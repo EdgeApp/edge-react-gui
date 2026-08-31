@@ -1,11 +1,11 @@
 import type { EdgeSwapQuote } from 'edge-core-js'
 import React from 'react'
-import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import { useCryptoText } from '../../hooks/useCryptoText'
 import { lstrings } from '../../locales/strings'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SmallText, WarningText } from '../themed/EdgeText'
 import { IconDataRow } from './IconDataRow'

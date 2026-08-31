@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 export function PairIcons({ icons }: { icons: string[] }) {

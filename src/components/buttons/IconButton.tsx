@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Platform, View } from 'react-native'
-import { LinearGradient } from '../common/LinearGradient'
 
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { LinearGradient } from '../common/LinearGradient'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 

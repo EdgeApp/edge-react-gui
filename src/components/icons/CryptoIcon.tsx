@@ -1,7 +1,6 @@
 import type { EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import FastImage from '../common/FastImage'
 import { ShadowedView } from 'react-native-fast-shadow'
 
 import customAssetIcon from '../../assets/images/custom-asset.png'
@@ -10,6 +9,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 

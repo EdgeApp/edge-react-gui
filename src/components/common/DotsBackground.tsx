@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { type LayoutChangeEvent, StyleSheet } from 'react-native'
-import { LinearGradient } from './LinearGradient'
 import { Circle, Defs, G, RadialGradient, Stop, Svg } from 'react-native-svg'
 
 import { useHandler } from '../../hooks/useHandler'
 import type { OverrideDots, ThemeDot } from '../../types/Theme'
 import { useTheme } from '../services/ThemeContext'
+import { LinearGradient } from './LinearGradient'
 
 export interface AccentColors {
   iconAccentColor?: string

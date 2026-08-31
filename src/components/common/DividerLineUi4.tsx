@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { LinearGradient } from './LinearGradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { LinearGradient } from './LinearGradient'
 import { DEFAULT_MARGIN_REM } from './Margins'
 
 interface Props {

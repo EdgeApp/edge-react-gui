@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 import { cacheStyles } from 'react-native-patina'
 
 import { useHandler } from '../../hooks/useHandler'
 import { toLocaleDate, toLocaleTime } from '../../locales/intl'
 import { getThemedIconUri } from '../../util/CdnUris'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { CloseIcon } from '../icons/ThemedIcons'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

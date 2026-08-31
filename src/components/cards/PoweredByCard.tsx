@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
+import FastImage from '../common/FastImage'
 import { ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

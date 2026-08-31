@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import type { LinearGradientProps } from '../common/LinearGradient'
 
 import { useHandler } from '../../hooks/useHandler'
+import type { LinearGradientProps } from '../common/LinearGradient'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'

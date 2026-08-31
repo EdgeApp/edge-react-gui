@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { WcConnectionInfo } from '../../types/types'
 import { EdgeCard } from '../cards/EdgeCard'
+import FastImage from '../common/FastImage'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeRow } from '../rows/EdgeRow'
 import { showError } from '../services/AirshipInstance'

@@ -1,12 +1,12 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { LinearGradient } from '../common/LinearGradient'
 
 import {
   type LayoutStyleProps,
   useLayoutStyle
 } from '../../hooks/useLayoutStyle'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { LinearGradient } from '../common/LinearGradient'
 import { ChevronDownIcon, ChevronRightIcon } from '../icons/ThemedIcons'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

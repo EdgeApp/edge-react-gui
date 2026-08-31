@@ -1,7 +1,7 @@
 import * as React from 'react'
-import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 export function EdgeLogoHeader() {

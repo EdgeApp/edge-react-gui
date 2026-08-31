@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { lstrings } from '../../locales/strings'
 import type { ImageProp } from '../../types/Theme'
 import { PillButton } from '../buttons/PillButton'
 import { EdgeCard } from '../cards/EdgeCard'
+import FastImage from '../common/FastImage'
 import { BestRateBadge } from '../icons/BestRateBadge'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

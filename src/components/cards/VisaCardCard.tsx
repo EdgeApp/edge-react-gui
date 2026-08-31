@@ -1,6 +1,5 @@
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
-import FastImage from '../common/FastImage'
 
 import { executePluginAction } from '../../actions/PluginActions'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
@@ -16,6 +15,7 @@ import type {
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { logEvent } from '../../util/tracking'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import FastImage from '../common/FastImage'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

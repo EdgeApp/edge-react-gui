@@ -1,5 +1,4 @@
 import * as React from 'react'
-import FastImage from '../common/FastImage'
 import { cacheStyles } from 'react-native-patina'
 
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -9,6 +8,7 @@ import type { PaymentMethod } from '../../controllers/action-queue/PaymentMethod
 import { lstrings } from '../../locales/strings'
 import { asGuiPluginJson } from '../../types/GuiPluginTypes'
 import { getPartnerIconUri } from '../../util/CdnUris'
+import FastImage from '../common/FastImage'
 import { FiatIcon } from '../icons/FiatIcon'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'

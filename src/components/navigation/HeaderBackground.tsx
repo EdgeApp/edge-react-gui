@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import { LinearGradient } from '../common/LinearGradient'
 import Animated, {
   interpolate,
   type SharedValue,
@@ -9,6 +8,7 @@ import Animated, {
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
 import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import { LinearGradient } from '../common/LinearGradient'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'

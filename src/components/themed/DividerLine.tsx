@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { LinearGradient } from '../common/LinearGradient'
 
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
+import { LinearGradient } from '../common/LinearGradient'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
 interface Props {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { LinearGradient } from '../common/LinearGradient'
 
+import { LinearGradient } from '../common/LinearGradient'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 

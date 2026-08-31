@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import FastImage from '../common/FastImage'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { fixFiatCurrencyCode } from '../../util/utils'
+import FastImage from '../common/FastImage'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 

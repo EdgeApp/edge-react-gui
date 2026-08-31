@@ -1,8 +1,8 @@
 import * as React from 'react'
-import FastImage, { type ImageStyle } from '../common/FastImage'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import type { NameService } from '../../util/nameServices'
+import FastImage, { type ImageStyle } from '../common/FastImage'
 import { useTheme } from '../services/ThemeContext'
 
 // Map of name-service identifier to its logo asset. Services without a bundled

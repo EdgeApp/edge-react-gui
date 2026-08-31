@@ -1,12 +1,12 @@
 import { toFixed } from 'biggystring'
 import * as React from 'react'
 import { View, type ViewStyle } from 'react-native'
-import FastImage from '../common/FastImage'
 import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../../locales/strings'
 import type { StakeProviderInfo } from '../../plugins/stake-plugins/types'
 import { getStakeProviderIcon } from '../../util/CdnUris'
+import FastImage from '../common/FastImage'
 import { PairIcons } from '../icons/PairIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
