@@ -13,6 +13,9 @@ declare module '*.jpeg' {
 declare module '*.jpg' {
   export default imageRequire
 }
+declare module '*.mp3' {
+  export default imageRequire
+}
 
 // Powered by react-native-svg-transformer:
 declare module '*.svg' {

@@ -195,6 +195,14 @@ jest.mock('expo-contacts', () => ({
   })
 }))
 
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    seekTo: jest.fn().mockResolvedValue(undefined)
+  })),
+  setAudioModeAsync: jest.fn().mockResolvedValue(undefined)
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   KeyboardAwareScrollView: 'KeyboardAwareScrollView',
   useReanimatedKeyboardAnimation: () => ({

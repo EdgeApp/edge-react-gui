@@ -1,39 +1,42 @@
-import Sound from 'react-native-sound'
+import {
+  type AudioPlayer,
+  createAudioPlayer,
+  setAudioModeAsync
+} from 'expo-audio'
 
-let receiveSoundPromise: Promise<Sound> | undefined
-let sendSoundPromise: Promise<Sound> | undefined
-Sound.setCategory('Ambient', true)
+import receivedSound from '../assets/sounds/audio_received.mp3'
+import sentSound from '../assets/sounds/audio_sent.mp3'
+
+/**
+ * Transaction send/receive sounds via expo-audio.
+ * react-native-sound stays linked.
+ */
+
+let audioModePromise: Promise<void> | undefined
+let receivePlayer: AudioPlayer | undefined
+let sendPlayer: AudioPlayer | undefined
+
+const ensureAudioMode = async (): Promise<void> => {
+  audioModePromise ??= setAudioModeAsync({
+    playsInSilentMode: false,
+    interruptionMode: 'mixWithOthers',
+    shouldPlayInBackground: false
+  })
+  await audioModePromise
+}
+
+const replaySound = async (player: AudioPlayer): Promise<void> => {
+  await ensureAudioMode()
+  await player.seekTo(0)
+  player.play()
+}
 
 export async function playReceiveSound(): Promise<void> {
-  receiveSoundPromise ??= loadSound('audio_received.mp3')
-  await receiveSoundPromise.then(playSound)
+  receivePlayer ??= createAudioPlayer(receivedSound)
+  await replaySound(receivePlayer)
 }
 
 export async function playSendSound(): Promise<void> {
-  sendSoundPromise ??= loadSound('audio_sent.mp3')
-  await sendSoundPromise.then(playSound)
-}
-
-/**
- * Turn the node-style Sound constructor into a promise.
- */
-async function loadSound(name: string): Promise<Sound> {
-  return await new Promise((resolve, reject) => {
-    const sound = new Sound(name, Sound.MAIN_BUNDLE, error => {
-      if (error != null) reject(error)
-      else resolve(sound)
-    })
-  })
-}
-
-/**
- * Turn the node-style Sound.play method into a promise.
- */
-async function playSound(sound: Sound): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    sound.play(success => {
-      if (success) resolve()
-      else reject(new Error('Could not play sound'))
-    })
-  })
+  sendPlayer ??= createAudioPlayer(sentSound)
+  await replaySound(sendPlayer)
 }
