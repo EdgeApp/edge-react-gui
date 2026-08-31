@@ -117,6 +117,7 @@
     "expo-application": "~6.1.5",
     "expo-battery": "~9.1.4",
     "expo-clipboard": "~7.1.5",
+    "expo-contacts": "~14.2.6",
     "expo-crypto": "~14.1.5",
     "expo-device": "~7.1.4",
     "expo-haptics": "~14.1.4",

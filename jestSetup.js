@@ -163,6 +163,22 @@ jest.mock('expo-image-picker', () => ({
   })
 }))
 
+jest.mock('expo-contacts', () => ({
+  Fields: {
+    Name: 'name',
+    FirstName: 'firstName',
+    LastName: 'lastName',
+    Company: 'company',
+    Image: 'image',
+    ImageAvailable: 'imageAvailable'
+  },
+  getContactsAsync: jest.fn().mockResolvedValue({
+    data: [],
+    hasNextPage: false,
+    hasPreviousPage: false
+  })
+}))
+
 jest.mock('react-native-keyboard-controller', () => ({
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
