@@ -73,6 +73,8 @@ PODS:
     - ExpoModulesCore
   - ExpoLinearGradient (14.1.5):
     - ExpoModulesCore
+  - ExpoLocalization (16.1.6):
+    - ExpoModulesCore
   - ExpoModulesCore (2.5.0):
     - DoubleConversion
     - glog
@@ -2912,6 +2914,7 @@ DEPENDENCIES:
   - ExpoImage (from `../node_modules/expo-image/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
+  - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoQuickActions (from `../node_modules/expo-quick-actions/ios`)
   - ExpoWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -3122,6 +3125,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
+  ExpoLocalization:
+    :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoQuickActions:
@@ -3386,6 +3391,7 @@ SPEC CHECKSUMS:
   ExpoImage: b0b4a838c62bb9d5438bb475cccc85619a5f59dc
   ExpoKeepAwake: bf0811570c8da182bfb879169437d4de298376e7
   ExpoLinearGradient: 7734c8059972fcf691fb4330bcdf3390960a152d
+  ExpoLocalization: 999a1ff61a7f5917d65c2bd9234883009019ca9f
   ExpoModulesCore: 471ae18809dc8a5c9a623193a317eef6048a4f8a
   ExpoQuickActions: fdbda7f5874aed3dd2b1d891ec00ab3300dc7541
   ExpoWebBrowser: dc39a88485f007e61a3dff05d6a75f22ab4a2e92
