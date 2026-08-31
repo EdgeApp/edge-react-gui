@@ -27,6 +27,9 @@ PODS:
     - React-Core
   - EXApplication (6.1.5):
     - ExpoModulesCore
+  - EXAV (15.1.7):
+    - ExpoModulesCore
+    - ReactCommon/turbomodule/core
   - EXConstants (17.1.7):
     - ExpoModulesCore
   - EXImageLoader (5.1.0):
@@ -2929,6 +2932,7 @@ DEPENDENCIES:
   - edge-exchange-plugins (from `../node_modules/edge-exchange-plugins`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
   - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXAV (from `../node_modules/expo-av/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - Expo (from `../node_modules/expo`)
@@ -3143,6 +3147,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/edge-login-ui-rn"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
+  EXAV:
+    :path: "../node_modules/expo-av/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   EXImageLoader:
@@ -3439,6 +3445,7 @@ SPEC CHECKSUMS:
   edge-exchange-plugins: f130b52ca5d58d774bf51c851bbb38df5fbf9238
   edge-login-ui-rn: 80979efda996608d927563cd770f69f7bfce80a9
   EXApplication: 1e06972201838375ca1ec1ba34d586a98a5dc718
+  EXAV: ae28256069c4cdde93d185c007d8f68d92902c2e
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   EXImageLoader: 4d3d3284141f1a45006cc4d0844061c182daf7ee
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
