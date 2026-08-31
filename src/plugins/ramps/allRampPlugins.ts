@@ -1,5 +1,6 @@
 import { banxaRampPlugin } from './banxa/banxaRampPlugin'
 import { bitsofgoldRampPlugin } from './bitsofgold/bitsofgoldRampPlugin'
+import { dfxRampPlugin } from './dfx/dfxRampPlugin'
 import { infiniteRampPlugin } from './infinite/infiniteRampPlugin'
 import { libertyxRampPlugin } from './libertyx/libertyxRampPlugin'
 import { moonpayRampPlugin } from './moonpay/moonpayRampPlugin'
@@ -11,6 +12,7 @@ import { simplexRampPlugin } from './simplex/simplexRampPlugin'
 export const pluginFactories: Record<string, RampPluginFactory> = {
   banxa: banxaRampPlugin,
   bitsofgold: bitsofgoldRampPlugin,
+  dfx: dfxRampPlugin,
   infinite: infiniteRampPlugin,
   libertyx: libertyxRampPlugin,
   moonpay: moonpayRampPlugin,
