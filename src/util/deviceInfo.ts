@@ -4,7 +4,7 @@ import * as Device from 'expo-device'
 /**
  * Device and app identity via expo-application / expo-device.
  * login-ui and a few GUI call sites still use react-native-device-info
- * (hasNotch, getUniqueId, usePowerState), so that package stays linked.
+ * (hasNotch, getUniqueId), so that package stays linked.
  */
 
 export const getVersion = (): string =>
