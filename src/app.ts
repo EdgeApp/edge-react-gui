@@ -5,7 +5,6 @@
  * rerenders
  */
 // import './wdyr'
-import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
@@ -21,6 +20,7 @@ import { changeTheme, getTheme } from './components/services/ThemeContext'
 import { ENV } from './env'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
+import { addConnectionListener } from './util/connection'
 import { getVersion } from './util/deviceInfo'
 import { log, logToServer } from './util/logger'
 import { initCoinrankList, initInfoServer } from './util/network'
@@ -326,8 +326,8 @@ initDeviceSettings()
 
 // Set up network state change listener to refresh data when connectivity is restored
 let previousConnectionState = false
-NetInfo.addEventListener(state => {
-  const currentConnectionState = state.isConnected ?? false
+addConnectionListener(state => {
+  const currentConnectionState = state.isConnected
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
     initInfoServer().catch(err => {
