@@ -3,9 +3,8 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { BlurView } from 'rn-id-blurview'
 
-import { isBlurDisabled } from '../common/BlurBackground'
+import { BlurUnderlayReversed, isBlurDisabled } from '../common/BlurBackground'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { QrCode } from '../themed/QrCode'
 
@@ -40,10 +39,7 @@ export const QrModal: React.FC<Props> = props => {
         isBlurDisabled ? (
           <View style={[StyleSheet.absoluteFill, styles.scrim]} />
         ) : (
-          <BlurView
-            blurType={theme.isDark ? 'light' : 'dark'}
-            style={StyleSheet.absoluteFill}
-          />
+          <BlurUnderlayReversed />
         )
       }
     >

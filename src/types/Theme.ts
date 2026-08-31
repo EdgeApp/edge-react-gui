@@ -130,6 +130,9 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
   modalBackground: string
+  // Solid stand-ins for blur where it cannot render (Android below 12):
+  modalBackgroundNoBlur: string
+  chromeBackgroundNoBlur: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 

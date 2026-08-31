@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
 import {
-  BlurBackgroundNoRoundedCorners,
+  ChromeBlurBackground,
   getBlurFallbackStyle
 } from '../common/BlurBackground'
 import { EdgeAnim, fadeInDown10 } from '../common/EdgeAnim'
@@ -48,7 +48,7 @@ export const KavButtons: React.FC<Props> = props => {
 
   return (
     <EdgeAnim enter={fadeInDown10} style={styles.container}>
-      <BlurBackgroundNoRoundedCorners />
+      <ChromeBlurBackground />
       <EdgeButton
         type="tertiary"
         mini

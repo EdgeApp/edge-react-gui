@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
 import { useSceneFooterState } from '../../state/SceneFooterState'
 import {
-  BlurBackgroundNoRoundedCorners,
+  ChromeBlurBackground,
   getBlurFallbackStyle
 } from '../common/BlurBackground'
 import type { SceneWrapperInfo } from '../common/SceneWrapper'
@@ -75,7 +75,7 @@ export const SceneFooterWrapper = (
       noBackgroundBlur={noBackgroundBlur}
       onLayout={handleLayoutOnce}
     >
-      {noBackgroundBlur ? null : <BlurBackgroundNoRoundedCorners />}
+      {noBackgroundBlur ? null : <ChromeBlurBackground />}
       {children}
     </ContainerAnimatedView>
   )

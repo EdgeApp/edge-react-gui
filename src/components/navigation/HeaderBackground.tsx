@@ -9,7 +9,7 @@ import Animated, {
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
 import {
-  BlurBackgroundNoRoundedCorners,
+  ChromeBlurBackground,
   getBlurFallbackStyle
 } from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
@@ -24,7 +24,7 @@ export const HeaderBackground = (props: any): React.JSX.Element => {
 
   return (
     <HeaderBackgroundContainerView scrollY={scrollY}>
-      <BlurBackgroundNoRoundedCorners />
+      <ChromeBlurBackground />
       <HeaderLinearGradient
         colors={theme.headerBackground}
         start={theme.headerBackgroundStart}
