@@ -7,6 +7,12 @@ import type {
   EdgeTxAction
 } from 'edge-core-js'
 
+import { getExchangeDenom } from '../../../util/exchangeDenom'
+import {
+  exportTxInfoKey,
+  mergeExportTxInfo,
+  readExportTxInfoMap
+} from '../../../util/exportTxInfo'
 import { fillTxsFiat, toIsoFiatCode } from '../../../util/fillTxsFiat'
 import {
   readDefaultIsoFiat,
@@ -16,6 +22,13 @@ import {
   fillTxMetadataForDisplay,
   getTxActionDisplayInfo
 } from '../../../util/txDisplay'
+import {
+  exportTransactionsToBitwave,
+  exportTransactionsToCSVInner,
+  exportTransactionsToQBO,
+  parseExportFormats,
+  type TxExportFormat
+} from '../../../util/txExport'
 import { engineError } from '../errors'
 import { findWallet, parseTokenId } from '../resolve'
 import { requireBodyObject, type Router } from '../router'
@@ -100,10 +113,108 @@ export function registerTransactionRoutes(router: Router): void {
         txs: overlayed
       })
 
+      const exportRaw = optionalQueryString(ctx.query, 'exportFormat')
+      let formats: TxExportFormat[]
+      try {
+        formats = parseExportFormats(exportRaw)
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error)
+        throw engineError('BAD_REQUEST', message, 400)
+      }
+
+      const bitwaveAccountIdQuery = optionalQueryString(
+        ctx.query,
+        'bitwaveAccountId'
+      )
+      if (bitwaveAccountIdQuery != null && !formats.includes('bitwave')) {
+        throw engineError(
+          'BAD_REQUEST',
+          'Query "bitwaveAccountId" requires exportFormat to include bitwave',
+          400
+        )
+      }
+
+      if (formats.length === 0) {
+        return {
+          transactions: overlayed,
+          total: transactions.length,
+          isoFiat
+        }
+      }
+
+      const denom = getExchangeDenom(wallet.currencyConfig, tokenId)
+      const currencyCode =
+        tokenId == null
+          ? wallet.currencyInfo.currencyCode
+          : wallet.currencyConfig.allTokens[tokenId]?.currencyCode ?? tokenId
+
+      let bitwaveAccountId: string | undefined
+      if (formats.includes('bitwave')) {
+        if (bitwaveAccountIdQuery != null && bitwaveAccountIdQuery !== '') {
+          bitwaveAccountId = bitwaveAccountIdQuery
+          await mergeExportTxInfo(wallet, tokenId, {
+            bitwaveAccountId,
+            isExportBitwave: true
+          })
+        } else {
+          let saved: string | undefined
+          try {
+            const map = await readExportTxInfoMap(wallet)
+            saved = map[exportTxInfoKey(wallet, tokenId)]?.bitwaveAccountId
+          } catch {
+            saved = undefined
+          }
+          if (saved == null || saved === '') {
+            throw engineError(
+              'MISSING_BITWAVE_ACCOUNT_ID',
+              'Bitwave export requires bitwaveAccountId (query or exportTxInfo.json)',
+              400
+            )
+          }
+          bitwaveAccountId = saved
+        }
+      }
+
+      const files: Array<{ format: TxExportFormat; contents: string }> = []
+      for (const format of formats) {
+        if (format === 'csv') {
+          files.push({
+            format,
+            contents: exportTransactionsToCSVInner(
+              overlayed,
+              currencyCode,
+              isoFiat,
+              denom.multiplier,
+              denom.name
+            )
+          })
+        } else if (format === 'qbo') {
+          files.push({
+            format,
+            contents: exportTransactionsToQBO(
+              overlayed,
+              isoFiat,
+              denom.multiplier
+            )
+          })
+        } else {
+          files.push({
+            format,
+            contents: await exportTransactionsToBitwave(
+              bitwaveAccountId!,
+              overlayed,
+              currencyCode,
+              denom.multiplier
+            )
+          })
+        }
+      }
+
       return {
-        transactions: overlayed,
+        ok: true,
+        isoFiat,
         total: transactions.length,
-        isoFiat
+        files
       }
     }
   )

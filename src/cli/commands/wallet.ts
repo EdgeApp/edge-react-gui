@@ -1,3 +1,7 @@
+import fs from 'fs'
+import path from 'path'
+
+import { parseExportFormats, type TxExportFormat } from '../../util/txExport'
 import { printJson } from '../client/output'
 import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
@@ -192,8 +196,8 @@ const txListCmd = command(
   'tx-list',
   {
     usage:
-      'tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD]',
-    help: 'List transactions in a wallet (historical fiat filled like GUI export)',
+      'tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]',
+    help: 'List or export wallet transactions (JSON by default; CSV/QBO/Bitwave via REST exportFormat)',
     needsSession: true
   },
   async (ctx, argv) => {
@@ -206,9 +210,37 @@ const txListCmd = command(
         'start-date': 'string',
         'end-date': 'string',
         'search-string': 'string',
-        fiat: 'string'
+        fiat: 'string',
+        'export-format': 'string',
+        out: 'string',
+        'bitwave-account': 'string'
       }
     })
+    let formats: TxExportFormat[]
+    try {
+      formats = parseExportFormats(args.string('export-format'))
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw new UsageError(txListCmd, message)
+    }
+    const out = args.string('out')
+    if (formats.length > 0 && out == null) {
+      throw new UsageError(
+        txListCmd,
+        '--export-format requires --out=<path> (relative to the current directory or absolute)'
+      )
+    }
+    if (formats.length === 0 && out != null) {
+      throw new UsageError(txListCmd, '--out requires --export-format')
+    }
+    const bitwaveAccount = args.string('bitwave-account')
+    if (bitwaveAccount != null && !formats.includes('bitwave')) {
+      throw new UsageError(
+        txListCmd,
+        '--bitwave-account requires bitwave in --export-format'
+      )
+    }
+
     const sessionId = requireSession(ctx)
     const query = new URLSearchParams()
     const tokenId = args.string('token-id')
@@ -225,18 +257,76 @@ const txListCmd = command(
     if (endDate != null) query.set('endDate', endDate)
     if (searchString != null) query.set('searchString', searchString)
     if (fiat != null) query.set('fiat', fiat)
+    if (formats.length > 0) query.set('exportFormat', formats.join(','))
+    if (bitwaveAccount != null) query.set('bitwaveAccountId', bitwaveAccount)
     const qs = query.toString()
-    printJson(
-      await ctx.client.get(
-        walletPath(
-          sessionId,
-          args.positional!,
-          `/transactions${qs !== '' ? `?${qs}` : ''}`
-        )
+    const result = await ctx.client.get<{
+      ok?: boolean
+      isoFiat?: string
+      total?: number
+      transactions?: unknown
+      files?: Array<{ format: TxExportFormat; contents: string }>
+    }>(
+      walletPath(
+        sessionId,
+        args.positional!,
+        `/transactions${qs !== '' ? `?${qs}` : ''}`
       )
     )
+
+    if (formats.length === 0 || result.files == null) {
+      printJson(result)
+      return
+    }
+
+    const written = await writeExportFiles(out!, result.files)
+    printJson({
+      ok: true,
+      isoFiat: result.isoFiat,
+      total: result.total,
+      files: written
+    })
   }
 )
+
+function resolveUserPath(out: string): string {
+  return path.isAbsolute(out) ? out : path.resolve(process.cwd(), out)
+}
+
+function exportFilePath(
+  out: string,
+  format: TxExportFormat,
+  count: number
+): string {
+  const resolved = resolveUserPath(out)
+  if (count <= 1) return resolved
+  let stem = resolved
+  if (stem.endsWith('.bitwave.csv')) {
+    stem = stem.slice(0, -'.bitwave.csv'.length)
+  } else if (stem.endsWith('.csv')) {
+    stem = stem.slice(0, -'.csv'.length)
+  } else if (stem.endsWith('.qbo')) {
+    stem = stem.slice(0, -'.qbo'.length)
+  }
+  if (format === 'bitwave') return `${stem}.bitwave.csv`
+  if (format === 'qbo') return `${stem}.qbo`
+  return `${stem}.csv`
+}
+
+async function writeExportFiles(
+  out: string,
+  files: Array<{ format: TxExportFormat; contents: string }>
+): Promise<Array<{ format: TxExportFormat; path: string }>> {
+  const written: Array<{ format: TxExportFormat; path: string }> = []
+  for (const file of files) {
+    const filePath = exportFilePath(out, file.format, files.length)
+    await fs.promises.mkdir(path.dirname(filePath), { recursive: true })
+    await fs.promises.writeFile(filePath, file.contents, 'utf8')
+    written.push({ format: file.format, path: filePath })
+  }
+  return written
+}
+
 const spendCmd = command(
   'spend',
   {

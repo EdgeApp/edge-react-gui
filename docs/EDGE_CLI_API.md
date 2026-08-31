@@ -2217,6 +2217,15 @@ curl --unix-socket "$SOCK" \
   account’s `defaultIsoFiat` from synced `Settings.json` (`iso:USD` if
   unset). Does **not** write the account setting. Response-only; does
   not call `saveTxMetadata`.
+- `exportFormat` — optional comma list of `csv`, `qbo`, `bitwave`. When
+  set, the engine formats after overlay + fiat fill and returns `files`
+  (no `transactions` array). Unknown tokens → `400 BAD_REQUEST`.
+- `bitwaveAccountId` — optional Bitwave account id. **400** unless
+  `exportFormat` includes `bitwave`. Omit → use GUI `wallet.disklet`
+  `exportTxInfo.json` (`tokenId ?? currencyCode`). Missing id → `400
+  MISSING_BITWAVE_ACCOUNT_ID`. Present → persist (merge that key, set
+  `isExportBitwave: true`, leave csv/qbo flags). Never default to the
+  Edge wallet id. This GET may write the wallet disklet.
 
 Each item is an `EdgeTransaction`. `metadata.name`, `metadata.category`,
 and `metadata.notes` are filled with the same merge the GUI transaction
@@ -2253,11 +2262,31 @@ non-zero). The chosen code is also returned as `isoFiat`.
 }
 ```
 
-**CLI:** `edge-cli tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD]`
+**CLI:** `edge-cli tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]`
 
 ```bash
 curl --unix-socket "$SOCK" \
   'http://localhost/v1/accounts/'"$SESS"'/wallets/abc123/transactions?limit=10'
+```
+
+**Success `200` with `exportFormat`:** no `transactions` array.
+
+```json
+{
+  "ok": true,
+  "isoFiat": "iso:USD",
+  "total": 1,
+  "files": [
+    { "format": "csv", "contents": "CURRENCY_CODE,DATE,…" },
+    { "format": "qbo", "contents": "OFXHEADER:100\n…" },
+    { "format": "bitwave", "contents": "id,remoteContactId,…" }
+  ]
+}
+```
+
+```bash
+curl --unix-socket "$SOCK" \
+  'http://localhost/v1/accounts/'"$SESS"'/wallets/'"$WID"'/transactions?exportFormat=csv,qbo&startDate=2020-01-01T00:00:00-07:00'
 ```
 
 ---

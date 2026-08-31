@@ -29,6 +29,7 @@ const SHARED_MODULES = [
   'src/util/exchangeDenom.ts',
   'src/util/fillTxsFiat.ts',
   'src/util/txExport/index.ts',
+  'src/util/exportTxInfo.ts',
   'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',

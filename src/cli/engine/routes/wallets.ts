@@ -122,6 +122,7 @@ export function registerWalletsRoutes(router: Router): void {
     const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
     return {
       ...summarizeWallet(wallet),
+      denominations: wallet.currencyInfo.denominations,
       walletSettings: wallet.walletSettings,
       allTokens: wallet.currencyConfig.allTokens
     }

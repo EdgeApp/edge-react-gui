@@ -260,6 +260,7 @@ is a named `--kebab-case` flag.
 | Also accepted | `--name value` |
 | Booleans | `--dry-run`, `--no-wait` (presence = true) |
 | Repeatable | `--answer=`, `--question=` |
+| Lists | comma-separated, no spaces: `--export-format=csv,qbo,bitwave` |
 
 Native token: **omit** `--token-id`. Do not pass the literal `null` on the CLI.
 Empty `--name=` is a usage error. Unknown flags and extra positionals are usage
@@ -367,12 +368,22 @@ least one flag. There are no `wallet-archive` / `wallet-unarchive` /
 |---------|-------------|----------|
 | `balance <walletId> [--token-id=]` | Native and exchange balance | `GET .../wallets/{walletId}/balances[/{tokenId}]` |
 | `address <walletId> [--token-id=]` | Receive addresses | `GET .../wallets/{walletId}/addresses` |
-| `tx-list <walletId> [--token-id=] [--limit=] [--offset=] [--start-date=] [--end-date=] [--search-string=] [--fiat=USD]` | List transactions (display metadata + historical fiat like GUI export) | `GET .../wallets/{walletId}/transactions` |
+| `tx-list <walletId> [--token-id=] [--limit=] [--offset=] [--start-date=] [--end-date=] [--search-string=] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=] [--bitwave-account=]` | List or export transactions (JSON by default; engine formats CSV/QBO/Bitwave) | `GET .../wallets/{walletId}/transactions` |
 
 `--search-string` maps to REST/core `searchString`. Omit `--token-id` for the
 native asset. REST URLs may still use the query/path value `tokenId=null`.
 `--fiat` is a 3-letter ISO 4217 override (`USD`); omit to use the account
 `defaultIsoFiat`. It is response-only and does not change the account setting.
+
+`--export-format` is a comma list of `csv`, `qbo`, `bitwave`. The engine
+formats on the same GET (`exportFormat` query); the CLI only writes `--out`
+(resolved from `process.cwd()`). One format: `--out` is the file path.
+Several formats: `--out` is a stem plus `.csv` / `.qbo` / `.bitwave.csv`.
+`--out` is required with `--export-format` and a usage error without it.
+`--bitwave-account` maps to `bitwaveAccountId`. Omit it to use the GUI
+`exportTxInfo.json` on the wallet disklet; passing it persists that id
+(and is a **400** unless `bitwave` is in `--export-format`). Never defaults
+to the Edge wallet id.
 
 ### Spending
 
