@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Android home screen long-press shortcuts no longer depend on a foreground activity during startup, and a shortcut registration failure no longer blocks the rest of the app.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
