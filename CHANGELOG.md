@@ -1,6 +1,7 @@
 # edge-react-gui
 
 ## Unreleased (develop)
+- fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
 - fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
 - fixed: The header, scene footer, tab bar, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
