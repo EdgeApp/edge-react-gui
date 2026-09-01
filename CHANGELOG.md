@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-- added: swaps.xyz swap provider wiring (SWAPSXYZ_INIT core plugin init and registration).
+- added: swaps.xyz swap provider wiring (SWAPSXYZ_INIT core plugin init and registration), including the DEX-classified "swaps.xyz (Solana)" entry for Solana-to-Solana routes.
 - added: Verbose logging for exchange rate queries: the request body, resolved/rate-less counts, and errors are captured when the Verbose Logging setting is enabled.
 - added: Exchange-rate cache snapshot in the support log output, plus a `rates-cache-replay` script that re-runs those queries against the rates server and reports the result for each pair.
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
