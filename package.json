@@ -68,6 +68,7 @@
     "yaob": "^0.4.0",
     "bip39": "3.0.4",
     "react-native-airship": "^0.3.0",
+    "react-native-haptic-feedback": "^3.0.0",
     "react-native-patina": "^0.2.0"
   },
   "dependencies": {
@@ -144,7 +145,7 @@
     "react-native-get-random-values": "^1.11.0",
     "react-native-gifted-charts": "1.4.63",
     "react-native-gradle-plugin": "^0.71.19",
-    "react-native-haptic-feedback": "^1.14.0",
+    "react-native-haptic-feedback": "^3.0.0",
     "react-native-image-colors": "^2.4.0",
     "react-native-image-picker": "^8.2.1",
     "react-native-in-app-review": "^4.3.5",
@@ -164,7 +165,7 @@
     "react-native-screens": "4.25.2",
     "react-native-securerandom": "^1.0.1",
     "react-native-share": "^12.0.11",
-    "react-native-sound": "^0.12.0",
+    "react-native-sound": "^0.13.0",
     "react-native-store-review": "https://github.com/EdgeApp/react-native-store-review#b0a3379829056e7328b550d5b135271f7a777083",
     "react-native-svg": "15.15.4",
     "react-native-vector-icons": "^10.1.0",

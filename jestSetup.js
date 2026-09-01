@@ -10,6 +10,10 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 // --------------------------------------------------------------------
 
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
+jest.mock('react-native-haptic-feedback', () => ({
+  __esModule: true,
+  default: { trigger() {} }
+}))
 jest.mock('react-native-permissions', () => mockPermissions)
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
 // Firebase 25 instantiates a native event emitter on import, which crashes in
