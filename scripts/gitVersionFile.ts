@@ -37,7 +37,12 @@ const specialBranches: Record<string, string> = {
   'test-feta': '-feta',
   'test-gouda': '-gouda',
   'test-halloumi': '-halloumi',
-  'test-paneer': '-paneer'
+  'test-paneer': '-paneer',
+  'test-kraft': '-kraft',
+  'test-colby': '-colby',
+  'test-string': '-string',
+  'test-parm': '-parm',
+  'test-swiss': '-swiss'
 }
 
 let _currentPath = __dirname
