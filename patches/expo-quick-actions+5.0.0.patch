@@ -11,6 +11,23 @@ index 4db980e..53bb319 100644
        }
      }
  
+diff --git a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
+index 66dc4a0..6bda3f8 100644
+--- a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
++++ b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
+@@ -3 +2,0 @@
+-import android.app.Activity
+@@ -126,3 +124,0 @@
+-  private val currentActivity: Activity?
+-    get() = appContext.currentActivity
+-
+@@ -229,0 +226,3 @@
++        val launchIntent = context.packageManager
++            .getLaunchIntentForPackage(context.packageName)
++            ?: throw IllegalStateException("Unable to find the app launch intent")
+@@ -232 +231 @@
+-            val intent = Intent(context, currentActivity!!::class.java)
++            val intent = Intent(launchIntent)
 diff --git a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift b/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift
 index 252da49..12a29e4 100644
 --- a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift

@@ -7,6 +7,7 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
+import { trackError } from '../../util/tracking'
 import { showError } from './AirshipInstance'
 
 export const QuickActionsManager: React.FC = () => {
@@ -38,7 +39,7 @@ export const QuickActionsManager: React.FC = () => {
           }
         ])
       } catch (error: unknown) {
-        showError(error)
+        trackError(error, 'QuickActionsManager:setItems')
       }
     },
     [],
