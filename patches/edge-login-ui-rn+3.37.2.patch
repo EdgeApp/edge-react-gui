@@ -314,6 +314,22 @@ index 8a5c3f3..e4699a4 100644
  import { cacheStyles } from 'react-native-patina';
  import { sprintf } from 'sprintf-js';
  import { maybeRouteComplete } from '../../../actions/LoginInitActions';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js b/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
+index 324ee0f..7f0fd48 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
++++ b/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
+@@ -83,8 +83,9 @@ export const FilledTextInput = React.forwardRef((props, ref) => {
+         isFocused,
+         setNativeProps
+     }));
+-    // Animates between 0 and 1 based our disabled state:
+-    const disableAnimation = useSharedValue(0);
++    // Animates between 0 and 1 based our disabled state, starting at the
++    // mounted state so the input doesn't flash its enabled look on entry:
++    const disableAnimation = useSharedValue(disabled ? 1 : 0);
+     React.useEffect(() => {
+         disableAnimation.value = withTiming(disabled ? 1 : 0);
+     }, [disableAnimation, disabled]);
 diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js b/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
 index 5fed31f..ad8aea7 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
@@ -325,6 +341,22 @@ index 5fed31f..ad8aea7 100644
  import { cacheStyles } from 'react-native-patina';
  import { usePendingPress } from '../../hooks/usePendingPress';
  import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js b/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
+index 7288462..466b83d 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
++++ b/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
+@@ -69,8 +69,9 @@ export const SimpleTextInput = React.forwardRef((props, ref) => {
+         isFocused,
+         setNativeProps
+     }));
+-    // Animates between 0 and 1 based our disabled state:
+-    const disableAnimation = useSharedValue(0);
++    // Animates between 0 and 1 based our disabled state, starting at the
++    // mounted state so the input doesn't flash its enabled look on entry:
++    const disableAnimation = useSharedValue(disabled ? 1 : 0);
+     React.useEffect(() => {
+         disableAnimation.value = withTiming(disabled ? 1 : 0);
+     }, [disableAnimation, disabled]);
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
 index 1ce7388..d6101c1 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
