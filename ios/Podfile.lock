@@ -1668,7 +1668,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-performance (5.1.4):
+  - react-native-performance (6.0.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -3502,7 +3502,7 @@ SPEC CHECKSUMS:
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
   react-native-monero: d2b0167fd79d8eeda80ad357f12e8fee8edf63a7
   react-native-netinfo: adec161a2fc40d327f2c1bab7d8c57a91943ab74
-  react-native-performance: d673456bafde4fbf8170e0f267f77a899c3f507b
+  react-native-performance: c2cf9c69321cd5eacfdba07ced92409a185140a8
   react-native-piratechain: b8a42336b1f8e6ccfc3ee054d18ed79d68d42fa1
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
