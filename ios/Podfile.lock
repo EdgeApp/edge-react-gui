@@ -2410,8 +2410,27 @@ PODS:
   - RNQrGenerator (1.4.6):
     - React
     - ZXingObjC
-  - RNReactNativeHapticFeedback (1.14.0):
+  - RNReactNativeHapticFeedback (3.0.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
     - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RNReanimated (4.5.3):
     - hermes-engine
     - RCTRequired
@@ -2598,7 +2617,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNSound (0.12.0):
+  - RNSound (0.13.0):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -3561,13 +3580,13 @@ SPEC CHECKSUMS:
   RNLocalize: 1034c494e25d2e8d4c5c9062418f1cd6db24e27e
   RNPermissions: 950d9f3b9c0225c92c1103366721e53491aec3f1
   RNQrGenerator: af2f0888eb81b8ff99517a3929d6399444dcc56d
-  RNReactNativeHapticFeedback: 8364333ca888b1b7ec9d2daf04b010ee5436366e
+  RNReactNativeHapticFeedback: ab7ef0c4befc540f5431166f98d74edfc70001f7
   RNReanimated: b9153787cb2d022e800229b75efcf87627117e3e
   RNScreens: df54f9e1092ce77fe96fc0c3a5314862d05a506e
   RNSecureRandom: b64d263529492a6897e236a22a2c4249aa1b53dc
   RNSentry: 18fc2982a2c646dfada4ddd6fc8e225e1bcad812
   RNShare: 8607a66b8edd8cf2d5781fb66250d8a07ec6d30d
-  RNSound: 460a3786c10accc5144d3b6866d3d8c3c41d2978
+  RNSound: 8e9d0d0c836de07b646743a60bc976276c9edfcd
   RNStoreReview: 6acb6bf05fcc90f471753d4c128954a1426018b2
   RNSVG: 02c4605f1656727c3a83059ef119dc7e469df182
   RNVectorIcons: 0763c0f64e1ec73fe18f4ed2fb1e485f96417009
