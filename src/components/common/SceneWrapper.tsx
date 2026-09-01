@@ -452,18 +452,17 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     return (
       <>
         <Reanimated.View
-          style={[
-            styles.sceneContainer,
-            layoutStyle,
-            insetStyle,
-            keyboardAwareStyle,
-            { padding }
-          ]}
+          style={[styles.sceneContainer, layoutStyle, keyboardAwareStyle]}
         >
           <BlurTargetView
             ref={sceneBlurTargetRef}
             collapsable={false}
-            style={styles.blurTargetGrow}
+            style={[
+              styles.sceneContainer,
+              styles.blurTargetGrow,
+              insetStyle,
+              { padding }
+            ]}
           >
             <DotsBackground
               accentColors={accentColors}

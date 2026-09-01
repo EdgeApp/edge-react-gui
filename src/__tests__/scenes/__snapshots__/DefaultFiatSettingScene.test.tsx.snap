@@ -26,15 +26,6 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
         "height": 1334,
         "width": 750,
       },
-      {
-        "paddingBottom": 0,
-        "paddingLeft": 0,
-        "paddingRight": 0,
-        "paddingTop": 64,
-      },
-      {
-        "padding": 0,
-      },
     ]
   }
   style={
@@ -49,16 +40,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
         "width": 750,
       },
       {
-        "paddingBottom": 0,
-        "paddingLeft": 0,
-        "paddingRight": 0,
-        "paddingTop": 64,
-      },
-      {
         "maxHeight": 1334,
-      },
-      {
-        "padding": 0,
       },
     ]
   }
@@ -71,10 +53,26 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
       }
     }
     style={
-      {
-        "flexGrow": 1,
-        "flexShrink": 1,
-      }
+      [
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        },
+        {
+          "flexGrow": 1,
+          "flexShrink": 1,
+        },
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
+        },
+        {
+          "padding": 0,
+        },
+      ]
     }
   >
     <ExpoLinearGradient
