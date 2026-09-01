@@ -721,6 +721,7 @@ export const pluginIdIcons: Record<string, string> = {
   lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
   mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
   mptrade: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/mptrade/icon.png',
+  mptradedefi: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/mptradedefi/icon.png',
   nexchange: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nexchange/icon.png',
   nymswap: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nymswap/icon.png',
   rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
