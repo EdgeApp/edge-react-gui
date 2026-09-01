@@ -71,6 +71,10 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptrade/icon.png`
   },
   {
+    displayName: 'MoonPay Trade (DeFi)',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptradedefi/icon.png`
+  },
+  {
     displayName: 'ShapeShift',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/shapeshift.png`
   },
