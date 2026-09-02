@@ -59,7 +59,9 @@ export const createWallet = route({
       doc(asCoreValue, 'Plugin key material. Omit to let core generate it.')
     )
   }).withRest,
-  returns: asObject({ walletId: asString }),
+  returns: asObject({
+    walletId: doc(asString, 'The new wallet. Its keys are already saved.')
+  }),
   errors: ['BAD_REQUEST'],
 
   async handler(ctx) {

@@ -21,7 +21,7 @@ export const fetchLobby = route({
   cli: { command: 'fetch-lobby', positional: 'lobbyId' },
   query: asObject({ lobbyId: doc(asString, LOBBY_ID_DOC) }).withRest,
   returns: asObject({
-    lobbyId: asString,
+    lobbyId: doc(asString, 'The lobby that was fetched, echoed back.'),
     loginRequest: doc(
       asEither(
         asObject({

@@ -576,16 +576,17 @@
       "command": "create-currency-wallet",
       "method": "POST",
       "path": "/account/{sessionId}/create-currency-wallet",
-      "usage": "create-currency-wallet <walletType> [--name=<name>] [--import-text=<importText>]",
+      "usage": "create-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]",
       "help": "Create a currency wallet.",
       "needsSession": true,
-      "positional": {
-        "field": "walletType",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
       "args": [
+        {
+          "flag": "wallet-type",
+          "field": "walletType",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
         {
           "flag": "name",
           "field": "name",

@@ -90,8 +90,11 @@ export const adminMakeLobby = route({
   }).withRest,
   returns: asObject({
     objectId: doc(asString, 'The parked handle.'),
-    expiresAt: asString,
-    lobbyId: asString,
+    expiresAt: doc(
+      asString,
+      'When the engine closes the lobby and stops polling.'
+    ),
+    lobbyId: doc(asString, 'Identifies the lobby to the party joining it.'),
     replies: doc(
       asArray(asCoreValue),
       'Empty at creation; re-read to see replies.'

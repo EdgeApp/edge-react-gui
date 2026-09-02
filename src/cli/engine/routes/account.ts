@@ -22,27 +22,45 @@ export const accountInfo = route({
   path: '/account/{sessionId}',
   cli: 'account-info',
   returns: asObject({
-    appId: asString,
-    created: asEither(asString, asValue(null)),
-    lastLogin: asString,
-    loggedIn: asBoolean,
+    appId: doc(asString, 'Application this session logged into.'),
+    created: doc(
+      asEither(asString, asValue(null)),
+      'When the account was created, null for accounts predating the field.'
+    ),
+    lastLogin: doc(asString, 'The previous login, not this one.'),
+    loggedIn: doc(
+      asBoolean,
+      'False once the account has been logged out; the session object outlives it briefly.'
+    ),
     recoveryKey: doc(
       asEither(asString, asValue(null)),
       'Present only while recovery is configured.'
     ),
-    otpEnabled: asBoolean,
+    otpEnabled: doc(asBoolean, '2FA is on for this account.'),
     otpResetPending: doc(
       asBoolean,
       'True while somebody has a reset pending against this account.'
     ),
-    canDuressLogin: asBoolean,
-    isDuressAccount: asBoolean,
+    canDuressLogin: doc(
+      asBoolean,
+      'A duress PIN is configured, so this account can be opened in duress mode.'
+    ),
+    isDuressAccount: doc(
+      asBoolean,
+      'True when this very session is the duress account rather than the real one.'
+    ),
     edgeLogin: doc(asBoolean, 'This account was reached by QR login.'),
-    keyLogin: asBoolean,
-    newAccount: asBoolean,
-    passwordLogin: asBoolean,
-    pinLogin: asBoolean,
-    recoveryLogin: asBoolean
+    keyLogin: doc(asBoolean, 'This session was reached with a login key.'),
+    newAccount: doc(
+      asBoolean,
+      'This session created the account rather than logging into an existing one.'
+    ),
+    passwordLogin: doc(asBoolean, 'This session was reached with a password.'),
+    pinLogin: doc(asBoolean, 'This session was reached with a PIN.'),
+    recoveryLogin: doc(
+      asBoolean,
+      'This session was reached by answering recovery questions.'
+    )
   }).withRest,
 
   handler(ctx) {

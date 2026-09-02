@@ -9,30 +9,49 @@ import {
 } from 'cleaners'
 
 import { getAppliedLocale } from '../../../locales/bootLocale'
+import { doc } from '../doc'
 import { route } from '../route'
 import { API_VERSION } from '../router'
 import { asOk } from '../schemas'
 
 const asEngineStatus = asObject({
-  pid: asNumber,
-  apiVersion: asString,
-  uptimeSeconds: asNumber,
-  sessionCount: asNumber,
-  testMode: asBoolean,
-  idleShutdownAt: asEither(asString, asValue(null)),
-  tcpPort: asEither(asNumber, asValue(null)),
-  socketPath: asString,
-  locale: asString,
-  decimalSeparator: asString,
-  groupingSeparator: asString
+  pid: doc(asNumber, 'The daemon process, for `kill` when it will not stop.'),
+  apiVersion: doc(
+    asString,
+    'The API this engine speaks. A client refusing to talk to an older engine ' +
+      'checks this.'
+  ),
+  uptimeSeconds: doc(asNumber, 'How long the daemon has been running.'),
+  sessionCount: doc(asNumber, 'Logged-in accounts held open right now.'),
+  testMode: doc(asBoolean, 'True when pointed at the tester fleet.'),
+  idleShutdownAt: doc(
+    asEither(asString, asValue(null)),
+    'When the engine will exit for want of work. Null while a session or a ' +
+      'subscription is holding it open, and null when the timeout is disabled.'
+  ),
+  tcpPort: doc(
+    asEither(asNumber, asValue(null)),
+    'The loopback port, null unless started with `--tcp`.'
+  ),
+  socketPath: doc(asString, 'Unix socket the CLI connects to.'),
+  locale: doc(asString, 'Language tag the engine resolved at boot.'),
+  decimalSeparator: doc(asString, 'Decimal mark for that locale.'),
+  groupingSeparator: doc(asString, 'Thousands mark for that locale.')
 })
 
 const asEngineConfig = asObject({
-  appId: asString,
-  testMode: asBoolean,
-  directory: asString,
-  servers: asObject(asString),
-  plugins: asArray(asString)
+  appId: doc(asString, 'Application ID the engine was started with.'),
+  testMode: doc(
+    asBoolean,
+    'True when the engine is pointed at the tester fleet.'
+  ),
+  directory: doc(asString, 'Working directory holding the core data.'),
+  servers: doc(
+    asObject(asEither(asString, asArray(asString))),
+    'The URLs this engine talks to, keyed by role. `syncServer` is a list, ' +
+      'since core rotates across the sync fleet.'
+  ),
+  plugins: doc(asArray(asString), 'Plugin IDs the engine loaded, sorted.')
 })
 
 /**

@@ -87,7 +87,11 @@ export const fetchSwapQuotes = route({
   }).withRest,
   returns: asObject({
     quoteCount: doc(asNumber, 'How many plugins answered.'),
-    quotes: asArray(asSwapQuote)
+    quotes: doc(
+      asArray(asSwapQuote),
+      'One quote per plugin that answered, each already parked under its own ' +
+        'handle. Plugins that failed or had nothing to offer are simply absent.'
+    )
   }),
   errors: [
     'BAD_REQUEST',
@@ -215,13 +219,19 @@ export const approveSwapQuote = route({
   path: '/account/{sessionId}/swap-quotes/{objectId}/approve',
   cli: { command: 'approve-swap-quote', positional: 'objectId' },
   returns: asObject({
-    ok: asCoreValue,
+    ok: doc(
+      asCoreValue,
+      'True once the swap is submitted and the send broadcast.'
+    ),
     objectId: doc(asString, 'The handle that was consumed.'),
     orderId: doc(
       asCoreValue,
       "The exchange's order reference, when it gives one."
     ),
-    destinationAddress: asCoreValue,
+    destinationAddress: doc(
+      asCoreValue,
+      'Address the funds were sent to, when the exchange reports one.'
+    ),
     transaction: doc(asCoreValue, 'The on-chain send to the exchange.')
   }),
   errors: [

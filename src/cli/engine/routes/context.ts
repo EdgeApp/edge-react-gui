@@ -44,7 +44,12 @@ export const localUsers = route({
   method: 'GET',
   path: '/local-users',
   cli: 'local-users',
-  returns: asObject({ localUsers: asArray(asCoreValue) }),
+  returns: asObject({
+    localUsers: doc(
+      asArray(asCoreValue),
+      '`EdgeUserInfo[]`: one entry per account cached on this device.'
+    )
+  }),
 
   handler(ctx) {
     return { localUsers: ctx.state.core.context.localUsers }
@@ -93,7 +98,13 @@ export const usernameAvailable = route({
   path: '/username-available',
   cli: { command: 'username-available', positional: 'username' },
   query: asUsernameQuery,
-  returns: asObject({ username: asString, available: asBoolean }),
+  returns: asObject({
+    username: doc(asString, 'The name that was checked, echoed back.'),
+    available: doc(
+      asBoolean,
+      'True when nobody holds this name. It is not reserved by asking.'
+    )
+  }),
   errors: ['USERNAME_ERROR', 'CHALLENGE_REQUIRED', 'NETWORK_ERROR'],
 
   async handler(ctx) {
@@ -189,7 +200,13 @@ export const requestOtpReset = route({
   path: '/request-otp-reset',
   cli: { command: 'request-otp-reset', positional: 'username' },
   body: asOtpResetBody,
-  returns: asObject({ resetDate: asString }),
+  returns: asObject({
+    resetDate: doc(
+      asString,
+      'When 2FA will actually come off. The login server enforces a waiting ' +
+        'period so the real owner has time to cancel.'
+    )
+  }),
   errors: ['USERNAME_ERROR', 'BAD_REQUEST', 'NETWORK_ERROR'],
 
   async handler(ctx) {
@@ -213,7 +230,12 @@ export const fetchRecoveryQuestions = route({
   path: '/fetch-recovery-questions',
   cli: { command: 'fetch-recovery-questions', positional: 'username' },
   query: asRecoveryQuestionsQuery,
-  returns: asObject({ questions: asArray(asString) }),
+  returns: asObject({
+    questions: doc(
+      asArray(asString),
+      'The questions in the order `login-with-recovery` expects the answers.'
+    )
+  }),
   errors: ['USERNAME_ERROR', 'NETWORK_ERROR'],
 
   async handler(ctx) {
@@ -242,8 +264,15 @@ export const fetchChallenge = route({
   cli: 'fetch-challenge',
   body: asObject({}).withRest,
   returns: asObject({
-    challengeId: asString,
-    challengeUri: asOptional(asString)
+    challengeId: doc(
+      asString,
+      'Pass to the call that demanded a challenge once the user has solved it.'
+    ),
+    challengeUri: doc(
+      asOptional(asString),
+      'Where to send the user to solve the CAPTCHA. Absent when the server ' +
+        'issued a challenge that needs no interaction.'
+    )
   }),
   errors: ['NETWORK_ERROR'],
 
@@ -265,7 +294,9 @@ export const currencyConfigs = route({
   method: 'GET',
   path: '/currency-configs',
   cli: 'currency-configs',
-  returns: asObject({ pluginIds: asArray(asString) }),
+  returns: asObject({
+    pluginIds: doc(asArray(asString), 'Currency plugins this engine loaded.')
+  }),
 
   handler(ctx) {
     return { pluginIds: ctx.state.core.currencyPluginIds }

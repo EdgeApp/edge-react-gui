@@ -17,7 +17,9 @@ export const listStoreIds = route({
   method: 'GET',
   path: '/account/{sessionId}/list-store-ids',
   cli: 'list-store-ids',
-  returns: asObject({ storeIds: asArray(asString) }),
+  returns: asObject({
+    storeIds: doc(asArray(asString), 'Every store holding at least one item.')
+  }),
 
   async handler(ctx) {
     return { storeIds: await getAccount(ctx).dataStore.listStoreIds() }
@@ -33,7 +35,9 @@ export const listItemIds = route({
   path: '/account/{sessionId}/list-item-ids',
   cli: { command: 'list-item-ids', positional: 'storeId' },
   query: asObject({ storeId: doc(asString, STORE_ID_DOC) }).withRest,
-  returns: asObject({ itemIds: asArray(asString) }),
+  returns: asObject({
+    itemIds: doc(asArray(asString), 'Keys in this store. Empty if it has none.')
+  }),
 
   async handler(ctx) {
     const itemIds = await getAccount(ctx).dataStore.listItemIds(

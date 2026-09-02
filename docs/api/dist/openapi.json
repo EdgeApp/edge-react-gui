@@ -126,19 +126,24 @@
                   "type": "object",
                   "properties": {
                     "pid": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "The daemon process, for `kill` when it will not stop."
                     },
                     "apiVersion": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The API this engine speaks. A client refusing to talk to an older engine checks this."
                     },
                     "uptimeSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "How long the daemon has been running."
                     },
                     "sessionCount": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Logged-in accounts held open right now."
                     },
                     "testMode": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when pointed at the tester fleet."
                     },
                     "idleShutdownAt": {
                       "anyOf": [
@@ -148,7 +153,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled."
                     },
                     "tcpPort": {
                       "anyOf": [
@@ -158,19 +164,24 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "The loopback port, null unless started with `--tcp`."
                     },
                     "socketPath": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Unix socket the CLI connects to."
                     },
                     "locale": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Language tag the engine resolved at boot."
                     },
                     "decimalSeparator": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Decimal mark for that locale."
                     },
                     "groupingSeparator": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Thousands mark for that locale."
                     }
                   },
                   "required": [
@@ -231,22 +242,34 @@
                   "type": "object",
                   "properties": {
                     "appId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Application ID the engine was started with."
                     },
                     "testMode": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when the engine is pointed at the tester fleet."
                     },
                     "directory": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Working directory holding the core data."
                     },
                     "servers": {
-                      "description": "{ [keys: string]: string; }"
+                      "anyOf": [
+                        {
+                          "description": "{ [keys: string]: string"
+                        },
+                        {
+                          "description": "string[]; }"
+                        }
+                      ],
+                      "description": "The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet."
                     },
                     "plugins": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Plugin IDs the engine loaded, sorted."
                     }
                   },
                   "required": [
@@ -353,7 +376,8 @@
                   "properties": {
                     "localUsers": {
                       "type": "array",
-                      "items": {}
+                      "items": {},
+                      "description": "`EdgeUserInfo[]`: one entry per account cached on this device."
                     }
                   },
                   "required": [
@@ -478,10 +502,12 @@
                   "type": "object",
                   "properties": {
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name that was checked, echoed back."
                     },
                     "available": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when nobody holds this name. It is not reserved by asking."
                     }
                   },
                   "required": [
@@ -685,7 +711,8 @@
                   "type": "object",
                   "properties": {
                     "resetDate": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When 2FA will actually come off. The login server enforces a waiting period so the real owner has time to cancel."
                     }
                   },
                   "required": [
@@ -783,7 +810,8 @@
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "The questions in the order `login-with-recovery` expects the answers."
                     }
                   },
                   "required": [
@@ -833,10 +861,12 @@
                   "type": "object",
                   "properties": {
                     "challengeId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Pass to the call that demanded a challenge once the user has solved it."
                     },
                     "challengeUri": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Where to send the user to solve the CAPTCHA. Absent when the server issued a challenge that needs no interaction."
                     }
                   },
                   "required": [
@@ -890,7 +920,8 @@
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Currency plugins this engine loaded."
                     }
                   },
                   "required": [
@@ -941,13 +972,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -969,10 +1003,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -982,13 +1018,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -1081,13 +1120,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -1109,10 +1151,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1122,13 +1166,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -1225,13 +1272,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -1253,10 +1303,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1266,13 +1318,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -1377,13 +1432,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -1405,10 +1463,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1418,13 +1478,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -1525,13 +1588,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -1553,10 +1619,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1566,13 +1634,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -1665,13 +1736,16 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "pendingId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1681,16 +1755,20 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
                     },
                     "lobbyId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Lobby the phone connects to."
                     },
                     "uri": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The `edge://` URI to render as a QR code for the phone to scan."
                     },
                     "state": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in."
                     },
                     "username": {
                       "anyOf": [
@@ -1700,7 +1778,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Account that approved the login, known once the phone has scanned."
                     },
                     "session": {
                       "anyOf": [
@@ -1731,7 +1810,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "The session, null until `state` is `done`."
                     },
                     "error": {
                       "anyOf": [
@@ -1741,7 +1821,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Why the login failed, set only when `state` is `error`."
                     }
                   },
                   "required": [
@@ -1805,13 +1886,16 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "pendingId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -1821,16 +1905,20 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
                     },
                     "lobbyId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Lobby the phone connects to."
                     },
                     "uri": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The `edge://` URI to render as a QR code for the phone to scan."
                     },
                     "state": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in."
                     },
                     "username": {
                       "anyOf": [
@@ -1840,7 +1928,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Account that approved the login, known once the phone has scanned."
                     },
                     "session": {
                       "anyOf": [
@@ -1871,7 +1960,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "The session, null until `state` is `done`."
                     },
                     "error": {
                       "anyOf": [
@@ -1881,7 +1971,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Why the login failed, set only when `state` is `error`."
                     }
                   },
                   "required": [
@@ -2068,7 +2159,8 @@
                   "type": "object",
                   "properties": {
                     "appId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Application this session logged into."
                     },
                     "created": {
                       "anyOf": [
@@ -2078,13 +2170,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the account was created, null for accounts predating the field."
                     },
                     "lastLogin": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The previous login, not this one."
                     },
                     "loggedIn": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "False once the account has been logged out; the session object outlives it briefly."
                     },
                     "recoveryKey": {
                       "anyOf": [
@@ -2098,36 +2193,44 @@
                       "description": "Present only while recovery is configured."
                     },
                     "otpEnabled": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "2FA is on for this account."
                     },
                     "otpResetPending": {
                       "type": "boolean",
                       "description": "True while somebody has a reset pending against this account."
                     },
                     "canDuressLogin": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "A duress PIN is configured, so this account can be opened in duress mode."
                     },
                     "isDuressAccount": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when this very session is the duress account rather than the real one."
                     },
                     "edgeLogin": {
                       "type": "boolean",
                       "description": "This account was reached by QR login."
                     },
                     "keyLogin": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "This session was reached with a login key."
                     },
                     "newAccount": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "This session created the account rather than logging into an existing one."
                     },
                     "passwordLogin": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "This session was reached with a password."
                     },
                     "pinLogin": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "This session was reached with a PIN."
                     },
                     "recoveryLogin": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "This session was reached by answering recovery questions."
                     }
                   },
                   "required": [
@@ -2248,13 +2351,16 @@
                   "type": "object",
                   "properties": {
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
                     },
                     "username": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
                     },
                     "rootLoginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
                     },
                     "loginMethod": {
                       "anyOf": [
@@ -2276,10 +2382,12 @@
                         {
                           "description": "\"create\""
                         }
-                      ]
+                      ],
+                      "description": "How this session was established."
                     },
                     "autoLogoutSeconds": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
                     },
                     "expiresAt": {
                       "anyOf": [
@@ -2289,13 +2397,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
                     },
                     "lastActivityAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
                     },
                     "createdAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the login completed."
                     }
                   },
                   "required": [
@@ -3875,7 +3986,8 @@
                   "type": "object",
                   "properties": {
                     "lobbyId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The lobby that was fetched, echoed back."
                     },
                     "loginRequest": {
                       "anyOf": [
@@ -4098,7 +4210,8 @@
                   "type": "object",
                   "properties": {
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The new wallet. Its keys are already saved."
                     }
                   },
                   "required": [
@@ -4725,7 +4838,8 @@
                             "description": "null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }"
                           }
                         ]
-                      }
+                      },
+                      "description": "Every wallet in the account, including paused ones."
                     }
                   },
                   "required": [
@@ -4752,13 +4866,12 @@
       "post": {
         "operationId": "createCurrencyWallet",
         "summary": "Create a currency wallet.",
-        "description": "**Core call:** `account.createCurrencyWallet`\n\n**Command line**\n\n```\ncreate-currency-wallet <walletType> [--name=<name>] [--import-text=<importText>]\n```\n\n",
+        "description": "**Core call:** `account.createCurrencyWallet`\n\n**Command line**\n\n```\ncreate-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]\n```\n\n",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "create-currency-wallet",
-          "positional": "walletType",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4786,13 +4899,16 @@
                   "type": "object",
                   "properties": {
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The full wallet id. Commands taking a wallet accept any unique prefix."
                     },
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Same value as `walletId`; core exposes both names."
                     },
                     "type": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Key type, such as `wallet:bitcoin`."
                     },
                     "name": {
                       "anyOf": [
@@ -4802,29 +4918,39 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "User-assigned name, null until one is set."
                     },
                     "pluginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Currency plugin backing this wallet."
                     },
                     "currencyCode": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Ticker for the native asset."
                     },
                     "fiatCurrencyCode": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Fiat the wallet reports value in, as `iso:USD`."
                     },
                     "blockHeight": {
-                      "type": "number"
+                      "type": "number",
+                      "description": "Chain height this wallet has seen."
                     },
-                    "syncStatus": {},
+                    "syncStatus": {
+                      "description": "`EdgeWalletSyncStatus` from core."
+                    },
                     "syncRatio": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Sync progress as a percentage, for display."
                     },
                     "paused": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True while the engine is not syncing this wallet."
                     },
                     "imported": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when the keys came from an import rather than being generated here."
                     },
                     "created": {
                       "anyOf": [
@@ -4834,25 +4960,29 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the wallet was created, null for wallets predating the field."
                     },
                     "enabledTokenIds": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Tokens the user turned on."
                     },
                     "detectedTokenIds": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Tokens found on-chain that are not enabled yet."
                     },
                     "unactivatedTokenIds": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Enabled tokens still awaiting on-chain activation."
                     }
                   },
                   "required": [
@@ -5600,7 +5730,8 @@
                             "description": "null; currencyCode: string; nativeAmount: string; displayAmount: string; }"
                           }
                         ]
-                      }
+                      },
+                      "description": "One entry per asset the wallet holds, native coin first."
                     }
                   },
                   "required": [
@@ -5769,16 +5900,17 @@
                       "description": "Built-in and custom together, keyed by tokenId. Large on EVM chains."
                     },
                     "builtinTokens": {
-                      "description": "{ [keys: string]: unknown; }"
+                      "description": "`EdgeToken` by tokenId: everything the plugin ships with."
                     },
                     "customTokens": {
-                      "description": "{ [keys: string]: unknown; }"
+                      "description": "`EdgeToken` by tokenId: tokens this account added by hand."
                     },
                     "enabledTokenIds": {
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Which of the above the wallet is actually tracking."
                     },
                     "detectedTokenIds": {
                       "type": "array",
@@ -5874,7 +6006,8 @@
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "The wallet’s enabled tokens after the change, not just what changed."
                     }
                   },
                   "required": [
@@ -6629,21 +6762,28 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     },
-                    "transaction": {}
+                    "transaction": {
+                      "description": "`EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
+                    }
                   },
                   "required": [
                     "objectId",
@@ -6755,21 +6895,28 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     },
-                    "transaction": {}
+                    "transaction": {
+                      "description": "`EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
+                    }
                   },
                   "required": [
                     "objectId",
@@ -6859,21 +7006,28 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     },
-                    "transaction": {}
+                    "transaction": {
+                      "description": "`EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
+                    }
                   },
                   "required": [
                     "objectId",
@@ -6963,10 +7117,12 @@
                   "type": "object",
                   "properties": {
                     "ok": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
                     },
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The handle this call consumed. It is now expired."
                     }
                   },
                   "required": [
@@ -7055,21 +7211,28 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     },
-                    "transaction": {}
+                    "transaction": {
+                      "description": "`EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
+                    }
                   },
                   "required": [
                     "objectId",
@@ -7159,21 +7322,28 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     },
-                    "transaction": {}
+                    "transaction": {
+                      "description": "`EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
+                    }
                   },
                   "required": [
                     "objectId",
@@ -7425,19 +7595,24 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "sessionId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
                     },
                     "walletId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
                     }
                   },
                   "required": [
@@ -7510,10 +7685,12 @@
                   "type": "object",
                   "properties": {
                     "ok": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
                     },
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The handle this call consumed. It is now expired."
                     }
                   },
                   "required": [
@@ -7598,13 +7775,32 @@
                             "description": "null; minReceiveAmount: string"
                           },
                           {
-                            "description": "null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: any; tokenId: any; }; quoteExpirationDate: string"
+                            "description": "null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: string; tokenId: string"
                           },
                           {
-                            "description": "null; swapInfo: { pluginId: any; displayName: any; supportEmail: any; isDex: any; }; request: { fromTokenId: any; toTokenId: any; nativeAmount: any; quoteFor: any; fromWalletId: any; toWalletId: any; }; }"
+                            "description": "null; }; quoteExpirationDate: string"
+                          },
+                          {
+                            "description": "null; swapInfo: { pluginId: string; displayName: string; supportEmail: string; isDex: boolean"
+                          },
+                          {
+                            "description": "null; }; request: { fromTokenId: string"
+                          },
+                          {
+                            "description": "null; toTokenId: string"
+                          },
+                          {
+                            "description": "null; nativeAmount: string; quoteFor: \"to\""
+                          },
+                          {
+                            "description": "\"from\""
+                          },
+                          {
+                            "description": "\"max\"; fromWalletId: string; toWalletId: string; }; }"
                           }
                         ]
-                      }
+                      },
+                      "description": "One quote per plugin that answered, each already parked under its own handle. Plugins that failed or had nothing to offer are simply absent."
                     }
                   },
                   "required": [
@@ -7735,19 +7931,24 @@
                   "type": "object",
                   "properties": {
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
                     },
                     "kind": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
                     },
                     "pluginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Swap provider that produced this quote."
                     },
                     "isEstimate": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "True when the provider may settle at a different rate than quoted."
                     },
                     "canBePartial": {
                       "anyOf": [
@@ -7757,7 +7958,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "True when the provider may fill only part of the order. Null when it does not say."
                     },
                     "maxFulfillmentSeconds": {
                       "anyOf": [
@@ -7767,7 +7969,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Longest the provider expects a partial fill to take."
                     },
                     "minReceiveAmount": {
                       "anyOf": [
@@ -7777,13 +7980,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "Least the provider guarantees to deliver, in the destination’s native units."
                     },
                     "fromNativeAmount": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Amount leaving the source wallet."
                     },
                     "toNativeAmount": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Amount arriving in the destination wallet."
                     },
                     "networkFee": {
                       "anyOf": [
@@ -7793,7 +7999,8 @@
                         {
                           "description": "null; }"
                         }
-                      ]
+                      ],
+                      "description": "On-chain fee for the sending transaction. It is not the provider’s own spread, which is already in the rate."
                     },
                     "quoteExpirationDate": {
                       "anyOf": [
@@ -7803,7 +8010,8 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "When the provider stops honouring the rate. Null when it does not expire."
                     },
                     "swapInfo": {
                       "anyOf": [
@@ -7813,7 +8021,8 @@
                         {
                           "description": "null; }"
                         }
-                      ]
+                      ],
+                      "description": "`EdgeSwapInfo`: how to name the provider and where to send complaints."
                     },
                     "request": {
                       "anyOf": [
@@ -7832,7 +8041,8 @@
                         {
                           "description": "\"max\"; fromWalletId: string; toWalletId: string; }"
                         }
-                      ]
+                      ],
+                      "description": "The `EdgeSwapRequest` this quote answers, echoed back so quotes from different plugins can be compared without tracking what was asked."
                     }
                   },
                   "required": [
@@ -7914,7 +8124,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "ok": {},
+                    "ok": {
+                      "description": "True once the swap is submitted and the send broadcast."
+                    },
                     "objectId": {
                       "type": "string",
                       "description": "The handle that was consumed."
@@ -7922,7 +8134,9 @@
                     "orderId": {
                       "description": "The exchange's order reference, when it gives one."
                     },
-                    "destinationAddress": {},
+                    "destinationAddress": {
+                      "description": "Address the funds were sent to, when the exchange reports one."
+                    },
                     "transaction": {
                       "description": "The on-chain send to the exchange."
                     }
@@ -7998,10 +8212,12 @@
                   "type": "object",
                   "properties": {
                     "ok": {
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
                     },
                     "objectId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The handle this call consumed. It is now expired."
                     }
                   },
                   "required": [
@@ -8258,7 +8474,8 @@
                       "type": "array",
                       "items": {
                         "description": "{ fiatCode: string; targetFiat: string; date: string; rate: number; }"
-                      }
+                      },
+                      "description": "Always present; empty when no fiat rates were requested."
                     }
                   },
                   "required": [
@@ -8366,7 +8583,8 @@
                       "description": "Echoed as a number, though it is sent as a string."
                     },
                     "pluginId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Currency plugin the amount was converted for."
                     },
                     "tokenId": {
                       "anyOf": [
@@ -8376,13 +8594,16 @@
                         {
                           "type": "null"
                         }
-                      ]
+                      ],
+                      "description": "The asset, or null for the chain’s own coin."
                     },
                     "multiplier": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Native units per whole coin, which is what the conversion divided by."
                     },
                     "date": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "The timestamp actually used for the rate."
                     },
                     "rate": {
                       "type": "number",
@@ -8507,7 +8728,8 @@
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Every store holding at least one item."
                     }
                   },
                   "required": [
@@ -8580,7 +8802,8 @@
                       "type": "array",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "description": "Keys in this store. Empty if it has none."
                     }
                   },
                   "required": [
@@ -9060,10 +9283,12 @@
                       "description": "The parked handle."
                     },
                     "expiresAt": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "When the engine closes the lobby and stops polling."
                     },
                     "lobbyId": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Identifies the lobby to the party joining it."
                     },
                     "replies": {
                       "type": "array",

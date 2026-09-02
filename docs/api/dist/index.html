@@ -213,57 +213,57 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>pid</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">The daemon process, for <code>kill</code> when it will not stop.</td>
 </tr>
 <tr>
   <td class="k"><code>apiVersion</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The API this engine speaks. A client refusing to talk to an older engine checks this.</td>
 </tr>
 <tr>
   <td class="k"><code>uptimeSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">How long the daemon has been running.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionCount</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Logged-in accounts held open right now.</td>
 </tr>
 <tr>
   <td class="k"><code>testMode</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when pointed at the tester fleet.</td>
 </tr>
 <tr>
   <td class="k"><code>idleShutdownAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>tcpPort</code></td>
   <td class="ty"><span class="t">number | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">The loopback port, null unless started with <code>--tcp</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>socketPath</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Unix socket the CLI connects to.</td>
 </tr>
 <tr>
   <td class="k"><code>locale</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Language tag the engine resolved at boot.</td>
 </tr>
 <tr>
   <td class="k"><code>decimalSeparator</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Decimal mark for that locale.</td>
 </tr>
 <tr>
   <td class="k"><code>groupingSeparator</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Thousands mark for that locale.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-ENGINE_SHUTTING_DOWN" class="err" title="Idle or explicit shutdown already in progress."><span class="st">503</span>ENGINE_SHUTTING_DOWN</a></p>
@@ -301,7 +301,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   appId: string
   testMode: boolean
   directory: string
-  servers: { [keys: string]: string; }
+  servers: { [keys: string]: string | string[]; }
   plugins: string[]
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
@@ -316,27 +316,27 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>appId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Application ID the engine was started with.</td>
 </tr>
 <tr>
   <td class="k"><code>testMode</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when the engine is pointed at the tester fleet.</td>
 </tr>
 <tr>
   <td class="k"><code>directory</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Working directory holding the core data.</td>
 </tr>
 <tr>
   <td class="k"><code>servers</code></td>
-  <td class="ty"><span class="t">{ [keys: string]: string; }</span></td>
-  <td class="doc"></td>
+  <td class="ty"><span class="t">{ [keys: string]: string | string[]; }</span></td>
+  <td class="doc">The URLs this engine talks to, keyed by role. <code>syncServer</code> is a list, since core rotates across the sync fleet.</td>
 </tr>
 <tr>
   <td class="k"><code>plugins</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Plugin IDs the engine loaded, sorted.</td>
 </tr></tbody></table>
   </div>
     
@@ -428,7 +428,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>localUsers</code></td>
   <td class="ty"><span class="t">unknown[]</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeUserInfo[]</code>: one entry per account cached on this device.</td>
 </tr></tbody></table>
   </div>
     
@@ -538,12 +538,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The name that was checked, echoed back.</td>
 </tr>
 <tr>
   <td class="k"><code>available</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when nobody holds this name. It is not reserved by asking.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -739,7 +739,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>resetDate</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When 2FA will actually come off. The login server enforces a waiting period so the real owner has time to cancel.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -803,7 +803,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>questions</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">The questions in the order <code>login-with-recovery</code> expects the answers.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -850,12 +850,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>challengeId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Pass to the call that demanded a challenge once the user has solved it.</td>
 </tr>
 <tr>
   <td class="k"><code>challengeUri</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Where to send the user to solve the CAPTCHA. Absent when the server issued a challenge that needs no interaction.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -900,7 +900,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>pluginIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Currency plugins this engine loaded.</td>
 </tr></tbody></table>
   </div>
     
@@ -1004,42 +1004,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-PASSWORD_ERROR" class="err" title="Wrong password, PIN, or recovery answers."><span class="st">401</span>PASSWORD_ERROR</a> <a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-OTP_REQUIRED" class="err" title="Missing or wrong 2FA token."><span class="st">401</span>OTP_REQUIRED</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1148,42 +1148,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-PASSWORD_ERROR" class="err" title="Wrong password, PIN, or recovery answers."><span class="st">401</span>PASSWORD_ERROR</a> <a href="#err-PIN_DISABLED" class="err" title="PIN login is not enabled on this device."><span class="st">403</span>PIN_DISABLED</a> <a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1292,42 +1292,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-PASSWORD_ERROR" class="err" title="Wrong password, PIN, or recovery answers."><span class="st">401</span>PASSWORD_ERROR</a> <a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1438,42 +1438,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-PASSWORD_ERROR" class="err" title="Wrong password, PIN, or recovery answers."><span class="st">401</span>PASSWORD_ERROR</a> <a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1582,42 +1582,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1680,52 +1680,52 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>pendingId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Same value as <code>objectId</code>, under the name the poll command takes.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the lobby closes and the QR code stops working.</td>
 </tr>
 <tr>
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Lobby the phone connects to.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The <code>edge://</code> URI to render as a QR code for the phone to scan.</td>
 </tr>
 <tr>
   <td class="k"><code>state</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">How far the login has got: <code>pending</code> before the phone scans, <code>started</code> once it has, and <code>done</code> when <code>session</code> is filled in.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Account that approved the login, known once the phone has scanned.</td>
 </tr>
 <tr>
   <td class="k"><code>session</code></td>
   <td class="ty"><span class="t">{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: &quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">The session, null until <code>state</code> is <code>done</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>error</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Why the login failed, set only when <code>state</code> is <code>error</code>.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -1782,52 +1782,52 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>pendingId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Same value as <code>objectId</code>, under the name the poll command takes.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the lobby closes and the QR code stops working.</td>
 </tr>
 <tr>
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Lobby the phone connects to.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The <code>edge://</code> URI to render as a QR code for the phone to scan.</td>
 </tr>
 <tr>
   <td class="k"><code>state</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">How far the login has got: <code>pending</code> before the phone scans, <code>started</code> once it has, and <code>done</code> when <code>session</code> is filled in.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Account that approved the login, known once the phone has scanned.</td>
 </tr>
 <tr>
   <td class="k"><code>session</code></td>
   <td class="ty"><span class="t">{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: &quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">The session, null until <code>state</code> is <code>done</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>error</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Why the login failed, set only when <code>state</code> is <code>error</code>.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-PENDING_LOGIN_NOT_FOUND" class="err" title="No pending Edge login with that `pendingId`."><span class="st">404</span>PENDING_LOGIN_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a></p>
@@ -1961,22 +1961,22 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>appId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Application this session logged into.</td>
 </tr>
 <tr>
   <td class="k"><code>created</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the account was created, null for accounts predating the field.</td>
 </tr>
 <tr>
   <td class="k"><code>lastLogin</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The previous login, not this one.</td>
 </tr>
 <tr>
   <td class="k"><code>loggedIn</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">False once the account has been logged out; the session object outlives it briefly.</td>
 </tr>
 <tr>
   <td class="k"><code>recoveryKey</code></td>
@@ -1986,7 +1986,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>otpEnabled</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">2FA is on for this account.</td>
 </tr>
 <tr>
   <td class="k"><code>otpResetPending</code></td>
@@ -1996,12 +1996,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>canDuressLogin</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">A duress PIN is configured, so this account can be opened in duress mode.</td>
 </tr>
 <tr>
   <td class="k"><code>isDuressAccount</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when this very session is the duress account rather than the real one.</td>
 </tr>
 <tr>
   <td class="k"><code>edgeLogin</code></td>
@@ -2011,27 +2011,27 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>keyLogin</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">This session was reached with a login key.</td>
 </tr>
 <tr>
   <td class="k"><code>newAccount</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">This session created the account rather than logging into an existing one.</td>
 </tr>
 <tr>
   <td class="k"><code>passwordLogin</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">This session was reached with a password.</td>
 </tr>
 <tr>
   <td class="k"><code>pinLogin</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">This session was reached with a PIN.</td>
 </tr>
 <tr>
   <td class="k"><code>recoveryLogin</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">This session was reached by answering recovery questions.</td>
 </tr></tbody></table>
   </div>
     
@@ -2122,42 +2122,42 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
 </tr>
 <tr>
   <td class="k"><code>username</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
 </tr>
 <tr>
   <td class="k"><code>rootLoginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
 </tr>
 <tr>
   <td class="k"><code>loginMethod</code></td>
   <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
-  <td class="doc"></td>
+  <td class="doc">How this session was established.</td>
 </tr>
 <tr>
   <td class="k"><code>autoLogoutSeconds</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
 </tr>
 <tr>
   <td class="k"><code>lastActivityAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
 </tr>
 <tr>
   <td class="k"><code>createdAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the login completed.</td>
 </tr></tbody></table>
   </div>
     
@@ -3293,7 +3293,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The lobby that was fetched, echoed back.</td>
 </tr>
 <tr>
   <td class="k"><code>loginRequest</code></td>
@@ -3471,7 +3471,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The new wallet. Its keys are already saved.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -3885,7 +3885,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>currencyWallets</code></td>
   <td class="ty"><span class="t">{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Every wallet in the account, including paused ones.</td>
 </tr></tbody></table>
   </div>
     
@@ -3900,7 +3900,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>create-currency-wallet &lt;walletType&gt; [--name=&lt;name&gt;] [--import-text=&lt;importText&gt;]</code></pre>
+    <pre class="usage"><code>create-currency-wallet --wallet-type=&lt;walletType&gt; [--name=&lt;name&gt;] [--import-text=&lt;importText&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -3993,82 +3993,82 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The full wallet id. Commands taking a wallet accept any unique prefix.</td>
 </tr>
 <tr>
   <td class="k"><code>id</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Same value as <code>walletId</code>; core exposes both names.</td>
 </tr>
 <tr>
   <td class="k"><code>type</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Key type, such as <code>wallet:bitcoin</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>name</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">User-assigned name, null until one is set.</td>
 </tr>
 <tr>
   <td class="k"><code>pluginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Currency plugin backing this wallet.</td>
 </tr>
 <tr>
   <td class="k"><code>currencyCode</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Ticker for the native asset.</td>
 </tr>
 <tr>
   <td class="k"><code>fiatCurrencyCode</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Fiat the wallet reports value in, as <code>iso:USD</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>blockHeight</code></td>
   <td class="ty"><span class="t">number</span></td>
-  <td class="doc"></td>
+  <td class="doc">Chain height this wallet has seen.</td>
 </tr>
 <tr>
   <td class="k"><code>syncStatus</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeWalletSyncStatus</code> from core.</td>
 </tr>
 <tr>
   <td class="k"><code>syncRatio</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Sync progress as a percentage, for display.</td>
 </tr>
 <tr>
   <td class="k"><code>paused</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True while the engine is not syncing this wallet.</td>
 </tr>
 <tr>
   <td class="k"><code>imported</code></td>
   <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when the keys came from an import rather than being generated here.</td>
 </tr>
 <tr>
   <td class="k"><code>created</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the wallet was created, null for wallets predating the field.</td>
 </tr>
 <tr>
   <td class="k"><code>enabledTokenIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Tokens the user turned on.</td>
 </tr>
 <tr>
   <td class="k"><code>detectedTokenIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Tokens found on-chain that are not enabled yet.</td>
 </tr>
 <tr>
   <td class="k"><code>unactivatedTokenIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Enabled tokens still awaiting on-chain activation.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -4498,7 +4498,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>balances</code></td>
   <td class="ty"><span class="t">{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string; }[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">One entry per asset the wallet holds, native coin first.</td>
 </tr></tbody></table>
   </div>
     
@@ -4625,17 +4625,17 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>builtinTokens</code></td>
   <td class="ty"><span class="t">{ [keys: string]: unknown; }</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeToken</code> by tokenId: everything the plugin ships with.</td>
 </tr>
 <tr>
   <td class="k"><code>customTokens</code></td>
   <td class="ty"><span class="t">{ [keys: string]: unknown; }</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeToken</code> by tokenId: tokens this account added by hand.</td>
 </tr>
 <tr>
   <td class="k"><code>enabledTokenIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Which of the above the wallet is actually tracking.</td>
 </tr>
 <tr>
   <td class="k"><code>detectedTokenIds</code></td>
@@ -4703,7 +4703,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>enabledTokenIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">The wallet’s enabled tokens after the change, not just what changed.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-WALLET_NOT_FOUND" class="err" title="No wallet matches that id or prefix."><span class="st">404</span>WALLET_NOT_FOUND</a> <a href="#err-AMBIGUOUS_WALLET_ID" class="err" title="A wallet id prefix matched more than one wallet."><span class="st">409</span>AMBIGUOUS_WALLET_ID</a></p>
@@ -5307,32 +5307,32 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeTransaction</code> as it stands after this step. Unsigned after <code>make-spend</code>, signed after <code>sign-tx</code>, and carrying a txid once broadcast.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-INSUFFICIENT_FUNDS" class="err" title="Not enough balance to cover amount plus fee."><span class="st">422</span>INSUFFICIENT_FUNDS</a> <a href="#err-DUST_SPEND" class="err" title="Amount below the network dust threshold."><span class="st">422</span>DUST_SPEND</a> <a href="#err-NO_AMOUNT_SPECIFIED" class="err" title="Zero-amount spend."><span class="st">400</span>NO_AMOUNT_SPECIFIED</a> <a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -5401,32 +5401,32 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeTransaction</code> as it stands after this step. Unsigned after <code>make-spend</code>, signed after <code>sign-tx</code>, and carrying a txid once broadcast.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -5496,32 +5496,32 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeTransaction</code> as it stands after this step. Unsigned after <code>make-spend</code>, signed after <code>sign-tx</code>, and carrying a txid once broadcast.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -5582,12 +5582,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>ok</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">Always true; a failure arrives as an error envelope.</td>
 </tr>
 <tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The handle this call consumed. It is now expired.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -5664,32 +5664,32 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeTransaction</code> as it stands after this step. Unsigned after <code>make-spend</code>, signed after <code>sign-tx</code>, and carrying a txid once broadcast.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
@@ -5758,32 +5758,32 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeTransaction</code> as it stands after this step. Unsigned after <code>make-spend</code>, signed after <code>sign-tx</code>, and carrying a txid once broadcast.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-INSUFFICIENT_FUNDS" class="err" title="Not enough balance to cover amount plus fee."><span class="st">422</span>INSUFFICIENT_FUNDS</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -5952,27 +5952,27 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>sessionId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletId</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc"></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
@@ -6018,12 +6018,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>ok</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">Always true; a failure arrives as an error envelope.</td>
 </tr>
 <tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The handle this call consumed. It is now expired.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
@@ -6120,7 +6120,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{
   quoteCount: number
-  quotes: { objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: any; tokenId: any; }; quoteExpirationDate: string | null; swapInfo: { pluginId: any; displayName: any; supportEmail: any; isDex: any; }; request: { fromTokenId: any; toTokenId: any; nativeAmount: any; quoteFor: any; fromWalletId: any; toWalletId: any; }; }[]
+  quotes: { objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: string; tokenId: string | null; }; quoteExpirationDate: string | null; swapInfo: { pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; }; request: { fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: &quot;to&quot; | &quot;from&quot; | &quot;max&quot;; fromWalletId: string; toWalletId: string; }; }[]
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
   &quot;quoteCount&quot;: 1,
@@ -6135,8 +6135,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </tr>
 <tr>
   <td class="k"><code>quotes</code></td>
-  <td class="ty"><span class="t">{ objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: any; tokenId: any; }; quoteExpirationDate: string | null; swapInfo: { pluginId: any; displayName: any; supportEmail: any; isDex: any; }; request: { fromTokenId: any; toTokenId: any; nativeAmount: any; quoteFor: any; fromWalletId: any; toWalletId: any; }; }[]</span></td>
-  <td class="doc"></td>
+  <td class="ty"><span class="t">{ objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: string; tokenId: string | null; }; quoteExpirationDate: string | null; swapInfo: { pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; }; request: { fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: &quot;to&quot; | &quot;from&quot; | &quot;max&quot;; fromWalletId: string; toWalletId: string; }; }[]</span></td>
+  <td class="doc">One quote per plugin that answered, each already parked under its own handle. Plugins that failed or had nothing to offer are simply absent.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-SWAP_BELOW_LIMIT" class="err" title="Amount below the plugin minimum."><span class="st">422</span>SWAP_BELOW_LIMIT</a> <a href="#err-SWAP_ABOVE_LIMIT" class="err" title="Amount exceeds the plugin maximum."><span class="st">422</span>SWAP_ABOVE_LIMIT</a> <a href="#err-SWAP_CURRENCY" class="err" title="The plugin does not support that pair."><span class="st">422</span>SWAP_CURRENCY</a> <a href="#err-SWAP_PERMISSION" class="err" title="The swap plugin refused the request."><span class="st">403</span>SWAP_PERMISSION</a> <a href="#err-SWAP_ADDRESS" class="err" title="Address unusable for this swap."><span class="st">422</span>SWAP_ADDRESS</a> <a href="#err-SAME_CURRENCY" class="err" title="Swap between identical currencies."><span class="st">400</span>SAME_CURRENCY</a> <a href="#err-INSUFFICIENT_FUNDS" class="err" title="Not enough balance to cover amount plus fee."><span class="st">422</span>INSUFFICIENT_FUNDS</a> <a href="#err-WALLET_NOT_FOUND" class="err" title="No wallet matches that id or prefix."><span class="st">404</span>WALLET_NOT_FOUND</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -6204,72 +6204,72 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
 </tr>
 <tr>
   <td class="k"><code>kind</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
 </tr>
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
 </tr>
 <tr>
   <td class="k"><code>pluginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Swap provider that produced this quote.</td>
 </tr>
 <tr>
   <td class="k"><code>isEstimate</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when the provider may settle at a different rate than quoted.</td>
 </tr>
 <tr>
   <td class="k"><code>canBePartial</code></td>
   <td class="ty"><span class="t">boolean | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">True when the provider may fill only part of the order. Null when it does not say.</td>
 </tr>
 <tr>
   <td class="k"><code>maxFulfillmentSeconds</code></td>
   <td class="ty"><span class="t">number | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Longest the provider expects a partial fill to take.</td>
 </tr>
 <tr>
   <td class="k"><code>minReceiveAmount</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">Least the provider guarantees to deliver, in the destination’s native units.</td>
 </tr>
 <tr>
   <td class="k"><code>fromNativeAmount</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Amount leaving the source wallet.</td>
 </tr>
 <tr>
   <td class="k"><code>toNativeAmount</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Amount arriving in the destination wallet.</td>
 </tr>
 <tr>
   <td class="k"><code>networkFee</code></td>
   <td class="ty"><span class="t">{ nativeAmount: string; tokenId: string | null; }</span></td>
-  <td class="doc"></td>
+  <td class="doc">On-chain fee for the sending transaction. It is not the provider’s own spread, which is already in the rate.</td>
 </tr>
 <tr>
   <td class="k"><code>quoteExpirationDate</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the provider stops honouring the rate. Null when it does not expire.</td>
 </tr>
 <tr>
   <td class="k"><code>swapInfo</code></td>
   <td class="ty"><span class="t">{ pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; }</span></td>
-  <td class="doc"></td>
+  <td class="doc"><code>EdgeSwapInfo</code>: how to name the provider and where to send complaints.</td>
 </tr>
 <tr>
   <td class="k"><code>request</code></td>
   <td class="ty"><span class="t">{ fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: &quot;to&quot; | &quot;from&quot; | &quot;max&quot;; fromWalletId: string; toWalletId: string; }</span></td>
-  <td class="doc"></td>
+  <td class="doc">The <code>EdgeSwapRequest</code> this quote answers, echoed back so quotes from different plugins can be compared without tracking what was asked.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_KIND_MISMATCH" class="err" title="The handle exists but is a different kind (e.g. a swap quote passed to `sign-tx`)."><span class="st">400</span>OBJECT_KIND_MISMATCH</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
@@ -6321,7 +6321,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>ok</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc">True once the swap is submitted and the send broadcast.</td>
 </tr>
 <tr>
   <td class="k"><code>objectId</code></td>
@@ -6336,7 +6336,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>destinationAddress</code></td>
   <td class="ty"><span class="t">unknown</span></td>
-  <td class="doc"></td>
+  <td class="doc">Address the funds were sent to, when the exchange reports one.</td>
 </tr>
 <tr>
   <td class="k"><code>transaction</code></td>
@@ -6387,12 +6387,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>ok</code></td>
   <td class="ty"><span class="t">boolean</span></td>
-  <td class="doc"></td>
+  <td class="doc">Always true; a failure arrives as an error envelope.</td>
 </tr>
 <tr>
   <td class="k"><code>objectId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The handle this call consumed. It is now expired.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_KIND_MISMATCH" class="err" title="The handle exists but is a different kind (e.g. a swap quote passed to `sign-tx`)."><span class="st">400</span>OBJECT_KIND_MISMATCH</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
@@ -6620,7 +6620,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>fiat</code></td>
   <td class="ty"><span class="t">{ fiatCode: string; targetFiat: string; date: string; rate: number; }[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Always present; empty when no fiat rates were requested.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
@@ -6726,22 +6726,22 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>pluginId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Currency plugin the amount was converted for.</td>
 </tr>
 <tr>
   <td class="k"><code>tokenId</code></td>
   <td class="ty"><span class="t">string | null</span></td>
-  <td class="doc"></td>
+  <td class="doc">The asset, or null for the chain’s own coin.</td>
 </tr>
 <tr>
   <td class="k"><code>multiplier</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Native units per whole coin, which is what the conversion divided by.</td>
 </tr>
 <tr>
   <td class="k"><code>date</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">The timestamp actually used for the rate.</td>
 </tr>
 <tr>
   <td class="k"><code>rate</code></td>
@@ -6804,7 +6804,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>storeIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Every store holding at least one item.</td>
 </tr></tbody></table>
   </div>
     
@@ -6861,7 +6861,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>itemIds</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc"></td>
+  <td class="doc">Keys in this store. Empty if it has none.</td>
 </tr></tbody></table>
   </div>
     
@@ -7281,12 +7281,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>expiresAt</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">When the engine closes the lobby and stops polling.</td>
 </tr>
 <tr>
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
-  <td class="doc"></td>
+  <td class="doc">Identifies the lobby to the party joining it.</td>
 </tr>
 <tr>
   <td class="k"><code>replies</code></td>

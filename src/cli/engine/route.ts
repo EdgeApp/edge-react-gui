@@ -104,6 +104,52 @@ export function allRoutes(): Array<RouteSpec<any, any, any>> {
 }
 
 /** Turn a cleaner failure into a `400` instead of a `500`. */
+/**
+ * How hard a response that fails its own `returns` cleaner should land.
+ *
+ * A mismatch is a documentation bug: the reference says one shape and the
+ * engine sends another. It is never the caller's fault, so the default is to
+ * log it and send the response through untouched rather than fail a request
+ * that would otherwise have worked. Tests set `strict` to turn drift into a
+ * failure, and `off` skips the check.
+ */
+export type ResponseCheckMode = 'warn' | 'strict' | 'off'
+
+function responseCheckMode(): ResponseCheckMode {
+  const raw = process.env.EDGE_CLI_CHECK_RESPONSES
+  if (raw === 'strict' || raw === '1') return 'strict'
+  if (raw === 'off' || raw === '0') return 'off'
+  return 'warn'
+}
+
+/**
+ * Confirms a response matches the cleaner that documents it.
+ *
+ * The cleaned value is discarded. Response cleaners strip unknown keys, so
+ * returning it would quietly delete fields the engine means to send — the
+ * check exists to report drift, not to reshape anything.
+ */
+function checkResponse(
+  spec: RouteSpec<any, any, any>,
+  ctx: RouteContext,
+  response: unknown
+): void {
+  if (spec.returns == null) return
+  const mode = responseCheckMode()
+  if (mode === 'off') return
+  try {
+    spec.returns(response)
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error)
+    const detail = `${spec.method} ${spec.path} response does not match its documented type: ${message}`
+    if (mode === 'strict') throw engineError('INTERNAL_ERROR', detail, 500)
+    ctx.state.logger.warn('Response type mismatch', {
+      route: `${spec.method} ${spec.path}`,
+      message
+    })
+  }
+}
+
 function clean<T>(cleaner: Cleaner<T>, raw: unknown, what: string): T {
   try {
     return cleaner(raw)
@@ -137,6 +183,8 @@ export function registerRoute(
       const raw = spec.method === 'GET' ? {} : requireBodyObject(ctx.body)
       ctx.body = clean(spec.body, raw, 'body')
     }
-    return await spec.handler(ctx as any)
+    const response = await spec.handler(ctx as any)
+    checkResponse(spec, ctx, response)
+    return response
   })
 }

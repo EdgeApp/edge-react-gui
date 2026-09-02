@@ -25,9 +25,18 @@ export const walletTokens = route({
       asObject(asCoreValue),
       'Built-in and custom together, keyed by tokenId. Large on EVM chains.'
     ),
-    builtinTokens: asObject(asCoreValue),
-    customTokens: asObject(asCoreValue),
-    enabledTokenIds: asArray(asString),
+    builtinTokens: doc(
+      asObject(asCoreValue),
+      '`EdgeToken` by tokenId: everything the plugin ships with.'
+    ),
+    customTokens: doc(
+      asObject(asCoreValue),
+      '`EdgeToken` by tokenId: tokens this account added by hand.'
+    ),
+    enabledTokenIds: doc(
+      asArray(asString),
+      'Which of the above the wallet is actually tracking.'
+    ),
     detectedTokenIds: doc(
       asArray(asString),
       'Seen on-chain but not enabled, so their balances are not synced.'

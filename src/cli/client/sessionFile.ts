@@ -28,11 +28,13 @@ export function writeSessionFile(
     username,
     updatedAt: new Date().toISOString()
   }
-  fs.writeFileSync(
-    sessionFilePath(profile),
-    JSON.stringify(data, null, 2) + '\n',
-    { mode: 0o600 }
-  )
+  const file = sessionFilePath(profile)
+  fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n', { mode: 0o600 })
+  // `mode` only applies when the file is created, so a session file written
+  // before that option was added keeps its old permissions forever. The run
+  // directory is already 0700, but a session id is a bearer token — narrow it
+  // on every write rather than trusting the directory alone.
+  fs.chmodSync(file, 0o600)
 }
 
 export function clearSessionFile(profile: string): void {

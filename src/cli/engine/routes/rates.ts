@@ -90,13 +90,16 @@ export const ratesQuery = route({
       ),
       'Always present; empty when no crypto rates were requested.'
     ),
-    fiat: asArray(
-      asObject({
-        fiatCode: asString,
-        targetFiat: asString,
-        date: asString,
-        rate: asNumber
-      })
+    fiat: doc(
+      asArray(
+        asObject({
+          fiatCode: asString,
+          targetFiat: asString,
+          date: asString,
+          rate: asNumber
+        })
+      ),
+      'Always present; empty when no fiat rates were requested.'
     )
   }),
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
@@ -186,10 +189,16 @@ export const ratesUsdToNative = route({
       asNumber,
       'Echoed as a number, though it is sent as a string.'
     ),
-    pluginId: asString,
-    tokenId: asTokenId,
-    multiplier: asString,
-    date: asString,
+    pluginId: doc(asString, 'Currency plugin the amount was converted for.'),
+    tokenId: doc(
+      asTokenId,
+      'The asset, or null for the chain\u2019s own coin.'
+    ),
+    multiplier: doc(
+      asString,
+      'Native units per whole coin, which is what the conversion divided by.'
+    ),
+    date: doc(asString, 'The timestamp actually used for the rate.'),
     rate: doc(asNumber, 'USD per whole coin at that date.'),
     displayAmount: doc(asString, 'Whole coins, to 8 decimal places.'),
     nativeAmount: doc(asString, 'What a spend actually takes.')

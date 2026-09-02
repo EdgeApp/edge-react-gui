@@ -94,7 +94,12 @@ export const currencyWallets = route({
       )
     )
   }).withRest,
-  returns: asObject({ currencyWallets: asArray(asWalletSummary) }),
+  returns: asObject({
+    currencyWallets: doc(
+      asArray(asWalletSummary),
+      'Every wallet in the account, including paused ones.'
+    )
+  }),
 
   async handler(ctx) {
     const account = getAccount(ctx)
@@ -123,7 +128,7 @@ export const createCurrencyWallet = route({
   core: 'account.createCurrencyWallet',
   method: 'POST',
   path: '/account/{sessionId}/create-currency-wallet',
-  cli: { command: 'create-currency-wallet', positional: 'walletType' },
+  cli: 'create-currency-wallet',
   body: asObject({
     walletType: doc(
       asString,
@@ -411,7 +416,12 @@ export const balanceMap = route({
       }
     }
   },
-  returns: asObject({ balances: asArray(asBalance) }),
+  returns: asObject({
+    balances: doc(
+      asArray(asBalance),
+      'One entry per asset the wallet holds, native coin first.'
+    )
+  }),
   errors: WALLET_ERRORS,
 
   handler(ctx) {

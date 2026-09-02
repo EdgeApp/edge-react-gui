@@ -21,12 +21,12 @@
         }
       },
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string",
-        "transaction": "unknown"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one.",
+        "transaction": "unknown — `EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
       },
       "returnsDoc": "Given objectId the same handle is updated; given a transaction a new one is created.",
       "notes": [
@@ -43,21 +43,21 @@
       "usage": "account-info",
       "description": "Session fields are spread at the top level alongside the account's own properties — there is no nested `session` object.",
       "returns": {
-        "appId": "string",
-        "created": "string | null",
-        "lastLogin": "string",
-        "loggedIn": "boolean",
+        "appId": "string — Application this session logged into.",
+        "created": "string | null — When the account was created, null for accounts predating the field.",
+        "lastLogin": "string — The previous login, not this one.",
+        "loggedIn": "boolean — False once the account has been logged out; the session object outlives it briefly.",
         "recoveryKey": "string | null — Present only while recovery is configured.",
-        "otpEnabled": "boolean",
+        "otpEnabled": "boolean — 2FA is on for this account.",
         "otpResetPending": "boolean — True while somebody has a reset pending against this account.",
-        "canDuressLogin": "boolean",
-        "isDuressAccount": "boolean",
+        "canDuressLogin": "boolean — A duress PIN is configured, so this account can be opened in duress mode.",
+        "isDuressAccount": "boolean — True when this very session is the duress account rather than the real one.",
         "edgeLogin": "boolean — This account was reached by QR login.",
-        "keyLogin": "boolean",
-        "newAccount": "boolean",
-        "passwordLogin": "boolean",
-        "pinLogin": "boolean",
-        "recoveryLogin": "boolean"
+        "keyLogin": "boolean — This session was reached with a login key.",
+        "newAccount": "boolean — This session created the account rather than logging into an existing one.",
+        "passwordLogin": "boolean — This session was reached with a password.",
+        "pinLogin": "boolean — This session was reached with a PIN.",
+        "recoveryLogin": "boolean — This session was reached by answering recovery questions."
       },
       "notes": [
         "The `otpEnabled` and `otpResetPending` flags here are derived. For the secret itself use `otp-key`."
@@ -165,8 +165,8 @@
       },
       "returns": {
         "objectId": "string — The parked handle.",
-        "expiresAt": "string",
-        "lobbyId": "string",
+        "expiresAt": "string — When the engine closes the lobby and stops polling.",
+        "lobbyId": "string — Identifies the lobby to the party joining it.",
         "replies": "unknown[] — Empty at creation; re-read to see replies."
       },
       "notes": [
@@ -390,10 +390,10 @@
       "description": "Moves funds. The handle is released afterwards whether or not the response is read, so record `orderId` from it.",
       "core": "EdgeSwapQuote.approve",
       "returns": {
-        "ok": "unknown",
+        "ok": "unknown — True once the swap is submitted and the send broadcast.",
         "objectId": "string — The handle that was consumed.",
         "orderId": "unknown — The exchange's order reference, when it gives one.",
-        "destinationAddress": "unknown",
+        "destinationAddress": "unknown — Address the funds were sent to, when the exchange reports one.",
         "transaction": "unknown — The on-chain send to the exchange."
       },
       "notes": [
@@ -442,7 +442,7 @@
         }
       },
       "returns": {
-        "balances": "{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string; }[]"
+        "balances": "{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string; }[] — One entry per asset the wallet holds, native coin first."
       },
       "notes": [
         "On the CLI, omit `--token-id` for the native asset rather than passing the literal `null`."
@@ -463,12 +463,12 @@
         }
       },
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string",
-        "transaction": "unknown"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one.",
+        "transaction": "unknown — `EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
       },
       "returnsDoc": "The handle survives, so `save-tx` can still run.",
       "notes": [
@@ -525,7 +525,7 @@
         }
       },
       "returns": {
-        "enabledTokenIds": "string[]"
+        "enabledTokenIds": "string[] — The wallet’s enabled tokens after the change, not just what changed."
       },
       "notes": [
         "The command's `--add` and `--remove` are client-side sugar over this one route, and cost an extra read first."
@@ -761,8 +761,8 @@
       "description": "Closes the plugin object without executing, freeing whatever the exchange was holding.",
       "core": "EdgeSwapQuote.close",
       "returns": {
-        "ok": "boolean",
-        "objectId": "string"
+        "ok": "boolean — Always true; a failure arrives as an error envelope.",
+        "objectId": "string — The handle this call consumed. It is now expired."
       },
       "errors": [
         "OBJECT_NOT_FOUND",
@@ -811,14 +811,14 @@
         }
       },
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "A session with `loginMethod: \"create\"`.",
       "notes": [
@@ -835,11 +835,11 @@
       "summary": "Create a currency wallet.",
       "method": "POST",
       "path": "/account/{sessionId}/create-currency-wallet",
-      "usage": "create-currency-wallet <walletType> [--name=<value>] [--import-text=<value>]",
+      "usage": "create-currency-wallet --wallet-type=<value> [--name=<value>] [--import-text=<value>]",
       "core": "account.createCurrencyWallet",
       "params": {
         "walletType": {
-          "pass": "<walletType>",
+          "pass": "--wallet-type=<value>",
           "doc": "From `currency-configs`, e.g. `wallet:bitcoin`.",
           "optional": false
         },
@@ -855,22 +855,22 @@
         }
       },
       "returns": {
-        "walletId": "string",
-        "id": "string",
-        "type": "string",
-        "name": "string | null",
-        "pluginId": "string",
-        "currencyCode": "string",
-        "fiatCurrencyCode": "string",
-        "blockHeight": "number",
-        "syncStatus": "unknown",
-        "syncRatio?": "string",
-        "paused": "boolean",
-        "imported?": "boolean",
-        "created": "string | null",
-        "enabledTokenIds": "string[]",
-        "detectedTokenIds": "string[]",
-        "unactivatedTokenIds": "string[]"
+        "walletId": "string — The full wallet id. Commands taking a wallet accept any unique prefix.",
+        "id": "string — Same value as `walletId`; core exposes both names.",
+        "type": "string — Key type, such as `wallet:bitcoin`.",
+        "name": "string | null — User-assigned name, null until one is set.",
+        "pluginId": "string — Currency plugin backing this wallet.",
+        "currencyCode": "string — Ticker for the native asset.",
+        "fiatCurrencyCode": "string — Fiat the wallet reports value in, as `iso:USD`.",
+        "blockHeight": "number — Chain height this wallet has seen.",
+        "syncStatus": "unknown — `EdgeWalletSyncStatus` from core.",
+        "syncRatio?": "string — Sync progress as a percentage, for display.",
+        "paused": "boolean — True while the engine is not syncing this wallet.",
+        "imported?": "boolean — True when the keys came from an import rather than being generated here.",
+        "created": "string | null — When the wallet was created, null for wallets predating the field.",
+        "enabledTokenIds": "string[] — Tokens the user turned on.",
+        "detectedTokenIds": "string[] — Tokens found on-chain that are not enabled yet.",
+        "unactivatedTokenIds": "string[] — Enabled tokens still awaiting on-chain activation."
       },
       "notes": [
         "The fiat currency is not set here. Core still accepts it on create, but that path is deprecated — use `set-fiat-currency-code` afterwards, so there is one way to do it."
@@ -920,7 +920,7 @@
         }
       },
       "returns": {
-        "walletId": "string"
+        "walletId": "string — The new wallet. Its keys are already saved."
       },
       "errors": [
         "BAD_REQUEST"
@@ -933,7 +933,7 @@
       "usage": "currency-configs",
       "description": "Currency and accountbased plugins only — swap plugins are excluded.",
       "returns": {
-        "pluginIds": "string[]"
+        "pluginIds": "string[] — Currency plugins this engine loaded."
       }
     },
     "currency-wallets": {
@@ -955,7 +955,7 @@
         }
       },
       "returns": {
-        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[]"
+        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet in the account, including paused ones."
       },
       "notes": [
         "The REST default for `waitForAll` is false; the command defaults it to true. A raw HTTP caller that skips it can see an incomplete list."
@@ -1138,11 +1138,11 @@
       "usage": "engine-config",
       "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
       "returns": {
-        "appId": "string",
-        "testMode": "boolean",
-        "directory": "string",
-        "servers": "{ [keys: string]: string; }",
-        "plugins": "string[]"
+        "appId": "string — Application ID the engine was started with.",
+        "testMode": "boolean — True when the engine is pointed at the tester fleet.",
+        "directory": "string — Working directory holding the core data.",
+        "servers": "{ [keys: string]: string | string[]; } — The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet.",
+        "plugins": "string[] — Plugin IDs the engine loaded, sorted."
       },
       "notes": [
         "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
@@ -1165,17 +1165,17 @@
       "usage": "engine-status",
       "description": "The readiness probe the client polls after auto-spawning the engine.",
       "returns": {
-        "pid": "number",
-        "apiVersion": "string",
-        "uptimeSeconds": "number",
-        "sessionCount": "number",
-        "testMode": "boolean",
-        "idleShutdownAt": "string | null",
-        "tcpPort": "number | null",
-        "socketPath": "string",
-        "locale": "string",
-        "decimalSeparator": "string",
-        "groupingSeparator": "string"
+        "pid": "number — The daemon process, for `kill` when it will not stop.",
+        "apiVersion": "string — The API this engine speaks. A client refusing to talk to an older engine checks this.",
+        "uptimeSeconds": "number — How long the daemon has been running.",
+        "sessionCount": "number — Logged-in accounts held open right now.",
+        "testMode": "boolean — True when pointed at the tester fleet.",
+        "idleShutdownAt": "string | null — When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled.",
+        "tcpPort": "number | null — The loopback port, null unless started with `--tcp`.",
+        "socketPath": "string — Unix socket the CLI connects to.",
+        "locale": "string — Language tag the engine resolved at boot.",
+        "decimalSeparator": "string — Decimal mark for that locale.",
+        "groupingSeparator": "string — Thousands mark for that locale."
       },
       "returnsDoc": "`idleShutdownAt` is null while a session or a subscription holds the engine open, and `tcpPort` is null unless started with `--tcp`.",
       "errors": [
@@ -1203,8 +1203,8 @@
       "description": "Lets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
       "core": "context.fetchChallenge",
       "returns": {
-        "challengeId": "string",
-        "challengeUri?": "string"
+        "challengeId": "string — Pass to the call that demanded a challenge once the user has solved it.",
+        "challengeUri?": "string — Where to send the user to solve the CAPTCHA. Absent when the server issued a challenge that needs no interaction."
       },
       "returnsDoc": "`challengeUri` is absent when the server considers the challenge already satisfied.",
       "errors": [
@@ -1226,7 +1226,7 @@
         }
       },
       "returns": {
-        "lobbyId": "string",
+        "lobbyId": "string — The lobby that was fetched, echoed back.",
         "loginRequest": "{ appId: string; displayName: string; displayImageDarkUrl: string | null; displayImageLightUrl: string | null; } | null — Null when the lobby carries no pending login request."
       },
       "errors": [
@@ -1264,7 +1264,7 @@
         }
       },
       "returns": {
-        "questions": "string[]"
+        "questions": "string[] — The questions in the order `login-with-recovery` expects the answers."
       },
       "errors": [
         "USERNAME_ERROR",
@@ -1317,7 +1317,7 @@
       },
       "returns": {
         "quoteCount": "number — How many plugins answered.",
-        "quotes": "{ objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: any; tokenId: any; }; quoteExpirationDate: string | null; swapInfo: { pluginId: any; displayName: any; supportEmail: any; isDex: any; }; request: { fromTokenId: any; toTokenId: any; nativeAmount: any; quoteFor: any; fromWalletId: any; toWalletId: any; }; }[]"
+        "quotes": "{ objectId: string; kind: string; expiresAt: string; pluginId: string; isEstimate: boolean; canBePartial: boolean | null; maxFulfillmentSeconds: number | null; minReceiveAmount: string | null; fromNativeAmount: string; toNativeAmount: string; networkFee: { nativeAmount: string; tokenId: string | null; }; quoteExpirationDate: string | null; swapInfo: { pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; }; request: { fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: \"to\" | \"from\" | \"max\"; fromWalletId: string; toWalletId: string; }; }[] — One quote per plugin that answered, each already parked under its own handle. Plugins that failed or had nothing to offer are simply absent."
       },
       "notes": [
         "Every returned quote holds an open plugin object. Approving one releases only that handle; close the rest, or let them expire.",
@@ -1728,7 +1728,7 @@
         }
       },
       "returns": {
-        "itemIds": "string[]"
+        "itemIds": "string[] — Keys in this store. Empty if it has none."
       }
     },
     "list-splittable-wallet-types": {
@@ -1760,7 +1760,7 @@
       "description": "The account's synced key-value store, where plugins keep their own state.",
       "core": "account.dataStore.listStoreIds",
       "returns": {
-        "storeIds": "string[]"
+        "storeIds": "string[] — Every store holding at least one item."
       }
     },
     "local-settings": {
@@ -1791,7 +1791,7 @@
       "usage": "local-users",
       "core": "context.localUsers",
       "returns": {
-        "localUsers": "unknown[]"
+        "localUsers": "unknown[] — `EdgeUserInfo[]`: one entry per account cached on this device."
       },
       "returnsDoc": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device."
     },
@@ -1835,14 +1835,14 @@
         }
       },
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "A session with `loginMethod: \"key\"`.",
       "errors": [
@@ -1885,14 +1885,14 @@
         }
       },
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "A session with `loginMethod: \"password\"`.",
       "notes": [
@@ -1946,14 +1946,14 @@
         }
       },
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "A session with `loginMethod: \"pin\"`.",
       "errors": [
@@ -2004,14 +2004,14 @@
         }
       },
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "A session with `loginMethod: \"recovery\"`.",
       "errors": [
@@ -2071,12 +2071,12 @@
         }
       },
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string",
-        "transaction": "unknown"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one.",
+        "transaction": "unknown — `EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
       },
       "errors": [
         "INSUFFICIENT_FUNDS",
@@ -2092,8 +2092,8 @@
       "usage": "object-delete <objectId> <objectId>",
       "description": "Runs the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
       "returns": {
-        "ok": "boolean",
-        "objectId": "string"
+        "ok": "boolean — Always true; a failure arrives as an error envelope.",
+        "objectId": "string — The handle this call consumed. It is now expired."
       },
       "errors": [
         "OBJECT_NOT_FOUND",
@@ -2108,11 +2108,11 @@
       "usage": "object-get <objectId> <objectId>",
       "description": "Works for every kind: transactions, pending logins, swap quotes.",
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one."
       },
       "returnsDoc": "The handle fields, plus a `value` holding the live core object.",
       "notes": [
@@ -2195,7 +2195,7 @@
       },
       "returns": {
         "crypto": "{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no crypto rates were requested.",
-        "fiat": "{ fiatCode: string; targetFiat: string; date: string; rate: number; }[]"
+        "fiat": "{ fiatCode: string; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no fiat rates were requested."
       },
       "notes": [
         "A rate the server cannot supply comes back as `0` rather than an error, so check for zero before dividing."
@@ -2240,10 +2240,10 @@
       },
       "returns": {
         "usdAmount": "number — Echoed as a number, though it is sent as a string.",
-        "pluginId": "string",
-        "tokenId": "string | null",
-        "multiplier": "string",
-        "date": "string",
+        "pluginId": "string — Currency plugin the amount was converted for.",
+        "tokenId": "string | null — The asset, or null for the chain’s own coin.",
+        "multiplier": "string — Native units per whole coin, which is what the conversion divided by.",
+        "date": "string — The timestamp actually used for the rate.",
         "rate": "number — USD per whole coin at that date.",
         "displayAmount": "string — Whole coins, to 8 decimal places.",
         "nativeAmount": "string — What a spend actually takes."
@@ -2321,16 +2321,16 @@
       "description": "Asks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
       "core": "context.requestEdgeLogin",
       "returns": {
-        "objectId": "string",
-        "pendingId": "string",
-        "kind": "string",
-        "expiresAt": "string | null",
-        "lobbyId": "string",
-        "uri": "string",
-        "state": "string",
-        "username": "string | null",
-        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null",
-        "error": "string | null"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "pendingId": "string — Same value as `objectId`, under the name the poll command takes.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
+        "lobbyId": "string — Lobby the phone connects to.",
+        "uri": "string — The `edge://` URI to render as a QR code for the phone to scan.",
+        "state": "string — How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in.",
+        "username": "string | null — Account that approved the login, known once the phone has scanned.",
+        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null — The session, null until `state` is `done`.",
+        "error": "string | null — Why the login failed, set only when `state` is `error`."
       },
       "notes": [
         "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you.",
@@ -2360,7 +2360,7 @@
         }
       },
       "returns": {
-        "resetDate": "string"
+        "resetDate": "string — When 2FA will actually come off. The login server enforces a waiting period so the real owner has time to cancel."
       },
       "returnsDoc": "When the reset completes if nobody cancels it.",
       "errors": [
@@ -2395,8 +2395,8 @@
         }
       },
       "returns": {
-        "ok": "boolean",
-        "objectId": "string"
+        "ok": "boolean — Always true; a failure arrives as an error envelope.",
+        "objectId": "string — The handle this call consumed. It is now expired."
       },
       "errors": [
         "BAD_REQUEST"
@@ -2568,12 +2568,12 @@
         }
       },
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string",
-        "transaction": "unknown"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one.",
+        "transaction": "unknown — `EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
       },
       "errors": [
         "BAD_REQUEST"
@@ -2781,20 +2781,20 @@
       "path": "/account/{sessionId}/swap-quotes/{objectId}",
       "usage": "swap-quote-get <objectId> <objectId>",
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "pluginId": "string",
-        "isEstimate": "boolean",
-        "canBePartial": "boolean | null",
-        "maxFulfillmentSeconds": "number | null",
-        "minReceiveAmount": "string | null",
-        "fromNativeAmount": "string",
-        "toNativeAmount": "string",
-        "networkFee": "{ nativeAmount: string; tokenId: string | null; }",
-        "quoteExpirationDate": "string | null",
-        "swapInfo": "{ pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; }",
-        "request": "{ fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: \"to\" | \"from\" | \"max\"; fromWalletId: string; toWalletId: string; }"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "pluginId": "string — Swap provider that produced this quote.",
+        "isEstimate": "boolean — True when the provider may settle at a different rate than quoted.",
+        "canBePartial": "boolean | null — True when the provider may fill only part of the order. Null when it does not say.",
+        "maxFulfillmentSeconds": "number | null — Longest the provider expects a partial fill to take.",
+        "minReceiveAmount": "string | null — Least the provider guarantees to deliver, in the destination’s native units.",
+        "fromNativeAmount": "string — Amount leaving the source wallet.",
+        "toNativeAmount": "string — Amount arriving in the destination wallet.",
+        "networkFee": "{ nativeAmount: string; tokenId: string | null; } — On-chain fee for the sending transaction. It is not the provider’s own spread, which is already in the rate.",
+        "quoteExpirationDate": "string | null — When the provider stops honouring the rate. Null when it does not expire.",
+        "swapInfo": "{ pluginId: string; displayName: string; supportEmail: string; isDex: boolean | null; } — `EdgeSwapInfo`: how to name the provider and where to send complaints.",
+        "request": "{ fromTokenId: string | null; toTokenId: string | null; nativeAmount: string; quoteFor: \"to\" | \"from\" | \"max\"; fromWalletId: string; toWalletId: string; } — The `EdgeSwapRequest` this quote answers, echoed back so quotes from different plugins can be compared without tracking what was asked."
       },
       "notes": [
         "Check `quoteExpirationDate` as well as `expiresAt`: the plugin's price can go stale before the handle does."
@@ -2821,12 +2821,12 @@
         }
       },
       "returns": {
-        "objectId": "string",
-        "kind": "string",
-        "expiresAt": "string",
-        "sessionId?": "string",
-        "walletId?": "string",
-        "transaction": "unknown"
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one.",
+        "transaction": "unknown — `EdgeTransaction` as it stands after this step. Unsigned after `make-spend`, signed after `sign-tx`, and carrying a txid once broadcast."
       },
       "errors": [
         "BAD_REQUEST",
@@ -2855,14 +2855,14 @@
       "usage": "touch",
       "description": "Resets the idle auto-logout timer without doing any other work.",
       "returns": {
-        "sessionId": "string",
-        "username?": "string",
-        "rootLoginId": "string",
-        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
-        "autoLogoutSeconds": "number",
-        "expiresAt": "string | null",
-        "lastActivityAt": "string",
-        "createdAt": "string"
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
       },
       "returnsDoc": "The session, with a refreshed `expiresAt`."
     },
@@ -2885,8 +2885,8 @@
         }
       },
       "returns": {
-        "username": "string",
-        "available": "boolean"
+        "username": "string — The name that was checked, echoed back.",
+        "available": "boolean — True when nobody holds this name. It is not reserved by asking."
       },
       "errors": [
         "USERNAME_ERROR",
@@ -2919,9 +2919,9 @@
       "description": "\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
       "returns": {
         "allTokens": "{ [keys: string]: unknown; } — Built-in and custom together, keyed by tokenId. Large on EVM chains.",
-        "builtinTokens": "{ [keys: string]: unknown; }",
-        "customTokens": "{ [keys: string]: unknown; }",
-        "enabledTokenIds": "string[]",
+        "builtinTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: everything the plugin ships with.",
+        "customTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: tokens this account added by hand.",
+        "enabledTokenIds": "string[] — Which of the above the wallet is actually tracking.",
         "detectedTokenIds": "string[] — Seen on-chain but not enabled, so their balances are not synced."
       },
       "errors": [
