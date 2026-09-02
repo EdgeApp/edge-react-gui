@@ -12,6 +12,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { endpoints } from '../docs/api'
+import { extractRoutes } from './extractRoutes'
 
 const ROOT = path.resolve(__dirname, '..')
 const ROUTES = path.join(ROOT, 'src/cli/engine/routes')
@@ -94,11 +95,34 @@ for (const e of endpoints) {
   }
 }
 
+// A `@param` carries the one thing a cleaner cannot: the prose. The field
+// *name* is the part that is stated twice, so hold the two together — a tag
+// naming nothing is dead, and a field with no tag is undocumented.
+for (const r of extractRoutes()) {
+  const fields = new Set(
+    [...(r.query ?? []), ...(r.body ?? [])].map(f => f.name)
+  )
+  for (const name of Object.keys(r.params)) {
+    if (!fields.has(name)) {
+      problems.push(
+        `${r.id}: @param ${name} names no field in the query or body cleaner`
+      )
+    }
+  }
+  for (const name of fields) {
+    if (!(name in r.params)) {
+      problems.push(`${r.id}: field "${name}" has no @param describing it`)
+    }
+  }
+}
+
 if (problems.length > 0) {
   console.error(`✗ ${problems.length} contract mismatch(es):\n`)
   for (const p of problems) console.error(`  ${p}`)
   process.exit(1)
 }
+const declared = extractRoutes()
 console.log(
-  `✓ request contracts match: ${handlers.size} handlers agree with their docs`
+  `✓ request contracts match: ${handlers.size} handlers agree with their docs, ` +
+    `${declared.length} declared route(s) documented field-for-field`
 )
