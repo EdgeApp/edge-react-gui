@@ -34,13 +34,15 @@ import { doc } from '../doc'
 import { engineError } from '../errors'
 import { findWallet, parseTokenId } from '../resolve'
 import { route } from '../route'
-import { asCoreValue, asTokenId } from '../schemas'
 import {
-  getAccount,
-  optionalQueryDate,
-  optionalQueryInt,
-  optionalQueryString
-} from './helpers'
+  asCoreValue,
+  asQueryDate,
+  asQueryInteger,
+  asQueryTokenId,
+  asTokenId,
+  asWalletId
+} from '../schemas'
+import { getAccount } from './helpers'
 
 /**
  * Fill name/category/notes from the same merge the GUI list uses.
@@ -77,7 +79,6 @@ export const getTransactions = route({
   method: 'GET',
   path: '/account/{sessionId}/wallet/get-transactions',
   cli: {
-    positional: 'walletId',
     command: 'get-transactions',
     custom: true,
     flags: { bitwaveAccount: { maps: 'bitwaveAccountId' } },
@@ -90,13 +91,20 @@ export const getTransactions = route({
     }
   },
   query: asObject({
-    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
+    walletId: asWalletId,
+    tokenId: asOptional(doc(asQueryTokenId, TOKEN_ID_DOC), null),
     limit: asOptional(
-      doc(asString, 'Omitting it returns every transaction from `offset` on.')
+      doc(
+        asQueryInteger,
+        'Omitting it returns every transaction from `offset` on.'
+      )
     ),
-    offset: asOptional(doc(asString, 'Where to start. Defaults to 0.')),
-    startDate: asOptional(doc(asString, 'ISO-8601, or epoch milliseconds.')),
-    endDate: asOptional(doc(asString, 'ISO-8601, or epoch milliseconds.')),
+    offset: asOptional(
+      doc(asQueryInteger, 'Where to start. Defaults to 0.'),
+      0
+    ),
+    startDate: asOptional(doc(asQueryDate, 'ISO-8601, or epoch milliseconds.')),
+    endDate: asOptional(doc(asQueryDate, 'ISO-8601, or epoch milliseconds.')),
     searchString: asOptional(
       doc(asString, 'Matches payee, category, notes and txid.')
     ),
@@ -132,23 +140,17 @@ export const getTransactions = route({
 
   async handler(ctx) {
     const account = getAccount(ctx)
-    const wallet = findWallet(account, ctx.params.walletId)
-    const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-    const startDate = optionalQueryDate(ctx.query, 'startDate')
-    const endDate = optionalQueryDate(ctx.query, 'endDate')
-    const searchString = optionalQueryString(ctx.query, 'searchString')
+    const wallet = findWallet(account, ctx.query.valid.walletId)
+    const { tokenId, startDate, endDate, searchString, limit, offset } =
+      ctx.query.valid
     const spamThreshold = await resolveListSpamThreshold({
       account,
       wallet,
       tokenId,
-      queryOverride: ctx.query.has('spamThreshold')
-        ? ctx.query.get('spamThreshold') ?? ''
-        : undefined
+      queryOverride: ctx.query.valid.spamThreshold
     })
-    const limit = optionalQueryInt(ctx.query, 'limit')
-    const offset = optionalQueryInt(ctx.query, 'offset') ?? 0
 
-    const fiatRaw = optionalQueryString(ctx.query, 'fiat')
+    const fiatRaw = ctx.query.valid.fiat
     let isoFiat: string
     if (fiatRaw != null && fiatRaw !== '') {
       const parsed = toIsoFiatCode(fiatRaw)
@@ -187,7 +189,7 @@ export const getTransactions = route({
       txs: overlayed
     })
 
-    const exportRaw = optionalQueryString(ctx.query, 'exportFormat')
+    const exportRaw = ctx.query.valid.exportFormat
     let formats: TxExportFormat[]
     try {
       formats = parseExportFormats(exportRaw)
@@ -196,10 +198,7 @@ export const getTransactions = route({
       throw engineError('BAD_REQUEST', message, 400)
     }
 
-    const bitwaveAccountIdQuery = optionalQueryString(
-      ctx.query,
-      'bitwaveAccountId'
-    )
+    const bitwaveAccountIdQuery = ctx.query.valid.bitwaveAccountId
     if (bitwaveAccountIdQuery != null && !formats.includes('bitwave')) {
       throw engineError(
         'BAD_REQUEST',
@@ -305,9 +304,10 @@ export const getNumTransactions = route({
   core: 'wallet.getNumTransactions',
   method: 'GET',
   path: '/account/{sessionId}/wallet/get-num-transactions',
-  cli: { command: 'get-num-transactions', positional: 'walletId' },
+  cli: 'get-num-transactions',
   query: asObject({
-    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC))
+    walletId: asWalletId,
+    tokenId: asOptional(doc(asQueryTokenId, TOKEN_ID_DOC), null)
   }).withRest,
   returns: asObject({
     numTransactions: doc(asNumber, 'Every transaction the wallet knows of.')
@@ -315,8 +315,8 @@ export const getNumTransactions = route({
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-    const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
+    const wallet = findWallet(getAccount(ctx), ctx.query.valid.walletId)
+    const { tokenId } = ctx.query.valid
     // Typed as returning a number, but plugins resolve a promise here, so
     // awaiting is what actually yields a serializable value.
     const numTransactions = await wallet.getNumTransactions({ tokenId })
@@ -336,8 +336,9 @@ export const saveTxMetadata = route({
   core: 'wallet.saveTxMetadata',
   method: 'POST',
   path: '/account/{sessionId}/wallet/save-tx-metadata',
-  cli: { command: 'save-tx-metadata', positional: 'walletId' },
+  cli: 'save-tx-metadata',
   body: asObject({
+    walletId: asWalletId,
     txid: doc(asString, 'Which transaction to tag.'),
     tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
     metadata: doc(
@@ -348,7 +349,7 @@ export const saveTxMetadata = route({
   errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     await wallet.saveTxMetadata({
       txid: ctx.body.txid,
       tokenId: parseTokenId(ctx.body.tokenId ?? undefined),
@@ -370,8 +371,9 @@ export const saveTxAction = route({
   core: 'wallet.saveTxAction',
   method: 'POST',
   path: '/account/{sessionId}/wallet/save-tx-action',
-  cli: { command: 'save-tx-action', positional: 'walletId' },
+  cli: 'save-tx-action',
   body: asObject({
+    walletId: asWalletId,
     txid: doc(asString, 'Which transaction to annotate.'),
     tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
     savedAction: doc(asCoreValue, '`EdgeTxAction` describing what happened.'),
@@ -380,7 +382,7 @@ export const saveTxAction = route({
   errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const assetAction =
       ctx.body.assetAction != null && typeof ctx.body.assetAction === 'object'
         ? (ctx.body.assetAction as EdgeAssetAction)

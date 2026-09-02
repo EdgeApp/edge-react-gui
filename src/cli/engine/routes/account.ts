@@ -1,9 +1,43 @@
-import { asBoolean, asEither, asObject, asString, asValue } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asEither,
+  asObject,
+  asOptional,
+  asString,
+  asValue
+} from 'cleaners'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { route } from '../route'
-import { asSession } from '../schemas'
-import { getAccount, getSession } from './helpers'
+import { asQueryBoolean, asSession, asWalletSummary } from '../schemas'
+import { getAccount, getSession, summarizeWallet } from './helpers'
+
+/** Which of the account's three wallet lists to read. */
+const asWalletFilter = asValue('active', 'archived', 'hidden', 'all')
+type WalletFilter = ReturnType<typeof asWalletFilter>
+
+function walletIdsForFilter(
+  account: EdgeAccount,
+  filter: WalletFilter
+): string[] {
+  switch (filter) {
+    case 'archived':
+      return account.archivedWalletIds
+    case 'hidden':
+      return account.hiddenWalletIds
+    case 'all':
+      return [
+        ...account.activeWalletIds,
+        ...account.archivedWalletIds,
+        ...account.hiddenWalletIds
+      ]
+    case 'active':
+    default:
+      return account.activeWalletIds
+  }
+}
 
 /**
  * Account and session summary.
@@ -205,5 +239,56 @@ export const deleteRemoteAccount = route({
     await getAccount(ctx).deleteRemoteAccount()
     await ctx.state.sessions.logout(ctx.params.sessionId)
     return undefined
+  }
+})
+
+/**
+ * List the account's wallets.
+ *
+ * @note The REST default for `waitForAll` is false; the command defaults it to
+ *   true. A raw HTTP caller that skips it can see an incomplete list.
+ * @coreNote Filtered by account.activeWalletIds / archivedWalletIds /
+ *   hiddenWalletIds.
+ */
+export const currencyWallets = route({
+  core: 'account.currencyWallets',
+  method: 'GET',
+  path: '/account/{sessionId}/currency-wallets',
+  cli: {
+    command: 'currency-wallets',
+    flags: { noWait: { maps: 'waitForAll', invert: true } }
+  },
+  query: asObject({
+    filter: asOptional(
+      doc(
+        asWalletFilter,
+        'Which of the account\u2019s wallet lists to read. Defaults to `active`.'
+      )
+    ),
+    waitForAll: asOptional(
+      doc(
+        asQueryBoolean,
+        'Await every wallet to load first. Without it a freshly logged-in ' +
+          'account may report fewer wallets than it has.'
+      )
+    )
+  }).withRest,
+  returns: asObject({
+    currencyWallets: doc(
+      asArray(asWalletSummary),
+      'Every wallet in the account, including paused ones.'
+    )
+  }),
+
+  async handler(ctx) {
+    const account = getAccount(ctx)
+    const { filter = 'active', waitForAll = false } = ctx.query.valid
+    if (waitForAll) await account.waitForAllWallets()
+
+    const currencyWallets = walletIdsForFilter(account, filter)
+      .map(id => account.currencyWallets[id])
+      .filter((wallet): wallet is EdgeCurrencyWallet => wallet != null)
+      .map(summarizeWallet)
+    return { currencyWallets }
   }
 })

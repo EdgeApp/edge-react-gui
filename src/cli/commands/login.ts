@@ -7,11 +7,6 @@ import {
 } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
-/** A login URL carries the account it names as its final segment. */
-function loginPath(command: string, nameOrId: string): string {
-  return `/${command}/${encodeURIComponent(nameOrId)}`
-}
-
 interface Session {
   sessionId: string
   username?: string
@@ -22,13 +17,14 @@ const accountCreateCmd = command(
   'create-account',
   {
     usage:
-      'create-account <username> --password=<pass> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+      'create-account [--username=<name>] --password=<pass> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
     help: 'Create a new Edge account'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(accountCreateCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        username: 'string',
         password: 'string',
         pin: 'string',
         otp: 'string',
@@ -37,6 +33,7 @@ const accountCreateCmd = command(
       }
     })
     const session = await ctx.client.post<Session>('/create-account', {
+      username: args.string('username'),
       password: args.requireString('password'),
       pin: args.requireString('pin'),
       otp: args.string('otp'),
@@ -52,28 +49,27 @@ const passwordLoginCmd = command(
   'login-with-password',
   {
     usage:
-      'login-with-password <username> --password=<pass> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+      'login-with-password --username=<name> --password=<pass> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
     help: 'Log in with a username and password'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(passwordLoginCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        username: 'string',
         password: 'string',
         otp: 'string',
         'otp-key': 'string',
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>(
-      loginPath('login-with-password', args.positional ?? ''),
-      {
-        password: args.requireString('password'),
-        otp: args.string('otp'),
-        otpKey: args.string('otp-key'),
-        challengeId: args.string('challenge-id') ?? ctx.challengeId
-      }
-    )
+    const session = await ctx.client.post<Session>('/login-with-password', {
+      username: args.requireString('username'),
+      password: args.requireString('password'),
+      otp: args.string('otp'),
+      otpKey: args.string('otp-key'),
+      challengeId: args.string('challenge-id') ?? ctx.challengeId
+    })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -83,28 +79,27 @@ const keyLoginCmd = command(
   'login-with-key',
   {
     usage:
-      'login-with-key <usernameOrLoginId> --login-key=<key> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+      'login-with-key --username-or-login-id=<value> --login-key=<key> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
     help: 'Log in with a raw account login key'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(keyLoginCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        'username-or-login-id': 'string',
         'login-key': 'string',
         otp: 'string',
         'otp-key': 'string',
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>(
-      loginPath('login-with-key', args.positional ?? ''),
-      {
-        loginKey: args.requireString('login-key'),
-        otp: args.string('otp'),
-        otpKey: args.string('otp-key'),
-        challengeId: args.string('challenge-id') ?? ctx.challengeId
-      }
-    )
+    const session = await ctx.client.post<Session>('/login-with-key', {
+      usernameOrLoginId: args.requireString('username-or-login-id'),
+      loginKey: args.requireString('login-key'),
+      otp: args.string('otp'),
+      otpKey: args.string('otp-key'),
+      challengeId: args.string('challenge-id') ?? ctx.challengeId
+    })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -114,28 +109,27 @@ const pinLoginCmd = command(
   'login-with-pin',
   {
     usage:
-      'login-with-pin <usernameOrLoginId> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+      'login-with-pin --username-or-login-id=<value> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
     help: 'Log in with a device PIN'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(pinLoginCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        'username-or-login-id': 'string',
         pin: 'string',
         otp: 'string',
         'otp-key': 'string',
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>(
-      loginPath('login-with-pin', args.positional ?? ''),
-      {
-        pin: args.requireString('pin'),
-        otp: args.string('otp'),
-        otpKey: args.string('otp-key'),
-        challengeId: args.string('challenge-id') ?? ctx.challengeId
-      }
-    )
+    const session = await ctx.client.post<Session>('/login-with-pin', {
+      usernameOrLoginId: args.requireString('username-or-login-id'),
+      pin: args.requireString('pin'),
+      otp: args.string('otp'),
+      otpKey: args.string('otp-key'),
+      challengeId: args.string('challenge-id') ?? ctx.challengeId
+    })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -145,13 +139,14 @@ const recoveryLoginCmd = command(
   'login-with-recovery',
   {
     usage:
-      'login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=…] [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+      'login-with-recovery --username=<name> --recovery-key=<key> --answer=<text> [--answer=…] [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
     help: 'Log in with recovery-question answers'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(recoveryLoginCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        username: 'string',
         'recovery-key': 'string',
         answer: 'repeat',
         otp: 'string',
@@ -163,13 +158,11 @@ const recoveryLoginCmd = command(
     if (answers.length === 0) {
       throw new UsageError(recoveryLoginCmd, 'Missing --answer')
     }
-    const session = await ctx.client.post<Session>(
-      loginPath('login-with-recovery', args.positional ?? ''),
-      {
-        recoveryKey: args.requireString('recovery-key'),
-        answers
-      }
-    )
+    const session = await ctx.client.post<Session>('/login-with-recovery', {
+      username: args.requireString('username'),
+      recoveryKey: args.requireString('recovery-key'),
+      answers
+    })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }

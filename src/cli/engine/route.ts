@@ -43,19 +43,16 @@ export interface CliSpec {
    * Request field taken as the bare positional argument.
    *
    * A positional also decides the REST path: it becomes the final path
-   * segment, so `--username` on the command line and `{username}` in the URL
+   * segment, so `<objectId>` on the command line and `{objectId}` in the URL
    * are the same value declared once. `routePath` derives that, which is why
    * `path` must not spell the parameter out itself.
+   *
+   * Only base58 identifiers qualify. A value that can contain `/`, `?` or `#`
+   * — a base64 wallet id, a free-text username — cannot be a path segment
+   * without percent-encoding that callers forget, so it travels as a named
+   * argument in the query or the body instead.
    */
   positional?: string
-  /**
-   * Keeps an optional positional out of the path.
-   *
-   * A path segment cannot be absent, so a positional the caller may omit has
-   * to stay in the body. Only `create-account` needs this, for light accounts
-   * that have no username.
-   */
-  positionalInPath?: false
   /** Overrides for flags whose name is not the kebab-cased field name. */
   flags?: Record<string, CliFlagSpec>
   /** Client-only flags. */
@@ -201,7 +198,7 @@ export function routePath(spec: RouteSpec<any, any, any>): string {
 export function positionalParam(spec: RouteSpec<any, any, any>): string | null {
   const cli = spec.cli
   if (cli == null || typeof cli === 'string' || Array.isArray(cli)) return null
-  if (cli.positional == null || cli.positionalInPath === false) return null
+  if (cli.positional == null) return null
   return cli.positional
 }
 

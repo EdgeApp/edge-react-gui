@@ -3,7 +3,7 @@
  * validation, and query-string parsing. Not part of the core engine
  * infrastructure — just utilities reused across route modules.
  */
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { engineError } from '../errors'
 import type { RouteContext } from '../router'
@@ -166,4 +166,31 @@ export function optionalQueryBoolean(
   const raw = query.get(key)
   if (raw == null || raw === '') return undefined
   return raw === 'true' || raw === '1'
+}
+
+/** The wallet fields every listing and creation route returns. */
+export function summarizeWallet(
+  wallet: EdgeCurrencyWallet
+): Record<string, unknown> {
+  return {
+    walletId: wallet.id,
+    id: wallet.id,
+    type: wallet.type,
+    name: wallet.name,
+    pluginId: wallet.currencyInfo.pluginId,
+    currencyCode: wallet.currencyInfo.currencyCode,
+    fiatCurrencyCode: wallet.fiatCurrencyCode,
+    blockHeight: wallet.blockHeight,
+    syncStatus: wallet.syncStatus,
+    syncRatio:
+      wallet.syncStatus?.totalRatio != null
+        ? `${Math.round(wallet.syncStatus.totalRatio * 100)}%`
+        : undefined,
+    paused: wallet.paused,
+    imported: wallet.imported,
+    created: wallet.created?.toISOString() ?? null,
+    enabledTokenIds: wallet.enabledTokenIds,
+    detectedTokenIds: wallet.detectedTokenIds,
+    unactivatedTokenIds: wallet.unactivatedTokenIds
+  }
 }

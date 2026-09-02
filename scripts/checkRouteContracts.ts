@@ -45,7 +45,8 @@ function readsFrom(fn: string, source: 'body' | 'query'): Set<string> {
     new RegExp(`const \\{([^}]*)\\} = ${base}\\b`, 'g')
   )) {
     for (const part of m[1].split(',')) {
-      const name = part.split(':')[0].trim()
+      // `{ filter = 'active' }` and `{ tokenId: id }` both name one field.
+      const name = part.split(':')[0].split('=')[0].trim()
       if (name !== '') out.add(name)
     }
   }
@@ -85,6 +86,24 @@ for (const r of extractRoutes()) {
       if (!names.has(name)) {
         problems.push(
           `${r.id}: handler reads query "${name}", absent from the query cleaner`
+        )
+      }
+    }
+
+    // A route that declares a query cleaner must read the cleaned result. A
+    // handler that re-parses the raw URLSearchParams gets whatever the caller
+    // sent, so the declared type stops being the enforced type — which is how
+    // `waitForAll` came to be documented as a string while the command wanted
+    // a switch.
+    if (r.query != null) {
+      const raw =
+        /\b(optionalQuery(String|Int|Date|Boolean)|requireQuery(String|Int)|ctx\.query\.(get|has))\b/.exec(
+          fn
+        )
+      if (raw != null) {
+        problems.push(
+          `${r.id}: handler calls ${raw[1]} on the raw query; read ` +
+            'ctx.query.valid instead, so the declared cleaner is what runs'
         )
       }
     }

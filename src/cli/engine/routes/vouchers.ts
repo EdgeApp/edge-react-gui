@@ -44,7 +44,7 @@ export const approveVoucher = route({
   core: 'account.approveVoucher',
   method: 'POST',
   path: '/account/{sessionId}/approve-voucher',
-  cli: { command: 'approve-voucher' },
+  cli: 'approve-voucher',
   body: asVoucherBody,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
@@ -63,7 +63,7 @@ export const rejectVoucher = route({
   core: 'account.rejectVoucher',
   method: 'POST',
   path: '/account/{sessionId}/reject-voucher',
-  cli: { command: 'reject-voucher' },
+  cli: 'reject-voucher',
   body: asVoucherBody,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 

@@ -15,6 +15,7 @@ import path from 'path'
 
 import {
   type ExtractedCli,
+  type ExtractedField,
   type ExtractedRoute,
   extractRoutes,
   kebab
@@ -45,15 +46,24 @@ interface CommandHelp {
   errors?: string[]
 }
 
+/** True for a field the command takes as a bare switch rather than a value. */
+function isSwitch(type: string): boolean {
+  return type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
+}
+
 /** How a request field is supplied on the command line, if at all. */
-function passForm(cli: ExtractedCli, field: string, optional: boolean): string {
-  if (cli.positional === field) return `<${field}>`
+function passForm(cli: ExtractedCli, field: ExtractedField): string {
+  if (cli.positional === field.name) return `<${field.name}>`
   if (cli.bodyFlag != null) return `--${cli.bodyFlag}='<json>'`
-  const mapped = cli.flags.find(f => f.maps === field)
-  const name = mapped?.name ?? kebab(field)
+  const mapped = cli.flags.find(f => f.maps === field.name)
+  const name = mapped?.name ?? kebab(field.name)
   const token =
-    mapped?.repeat === true ? `--${name}=<value> …` : `--${name}=<value>`
-  return optional ? `[${token}]` : token
+    mapped?.repeat === true
+      ? `--${name}=<value> …`
+      : isSwitch(field.type)
+      ? `--${name}`
+      : `--${name}=<value>`
+  return field.optional ? `[${token}]` : token
 }
 
 function usageFor(r: ExtractedRoute, cli: ExtractedCli): string {
@@ -65,7 +75,7 @@ function usageFor(r: ExtractedRoute, cli: ExtractedCli): string {
   else {
     for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
       if (r.pathParams.includes(f.name)) continue
-      parts.push(passForm(cli, f.name, f.optional))
+      parts.push(passForm(cli, f))
     }
   }
   for (const x of cli.extra) {
@@ -88,7 +98,7 @@ function helpFor(r: ExtractedRoute, cli: ExtractedCli): CommandHelp {
   const params: Record<string, ParamHelp> = {}
   for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
     params[f.name] = {
-      pass: passForm(cli, f.name, f.optional),
+      pass: passForm(cli, f),
       doc: f.doc,
       optional: f.optional
     }

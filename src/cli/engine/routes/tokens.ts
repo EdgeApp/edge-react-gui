@@ -3,7 +3,7 @@ import { asArray, asObject, asString } from 'cleaners'
 import { doc } from '../doc'
 import { findWallet } from '../resolve'
 import { route } from '../route'
-import { asCoreValue, asEnabledTokens } from '../schemas'
+import { asCoreValue, asEnabledTokens, asWalletId } from '../schemas'
 import { getAccount } from './helpers'
 
 /**
@@ -19,7 +19,8 @@ export const walletTokens = route({
   core: null,
   method: 'GET',
   path: '/account/{sessionId}/wallet/tokens',
-  cli: { command: 'wallet-tokens', positional: 'walletId' },
+  cli: 'wallet-tokens',
+  query: asObject({ walletId: asWalletId }).withRest,
   returns: asObject({
     allTokens: doc(
       asObject(asCoreValue),
@@ -45,7 +46,7 @@ export const walletTokens = route({
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.query.valid.walletId)
     return {
       allTokens: wallet.currencyConfig.allTokens,
       builtinTokens: wallet.currencyConfig.builtinTokens,
@@ -70,7 +71,6 @@ export const changeEnabledTokenIds = route({
   method: 'POST',
   path: '/account/{sessionId}/wallet/change-enabled-token-ids',
   cli: {
-    positional: 'walletId',
     command: 'change-enabled-token-ids',
     custom: true,
     extra: {
@@ -85,13 +85,14 @@ export const changeEnabledTokenIds = route({
     }
   },
   body: asObject({
+    walletId: asWalletId,
     tokenIds: doc(asArray(asString), 'The complete desired set.')
   }).withRest,
   returns: asEnabledTokens,
   errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     await wallet.changeEnabledTokenIds(ctx.body.tokenIds)
     return { enabledTokenIds: wallet.enabledTokenIds }
   }

@@ -20,14 +20,10 @@ import {
   asObjectHandle,
   asOkObject,
   asTokenId,
-  asTransactionHandle
+  asTransactionHandle,
+  asWalletId
 } from '../schemas'
-import {
-  getAccount,
-  optionalBoolean,
-  optionalString,
-  requireQueryString
-} from './helpers'
+import { getAccount, optionalBoolean, optionalString } from './helpers'
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === 'object' && !Array.isArray(value)
@@ -242,8 +238,9 @@ export const getMaxSpendable = route({
   core: 'wallet.getMaxSpendable',
   method: 'POST',
   path: '/account/{sessionId}/wallet/get-max-spendable',
-  cli: { command: 'get-max-spendable', positional: 'walletId' },
+  cli: 'get-max-spendable',
   body: asObject({
+    walletId: asWalletId,
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
     ),
@@ -269,7 +266,7 @@ export const getMaxSpendable = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const spendInfo = await buildSpendInfo(wallet, body, {
       requireAmount: false
     })
@@ -300,15 +297,15 @@ export const spend = route({
   method: 'POST',
   path: '/account/{sessionId}/wallet/spend',
   cli: [
-    { command: 'spend', positional: 'walletId' },
+    { command: 'spend' },
     {
       command: 'spend-max',
-      positional: 'walletId',
       preset: { useMax: true },
       notes: 'The same route with `useMax` preset, so it sends everything.'
     }
   ],
   body: asObject({
+    walletId: asWalletId,
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
     ),
@@ -347,7 +344,7 @@ export const spend = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const useMax = optionalBoolean(body, 'useMax') ?? false
     const spendInfo = await buildSpendInfo(wallet, body, {
       requireAmount: !useMax
@@ -365,7 +362,7 @@ export const spend = route({
       // object expires (or they delete it) — nothing is signed/broadcast.
       return storeTransaction(ctx, {
         sessionId: ctx.params.sessionId,
-        walletId: ctx.params.walletId,
+        walletId: ctx.body.walletId,
         transaction: unsignedTx
       })
     }
@@ -396,7 +393,7 @@ export const spend = route({
         if (!broadcast) throw error
         saveError = error instanceof Error ? error.message : String(error)
         ctx.state.logger.warn('saveTx failed after broadcast', {
-          walletId: ctx.params.walletId,
+          walletId: ctx.body.walletId,
           txid: finalTx.txid,
           error: saveError
         })
@@ -420,8 +417,9 @@ export const makeSpend = route({
   core: 'wallet.makeSpend',
   method: 'POST',
   path: '/account/{sessionId}/wallet/make-spend',
-  cli: { command: 'make-spend', positional: 'walletId' },
+  cli: 'make-spend',
   body: asObject({
+    walletId: asWalletId,
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
     ),
@@ -446,14 +444,14 @@ export const makeSpend = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const spendInfo = await buildSpendInfo(wallet, body, {
       requireAmount: true
     })
     const transaction = await wallet.makeSpend(spendInfo)
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.params.walletId,
+      walletId: ctx.body.walletId,
       transaction
     })
   }
@@ -556,8 +554,9 @@ export const accelerate = route({
   core: 'wallet.accelerate',
   method: 'POST',
   path: '/account/{sessionId}/wallet/accelerate',
-  cli: { command: 'accelerate', positional: 'walletId' },
+  cli: 'accelerate',
   body: asObject({
+    walletId: asWalletId,
     objectId: asOptional(doc(asString, 'Handle of the transaction to bump.')),
     transaction: asOptional(doc(asCoreValue, 'Or the transaction itself.'))
   }).withRest,
@@ -569,11 +568,11 @@ export const accelerate = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const objectId = optionalString(body, 'objectId')
     let source: EdgeTransaction
     if (objectId != null) {
-      source = requireTxHandle(ctx, body, ctx.params.walletId).transaction
+      source = requireTxHandle(ctx, body, ctx.body.walletId).transaction
     } else if (isPlainObject(body.transaction)) {
       source = body.transaction as unknown as EdgeTransaction
     } else {
@@ -596,7 +595,7 @@ export const accelerate = route({
     }
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.params.walletId,
+      walletId: ctx.body.walletId,
       transaction
     })
   }
@@ -612,8 +611,9 @@ export const sweepPrivateKeys = route({
   core: 'wallet.sweepPrivateKeys',
   method: 'POST',
   path: '/account/{sessionId}/wallet/sweep-private-keys',
-  cli: { command: 'sweep-private-keys', positional: 'walletId' },
+  cli: 'sweep-private-keys',
   body: asObject({
+    walletId: asWalletId,
     spendInfo: doc(
       asCoreValue,
       'A full `EdgeSpendInfo`, with the keys to sweep in `privateKeys`.'
@@ -629,7 +629,7 @@ export const sweepPrivateKeys = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     if (!isPlainObject(body.spendInfo)) {
       throw engineError(
         'BAD_REQUEST',
@@ -642,7 +642,7 @@ export const sweepPrivateKeys = route({
     )
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.params.walletId,
+      walletId: ctx.body.walletId,
       transaction
     })
   }
@@ -660,8 +660,9 @@ export const signBytes = route({
   core: 'wallet.signBytes',
   method: 'POST',
   path: '/account/{sessionId}/wallet/sign-bytes',
-  cli: { command: 'sign-bytes', positional: 'walletId' },
+  cli: 'sign-bytes',
   body: asObject({
+    walletId: asWalletId,
     bytes: asOptional(doc(asString, 'Base64. Defaults to empty when absent.')),
     data: asOptional(doc(asString, 'Legacy alias for `bytes`.')),
     otherParams: asOptional(doc(asCoreValue, 'Plugin-specific options.'))
@@ -671,7 +672,7 @@ export const signBytes = route({
 
   async handler(ctx) {
     const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     // Prefer the documented `bytes` field; accept legacy `data` too.
     const data =
       optionalString(body, 'bytes') ?? optionalString(body, 'data') ?? ''
@@ -693,8 +694,9 @@ export const getPaymentProtocolInfo = route({
   core: 'wallet.getPaymentProtocolInfo',
   method: 'GET',
   path: '/account/{sessionId}/wallet/get-payment-protocol-info',
-  cli: { command: 'get-payment-protocol-info', positional: 'walletId' },
+  cli: 'get-payment-protocol-info',
   query: asObject({
+    walletId: asWalletId,
     paymentProtocolUrl: doc(asString, 'The payment-request URL.')
   }).withRest,
   returns: doc(
@@ -704,12 +706,10 @@ export const getPaymentProtocolInfo = route({
   errors: ['BAD_REQUEST', 'NETWORK_ERROR', ...WALLET_ERRORS],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-    const paymentProtocolUrl = requireQueryString(
-      ctx.query,
-      'paymentProtocolUrl'
+    const wallet = findWallet(getAccount(ctx), ctx.query.valid.walletId)
+    return await wallet.getPaymentProtocolInfo(
+      ctx.query.valid.paymentProtocolUrl
     )
-    return await wallet.getPaymentProtocolInfo(paymentProtocolUrl)
   }
 })
 

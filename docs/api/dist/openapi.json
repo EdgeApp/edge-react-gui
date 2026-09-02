@@ -400,17 +400,16 @@
         }
       }
     },
-    "/forget-account/{rootLoginId}": {
+    "/forget-account": {
       "post": {
         "operationId": "forgetAccount",
         "summary": "Forget an account on this device.",
-        "description": "**Core call:** `context.forgetAccount`\n\n**Command line**\n\n```\nforget-account <rootLoginId> <rootLoginId>\n```\n\nRemoves locally cached credentials. The remote account is untouched.",
+        "description": "**Core call:** `context.forgetAccount`\n\n**Command line**\n\n```\nforget-account --root-login-id=<rootLoginId>\n```\n\nRemoves locally cached credentials. The remote account is untouched.",
         "tags": [
           "Context"
         ],
         "x-cli": {
           "command": "forget-account",
-          "positional": "rootLoginId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -418,16 +417,7 @@
         },
         "x-core-call": "context.forgetAccount",
         "x-source": "src/cli/engine/routes/context.ts",
-        "parameters": [
-          {
-            "name": "rootLoginId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "No content."
@@ -464,17 +454,16 @@
         }
       }
     },
-    "/username-available/{username}": {
+    "/username-available": {
       "get": {
         "operationId": "usernameAvailable",
         "summary": "Check whether a username is free.",
-        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available <username> <username> [--challenge-id=<challengeId>]\n```\n\n",
+        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available --username=<username> [--challenge-id=<challengeId>]\n```\n\n",
         "tags": [
           "Context"
         ],
         "x-cli": {
           "command": "username-available",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -483,14 +472,6 @@
         "x-core-call": "context.usernameAvailable",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "username",
             "in": "query",
@@ -548,17 +529,16 @@
         }
       }
     },
-    "/fix-username/{username}": {
+    "/fix-username": {
       "get": {
         "operationId": "fixUsername",
         "summary": "Normalize a username.",
-        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username <username> <username>\n```\n\nApplies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
+        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username --username=<username>\n```\n\nApplies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
         "tags": [
           "Context"
         ],
         "x-cli": {
           "command": "fix-username",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -567,14 +547,6 @@
         "x-core-call": "context.fixUsername",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "username",
             "in": "query",
@@ -708,17 +680,16 @@
         }
       }
     },
-    "/request-otp-reset/{username}": {
+    "/request-otp-reset": {
       "post": {
         "operationId": "requestOtpReset",
         "summary": "Request a 2FA reset.",
-        "description": "**Core call:** `context.requestOtpReset`\n\n**Command line**\n\n```\nrequest-otp-reset <username> <username> --otp-reset-token=<otpResetToken>\n```\n\nStarts the timed reset a user falls back on after losing their authenticator.",
+        "description": "**Core call:** `context.requestOtpReset`\n\n**Command line**\n\n```\nrequest-otp-reset --username=<username> --otp-reset-token=<otpResetToken>\n```\n\nStarts the timed reset a user falls back on after losing their authenticator.",
         "tags": [
           "Context"
         ],
         "x-cli": {
           "command": "request-otp-reset",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -726,16 +697,7 @@
         },
         "x-core-call": "context.requestOtpReset",
         "x-source": "src/cli/engine/routes/context.ts",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "When the reset completes if nobody cancels it.",
@@ -793,17 +755,16 @@
         }
       }
     },
-    "/fetch-recovery-questions/{username}": {
+    "/fetch-recovery-questions": {
       "get": {
         "operationId": "fetchRecoveryQuestions",
         "summary": "Fetch a user’s recovery questions.",
-        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions <username> <username> --recovery-key=<recoveryKey>\n```\n\n",
+        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions --recovery-key=<recoveryKey> --username=<username>\n```\n\n",
         "tags": [
           "Context"
         ],
         "x-cli": {
           "command": "fetch-recovery-questions",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -813,14 +774,6 @@
         "x-core-note": "Our surface drops the `2` from the path, command and `recoveryKey` parameter; a future Recovery1 would be suffixed `V1`.",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "recoveryKey",
             "in": "query",
@@ -986,17 +939,16 @@
         }
       }
     },
-    "/login-with-password/{username}": {
+    "/login-with-password": {
       "post": {
         "operationId": "loginWithPassword",
         "summary": "Log in with a password.",
-        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password <username> <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --password=<password>\n```\n\n",
+        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username=<username> --password=<password>\n```\n\n",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "login-with-password",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": true,
@@ -1004,16 +956,7 @@
         },
         "x-core-call": "context.loginWithPassword",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"password\"`.",
@@ -1143,17 +1086,16 @@
         }
       }
     },
-    "/login-with-pin/{usernameOrLoginId}": {
+    "/login-with-pin": {
       "post": {
         "operationId": "loginWithPin",
         "summary": "Log in with a device PIN.",
-        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin <usernameOrLoginId> <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --pin=<pin> [--use-login-id=<useLoginId>]\n```\n\nOnly works on a device that has already saved a PIN for the account.",
+        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --pin=<pin> [--use-login-id=<useLoginId>]\n```\n\nOnly works on a device that has already saved a PIN for the account.",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "login-with-pin",
-          "positional": "usernameOrLoginId",
           "flags": [],
           "extra": [],
           "custom": true,
@@ -1161,16 +1103,7 @@
         },
         "x-core-call": "context.loginWithPIN",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [
-          {
-            "name": "usernameOrLoginId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"pin\"`.",
@@ -1304,17 +1237,16 @@
         }
       }
     },
-    "/login-with-key/{usernameOrLoginId}": {
+    "/login-with-key": {
       "post": {
         "operationId": "loginWithKey",
         "summary": "Log in with an account login key.",
-        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key <usernameOrLoginId> <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --login-key=<loginKey> [--use-login-id=<useLoginId>]\n```\n\nThe key comes from `get-login-key` on an already-authenticated session.",
+        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --login-key=<loginKey> [--use-login-id=<useLoginId>]\n```\n\nThe key comes from `get-login-key` on an already-authenticated session.",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "login-with-key",
-          "positional": "usernameOrLoginId",
           "flags": [],
           "extra": [],
           "custom": true,
@@ -1322,16 +1254,7 @@
         },
         "x-core-call": "context.loginWithKey",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [
-          {
-            "name": "usernameOrLoginId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"key\"`.",
@@ -1465,17 +1388,16 @@
         }
       }
     },
-    "/login-with-recovery/{username}": {
+    "/login-with-recovery": {
       "post": {
         "operationId": "loginWithRecovery",
         "summary": "Log in with recovery answers.",
-        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --answer=<answers>\n```\n\nNeeds both the recovery key and the answers; neither works alone.",
+        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --username=<username> --answer=<answers>\n```\n\nNeeds both the recovery key and the answers; neither works alone.",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "login-with-recovery",
-          "positional": "username",
           "flags": [
             {
               "name": "answer",
@@ -1491,16 +1413,7 @@
         "x-core-call": "context.loginWithRecovery2",
         "x-core-note": "Our surface drops the `2` from core's recovery2 naming, and calls the key `recoveryKey` to match what `change-recovery` returns.",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"recovery\"`.",
@@ -1642,14 +1555,12 @@
       "post": {
         "operationId": "createAccount",
         "summary": "Create an account.",
-        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] [--password=<password>] [--pin=<pin>]\n```\n\nEvery credential is optional over REST: omitting all three creates a light account with no username.",
+        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] [--username=<username>] [--password=<password>] [--pin=<pin>]\n```\n\nEvery credential is optional over REST: omitting all three creates a light account with no username.",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "create-account",
-          "positional": "username",
-          "positionalInPath": false,
           "flags": [],
           "extra": [],
           "custom": true,
@@ -1791,17 +1702,24 @@
       "post": {
         "operationId": "requestEdgeLogin",
         "summary": "Start a QR login.",
-        "description": "**Core call:** `context.requestEdgeLogin`\n\n**Command line**\n\n```\nrequest-edge-login\n```\n\nAsks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
+        "description": "**Core call:** `context.requestEdgeLogin`\n\n**Command line**\n\n```\nrequest-edge-login [--no-wait]\n```\n\nAsks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
         "tags": [
           "Login"
         ],
         "x-cli": {
           "command": "request-edge-login",
           "flags": [],
-          "extra": [],
+          "extra": [
+            {
+              "name": "no-wait",
+              "kind": "boolean",
+              "required": false,
+              "doc": "Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process."
+            }
+          ],
           "custom": true,
           "preset": {},
-          "notes": "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session."
+          "notes": "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over."
         },
         "x-core-call": "context.requestEdgeLogin",
         "x-source": "src/cli/engine/routes/login.ts",
@@ -1937,11 +1855,18 @@
       "get": {
         "operationId": "pollEdgeLogin",
         "summary": "Poll a pending QR login.",
-        "description": "**Core call:** _none — Engine state for an in-flight requestEdgeLogin; core exposes it as EdgePendingEdgeLogin properties._\n\n_No `edge-cli` command; REST only._\n\nOnce `state` reaches `done` the engine has already created the session, so the response carries one ready to use.",
+        "description": "**Core call:** _none — Engine state for an in-flight requestEdgeLogin; core exposes it as EdgePendingEdgeLogin properties._\n\n**Command line**\n\n```\npoll-edge-login <pendingId> <pendingId>\n```\n\nOnce `state` reaches `done` the engine has already created the session, so the response carries one ready to use.",
         "tags": [
           "Login"
         ],
-        "x-cli": null,
+        "x-cli": {
+          "command": "poll-edge-login",
+          "positional": "pendingId",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
         "x-core-call": null,
         "x-core-note": "Engine state for an in-flight requestEdgeLogin; core exposes it as EdgePendingEdgeLogin properties.",
         "x-source": "src/cli/engine/routes/login.ts",
@@ -2662,6 +2587,125 @@
           },
           "default": {
             "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/currency-wallets": {
+      "get": {
+        "operationId": "currencyWallets",
+        "summary": "List the account's wallets.",
+        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>] [--no-wait=<waitForAll>]\n```\n\n",
+        "tags": [
+          "Account"
+        ],
+        "x-cli": {
+          "command": "currency-wallets",
+          "flags": [
+            {
+              "name": "no-wait",
+              "maps": "waitForAll",
+              "repeat": false,
+              "invert": true
+            }
+          ],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.currencyWallets",
+        "x-core-note": "Filtered by account.activeWalletIds / archivedWalletIds / hiddenWalletIds.",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Which of the account’s wallet lists to read. Defaults to `active`.",
+            "schema": {
+              "anyOf": [
+                {
+                  "description": "\"active\""
+                },
+                {
+                  "description": "\"archived\""
+                },
+                {
+                  "description": "\"hidden\""
+                },
+                {
+                  "description": "\"all\""
+                }
+              ]
+            }
+          },
+          {
+            "name": "waitForAll",
+            "in": "query",
+            "required": false,
+            "description": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "currencyWallets": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "description": "{ walletId: string; id: string; type: string; name: string"
+                          },
+                          {
+                            "description": "null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string"
+                          },
+                          {
+                            "description": "undefined; paused: boolean; imported: boolean"
+                          },
+                          {
+                            "description": "undefined; created: string"
+                          },
+                          {
+                            "description": "null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }"
+                          }
+                        ]
+                      },
+                      "description": "Every wallet in the account, including paused ones."
+                    }
+                  },
+                  "required": [
+                    "currencyWallets"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4050,14 +4094,6 @@
             "name": "lobbyId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "lobbyId",
-            "in": "query",
-            "required": true,
             "description": "From the QR code, or an `edge://edge/<lobbyId>` link.",
             "schema": {
               "type": "string"
@@ -4148,6 +4184,7 @@
             "name": "lobbyId",
             "in": "path",
             "required": true,
+            "description": "From the QR code, or an `edge://edge/<lobbyId>` link.",
             "schema": {
               "type": "string"
             }
@@ -4180,25 +4217,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ErrorEnvelope"
                 }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "lobbyId": {
-                    "type": "string",
-                    "description": "From the QR code, or an `edge://edge/<lobbyId>` link."
-                  }
-                },
-                "required": [
-                  "lobbyId"
-                ]
               }
             }
           }
@@ -4271,13 +4289,12 @@
       "post": {
         "operationId": "createWallet",
         "summary": "Create a wallet from raw key JSON.",
-        "description": "**Core call:** `account.createWallet`\n\n**Command line**\n\n```\ncreate-wallet --key-info='<json>'\n```\n\nThe import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.",
+        "description": "**Core call:** `account.createWallet`\n\n**Command line**\n\n```\ncreate-wallet --type=<type> [--keys=<keys>]\n```\n\nThe import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "create-wallet",
-          "bodyFlag": "key-info",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4351,17 +4368,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-wallet-info/{id}": {
+    "/account/{sessionId}/get-wallet-info": {
       "get": {
         "operationId": "getWalletInfo",
         "summary": "Read one wallet's key info.",
-        "description": "**Core call:** `account.getWalletInfo`\n\n**Command line**\n\n```\nget-wallet-info <id> <id>\n```\n\n",
+        "description": "**Core call:** `account.getWalletInfo`\n\n**Command line**\n\n```\nget-wallet-info --id=<id>\n```\n\n",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "get-wallet-info",
-          "positional": "id",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4381,17 +4397,9 @@
           },
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The key id, from `all-keys`. Base64, like a wallet id.",
             "schema": {
               "type": "string"
             }
@@ -4419,17 +4427,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-raw-private-key/{walletId}": {
+    "/account/{sessionId}/get-raw-private-key": {
       "get": {
         "operationId": "getRawPrivateKey",
         "summary": "Read raw private key material.",
-        "description": "**Core call:** `account.getRawPrivateKey`\n\n**Command line**\n\n```\nget-raw-private-key <walletId> <walletId>\n```\n\nSecret. Whatever the plugin stores — seed, mnemonic, xpriv.",
+        "description": "**Core call:** `account.getRawPrivateKey`\n\n**Command line**\n\n```\nget-raw-private-key --wallet-id=<walletId>\n```\n\nSecret. Whatever the plugin stores — seed, mnemonic, xpriv.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "get-raw-private-key",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4449,18 +4456,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4488,17 +4486,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-raw-public-key/{walletId}": {
+    "/account/{sessionId}/get-raw-public-key": {
       "get": {
         "operationId": "getRawPublicKey",
         "summary": "Read raw public key material.",
-        "description": "**Core call:** `account.getRawPublicKey`\n\n**Command line**\n\n```\nget-raw-public-key <walletId> <walletId>\n```\n\n",
+        "description": "**Core call:** `account.getRawPublicKey`\n\n**Command line**\n\n```\nget-raw-public-key --wallet-id=<walletId>\n```\n\n",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "get-raw-public-key",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4518,18 +4515,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4557,17 +4545,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-display-private-key/{walletId}": {
+    "/account/{sessionId}/get-display-private-key": {
       "get": {
         "operationId": "getDisplayPrivateKey",
         "summary": "Export the private key for display.",
-        "description": "**Core call:** `account.getDisplayPrivateKey`\n\n**Command line**\n\n```\nget-display-private-key <walletId> <walletId>\n```\n\nSecret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
+        "description": "**Core call:** `account.getDisplayPrivateKey`\n\n**Command line**\n\n```\nget-display-private-key --wallet-id=<walletId>\n```\n\nSecret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "get-display-private-key",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4587,18 +4574,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4637,17 +4615,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-display-public-key/{walletId}": {
+    "/account/{sessionId}/get-display-public-key": {
       "get": {
         "operationId": "getDisplayPublicKey",
         "summary": "Export the public key for display.",
-        "description": "**Core call:** `account.getDisplayPublicKey`\n\n**Command line**\n\n```\nget-display-public-key <walletId> <walletId>\n```\n\nThe xpub or equivalent — safe to share for watch-only use.",
+        "description": "**Core call:** `account.getDisplayPublicKey`\n\n**Command line**\n\n```\nget-display-public-key --wallet-id=<walletId>\n```\n\nThe xpub or equivalent — safe to share for watch-only use.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "get-display-public-key",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4667,18 +4644,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4717,17 +4685,16 @@
         }
       }
     },
-    "/account/{sessionId}/list-splittable-wallet-types/{walletId}": {
+    "/account/{sessionId}/list-splittable-wallet-types": {
       "get": {
         "operationId": "listSplittableWalletTypes",
         "summary": "List chains a wallet can split into.",
-        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n**Command line**\n\n```\nlist-splittable-wallet-types <walletId> <walletId>\n```\n\nForked-chain support: which wallet types can be derived from these keys.",
+        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n**Command line**\n\n```\nlist-splittable-wallet-types --wallet-id=<walletId>\n```\n\nForked-chain support: which wallet types can be derived from these keys.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "list-splittable-wallet-types",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -4747,18 +4714,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
             "in": "query",
             "required": true,
-            "description": "Full base58 wallet id.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4800,17 +4758,16 @@
         }
       }
     },
-    "/account/{sessionId}/change-wallet-states/{walletId}": {
+    "/account/{sessionId}/change-wallet-states": {
       "post": {
         "operationId": "changeWalletStates",
         "summary": "Archive, delete, hide, or reorder wallets.",
-        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states <walletId> <walletId> [--wallet-states=<walletStates>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
+        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states --wallet-id=<walletId> [--wallet-states=<walletStates>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
         "tags": [
           "Keys"
         ],
         "x-cli": {
           "command": "change-wallet-states",
-          "positional": "walletId",
           "flags": [],
           "extra": [
             {
@@ -4853,15 +4810,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -4886,6 +4834,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "walletStates": {
                     "anyOf": [
                       {
@@ -4906,113 +4858,10 @@
                     ],
                     "description": "`EdgeWalletStates`: wallet ids to the flags being changed."
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/account/{sessionId}/currency-wallets": {
-      "get": {
-        "operationId": "currencyWallets",
-        "summary": "List wallets.",
-        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>] [--no-wait=<waitForAll>]\n```\n\n",
-        "tags": [
-          "Wallets"
-        ],
-        "x-cli": {
-          "command": "currency-wallets",
-          "flags": [
-            {
-              "name": "no-wait",
-              "maps": "waitForAll",
-              "repeat": false,
-              "invert": true
-            }
-          ],
-          "extra": [],
-          "custom": false,
-          "preset": {}
-        },
-        "x-core-call": "account.currencyWallets",
-        "x-core-note": "Filtered by account.activeWalletIds / archivedWalletIds / hiddenWalletIds.",
-        "x-source": "src/cli/engine/routes/wallets.ts",
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter",
-            "in": "query",
-            "required": false,
-            "description": "`active` (default), `archived`, `hidden`, or `all`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "waitForAll",
-            "in": "query",
-            "required": false,
-            "description": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "currencyWallets": {
-                      "type": "array",
-                      "items": {
-                        "anyOf": [
-                          {
-                            "description": "{ walletId: string; id: string; type: string; name: string"
-                          },
-                          {
-                            "description": "null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string"
-                          },
-                          {
-                            "description": "undefined; paused: boolean; imported: boolean"
-                          },
-                          {
-                            "description": "undefined; created: string"
-                          },
-                          {
-                            "description": "null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }"
-                          }
-                        ]
-                      },
-                      "description": "Every wallet in the account, including paused ones."
-                    }
-                  },
-                  "required": [
-                    "currencyWallets"
-                  ]
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
@@ -5206,13 +5055,12 @@
       "post": {
         "operationId": "createCurrencyWallets",
         "summary": "Create several wallets at once.",
-        "description": "**Core call:** `account.createCurrencyWallets`\n\n**Command line**\n\n```\ncreate-currency-wallets --create-wallets='<json>'\n```\n\nPartial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
+        "description": "**Core call:** `account.createCurrencyWallets`\n\n**Command line**\n\n```\ncreate-currency-wallets --create-wallets=<createWallets>\n```\n\nPartial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "create-currency-wallets",
-          "bodyFlag": "create-wallets",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5285,17 +5133,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/{walletId}": {
+    "/account/{sessionId}/wallet": {
       "get": {
         "operationId": "walletInfo",
         "summary": "Wallet detail.",
-        "description": "**Core call:** _none — Engine composite of EdgeCurrencyWallet properties plus its EdgeCurrencyConfig token map._\n\n**Command line**\n\n```\nwallet-info <walletId> <walletId>\n```\n\n",
+        "description": "**Core call:** _none — Engine composite of EdgeCurrencyWallet properties plus its EdgeCurrencyConfig token map._\n\n**Command line**\n\n```\nwallet-info --wallet-id=<walletId>\n```\n\n",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "wallet-info",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5316,9 +5163,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5346,17 +5193,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/rename-wallet/{walletId}": {
+    "/account/{sessionId}/wallet/rename-wallet": {
       "post": {
         "operationId": "renameWallet",
         "summary": "Rename a wallet.",
-        "description": "**Core call:** `wallet.renameWallet`\n\n**Command line**\n\n```\nrename-wallet <walletId> <walletId> --name=<name>\n```\n\n",
+        "description": "**Core call:** `wallet.renameWallet`\n\n**Command line**\n\n```\nrename-wallet --wallet-id=<walletId> --name=<name>\n```\n\n",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "rename-wallet",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5373,15 +5219,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -5406,12 +5243,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "name": {
                     "type": "string",
                     "description": "The new display name."
                   }
                 },
                 "required": [
+                  "walletId",
                   "name"
                 ]
               }
@@ -5420,17 +5262,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}": {
+    "/account/{sessionId}/wallet/set-fiat-currency-code": {
       "post": {
         "operationId": "setFiatCurrencyCode",
         "summary": "Change a wallet's fiat currency.",
-        "description": "**Core call:** `wallet.setFiatCurrencyCode`\n\n**Command line**\n\n```\nset-fiat-currency-code <walletId> <walletId> --fiat-currency-code=<fiatCurrencyCode>\n```\n\nAffects how balances and history are priced, not the asset itself.",
+        "description": "**Core call:** `wallet.setFiatCurrencyCode`\n\n**Command line**\n\n```\nset-fiat-currency-code --wallet-id=<walletId> --fiat-currency-code=<fiatCurrencyCode>\n```\n\nAffects how balances and history are priced, not the asset itself.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "set-fiat-currency-code",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5447,15 +5288,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -5480,12 +5312,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "fiatCurrencyCode": {
                     "type": "string",
                     "description": "e.g. `iso:EUR`."
                   }
                 },
                 "required": [
+                  "walletId",
                   "fiatCurrencyCode"
                 ]
               }
@@ -5494,17 +5331,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/change-paused/{walletId}": {
+    "/account/{sessionId}/wallet/change-paused": {
       "post": {
         "operationId": "changePaused",
         "summary": "Pause or resume a wallet engine.",
-        "description": "**Core call:** `wallet.changePaused`\n\n**Command line**\n\n```\nchange-paused <walletId> <walletId> --paused=<paused>\n```\n\nA paused wallet stops syncing, which is how a caller quiets a chain it does not currently care about.",
+        "description": "**Core call:** `wallet.changePaused`\n\n**Command line**\n\n```\nchange-paused --wallet-id=<walletId> --paused=<paused>\n```\n\nA paused wallet stops syncing, which is how a caller quiets a chain it does not currently care about.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "change-paused",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5521,15 +5357,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -5554,12 +5381,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "paused": {
                     "type": "boolean",
                     "description": "True to stop syncing."
                   }
                 },
                 "required": [
+                  "walletId",
                   "paused"
                 ]
               }
@@ -5568,17 +5400,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/sync/{walletId}": {
+    "/account/{sessionId}/wallet/sync": {
       "post": {
         "operationId": "walletSync",
         "summary": "Nudge one wallet to sync.",
-        "description": "**Core call:** `wallet.sync`\n\n**Command line**\n\n```\nwallet-sync <walletId> <walletId>\n```\n\n",
+        "description": "**Core call:** `wallet.sync`\n\n**Command line**\n\n```\nwallet-sync --wallet-id=<walletId>\n```\n\n",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "wallet-sync",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5595,15 +5426,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -5620,20 +5442,38 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  }
+                },
+                "required": [
+                  "walletId"
+                ]
+              }
+            }
+          }
         }
       }
     },
-    "/account/{sessionId}/wallet/resync-blockchain/{walletId}": {
+    "/account/{sessionId}/wallet/resync-blockchain": {
       "post": {
         "operationId": "resyncBlockchain",
         "summary": "Rescan the blockchain from scratch.",
-        "description": "**Core call:** `wallet.resyncBlockchain`\n\n**Command line**\n\n```\nresync-blockchain <walletId> <walletId>\n```\n\nDrops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
+        "description": "**Core call:** `wallet.resyncBlockchain`\n\n**Command line**\n\n```\nresync-blockchain --wallet-id=<walletId>\n```\n\nDrops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "resync-blockchain",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5650,15 +5490,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -5675,21 +5506,38 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  }
+                },
+                "required": [
+                  "walletId"
+                ]
+              }
+            }
+          }
         }
       }
     },
-    "/account/{sessionId}/wallet/split/{walletId}": {
+    "/account/{sessionId}/wallet/split": {
       "post": {
         "operationId": "splitWallet",
         "summary": "Split a wallet into another chain.",
-        "description": "**Core call:** `wallet.split`\n\n**Command line**\n\n```\nsplit <walletId> <walletId> --split-wallets='<json>'\n```\n\nForked-chain support: derive a wallet of a different type from the same keys. `list-splittable-wallet-types` says which are valid.",
+        "description": "**Core call:** `wallet.split`\n\n**Command line**\n\n```\nsplit --wallet-id=<walletId> --split-wallets=<splitWallets>\n```\n\nForked-chain support: derive a wallet of a different type from the same keys. `list-splittable-wallet-types` says which are valid.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "split",
-          "positional": "walletId",
-          "bodyFlag": "split-wallets",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5703,15 +5551,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5756,6 +5595,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "splitWallets": {
                     "type": "array",
                     "items": {},
@@ -5763,6 +5606,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "splitWallets"
                 ]
               }
@@ -5771,17 +5615,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/dump-data/{walletId}": {
+    "/account/{sessionId}/wallet/dump-data": {
       "get": {
         "operationId": "dumpData",
         "summary": "Dump wallet engine state.",
-        "description": "**Core call:** `wallet.dumpData`\n\n**Command line**\n\n```\ndump-data <walletId> <walletId>\n```\n\nPlugin-defined debug output. Shape varies by plugin and can be very large.",
+        "description": "**Core call:** `wallet.dumpData`\n\n**Command line**\n\n```\ndump-data --wallet-id=<walletId>\n```\n\nPlugin-defined debug output. Shape varies by plugin and can be very large.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "dump-data",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5801,9 +5644,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5831,17 +5674,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/balance-map/{walletId}": {
+    "/account/{sessionId}/wallet/balance-map": {
       "get": {
         "operationId": "balanceMap",
         "summary": "Balances for every asset in the wallet.",
-        "description": "**Core call:** `wallet.balanceMap`\n\n**Command line**\n\n```\nbalance-map <walletId> <walletId> [--token-id=<value>]\n```\n\nThe native currency plus every enabled token.",
+        "description": "**Core call:** `wallet.balanceMap`\n\n**Command line**\n\n```\nbalance-map --wallet-id=<walletId> [--token-id=<value>]\n```\n\nThe native currency plus every enabled token.",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "balance-map",
-          "positional": "walletId",
           "flags": [],
           "extra": [
             {
@@ -5869,9 +5711,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5920,17 +5762,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/get-addresses/{walletId}": {
+    "/account/{sessionId}/wallet/get-addresses": {
       "get": {
         "operationId": "getAddresses",
         "summary": "Receive addresses.",
-        "description": "**Core call:** `wallet.getAddresses`\n\n**Command line**\n\n```\nget-addresses <walletId> <walletId> [--token-id=<tokenId>] [--force-index=<forceIndex>]\n```\n\n",
+        "description": "**Core call:** `wallet.getAddresses`\n\n**Command line**\n\n```\nget-addresses --wallet-id=<walletId> [--token-id=<tokenId>] [--force-index=<forceIndex>]\n```\n\n",
         "tags": [
           "Wallets"
         ],
         "x-cli": {
           "command": "get-addresses",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -5950,9 +5791,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5979,7 +5820,7 @@
             "required": false,
             "description": "Derive at a specific index.",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -6017,17 +5858,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/tokens/{walletId}": {
+    "/account/{sessionId}/wallet/tokens": {
       "get": {
         "operationId": "walletTokens",
         "summary": "List a wallet's tokens.",
-        "description": "**Core call:** _none — Engine composite of the EdgeCurrencyConfig token maps plus wallet.enabledTokenIds and wallet.detectedTokenIds._\n\n**Command line**\n\n```\nwallet-tokens <walletId> <walletId>\n```\n\n\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
+        "description": "**Core call:** _none — Engine composite of the EdgeCurrencyConfig token maps plus wallet.enabledTokenIds and wallet.detectedTokenIds._\n\n**Command line**\n\n```\nwallet-tokens --wallet-id=<walletId>\n```\n\n\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
         "tags": [
           "Tokens"
         ],
         "x-cli": {
           "command": "wallet-tokens",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6048,9 +5888,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6112,17 +5952,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/change-enabled-token-ids/{walletId}": {
+    "/account/{sessionId}/wallet/change-enabled-token-ids": {
       "post": {
         "operationId": "changeEnabledTokenIds",
         "summary": "Set the enabled token set.",
-        "description": "**Core call:** `wallet.changeEnabledTokenIds`\n\n**Command line**\n\n```\nchange-enabled-token-ids <walletId> <walletId> --token-ids=<tokenIds> [--add=<value>] [--remove=<value>]\n```\n\nAbsolute: anything missing from `tokenIds` is disabled. Core has only this setter, so there is no add or remove call.",
+        "description": "**Core call:** `wallet.changeEnabledTokenIds`\n\n**Command line**\n\n```\nchange-enabled-token-ids --wallet-id=<walletId> --token-ids=<tokenIds> [--add=<value>] [--remove=<value>]\n```\n\nAbsolute: anything missing from `tokenIds` is disabled. Core has only this setter, so there is no add or remove call.",
         "tags": [
           "Tokens"
         ],
         "x-cli": {
           "command": "change-enabled-token-ids",
-          "positional": "walletId",
           "flags": [],
           "extra": [
             {
@@ -6149,15 +5988,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6204,6 +6034,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "tokenIds": {
                     "type": "array",
                     "items": {
@@ -6213,6 +6047,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "tokenIds"
                 ]
               }
@@ -6221,17 +6056,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/get-transactions/{walletId}": {
+    "/account/{sessionId}/wallet/get-transactions": {
       "get": {
         "operationId": "getTransactions",
         "summary": "List or export a wallet's transactions.",
-        "description": "**Core call:** `wallet.getTransactions`\n\n**Command line**\n\n```\nget-transactions <walletId> <walletId> [--token-id=<tokenId>] [--limit=<limit>] [--offset=<offset>] [--start-date=<startDate>] [--end-date=<endDate>] [--search-string=<searchString>] [--spam-threshold=<spamThreshold>] [--fiat=<fiat>] [--export-format=<exportFormat>] [--bitwave-account=<bitwaveAccountId>] [--out=<value>]\n```\n\nReads history, overlays the display metadata the GUI shows, fills historical fiat, and optionally formats the result — all on this one call.",
+        "description": "**Core call:** `wallet.getTransactions`\n\n**Command line**\n\n```\nget-transactions --wallet-id=<walletId> [--token-id=<tokenId>] [--limit=<limit>] [--offset=<offset>] [--start-date=<startDate>] [--end-date=<endDate>] [--search-string=<searchString>] [--spam-threshold=<spamThreshold>] [--fiat=<fiat>] [--export-format=<exportFormat>] [--bitwave-account=<bitwaveAccountId>] [--out=<value>]\n```\n\nReads history, overlays the display metadata the GUI shows, fills historical fiat, and optionally formats the result — all on this one call.",
         "tags": [
           "Transactions"
         ],
         "x-cli": {
           "command": "get-transactions",
-          "positional": "walletId",
           "flags": [
             {
               "name": "bitwave-account",
@@ -6266,9 +6100,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6295,7 +6129,7 @@
             "required": false,
             "description": "Omitting it returns every transaction from `offset` on.",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
@@ -6304,7 +6138,7 @@
             "required": false,
             "description": "Where to start. Defaults to 0.",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
@@ -6313,7 +6147,7 @@
             "required": false,
             "description": "ISO-8601, or epoch milliseconds.",
             "schema": {
-              "type": "string"
+              "description": "Date"
             }
           },
           {
@@ -6322,7 +6156,7 @@
             "required": false,
             "description": "ISO-8601, or epoch milliseconds.",
             "schema": {
-              "type": "string"
+              "description": "Date"
             }
           },
           {
@@ -6393,17 +6227,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/get-num-transactions/{walletId}": {
+    "/account/{sessionId}/wallet/get-num-transactions": {
       "get": {
         "operationId": "getNumTransactions",
         "summary": "Count transactions in a wallet.",
-        "description": "**Core call:** `wallet.getNumTransactions`\n\n**Command line**\n\n```\nget-num-transactions <walletId> <walletId> [--token-id=<tokenId>]\n```\n\nCheaper than listing when only the total matters.",
+        "description": "**Core call:** `wallet.getNumTransactions`\n\n**Command line**\n\n```\nget-num-transactions --wallet-id=<walletId> [--token-id=<tokenId>]\n```\n\nCheaper than listing when only the total matters.",
         "tags": [
           "Transactions"
         ],
         "x-cli": {
           "command": "get-num-transactions",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6423,9 +6256,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6480,17 +6313,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/save-tx-metadata/{walletId}": {
+    "/account/{sessionId}/wallet/save-tx-metadata": {
       "post": {
         "operationId": "saveTxMetadata",
         "summary": "Save transaction metadata.",
-        "description": "**Core call:** `wallet.saveTxMetadata`\n\n**Command line**\n\n```\nsave-tx-metadata <walletId> <walletId> --txid=<txid> [--token-id=<tokenId>] --metadata=<metadata>\n```\n\nOne of only two routes that write transaction metadata to disk.",
+        "description": "**Core call:** `wallet.saveTxMetadata`\n\n**Command line**\n\n```\nsave-tx-metadata --wallet-id=<walletId> --txid=<txid> [--token-id=<tokenId>] --metadata=<metadata>\n```\n\nOne of only two routes that write transaction metadata to disk.",
         "tags": [
           "Transactions"
         ],
         "x-cli": {
           "command": "save-tx-metadata",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6504,15 +6336,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6540,6 +6363,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "txid": {
                     "type": "string",
                     "description": "Which transaction to tag."
@@ -6560,6 +6387,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "txid",
                   "metadata"
                 ]
@@ -6569,17 +6397,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/save-tx-action/{walletId}": {
+    "/account/{sessionId}/wallet/save-tx-action": {
       "post": {
         "operationId": "saveTxAction",
         "summary": "Save a transaction action.",
-        "description": "**Core call:** `wallet.saveTxAction`\n\n**Command line**\n\n```\nsave-tx-action <walletId> <walletId> --txid=<txid> [--token-id=<tokenId>] --saved-action=<savedAction> [--asset-action=<assetAction>]\n```\n\nRecords what a transaction *was* — a swap, a stake — beyond its metadata.",
+        "description": "**Core call:** `wallet.saveTxAction`\n\n**Command line**\n\n```\nsave-tx-action --wallet-id=<walletId> --txid=<txid> [--token-id=<tokenId>] --saved-action=<savedAction> [--asset-action=<assetAction>]\n```\n\nRecords what a transaction *was* — a swap, a stake — beyond its metadata.",
         "tags": [
           "Transactions"
         ],
         "x-cli": {
           "command": "save-tx-action",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6593,15 +6420,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6629,6 +6447,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "txid": {
                     "type": "string",
                     "description": "Which transaction to annotate."
@@ -6652,6 +6474,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "txid",
                   "savedAction"
                 ]
@@ -6661,17 +6484,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/get-max-spendable/{walletId}": {
+    "/account/{sessionId}/wallet/get-max-spendable": {
       "post": {
         "operationId": "getMaxSpendable",
         "summary": "Largest sendable amount.",
-        "description": "**Core call:** `wallet.getMaxSpendable`\n\n**Command line**\n\n```\nget-max-spendable <walletId> <walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>]\n```\n\nWhat empties the wallet after fees. A destination is still required, since fees depend on it.",
+        "description": "**Core call:** `wallet.getMaxSpendable`\n\n**Command line**\n\n```\nget-max-spendable --wallet-id=<walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>]\n```\n\nWhat empties the wallet after fees. A destination is still required, since fees depend on it.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "get-max-spendable",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6685,15 +6507,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6737,6 +6550,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "spendInfo": {
                     "description": "A full `EdgeSpendInfo`, used as-is when present."
                   },
@@ -6766,24 +6583,26 @@
                   "metadata": {
                     "description": "Wins over anything parsed out of the URI."
                   }
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
         }
       }
     },
-    "/account/{sessionId}/wallet/spend/{walletId}": {
+    "/account/{sessionId}/wallet/spend": {
       "post": {
         "operationId": "spend",
         "summary": "Send funds.",
-        "description": "**Core call:** _none — GUI composite: makeSpend, signTx, broadcastTx and saveTx together._\n\n**Command line**\n\n```\nspend <walletId> <walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>] [--use-max=<useMax>] [--dry-run=<dryRun>] [--broadcast=<broadcast>] [--save=<save>]\n```\n\n`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
+        "description": "**Core call:** _none — GUI composite: makeSpend, signTx, broadcastTx and saveTx together._\n\n**Command line**\n\n```\nspend --wallet-id=<walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>] [--use-max=<useMax>] [--dry-run=<dryRun>] [--broadcast=<broadcast>] [--save=<save>]\n```\n\n`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "spend",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6798,15 +6617,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6839,6 +6649,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "spendInfo": {
                     "description": "A full `EdgeSpendInfo`, used as-is when present."
                   },
@@ -6884,24 +6698,26 @@
                     "type": "boolean",
                     "description": "Defaults to **true**."
                   }
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
         }
       }
     },
-    "/account/{sessionId}/wallet/make-spend/{walletId}": {
+    "/account/{sessionId}/wallet/make-spend": {
       "post": {
         "operationId": "makeSpend",
         "summary": "Build an unsigned transaction.",
-        "description": "**Core call:** `wallet.makeSpend`\n\n**Command line**\n\n```\nmake-spend <walletId> <walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>]\n```\n\nFirst step of the staged workflow: nothing is signed and no funds move. Inspect `transaction.networkFee` on the result before signing.",
+        "description": "**Core call:** `wallet.makeSpend`\n\n**Command line**\n\n```\nmake-spend --wallet-id=<walletId> [--spend-info=<spendInfo>] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata=<metadata>]\n```\n\nFirst step of the staged workflow: nothing is signed and no funds move. Inspect `transaction.networkFee` on the result before signing.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "make-spend",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -6915,15 +6731,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -6989,6 +6796,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "spendInfo": {
                     "description": "A full `EdgeSpendInfo`, used as-is when present."
                   },
@@ -7018,7 +6829,10 @@
                   "metadata": {
                     "description": "Wins over anything parsed out of the URI."
                   }
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
@@ -7057,7 +6871,7 @@
             "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "An ephemeral object handle id.",
+            "description": "From `make-spend`.",
             "schema": {
               "type": "string"
             }
@@ -7115,25 +6929,6 @@
               }
             }
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "objectId": {
-                    "type": "string",
-                    "description": "From `make-spend`."
-                  }
-                },
-                "required": [
-                  "objectId"
-                ]
-              }
-            }
-          }
         }
       }
     },
@@ -7169,7 +6964,7 @@
             "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "An ephemeral object handle id.",
+            "description": "From `sign-tx`.",
             "schema": {
               "type": "string"
             }
@@ -7227,25 +7022,6 @@
               }
             }
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "objectId": {
-                    "type": "string",
-                    "description": "From `sign-tx`."
-                  }
-                },
-                "required": [
-                  "objectId"
-                ]
-              }
-            }
-          }
         }
       }
     },
@@ -7281,7 +7057,7 @@
             "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "An ephemeral object handle id.",
+            "description": "The handle to persist and release.",
             "schema": {
               "type": "string"
             }
@@ -7322,39 +7098,19 @@
               }
             }
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "objectId": {
-                    "type": "string",
-                    "description": "The handle to persist and release."
-                  }
-                },
-                "required": [
-                  "objectId"
-                ]
-              }
-            }
-          }
         }
       }
     },
-    "/account/{sessionId}/wallet/accelerate/{walletId}": {
+    "/account/{sessionId}/wallet/accelerate": {
       "post": {
         "operationId": "accelerate",
         "summary": "Fee-bump a pending transaction.",
-        "description": "**Core call:** `wallet.accelerate`\n\n**Command line**\n\n```\naccelerate <walletId> <walletId> [--object-id=<objectId>] [--transaction=<transaction>]\n```\n\nReplace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
+        "description": "**Core call:** `wallet.accelerate`\n\n**Command line**\n\n```\naccelerate --wallet-id=<walletId> [--object-id=<objectId>] [--transaction=<transaction>]\n```\n\nReplace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "accelerate",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7368,15 +7124,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -7442,6 +7189,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "objectId": {
                     "type": "string",
                     "description": "Handle of the transaction to bump."
@@ -7449,24 +7200,26 @@
                   "transaction": {
                     "description": "Or the transaction itself."
                   }
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
         }
       }
     },
-    "/account/{sessionId}/wallet/sweep-private-keys/{walletId}": {
+    "/account/{sessionId}/wallet/sweep-private-keys": {
       "post": {
         "operationId": "sweepPrivateKeys",
         "summary": "Sweep private keys into this wallet.",
-        "description": "**Core call:** `wallet.sweepPrivateKeys`\n\n**Command line**\n\n```\nsweep-private-keys <walletId> <walletId> --spend-info=<spendInfo>\n```\n\nBuilds a transaction moving everything from an external key. Returns an unsigned handle: sign, broadcast and save it like any staged spend.",
+        "description": "**Core call:** `wallet.sweepPrivateKeys`\n\n**Command line**\n\n```\nsweep-private-keys --wallet-id=<walletId> --spend-info=<spendInfo>\n```\n\nBuilds a transaction moving everything from an external key. Returns an unsigned handle: sign, broadcast and save it like any staged spend.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "sweep-private-keys",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7480,15 +7233,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -7554,11 +7298,16 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "spendInfo": {
                     "description": "A full `EdgeSpendInfo`, with the keys to sweep in `privateKeys`."
                   }
                 },
                 "required": [
+                  "walletId",
                   "spendInfo"
                 ]
               }
@@ -7567,17 +7316,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/sign-bytes/{walletId}": {
+    "/account/{sessionId}/wallet/sign-bytes": {
       "post": {
         "operationId": "signBytes",
         "summary": "Sign arbitrary bytes.",
-        "description": "**Core call:** `wallet.signBytes`\n\n**Command line**\n\n```\nsign-bytes <walletId> <walletId> [--bytes=<bytes>] [--data=<data>] [--other-params=<otherParams>]\n```\n\nMessage signing and proof-of-ownership, for plugins that support it.",
+        "description": "**Core call:** `wallet.signBytes`\n\n**Command line**\n\n```\nsign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--data=<data>] [--other-params=<otherParams>]\n```\n\nMessage signing and proof-of-ownership, for plugins that support it.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "sign-bytes",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7591,15 +7339,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -7643,6 +7382,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "bytes": {
                     "type": "string",
                     "description": "Base64. Defaults to empty when absent."
@@ -7654,24 +7397,26 @@
                   "otherParams": {
                     "description": "Plugin-specific options."
                   }
-                }
+                },
+                "required": [
+                  "walletId"
+                ]
               }
             }
           }
         }
       }
     },
-    "/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}": {
+    "/account/{sessionId}/wallet/get-payment-protocol-info": {
       "get": {
         "operationId": "getPaymentProtocolInfo",
         "summary": "Fetch a BIP70 payment request.",
-        "description": "**Core call:** `wallet.getPaymentProtocolInfo`\n\n**Command line**\n\n```\nget-payment-protocol-info <walletId> <walletId> --payment-protocol-url=<paymentProtocolUrl>\n```\n\nFeed `spendTargets` from the result into `make-spend` to pay it.",
+        "description": "**Core call:** `wallet.getPaymentProtocolInfo`\n\n**Command line**\n\n```\nget-payment-protocol-info --wallet-id=<walletId> --payment-protocol-url=<paymentProtocolUrl>\n```\n\nFeed `spendTargets` from the result into `make-spend` to pay it.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "get-payment-protocol-info",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7691,9 +7436,9 @@
           },
           {
             "name": "walletId",
-            "in": "path",
+            "in": "query",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -8424,17 +8169,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/parse-uri/{walletId}": {
+    "/account/{sessionId}/wallet/parse-uri": {
       "post": {
         "operationId": "parseUri",
         "summary": "Parse a payment URI or address.",
-        "description": "**Core call:** `wallet.parseUri`\n\n**Command line**\n\n```\nparse-uri <walletId> <walletId> --uri=<uri> [--currency-code=<currencyCode>]\n```\n\nWhat the GUI address tile does when you paste or scan something.",
+        "description": "**Core call:** `wallet.parseUri`\n\n**Command line**\n\n```\nparse-uri --wallet-id=<walletId> --uri=<uri> [--currency-code=<currencyCode>]\n```\n\nWhat the GUI address tile does when you paste or scan something.",
         "tags": [
           "Payment URIs"
         ],
         "x-cli": {
           "command": "parse-uri",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -8448,15 +8192,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -8489,6 +8224,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "uri": {
                     "type": "string",
                     "description": "A payment URI or a bare address."
@@ -8499,6 +8238,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "uri"
                 ]
               }
@@ -8507,17 +8247,16 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/encode-uri/{walletId}": {
+    "/account/{sessionId}/wallet/encode-uri": {
       "post": {
         "operationId": "encodeUri",
         "summary": "Build a payment URI.",
-        "description": "**Core call:** `wallet.encodeUri`\n\n**Command line**\n\n```\nencode-uri <walletId> <walletId> --public-address=<publicAddress> [--native-amount=<nativeAmount>] [--label=<label>] [--message=<message>] [--currency-code=<currencyCode>]\n```\n\nFor a receive screen or a QR code.",
+        "description": "**Core call:** `wallet.encodeUri`\n\n**Command line**\n\n```\nencode-uri --wallet-id=<walletId> --public-address=<publicAddress> [--native-amount=<nativeAmount>] [--label=<label>] [--message=<message>] [--currency-code=<currencyCode>]\n```\n\nFor a receive screen or a QR code.",
         "tags": [
           "Payment URIs"
         ],
         "x-cli": {
           "command": "encode-uri",
-          "positional": "walletId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -8531,15 +8270,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "walletId",
-            "in": "path",
-            "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -8583,6 +8313,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
                   "publicAddress": {
                     "type": "string",
                     "description": "Where the payment should go."
@@ -8605,6 +8339,7 @@
                   }
                 },
                 "required": [
+                  "walletId",
                   "publicAddress"
                 ]
               }
@@ -8617,13 +8352,12 @@
       "post": {
         "operationId": "ratesQuery",
         "summary": "Batch crypto and fiat rate lookups.",
-        "description": "**Core call:** _none — GUI code (src/util/exchangeRates): getHistoricalCryptoRate and getHistoricalFiatRate._\n\n**Command line**\n\n```\nrates-query --body='<json>'\n```\n\nConcurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
+        "description": "**Core call:** _none — GUI code (src/util/exchangeRates): getHistoricalCryptoRate and getHistoricalFiatRate._\n\n**Command line**\n\n```\nrates-query [--crypto=<crypto>] [--fiat=<fiat>]\n```\n\nConcurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
         "tags": [
           "Exchange rates"
         ],
         "x-cli": {
           "command": "rates-query",
-          "bodyFlag": "body",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -8937,17 +8671,16 @@
         }
       }
     },
-    "/account/{sessionId}/list-item-ids/{storeId}": {
+    "/account/{sessionId}/list-item-ids": {
       "get": {
         "operationId": "listItemIds",
         "summary": "List item ids in a store.",
-        "description": "**Core call:** `account.dataStore.listItemIds`\n\n**Command line**\n\n```\nlist-item-ids <storeId> <storeId>\n```\n\n",
+        "description": "**Core call:** `account.dataStore.listItemIds`\n\n**Command line**\n\n```\nlist-item-ids --store-id=<storeId>\n```\n\n",
         "tags": [
           "Data store"
         ],
         "x-cli": {
           "command": "list-item-ids",
-          "positional": "storeId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -8961,14 +8694,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "storeId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9019,17 +8744,16 @@
         }
       }
     },
-    "/account/{sessionId}/get-item/{storeId}": {
+    "/account/{sessionId}/get-item": {
       "get": {
         "operationId": "getItem",
         "summary": "Read an item.",
-        "description": "**Core call:** `account.dataStore.getItem`\n\n**Command line**\n\n```\nget-item <storeId> <storeId> --item-id=<itemId>\n```\n\nValues are opaque strings; encoding is the caller's business.",
+        "description": "**Core call:** `account.dataStore.getItem`\n\n**Command line**\n\n```\nget-item --store-id=<storeId> --item-id=<itemId>\n```\n\nValues are opaque strings; encoding is the caller's business.",
         "tags": [
           "Data store"
         ],
         "x-cli": {
           "command": "get-item",
-          "positional": "storeId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -9043,14 +8767,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "storeId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9107,17 +8823,16 @@
         }
       }
     },
-    "/account/{sessionId}/set-item/{storeId}": {
+    "/account/{sessionId}/set-item": {
       "post": {
         "operationId": "setItem",
         "summary": "Write an item.",
-        "description": "**Core call:** `account.dataStore.setItem`\n\n**Command line**\n\n```\nset-item <storeId> <storeId> --item-id=<itemId> --value=<value>\n```\n\nCreates the store if it does not exist.",
+        "description": "**Core call:** `account.dataStore.setItem`\n\n**Command line**\n\n```\nset-item --store-id=<storeId> --item-id=<itemId> --value=<value>\n```\n\nCreates the store if it does not exist.",
         "tags": [
           "Data store"
         ],
         "x-cli": {
           "command": "set-item",
-          "positional": "storeId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -9131,14 +8846,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "storeId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9190,17 +8897,16 @@
         }
       }
     },
-    "/account/{sessionId}/delete-item/{storeId}": {
+    "/account/{sessionId}/delete-item": {
       "post": {
         "operationId": "deleteItem",
         "summary": "Delete an item.",
-        "description": "**Core call:** `account.dataStore.deleteItem`\n\n**Command line**\n\n```\ndelete-item <storeId> <storeId> --item-id=<itemId>\n```\n\n",
+        "description": "**Core call:** `account.dataStore.deleteItem`\n\n**Command line**\n\n```\ndelete-item --store-id=<storeId> --item-id=<itemId>\n```\n\n",
         "tags": [
           "Data store"
         ],
         "x-cli": {
           "command": "delete-item",
-          "positional": "storeId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -9214,14 +8920,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "storeId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9268,17 +8966,16 @@
         }
       }
     },
-    "/account/{sessionId}/delete-store/{storeId}": {
+    "/account/{sessionId}/delete-store": {
       "post": {
         "operationId": "deleteStore",
         "summary": "Delete an entire store.",
-        "description": "**Core call:** `account.dataStore.deleteStore`\n\n**Command line**\n\n```\ndelete-store <storeId> <storeId>\n```\n\nRemoves every item in it, which cannot be undone from this API.",
+        "description": "**Core call:** `account.dataStore.deleteStore`\n\n**Command line**\n\n```\ndelete-store --store-id=<storeId>\n```\n\nRemoves every item in it, which cannot be undone from this API.",
         "tags": [
           "Data store"
         ],
         "x-cli": {
           "command": "delete-store",
-          "positional": "storeId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -9292,14 +8989,6 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "storeId",
-            "in": "path",
-            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9408,17 +9097,16 @@
         }
       }
     },
-    "/admin/hash-username/{username}": {
+    "/admin/hash-username": {
       "get": {
         "operationId": "adminHashUsername",
         "summary": "Hash a username.",
-        "description": "**Core call:** `context.$internalStuff.hashUsername`\n\n**Command line**\n\n```\nadmin-hash-username <username> <username>\n```\n\nReproduces the login server's hashing, to derive a login id offline.",
+        "description": "**Core call:** `context.$internalStuff.hashUsername`\n\n**Command line**\n\n```\nadmin-hash-username --username=<username>\n```\n\nReproduces the login server's hashing, to derive a login id offline.",
         "tags": [
           "Admin"
         ],
         "x-cli": {
           "command": "admin-hash-username",
-          "positional": "username",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -9427,14 +9115,6 @@
         "x-core-call": "context.$internalStuff.hashUsername",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "username",
             "in": "query",
@@ -9656,14 +9336,6 @@
             "name": "lobbyId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "lobbyId",
-            "in": "query",
-            "required": true,
             "description": "Which lobby to read.",
             "schema": {
               "type": "string"
@@ -9715,6 +9387,7 @@
             "name": "lobbyId",
             "in": "path",
             "required": true,
+            "description": "Which lobby to answer.",
             "schema": {
               "type": "string"
             }
@@ -9742,10 +9415,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "lobbyId": {
-                    "type": "string",
-                    "description": "Which lobby to answer."
-                  },
                   "lobbyRequest": {
                     "description": "Normally the object from `admin-fetch-lobby-request`."
                   },
@@ -9754,7 +9423,6 @@
                   }
                 },
                 "required": [
-                  "lobbyId",
                   "lobbyRequest"
                 ]
               }
@@ -9786,6 +9454,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
+            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -9807,25 +9476,6 @@
                 "schema": {
                   "$ref": "#/components/schemas/ErrorEnvelope"
                 }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "syncKey": {
-                    "type": "string",
-                    "description": "Base58 repo sync key."
-                  }
-                },
-                "required": [
-                  "syncKey"
-                ]
               }
             }
           }
@@ -9855,6 +9505,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
+            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -9864,15 +9515,6 @@
             "in": "query",
             "required": false,
             "description": "Subdirectory. Defaults to the repo root.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "syncKey",
-            "in": "query",
-            "required": true,
-            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -9942,6 +9584,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
+            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -9951,15 +9594,6 @@
             "in": "query",
             "required": true,
             "description": "Path within the repo.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "syncKey",
-            "in": "query",
-            "required": true,
-            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -10030,6 +9664,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
+            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -10065,10 +9700,6 @@
                     "type": "string",
                     "description": "The contents to write."
                   },
-                  "syncKey": {
-                    "type": "string",
-                    "description": "Base58 repo sync key."
-                  },
                   "dataKey": {
                     "type": "string",
                     "description": "Base58 repo data key."
@@ -10077,7 +9708,6 @@
                 "required": [
                   "path",
                   "text",
-                  "syncKey",
                   "dataKey"
                 ]
               }
@@ -10109,6 +9739,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
+            "description": "Base58 repo sync key.",
             "schema": {
               "type": "string"
             }
@@ -10140,10 +9771,6 @@
                     "type": "string",
                     "description": "Path within the repo."
                   },
-                  "syncKey": {
-                    "type": "string",
-                    "description": "Base58 repo sync key."
-                  },
                   "dataKey": {
                     "type": "string",
                     "description": "Base58 repo data key."
@@ -10151,7 +9778,6 @@
                 },
                 "required": [
                   "path",
-                  "syncKey",
                   "dataKey"
                 ]
               }

@@ -40,8 +40,6 @@ export interface ExtractedCliExtra {
 export interface ExtractedCli {
   command: string
   positional?: string
-  /** False when an optional positional has to stay off the path. */
-  positionalInPath?: false
   bodyFlag?: string
   flags: ExtractedCliFlag[]
   extra: ExtractedCliExtra[]
@@ -241,6 +239,24 @@ function proseFor(
   // A `doc(…)` call may sit inside a combinator — `asOptional(doc(…))` — so
   // search the expression rather than only looking at its outermost call.
   const findDoc = (expr: ts.Expression): string | undefined => {
+    // A shared field cleaner is named: `walletId: asWalletId`, where
+    // `asWalletId` is `doc(asString, '…')` exported from schemas. Follow the
+    // name to its declaration so one description serves every route using it.
+    if (ts.isIdentifier(expr)) {
+      let sym = checker.getSymbolAtLocation(expr)
+      if (sym != null && (sym.flags & ts.SymbolFlags.Alias) !== 0) {
+        sym = checker.getAliasedSymbol(sym)
+      }
+      const decl = sym?.declarations?.[0]
+      if (
+        decl != null &&
+        ts.isVariableDeclaration(decl) &&
+        decl.initializer != null
+      ) {
+        return findDoc(decl.initializer)
+      }
+      return undefined
+    }
     if (ts.isCallExpression(expr)) {
       if (expr.expression.getText() === 'doc' && expr.arguments.length > 1) {
         return proseText(expr.arguments[1])
@@ -372,9 +388,6 @@ function parseCli(node: ts.Expression | undefined): ExtractedCli | null {
   return {
     command,
     positional: str(node, 'positional'),
-    positionalInPath: /positionalInPath:\s*false/.test(node.getText())
-      ? false
-      : undefined,
     bodyFlag: str(node, 'bodyFlag'),
     flags,
     extra,
@@ -572,10 +585,7 @@ export function extractRoutes(): ExtractedRoute[] {
         // which is what the engine actually serves.
         const declaredPath = literal(arg, 'path') ?? ''
         const cli = parseCliList(cliNode)[0] ?? null
-        const pathPositional =
-          cli?.positional != null && cli.positionalInPath !== false
-            ? cli.positional
-            : null
+        const pathPositional = cli?.positional ?? null
         const routePath =
           pathPositional == null
             ? declaredPath

@@ -21,12 +21,17 @@ export function doc<T>(cleaner: Cleaner<T>, _prose: string): Cleaner<T> {
 /**
  * Path parameters carry scope, and mean the same thing on every route that
  * takes them, so they are described once here rather than per route.
+ *
+ * Every one of these is base58, which is the rule for a path parameter: no
+ * `/`, `?` or `#`, so it survives a URL without percent-encoding. Anything
+ * else — a base64 wallet id, a free-text username — travels in the query or
+ * the body instead.
  */
 export const SCOPE_PARAMS: Record<string, string> = {
   sessionId:
     'From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.',
-  walletId:
-    'A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.',
   objectId: 'An ephemeral object handle id.',
-  pendingId: 'The `pendingId` returned when the QR login was requested.'
+  pendingId: 'The `pendingId` returned when the QR login was requested.',
+  lobbyId: 'The lobby to act on.',
+  syncKey: 'Base58 sync key for the repo.'
 }

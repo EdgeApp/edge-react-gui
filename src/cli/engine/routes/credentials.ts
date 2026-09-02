@@ -26,7 +26,7 @@ export const changePassword = route({
   core: 'account.changePassword',
   method: 'POST',
   path: '/account/{sessionId}/change-password',
-  cli: { command: 'change-password' },
+  cli: 'change-password',
   body: asObject({ password: doc(asString, 'The new password.') }).withRest,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
@@ -102,7 +102,7 @@ export const changePin = route({
   core: 'account.changePin',
   method: 'POST',
   path: '/account/{sessionId}/change-pin',
-  cli: { command: 'change-pin' },
+  cli: 'change-pin',
   body: asObject({
     pin: doc(asString, 'The new PIN.'),
     enableLogin: asOptional(
@@ -175,7 +175,7 @@ export const changeUsername = route({
   core: 'account.changeUsername',
   method: 'POST',
   path: '/account/{sessionId}/change-username',
-  cli: { command: 'change-username' },
+  cli: 'change-username',
   body: asObject({
     username: doc(asString, 'The new username.'),
     password: asOptional(

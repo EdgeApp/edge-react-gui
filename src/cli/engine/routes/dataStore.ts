@@ -33,7 +33,7 @@ export const listItemIds = route({
   core: 'account.dataStore.listItemIds',
   method: 'GET',
   path: '/account/{sessionId}/list-item-ids',
-  cli: { command: 'list-item-ids', positional: 'storeId' },
+  cli: 'list-item-ids',
   query: asObject({ storeId: doc(asString, STORE_ID_DOC) }).withRest,
   returns: asObject({
     itemIds: doc(asArray(asString), 'Keys in this store. Empty if it has none.')
@@ -56,7 +56,7 @@ export const getItem = route({
   core: 'account.dataStore.getItem',
   method: 'GET',
   path: '/account/{sessionId}/get-item',
-  cli: { command: 'get-item', positional: 'storeId' },
+  cli: 'get-item',
   query: asObject({
     storeId: doc(asString, STORE_ID_DOC),
     itemId: doc(asString, ITEM_ID_DOC)
@@ -80,7 +80,7 @@ export const setItem = route({
   core: 'account.dataStore.setItem',
   method: 'POST',
   path: '/account/{sessionId}/set-item',
-  cli: { command: 'set-item', positional: 'storeId' },
+  cli: 'set-item',
   body: asObject({
     storeId: doc(asString, STORE_ID_DOC),
     itemId: doc(asString, ITEM_ID_DOC),
@@ -102,7 +102,7 @@ export const deleteItem = route({
   core: 'account.dataStore.deleteItem',
   method: 'POST',
   path: '/account/{sessionId}/delete-item',
-  cli: { command: 'delete-item', positional: 'storeId' },
+  cli: 'delete-item',
   body: asObject({
     storeId: doc(asString, STORE_ID_DOC),
     itemId: doc(asString, ITEM_ID_DOC)
@@ -127,7 +127,7 @@ export const deleteStore = route({
   core: 'account.dataStore.deleteStore',
   method: 'POST',
   path: '/account/{sessionId}/delete-store',
-  cli: { command: 'delete-store', positional: 'storeId' },
+  cli: 'delete-store',
   body: asObject({ storeId: doc(asString, STORE_ID_DOC) }).withRest,
   errors: ['BAD_REQUEST'],
 

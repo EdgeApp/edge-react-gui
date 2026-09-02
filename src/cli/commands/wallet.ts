@@ -7,29 +7,29 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 /**
- * A wallet-scoped URL: scope, then command, then the wallet it acts on.
+ * A wallet-scoped URL.
  *
- * The wallet id comes last so the path reads in the same order the command
- * does — `wallet/balance-map/{walletId}` for `balance-map <walletId>`.
+ * The wallet id is not in it: ids are base64, so `7o7i6/tlI+qi…=` contains a
+ * path delimiter. It travels as a named argument instead — in the query for
+ * `GET`, the body for `POST`.
  */
-function walletPath(sessionId: string, walletId: string, verb = ''): string {
-  return `/account/${encodeURIComponent(
-    sessionId
-  )}/wallet${verb}/${encodeURIComponent(walletId)}`
+function walletPath(sessionId: string, verb = ''): string {
+  return `/account/${encodeURIComponent(sessionId)}/wallet${verb}`
 }
 
 const walletStateCmd = command(
   'change-wallet-states',
   {
     usage:
-      'change-wallet-states <walletId> [--archived=true|false] [--deleted=true|false] [--hidden=true|false] [--sort-index=N]',
+      'change-wallet-states --wallet-id=<id> [--archived=true|false] [--deleted=true|false] [--hidden=true|false] [--sort-index=N]',
     help: 'Set wallet archived/deleted/hidden/sortIndex (account.changeWalletStates)',
     needsSession: true
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(walletStateCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        'wallet-id': 'string',
         archived: 'boolstr',
         deleted: 'boolstr',
         hidden: 'boolstr',
@@ -60,7 +60,7 @@ const walletStateCmd = command(
     const sessionId = requireSession(ctx)
     await ctx.client.post(
       `/account/${encodeURIComponent(sessionId)}/change-wallet-states`,
-      { [args.positional!]: state }
+      { [args.requireString('wallet-id')]: state }
     )
     printJson({ ok: true })
   }
@@ -69,20 +69,23 @@ const walletStateCmd = command(
 const balanceCmd = command(
   'balance-map',
   {
-    usage: 'balance-map <walletId> [--token-id=<tokenId>]',
+    usage: 'balance-map --wallet-id=<id> [--token-id=<tokenId>]',
     help: 'Show native and exchange balance-map for a wallet (or one token)',
     needsSession: true
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(balanceCmd, argv, {
-      positional: 'required',
-      flags: { 'token-id': 'string' }
+      positional: 'none',
+      flags: { 'wallet-id': 'string', 'token-id': 'string' }
     })
     const sessionId = requireSession(ctx)
     const tokenId = args.string('token-id')
     const result = await ctx.client.get<{
       balances: Array<{ tokenId: string | null }>
-    }>(walletPath(sessionId, args.positional!, '/balance-map'))
+    }>(
+      walletPath(sessionId, '/balance-map') +
+        `?walletId=${encodeURIComponent(args.requireString('wallet-id'))}`
+    )
     if (tokenId == null) {
       printJson(result)
       return
@@ -97,14 +100,15 @@ const txListCmd = command(
   'get-transactions',
   {
     usage:
-      'get-transactions <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]',
+      'get-transactions --wallet-id=<id> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]',
     help: 'List or export wallet transactions (JSON by default; CSV/QBO/Bitwave via REST exportFormat)',
     needsSession: true
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(txListCmd, argv, {
-      positional: 'required',
+      positional: 'none',
       flags: {
+        'wallet-id': 'string',
         'token-id': 'string',
         limit: 'string',
         offset: 'string',
@@ -144,6 +148,7 @@ const txListCmd = command(
 
     const sessionId = requireSession(ctx)
     const query = new URLSearchParams()
+    query.set('walletId', args.requireString('wallet-id'))
     const tokenId = args.string('token-id')
     const limit = args.string('limit')
     const offset = args.string('offset')
@@ -167,10 +172,7 @@ const txListCmd = command(
       total?: number
       transactions?: unknown
       files?: Array<{ format: TxExportFormat; contents: string }>
-    }>(
-      walletPath(sessionId, args.positional!, '/get-transactions') +
-        (qs !== '' ? `?${qs}` : '')
-    )
+    }>(walletPath(sessionId, '/get-transactions') + `?${qs}`)
 
     if (formats.length === 0 || result.files == null) {
       printJson(result)
@@ -229,17 +231,22 @@ const changeEnabledTokenIdsCmd = command(
   'change-enabled-token-ids',
   {
     usage:
-      'change-enabled-token-ids <walletId> (--token-ids=<a,b,c> | --add=<id> | --remove=<id>)',
+      'change-enabled-token-ids --wallet-id=<id> (--token-ids=<a,b,c> | --add=<id> | --remove=<id>)',
     help: 'Set the wallet\u2019s enabled token set (wallet.changeEnabledTokenIds)',
     needsSession: true
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(changeEnabledTokenIdsCmd, argv, {
-      positional: 'required',
-      flags: { 'token-ids': 'string', add: 'repeat', remove: 'repeat' }
+      positional: 'none',
+      flags: {
+        'wallet-id': 'string',
+        'token-ids': 'string',
+        add: 'repeat',
+        remove: 'repeat'
+      }
     })
     const sessionId = requireSession(ctx)
-    const walletId = args.positional!
+    const walletId = args.requireString('wallet-id')
     const listed = args.string('token-ids')
     const added = args.strings('add')
     const removed = args.strings('remove')
@@ -261,7 +268,8 @@ const changeEnabledTokenIdsCmd = command(
       // --add / --remove are client-side sugar: core only has a full setter,
       // so read the current set first and send back the whole list.
       const current = await ctx.client.get<{ enabledTokenIds: string[] }>(
-        walletPath(sessionId, walletId, '/tokens')
+        walletPath(sessionId, '/tokens') +
+          `?walletId=${encodeURIComponent(walletId)}`
       )
       const next = new Set(current.enabledTokenIds)
       for (const id of added) next.add(id)
@@ -276,8 +284,8 @@ const changeEnabledTokenIdsCmd = command(
 
     printJson(
       await ctx.client.post(
-        walletPath(sessionId, walletId, '/change-enabled-token-ids'),
-        { tokenIds }
+        walletPath(sessionId, '/change-enabled-token-ids'),
+        { walletId, tokenIds }
       )
     )
   }

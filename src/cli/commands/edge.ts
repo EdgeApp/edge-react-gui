@@ -1,5 +1,6 @@
 import { printJson } from '../client/output'
 import { command } from '../command'
+import { parseCommandArgs } from '../commandArgs'
 
 interface PendingEdgeLogin {
   pendingId: string
@@ -18,16 +19,26 @@ async function sleep(ms: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, ms))
 }
 
-command(
+const requestCmd = command(
   'request-edge-login',
   {
-    usage: 'request-edge-login',
+    usage: 'request-edge-login [--no-wait]',
     help: 'Request a QR / lobby Edge login and wait for approval'
   },
-  async ctx => {
+  async (ctx, argv) => {
+    const args = parseCommandArgs(requestCmd, argv, {
+      positional: 'none',
+      flags: { 'no-wait': 'boolean' }
+    })
     const pending = await ctx.client.post<PendingEdgeLogin>(
       '/request-edge-login'
     )
+    // `--no-wait` prints the lobby and stops, so the QR can be shown while
+    // another process polls the same handle with `poll-edge-login`.
+    if (args.boolean('no-wait')) {
+      printJson(pending)
+      return
+    }
     printJson(pending)
 
     const deadline = Date.now() + TIMEOUT_MS
@@ -55,5 +66,29 @@ command(
         current.error ?? `Edge login ended in state "${current.state}"`
       )
     }
+  }
+)
+
+const pollCmd = command(
+  'poll-edge-login',
+  {
+    usage: 'poll-edge-login <pendingId>',
+    help: 'Check a pending QR login once, without waiting',
+    needsSession: false
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(pollCmd, argv, {
+      positional: 'required',
+      flags: {}
+    })
+    const current = await ctx.client.get<PendingEdgeLogin>(
+      `/pending-edge-login/${encodeURIComponent(args.positional ?? '')}`
+    )
+    // A finished poll carries the session, so store it here rather than
+    // making the caller copy a sessionId out of the JSON.
+    if (current.state === 'done' && current.session != null) {
+      ctx.setSessionId(current.session.sessionId, current.session.username)
+    }
+    printJson(current)
   }
 )

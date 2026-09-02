@@ -119,7 +119,7 @@ export const repairOtp = route({
   core: 'account.repairOtp',
   method: 'POST',
   path: '/account/{sessionId}/repair-otp',
-  cli: { command: 'repair-otp' },
+  cli: 'repair-otp',
   body: asObject({
     otpKey: doc(asString, 'The secret the account should use.')
   }).withRest,

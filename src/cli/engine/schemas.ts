@@ -9,6 +9,7 @@
  * fields are validated while anything a handler forwards wholesale to core
  * still passes through untouched.
  */
+import type { Cleaner } from 'cleaners'
 import {
   asArray,
   asBoolean,
@@ -26,6 +27,76 @@ import { doc } from './doc'
 
 /** `EdgeTokenId`: a contract id, or null for the native asset. */
 export const asTokenId = asEither(asString, asValue(null))
+
+/**
+ * The wallet a call acts on.
+ *
+ * Not a path parameter. A wallet id is base64 — `7o7i6/tlI+qi…=` is an
+ * ordinary one — and a value containing `/` cannot be a path segment without
+ * percent-encoding that callers forget. Path parameters are reserved for
+ * base58 identifiers, which have no such character.
+ */
+export const asWalletId = doc(
+  asString,
+  'The wallet to act on. A full wallet id, or any unique prefix of one. An ' +
+    'ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with ' +
+    '`details.candidates`.'
+)
+
+// ------------------------------------------------------------ query values
+// A query string carries only text, so `?waitForAll=true` arrives as the four
+// characters "true". These cleaners convert on the way in, which lets a route
+// declare the type it actually means: the documented type, the type the
+// handler reads, and the CLI flag kind all follow from one declaration. A
+// route that declared `asString` and converted inside the handler documented a
+// string and produced a `--flag=<value>` where a bare switch belonged.
+
+/** A boolean written out in a query string. */
+export const asQueryBoolean: Cleaner<boolean> = raw => {
+  if (typeof raw === 'boolean') return raw
+  if (raw === 'true') return true
+  if (raw === 'false') return false
+  throw new TypeError('Expected "true" or "false"')
+}
+
+/** A whole number written out in a query string. */
+export const asQueryInteger: Cleaner<number> = raw => {
+  if (typeof raw === 'number' && Number.isInteger(raw)) return raw
+  if (typeof raw !== 'string' || raw === '') {
+    throw new TypeError('Expected a whole number')
+  }
+  const n = Number(raw)
+  if (!Number.isInteger(n)) throw new TypeError('Expected a whole number')
+  return n
+}
+
+/**
+ * A date written out in a query string, as ISO-8601 or epoch milliseconds.
+ */
+export const asQueryDate: Cleaner<Date> = raw => {
+  if (raw instanceof Date) return raw
+  if (typeof raw !== 'string' || raw.trim() === '') {
+    throw new TypeError('Expected an ISO-8601 date or epoch milliseconds')
+  }
+  const ms = Number(raw)
+  const date = Number.isFinite(ms) ? new Date(ms) : new Date(raw)
+  if (Number.isNaN(date.getTime())) {
+    throw new TypeError('Expected an ISO-8601 date or epoch milliseconds')
+  }
+  return date
+}
+
+/**
+ * `EdgeTokenId` from a query string.
+ *
+ * The native asset is `null`, which a URL can only spell as the text "null" —
+ * or by omitting the parameter. Both mean the same thing.
+ */
+export const asQueryTokenId: Cleaner<string | null> = raw => {
+  if (raw == null || raw === '' || raw === 'null') return null
+  if (typeof raw === 'string') return raw
+  throw new TypeError('Expected a token id or null')
+}
 
 /** A core value passed through untouched. Documented by name in JSDoc. */
 export const asCoreValue = asUnknown

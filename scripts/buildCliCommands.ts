@@ -92,6 +92,17 @@ function specFor(r: ExtractedRoute, cli: ExtractedCli): CommandSpec {
     })
   }
 
+  // `bodyFlag` means one JSON argument *is* the body, so any other declared
+  // field would be silently dropped. Better to fail the build than to send a
+  // request missing a field the route requires.
+  if (cli.bodyFlag != null && args.length > 0) {
+    throw new Error(
+      `${cli.command}: has bodyFlag "${cli.bodyFlag}" and also declares ` +
+        `${args.map(a => a.field).join(', ')}; drop the bodyFlag so every ` +
+        'field gets its own flag'
+    )
+  }
+
   const parts = [cli.command]
   if (pathPositional != null) parts.push(`<${pathPositional}>`)
   if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)

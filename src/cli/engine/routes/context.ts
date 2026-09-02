@@ -66,7 +66,7 @@ export const forgetAccount = route({
   core: 'context.forgetAccount',
   method: 'POST',
   path: '/forget-account',
-  cli: { command: 'forget-account', positional: 'rootLoginId' },
+  cli: 'forget-account',
   body: asForgetAccountBody,
   errors: ['USER_NOT_FOUND', 'BAD_REQUEST'],
 
@@ -96,7 +96,7 @@ export const usernameAvailable = route({
   core: 'context.usernameAvailable',
   method: 'GET',
   path: '/username-available',
-  cli: { command: 'username-available', positional: 'username' },
+  cli: 'username-available',
   query: asUsernameQuery,
   returns: asObject({
     username: doc(asString, 'The name that was checked, echoed back.'),
@@ -126,7 +126,7 @@ export const fixUsername = route({
   core: 'context.fixUsername',
   method: 'GET',
   path: '/fix-username',
-  cli: { command: 'fix-username', positional: 'username' },
+  cli: 'fix-username',
   query: asObject({
     username: doc(asString, 'The name to normalize.')
   }).withRest,
@@ -198,7 +198,7 @@ export const requestOtpReset = route({
   core: 'context.requestOtpReset',
   method: 'POST',
   path: '/request-otp-reset',
-  cli: { command: 'request-otp-reset', positional: 'username' },
+  cli: 'request-otp-reset',
   body: asOtpResetBody,
   returns: asObject({
     resetDate: doc(
@@ -228,7 +228,7 @@ export const fetchRecoveryQuestions = route({
   core: 'context.fetchRecovery2Questions',
   method: 'GET',
   path: '/fetch-recovery-questions',
-  cli: { command: 'fetch-recovery-questions', positional: 'username' },
+  cli: 'fetch-recovery-questions',
   query: asRecoveryQuestionsQuery,
   returns: asObject({
     questions: doc(

@@ -137,7 +137,7 @@ export const loginWithPassword = route({
   core: 'context.loginWithPassword',
   method: 'POST',
   path: '/login-with-password',
-  cli: { command: 'login-with-password', custom: true, positional: 'username' },
+  cli: { command: 'login-with-password', custom: true },
   body: asObject({
     username: doc(asString, 'The account name.'),
     password: doc(asString, 'The account password.'),
@@ -173,8 +173,7 @@ export const loginWithPin = route({
   path: '/login-with-pin',
   cli: {
     command: 'login-with-pin',
-    custom: true,
-    positional: 'usernameOrLoginId'
+    custom: true
   },
   body: asObject({
     usernameOrLoginId: doc(asString, 'A username, or a login id.'),
@@ -212,8 +211,7 @@ export const loginWithKey = route({
   path: '/login-with-key',
   cli: {
     command: 'login-with-key',
-    custom: true,
-    positional: 'usernameOrLoginId'
+    custom: true
   },
   body: asObject({
     usernameOrLoginId: doc(asString, 'A username, or a login id.'),
@@ -249,7 +247,6 @@ export const loginWithRecovery = route({
   cli: {
     command: 'login-with-recovery',
     custom: true,
-    positional: 'username',
     flags: { answer: { maps: 'answers', repeat: true } }
   },
   body: asObject({
@@ -288,11 +285,7 @@ export const createAccount = route({
   path: '/create-account',
   cli: {
     command: 'create-account',
-    custom: true,
-    positional: 'username',
-    // A light account has no username, so the positional is optional and
-    // cannot become a path segment.
-    positionalInPath: false
+    custom: true
   },
   body: asObject({
     username: asOptional(doc(asString, 'The name to claim.')),
@@ -335,8 +328,14 @@ export const requestEdgeLogin = route({
   cli: {
     command: 'request-edge-login',
     custom: true,
+    extra: {
+      noWait: {
+        kind: 'boolean',
+        doc: 'Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process.'
+      }
+    },
     notes:
-      'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session.'
+      'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over.'
   },
   body: asObject({}).withRest,
   returns: asPendingEdgeLogin,
@@ -409,8 +408,14 @@ export const requestEdgeLogin = route({
 export const pollEdgeLogin = route({
   core: null,
   method: 'GET',
-  path: '/pending-edge-login/{pendingId}',
-  cli: null,
+  path: '/pending-edge-login',
+  cli: {
+    command: 'poll-edge-login',
+    positional: 'pendingId',
+    // Hand-written: a poll that reaches `done` carries a session, and the
+    // command has to store it the way the other login commands do.
+    custom: true
+  },
   returns: asPendingEdgeLogin,
   errors: ['PENDING_LOGIN_NOT_FOUND', 'OBJECT_EXPIRED'],
 

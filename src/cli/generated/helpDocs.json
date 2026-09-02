@@ -4,11 +4,16 @@
     "accelerate": {
       "summary": "Fee-bump a pending transaction.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/accelerate/{walletId}",
-      "usage": "accelerate <walletId> [--object-id=<value>] [--transaction=<value>]",
+      "path": "/account/{sessionId}/wallet/accelerate",
+      "usage": "accelerate --wallet-id=<value> [--object-id=<value>] [--transaction=<value>]",
       "description": "Replace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
       "core": "wallet.accelerate",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "objectId": {
           "pass": "[--object-id=<value>]",
           "doc": "Handle of the transaction to bump.",
@@ -114,13 +119,13 @@
     "admin-hash-username": {
       "summary": "Hash a username.",
       "method": "GET",
-      "path": "/admin/hash-username/{username}",
-      "usage": "admin-hash-username <username>",
+      "path": "/admin/hash-username",
+      "usage": "admin-hash-username --username=<value>",
       "description": "Reproduces the login server's hashing, to derive a login id offline.",
       "core": "context.$internalStuff.hashUsername",
       "params": {
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "The name to hash.",
           "optional": false
         }
@@ -430,11 +435,16 @@
     "balance-map": {
       "summary": "Balances for every asset in the wallet.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/balance-map/{walletId}",
-      "usage": "balance-map <walletId> [--token-id=<value>]",
+      "path": "/account/{sessionId}/wallet/balance-map",
+      "usage": "balance-map --wallet-id=<value> [--token-id=<value>]",
       "description": "The native currency plus every enabled token.",
       "core": "wallet.balanceMap",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "token-id": {
           "pass": "--token-id=<value>",
           "doc": "Client-side filter; core has no single-balance accessor.",
@@ -503,11 +513,16 @@
     "change-enabled-token-ids": {
       "summary": "Set the enabled token set.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/change-enabled-token-ids/{walletId}",
-      "usage": "change-enabled-token-ids <walletId> --token-ids=<value> [--add=<value>] [--remove=<value>]",
+      "path": "/account/{sessionId}/wallet/change-enabled-token-ids",
+      "usage": "change-enabled-token-ids --wallet-id=<value> --token-ids=<value> [--add=<value>] [--remove=<value>]",
       "description": "Absolute: anything missing from `tokenIds` is disabled. Core has only this setter, so there is no add or remove call.",
       "core": "wallet.changeEnabledTokenIds",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "tokenIds": {
           "pass": "--token-ids=<value>",
           "doc": "The complete desired set.",
@@ -558,13 +573,18 @@
     "change-paused": {
       "summary": "Pause or resume a wallet engine.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/change-paused/{walletId}",
-      "usage": "change-paused <walletId> --paused=<value>",
+      "path": "/account/{sessionId}/wallet/change-paused",
+      "usage": "change-paused --wallet-id=<value> --paused",
       "description": "A paused wallet stops syncing, which is how a caller quiets a chain it does not currently care about.",
       "core": "wallet.changePaused",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "paused": {
-          "pass": "--paused=<value>",
+          "pass": "--paused",
           "doc": "True to stop syncing.",
           "optional": false
         }
@@ -577,7 +597,7 @@
       "summary": "Set or change the PIN.",
       "method": "POST",
       "path": "/account/{sessionId}/change-pin",
-      "usage": "change-pin --pin=<value> [--enable-login=<value>] [--for-duress-account=<value>]",
+      "usage": "change-pin --pin=<value> [--enable-login] [--for-duress-account]",
       "core": "account.changePin",
       "params": {
         "pin": {
@@ -586,12 +606,12 @@
           "optional": false
         },
         "enableLogin": {
-          "pass": "[--enable-login=<value>]",
+          "pass": "[--enable-login]",
           "doc": "Allow logging in with this PIN on this device.",
           "optional": true
         },
         "forDuressAccount": {
-          "pass": "[--for-duress-account=<value>]",
+          "pass": "[--for-duress-account]",
           "doc": "Act on the duress account rather than the real one.",
           "optional": true
         }
@@ -657,11 +677,16 @@
     "change-wallet-states": {
       "summary": "Archive, delete, hide, or reorder wallets.",
       "method": "POST",
-      "path": "/account/{sessionId}/change-wallet-states/{walletId}",
-      "usage": "change-wallet-states <walletId> [--wallet-states=<value>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]",
+      "path": "/account/{sessionId}/change-wallet-states",
+      "usage": "change-wallet-states --wallet-id=<value> [--wallet-states=<value>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]",
       "description": "The canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
       "core": "account.changeWalletStates",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "walletStates": {
           "pass": "[--wallet-states=<value>]",
           "doc": "`EdgeWalletStates`: wallet ids to the flags being changed.",
@@ -735,7 +760,7 @@
       "summary": "Verify a PIN.",
       "method": "POST",
       "path": "/account/{sessionId}/check-pin",
-      "usage": "check-pin --pin=<value> [--for-duress-account=<value>]",
+      "usage": "check-pin --pin=<value> [--for-duress-account]",
       "core": "account.checkPin",
       "params": {
         "pin": {
@@ -744,7 +769,7 @@
           "optional": false
         },
         "forDuressAccount": {
-          "pass": "[--for-duress-account=<value>]",
+          "pass": "[--for-duress-account]",
           "doc": "Act on the duress account rather than the real one.",
           "optional": true
         }
@@ -775,7 +800,7 @@
       "summary": "Create an account.",
       "method": "POST",
       "path": "/create-account",
-      "usage": "create-account [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] <username> [--password=<value>] [--pin=<value>]",
+      "usage": "create-account [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] [--username=<value>] [--password=<value>] [--pin=<value>]",
       "description": "Every credential is optional over REST: omitting all three creates a light account with no username.",
       "core": "context.createAccount",
       "params": {
@@ -795,7 +820,7 @@
           "optional": true
         },
         "username": {
-          "pass": "<username>",
+          "pass": "[--username=<value>]",
           "doc": "The name to claim.",
           "optional": true
         },
@@ -883,12 +908,12 @@
       "summary": "Create several wallets at once.",
       "method": "POST",
       "path": "/account/{sessionId}/create-currency-wallets",
-      "usage": "create-currency-wallets --create-wallets='<json>'",
+      "usage": "create-currency-wallets --create-wallets=<value>",
       "description": "Partial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
       "core": "account.createCurrencyWallets",
       "params": {
         "createWallets": {
-          "pass": "--create-wallets='<json>'",
+          "pass": "--create-wallets=<value>",
           "doc": "`EdgeCreateCurrencyWallet[]`: walletType, name, fiatCurrencyCode.",
           "optional": false
         }
@@ -904,17 +929,17 @@
       "summary": "Create a wallet from raw key JSON.",
       "method": "POST",
       "path": "/account/{sessionId}/create-wallet",
-      "usage": "create-wallet --key-info='<json>'",
+      "usage": "create-wallet --type=<value> [--keys=<value>]",
       "description": "The import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.",
       "core": "account.createWallet",
       "params": {
         "type": {
-          "pass": "--key-info='<json>'",
+          "pass": "--type=<value>",
           "doc": "Wallet type, e.g. `wallet:bitcoin`.",
           "optional": false
         },
         "keys": {
-          "pass": "--key-info='<json>'",
+          "pass": "[--keys=<value>]",
           "doc": "Plugin key material. Omit to let core generate it.",
           "optional": true
         }
@@ -937,19 +962,19 @@
       }
     },
     "currency-wallets": {
-      "summary": "List wallets.",
+      "summary": "List the account's wallets.",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<value>] [--no-wait=<value>]",
+      "usage": "currency-wallets [--filter=<value>] [--no-wait]",
       "core": "account.currencyWallets",
       "params": {
         "filter": {
           "pass": "[--filter=<value>]",
-          "doc": "`active` (default), `archived`, `hidden`, or `all`.",
+          "doc": "Which of the account’s wallet lists to read. Defaults to `active`.",
           "optional": true
         },
         "waitForAll": {
-          "pass": "[--no-wait=<value>]",
+          "pass": "[--no-wait]",
           "doc": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
           "optional": true
         }
@@ -964,12 +989,12 @@
     "delete-item": {
       "summary": "Delete an item.",
       "method": "POST",
-      "path": "/account/{sessionId}/delete-item/{storeId}",
-      "usage": "delete-item <storeId> --item-id=<value>",
+      "path": "/account/{sessionId}/delete-item",
+      "usage": "delete-item --store-id=<value> --item-id=<value>",
       "core": "account.dataStore.deleteItem",
       "params": {
         "storeId": {
-          "pass": "<storeId>",
+          "pass": "--store-id=<value>",
           "doc": "Plugin or app namespace within the account data store.",
           "optional": false
         },
@@ -1035,13 +1060,13 @@
     "delete-store": {
       "summary": "Delete an entire store.",
       "method": "POST",
-      "path": "/account/{sessionId}/delete-store/{storeId}",
-      "usage": "delete-store <storeId>",
+      "path": "/account/{sessionId}/delete-store",
+      "usage": "delete-store --store-id=<value>",
       "description": "Removes every item in it, which cannot be undone from this API.",
       "core": "account.dataStore.deleteStore",
       "params": {
         "storeId": {
-          "pass": "<storeId>",
+          "pass": "--store-id=<value>",
           "doc": "Plugin or app namespace within the account data store.",
           "optional": false
         }
@@ -1061,10 +1086,17 @@
     "dump-data": {
       "summary": "Dump wallet engine state.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/dump-data/{walletId}",
-      "usage": "dump-data <walletId>",
+      "path": "/account/{sessionId}/wallet/dump-data",
+      "usage": "dump-data --wallet-id=<value>",
       "description": "Plugin-defined debug output. Shape varies by plugin and can be very large.",
       "core": "wallet.dumpData",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        }
+      },
       "returnsDoc": "`EdgeDataDump`, straight from the plugin."
     },
     "enable-otp": {
@@ -1088,11 +1120,16 @@
     "encode-uri": {
       "summary": "Build a payment URI.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/encode-uri/{walletId}",
-      "usage": "encode-uri <walletId> --public-address=<value> [--native-amount=<value>] [--label=<value>] [--message=<value>] [--currency-code=<value>]",
+      "path": "/account/{sessionId}/wallet/encode-uri",
+      "usage": "encode-uri --wallet-id=<value> --public-address=<value> [--native-amount=<value>] [--label=<value>] [--message=<value>] [--currency-code=<value>]",
       "description": "For a receive screen or a QR code.",
       "core": "wallet.encodeUri",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "publicAddress": {
           "pass": "--public-address=<value>",
           "doc": "Where the payment should go.",
@@ -1248,8 +1285,8 @@
     "fetch-recovery-questions": {
       "summary": "Fetch a user’s recovery questions.",
       "method": "GET",
-      "path": "/fetch-recovery-questions/{username}",
-      "usage": "fetch-recovery-questions <username> --recovery-key=<value>",
+      "path": "/fetch-recovery-questions",
+      "usage": "fetch-recovery-questions --recovery-key=<value> --username=<value>",
       "core": "context.fetchRecovery2Questions",
       "params": {
         "recoveryKey": {
@@ -1258,7 +1295,7 @@
           "optional": false
         },
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "Whose questions to fetch.",
           "optional": false
         }
@@ -1339,13 +1376,13 @@
     "fix-username": {
       "summary": "Normalize a username.",
       "method": "GET",
-      "path": "/fix-username/{username}",
-      "usage": "fix-username <username>",
+      "path": "/fix-username",
+      "usage": "fix-username --username=<value>",
       "description": "Applies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
       "core": "context.fixUsername",
       "params": {
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "The name to normalize.",
           "optional": false
         }
@@ -1357,13 +1394,13 @@
     "forget-account": {
       "summary": "Forget an account on this device.",
       "method": "POST",
-      "path": "/forget-account/{rootLoginId}",
-      "usage": "forget-account <rootLoginId>",
+      "path": "/forget-account",
+      "usage": "forget-account --root-login-id=<value>",
       "description": "Removes locally cached credentials. The remote account is untouched.",
       "core": "context.forgetAccount",
       "params": {
         "rootLoginId": {
-          "pass": "<rootLoginId>",
+          "pass": "--root-login-id=<value>",
           "doc": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it.",
           "optional": false
         }
@@ -1376,10 +1413,15 @@
     "get-addresses": {
       "summary": "Receive addresses.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/get-addresses/{walletId}",
-      "usage": "get-addresses <walletId> [--token-id=<value>] [--force-index=<value>]",
+      "path": "/account/{sessionId}/wallet/get-addresses",
+      "usage": "get-addresses --wallet-id=<value> [--token-id=<value>] [--force-index=<value>]",
       "core": "wallet.getAddresses",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "tokenId": {
           "pass": "[--token-id=<value>]",
           "doc": "Defaults to the native asset.",
@@ -1398,14 +1440,14 @@
     "get-display-private-key": {
       "summary": "Export the private key for display.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-display-private-key/{walletId}",
-      "usage": "get-display-private-key <walletId>",
+      "path": "/account/{sessionId}/get-display-private-key",
+      "usage": "get-display-private-key --wallet-id=<value>",
       "description": "Secret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
       "core": "account.getDisplayPrivateKey",
       "params": {
         "walletId": {
-          "pass": "<walletId>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
           "optional": false
         }
       },
@@ -1420,14 +1462,14 @@
     "get-display-public-key": {
       "summary": "Export the public key for display.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-display-public-key/{walletId}",
-      "usage": "get-display-public-key <walletId>",
+      "path": "/account/{sessionId}/get-display-public-key",
+      "usage": "get-display-public-key --wallet-id=<value>",
       "description": "The xpub or equivalent — safe to share for watch-only use.",
       "core": "account.getDisplayPublicKey",
       "params": {
         "walletId": {
-          "pass": "<walletId>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
           "optional": false
         }
       },
@@ -1442,13 +1484,13 @@
     "get-item": {
       "summary": "Read an item.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-item/{storeId}",
-      "usage": "get-item <storeId> --item-id=<value>",
+      "path": "/account/{sessionId}/get-item",
+      "usage": "get-item --store-id=<value> --item-id=<value>",
       "description": "Values are opaque strings; encoding is the caller's business.",
       "core": "account.dataStore.getItem",
       "params": {
         "storeId": {
-          "pass": "<storeId>",
+          "pass": "--store-id=<value>",
           "doc": "Plugin or app namespace within the account data store.",
           "optional": false
         },
@@ -1480,11 +1522,16 @@
     "get-max-spendable": {
       "summary": "Largest sendable amount.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/get-max-spendable/{walletId}",
-      "usage": "get-max-spendable <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
+      "path": "/account/{sessionId}/wallet/get-max-spendable",
+      "usage": "get-max-spendable --wallet-id=<value> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
       "description": "What empties the wallet after fees. A destination is still required, since fees depend on it.",
       "core": "wallet.getMaxSpendable",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "spendInfo": {
           "pass": "[--spend-info=<value>]",
           "doc": "A full `EdgeSpendInfo`, used as-is when present.",
@@ -1528,11 +1575,16 @@
     "get-num-transactions": {
       "summary": "Count transactions in a wallet.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/get-num-transactions/{walletId}",
-      "usage": "get-num-transactions <walletId> [--token-id=<value>]",
+      "path": "/account/{sessionId}/wallet/get-num-transactions",
+      "usage": "get-num-transactions --wallet-id=<value> [--token-id=<value>]",
       "description": "Cheaper than listing when only the total matters.",
       "core": "wallet.getNumTransactions",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "tokenId": {
           "pass": "[--token-id=<value>]",
           "doc": "Defaults to the native asset.",
@@ -1553,11 +1605,16 @@
     "get-payment-protocol-info": {
       "summary": "Fetch a BIP70 payment request.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}",
-      "usage": "get-payment-protocol-info <walletId> --payment-protocol-url=<value>",
+      "path": "/account/{sessionId}/wallet/get-payment-protocol-info",
+      "usage": "get-payment-protocol-info --wallet-id=<value> --payment-protocol-url=<value>",
       "description": "Feed `spendTargets` from the result into `make-spend` to pay it.",
       "core": "wallet.getPaymentProtocolInfo",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "paymentProtocolUrl": {
           "pass": "--payment-protocol-url=<value>",
           "doc": "The payment-request URL.",
@@ -1584,14 +1641,14 @@
     "get-raw-private-key": {
       "summary": "Read raw private key material.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-raw-private-key/{walletId}",
-      "usage": "get-raw-private-key <walletId>",
+      "path": "/account/{sessionId}/get-raw-private-key",
+      "usage": "get-raw-private-key --wallet-id=<value>",
       "description": "Secret. Whatever the plugin stores — seed, mnemonic, xpriv.",
       "core": "account.getRawPrivateKey",
       "params": {
         "walletId": {
-          "pass": "<walletId>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
           "optional": false
         }
       },
@@ -1604,13 +1661,13 @@
     "get-raw-public-key": {
       "summary": "Read raw public key material.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-raw-public-key/{walletId}",
-      "usage": "get-raw-public-key <walletId>",
+      "path": "/account/{sessionId}/get-raw-public-key",
+      "usage": "get-raw-public-key --wallet-id=<value>",
       "core": "account.getRawPublicKey",
       "params": {
         "walletId": {
-          "pass": "<walletId>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
           "optional": false
         }
       },
@@ -1623,11 +1680,16 @@
     "get-transactions": {
       "summary": "List or export a wallet's transactions.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/get-transactions/{walletId}",
-      "usage": "get-transactions <walletId> [--token-id=<value>] [--limit=<value>] [--offset=<value>] [--start-date=<value>] [--end-date=<value>] [--search-string=<value>] [--spam-threshold=<value>] [--fiat=<value>] [--export-format=<value>] [--bitwave-account=<value>] [--out=<value>]",
+      "path": "/account/{sessionId}/wallet/get-transactions",
+      "usage": "get-transactions --wallet-id=<value> [--token-id=<value>] [--limit=<value>] [--offset=<value>] [--start-date=<value>] [--end-date=<value>] [--search-string=<value>] [--spam-threshold=<value>] [--fiat=<value>] [--export-format=<value>] [--bitwave-account=<value>] [--out=<value>]",
       "description": "Reads history, overlays the display metadata the GUI shows, fills historical fiat, and optionally formats the result — all on this one call.",
       "core": "wallet.getTransactions",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "tokenId": {
           "pass": "[--token-id=<value>]",
           "doc": "Defaults to the native asset.",
@@ -1700,13 +1762,13 @@
     "get-wallet-info": {
       "summary": "Read one wallet's key info.",
       "method": "GET",
-      "path": "/account/{sessionId}/get-wallet-info/{id}",
-      "usage": "get-wallet-info <id>",
+      "path": "/account/{sessionId}/get-wallet-info",
+      "usage": "get-wallet-info --id=<value>",
       "core": "account.getWalletInfo",
       "params": {
         "id": {
-          "pass": "<id>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--id=<value>",
+          "doc": "The key id, from `all-keys`. Base64, like a wallet id.",
           "optional": false
         }
       },
@@ -1722,12 +1784,12 @@
     "list-item-ids": {
       "summary": "List item ids in a store.",
       "method": "GET",
-      "path": "/account/{sessionId}/list-item-ids/{storeId}",
-      "usage": "list-item-ids <storeId>",
+      "path": "/account/{sessionId}/list-item-ids",
+      "usage": "list-item-ids --store-id=<value>",
       "core": "account.dataStore.listItemIds",
       "params": {
         "storeId": {
-          "pass": "<storeId>",
+          "pass": "--store-id=<value>",
           "doc": "Plugin or app namespace within the account data store.",
           "optional": false
         }
@@ -1739,14 +1801,14 @@
     "list-splittable-wallet-types": {
       "summary": "List chains a wallet can split into.",
       "method": "GET",
-      "path": "/account/{sessionId}/list-splittable-wallet-types/{walletId}",
-      "usage": "list-splittable-wallet-types <walletId>",
+      "path": "/account/{sessionId}/list-splittable-wallet-types",
+      "usage": "list-splittable-wallet-types --wallet-id=<value>",
       "description": "Forked-chain support: which wallet types can be derived from these keys.",
       "core": "account.listSplittableWalletTypes",
       "params": {
         "walletId": {
-          "pass": "<walletId>",
-          "doc": "Full base58 wallet id.",
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
           "optional": false
         }
       },
@@ -1773,11 +1835,11 @@
       "summary": "Change local settings.",
       "method": "POST",
       "path": "/account/{sessionId}/change-local-settings",
-      "usage": "local-settings --spam-filter-on=<value>",
+      "usage": "local-settings --spam-filter-on",
       "description": "Writes device-local account settings. Every option is a field on the body; `spamFilterOn` is the only one today, and new options are added alongside it.",
       "params": {
         "spamFilterOn": {
-          "pass": "--spam-filter-on=<value>",
+          "pass": "--spam-filter-on",
           "doc": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.",
           "optional": false
         }
@@ -1804,8 +1866,8 @@
     "login-with-key": {
       "summary": "Log in with an account login key.",
       "method": "POST",
-      "path": "/login-with-key/{usernameOrLoginId}",
-      "usage": "login-with-key <usernameOrLoginId> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --login-key=<value> [--use-login-id=<value>]",
+      "path": "/login-with-key",
+      "usage": "login-with-key [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --username-or-login-id=<value> --login-key=<value> [--use-login-id]",
       "description": "The key comes from `get-login-key` on an already-authenticated session.",
       "core": "context.loginWithKey",
       "params": {
@@ -1825,7 +1887,7 @@
           "optional": true
         },
         "usernameOrLoginId": {
-          "pass": "<usernameOrLoginId>",
+          "pass": "--username-or-login-id=<value>",
           "doc": "A username, or a login id.",
           "optional": false
         },
@@ -1835,7 +1897,7 @@
           "optional": false
         },
         "useLoginId": {
-          "pass": "[--use-login-id=<value>]",
+          "pass": "[--use-login-id]",
           "doc": "Treat the value as a login id.",
           "optional": true
         }
@@ -1860,8 +1922,8 @@
     "login-with-password": {
       "summary": "Log in with a password.",
       "method": "POST",
-      "path": "/login-with-password/{username}",
-      "usage": "login-with-password <username> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --password=<value>",
+      "path": "/login-with-password",
+      "usage": "login-with-password [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --username=<value> --password=<value>",
       "core": "context.loginWithPassword",
       "params": {
         "otp": {
@@ -1880,7 +1942,7 @@
           "optional": true
         },
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "The account name.",
           "optional": false
         },
@@ -1915,8 +1977,8 @@
     "login-with-pin": {
       "summary": "Log in with a device PIN.",
       "method": "POST",
-      "path": "/login-with-pin/{usernameOrLoginId}",
-      "usage": "login-with-pin <usernameOrLoginId> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --pin=<value> [--use-login-id=<value>]",
+      "path": "/login-with-pin",
+      "usage": "login-with-pin [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --username-or-login-id=<value> --pin=<value> [--use-login-id]",
       "description": "Only works on a device that has already saved a PIN for the account.",
       "core": "context.loginWithPIN",
       "params": {
@@ -1936,7 +1998,7 @@
           "optional": true
         },
         "usernameOrLoginId": {
-          "pass": "<usernameOrLoginId>",
+          "pass": "--username-or-login-id=<value>",
           "doc": "A username, or a login id.",
           "optional": false
         },
@@ -1946,7 +2008,7 @@
           "optional": false
         },
         "useLoginId": {
-          "pass": "[--use-login-id=<value>]",
+          "pass": "[--use-login-id]",
           "doc": "Treat the value as a login id.",
           "optional": true
         }
@@ -1973,8 +2035,8 @@
     "login-with-recovery": {
       "summary": "Log in with recovery answers.",
       "method": "POST",
-      "path": "/login-with-recovery/{username}",
-      "usage": "login-with-recovery <username> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --recovery-key=<value> --answer=<value> …",
+      "path": "/login-with-recovery",
+      "usage": "login-with-recovery [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --recovery-key=<value> --username=<value> --answer=<value> …",
       "description": "Needs both the recovery key and the answers; neither works alone.",
       "core": "context.loginWithRecovery2",
       "params": {
@@ -1999,7 +2061,7 @@
           "optional": false
         },
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "The account name.",
           "optional": false
         },
@@ -2040,11 +2102,16 @@
     "make-spend": {
       "summary": "Build an unsigned transaction.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/make-spend/{walletId}",
-      "usage": "make-spend <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
+      "path": "/account/{sessionId}/wallet/make-spend",
+      "usage": "make-spend --wallet-id=<value> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
       "description": "First step of the staged workflow: nothing is signed and no funds move. Inspect `transaction.networkFee` on the result before signing.",
       "core": "wallet.makeSpend",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "spendInfo": {
           "pass": "[--spend-info=<value>]",
           "doc": "A full `EdgeSpendInfo`, used as-is when present.",
@@ -2144,11 +2211,16 @@
     "parse-uri": {
       "summary": "Parse a payment URI or address.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/parse-uri/{walletId}",
-      "usage": "parse-uri <walletId> --uri=<value> [--currency-code=<value>]",
+      "path": "/account/{sessionId}/wallet/parse-uri",
+      "usage": "parse-uri --wallet-id=<value> --uri=<value> [--currency-code=<value>]",
       "description": "What the GUI address tile does when you paste or scan something.",
       "core": "wallet.parseUri",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "uri": {
           "pass": "--uri=<value>",
           "doc": "A payment URI or a bare address.",
@@ -2181,20 +2253,47 @@
         "pendingVouchers": "unknown[] — `EdgePendingVoucher[]`: voucherId, activates, created, deviceDescription, ipDescription."
       }
     },
+    "poll-edge-login": {
+      "summary": "Poll a pending QR login.",
+      "method": "GET",
+      "path": "/pending-edge-login/{pendingId}",
+      "usage": "poll-edge-login <pendingId>",
+      "description": "Once `state` reaches `done` the engine has already created the session, so the response carries one ready to use.",
+      "returns": {
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "pendingId": "string — Same value as `objectId`, under the name the poll command takes.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
+        "lobbyId": "string — Lobby the phone connects to.",
+        "uri": "string — The `edge://` URI to render as a QR code for the phone to scan.",
+        "state": "string — How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in.",
+        "username": "string | null — Account that approved the login, known once the phone has scanned.",
+        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null — The session, null until `state` is `done`.",
+        "error": "string | null — Why the login failed, set only when `state` is `error`."
+      },
+      "notes": [
+        "Session creation is attempted once. A failure is sticky, so later polls report the same `error` rather than retrying.",
+        "Polling does not extend the handle TTL; only the original 5 minute window applies."
+      ],
+      "errors": [
+        "PENDING_LOGIN_NOT_FOUND",
+        "OBJECT_EXPIRED"
+      ]
+    },
     "rates-query": {
       "summary": "Batch crypto and fiat rate lookups.",
       "method": "POST",
       "path": "/rates/query",
-      "usage": "rates-query --body='<json>'",
+      "usage": "rates-query [--crypto=<value>] [--fiat=<value>]",
       "description": "Concurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
       "params": {
         "crypto": {
-          "pass": "--body='<json>'",
+          "pass": "[--crypto=<value>]",
           "doc": "Crypto rates to fetch.",
           "optional": true
         },
         "fiat": {
-          "pass": "--body='<json>'",
+          "pass": "[--fiat=<value>]",
           "doc": "Fiat rates to fetch.",
           "optional": true
         }
@@ -2286,10 +2385,15 @@
     "rename-wallet": {
       "summary": "Rename a wallet.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/rename-wallet/{walletId}",
-      "usage": "rename-wallet <walletId> --name=<value>",
+      "path": "/account/{sessionId}/wallet/rename-wallet",
+      "usage": "rename-wallet --wallet-id=<value> --name=<value>",
       "core": "wallet.renameWallet",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "name": {
           "pass": "--name=<value>",
           "doc": "The new display name.",
@@ -2323,9 +2427,16 @@
       "summary": "Start a QR login.",
       "method": "POST",
       "path": "/request-edge-login",
-      "usage": "request-edge-login",
+      "usage": "request-edge-login [--no-wait]",
       "description": "Asks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
       "core": "context.requestEdgeLogin",
+      "params": {
+        "no-wait": {
+          "pass": "--no-wait",
+          "doc": "Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process.",
+          "optional": true
+        }
+      },
       "returns": {
         "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
         "pendingId": "string — Same value as `objectId`, under the name the poll command takes.",
@@ -2340,7 +2451,7 @@
       },
       "notes": [
         "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you.",
-        "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session."
+        "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over."
       ],
       "errors": [
         "NETWORK_ERROR"
@@ -2349,13 +2460,13 @@
     "request-otp-reset": {
       "summary": "Request a 2FA reset.",
       "method": "POST",
-      "path": "/request-otp-reset/{username}",
-      "usage": "request-otp-reset <username> --otp-reset-token=<value>",
+      "path": "/request-otp-reset",
+      "usage": "request-otp-reset --username=<value> --otp-reset-token=<value>",
       "description": "Starts the timed reset a user falls back on after losing their authenticator.",
       "core": "context.requestOtpReset",
       "params": {
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "Whose 2FA to reset.",
           "optional": false
         },
@@ -2378,10 +2489,17 @@
     "resync-blockchain": {
       "summary": "Rescan the blockchain from scratch.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/resync-blockchain/{walletId}",
-      "usage": "resync-blockchain <walletId>",
+      "path": "/account/{sessionId}/wallet/resync-blockchain",
+      "usage": "resync-blockchain --wallet-id=<value>",
       "description": "Drops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
       "core": "wallet.resyncBlockchain",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        }
+      },
       "notes": [
         "Returns when the resync is requested, not when it completes. Watch `syncRatio` for progress."
       ]
@@ -2411,11 +2529,16 @@
     "save-tx-action": {
       "summary": "Save a transaction action.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/save-tx-action/{walletId}",
-      "usage": "save-tx-action <walletId> --txid=<value> [--token-id=<value>] --saved-action=<value> [--asset-action=<value>]",
+      "path": "/account/{sessionId}/wallet/save-tx-action",
+      "usage": "save-tx-action --wallet-id=<value> --txid=<value> [--token-id=<value>] --saved-action=<value> [--asset-action=<value>]",
       "description": "Records what a transaction *was* — a swap, a stake — beyond its metadata.",
       "core": "wallet.saveTxAction",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "txid": {
           "pass": "--txid=<value>",
           "doc": "Which transaction to annotate.",
@@ -2449,11 +2572,16 @@
     "save-tx-metadata": {
       "summary": "Save transaction metadata.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/save-tx-metadata/{walletId}",
-      "usage": "save-tx-metadata <walletId> --txid=<value> [--token-id=<value>] --metadata=<value>",
+      "path": "/account/{sessionId}/wallet/save-tx-metadata",
+      "usage": "save-tx-metadata --wallet-id=<value> --txid=<value> [--token-id=<value>] --metadata=<value>",
       "description": "One of only two routes that write transaction metadata to disk.",
       "core": "wallet.saveTxMetadata",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "txid": {
           "pass": "--txid=<value>",
           "doc": "Which transaction to tag.",
@@ -2482,11 +2610,16 @@
     "set-fiat-currency-code": {
       "summary": "Change a wallet's fiat currency.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}",
-      "usage": "set-fiat-currency-code <walletId> --fiat-currency-code=<value>",
+      "path": "/account/{sessionId}/wallet/set-fiat-currency-code",
+      "usage": "set-fiat-currency-code --wallet-id=<value> --fiat-currency-code=<value>",
       "description": "Affects how balances and history are priced, not the asset itself.",
       "core": "wallet.setFiatCurrencyCode",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "fiatCurrencyCode": {
           "pass": "--fiat-currency-code=<value>",
           "doc": "e.g. `iso:EUR`.",
@@ -2500,13 +2633,13 @@
     "set-item": {
       "summary": "Write an item.",
       "method": "POST",
-      "path": "/account/{sessionId}/set-item/{storeId}",
-      "usage": "set-item <storeId> --item-id=<value> --value=<value>",
+      "path": "/account/{sessionId}/set-item",
+      "usage": "set-item --store-id=<value> --item-id=<value> --value=<value>",
       "description": "Creates the store if it does not exist.",
       "core": "account.dataStore.setItem",
       "params": {
         "storeId": {
-          "pass": "<storeId>",
+          "pass": "--store-id=<value>",
           "doc": "Plugin or app namespace within the account data store.",
           "optional": false
         },
@@ -2528,11 +2661,16 @@
     "sign-bytes": {
       "summary": "Sign arbitrary bytes.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/sign-bytes/{walletId}",
-      "usage": "sign-bytes <walletId> [--bytes=<value>] [--data=<value>] [--other-params=<value>]",
+      "path": "/account/{sessionId}/wallet/sign-bytes",
+      "usage": "sign-bytes --wallet-id=<value> [--bytes=<value>] [--data=<value>] [--other-params=<value>]",
       "description": "Message signing and proof-of-ownership, for plugins that support it.",
       "core": "wallet.signBytes",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "bytes": {
           "pass": "[--bytes=<value>]",
           "doc": "Base64. Defaults to empty when absent.",
@@ -2588,10 +2726,15 @@
     "spend": {
       "summary": "Send funds.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/spend/{walletId}",
-      "usage": "spend <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max=<value>] [--dry-run=<value>] [--broadcast=<value>] [--save=<value>]",
+      "path": "/account/{sessionId}/wallet/spend",
+      "usage": "spend --wallet-id=<value> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max] [--dry-run] [--broadcast] [--save]",
       "description": "`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "spendInfo": {
           "pass": "[--spend-info=<value>]",
           "doc": "A full `EdgeSpendInfo`, used as-is when present.",
@@ -2623,22 +2766,22 @@
           "optional": true
         },
         "useMax": {
-          "pass": "[--use-max=<value>]",
+          "pass": "[--use-max]",
           "doc": "Replace the first target's amount with the maximum.",
           "optional": true
         },
         "dryRun": {
-          "pass": "[--dry-run=<value>]",
+          "pass": "[--dry-run]",
           "doc": "Build only. Never signs or broadcasts.",
           "optional": true
         },
         "broadcast": {
-          "pass": "[--broadcast=<value>]",
+          "pass": "[--broadcast]",
           "doc": "Defaults to **true**.",
           "optional": true
         },
         "save": {
-          "pass": "[--save=<value>]",
+          "pass": "[--save]",
           "doc": "Defaults to **true**.",
           "optional": true
         }
@@ -2662,10 +2805,15 @@
     "spend-max": {
       "summary": "Send funds.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/spend/{walletId}",
-      "usage": "spend-max <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max=<value>] [--dry-run=<value>] [--broadcast=<value>] [--save=<value>]",
+      "path": "/account/{sessionId}/wallet/spend",
+      "usage": "spend-max --wallet-id=<value> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max] [--dry-run] [--broadcast] [--save]",
       "description": "`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "spendInfo": {
           "pass": "[--spend-info=<value>]",
           "doc": "A full `EdgeSpendInfo`, used as-is when present.",
@@ -2697,22 +2845,22 @@
           "optional": true
         },
         "useMax": {
-          "pass": "[--use-max=<value>]",
+          "pass": "[--use-max]",
           "doc": "Replace the first target's amount with the maximum.",
           "optional": true
         },
         "dryRun": {
-          "pass": "[--dry-run=<value>]",
+          "pass": "[--dry-run]",
           "doc": "Build only. Never signs or broadcasts.",
           "optional": true
         },
         "broadcast": {
-          "pass": "[--broadcast=<value>]",
+          "pass": "[--broadcast]",
           "doc": "Defaults to **true**.",
           "optional": true
         },
         "save": {
-          "pass": "[--save=<value>]",
+          "pass": "[--save]",
           "doc": "Defaults to **true**.",
           "optional": true
         }
@@ -2737,13 +2885,18 @@
     "split": {
       "summary": "Split a wallet into another chain.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/split/{walletId}",
-      "usage": "split <walletId> --split-wallets='<json>'",
+      "path": "/account/{sessionId}/wallet/split",
+      "usage": "split --wallet-id=<value> --split-wallets=<value>",
       "description": "Forked-chain support: derive a wallet of a different type from the same keys. `list-splittable-wallet-types` says which are valid.",
       "core": "wallet.split",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "splitWallets": {
-          "pass": "--split-wallets='<json>'",
+          "pass": "--split-wallets=<value>",
           "doc": "`EdgeSplitCurrencyWallet[]`: walletType, name, fiatCurrencyCode.",
           "optional": false
         }
@@ -2815,11 +2968,16 @@
     "sweep-private-keys": {
       "summary": "Sweep private keys into this wallet.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/sweep-private-keys/{walletId}",
-      "usage": "sweep-private-keys <walletId> --spend-info=<value>",
+      "path": "/account/{sessionId}/wallet/sweep-private-keys",
+      "usage": "sweep-private-keys --wallet-id=<value> --spend-info=<value>",
       "description": "Builds a transaction moving everything from an external key. Returns an unsigned handle: sign, broadcast and save it like any staged spend.",
       "core": "wallet.sweepPrivateKeys",
       "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
         "spendInfo": {
           "pass": "--spend-info=<value>",
           "doc": "A full `EdgeSpendInfo`, with the keys to sweep in `privateKeys`.",
@@ -2875,12 +3033,12 @@
     "username-available": {
       "summary": "Check whether a username is free.",
       "method": "GET",
-      "path": "/username-available/{username}",
-      "usage": "username-available <username> [--challenge-id=<value>]",
+      "path": "/username-available",
+      "usage": "username-available --username=<value> [--challenge-id=<value>]",
       "core": "context.usernameAvailable",
       "params": {
         "username": {
-          "pass": "<username>",
+          "pass": "--username=<value>",
           "doc": "The name to check.",
           "optional": false
         },
@@ -2903,16 +3061,30 @@
     "wallet-info": {
       "summary": "Wallet detail.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/{walletId}",
-      "usage": "wallet-info <walletId>",
+      "path": "/account/{sessionId}/wallet",
+      "usage": "wallet-info --wallet-id=<value>",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        }
+      },
       "returnsDoc": "Every WalletSummary field, plus denominations, walletSettings and allTokens."
     },
     "wallet-sync": {
       "summary": "Nudge one wallet to sync.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/sync/{walletId}",
-      "usage": "wallet-sync <walletId>",
+      "path": "/account/{sessionId}/wallet/sync",
+      "usage": "wallet-sync --wallet-id=<value>",
       "core": "wallet.sync",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        }
+      },
       "notes": [
         "Named `wallet-sync` on the CLI because `sync` is `account.sync`."
       ]
@@ -2920,9 +3092,16 @@
     "wallet-tokens": {
       "summary": "List a wallet's tokens.",
       "method": "GET",
-      "path": "/account/{sessionId}/wallet/tokens/{walletId}",
-      "usage": "wallet-tokens <walletId>",
+      "path": "/account/{sessionId}/wallet/tokens",
+      "usage": "wallet-tokens --wallet-id=<value>",
       "description": "\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<value>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        }
+      },
       "returns": {
         "allTokens": "{ [keys: string]: unknown; } — Built-in and custom together, keyed by tokenId. Large on EVM chains.",
         "builtinTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: everything the plugin ships with.",

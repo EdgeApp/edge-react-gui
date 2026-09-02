@@ -130,12 +130,37 @@ for (const [key, count] of seen) {
 }
 
 // ------------------------------------------------------------ path shape
+// Path parameters are base58 identifiers, and nothing else. Base58 has no
+// `/`, `?` or `#`, so such a value survives a URL as written. A base64 wallet
+// id (`7o7i6/tlI+qi…=`) or a free-text username does not: it needs
+// percent-encoding, and a caller who forgets gets a 404 rather than an error
+// that names the mistake. Those travel as named arguments instead.
+const BASE58_PARAMS = new Set([
+  'sessionId',
+  'objectId',
+  'pendingId',
+  'lobbyId',
+  'syncKey'
+])
+
 // A REST path reads in the same order the command does: scope, then command,
 // then the one argument the command takes bare. Anything the caller names
 // stays in the query or the body.
 for (const r of routes) {
   const segments = r.routePath.split('/').filter(x => x !== '')
   const params = segments.filter(x => x.startsWith('{'))
+
+  for (const seg of params) {
+    const name = seg.slice(1, -1)
+    if (!BASE58_PARAMS.has(name)) {
+      fail(
+        'path shape',
+        `${r.method} ${r.routePath} carries "${name}" on the path; only ` +
+          `base58 identifiers (${[...BASE58_PARAMS].join(', ')}) may be path ` +
+          'parameters — everything else needs a named argument'
+      )
+    }
+  }
 
   for (const [i, seg] of segments.entries()) {
     if (!seg.startsWith('{')) continue
@@ -172,7 +197,7 @@ for (const r of routes) {
   // The positional must actually be on the path, or the CLI and REST disagree
   // about where the argument goes.
   const pos = r.cli?.positional
-  if (pos != null && r.cli?.positionalInPath !== false) {
+  if (pos != null) {
     if (!r.routePath.endsWith(`/{${pos}}`)) {
       fail(
         'path shape',

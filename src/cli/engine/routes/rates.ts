@@ -72,7 +72,7 @@ export const ratesQuery = route({
   core: null,
   method: 'POST',
   path: '/rates/query',
-  cli: { command: 'rates-query', bodyFlag: 'body' },
+  cli: 'rates-query',
   body: asObject({
     crypto: asOptional(doc(asArray(asCryptoQuery), 'Crypto rates to fetch.')),
     fiat: asOptional(doc(asArray(asFiatQuery), 'Fiat rates to fetch.'))

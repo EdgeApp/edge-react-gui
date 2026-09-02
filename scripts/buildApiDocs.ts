@@ -26,6 +26,37 @@ import {
 } from './extractRoutes'
 import { writeIfChanged } from './writeIfChanged'
 
+/**
+ * What a path parameter is, in prose.
+ *
+ * A derived positional keeps the description written beside its cleaner; a
+ * scope parameter means the same thing everywhere and is described once.
+ */
+function pathParamDoc(e: ExtractedRoute, name: string): string {
+  if (name === e.pathPositional) {
+    const field = [...(e.query ?? []), ...(e.body ?? [])].find(
+      f => f.name === name
+    )
+    if (field?.doc != null) return field.doc
+  }
+  return SCOPE_PARAMS[name] ?? ''
+}
+
+/**
+ * Request fields, minus the one the path carries.
+ *
+ * A positional is declared as an ordinary field but travels as a path
+ * segment. Listing it in both tables would tell a reader to send it twice.
+ */
+function requestFields(
+  e: ExtractedRoute,
+  fields: ExtractedField[] | undefined
+): ExtractedField[] | undefined {
+  if (fields == null) return undefined
+  const out = fields.filter(f => f.name !== e.pathPositional)
+  return out.length === 0 ? undefined : out
+}
+
 const OUT = path.resolve(__dirname, '../docs/api/dist')
 const API_VERSION = '1.0.0'
 
@@ -110,9 +141,48 @@ function exampleObject(fields: ExtractedField[]): Record<string, unknown> {
   return out
 }
 
+/**
+ * Break a resolved type across lines the way a person would write it.
+ *
+ * The compiler hands back one long string —
+ * `{ tokenId: string | null; currencyCode: string; … }[]` — which is
+ * unreadable past a couple of fields. This indents nested object literals and
+ * puts one member per line. Only `{`, `;` and `}` matter; a `;` inside a
+ * string literal type would be misread, and no cleaner produces one.
+ */
+function formatType(type: string, indent = 0): string {
+  let out = ''
+  let depth = indent
+  const pad = (n: number): string => '  '.repeat(n)
+  for (let i = 0; i < type.length; i++) {
+    const c = type[i]
+    if (c === '{') {
+      depth++
+      out += '{\n' + pad(depth)
+    } else if (c === '}') {
+      depth--
+      out = out.replace(/[ \n]+$/, '')
+      out += '\n' + pad(depth) + '}'
+    } else if (c === ';') {
+      // A trailing `;` before `}` would leave a blank line.
+      const rest = type.slice(i + 1).trimStart()
+      out += rest.startsWith('}') ? '' : ';\n' + pad(depth)
+    } else if (c === ' ' && out.endsWith('\n' + pad(depth))) {
+      // Swallow the space the compiler puts after `{` and `;`.
+    } else {
+      out += c
+    }
+  }
+  return out
+}
+
 function tsInterface(fields: ExtractedField[]): string {
   const lines = fields.map(
-    f => `  ${f.name}${f.optional ? '?' : ''}: ${f.type}`
+    f =>
+      `  ${f.name}${f.optional ? '?' : ''}: ${formatType(
+        f.type,
+        1
+      ).trimStart()}`
   )
   return `{\n${lines.join('\n')}\n}`
 }
@@ -246,7 +316,7 @@ function restBlock(e: ExtractedRoute): string {
                 n
               )}</code></td><td class="ty">${typeLabel(
                 'string'
-              )}</td><td class="doc">${md(SCOPE_PARAMS[n] ?? '')}</td></tr>`
+              )}</td><td class="doc">${md(pathParamDoc(e, n))}</td></tr>`
           )
           .join('')}</tbody></table>`
   return `<div class="pane rest">
@@ -255,11 +325,19 @@ function restBlock(e: ExtractedRoute): string {
     e.method
   }</span><code>${esc(e.routePath)}</code></p>
     ${pathTable}
-    ${e.query != null ? shapeBlock(e.query, 'Query') : ''}
+    ${
+      requestFields(e, e.query) != null
+        ? shapeBlock(requestFields(e, e.query)!, 'Query')
+        : ''
+    }
     ${
       e.bodyNote != null ? `<div class="note">${mdBlock(e.bodyNote)}</div>` : ''
     }
-    ${e.body != null ? shapeBlock(e.body, 'Request body') : ''}
+    ${
+      requestFields(e, e.body) != null
+        ? shapeBlock(requestFields(e, e.body)!, 'Request body')
+        : ''
+    }
     <h5>Example</h5>
     <pre class="ex"><code>${esc(curlFor(e))}</code></pre>
   </div>`
@@ -285,7 +363,9 @@ function responseBlock(e: ExtractedRoute): string {
       : `${prose != null ? `<div class="note">${mdBlock(prose)}</div>` : ''}${
           e.returns != null && e.returns.length > 0
             ? shapeBlock(e.returns, 'Response body')
-            : `<p class="lead">${typeLabel(e.returnsType ?? 'unknown')}</p>`
+            : `<pre class="ts"><code>${esc(
+                formatType(e.returnsType ?? 'unknown')
+              )}</code></pre>`
         }`
   return `<div class="pane resp">
     <h4>Response <span class="st ok">${status}</span></h4>
@@ -393,10 +473,10 @@ function buildOpenApi(): Record<string, unknown> {
             name: n,
             in: 'path',
             required: true,
-            description: SCOPE_PARAMS[n],
+            description: pathParamDoc(e, n),
             schema: { type: 'string' }
           })),
-          ...(e.query ?? []).map(q => ({
+          ...(requestFields(e, e.query) ?? []).map(q => ({
             name: q.name,
             in: 'query',
             required: !q.optional,
@@ -429,11 +509,12 @@ function buildOpenApi(): Record<string, unknown> {
           }
         }
       }
-      if (e.body != null && e.body.length > 0) {
+      const bodyFields = requestFields(e, e.body)
+      if (bodyFields != null) {
         op.requestBody = {
           required: true,
           description: e.bodyNote,
-          content: { 'application/json': { schema: objectSchema(e.body) } }
+          content: { 'application/json': { schema: objectSchema(bodyFields) } }
         }
       }
       paths[e.routePath] = paths[e.routePath] ?? {}

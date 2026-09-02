@@ -298,25 +298,32 @@ matches:
 
 | Core | REST | CLI |
 |------|------|-----|
-| `context.forgetAccount` | `POST /forget-account/{rootLoginId}` | `forget-account <rootLoginId>` |
-| `context.loginWithPassword` | `POST /login-with-password/{username}` | `login-with-password <username>` |
+| `context.forgetAccount` | `POST /forget-account` | `forget-account --root-login-id=<id>` |
+| `context.loginWithPassword` | `POST /login-with-password` | `login-with-password --username=<name>` |
 | `account.changePin` | `POST /account/{sessionId}/change-pin` | `change-pin` |
-| `wallet.getTransactions` | `GET /account/{sessionId}/wallet/get-transactions/{walletId}` | `get-transactions <walletId>` |
+| `wallet.getTransactions` | `GET /account/{sessionId}/wallet/get-transactions` | `get-transactions --wallet-id=<id>` |
+| `EdgeSwapQuote.approve` | `POST /account/{sessionId}/swap-quote/approve/{objectId}` | `approve-swap-quote <objectId>` |
 
 Parameters keep core's own names (`rootLoginId`, `otpResetToken`,
 `usernameOrLoginId`, `paymentProtocolUrl`).
 
-A path reads in the order the command does: scope, then the command, then the
-one argument the command takes bare. `get-addresses <walletId>` is
-`GET /account/{sessionId}/wallet/get-addresses/{walletId}` — the wallet id
-last, exactly where it sits on the command line. Collection segments are
-singular (`wallet`, `object`, `swap-quote`), because each call acts on one.
-Everything the caller names travels in the query for `GET` and the body for
-`POST`.
+**A path parameter is a base58 identifier, and nothing else.** Base58 contains
+no `/`, `?` or `#`, so such a value survives a URL exactly as written:
+`sessionId`, `objectId`, `pendingId`, `lobbyId`, `syncKey`. A wallet id does
+not qualify — ids are base64, so `7o7i6/tlI+qi…=` is an ordinary one, and a
+caller who does not percent-encode it gets a 404 rather than an error naming
+the mistake. Neither does a username, which is free text. Those travel as
+named arguments: in the query for `GET`, the body for `POST`.
+
+Where a path parameter *is* allowed, it reads in the order the command does —
+scope, then command, then the argument, last:
+`POST /account/{sessionId}/swap-quote/approve/{objectId}` for
+`approve-swap-quote <objectId>`. Collection segments are singular (`wallet`,
+`object`, `swap-quote`), because each call acts on one.
 
 The positional is declared once, as an ordinary request field; the path is
-derived from it. That is why a declaration says `positional: 'walletId'` and
-its `path` does not mention `{walletId}` — writing both would let them
+derived from it. That is why a declaration says `positional: 'objectId'` and
+its `path` does not mention `{objectId}` — writing both would let them
 disagree. Only those two verbs are used, since core has no
 HTTP verbs. There is no `/v1` prefix; `X-Edge-Api-Version` still reports the
 version.

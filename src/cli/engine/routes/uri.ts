@@ -4,7 +4,7 @@ import type { EdgeEncodeUri } from 'edge-core-js'
 import { doc } from '../doc'
 import { findWallet } from '../resolve'
 import { route } from '../route'
-import { asCoreValue } from '../schemas'
+import { asCoreValue, asWalletId } from '../schemas'
 import { getAccount } from './helpers'
 
 const CURRENCY_CODE_DOC = 'Disambiguates on chains that carry several assets.'
@@ -21,8 +21,9 @@ export const parseUri = route({
   core: 'wallet.parseUri',
   method: 'POST',
   path: '/account/{sessionId}/wallet/parse-uri',
-  cli: { command: 'parse-uri', positional: 'walletId' },
+  cli: 'parse-uri',
   body: asObject({
+    walletId: asWalletId,
     uri: doc(asString, 'A payment URI or a bare address.'),
     currencyCode: asOptional(doc(asString, CURRENCY_CODE_DOC))
   }).withRest,
@@ -33,7 +34,7 @@ export const parseUri = route({
   errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     return await wallet.parseUri(ctx.body.uri, ctx.body.currencyCode)
   }
 })
@@ -50,8 +51,9 @@ export const encodeUri = route({
   core: 'wallet.encodeUri',
   method: 'POST',
   path: '/account/{sessionId}/wallet/encode-uri',
-  cli: { command: 'encode-uri', positional: 'walletId' },
+  cli: 'encode-uri',
   body: asObject({
+    walletId: asWalletId,
     publicAddress: doc(asString, 'Where the payment should go.'),
     nativeAmount: asOptional(doc(asString, 'Amount, in the native unit.')),
     label: asOptional(
@@ -68,7 +70,7 @@ export const encodeUri = route({
   errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     const obj: EdgeEncodeUri = {
       publicAddress: ctx.body.publicAddress,
       nativeAmount: ctx.body.nativeAmount,

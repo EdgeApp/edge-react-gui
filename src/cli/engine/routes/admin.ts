@@ -26,7 +26,7 @@ export const adminAuthRequest = route({
   core: 'context.$internalStuff.authRequest',
   method: 'POST',
   path: '/admin/auth-request',
-  cli: { command: 'admin-auth-request' },
+  cli: 'admin-auth-request',
   body: asObject({
     method: doc(asString, 'HTTP method, e.g. `GET`.'),
     path: doc(asString, 'Login-server path, not an engine path.'),
@@ -55,7 +55,7 @@ export const adminHashUsername = route({
   core: 'context.$internalStuff.hashUsername',
   method: 'GET',
   path: '/admin/hash-username',
-  cli: { command: 'admin-hash-username', positional: 'username' },
+  cli: 'admin-hash-username',
   query: asObject({ username: doc(asString, 'The name to hash.') }).withRest,
   returns: asObject({ loginId: doc(asString, 'Base58.') }),
 

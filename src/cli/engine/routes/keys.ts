@@ -13,7 +13,7 @@ import { engineError } from '../errors'
 import { findWallet } from '../resolve'
 import { route } from '../route'
 import type { RouteContext } from '../router'
-import { asCoreValue } from '../schemas'
+import { asCoreValue, asWalletId } from '../schemas'
 import { getAccount } from './helpers'
 
 /**
@@ -31,11 +31,7 @@ function walletIdFor(
   return findWallet(getAccount(ctx), ctx.query.valid.walletId).id
 }
 
-const WALLET_ID_QUERY_DOC = 'Full base58 wallet id.'
-
-const asWalletIdQuery = asObject({
-  walletId: doc(asString, WALLET_ID_QUERY_DOC)
-}).withRest
+const asWalletIdQuery = asObject({ walletId: asWalletId }).withRest
 
 /**
  * List every key in the account.
@@ -69,7 +65,7 @@ export const createWallet = route({
   core: 'account.createWallet',
   method: 'POST',
   path: '/account/{sessionId}/create-wallet',
-  cli: { command: 'create-wallet', bodyFlag: 'key-info' },
+  cli: 'create-wallet',
   body: asObject({
     type: doc(asString, 'Wallet type, e.g. `wallet:bitcoin`.'),
     keys: asOptional(
@@ -101,8 +97,10 @@ export const getWalletInfo = route({
   core: 'account.getWalletInfo',
   method: 'GET',
   path: '/account/{sessionId}/get-wallet-info',
-  cli: { command: 'get-wallet-info', positional: 'id' },
-  query: asObject({ id: doc(asString, WALLET_ID_QUERY_DOC) }).withRest,
+  cli: 'get-wallet-info',
+  query: asObject({
+    id: doc(asString, 'The key id, from `all-keys`. Base64, like a wallet id.')
+  }).withRest,
   returns: doc(
     asCoreValue,
     '`EdgeWalletInfoFull`, verbatim from core — including the `keys` object.'
@@ -131,7 +129,7 @@ export const getRawPrivateKey = route({
   core: 'account.getRawPrivateKey',
   method: 'GET',
   path: '/account/{sessionId}/get-raw-private-key',
-  cli: { command: 'get-raw-private-key', positional: 'walletId' },
+  cli: 'get-raw-private-key',
   query: asWalletIdQuery,
   returns: doc(asCoreValue, "The plugin's key object, at the top level."),
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
@@ -149,7 +147,7 @@ export const getRawPublicKey = route({
   core: 'account.getRawPublicKey',
   method: 'GET',
   path: '/account/{sessionId}/get-raw-public-key',
-  cli: { command: 'get-raw-public-key', positional: 'walletId' },
+  cli: 'get-raw-public-key',
   query: asWalletIdQuery,
   returns: doc(asCoreValue, "The plugin's public key object."),
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
@@ -170,7 +168,7 @@ export const getDisplayPrivateKey = route({
   core: 'account.getDisplayPrivateKey',
   method: 'GET',
   path: '/account/{sessionId}/get-display-private-key',
-  cli: { command: 'get-display-private-key', positional: 'walletId' },
+  cli: 'get-display-private-key',
   query: asWalletIdQuery,
   returns: asObject({ key: doc(asString, 'The displayable private key.') }),
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
@@ -190,7 +188,7 @@ export const getDisplayPublicKey = route({
   core: 'account.getDisplayPublicKey',
   method: 'GET',
   path: '/account/{sessionId}/get-display-public-key',
-  cli: { command: 'get-display-public-key', positional: 'walletId' },
+  cli: 'get-display-public-key',
   query: asWalletIdQuery,
   returns: asObject({ key: doc(asString, 'The displayable public key.') }),
   errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
@@ -210,7 +208,7 @@ export const listSplittableWalletTypes = route({
   core: 'account.listSplittableWalletTypes',
   method: 'GET',
   path: '/account/{sessionId}/list-splittable-wallet-types',
-  cli: { command: 'list-splittable-wallet-types', positional: 'walletId' },
+  cli: 'list-splittable-wallet-types',
   query: asWalletIdQuery,
   returns: asObject({
     walletTypes: doc(asArray(asString), 'Types valid for `split`.')
@@ -238,7 +236,6 @@ export const changeWalletStates = route({
   cli: {
     command: 'change-wallet-states',
     custom: true,
-    positional: 'walletId',
     extra: {
       archived: { kind: 'boolstr', doc: 'Hide from the active list.' },
       deleted: { kind: 'boolstr', doc: 'Mark deleted.' },
@@ -249,6 +246,7 @@ export const changeWalletStates = route({
       'The command builds a single-wallet `walletStates` map from these flags, and needs at least one.'
   },
   body: asObject({
+    walletId: asWalletId,
     walletStates: doc(
       asObject(
         asObject({
