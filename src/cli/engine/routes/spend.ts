@@ -261,10 +261,14 @@ export const spend = route({
   core: null,
   method: 'POST',
   path: '/account/{sessionId}/wallets/{walletId}/spend',
-  cli: {
-    command: 'spend',
-    notes: '`spend-max` is the same route with `useMax` preset.'
-  },
+  cli: [
+    { command: 'spend' },
+    {
+      command: 'spend-max',
+      preset: { useMax: true },
+      notes: 'The same route with `useMax` preset, so it sends everything.'
+    }
+  ],
   body: asObject({
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
@@ -377,7 +381,7 @@ export const makeSpend = route({
   core: 'wallet.makeSpend',
   method: 'POST',
   path: '/account/{sessionId}/wallets/{walletId}/make-spend',
-  cli: { command: 'make-spend', bodyFlag: 'spend-info' },
+  cli: 'make-spend',
   body: asObject({
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
@@ -579,7 +583,7 @@ export const sweepPrivateKeys = route({
   core: 'wallet.sweepPrivateKeys',
   method: 'POST',
   path: '/account/{sessionId}/wallets/{walletId}/sweep-private-keys',
-  cli: { command: 'sweep-private-keys', bodyFlag: 'spend-info' },
+  cli: 'sweep-private-keys',
   body: asObject({
     spendInfo: doc(
       asCoreValue,

@@ -1,15 +1,24 @@
 {
-  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the JSDoc above each route() in src/cli/engine/routes. Edit the comment on the route, then run `npm run prepare` (or `npm run docs:api`).",
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the route declarations in src/cli/engine/routes. Edit the declaration, then run `npm run prepare` (or `npm run docs:api`).",
   "commands": {
     "accelerate": {
       "summary": "Fee-bump a pending transaction.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/accelerate",
+      "usage": "accelerate <walletId> [--object-id=<value>] [--transaction=<value>]",
       "description": "Replace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
       "core": "wallet.accelerate",
       "params": {
-        "objectId": "Handle of the transaction to bump.",
-        "transaction": "Or the transaction itself."
+        "objectId": {
+          "pass": "[--object-id=<value>]",
+          "doc": "Handle of the transaction to bump.",
+          "optional": true
+        },
+        "transaction": {
+          "pass": "[--transaction=<value>]",
+          "doc": "Or the transaction itself.",
+          "optional": true
+        }
       },
       "returns": {
         "objectId": "string",
@@ -31,6 +40,7 @@
       "summary": "Account and session summary.",
       "method": "GET",
       "path": "/account/{sessionId}",
+      "usage": "account-info",
       "description": "Session fields are spread at the top level alongside the account's own properties — there is no nested `session` object.",
       "returns": {
         "appId": "string",
@@ -57,12 +67,25 @@
       "summary": "Raw login-server request.",
       "method": "POST",
       "path": "/admin/auth-request",
+      "usage": "admin-auth-request --method=<value> --path=<value> [--body=<value>]",
       "description": "Sends an arbitrary request with the context's credentials attached. Debugging only — this is core's private surface.",
       "core": "context.$internalStuff.authRequest",
       "params": {
-        "method": "HTTP method, e.g. `GET`.",
-        "path": "Login-server path, not an engine path.",
-        "body": "Request body, when the method takes one."
+        "method": {
+          "pass": "--method=<value>",
+          "doc": "HTTP method, e.g. `GET`.",
+          "optional": false
+        },
+        "path": {
+          "pass": "--path=<value>",
+          "doc": "Login-server path, not an engine path.",
+          "optional": false
+        },
+        "body": {
+          "pass": "[--body=<value>]",
+          "doc": "Request body, when the method takes one.",
+          "optional": true
+        }
       },
       "returnsDoc": "Whatever the login server returned.",
       "errors": [
@@ -74,9 +97,14 @@
       "summary": "Read a lobby's contents.",
       "method": "GET",
       "path": "/admin/fetch-lobby-request",
+      "usage": "admin-fetch-lobby-request <lobbyId>",
       "core": "context.$internalStuff.fetchLobbyRequest",
       "params": {
-        "lobbyId": "Which lobby to read."
+        "lobbyId": {
+          "pass": "<lobbyId>",
+          "doc": "Which lobby to read.",
+          "optional": false
+        }
       },
       "returnsDoc": "The raw lobby request.",
       "errors": [
@@ -87,10 +115,15 @@
       "summary": "Hash a username.",
       "method": "GET",
       "path": "/admin/hash-username",
+      "usage": "admin-hash-username <username>",
       "description": "Reproduces the login server's hashing, to derive a login id offline.",
       "core": "context.$internalStuff.hashUsername",
       "params": {
-        "username": "The name to hash."
+        "username": {
+          "pass": "<username>",
+          "doc": "The name to hash.",
+          "optional": false
+        }
       },
       "returns": {
         "loginId": "string — Base58."
@@ -100,6 +133,7 @@
       "summary": "Close a parked lobby.",
       "method": "POST",
       "path": "/admin/lobby-handle/{objectId}/delete",
+      "usage": "admin-lobby-handle-delete <objectId> <objectId>",
       "returns": {
         "ok": "boolean — Always true; a failure arrives as an error envelope."
       },
@@ -114,11 +148,20 @@
       "summary": "Create a lobby.",
       "method": "POST",
       "path": "/admin/make-lobby",
+      "usage": "admin-make-lobby [--lobby-request=<value>] [--period-seconds=<value>]",
       "description": "A lobby polls the login server until closed, so the engine parks it under a `lobby_` handle and closes it on expiry rather than leaking the poll.",
       "core": "context.$internalStuff.makeLobby",
       "params": {
-        "lobbyRequest": "Defaults to `{}`.",
-        "period": "Poll interval in seconds."
+        "lobbyRequest": {
+          "pass": "[--lobby-request=<value>]",
+          "doc": "Defaults to `{}`.",
+          "optional": true
+        },
+        "period": {
+          "pass": "[--period-seconds=<value>]",
+          "doc": "Poll interval in seconds.",
+          "optional": true
+        }
       },
       "returns": {
         "objectId": "string — The parked handle.",
@@ -137,12 +180,25 @@
       "summary": "Delete a repo file.",
       "method": "POST",
       "path": "/admin/repo-delete",
+      "usage": "admin-repo-delete <syncKey> --path=<value> --data-key=<value>",
       "description": "Destructive, and not undoable from this API.",
       "core": "context.$internalStuff.getRepoDisklet",
       "params": {
-        "path": "Path within the repo.",
-        "syncKey": "Base58 repo sync key.",
-        "dataKey": "Base58 repo data key."
+        "path": {
+          "pass": "--path=<value>",
+          "doc": "Path within the repo.",
+          "optional": false
+        },
+        "syncKey": {
+          "pass": "<syncKey>",
+          "doc": "Base58 repo sync key.",
+          "optional": false
+        },
+        "dataKey": {
+          "pass": "--data-key=<value>",
+          "doc": "Base58 repo data key.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -152,11 +208,24 @@
       "summary": "Read a repo file.",
       "method": "GET",
       "path": "/admin/repo-get",
+      "usage": "admin-repo-get <syncKey> --path=<value> --data-key=<value>",
       "core": "context.$internalStuff.getRepoDisklet",
       "params": {
-        "path": "Path within the repo.",
-        "syncKey": "Base58 repo sync key.",
-        "dataKey": "Base58 repo data key."
+        "path": {
+          "pass": "--path=<value>",
+          "doc": "Path within the repo.",
+          "optional": false
+        },
+        "syncKey": {
+          "pass": "<syncKey>",
+          "doc": "Base58 repo sync key.",
+          "optional": false
+        },
+        "dataKey": {
+          "pass": "--data-key=<value>",
+          "doc": "Base58 repo data key.",
+          "optional": false
+        }
       },
       "returns": {
         "text": "string — The file contents."
@@ -170,11 +239,24 @@
       "summary": "List repo contents.",
       "method": "GET",
       "path": "/admin/repo-list",
+      "usage": "admin-repo-list <syncKey> [--path=<value>] --data-key=<value>",
       "core": "context.$internalStuff.getRepoDisklet",
       "params": {
-        "path": "Subdirectory. Defaults to the repo root.",
-        "syncKey": "Base58 repo sync key.",
-        "dataKey": "Base58 repo data key."
+        "path": {
+          "pass": "[--path=<value>]",
+          "doc": "Subdirectory. Defaults to the repo root.",
+          "optional": true
+        },
+        "syncKey": {
+          "pass": "<syncKey>",
+          "doc": "Base58 repo sync key.",
+          "optional": false
+        },
+        "dataKey": {
+          "pass": "--data-key=<value>",
+          "doc": "Base58 repo data key.",
+          "optional": false
+        }
       },
       "returns": {
         "listing": "unknown — Path to entry type: `file` or `folder`."
@@ -187,13 +269,30 @@
       "summary": "Write a repo file.",
       "method": "POST",
       "path": "/admin/repo-set",
+      "usage": "admin-repo-set <syncKey> --path=<value> --text=<value> --data-key=<value>",
       "description": "Writes directly into a synced repo, bypassing every core-level invariant. A malformed write can break the account for real clients.",
       "core": "context.$internalStuff.getRepoDisklet",
       "params": {
-        "path": "Path within the repo.",
-        "text": "The contents to write.",
-        "syncKey": "Base58 repo sync key.",
-        "dataKey": "Base58 repo data key."
+        "path": {
+          "pass": "--path=<value>",
+          "doc": "Path within the repo.",
+          "optional": false
+        },
+        "text": {
+          "pass": "--text=<value>",
+          "doc": "The contents to write.",
+          "optional": false
+        },
+        "syncKey": {
+          "pass": "<syncKey>",
+          "doc": "Base58 repo sync key.",
+          "optional": false
+        },
+        "dataKey": {
+          "pass": "--data-key=<value>",
+          "doc": "Base58 repo data key.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -203,11 +302,24 @@
       "summary": "Reply to a lobby.",
       "method": "POST",
       "path": "/admin/send-lobby-reply",
+      "usage": "admin-send-lobby-reply <lobbyId> --lobby-request=<value> [--reply-data=<value>]",
       "core": "context.$internalStuff.sendLobbyReply",
       "params": {
-        "lobbyId": "Which lobby to answer.",
-        "lobbyRequest": "Normally the object from `admin-fetch-lobby-request`.",
-        "replyData": "Payload for the requester."
+        "lobbyId": {
+          "pass": "<lobbyId>",
+          "doc": "Which lobby to answer.",
+          "optional": false
+        },
+        "lobbyRequest": {
+          "pass": "--lobby-request=<value>",
+          "doc": "Normally the object from `admin-fetch-lobby-request`.",
+          "optional": false
+        },
+        "replyData": {
+          "pass": "[--reply-data=<value>]",
+          "doc": "Payload for the requester.",
+          "optional": true
+        }
       },
       "errors": [
         "BAD_REQUEST",
@@ -218,9 +330,14 @@
       "summary": "Sync a repo.",
       "method": "POST",
       "path": "/admin/sync-repo",
+      "usage": "admin-sync-repo <syncKey>",
       "core": "context.$internalStuff.syncRepo",
       "params": {
-        "syncKey": "Base58 repo sync key."
+        "syncKey": {
+          "pass": "<syncKey>",
+          "doc": "Base58 repo sync key.",
+          "optional": false
+        }
       },
       "returnsDoc": "The changeset summary.",
       "errors": [
@@ -232,6 +349,7 @@
       "summary": "List every key in the account.",
       "method": "GET",
       "path": "/account/{sessionId}/all-keys",
+      "usage": "all-keys",
       "description": "Includes archived and deleted keys, unlike `currency-wallets`.",
       "core": "account.allKeys",
       "returns": {
@@ -242,10 +360,15 @@
       "summary": "Approve a login request.",
       "method": "POST",
       "path": "/account/{sessionId}/approve-login-request",
+      "usage": "approve-login-request <lobbyId>",
       "description": "Grants the requesting device access to this account.",
       "core": "EdgeLoginRequest.approve",
       "params": {
-        "lobbyId": "From the QR code, or an `edge://edge/<lobbyId>` link."
+        "lobbyId": {
+          "pass": "<lobbyId>",
+          "doc": "From the QR code, or an `edge://edge/<lobbyId>` link.",
+          "optional": false
+        }
       },
       "returns": {
         "ok": "boolean — Always true; a failure arrives as an error envelope."
@@ -263,6 +386,7 @@
       "summary": "Execute a quote.",
       "method": "POST",
       "path": "/account/{sessionId}/swap-quotes/{objectId}/approve",
+      "usage": "approve-swap-quote <objectId> <objectId>",
       "description": "Moves funds. The handle is released afterwards whether or not the response is read, so record `orderId` from it.",
       "core": "EdgeSwapQuote.approve",
       "returns": {
@@ -288,10 +412,15 @@
       "summary": "Approve a voucher.",
       "method": "POST",
       "path": "/account/{sessionId}/approve-voucher",
+      "usage": "approve-voucher --voucher-id=<value>",
       "description": "Lets the waiting device finish logging in.",
       "core": "account.approveVoucher",
       "params": {
-        "voucherId": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`."
+        "voucherId": {
+          "pass": "--voucher-id=<value>",
+          "doc": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST",
@@ -302,8 +431,16 @@
       "summary": "Balances for every asset in the wallet.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/balance-map",
+      "usage": "balance-map <walletId> [--token-id=<value>]",
       "description": "The native currency plus every enabled token.",
       "core": "wallet.balanceMap",
+      "params": {
+        "token-id": {
+          "pass": "--token-id=<value>",
+          "doc": "Client-side filter; core has no single-balance accessor.",
+          "optional": true
+        }
+      },
       "returns": {
         "balances": "{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string; }[]"
       },
@@ -315,10 +452,15 @@
       "summary": "Broadcast a signed transaction.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/broadcast-tx",
+      "usage": "broadcast-tx <walletId> --object-id=<value>",
       "description": "The irreversible step: once this returns, the funds have left the wallet.",
       "core": "wallet.broadcastTx",
       "params": {
-        "objectId": "From `sign-tx`."
+        "objectId": {
+          "pass": "--object-id=<value>",
+          "doc": "From `sign-tx`.",
+          "optional": false
+        }
       },
       "returns": {
         "objectId": "string",
@@ -341,6 +483,7 @@
       "summary": "Cancel a pending 2FA reset.",
       "method": "POST",
       "path": "/account/{sessionId}/cancel-otp-reset",
+      "usage": "cancel-otp-reset",
       "description": "The defence against somebody else requesting a reset on your account: as long as you cancel before the timer runs out, their reset never lands.",
       "core": "account.cancelOtpReset"
     },
@@ -348,6 +491,7 @@
       "summary": "Cancel a pending QR login.",
       "method": "POST",
       "path": "/pending-edge-login/{pendingId}/cancel-request",
+      "usage": "cancel-request <pendingId> <pendingId>",
       "core": "EdgePendingEdgeLogin.cancelRequest",
       "notes": [
         "If the login already completed and a session exists, that session is force-logged-out too, so cancelling cannot leave an orphan visible in `engine-sessions`."
@@ -360,10 +504,25 @@
       "summary": "Set the enabled token set.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids",
+      "usage": "change-enabled-token-ids <walletId> --token-ids=<value> [--add=<value>] [--remove=<value>]",
       "description": "Absolute: anything missing from `tokenIds` is disabled. Core has only this setter, so there is no add or remove call.",
       "core": "wallet.changeEnabledTokenIds",
       "params": {
-        "tokenIds": "The complete desired set."
+        "tokenIds": {
+          "pass": "--token-ids=<value>",
+          "doc": "The complete desired set.",
+          "optional": false
+        },
+        "add": {
+          "pass": "--add=<value>",
+          "doc": "Read the current set, add this id, write it back.",
+          "optional": true
+        },
+        "remove": {
+          "pass": "--remove=<value>",
+          "doc": "Read the current set, drop this id, write it back.",
+          "optional": true
+        }
       },
       "returns": {
         "enabledTokenIds": "string[]"
@@ -381,10 +540,15 @@
       "summary": "Set or change the password.",
       "method": "POST",
       "path": "/account/{sessionId}/change-password",
+      "usage": "change-password --password=<value>",
       "description": "The login server enforces its own rules; `check-password-rules` scores a candidate first.",
       "core": "account.changePassword",
       "params": {
-        "password": "The new password."
+        "password": {
+          "pass": "--password=<value>",
+          "doc": "The new password.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST",
@@ -395,10 +559,15 @@
       "summary": "Pause or resume a wallet engine.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/change-paused",
+      "usage": "change-paused <walletId> --paused=<value>",
       "description": "A paused wallet stops syncing, which is how a caller quiets a chain it does not currently care about.",
       "core": "wallet.changePaused",
       "params": {
-        "paused": "True to stop syncing."
+        "paused": {
+          "pass": "--paused=<value>",
+          "doc": "True to stop syncing.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -408,11 +577,24 @@
       "summary": "Set or change the PIN.",
       "method": "POST",
       "path": "/account/{sessionId}/change-pin",
+      "usage": "change-pin --pin=<value> [--enable-login=<value>] [--for-duress-account=<value>]",
       "core": "account.changePin",
       "params": {
-        "pin": "The new PIN.",
-        "enableLogin": "Allow logging in with this PIN on this device.",
-        "forDuressAccount": "Act on the duress account rather than the real one."
+        "pin": {
+          "pass": "--pin=<value>",
+          "doc": "The new PIN.",
+          "optional": false
+        },
+        "enableLogin": {
+          "pass": "[--enable-login=<value>]",
+          "doc": "Allow logging in with this PIN on this device.",
+          "optional": true
+        },
+        "forDuressAccount": {
+          "pass": "[--for-duress-account=<value>]",
+          "doc": "Act on the duress account rather than the real one.",
+          "optional": true
+        }
       },
       "returns": {
         "pin2Key": "string — The new PIN login key core returns."
@@ -425,11 +607,20 @@
       "summary": "Set recovery questions and answers.",
       "method": "POST",
       "path": "/account/{sessionId}/change-recovery",
+      "usage": "change-recovery --question=<value> … --answer=<value> …",
       "description": "The returned key is half of the credential: without it the answers alone cannot recover the account, so it has to be stored somewhere else.",
       "core": "account.changeRecovery",
       "params": {
-        "questions": "The questions to ask.",
-        "answers": "Same length and order as `questions`."
+        "questions": {
+          "pass": "--question=<value> …",
+          "doc": "The questions to ask.",
+          "optional": false
+        },
+        "answers": {
+          "pass": "--answer=<value> …",
+          "doc": "Same length and order as `questions`.",
+          "optional": false
+        }
       },
       "returns": {
         "recoveryKey": "string — Store this out of band. `login-with-recovery` needs it alongside the answers."
@@ -442,11 +633,20 @@
       "summary": "Change the username.",
       "method": "POST",
       "path": "/account/{sessionId}/change-username",
+      "usage": "change-username --username=<value> [--password=<value>]",
       "description": "The old name is released, so it becomes available to anyone else.",
       "core": "account.changeUsername",
       "params": {
-        "username": "The new username.",
-        "password": "Required by core when the account has a password."
+        "username": {
+          "pass": "--username=<value>",
+          "doc": "The new username.",
+          "optional": false
+        },
+        "password": {
+          "pass": "[--password=<value>]",
+          "doc": "Required by core when the account has a password.",
+          "optional": true
+        }
       },
       "errors": [
         "USERNAME_ERROR",
@@ -458,11 +658,39 @@
       "summary": "Archive, delete, hide, or reorder wallets.",
       "method": "POST",
       "path": "/account/{sessionId}/change-wallet-states",
+      "usage": "change-wallet-states <walletId> [--wallet-states=<value>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]",
       "description": "The canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
       "core": "account.changeWalletStates",
       "params": {
-        "walletStates": "`EdgeWalletStates`: wallet ids to the flags being changed."
+        "walletStates": {
+          "pass": "[--wallet-states=<value>]",
+          "doc": "`EdgeWalletStates`: wallet ids to the flags being changed.",
+          "optional": true
+        },
+        "archived": {
+          "pass": "--archived=<value>",
+          "doc": "Hide from the active list.",
+          "optional": true
+        },
+        "deleted": {
+          "pass": "--deleted=<value>",
+          "doc": "Mark deleted.",
+          "optional": true
+        },
+        "hidden": {
+          "pass": "--hidden=<value>",
+          "doc": "Hide from the wallet picker.",
+          "optional": true
+        },
+        "sort-index": {
+          "pass": "--sort-index=<value>",
+          "doc": "Position in the wallet list.",
+          "optional": true
+        }
       },
+      "notes": [
+        "The command builds a single-wallet `walletStates` map from these flags, and needs at least one."
+      ],
       "errors": [
         "BAD_REQUEST"
       ]
@@ -471,10 +699,15 @@
       "summary": "Verify a password.",
       "method": "POST",
       "path": "/account/{sessionId}/check-password",
+      "usage": "check-password --password=<value>",
       "description": "Checks without changing anything, which is how a caller gates a destructive action behind a re-entry prompt.",
       "core": "account.checkPassword",
       "params": {
-        "password": "The account password."
+        "password": {
+          "pass": "--password=<value>",
+          "doc": "The account password.",
+          "optional": false
+        }
       },
       "returns": {
         "ok": "boolean — False for a wrong password — not an error response."
@@ -484,9 +717,14 @@
       "summary": "Score a candidate password.",
       "method": "GET",
       "path": "/check-password-rules",
+      "usage": "check-password-rules --password=<value>",
       "core": "context.checkPasswordRules",
       "params": {
-        "password": "The candidate."
+        "password": {
+          "pass": "--password=<value>",
+          "doc": "The candidate password to score.",
+          "optional": false
+        }
       },
       "returnsDoc": "`EdgePasswordRules` from core: passed, tooShort, noNumber, noLowerCase, noUpperCase, secondsToCrack.",
       "notes": [
@@ -497,10 +735,19 @@
       "summary": "Verify a PIN.",
       "method": "POST",
       "path": "/account/{sessionId}/check-pin",
+      "usage": "check-pin --pin=<value> [--for-duress-account=<value>]",
       "core": "account.checkPin",
       "params": {
-        "pin": "The device PIN, usually four digits.",
-        "forDuressAccount": "Act on the duress account rather than the real one."
+        "pin": {
+          "pass": "--pin=<value>",
+          "doc": "The device PIN, usually four digits.",
+          "optional": false
+        },
+        "forDuressAccount": {
+          "pass": "[--for-duress-account=<value>]",
+          "doc": "Act on the duress account rather than the real one.",
+          "optional": true
+        }
       },
       "returns": {
         "ok": "boolean — False for a wrong PIN — not an error response."
@@ -510,6 +757,7 @@
       "summary": "Discard a quote.",
       "method": "POST",
       "path": "/account/{sessionId}/swap-quotes/{objectId}/close",
+      "usage": "close-swap-quote <objectId> <objectId>",
       "description": "Closes the plugin object without executing, freeing whatever the exchange was holding.",
       "core": "EdgeSwapQuote.close",
       "returns": {
@@ -527,15 +775,40 @@
       "summary": "Create an account.",
       "method": "POST",
       "path": "/create-account",
+      "usage": "create-account <username> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] [--password=<value>] [--pin=<value>]",
       "description": "Every credential is optional over REST: omitting all three creates a light account with no username.",
       "core": "context.createAccount",
       "params": {
-        "otp": "A current 2FA code.",
-        "otpKey": "The 2FA secret itself, instead of a code.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
-        "username": "The name to claim.",
-        "password": "The account password.",
-        "pin": "A device PIN to save."
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "<username>",
+          "doc": "The name to claim.",
+          "optional": true
+        },
+        "password": {
+          "pass": "[--password=<value>]",
+          "doc": "The account password.",
+          "optional": true
+        },
+        "pin": {
+          "pass": "[--pin=<value>]",
+          "doc": "A device PIN to save.",
+          "optional": true
+        }
       },
       "returns": {
         "sessionId": "string",
@@ -562,12 +835,24 @@
       "summary": "Create a currency wallet.",
       "method": "POST",
       "path": "/account/{sessionId}/create-currency-wallet",
+      "usage": "create-currency-wallet <walletType> [--name=<value>] [--import-text=<value>]",
       "core": "account.createCurrencyWallet",
       "params": {
-        "walletType": "From `currency-configs`, e.g. `wallet:bitcoin`.",
-        "name": "Display name.",
-        "fiatCurrencyCode": "e.g. `iso:USD`.",
-        "importText": "Seed or key text to import instead of generating."
+        "walletType": {
+          "pass": "<walletType>",
+          "doc": "From `currency-configs`, e.g. `wallet:bitcoin`.",
+          "optional": false
+        },
+        "name": {
+          "pass": "[--name=<value>]",
+          "doc": "Display name.",
+          "optional": true
+        },
+        "importText": {
+          "pass": "[--import-text=<value>]",
+          "doc": "Seed or key text to import instead of generating.",
+          "optional": true
+        }
       },
       "returns": {
         "walletId": "string",
@@ -588,7 +873,7 @@
         "unactivatedTokenIds": "string[]"
       },
       "notes": [
-        "`fiatCurrencyCode` and `importText` are REST-only; the command has no flags for them."
+        "The fiat currency is not set here. Core still accepts it on create, but that path is deprecated — use `set-fiat-currency-code` afterwards, so there is one way to do it."
       ],
       "errors": [
         "BAD_REQUEST"
@@ -598,10 +883,15 @@
       "summary": "Create several wallets at once.",
       "method": "POST",
       "path": "/account/{sessionId}/create-currency-wallets",
+      "usage": "create-currency-wallets --create-wallets='<json>'",
       "description": "Partial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
       "core": "account.createCurrencyWallets",
       "params": {
-        "createWallets": "`EdgeCreateCurrencyWallet[]`: walletType, name, fiatCurrencyCode."
+        "createWallets": {
+          "pass": "--create-wallets='<json>'",
+          "doc": "`EdgeCreateCurrencyWallet[]`: walletType, name, fiatCurrencyCode.",
+          "optional": false
+        }
       },
       "returns": {
         "results": "unknown[] — Mirrors core's EdgeResult[]: `{ ok, wallet }` or `{ ok: false, error }`."
@@ -614,11 +904,20 @@
       "summary": "Create a wallet from raw key JSON.",
       "method": "POST",
       "path": "/account/{sessionId}/create-wallet",
+      "usage": "create-wallet --key-info='<json>'",
       "description": "The import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.",
       "core": "account.createWallet",
       "params": {
-        "type": "Wallet type, e.g. `wallet:bitcoin`.",
-        "keys": "Plugin key material. Omit to let core generate it."
+        "type": {
+          "pass": "--key-info='<json>'",
+          "doc": "Wallet type, e.g. `wallet:bitcoin`.",
+          "optional": false
+        },
+        "keys": {
+          "pass": "--key-info='<json>'",
+          "doc": "Plugin key material. Omit to let core generate it.",
+          "optional": true
+        }
       },
       "returns": {
         "walletId": "string"
@@ -631,6 +930,7 @@
       "summary": "List plugin ids usable for wallet creation.",
       "method": "GET",
       "path": "/currency-configs",
+      "usage": "currency-configs",
       "description": "Currency and accountbased plugins only — swap plugins are excluded.",
       "returns": {
         "pluginIds": "string[]"
@@ -640,10 +940,19 @@
       "summary": "List wallets.",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
+      "usage": "currency-wallets [--filter=<value>] [--no-wait=<value>]",
       "core": "account.currencyWallets",
       "params": {
-        "filter": "`active` (default), `archived`, `hidden`, or `all`.",
-        "waitForAll": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has."
+        "filter": {
+          "pass": "[--filter=<value>]",
+          "doc": "`active` (default), `archived`, `hidden`, or `all`.",
+          "optional": true
+        },
+        "waitForAll": {
+          "pass": "[--no-wait=<value>]",
+          "doc": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
+          "optional": true
+        }
       },
       "returns": {
         "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[]"
@@ -656,10 +965,19 @@
       "summary": "Delete an item.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-item",
+      "usage": "delete-item <storeId> --item-id=<value>",
       "core": "account.dataStore.deleteItem",
       "params": {
-        "storeId": "Plugin or app namespace within the account data store.",
-        "itemId": "Key within the store."
+        "storeId": {
+          "pass": "<storeId>",
+          "doc": "Plugin or app namespace within the account data store.",
+          "optional": false
+        },
+        "itemId": {
+          "pass": "--item-id=<value>",
+          "doc": "Key within the store.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -669,6 +987,7 @@
       "summary": "Remove password login.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-password",
+      "usage": "delete-password",
       "description": "The account keeps its other login methods; only the password stops working.",
       "core": "account.deletePassword",
       "errors": [
@@ -680,6 +999,7 @@
       "summary": "Remove the PIN.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-pin",
+      "usage": "delete-pin",
       "description": "PIN login stops working on this device; other methods are untouched.",
       "core": "account.deletePin"
     },
@@ -687,6 +1007,7 @@
       "summary": "Disable recovery login.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-recovery",
+      "usage": "delete-recovery",
       "description": "The existing recovery key stops working.",
       "core": "account.deleteRecovery"
     },
@@ -694,8 +1015,16 @@
       "summary": "Permanently delete the remote account.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-remote-account",
+      "usage": "delete-remote-account --yes",
       "description": "Irreversible. The account is removed from the login server, and funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
       "core": "account.deleteRemoteAccount",
+      "params": {
+        "yes": {
+          "pass": "--yes",
+          "doc": "Confirms intent. Without it the command refuses to run.",
+          "optional": false
+        }
+      },
       "notes": [
         "The engine performs no confirmation check — the call runs as soon as it arrives, so any guard has to live in the caller. The command requires `--yes` for exactly this reason."
       ],
@@ -707,10 +1036,15 @@
       "summary": "Delete an entire store.",
       "method": "POST",
       "path": "/account/{sessionId}/delete-store",
+      "usage": "delete-store <storeId>",
       "description": "Removes every item in it, which cannot be undone from this API.",
       "core": "account.dataStore.deleteStore",
       "params": {
-        "storeId": "Plugin or app namespace within the account data store."
+        "storeId": {
+          "pass": "<storeId>",
+          "doc": "Plugin or app namespace within the account data store.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -720,6 +1054,7 @@
       "summary": "Disable 2FA.",
       "method": "POST",
       "path": "/account/{sessionId}/disable-otp",
+      "usage": "disable-otp",
       "description": "Logins stop requiring a code immediately.",
       "core": "account.disableOtp"
     },
@@ -727,6 +1062,7 @@
       "summary": "Dump wallet engine state.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/dump-data",
+      "usage": "dump-data <walletId>",
       "description": "Plugin-defined debug output. Shape varies by plugin and can be very large.",
       "core": "wallet.dumpData",
       "returnsDoc": "`EdgeDataDump`, straight from the plugin."
@@ -735,10 +1071,15 @@
       "summary": "Enable 2FA.",
       "method": "POST",
       "path": "/account/{sessionId}/enable-otp",
+      "usage": "enable-otp [--timeout=<value>]",
       "description": "Record the returned key before leaving the terminal: it is the only copy.",
       "core": "account.enableOtp",
       "params": {
-        "timeout": "How long a reset request must wait before it completes. Core supplies the default when omitted."
+        "timeout": {
+          "pass": "[--timeout=<value>]",
+          "doc": "How long a reset request must wait before it completes. Core supplies the default when omitted.",
+          "optional": true
+        }
       },
       "returns": {
         "otpKey": "string | null — The new secret. The 2FA secret itself. Secret material — record it safely."
@@ -748,14 +1089,35 @@
       "summary": "Build a payment URI.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/encode-uri",
+      "usage": "encode-uri <walletId> --public-address=<value> [--native-amount=<value>] [--label=<value>] [--message=<value>] [--currency-code=<value>]",
       "description": "For a receive screen or a QR code.",
       "core": "wallet.encodeUri",
       "params": {
-        "publicAddress": "Where the payment should go.",
-        "nativeAmount": "Amount, in the native unit.",
-        "label": "BIP21 `label`; becomes `metadata.name` when parsed back.",
-        "message": "BIP21 `message`; becomes `metadata.notes`.",
-        "currencyCode": "Disambiguates on chains that carry several assets."
+        "publicAddress": {
+          "pass": "--public-address=<value>",
+          "doc": "Where the payment should go.",
+          "optional": false
+        },
+        "nativeAmount": {
+          "pass": "[--native-amount=<value>]",
+          "doc": "Amount, in the native unit.",
+          "optional": true
+        },
+        "label": {
+          "pass": "[--label=<value>]",
+          "doc": "BIP21 `label`; becomes `metadata.name` when parsed back.",
+          "optional": true
+        },
+        "message": {
+          "pass": "[--message=<value>]",
+          "doc": "BIP21 `message`; becomes `metadata.notes`.",
+          "optional": true
+        },
+        "currencyCode": {
+          "pass": "[--currency-code=<value>]",
+          "doc": "Disambiguates on chains that carry several assets.",
+          "optional": true
+        }
       },
       "returns": {
         "uri": "string — The encoded URI, ready for a QR code."
@@ -773,6 +1135,7 @@
       "summary": "Configured context options.",
       "method": "GET",
       "path": "/engine/config",
+      "usage": "engine-config",
       "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
       "returns": {
         "appId": "string",
@@ -789,42 +1152,9 @@
       "summary": "List active sessions.",
       "method": "GET",
       "path": "/engine/sessions",
+      "usage": "engine-sessions",
       "returns": {
-        "length": "number",
-        "toString": "() => string — function toString() { [native code] }",
-        "toLocaleString": "() => string — function toLocaleString() { [native code] }",
-        "pop?": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }",
-        "push": "(...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => number",
-        "concat": "{ (...items: ConcatArray<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; (...items: ({ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | ConcatArray<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>)[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
-        "join": "(separator?: string | undefined) => string",
-        "reverse": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
-        "shift?": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }",
-        "slice": "(start?: number | undefined, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
-        "sort": "(compareFn?: ((a: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, b: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }) => number) | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
-        "splice": "{ (start: number, deleteCount?: number | undefined): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; (start: number, deleteCount: number, ...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
-        "unshift": "(...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => number",
-        "indexOf": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => number",
-        "lastIndexOf": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => number",
-        "every": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): this is S[]; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): boolean; }",
-        "some": "(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any) => boolean",
-        "forEach": "(callbackfn: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => void, thisArg?: any) => void",
-        "map": "<U>(callbackfn: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, thisArg?: any) => U[]",
-        "filter": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): S[]; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
-        "reduce": "{ (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, initialValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; <U>(callbackfn: (previousValue: U, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, initialValue: U): U; }",
-        "reduceRight": "{ (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, initialValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; <U>(callbackfn: (previousValue: U, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, initialValue: U): U; }",
-        "find": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): S | undefined; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | undefined; }",
-        "findIndex": "(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any) => number",
-        "fill": "(value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, start?: number | undefined, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
-        "copyWithin": "(target: number, start: number, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
-        "entries": "() => IterableIterator<[number, { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }]>",
-        "keys": "() => IterableIterator<number>",
-        "values": "() => IterableIterator<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>",
-        "includes": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => boolean",
-        "flatMap": "<U, This = undefined>(callback: (this: This, value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U | readonly U[], thisArg?: This | undefined) => U[]",
-        "flat": "<A, D extends number = 1>(this: A, depth?: D | undefined) => FlatArray<A, D>[]",
-        "__@iterator@157": "() => IterableIterator<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>",
-        "__@unscopables@159": "{ [x: number]: boolean | undefined; length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; pop?: boolean | undefined; push?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; reverse?: boolean | undefined; shift?: boolean | undefined; slice?: boolean | undefined; sort?: boolean | undefined; splice?: boolean | undefined; unshift?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; fill?: boolean | undefined; copyWithin?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; at?: boolean | undefined; }",
-        "at?": "(index: number) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }"
+        "": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]"
       },
       "returnsDoc": "A bare array, not wrapped in a key."
     },
@@ -832,6 +1162,7 @@
       "summary": "Engine liveness and summary.",
       "method": "GET",
       "path": "/engine/status",
+      "usage": "engine-status",
       "description": "The readiness probe the client polls after auto-spawning the engine.",
       "returns": {
         "pid": "number",
@@ -855,6 +1186,7 @@
       "summary": "Stop the engine.",
       "method": "POST",
       "path": "/engine/stop",
+      "usage": "engine-stop",
       "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
       "returns": {
         "ok": "boolean — Always true; a failure arrives as an error envelope."
@@ -867,6 +1199,7 @@
       "summary": "Pre-fetch a CAPTCHA challenge.",
       "method": "POST",
       "path": "/fetch-challenge",
+      "usage": "fetch-challenge",
       "description": "Lets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
       "core": "context.fetchChallenge",
       "returns": {
@@ -882,10 +1215,15 @@
       "summary": "Inspect a login request.",
       "method": "GET",
       "path": "/account/{sessionId}/fetch-lobby",
+      "usage": "fetch-lobby <lobbyId>",
       "description": "The other side of `request-edge-login`: shows who is asking, so a human can decide before approving.",
       "core": "account.fetchLobby",
       "params": {
-        "lobbyId": "From the QR code, or an `edge://edge/<lobbyId>` link."
+        "lobbyId": {
+          "pass": "<lobbyId>",
+          "doc": "From the QR code, or an `edge://edge/<lobbyId>` link.",
+          "optional": false
+        }
       },
       "returns": {
         "lobbyId": "string",
@@ -900,6 +1238,7 @@
       "summary": "Fetch login-server messages for every local user.",
       "method": "GET",
       "path": "/fetch-login-messages",
+      "usage": "fetch-login-messages",
       "core": "context.fetchLoginMessages",
       "returnsDoc": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.",
       "errors": [
@@ -910,10 +1249,19 @@
       "summary": "Fetch a user’s recovery questions.",
       "method": "GET",
       "path": "/fetch-recovery-questions",
+      "usage": "fetch-recovery-questions <username> --recovery-key=<value>",
       "core": "context.fetchRecovery2Questions",
       "params": {
-        "recoveryKey": "From `change-recovery`, stored by the user out of band.",
-        "username": "Whose questions to fetch."
+        "recoveryKey": {
+          "pass": "--recovery-key=<value>",
+          "doc": "From `change-recovery`, stored by the user out of band.",
+          "optional": false
+        },
+        "username": {
+          "pass": "<username>",
+          "doc": "Whose questions to fetch.",
+          "optional": false
+        }
       },
       "returns": {
         "questions": "string[]"
@@ -927,16 +1275,45 @@
       "summary": "Fetch swap quotes.",
       "method": "POST",
       "path": "/account/{sessionId}/fetch-swap-quotes",
+      "usage": "fetch-swap-quotes --from-wallet-id=<value> --to-wallet-id=<value> --native-amount=<value> [--from-token-id=<value>] [--to-token-id=<value>] [--quote-for=<value>] [--plugin-id=<value>]",
       "description": "Polls every enabled swap plugin and parks each result under its own `swap_` handle with a 5 minute TTL.",
       "core": "account.fetchSwapQuotes",
       "params": {
-        "fromWalletId": "Source wallet. Accepts a unique prefix.",
-        "toWalletId": "Destination wallet.",
-        "nativeAmount": "How much, in native units.",
-        "fromTokenId": "Defaults to the native asset.",
-        "toTokenId": "Defaults to the native asset.",
-        "quoteFor": "`from` spends this much of the source, `to` receives this much at the destination, `max` sends everything. Defaults to `from`.",
-        "preferPluginId": "Restrict to one exchange."
+        "fromWalletId": {
+          "pass": "--from-wallet-id=<value>",
+          "doc": "Source wallet. Accepts a unique prefix.",
+          "optional": false
+        },
+        "toWalletId": {
+          "pass": "--to-wallet-id=<value>",
+          "doc": "Destination wallet.",
+          "optional": false
+        },
+        "nativeAmount": {
+          "pass": "--native-amount=<value>",
+          "doc": "How much, in native units.",
+          "optional": false
+        },
+        "fromTokenId": {
+          "pass": "[--from-token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "toTokenId": {
+          "pass": "[--to-token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "quoteFor": {
+          "pass": "[--quote-for=<value>]",
+          "doc": "`from` spends this much of the source, `to` receives this much at the destination, `max` sends everything. Defaults to `from`.",
+          "optional": true
+        },
+        "preferPluginId": {
+          "pass": "[--plugin-id=<value>]",
+          "doc": "Restrict to one exchange.",
+          "optional": true
+        }
       },
       "returns": {
         "quoteCount": "number — How many plugins answered.",
@@ -963,10 +1340,15 @@
       "summary": "Normalize a username.",
       "method": "GET",
       "path": "/fix-username",
+      "usage": "fix-username <username>",
       "description": "Applies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
       "core": "context.fixUsername",
       "params": {
-        "username": "The name to normalize."
+        "username": {
+          "pass": "<username>",
+          "doc": "The name to normalize.",
+          "optional": false
+        }
       },
       "returns": {
         "username": "string — The normalized value. The input is not echoed."
@@ -976,10 +1358,15 @@
       "summary": "Forget an account on this device.",
       "method": "POST",
       "path": "/forget-account",
+      "usage": "forget-account <rootLoginId>",
       "description": "Removes locally cached credentials. The remote account is untouched.",
       "core": "context.forgetAccount",
       "params": {
-        "rootLoginId": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it."
+        "rootLoginId": {
+          "pass": "<rootLoginId>",
+          "doc": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it.",
+          "optional": false
+        }
       },
       "errors": [
         "USER_NOT_FOUND",
@@ -990,10 +1377,19 @@
       "summary": "Receive addresses.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/get-addresses",
+      "usage": "get-addresses <walletId> [--token-id=<value>] [--force-index=<value>]",
       "core": "wallet.getAddresses",
       "params": {
-        "tokenId": "Defaults to the native asset.",
-        "forceIndex": "Derive at a specific index."
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "forceIndex": {
+          "pass": "[--force-index=<value>]",
+          "doc": "Derive at a specific index.",
+          "optional": true
+        }
       },
       "returns": {
         "addresses": "unknown[] — `EdgeAddress[]`: addressType, publicAddress, nativeBalance."
@@ -1003,10 +1399,15 @@
       "summary": "Export the private key for display.",
       "method": "GET",
       "path": "/account/{sessionId}/get-display-private-key",
+      "usage": "get-display-private-key <walletId>",
       "description": "Secret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
       "core": "account.getDisplayPrivateKey",
       "params": {
-        "walletId": "Full base58 wallet id."
+        "walletId": {
+          "pass": "<walletId>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returns": {
         "key": "string — The displayable private key."
@@ -1019,10 +1420,15 @@
       "summary": "Export the public key for display.",
       "method": "GET",
       "path": "/account/{sessionId}/get-display-public-key",
+      "usage": "get-display-public-key <walletId>",
       "description": "The xpub or equivalent — safe to share for watch-only use.",
       "core": "account.getDisplayPublicKey",
       "params": {
-        "walletId": "Full base58 wallet id."
+        "walletId": {
+          "pass": "<walletId>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returns": {
         "key": "string — The displayable public key."
@@ -1035,11 +1441,20 @@
       "summary": "Read an item.",
       "method": "GET",
       "path": "/account/{sessionId}/get-item",
+      "usage": "get-item <storeId> --item-id=<value>",
       "description": "Values are opaque strings; encoding is the caller's business.",
       "core": "account.dataStore.getItem",
       "params": {
-        "storeId": "Plugin or app namespace within the account data store.",
-        "itemId": "Key within the store."
+        "storeId": {
+          "pass": "<storeId>",
+          "doc": "Plugin or app namespace within the account data store.",
+          "optional": false
+        },
+        "itemId": {
+          "pass": "--item-id=<value>",
+          "doc": "Key within the store.",
+          "optional": false
+        }
       },
       "returns": {
         "value": "string — The stored string."
@@ -1053,6 +1468,7 @@
       "summary": "Read the account login key.",
       "method": "GET",
       "path": "/account/{sessionId}/get-login-key",
+      "usage": "get-login-key",
       "description": "The key `login-with-key` takes. It grants full account access, so treat the output as secret.",
       "core": "account.getLoginKey",
       "returns": {
@@ -1063,15 +1479,40 @@
       "summary": "Largest sendable amount.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/get-max-spendable",
+      "usage": "get-max-spendable <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
       "description": "What empties the wallet after fees. A destination is still required, since fees depend on it.",
       "core": "wallet.getMaxSpendable",
       "params": {
-        "spendInfo": "A full `EdgeSpendInfo`, used as-is when present.",
-        "to": "Address or BIP21 URI, run through `wallet.parseUri`.",
-        "nativeAmount": "How much, in native units.",
-        "amount": "Alias of `nativeAmount`.",
-        "tokenId": "Defaults to the native asset.",
-        "metadata": "Wins over anything parsed out of the URI."
+        "spendInfo": {
+          "pass": "[--spend-info=<value>]",
+          "doc": "A full `EdgeSpendInfo`, used as-is when present.",
+          "optional": true
+        },
+        "to": {
+          "pass": "[--to=<value>]",
+          "doc": "Address or BIP21 URI, run through `wallet.parseUri`.",
+          "optional": true
+        },
+        "nativeAmount": {
+          "pass": "[--native-amount=<value>]",
+          "doc": "How much, in native units.",
+          "optional": true
+        },
+        "amount": {
+          "pass": "[--amount=<value>]",
+          "doc": "Alias of `nativeAmount`.",
+          "optional": true
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "metadata": {
+          "pass": "[--metadata=<value>]",
+          "doc": "Wins over anything parsed out of the URI.",
+          "optional": true
+        }
       },
       "returns": {
         "nativeAmount": "string — The most this wallet can send."
@@ -1086,10 +1527,15 @@
       "summary": "Count transactions in a wallet.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/get-num-transactions",
+      "usage": "get-num-transactions <walletId> [--token-id=<value>]",
       "description": "Cheaper than listing when only the total matters.",
       "core": "wallet.getNumTransactions",
       "params": {
-        "tokenId": "Defaults to the native asset."
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        }
       },
       "returns": {
         "numTransactions": "number — Every transaction the wallet knows of."
@@ -1106,10 +1552,15 @@
       "summary": "Fetch a BIP70 payment request.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info",
+      "usage": "get-payment-protocol-info <walletId> --payment-protocol-url=<value>",
       "description": "Feed `spendTargets` from the result into `make-spend` to pay it.",
       "core": "wallet.getPaymentProtocolInfo",
       "params": {
-        "paymentProtocolUrl": "The payment-request URL."
+        "paymentProtocolUrl": {
+          "pass": "--payment-protocol-url=<value>",
+          "doc": "The payment-request URL.",
+          "optional": false
+        }
       },
       "returnsDoc": "`EdgePaymentProtocolInfo`: domain, memo, merchant, nativeAmount, spendTargets.",
       "errors": [
@@ -1121,6 +1572,7 @@
       "summary": "Read the account PIN.",
       "method": "GET",
       "path": "/account/{sessionId}/get-pin",
+      "usage": "get-pin",
       "description": "Returns the PIN itself, not a status flag, so treat the output as secret.",
       "core": "account.getPin",
       "returns": {
@@ -1131,10 +1583,15 @@
       "summary": "Read raw private key material.",
       "method": "GET",
       "path": "/account/{sessionId}/get-raw-private-key",
+      "usage": "get-raw-private-key <walletId>",
       "description": "Secret. Whatever the plugin stores — seed, mnemonic, xpriv.",
       "core": "account.getRawPrivateKey",
       "params": {
-        "walletId": "Full base58 wallet id."
+        "walletId": {
+          "pass": "<walletId>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returnsDoc": "The plugin's key object, at the top level.",
       "errors": [
@@ -1145,9 +1602,14 @@
       "summary": "Read raw public key material.",
       "method": "GET",
       "path": "/account/{sessionId}/get-raw-public-key",
+      "usage": "get-raw-public-key <walletId>",
       "core": "account.getRawPublicKey",
       "params": {
-        "walletId": "Full base58 wallet id."
+        "walletId": {
+          "pass": "<walletId>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returnsDoc": "The plugin's public key object.",
       "errors": [
@@ -1158,19 +1620,65 @@
       "summary": "List or export a wallet's transactions.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/get-transactions",
+      "usage": "get-transactions <walletId> [--token-id=<value>] [--limit=<value>] [--offset=<value>] [--start-date=<value>] [--end-date=<value>] [--search-string=<value>] [--spam-threshold=<value>] [--fiat=<value>] [--export-format=<value>] [--bitwave-account=<value>] [--out=<value>]",
       "description": "Reads history, overlays the display metadata the GUI shows, fills historical fiat, and optionally formats the result — all on this one call.",
       "core": "wallet.getTransactions",
       "params": {
-        "tokenId": "Defaults to the native asset.",
-        "limit": "Omitting it returns every transaction from `offset` on.",
-        "offset": "Where to start. Defaults to 0.",
-        "startDate": "ISO-8601, or epoch milliseconds.",
-        "endDate": "ISO-8601, or epoch milliseconds.",
-        "searchString": "Matches payee, category, notes and txid.",
-        "spamThreshold": "Native-amount floor. Omitted, the account spam-filter setting applies; passing it always overrides.",
-        "fiat": "Three-letter ISO 4217 code. Defaults to the account defaultIsoFiat.",
-        "exportFormat": "Comma list of `csv`, `qbo`, `bitwave`.",
-        "bitwaveAccountId": "A 400 unless `exportFormat` includes `bitwave`."
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "limit": {
+          "pass": "[--limit=<value>]",
+          "doc": "Omitting it returns every transaction from `offset` on.",
+          "optional": true
+        },
+        "offset": {
+          "pass": "[--offset=<value>]",
+          "doc": "Where to start. Defaults to 0.",
+          "optional": true
+        },
+        "startDate": {
+          "pass": "[--start-date=<value>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "endDate": {
+          "pass": "[--end-date=<value>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "searchString": {
+          "pass": "[--search-string=<value>]",
+          "doc": "Matches payee, category, notes and txid.",
+          "optional": true
+        },
+        "spamThreshold": {
+          "pass": "[--spam-threshold=<value>]",
+          "doc": "Native-amount floor. Omitted, the account spam-filter setting applies; passing it always overrides.",
+          "optional": true
+        },
+        "fiat": {
+          "pass": "[--fiat=<value>]",
+          "doc": "Three-letter ISO 4217 code. Defaults to the account defaultIsoFiat.",
+          "optional": true
+        },
+        "exportFormat": {
+          "pass": "[--export-format=<value>]",
+          "doc": "Comma list of `csv`, `qbo`, `bitwave`.",
+          "optional": true
+        },
+        "bitwaveAccountId": {
+          "pass": "[--bitwave-account=<value>]",
+          "doc": "A 400 unless `exportFormat` includes `bitwave`.",
+          "optional": true
+        },
+        "out": {
+          "pass": "--out=<value>",
+          "doc": "Where to write the returned files. One format: the path. Several: a stem, plus .csv / .qbo / .bitwave.csv.",
+          "optional": true
+        }
       },
       "returnsDoc": "`{ transactions, total, isoFiat }`, or `{ ok, isoFiat, total, files }` when exportFormat is set.",
       "notes": [
@@ -1189,9 +1697,14 @@
       "summary": "Read one wallet's key info.",
       "method": "GET",
       "path": "/account/{sessionId}/get-wallet-info",
+      "usage": "get-wallet-info <id>",
       "core": "account.getWalletInfo",
       "params": {
-        "id": "Full base58 wallet id."
+        "id": {
+          "pass": "<id>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returnsDoc": "`EdgeWalletInfoFull`, verbatim from core — including the `keys` object.",
       "notes": [
@@ -1205,9 +1718,14 @@
       "summary": "List item ids in a store.",
       "method": "GET",
       "path": "/account/{sessionId}/list-item-ids",
+      "usage": "list-item-ids <storeId>",
       "core": "account.dataStore.listItemIds",
       "params": {
-        "storeId": "Plugin or app namespace within the account data store."
+        "storeId": {
+          "pass": "<storeId>",
+          "doc": "Plugin or app namespace within the account data store.",
+          "optional": false
+        }
       },
       "returns": {
         "itemIds": "string[]"
@@ -1217,10 +1735,15 @@
       "summary": "List chains a wallet can split into.",
       "method": "GET",
       "path": "/account/{sessionId}/list-splittable-wallet-types",
+      "usage": "list-splittable-wallet-types <walletId>",
       "description": "Forked-chain support: which wallet types can be derived from these keys.",
       "core": "account.listSplittableWalletTypes",
       "params": {
-        "walletId": "Full base58 wallet id."
+        "walletId": {
+          "pass": "<walletId>",
+          "doc": "Full base58 wallet id.",
+          "optional": false
+        }
       },
       "returns": {
         "walletTypes": "string[] — Types valid for `split`."
@@ -1233,6 +1756,7 @@
       "summary": "List data-store ids.",
       "method": "GET",
       "path": "/account/{sessionId}/list-store-ids",
+      "usage": "list-store-ids",
       "description": "The account's synced key-value store, where plugins keep their own state.",
       "core": "account.dataStore.listStoreIds",
       "returns": {
@@ -1243,21 +1767,28 @@
       "summary": "Change local settings.",
       "method": "POST",
       "path": "/account/{sessionId}/change-local-settings",
+      "usage": "local-settings --spam-filter-on=<value>",
       "description": "Writes device-local account settings. Every option is a field on the body; `spamFilterOn` is the only one today, and new options are added alongside it.",
       "params": {
-        "spamFilterOn": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+        "spamFilterOn": {
+          "pass": "--spam-filter-on=<value>",
+          "doc": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.",
+          "optional": false
+        }
       },
       "returns": {
         "spamFilterOn": "boolean — Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
       },
       "notes": [
-        "Omitting a field is a `400`, not a no-op, so a caller cannot clear a setting by accident."
+        "Omitting a field is a `400`, not a no-op, so a caller cannot clear a setting by accident.",
+        "With no flag the command reads; with one it writes."
       ]
     },
     "local-users": {
       "summary": "List local users on this device.",
       "method": "GET",
       "path": "/local-users",
+      "usage": "local-users",
       "core": "context.localUsers",
       "returns": {
         "localUsers": "unknown[]"
@@ -1268,15 +1799,40 @@
       "summary": "Log in with an account login key.",
       "method": "POST",
       "path": "/login-with-key",
+      "usage": "login-with-key <usernameOrLoginId> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --login-key=<value> [--use-login-id=<value>]",
       "description": "The key comes from `get-login-key` on an already-authenticated session.",
       "core": "context.loginWithKey",
       "params": {
-        "otp": "A current 2FA code.",
-        "otpKey": "The 2FA secret itself, instead of a code.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
-        "usernameOrLoginId": "A username, or a login id.",
-        "loginKey": "From `get-login-key`.",
-        "useLoginId": "Treat the value as a login id."
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "usernameOrLoginId": {
+          "pass": "<usernameOrLoginId>",
+          "doc": "A username, or a login id.",
+          "optional": false
+        },
+        "loginKey": {
+          "pass": "--login-key=<value>",
+          "doc": "From `get-login-key`.",
+          "optional": false
+        },
+        "useLoginId": {
+          "pass": "[--use-login-id=<value>]",
+          "doc": "Treat the value as a login id.",
+          "optional": true
+        }
       },
       "returns": {
         "sessionId": "string",
@@ -1299,13 +1855,34 @@
       "summary": "Log in with a password.",
       "method": "POST",
       "path": "/login-with-password",
+      "usage": "login-with-password <username> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --password=<value>",
       "core": "context.loginWithPassword",
       "params": {
-        "otp": "A current 2FA code.",
-        "otpKey": "The 2FA secret itself, instead of a code.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
-        "username": "The account name.",
-        "password": "The account password."
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "<username>",
+          "doc": "The account name.",
+          "optional": false
+        },
+        "password": {
+          "pass": "--password=<value>",
+          "doc": "The account password.",
+          "optional": false
+        }
       },
       "returns": {
         "sessionId": "string",
@@ -1333,15 +1910,40 @@
       "summary": "Log in with a device PIN.",
       "method": "POST",
       "path": "/login-with-pin",
+      "usage": "login-with-pin <usernameOrLoginId> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --pin=<value> [--use-login-id=<value>]",
       "description": "Only works on a device that has already saved a PIN for the account.",
       "core": "context.loginWithPIN",
       "params": {
-        "otp": "A current 2FA code.",
-        "otpKey": "The 2FA secret itself, instead of a code.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
-        "usernameOrLoginId": "A username, or a login id.",
-        "pin": "The device PIN.",
-        "useLoginId": "Treat the value as a login id."
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "usernameOrLoginId": {
+          "pass": "<usernameOrLoginId>",
+          "doc": "A username, or a login id.",
+          "optional": false
+        },
+        "pin": {
+          "pass": "--pin=<value>",
+          "doc": "The device PIN.",
+          "optional": false
+        },
+        "useLoginId": {
+          "pass": "[--use-login-id=<value>]",
+          "doc": "Treat the value as a login id.",
+          "optional": true
+        }
       },
       "returns": {
         "sessionId": "string",
@@ -1366,15 +1968,40 @@
       "summary": "Log in with recovery answers.",
       "method": "POST",
       "path": "/login-with-recovery",
+      "usage": "login-with-recovery <username> [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --recovery-key=<value> --answer=<value> …",
       "description": "Needs both the recovery key and the answers; neither works alone.",
       "core": "context.loginWithRecovery2",
       "params": {
-        "otp": "A current 2FA code.",
-        "otpKey": "The 2FA secret itself, instead of a code.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
-        "recoveryKey": "From `change-recovery`.",
-        "username": "The account name.",
-        "answers": "In the same order as the questions."
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "recoveryKey": {
+          "pass": "--recovery-key=<value>",
+          "doc": "From `change-recovery`.",
+          "optional": false
+        },
+        "username": {
+          "pass": "<username>",
+          "doc": "The account name.",
+          "optional": false
+        },
+        "answers": {
+          "pass": "--answer=<value> …",
+          "doc": "In the same order as the questions.",
+          "optional": false
+        }
       },
       "returns": {
         "sessionId": "string",
@@ -1397,22 +2024,51 @@
       "summary": "Log out.",
       "method": "POST",
       "path": "/account/{sessionId}/logout",
+      "usage": "logout",
       "description": "Ends the session and drops it from the engine. Any subscription scoped to this account or its wallets is closed with it.",
-      "core": "account.logout"
+      "core": "account.logout",
+      "notes": [
+        "Also clears the stored id from `session.json`."
+      ]
     },
     "make-spend": {
       "summary": "Build an unsigned transaction.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/make-spend",
+      "usage": "make-spend <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>]",
       "description": "First step of the staged workflow: nothing is signed and no funds move. Inspect `transaction.networkFee` on the result before signing.",
       "core": "wallet.makeSpend",
       "params": {
-        "spendInfo": "A full `EdgeSpendInfo`, used as-is when present.",
-        "to": "Address or BIP21 URI, run through `wallet.parseUri`.",
-        "nativeAmount": "How much, in native units.",
-        "amount": "Alias of `nativeAmount`.",
-        "tokenId": "Defaults to the native asset.",
-        "metadata": "Wins over anything parsed out of the URI."
+        "spendInfo": {
+          "pass": "[--spend-info=<value>]",
+          "doc": "A full `EdgeSpendInfo`, used as-is when present.",
+          "optional": true
+        },
+        "to": {
+          "pass": "[--to=<value>]",
+          "doc": "Address or BIP21 URI, run through `wallet.parseUri`.",
+          "optional": true
+        },
+        "nativeAmount": {
+          "pass": "[--native-amount=<value>]",
+          "doc": "How much, in native units.",
+          "optional": true
+        },
+        "amount": {
+          "pass": "[--amount=<value>]",
+          "doc": "Alias of `nativeAmount`.",
+          "optional": true
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "metadata": {
+          "pass": "[--metadata=<value>]",
+          "doc": "Wins over anything parsed out of the URI.",
+          "optional": true
+        }
       },
       "returns": {
         "objectId": "string",
@@ -1433,6 +2089,7 @@
       "summary": "Release an object handle.",
       "method": "POST",
       "path": "/account/{sessionId}/objects/{objectId}/delete",
+      "usage": "object-delete <objectId> <objectId>",
       "description": "Runs the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
       "returns": {
         "ok": "boolean",
@@ -1448,6 +2105,7 @@
       "summary": "Inspect an object handle.",
       "method": "GET",
       "path": "/account/{sessionId}/objects/{objectId}",
+      "usage": "object-get <objectId> <objectId>",
       "description": "Works for every kind: transactions, pending logins, swap quotes.",
       "returns": {
         "objectId": "string",
@@ -1470,6 +2128,7 @@
       "summary": "Read the 2FA secret and reset state.",
       "method": "GET",
       "path": "/account/{sessionId}/otp-key",
+      "usage": "otp-key",
       "core": "account.otpKey",
       "returns": {
         "otpKey": "string | null — Null when 2FA is off. The 2FA secret itself. Secret material — record it safely.",
@@ -1480,11 +2139,20 @@
       "summary": "Parse a payment URI or address.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/parse-uri",
+      "usage": "parse-uri <walletId> --uri=<value> [--currency-code=<value>]",
       "description": "What the GUI address tile does when you paste or scan something.",
       "core": "wallet.parseUri",
       "params": {
-        "uri": "A payment URI or a bare address.",
-        "currencyCode": "Disambiguates on chains that carry several assets."
+        "uri": {
+          "pass": "--uri=<value>",
+          "doc": "A payment URI or a bare address.",
+          "optional": false
+        },
+        "currencyCode": {
+          "pass": "[--currency-code=<value>]",
+          "doc": "Disambiguates on chains that carry several assets.",
+          "optional": true
+        }
       },
       "returnsDoc": "`EdgeParsedUri`: publicAddress, nativeAmount, currencyCode, metadata, paymentProtocolUrl, …",
       "notes": [
@@ -1500,6 +2168,7 @@
       "summary": "List pending 2FA vouchers.",
       "method": "GET",
       "path": "/account/{sessionId}/pending-vouchers",
+      "usage": "pending-vouchers",
       "description": "When 2FA blocks a login, the login server issues a voucher that an already-trusted device can approve or reject.",
       "core": "account.pendingVouchers",
       "returns": {
@@ -1510,10 +2179,19 @@
       "summary": "Batch crypto and fiat rate lookups.",
       "method": "POST",
       "path": "/rates/query",
+      "usage": "rates-query --body='<json>'",
       "description": "Concurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
       "params": {
-        "crypto": "Crypto rates to fetch.",
-        "fiat": "Fiat rates to fetch."
+        "crypto": {
+          "pass": "--body='<json>'",
+          "doc": "Crypto rates to fetch.",
+          "optional": true
+        },
+        "fiat": {
+          "pass": "--body='<json>'",
+          "doc": "Fiat rates to fetch.",
+          "optional": true
+        }
       },
       "returns": {
         "crypto": "{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no crypto rates were requested.",
@@ -1531,13 +2209,34 @@
       "summary": "Convert a USD amount into native units.",
       "method": "POST",
       "path": "/rates/usd-to-native",
+      "usage": "rates-usd-to-native --usd-amount=<value> --plugin-id=<value> [--token-id=<value>] [--multiplier=<value>] [--date=<value>]",
       "description": "Turns a fiat notional into the native amount a spend needs.",
       "params": {
-        "usdAmount": "A string, which must parse to a positive finite number.",
-        "pluginId": "Which chain to price.",
-        "tokenId": "Defaults to the native asset.",
-        "multiplier": "Native units per whole coin. Defaults per plugin.",
-        "date": "ISO-8601. Omitted, the current time is sent to the rates server."
+        "usdAmount": {
+          "pass": "--usd-amount=<value>",
+          "doc": "A string, which must parse to a positive finite number.",
+          "optional": false
+        },
+        "pluginId": {
+          "pass": "--plugin-id=<value>",
+          "doc": "Which chain to price.",
+          "optional": false
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "multiplier": {
+          "pass": "[--multiplier=<value>]",
+          "doc": "Native units per whole coin. Defaults per plugin.",
+          "optional": true
+        },
+        "date": {
+          "pass": "[--date=<value>]",
+          "doc": "ISO-8601. Omitted, the current time is sent to the rates server.",
+          "optional": true
+        }
       },
       "returns": {
         "usdAmount": "number — Echoed as a number, though it is sent as a string.",
@@ -1563,10 +2262,15 @@
       "summary": "Reject a voucher.",
       "method": "POST",
       "path": "/account/{sessionId}/reject-voucher",
+      "usage": "reject-voucher --voucher-id=<value>",
       "description": "Denies the waiting device. The login it was issued for cannot complete.",
       "core": "account.rejectVoucher",
       "params": {
-        "voucherId": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`."
+        "voucherId": {
+          "pass": "--voucher-id=<value>",
+          "doc": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST",
@@ -1577,9 +2281,14 @@
       "summary": "Rename a wallet.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/rename-wallet",
+      "usage": "rename-wallet <walletId> --name=<value>",
       "core": "wallet.renameWallet",
       "params": {
-        "name": "The new display name."
+        "name": {
+          "pass": "--name=<value>",
+          "doc": "The new display name.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -1589,10 +2298,15 @@
       "summary": "Re-point the account at a known 2FA secret.",
       "method": "POST",
       "path": "/account/{sessionId}/repair-otp",
+      "usage": "repair-otp --otp-key=<value>",
       "description": "For a device whose stored secret has drifted from the server's.",
       "core": "account.repairOtp",
       "params": {
-        "otpKey": "The secret the account should use."
+        "otpKey": {
+          "pass": "--otp-key=<value>",
+          "doc": "The secret the account should use.",
+          "optional": false
+        }
       },
       "errors": [
         "OTP_REQUIRED",
@@ -1603,6 +2317,7 @@
       "summary": "Start a QR login.",
       "method": "POST",
       "path": "/request-edge-login",
+      "usage": "request-edge-login",
       "description": "Asks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
       "core": "context.requestEdgeLogin",
       "returns": {
@@ -1618,7 +2333,8 @@
         "error": "string | null"
       },
       "notes": [
-        "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you."
+        "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you.",
+        "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session."
       ],
       "errors": [
         "NETWORK_ERROR"
@@ -1628,11 +2344,20 @@
       "summary": "Request a 2FA reset.",
       "method": "POST",
       "path": "/request-otp-reset",
+      "usage": "request-otp-reset <username> --otp-reset-token=<value>",
       "description": "Starts the timed reset a user falls back on after losing their authenticator.",
       "core": "context.requestOtpReset",
       "params": {
-        "username": "Whose 2FA to reset.",
-        "otpResetToken": "From `details.resetToken` on an `OTP_REQUIRED` error."
+        "username": {
+          "pass": "<username>",
+          "doc": "Whose 2FA to reset.",
+          "optional": false
+        },
+        "otpResetToken": {
+          "pass": "--otp-reset-token=<value>",
+          "doc": "From `details.resetToken` on an `OTP_REQUIRED` error.",
+          "optional": false
+        }
       },
       "returns": {
         "resetDate": "string"
@@ -1648,6 +2373,7 @@
       "summary": "Rescan the blockchain from scratch.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/resync-blockchain",
+      "usage": "resync-blockchain <walletId>",
       "description": "Drops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
       "core": "wallet.resyncBlockchain",
       "notes": [
@@ -1658,10 +2384,15 @@
       "summary": "Record a transaction and release its handle.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/save-tx",
+      "usage": "save-tx <walletId> --object-id=<value>",
       "description": "Final step. The handle is gone afterwards, so a second call is a 404.",
       "core": "wallet.saveTx",
       "params": {
-        "objectId": "The handle to persist and release."
+        "objectId": {
+          "pass": "--object-id=<value>",
+          "doc": "The handle to persist and release.",
+          "optional": false
+        }
       },
       "returns": {
         "ok": "boolean",
@@ -1675,13 +2406,30 @@
       "summary": "Save a transaction action.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/save-tx-action",
+      "usage": "save-tx-action <walletId> --txid=<value> [--token-id=<value>] --saved-action=<value> [--asset-action=<value>]",
       "description": "Records what a transaction *was* — a swap, a stake — beyond its metadata.",
       "core": "wallet.saveTxAction",
       "params": {
-        "txid": "Which transaction to annotate.",
-        "tokenId": "Defaults to the native asset.",
-        "savedAction": "`EdgeTxAction` describing what happened.",
-        "assetAction": "`EdgeAssetAction`."
+        "txid": {
+          "pass": "--txid=<value>",
+          "doc": "Which transaction to annotate.",
+          "optional": false
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "savedAction": {
+          "pass": "--saved-action=<value>",
+          "doc": "`EdgeTxAction` describing what happened.",
+          "optional": false
+        },
+        "assetAction": {
+          "pass": "[--asset-action=<value>]",
+          "doc": "`EdgeAssetAction`.",
+          "optional": true
+        }
       },
       "notes": [
         "When `assetAction` is omitted it defaults to `{ assetActionType: 'transfer' }`."
@@ -1696,12 +2444,25 @@
       "summary": "Save transaction metadata.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/save-tx-metadata",
+      "usage": "save-tx-metadata <walletId> --txid=<value> [--token-id=<value>] --metadata=<value>",
       "description": "One of only two routes that write transaction metadata to disk.",
       "core": "wallet.saveTxMetadata",
       "params": {
-        "txid": "Which transaction to tag.",
-        "tokenId": "Defaults to the native asset.",
-        "metadata": "`EdgeMetadataChange`: name, category, notes, exchangeAmount."
+        "txid": {
+          "pass": "--txid=<value>",
+          "doc": "Which transaction to tag.",
+          "optional": false
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "metadata": {
+          "pass": "--metadata=<value>",
+          "doc": "`EdgeMetadataChange`: name, category, notes, exchangeAmount.",
+          "optional": false
+        }
       },
       "notes": [
         "`metadata` is an `EdgeMetadataChange`, so an explicit null clears a field while an omitted one is left alone."
@@ -1716,10 +2477,15 @@
       "summary": "Change a wallet's fiat currency.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code",
+      "usage": "set-fiat-currency-code <walletId> --fiat-currency-code=<value>",
       "description": "Affects how balances and history are priced, not the asset itself.",
       "core": "wallet.setFiatCurrencyCode",
       "params": {
-        "fiatCurrencyCode": "e.g. `iso:EUR`."
+        "fiatCurrencyCode": {
+          "pass": "--fiat-currency-code=<value>",
+          "doc": "e.g. `iso:EUR`.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -1729,12 +2495,25 @@
       "summary": "Write an item.",
       "method": "POST",
       "path": "/account/{sessionId}/set-item",
+      "usage": "set-item <storeId> --item-id=<value> --value=<value>",
       "description": "Creates the store if it does not exist.",
       "core": "account.dataStore.setItem",
       "params": {
-        "storeId": "Plugin or app namespace within the account data store.",
-        "itemId": "Key within the store.",
-        "value": "The string to store."
+        "storeId": {
+          "pass": "<storeId>",
+          "doc": "Plugin or app namespace within the account data store.",
+          "optional": false
+        },
+        "itemId": {
+          "pass": "--item-id=<value>",
+          "doc": "Key within the store.",
+          "optional": false
+        },
+        "value": {
+          "pass": "--value=<value>",
+          "doc": "The string to store.",
+          "optional": false
+        }
       },
       "errors": [
         "BAD_REQUEST"
@@ -1744,12 +2523,25 @@
       "summary": "Sign arbitrary bytes.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/sign-bytes",
+      "usage": "sign-bytes <walletId> [--bytes=<value>] [--data=<value>] [--other-params=<value>]",
       "description": "Message signing and proof-of-ownership, for plugins that support it.",
       "core": "wallet.signBytes",
       "params": {
-        "bytes": "Base64. Defaults to empty when absent.",
-        "data": "Legacy alias for `bytes`.",
-        "otherParams": "Plugin-specific options."
+        "bytes": {
+          "pass": "[--bytes=<value>]",
+          "doc": "Base64. Defaults to empty when absent.",
+          "optional": true
+        },
+        "data": {
+          "pass": "[--data=<value>]",
+          "doc": "Legacy alias for `bytes`.",
+          "optional": true
+        },
+        "otherParams": {
+          "pass": "[--other-params=<value>]",
+          "doc": "Plugin-specific options.",
+          "optional": true
+        }
       },
       "returns": {
         "signature": "string — Base64."
@@ -1765,10 +2557,15 @@
       "summary": "Sign a staged transaction.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/sign-tx",
+      "usage": "sign-tx <walletId> --object-id=<value>",
       "description": "Keeps the same handle and pushes its expiry out another five minutes.",
       "core": "wallet.signTx",
       "params": {
-        "objectId": "From `make-spend`."
+        "objectId": {
+          "pass": "--object-id=<value>",
+          "doc": "From `make-spend`.",
+          "optional": false
+        }
       },
       "returns": {
         "objectId": "string",
@@ -1786,18 +2583,59 @@
       "summary": "Send funds.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/spend",
+      "usage": "spend <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max=<value>] [--dry-run=<value>] [--broadcast=<value>] [--save=<value>]",
       "description": "`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
       "params": {
-        "spendInfo": "A full `EdgeSpendInfo`, used as-is when present.",
-        "to": "Address or BIP21 URI, run through `wallet.parseUri`.",
-        "nativeAmount": "How much, in native units.",
-        "amount": "Alias of `nativeAmount`.",
-        "tokenId": "Defaults to the native asset.",
-        "metadata": "Wins over anything parsed out of the URI.",
-        "useMax": "Replace the first target's amount with the maximum.",
-        "dryRun": "Build only. Never signs or broadcasts.",
-        "broadcast": "Defaults to **true**.",
-        "save": "Defaults to **true**."
+        "spendInfo": {
+          "pass": "[--spend-info=<value>]",
+          "doc": "A full `EdgeSpendInfo`, used as-is when present.",
+          "optional": true
+        },
+        "to": {
+          "pass": "[--to=<value>]",
+          "doc": "Address or BIP21 URI, run through `wallet.parseUri`.",
+          "optional": true
+        },
+        "nativeAmount": {
+          "pass": "[--native-amount=<value>]",
+          "doc": "How much, in native units.",
+          "optional": true
+        },
+        "amount": {
+          "pass": "[--amount=<value>]",
+          "doc": "Alias of `nativeAmount`.",
+          "optional": true
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "metadata": {
+          "pass": "[--metadata=<value>]",
+          "doc": "Wins over anything parsed out of the URI.",
+          "optional": true
+        },
+        "useMax": {
+          "pass": "[--use-max=<value>]",
+          "doc": "Replace the first target's amount with the maximum.",
+          "optional": true
+        },
+        "dryRun": {
+          "pass": "[--dry-run=<value>]",
+          "doc": "Build only. Never signs or broadcasts.",
+          "optional": true
+        },
+        "broadcast": {
+          "pass": "[--broadcast=<value>]",
+          "doc": "Defaults to **true**.",
+          "optional": true
+        },
+        "save": {
+          "pass": "[--save=<value>]",
+          "doc": "Defaults to **true**.",
+          "optional": true
+        }
       },
       "returnsDoc": "`{ transaction }`, plus `saveError` when the broadcast succeeded but saving failed. With dryRun, a TransactionHandle instead.",
       "notes": [
@@ -1815,14 +2653,94 @@
         "NETWORK_ERROR"
       ]
     },
+    "spend-max": {
+      "summary": "Send funds.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallets/{walletId}/spend",
+      "usage": "spend-max <walletId> [--spend-info=<value>] [--to=<value>] [--native-amount=<value>] [--amount=<value>] [--token-id=<value>] [--metadata=<value>] [--use-max=<value>] [--dry-run=<value>] [--broadcast=<value>] [--save=<value>]",
+      "description": "`makeSpend`, then `signTx`, then optionally `broadcastTx` and `saveTx`, in one request. `broadcast` and `save` both default to true, so a bare body with a destination and an amount moves real money. A completed spend leaves no handle behind.",
+      "params": {
+        "spendInfo": {
+          "pass": "[--spend-info=<value>]",
+          "doc": "A full `EdgeSpendInfo`, used as-is when present.",
+          "optional": true
+        },
+        "to": {
+          "pass": "[--to=<value>]",
+          "doc": "Address or BIP21 URI, run through `wallet.parseUri`.",
+          "optional": true
+        },
+        "nativeAmount": {
+          "pass": "[--native-amount=<value>]",
+          "doc": "How much, in native units.",
+          "optional": true
+        },
+        "amount": {
+          "pass": "[--amount=<value>]",
+          "doc": "Alias of `nativeAmount`.",
+          "optional": true
+        },
+        "tokenId": {
+          "pass": "[--token-id=<value>]",
+          "doc": "Defaults to the native asset.",
+          "optional": true
+        },
+        "metadata": {
+          "pass": "[--metadata=<value>]",
+          "doc": "Wins over anything parsed out of the URI.",
+          "optional": true
+        },
+        "useMax": {
+          "pass": "[--use-max=<value>]",
+          "doc": "Replace the first target's amount with the maximum.",
+          "optional": true
+        },
+        "dryRun": {
+          "pass": "[--dry-run=<value>]",
+          "doc": "Build only. Never signs or broadcasts.",
+          "optional": true
+        },
+        "broadcast": {
+          "pass": "[--broadcast=<value>]",
+          "doc": "Defaults to **true**.",
+          "optional": true
+        },
+        "save": {
+          "pass": "[--save=<value>]",
+          "doc": "Defaults to **true**.",
+          "optional": true
+        }
+      },
+      "returnsDoc": "`{ transaction }`, plus `saveError` when the broadcast succeeded but saving failed. With dryRun, a TransactionHandle instead.",
+      "notes": [
+        "BIP21 `label` and `message` from `to` become metadata name and notes. An explicit `metadata` object wins.",
+        "`saveError` is the case to handle. Once broadcast, the money is gone, so a failure inside saveTx cannot throw — it would hide the txid of a real payment. The response is 200 with the transaction plus `saveError`.",
+        "With `dryRun`, only makeSpend runs and the response is a transaction handle that expires in 5 minutes.",
+        "The same route with `useMax` preset, so it sends everything."
+      ],
+      "errors": [
+        "INSUFFICIENT_FUNDS",
+        "DUST_SPEND",
+        "PENDING_FUNDS",
+        "SPEND_TO_SELF",
+        "NO_AMOUNT_SPECIFIED",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
     "split": {
       "summary": "Split a wallet into another chain.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/split",
+      "usage": "split <walletId> --split-wallets='<json>'",
       "description": "Forked-chain support: derive a wallet of a different type from the same keys. `list-splittable-wallet-types` says which are valid.",
       "core": "wallet.split",
       "params": {
-        "splitWallets": "`EdgeSplitCurrencyWallet[]`: walletType, name, fiatCurrencyCode."
+        "splitWallets": {
+          "pass": "--split-wallets='<json>'",
+          "doc": "`EdgeSplitCurrencyWallet[]`: walletType, name, fiatCurrencyCode.",
+          "optional": false
+        }
       },
       "returns": {
         "results": "unknown[] — Per-entry outcomes, like batch create."
@@ -1835,7 +2753,15 @@
       "summary": "Subscribe to engine events.",
       "method": "GET",
       "path": "/engine/events",
+      "usage": "subscribe [--type=<value>]",
       "description": "Holds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.\n\nA live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.",
+      "params": {
+        "type": {
+          "pass": "--type=<value>",
+          "doc": "Client-side filter; the engine always sends everything the scope allows.",
+          "optional": true
+        }
+      },
       "returns": {
         "type": "string — The event name.",
         "data": "unknown — Payload, shaped by the event type."
@@ -1845,13 +2771,15 @@
         "Frame types: `core.log`, `session.created`, `session.expired`, `engine.shutdown`, and `subscription.closed` when the engine ends it.",
         "`sessionId` in event payloads is truncated to its first 10 characters.",
         "A client more than 1 MiB behind is disconnected rather than buffered.",
-        "Served directly by the HTTP handler rather than through the router, because the response never ends."
+        "Served directly by the HTTP handler rather than through the router, because the response never ends.",
+        "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away."
       ]
     },
     "swap-quote-get": {
       "summary": "Re-read a quote.",
       "method": "GET",
       "path": "/account/{sessionId}/swap-quotes/{objectId}",
+      "usage": "swap-quote-get <objectId> <objectId>",
       "returns": {
         "objectId": "string",
         "kind": "string",
@@ -1882,10 +2810,15 @@
       "summary": "Sweep private keys into this wallet.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/sweep-private-keys",
+      "usage": "sweep-private-keys <walletId> --spend-info=<value>",
       "description": "Builds a transaction moving everything from an external key. Returns an unsigned handle: sign, broadcast and save it like any staged spend.",
       "core": "wallet.sweepPrivateKeys",
       "params": {
-        "spendInfo": "A full `EdgeSpendInfo`, with the keys to sweep in `privateKeys`."
+        "spendInfo": {
+          "pass": "--spend-info=<value>",
+          "doc": "A full `EdgeSpendInfo`, with the keys to sweep in `privateKeys`.",
+          "optional": false
+        }
       },
       "returns": {
         "objectId": "string",
@@ -1905,8 +2838,12 @@
       "summary": "Force an account data sync.",
       "method": "POST",
       "path": "/account/{sessionId}/sync",
+      "usage": "sync",
       "description": "Pushes and pulls the account repos immediately rather than waiting for the next scheduled sync.",
       "core": "account.sync",
+      "notes": [
+        "Named `sync` for the account; the wallet one is `wallet-sync`."
+      ],
       "errors": [
         "NETWORK_ERROR"
       ]
@@ -1915,6 +2852,7 @@
       "summary": "Keepalive.",
       "method": "POST",
       "path": "/account/{sessionId}/touch",
+      "usage": "touch",
       "description": "Resets the idle auto-logout timer without doing any other work.",
       "returns": {
         "sessionId": "string",
@@ -1932,10 +2870,19 @@
       "summary": "Check whether a username is free.",
       "method": "GET",
       "path": "/username-available",
+      "usage": "username-available <username> [--challenge-id=<value>]",
       "core": "context.usernameAvailable",
       "params": {
-        "username": "The name to check.",
-        "challengeId": "Supply after solving a CAPTCHA to retry the same check."
+        "username": {
+          "pass": "<username>",
+          "doc": "The name to check.",
+          "optional": false
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same check.",
+          "optional": true
+        }
       },
       "returns": {
         "username": "string",
@@ -1951,12 +2898,14 @@
       "summary": "Wallet detail.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}",
+      "usage": "wallet-info <walletId>",
       "returnsDoc": "Every WalletSummary field, plus denominations, walletSettings and allTokens."
     },
     "wallet-sync": {
       "summary": "Nudge one wallet to sync.",
       "method": "POST",
       "path": "/account/{sessionId}/wallets/{walletId}/sync",
+      "usage": "wallet-sync <walletId>",
       "core": "wallet.sync",
       "notes": [
         "Named `wallet-sync` on the CLI because `sync` is `account.sync`."
@@ -1966,6 +2915,7 @@
       "summary": "List a wallet's tokens.",
       "method": "GET",
       "path": "/account/{sessionId}/wallets/{walletId}/tokens",
+      "usage": "wallet-tokens <walletId>",
       "description": "\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
       "returns": {
         "allTokens": "{ [keys: string]: unknown; } — Built-in and custom together, keyed by tokenId. Large on EVM chains.",

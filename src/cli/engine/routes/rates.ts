@@ -168,7 +168,7 @@ export const ratesUsdToNative = route({
   core: null,
   method: 'POST',
   path: '/rates/usd-to-native',
-  cli: { command: 'rates-usd-to-native', positional: 'usdAmount' },
+  cli: 'rates-usd-to-native',
   body: asObject({
     usdAmount: doc(
       asString,

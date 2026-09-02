@@ -78,6 +78,7 @@ export const getTransactions = route({
   path: '/account/{sessionId}/wallets/{walletId}/get-transactions',
   cli: {
     command: 'get-transactions',
+    custom: true,
     flags: { bitwaveAccount: { maps: 'bitwaveAccountId' } },
     extra: {
       out: {

@@ -62,6 +62,7 @@ export const changeEnabledTokenIds = route({
   path: '/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
   cli: {
     command: 'change-enabled-token-ids',
+    custom: true,
     extra: {
       add: {
         kind: 'repeat',

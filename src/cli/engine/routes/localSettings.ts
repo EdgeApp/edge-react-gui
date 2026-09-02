@@ -31,7 +31,7 @@ export const localSettings = route({
   core: null,
   method: 'GET',
   path: '/account/{sessionId}/local-settings',
-  cli: { command: 'local-settings' },
+  cli: { command: 'local-settings', custom: true },
   returns: asLocalSettings,
 
   async handler(ctx) {
@@ -56,6 +56,7 @@ export const changeLocalSettings = route({
   path: '/account/{sessionId}/change-local-settings',
   cli: {
     command: 'local-settings',
+    custom: true,
     notes: 'With no flag the command reads; with one it writes.'
   },
   body: asLocalSettings.withRest,

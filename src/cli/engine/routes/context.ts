@@ -6,18 +6,31 @@ import { route } from '../route'
 import { asCoreValue } from '../schemas'
 
 const asUsernameQuery = asObject({
-  username: asString,
-  challengeId: asOptional(asString)
+  username: doc(asString, 'The name to check.'),
+  challengeId: asOptional(
+    doc(asString, 'Supply after solving a CAPTCHA to retry the same check.')
+  )
 }).withRest
 
-const asForgetAccountBody = asObject({ rootLoginId: asString }).withRest
+const asForgetAccountBody = asObject({
+  rootLoginId: doc(
+    asString,
+    'Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it.'
+  )
+}).withRest
 const asOtpResetBody = asObject({
-  username: asString,
-  otpResetToken: asString
+  username: doc(asString, 'Whose 2FA to reset.'),
+  otpResetToken: doc(
+    asString,
+    'From `details.resetToken` on an `OTP_REQUIRED` error.'
+  )
 }).withRest
 const asRecoveryQuestionsQuery = asObject({
-  recoveryKey: asString,
-  username: asString
+  recoveryKey: doc(
+    asString,
+    'From `change-recovery`, stored by the user out of band.'
+  ),
+  username: doc(asString, 'Whose questions to fetch.')
 }).withRest
 
 /**
@@ -43,8 +56,6 @@ export const localUsers = route({
  *
  * Removes locally cached credentials. The remote account is untouched.
  *
- * @param rootLoginId Core takes a `rootLoginId`. A username is also accepted
- *   and resolved against `localUsers` first, so callers need not hash it.
  */
 export const forgetAccount = route({
   core: 'context.forgetAccount',
@@ -75,8 +86,6 @@ export const forgetAccount = route({
 /**
  * Check whether a username is free.
  *
- * @param username The name to check.
- * @param challengeId Supply after solving a CAPTCHA to retry the same check.
  */
 export const usernameAvailable = route({
   core: 'context.usernameAvailable',
@@ -124,7 +133,6 @@ export const fixUsername = route({
 /**
  * Score a candidate password.
  *
- * @param password The candidate.
  * @note Send it with `curl --get --data-urlencode` rather than putting it in a
  *   shell-visible URL.
  * @returns `EdgePasswordRules` from core: passed, tooShort, noNumber,
@@ -134,8 +142,10 @@ export const checkPasswordRules = route({
   core: 'context.checkPasswordRules',
   method: 'GET',
   path: '/check-password-rules',
-  cli: { command: 'check-password-rules', positional: 'password' },
-  query: asObject({ password: asString }).withRest,
+  cli: 'check-password-rules',
+  query: asObject({
+    password: doc(asString, 'The candidate password to score.')
+  }).withRest,
   returns: asCoreValue,
 
   handler(ctx) {
@@ -171,8 +181,6 @@ export const fetchLoginMessages = route({
  * Starts the timed reset a user falls back on after losing their
  * authenticator.
  *
- * @param username Whose 2FA to reset.
- * @param otpResetToken From `details.resetToken` on an `OTP_REQUIRED` error.
  * @returns When the reset completes if nobody cancels it.
  */
 export const requestOtpReset = route({
@@ -196,8 +204,6 @@ export const requestOtpReset = route({
 /**
  * Fetch a user’s recovery questions.
  *
- * @param recoveryKey From `change-recovery`, stored by the user out of band.
- * @param username Whose questions to fetch.
  * @coreNote Our surface drops the `2` from the path, command and `recoveryKey`
  *   parameter; a future Recovery1 would be suffixed `V1`.
  */

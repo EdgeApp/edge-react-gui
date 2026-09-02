@@ -29,6 +29,7 @@ export const engineEvents = route({
   path: '/engine/events',
   cli: {
     command: 'subscribe',
+    custom: true,
     extra: {
       type: {
         kind: 'repeat',

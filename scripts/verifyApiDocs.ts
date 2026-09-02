@@ -1,31 +1,30 @@
 /**
- * Drift checker for docs/api.
+ * Drift checker for the API surface.
  *
- * Reads the engine's own route registrations and command registrations
- * straight out of `src/cli`, then asserts the documentation describes exactly
- * that surface — no missing routes, no invented ones, no stale command names.
+ * Reads the route declarations and the registered CLI commands out of
+ * `src/cli`, and asserts they describe the same API: no route without a
+ * command it claims, no command nobody declares, no flag on one side missing
+ * from the other, and no `core` naming a member `edge-core-js` does not have.
  *
  *   node -r sucrase/register scripts/verifyApiDocs.ts
  *
  * Exits non-zero on any drift, so it can gate CI.
  */
 import fs from 'fs'
-// ------------------------------------------------------------- core calls
-// Every endpoint must either name the core call it fronts or say why there is
-// none. Names are checked against the real edge-core-js interfaces.
 import path from 'path'
 
-import { endpoints } from '../docs/api'
 import { errorCodes } from '../docs/api/shared'
+import { extractRoutes, kebab } from './extractRoutes'
 
 const ROOT = path.resolve(__dirname, '..')
-const ROUTES_DIR = path.join(ROOT, 'src/cli/engine/routes')
 const COMMANDS_DIR = path.join(ROOT, 'src/cli/commands')
+const CORE_TYPES = path.join(
+  ROOT,
+  'node_modules/edge-core-js/src/types/types.ts'
+)
+const INTERNAL_TYPES = path.join(ROOT, 'src/cli/engine/internal.ts')
 
-/** Routes served outside the router, which therefore never call `router.add`. */
-const NON_ROUTER_ROUTES = new Set(['GET /engine/events'])
-
-/** Commands that talk to no endpoint. */
+/** Commands that talk to no route. */
 const LOCAL_ONLY_COMMANDS = new Set(['help'])
 
 function read(dir: string): string {
@@ -36,42 +35,35 @@ function read(dir: string): string {
     .join('\n')
 }
 
-function actualRoutes(): Set<string> {
-  const source = read(ROUTES_DIR)
-  const found = new Set<string>()
-  // Legacy form: router.add('GET', '/path', handler)
-  const addRe = /router\.add\(\s*'([A-Z]+)',\s*'([^']+)'/g
-  let m: RegExpExecArray | null
-  while ((m = addRe.exec(source)) != null) found.add(`${m[1]} ${m[2]}`)
-  // Declaration form: route({ …, method: 'GET', path: '/path', … })
-  const routeRe =
-    /\broute\(\{[\s\S]*?\bmethod:\s*'([A-Z]+)',\s*\n?\s*path:\s*'([^']+)'/g
-  while ((m = routeRe.exec(source)) != null) found.add(`${m[1]} ${m[2]}`)
-  return found
+const commandSource = read(COMMANDS_DIR)
+
+interface GeneratedTable {
+  commands: Array<{
+    command: string
+    args: Array<{ flag?: string }>
+    bodyFlag?: string
+  }>
 }
 
-function actualCommands(): Set<string> {
-  const source = read(COMMANDS_DIR)
+/** The generated table, alongside the hand-written modules. */
+const generated: GeneratedTable = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'src/cli/generated/commands.json'), 'utf8')
+)
+
+function registeredCommands(): Set<string> {
   const found = new Set<string>()
-  // `command('name', …)` plus the wrappers in wallet.ts that register several
-  // commands from one body.
   const re =
     /(?<![\w.])(?:command|objectIdCmd|walletActionCmd)\(\s*'([a-z0-9-]+)'/g
   let m: RegExpExecArray | null
-  while ((m = re.exec(source)) != null) found.add(m[1])
+  while ((m = re.exec(commandSource)) != null) found.add(m[1])
+  for (const c of generated.commands) found.add(c.command)
   return found
 }
 
-/**
- * The flags each command actually accepts, read from its `parseCommandArgs`
- * call. `objectIdCmd` builds three commands from one body, so its flags are
- * attributed to every name it registers.
- */
-function actualFlags(): Map<string, Set<string>> {
-  const source = read(COMMANDS_DIR)
+/** Flags each command's parser really accepts. */
+function registeredFlags(): Map<string, Set<string>> {
   const out = new Map<string, Set<string>>()
-
-  function flagsIn(text: string): Set<string> {
+  const flagsIn = (text: string): Set<string> => {
     const flags = new Set<string>()
     const block = /flags:\s*\{([\s\S]*?)\}/.exec(text)
     if (block == null) return flags
@@ -81,9 +73,6 @@ function actualFlags(): Map<string, Set<string>> {
     while ((m = re.exec(block[1])) != null) flags.add(m[1])
     return flags
   }
-
-  // Wrappers in wallet.ts register several commands from one body, so each
-  // wrapper's flags belong to every name it is called with.
   const helpers: Array<[RegExp, RegExp]> = [
     [
       /function objectIdCmd\([\s\S]*?\n\}/,
@@ -94,26 +83,25 @@ function actualFlags(): Map<string, Set<string>> {
       /^walletActionCmd\(\s*\n?\s*'([a-z0-9-]+)'/gm
     ]
   ]
-
-  for (const block of source.split(/\n(?=(?:const \w+ = )?command\()/)) {
+  for (const block of commandSource.split(/\n(?=(?:const \w+ = )?command\()/)) {
     const name = /^(?:const \w+ = )?command\(\s*\n?\s*'([a-z0-9-]+)'/.exec(
       block
     )
     if (name != null) out.set(name[1], flagsIn(block))
   }
   for (const [bodyRe, callRe] of helpers) {
-    const body = bodyRe.exec(source)
+    const body = bodyRe.exec(commandSource)
     const flags = body != null ? flagsIn(body[0]) : new Set<string>()
     let m: RegExpExecArray | null
-    while ((m = callRe.exec(source)) != null) out.set(m[1], flags)
+    while ((m = callRe.exec(commandSource)) != null) out.set(m[1], flags)
   }
-
+  for (const c of generated.commands) {
+    const flags = new Set<string>()
+    for (const a of c.args) if (a.flag != null) flags.add(a.flag)
+    if (c.bodyFlag != null) flags.add(c.bodyFlag)
+    out.set(c.command, flags)
+  }
   return out
-}
-
-/** `--token-id=<id>` -> `token-id` */
-function flagName(flag: string): string {
-  return flag.replace(/^--/, '').split(/[=\s]/)[0]
 }
 
 const problems: string[] = []
@@ -121,185 +109,148 @@ function fail(kind: string, detail: string): void {
   problems.push(`${kind}: ${detail}`)
 }
 
-// ---------------------------------------------------------------- routes
-const routes = actualRoutes()
-const documented = new Map<string, number>()
-for (const e of endpoints) {
-  const key = `${e.method} ${e.path}`
-  documented.set(key, (documented.get(key) ?? 0) + 1)
+const routes = extractRoutes()
+const commands = registeredCommands()
+const flagsByCommand = registeredFlags()
+const coreSource = fs.existsSync(CORE_TYPES)
+  ? fs.readFileSync(CORE_TYPES, 'utf8')
+  : ''
+const internalSource = fs.existsSync(INTERNAL_TYPES)
+  ? fs.readFileSync(INTERNAL_TYPES, 'utf8')
+  : ''
+
+// -------------------------------------------------------------- uniqueness
+const seen = new Map<string, number>()
+for (const r of routes) {
+  const key = `${r.method} ${r.routePath}`
+  seen.set(key, (seen.get(key) ?? 0) + 1)
+}
+for (const [key, count] of seen) {
+  if (count > 1) fail('duplicate route', `${key} declared ${count} times`)
 }
 
-for (const [key, count] of documented) {
-  if (count > 1) fail('duplicate', `${key} is documented ${count} times`)
-  if (!routes.has(key) && !NON_ROUTER_ROUTES.has(key)) {
-    fail('phantom route', `${key} is documented but never registered`)
-  }
-}
-for (const key of routes) {
-  if (!documented.has(key)) fail('undocumented route', key)
-}
-
-// -------------------------------------------------------------- commands
-const commands = actualCommands()
-const cited = new Set<string>()
-for (const e of endpoints) {
-  for (const c of e.cli) {
-    cited.add(c.command)
-    if (!commands.has(c.command)) {
-      fail('phantom command', `"${c.command}" cited by ${e.id} does not exist`)
-    }
-    if (!c.usage.startsWith(c.command)) {
+// ---------------------------------------------------------------- commands
+const claimed = new Set<string>()
+for (const r of routes) {
+  for (const cli of [r.cli, ...r.cliExtra]) {
+    if (cli == null) continue
+    claimed.add(cli.command)
+    if (!commands.has(cli.command)) {
       fail(
-        'usage mismatch',
-        `${e.id}: usage "${c.usage}" does not start with "${c.command}"`
+        'phantom command',
+        `"${cli.command}" claimed by ${r.id} is not registered`
       )
     }
   }
 }
 for (const name of commands) {
-  if (!cited.has(name) && !LOCAL_ONLY_COMMANDS.has(name)) {
-    fail(
-      'undocumented command',
-      `"${name}" is registered but no endpoint cites it`
-    )
+  if (!claimed.has(name) && !LOCAL_ONLY_COMMANDS.has(name)) {
+    fail('undeclared command', `"${name}" is registered but no route claims it`)
   }
 }
 
-// Documented flags must be flags the command really parses. This is the check
-// that would have caught the old doc's invented options.
-const flagsByCommand = actualFlags()
-for (const e of endpoints) {
-  for (const c of e.cli) {
-    const real = flagsByCommand.get(c.command)
-    if (real == null) continue
-    for (const fl of c.flags ?? []) {
-      const name = flagName(fl.flag)
-      if (!real.has(name)) {
-        fail(
-          'phantom flag',
-          `${e.id}: "${c.command}" does not accept --${name}`
-        )
-      }
+// ------------------------------------------------------------------- flags
+// A command may serve several routes, so gather what it declares across all.
+const declaredFlags = new Map<string, Set<string>>()
+for (const r of routes) {
+  for (const cli of [r.cli, ...r.cliExtra]) {
+    if (cli == null) continue
+    const set = declaredFlags.get(cli.command) ?? new Set<string>()
+    for (const f of cli.flags) set.add(f.name)
+    for (const x of cli.extra) set.add(x.name)
+    if (cli.bodyFlag != null) set.add(cli.bodyFlag)
+    // Fields with no override become their kebab-cased name.
+    for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
+      if (f.name === cli.positional) continue
+      set.add(kebab(f.name))
     }
-    // Usage strings must not advertise flags the parser would reject either.
-    for (const m of c.usage.matchAll(/--([a-z0-9-]+)/g)) {
-      if (!real.has(m[1])) {
-        fail(
-          'phantom flag in usage',
-          `${e.id}: "${c.command}" usage shows --${m[1]}`
-        )
-      }
-    }
-  }
-}
-const CORE_TYPES = path.join(
-  ROOT,
-  'node_modules/edge-core-js/src/types/types.ts'
-)
-const coreSource = fs.existsSync(CORE_TYPES)
-  ? fs.readFileSync(CORE_TYPES, 'utf8')
-  : ''
-const INTERNAL_TYPES = path.join(ROOT, 'src/cli/engine/internal.ts')
-const internalSource = fs.existsSync(INTERNAL_TYPES)
-  ? fs.readFileSync(INTERNAL_TYPES, 'utf8')
-  : ''
-for (const e of endpoints) {
-  if (e.coreCall == null) {
-    if (e.coreNote == null || e.coreNote === '') {
-      fail('missing core note', `${e.id} has no coreCall and no coreNote`)
-    }
-    continue
-  }
-  const member = e.coreCall.split('.').pop() ?? ''
-  // `$internalStuff` is core's private surface and is absent from the public
-  // types, so those names are checked against the engine's own shim instead.
-  const haystack = e.coreCall.includes('$internalStuff')
-    ? internalSource
-    : coreSource
-  if (haystack !== '' && !new RegExp(`\\b${member}\\b`).test(haystack)) {
-    fail(
-      'unknown core call',
-      `${e.id} names "${e.coreCall}" but "${member}" is absent from ${
-        e.coreCall.includes('$internalStuff')
-          ? 'src/cli/engine/internal.ts'
-          : 'edge-core-js'
-      }`
-    )
-  }
-}
-
-// Every flag a command really accepts must appear somewhere in its docs, or
-// they quietly understate what the CLI can do. A command may be bound to more
-// than one route, so its flags are gathered across every binding.
-const documentedFlags = new Map<string, Set<string>>()
-for (const e of endpoints) {
-  for (const c of e.cli) {
-    const set = documentedFlags.get(c.command) ?? new Set<string>()
-    for (const fl of c.flags ?? []) set.add(flagName(fl.flag))
-    for (const m of c.usage.matchAll(/--([a-z0-9-]+)/g)) set.add(m[1])
-    documentedFlags.set(c.command, set)
+    declaredFlags.set(cli.command, set)
   }
 }
 for (const [command, real] of flagsByCommand) {
-  const documented = documentedFlags.get(command)
-  if (documented == null) continue
+  const declared = declaredFlags.get(command)
+  if (declared == null) continue
   for (const name of real) {
-    if (!documented.has(name)) {
+    if (!declared.has(name)) {
       fail(
-        'undocumented flag',
-        `"${command}" accepts --${name}, absent from the docs`
+        'undeclared flag',
+        `"${command}" accepts --${name}, no route declares it`
       )
     }
   }
 }
 
-// ---------------------------------------------------------------- errors
+// -------------------------------------------------------------- core calls
+for (const r of routes) {
+  if (r.core == null) {
+    if (r.coreNote == null || r.coreNote === '') {
+      fail('missing core note', `${r.id} has no core call and no @coreNote`)
+    }
+    continue
+  }
+  const member = r.core.split('.').pop() ?? ''
+  const haystack = r.core.includes('$internalStuff')
+    ? internalSource
+    : coreSource
+  if (haystack !== '' && !new RegExp(`\\b${member}\\b`).test(haystack)) {
+    fail('unknown core call', `${r.id} names "${r.core}", absent from core`)
+  }
+}
+
+// ------------------------------------------------------------------ shapes
 const knownCodes = new Set(errorCodes.map(e => e.code))
-for (const e of endpoints) {
-  for (const code of e.errors ?? []) {
+for (const r of routes) {
+  for (const code of r.errors) {
     if (!knownCodes.has(code)) {
+      fail('unknown error code', `${r.id} lists "${code}"`)
+    }
+  }
+  if (r.summary === '') fail('missing summary', `${r.id} has no JSDoc summary`)
+}
+
+// ------------------------------------------------- paths named in the prose
+// Narrative text is not generated, so a rename can leave it behind. Any
+// `METHOD /path` mentioned anywhere in the docs must be a real route.
+const realPaths = new Set(routes.map(r => `${r.method} ${r.routePath}`))
+/** Paths on other services that the prose legitimately mentions. */
+const EXTERNAL_PATHS = new Set(['GET /v1/getKeys'])
+const proseSources: Array<[string, string]> = []
+for (const file of ['docs/EDGE_CLI.md', 'docs/api/README.md']) {
+  const full = path.join(ROOT, file)
+  if (fs.existsSync(full))
+    proseSources.push([file, fs.readFileSync(full, 'utf8')])
+}
+for (const r of routes) {
+  const text = [
+    r.summary,
+    r.description ?? '',
+    ...r.notes,
+    r.coreNote ?? ''
+  ].join(' ')
+  proseSources.push([r.id, text])
+}
+for (const [where, text] of proseSources) {
+  for (const m of text.matchAll(
+    /\b(GET|POST|PUT|PATCH|DELETE) (\/[\w{}/-]+)/g
+  )) {
+    const cited = `${m[1]} ${m[2]}`
+    // `…` stands in for an elided prefix; only check fully-written paths.
+    if (m[2].includes('…')) continue
+    if (!realPaths.has(cited) && !EXTERNAL_PATHS.has(cited)) {
       fail(
-        'unknown error code',
-        `${e.id} lists "${code}", absent from the catalogue`
+        'stale path in prose',
+        `${where} cites "${cited}", which is not a route`
       )
     }
   }
 }
 
-// --------------------------------------------------------------- shapes
-for (const e of endpoints) {
-  if (e.success.status === 204 && e.success.schema != null) {
-    fail('bad response', `${e.id} is 204 but declares a body schema`)
-  }
-  if (
-    e.success.status === 200 &&
-    e.success.schema == null &&
-    e.success.doc == null
-  ) {
-    fail(
-      'bad response',
-      `${e.id} is 200 with neither a schema nor a prose description`
-    )
-  }
-  for (const name of e.path.matchAll(/\{(\w+)\}/g)) {
-    const declared = (e.pathParams ?? []).some(p => p.name === name[1])
-    if (!declared)
-      fail('missing path param', `${e.id} does not declare {${name[1]}}`)
-  }
-}
-
-// ---------------------------------------------------------------- report
-const routeCount = routes.size + NON_ROUTER_ROUTES.size
 if (problems.length > 0) {
   console.error(`✗ ${problems.length} problem(s):\n`)
   for (const p of problems) console.error(`  ${p}`)
-  console.error(
-    `\n${documented.size} documented / ${routeCount} actual routes, ` +
-      `${cited.size} documented / ${commands.size} actual commands`
-  )
   process.exit(1)
 }
 console.log(
-  `✓ docs/api matches the code: ${documented.size} routes, ` +
-    `${cited.size} of ${commands.size} commands (${LOCAL_ONLY_COMMANDS.size} local-only)`
+  `✓ surface matches: ${routes.length} routes, ` +
+    `${claimed.size} of ${commands.size} commands (${LOCAL_ONLY_COMMANDS.size} local-only)`
 )

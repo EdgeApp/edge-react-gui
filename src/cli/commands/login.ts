@@ -13,25 +13,6 @@ interface Session {
   [key: string]: unknown
 }
 
-const accountAvailableCmd = command(
-  'username-available',
-  {
-    usage: 'username-available <username> [--challenge-id=<id>]',
-    help: 'Check whether a username is available'
-  },
-  async (ctx, argv) => {
-    const args = parseCommandArgs(accountAvailableCmd, argv, {
-      positional: 'required',
-      flags: { 'challenge-id': 'string' }
-    })
-    const query = new URLSearchParams({ username: args.positional! })
-    // An explicit flag wins over one --solve-captcha just obtained.
-    const challengeId = args.string('challenge-id') ?? ctx.challengeId
-    if (challengeId != null) query.set('challengeId', challengeId)
-    printJson(await ctx.client.get(`/username-available?${query.toString()}`))
-  }
-)
-
 const accountCreateCmd = command(
   'create-account',
   {
@@ -60,36 +41,6 @@ const accountCreateCmd = command(
     })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
-  }
-)
-
-command(
-  'get-login-key',
-  {
-    usage: 'get-login-key',
-    help: "Show the current account's login key",
-    needsSession: true
-  },
-  async ctx => {
-    const sessionId = requireSession(ctx)
-    printJson(
-      await ctx.client.get(
-        `/account/${encodeURIComponent(sessionId)}/get-login-key`
-      )
-    )
-  }
-)
-
-command(
-  'account-info',
-  {
-    usage: 'account-info',
-    help: 'Show the current session and account details',
-    needsSession: true
-  },
-  async ctx => {
-    const sessionId = requireSession(ctx)
-    printJson(await ctx.client.get(`/account/${encodeURIComponent(sessionId)}`))
   }
 )
 
@@ -223,109 +174,6 @@ command(
     const sessionId = requireSession(ctx)
     await ctx.client.post(`/account/${encodeURIComponent(sessionId)}/logout`)
     ctx.setSessionId(null)
-    printJson({ ok: true })
-  }
-)
-
-command(
-  'local-users',
-  {
-    usage: 'local-users',
-    help: 'List local usernames known to this device'
-  },
-  async ctx => {
-    printJson(await ctx.client.get('/local-users'))
-  }
-)
-
-const usernameDeleteCmd = command(
-  'forget-account',
-  {
-    usage: 'forget-account <rootLoginId>',
-    help: 'Forget an account on this device (accepts a rootLoginId or username)'
-  },
-  async (ctx, argv) => {
-    const { positional: rootLoginId } = parseCommandArgs(
-      usernameDeleteCmd,
-      argv,
-      { positional: 'required' }
-    )
-    await ctx.client.post('/forget-account', { rootLoginId })
-    printJson({ ok: true })
-  }
-)
-
-command(
-  'fetch-login-messages',
-  {
-    usage: 'fetch-login-messages',
-    help: 'Fetch login messages for all local users'
-  },
-  async ctx => {
-    printJson(await ctx.client.get('/fetch-login-messages'))
-  }
-)
-
-command(
-  'fetch-challenge',
-  {
-    usage: 'fetch-challenge',
-    help: 'Prefetch a CAPTCHA challenge'
-  },
-  async ctx => {
-    printJson(await ctx.client.post('/fetch-challenge'))
-  }
-)
-
-const fixUsernameCmd = command(
-  'fix-username',
-  {
-    usage: 'fix-username <username>',
-    help: 'Normalize a username the way the login server does (context.fixUsername)'
-  },
-  async (ctx, argv) => {
-    const { positional: username } = parseCommandArgs(fixUsernameCmd, argv, {
-      positional: 'required'
-    })
-    printJson(
-      await ctx.client.get(
-        `/fix-username?username=${encodeURIComponent(username!)}`
-      )
-    )
-  }
-)
-
-const checkPasswordRulesCmd = command(
-  'check-password-rules',
-  {
-    usage: 'check-password-rules --password=<password>',
-    help: 'Score a candidate password (context.checkPasswordRules)'
-  },
-  async (ctx, argv) => {
-    const args = parseCommandArgs(checkPasswordRulesCmd, argv, {
-      positional: 'none',
-      flags: { password: 'string' }
-    })
-    const query = new URLSearchParams({
-      password: args.requireString('password')
-    })
-    printJson(await ctx.client.get(`/check-password-rules?${query.toString()}`))
-  }
-)
-
-const cancelRequestCmd = command(
-  'cancel-request',
-  {
-    usage: 'cancel-request <pendingId>',
-    help: 'Cancel a pending QR login (EdgePendingEdgeLogin.cancelRequest)'
-  },
-  async (ctx, argv) => {
-    const { positional: pendingId } = parseCommandArgs(cancelRequestCmd, argv, {
-      positional: 'required'
-    })
-    await ctx.client.post(
-      `/pending-edge-login/${encodeURIComponent(pendingId!)}/cancel-request`
-    )
     printJson({ ok: true })
   }
 )

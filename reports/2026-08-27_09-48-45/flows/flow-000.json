@@ -1,0 +1,53 @@
+{
+  "id": "flow-000",
+  "name": "mr-pixelSignIn-fdf",
+  "sourceFile": "/tmp/mr-pixelSignIn-fdf.yaml",
+  "device": {
+    "id": "56131FDCR003LJ",
+    "name": "google Pixel 10",
+    "platform": "android",
+    "osVersion": "36",
+    "isSimulator": false
+  },
+  "startTime": "2026-08-27T09:48:48.81958-07:00",
+  "endTime": "2026-08-27T09:48:49.64238-07:00",
+  "duration": 822,
+  "commands": [
+    {
+      "id": "cmd-000",
+      "index": 0,
+      "type": "tapOn",
+      "yaml": "tapOn: text=\"Sign in\"",
+      "status": "passed",
+      "startTime": "2026-08-27T09:48:48.821079-07:00",
+      "endTime": "2026-08-27T09:48:49.640641-07:00",
+      "duration": 819,
+      "params": {
+        "selector": {
+          "type": "text",
+          "value": "Sign in"
+        }
+      },
+      "element": {
+        "found": true,
+        "id": "00000000-0000-001d-ffff-ffff0000009c",
+        "bounds": {
+          "x": 0,
+          "y": 2222,
+          "width": 1080,
+          "height": 63
+        }
+      },
+      "artifacts": {}
+    }
+  ],
+  "stepLatency": {
+    "count": 1,
+    "mean": 819,
+    "p50": 819,
+    "p95": 819,
+    "max": 819,
+    "slowestType": "tapOn"
+  },
+  "artifacts": {}
+}

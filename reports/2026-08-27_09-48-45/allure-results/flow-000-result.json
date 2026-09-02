@@ -1,0 +1,52 @@
+{
+  "uuid": "flow-000",
+  "historyId": "6a666009",
+  "fullName": "mr-pixelSignIn-fdf",
+  "name": "mr-pixelSignIn-fdf",
+  "status": "passed",
+  "stage": "finished",
+  "start": 0,
+  "stop": 1787849329642,
+  "labels": [
+    {
+      "name": "suite",
+      "value": "mr-pixelSignIn-fdf"
+    },
+    {
+      "name": "parentSuite",
+      "value": "mr-pixelSignIn-fdf.yaml"
+    },
+    {
+      "name": "framework",
+      "value": "maestro"
+    },
+    {
+      "name": "severity",
+      "value": "normal"
+    },
+    {
+      "name": "host",
+      "value": "google Pixel 10"
+    },
+    {
+      "name": "thread",
+      "value": "56131FDCR003LJ"
+    }
+  ],
+  "statusDetails": {
+    "message": "",
+    "trace": ""
+  },
+  "steps": [
+    {
+      "name": "tapOn",
+      "status": "passed",
+      "stage": "finished",
+      "start": 1787849328821,
+      "stop": 1787849329640,
+      "steps": [],
+      "attachments": null
+    }
+  ],
+  "attachments": null
+}

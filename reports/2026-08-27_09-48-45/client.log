@@ -1,0 +1,11 @@
+09:48:48.334160 POST /session [55.383792ms] OK body={"capabilities":{"platformName":"Android","deviceName":"Pixel 10"}}
+09:48:48.360524 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/appium/settings [25.801042ms] OK body={"settings":{"enableMultiWindows":true,"waitForIdleTimeout":200}}
+09:48:48.394366 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/appium/settings [33.512875ms] OK body={"settings":{"implicitWait":100}}
+09:48:48.742426 GET /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/appium/device/info [144.231667ms] OK body=
+09:48:48.819329 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/appium/settings [57.372041ms] OK body={"settings":{"waitForIdleTimeout":200}}
+09:48:49.167757 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/element [194.508875ms] ERR:404 body={"strategy":"-android uiautomator","selector":"new UiSelector().textContains(\"Sign in\").clickable(...
+09:48:49.345287 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/element [177.398709ms] OK body={"strategy":"-android uiautomator","selector":"new UiSelector().descriptionContains(\"Sign in\").cli...
+09:48:49.402721 GET /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/element/00000000-0000-001d-ffff-ffff0000009c/text [57.286125ms] OK body=
+09:48:49.449296 GET /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/element/00000000-0000-001d-ffff-ffff0000009c/rect [46.45575ms] OK body=
+09:48:49.569197 POST /session/eaea2189-4f26-4de8-a3bd-57cce15122a8/element/00000000-0000-001d-ffff-ffff0000009c/click [119.427167ms] OK body=
+09:48:49.727497 DELETE /session/eaea2189-4f26-4de8-a3bd-57cce15122a8 [33.827458ms] OK body=

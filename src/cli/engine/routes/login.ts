@@ -137,7 +137,7 @@ export const loginWithPassword = route({
   core: 'context.loginWithPassword',
   method: 'POST',
   path: '/login-with-password',
-  cli: { command: 'login-with-password', positional: 'username' },
+  cli: { command: 'login-with-password', custom: true, positional: 'username' },
   body: asObject({
     username: doc(asString, 'The account name.'),
     password: doc(asString, 'The account password.'),
@@ -171,7 +171,11 @@ export const loginWithPin = route({
   core: 'context.loginWithPIN',
   method: 'POST',
   path: '/login-with-pin',
-  cli: { command: 'login-with-pin', positional: 'usernameOrLoginId' },
+  cli: {
+    command: 'login-with-pin',
+    custom: true,
+    positional: 'usernameOrLoginId'
+  },
   body: asObject({
     usernameOrLoginId: doc(asString, 'A username, or a login id.'),
     pin: doc(asString, 'The device PIN.'),
@@ -206,7 +210,11 @@ export const loginWithKey = route({
   core: 'context.loginWithKey',
   method: 'POST',
   path: '/login-with-key',
-  cli: { command: 'login-with-key', positional: 'usernameOrLoginId' },
+  cli: {
+    command: 'login-with-key',
+    custom: true,
+    positional: 'usernameOrLoginId'
+  },
   body: asObject({
     usernameOrLoginId: doc(asString, 'A username, or a login id.'),
     loginKey: doc(asString, 'From `get-login-key`.'),
@@ -240,6 +248,7 @@ export const loginWithRecovery = route({
   path: '/login-with-recovery',
   cli: {
     command: 'login-with-recovery',
+    custom: true,
     positional: 'username',
     flags: { answer: { maps: 'answers', repeat: true } }
   },
@@ -277,7 +286,7 @@ export const createAccount = route({
   core: 'context.createAccount',
   method: 'POST',
   path: '/create-account',
-  cli: { command: 'create-account', positional: 'username' },
+  cli: { command: 'create-account', custom: true, positional: 'username' },
   body: asObject({
     username: asOptional(doc(asString, 'The name to claim.')),
     password: asOptional(doc(asString, 'The account password.')),
@@ -318,6 +327,7 @@ export const requestEdgeLogin = route({
   path: '/request-edge-login',
   cli: {
     command: 'request-edge-login',
+    custom: true,
     notes:
       'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session.'
   },

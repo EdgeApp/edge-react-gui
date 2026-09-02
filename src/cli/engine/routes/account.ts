@@ -84,6 +84,7 @@ export const logout = route({
   path: '/account/{sessionId}/logout',
   cli: {
     command: 'logout',
+    custom: true,
     notes: 'Also clears the stored id from `session.json`.'
   },
 
@@ -171,6 +172,7 @@ export const deleteRemoteAccount = route({
   path: '/account/{sessionId}/delete-remote-account',
   cli: {
     command: 'delete-remote-account',
+    custom: true,
     extra: {
       yes: {
         kind: 'boolean',

@@ -115,8 +115,9 @@ export const currencyWallets = route({
 /**
  * Create a currency wallet.
  *
- * @note `fiatCurrencyCode` and `importText` are REST-only; the command has no
- *   flags for them.
+ * @note The fiat currency is not set here. Core still accepts it on create,
+ *   but that path is deprecated — use `set-fiat-currency-code` afterwards, so
+ *   there is one way to do it.
  */
 export const createCurrencyWallet = route({
   core: 'account.createCurrencyWallet',
@@ -129,7 +130,6 @@ export const createCurrencyWallet = route({
       'From `currency-configs`, e.g. `wallet:bitcoin`.'
     ),
     name: asOptional(doc(asString, 'Display name.')),
-    fiatCurrencyCode: asOptional(doc(asString, 'e.g. `iso:USD`.')),
     importText: asOptional(
       doc(asString, 'Seed or key text to import instead of generating.')
     )
@@ -142,7 +142,6 @@ export const createCurrencyWallet = route({
       ctx.body.walletType,
       {
         name: ctx.body.name,
-        fiatCurrencyCode: ctx.body.fiatCurrencyCode,
         importText: ctx.body.importText
       }
     )
@@ -404,6 +403,7 @@ export const balanceMap = route({
   path: '/account/{sessionId}/wallets/{walletId}/balance-map',
   cli: {
     command: 'balance-map',
+    custom: true,
     extra: {
       tokenId: {
         kind: 'string',

@@ -19,6 +19,37 @@ export interface ExtractedField {
   doc?: string
 }
 
+export interface ExtractedCliFlag {
+  /** Flag name as typed, without the leading dashes. */
+  name: string
+  /** Request field it carries. */
+  maps: string
+  repeat?: boolean
+  invert?: boolean
+  doc?: string
+}
+
+export interface ExtractedCliExtra {
+  name: string
+  kind: string
+  required?: boolean
+  requiredWith?: string
+  doc?: string
+}
+
+export interface ExtractedCli {
+  command: string
+  positional?: string
+  bodyFlag?: string
+  flags: ExtractedCliFlag[]
+  extra: ExtractedCliExtra[]
+  notes?: string
+  custom: boolean
+  /** Fields sent at fixed values. */
+  preset: Record<string, boolean>
+  exits?: Record<string, number>
+}
+
 export interface ExtractedRoute {
   id: string
   file: string
@@ -28,8 +59,14 @@ export interface ExtractedRoute {
   coreNote?: string
   method: string
   routePath: string
-  cli?: string
-  cliRaw?: string
+  cli: ExtractedCli | null
+  /** Additional commands this route backs, e.g. `spend-max`. */
+  cliExtra: ExtractedCli[]
+  /** Path parameters, in order of appearance. */
+  pathParams: string[]
+  /** Source file basename, which is also the documentation group. */
+  group: string
+  isStream: boolean
   errors: string[]
   notes: string[]
   bodyNote?: string
@@ -98,16 +135,22 @@ function fieldsOf(
   }
   const out = checker.getReturnTypeOfSignature(call)
   const typeText = checker.typeToString(out, node, FORMAT)
-  const fields = checker.getPropertiesOfType(out).map(prop => {
-    const t = checker.getTypeOfSymbolAtLocation(prop, node)
-    let text = checker.typeToString(t, node, FORMAT)
-    // Cleaners type optional fields as `T | undefined`; render them as `T?`.
-    const optional =
-      (prop.flags & ts.SymbolFlags.Optional) !== 0 ||
-      text.endsWith(' | undefined')
-    text = text.replace(/ \| undefined$/, '')
-    return { name: prop.name, type: text, optional }
-  })
+  // A primitive or `unknown` has no fields of its own — asking for its
+  // properties yields the prototype's, which are not part of the API.
+  const isObjectLike =
+    (out.flags & ts.TypeFlags.Object) !== 0 && !typeText.endsWith('[]')
+  const fields = (isObjectLike ? checker.getPropertiesOfType(out) : []).map(
+    prop => {
+      const t = checker.getTypeOfSymbolAtLocation(prop, node)
+      let text = checker.typeToString(t, node, FORMAT)
+      // Cleaners type optional fields as `T | undefined`; render them as `T?`.
+      const optional =
+        (prop.flags & ts.SymbolFlags.Optional) !== 0 ||
+        text.endsWith(' | undefined')
+      text = text.replace(/ \| undefined$/, '')
+      return { name: prop.name, type: text, optional }
+    }
+  )
   return { fields, type: typeText }
 }
 
@@ -123,7 +166,9 @@ function proseFor(
   checker: ts.TypeChecker,
   node: ts.Expression
 ): Record<string, string> {
-  const out: Record<string, string> = {}
+  // Null-prototype, so a field called `toString` cannot pick up an inherited
+  // member instead of its own prose.
+  const out: Record<string, string> = Object.create(null)
 
   const objectOf = (expr: ts.Expression): ts.Expression | undefined => {
     // A shared field group is a bare object literal, not an asObject() call.
@@ -231,6 +276,134 @@ function proseFor(
   return out
 }
 
+/** Parse the `cli` field: a bare command name, an object spec, or null. */
+function parseCli(node: ts.Expression | undefined): ExtractedCli | null {
+  if (node == null) return null
+  if (node.kind === ts.SyntaxKind.NullKeyword) return null
+  if (ts.isStringLiteral(node)) {
+    return {
+      command: node.text,
+      flags: [],
+      extra: [],
+      custom: false,
+      preset: {}
+    }
+  }
+  if (!ts.isObjectLiteralExpression(node)) return null
+
+  const str = (
+    o: ts.ObjectLiteralExpression,
+    key: string
+  ): string | undefined => {
+    for (const prop of o.properties) {
+      if (!ts.isPropertyAssignment(prop)) continue
+      if (prop.name.getText() !== key) continue
+      if (ts.isStringLiteral(prop.initializer)) return prop.initializer.text
+      if (ts.isNoSubstitutionTemplateLiteral(prop.initializer)) {
+        return prop.initializer.text
+      }
+      // A concatenated string spanning lines.
+      const text = prop.initializer.getText()
+      const parts = [...text.matchAll(/'([^']*)'/g)].map(m => m[1])
+      if (parts.length > 0) return parts.join('')
+    }
+    return undefined
+  }
+  const obj = (
+    o: ts.ObjectLiteralExpression,
+    key: string
+  ): ts.ObjectLiteralExpression | undefined => {
+    for (const prop of o.properties) {
+      if (
+        ts.isPropertyAssignment(prop) &&
+        prop.name.getText() === key &&
+        ts.isObjectLiteralExpression(prop.initializer)
+      ) {
+        return prop.initializer
+      }
+    }
+    return undefined
+  }
+
+  const command = str(node, 'command') ?? ''
+  const flags: ExtractedCliFlag[] = []
+  const flagsObj = obj(node, 'flags')
+  if (flagsObj != null) {
+    for (const prop of flagsObj.properties) {
+      if (!ts.isPropertyAssignment(prop)) continue
+      const name = prop.name.getText().replace(/'/g, '')
+      const spec = ts.isObjectLiteralExpression(prop.initializer)
+        ? prop.initializer
+        : undefined
+      flags.push({
+        name: kebab(name),
+        maps: spec != null ? str(spec, 'maps') ?? name : name,
+        repeat: spec != null ? /repeat:\s*true/.test(spec.getText()) : false,
+        invert: spec != null ? /invert:\s*true/.test(spec.getText()) : false,
+        doc: spec != null ? str(spec, 'doc') : undefined
+      })
+    }
+  }
+  const extra: ExtractedCliExtra[] = []
+  const extraObj = obj(node, 'extra')
+  if (extraObj != null) {
+    for (const prop of extraObj.properties) {
+      if (!ts.isPropertyAssignment(prop)) continue
+      const name = prop.name.getText().replace(/'/g, '')
+      const spec = ts.isObjectLiteralExpression(prop.initializer)
+        ? prop.initializer
+        : undefined
+      extra.push({
+        name: kebab(name),
+        kind: spec != null ? str(spec, 'kind') ?? 'string' : 'string',
+        required:
+          spec != null ? /required:\s*true/.test(spec.getText()) : false,
+        requiredWith: spec != null ? str(spec, 'requiredWith') : undefined,
+        doc: spec != null ? str(spec, 'doc') : undefined
+      })
+    }
+  }
+  return {
+    command,
+    positional: str(node, 'positional'),
+    bodyFlag: str(node, 'bodyFlag'),
+    flags,
+    extra,
+    custom: /custom:\s*true/.test(node.getText()),
+    preset: (() => {
+      const out: Record<string, boolean> = {}
+      const o = obj(node, 'preset')
+      if (o != null) {
+        for (const prop of o.properties) {
+          if (!ts.isPropertyAssignment(prop)) continue
+          const v = prop.initializer.getText()
+          if (v === 'true' || v === 'false') {
+            out[prop.name.getText().replace(/'/g, '')] = v === 'true'
+          }
+        }
+      }
+      return out
+    })(),
+    notes: str(node, 'notes')
+  }
+}
+
+/** `cli` may be one command or several. */
+function parseCliList(node: ts.Expression | undefined): ExtractedCli[] {
+  if (node != null && ts.isArrayLiteralExpression(node)) {
+    return node.elements
+      .map(el => parseCli(el))
+      .filter((c): c is ExtractedCli => c != null)
+  }
+  const one = parseCli(node)
+  return one != null ? [one] : []
+}
+
+/** camelCase to kebab-case, the CLI's flag spelling. */
+export function kebab(name: string): string {
+  return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase())
+}
+
 /** Split a JSDoc comment into prose and tags. */
 function readJsDoc(node: ts.Node): {
   summary: string
@@ -268,6 +441,58 @@ function readJsDoc(node: ts.Node): {
   }
 }
 
+/**
+ * Property names wrapped in `asOptional(…)`.
+ *
+ * `asOptional(asUnknown)` resolves to plain `unknown`, because `unknown`
+ * absorbs `undefined` — so optionality has to be read from the source.
+ */
+function optionalNames(
+  checker: ts.TypeChecker,
+  node: ts.Expression
+): Set<string> {
+  const out = new Set<string>()
+  const walk = (expr: ts.Expression): ts.Expression | undefined => {
+    let cur: ts.Expression = expr
+    if (ts.isPropertyAccessExpression(cur)) cur = cur.expression
+    if (ts.isObjectLiteralExpression(cur)) return cur
+    if (ts.isIdentifier(cur)) {
+      let sym = checker.getSymbolAtLocation(cur)
+      if (sym != null && (sym.flags & ts.SymbolFlags.Alias) !== 0) {
+        sym = checker.getAliasedSymbol(sym)
+      }
+      const decl = sym?.declarations?.[0]
+      if (
+        decl != null &&
+        ts.isVariableDeclaration(decl) &&
+        decl.initializer != null
+      ) {
+        return walk(decl.initializer)
+      }
+      return undefined
+    }
+    if (ts.isCallExpression(cur)) {
+      const callee = cur.expression.getText()
+      if (callee === 'doc') return walk(cur.arguments[0])
+      if (callee.startsWith('asObject')) return cur.arguments[0]
+    }
+    return undefined
+  }
+  const shape = walk(node)
+  if (shape == null || !ts.isObjectLiteralExpression(shape)) return out
+  for (const prop of shape.properties) {
+    if (ts.isSpreadAssignment(prop)) {
+      for (const n of optionalNames(checker, prop.expression)) out.add(n)
+      continue
+    }
+    if (!ts.isPropertyAssignment(prop)) continue
+    if (/\basOptional\s*\(/.test(prop.initializer.getText())) {
+      out.add(prop.name.getText().replace(/'/g, ''))
+    }
+  }
+  return out
+}
+
 /** Resolved fields, each carrying the prose written beside it. */
 function withProse(
   checker: ts.TypeChecker,
@@ -275,8 +500,10 @@ function withProse(
 ): ExtractedField[] | undefined {
   if (node == null) return undefined
   const prose = proseFor(checker, node)
+  const optional = optionalNames(checker, node)
   return fieldsOf(checker, node).fields.map(f => ({
     ...f,
+    optional: f.optional || optional.has(f.name),
     doc: prose[f.name]
   }))
 }
@@ -340,11 +567,13 @@ export function extractRoutes(): ExtractedRoute[] {
           coreNote,
           method: literal(arg, 'method') ?? '',
           routePath: literal(arg, 'path') ?? '',
-          cli:
-            cliNode != null && ts.isStringLiteral(cliNode)
-              ? cliNode.text
-              : undefined,
-          cliRaw: cliNode?.getText(),
+          cli: parseCliList(cliNode)[0] ?? null,
+          cliExtra: parseCliList(cliNode).slice(1),
+          pathParams: [
+            ...(literal(arg, 'path') ?? '').matchAll(/\{(\w+)\}/g)
+          ].map(m => m[1]),
+          group: path.basename(file, '.ts'),
+          isStream: propNode(arg, 'stream') != null,
           errors: arrayLiteral(arg, 'errors'),
           notes,
           bodyNote,
@@ -373,9 +602,7 @@ if (require.main === module) {
   console.log(`extracted ${routes.length} route declaration(s)\n`)
   for (const r of routes) {
     console.log(`${r.id}  [${r.file}]`)
-    console.log(
-      `  ${r.method} ${r.routePath}   cli=${r.cli ?? r.cliRaw ?? '—'}`
-    )
+    console.log(`  ${r.method} ${r.routePath}   cli=${r.cli?.command ?? '—'}`)
     console.log(
       `  core: ${r.core ?? 'null'}${
         r.coreNote != null ? ' — ' + r.coreNote.slice(0, 60) : ''

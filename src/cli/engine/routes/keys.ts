@@ -220,9 +220,16 @@ export const changeWalletStates = route({
   path: '/account/{sessionId}/change-wallet-states',
   cli: {
     command: 'change-wallet-states',
+    custom: true,
     positional: 'walletId',
+    extra: {
+      archived: { kind: 'boolstr', doc: 'Hide from the active list.' },
+      deleted: { kind: 'boolstr', doc: 'Mark deleted.' },
+      hidden: { kind: 'boolstr', doc: 'Hide from the wallet picker.' },
+      sortIndex: { kind: 'string', doc: 'Position in the wallet list.' }
+    },
     notes:
-      'The command sends a single-wallet map built from its flags, and needs at least one.'
+      'The command builds a single-wallet `walletStates` map from these flags, and needs at least one.'
   },
   body: asObject({
     walletStates: doc(

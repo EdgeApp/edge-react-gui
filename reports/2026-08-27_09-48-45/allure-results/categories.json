@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Element Not Found",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*element not found.*"
+  },
+  {
+    "name": "Element Not Visible",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*not visible.*|.*not displayed.*"
+  },
+  {
+    "name": "Timeout",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*timeout.*|.*timed out.*"
+  },
+  {
+    "name": "Assertion Failed",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*assert.*"
+  },
+  {
+    "name": "App Launch Failed",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*launch.*failed.*|.*app.*crash.*"
+  },
+  {
+    "name": "Connection Error",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*connection.*|.*socket.*|.*network.*"
+  },
+  {
+    "name": "Script Error",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*script.*error.*|.*runScript.*"
+  },
+  {
+    "name": "Input Error",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": "(?i).*input.*|.*keyboard.*"
+  }
+]

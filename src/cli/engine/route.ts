@@ -53,6 +53,12 @@ export interface CliSpec {
   exits?: Record<string, number>
   /** Behaviour the request shape cannot express. */
   notes?: string
+  /**
+   * Hand-written because the command does something the request shape cannot
+   * describe — writing files, storing a session, holding a stream open.
+   * Everything else is generated from this spec.
+   */
+  custom?: boolean
 }
 
 export interface StreamSpec {
@@ -67,8 +73,8 @@ export interface RouteSpec<Q = unknown, B = unknown, R = unknown> {
   coreNote?: string
   method: HttpMethod
   path: string
-  /** Command name, or a spec when something is not derivable. */
-  cli?: string | CliSpec | null
+  /** Command name, a spec, or several when one route backs more than one. */
+  cli?: string | CliSpec | CliSpec[] | null
   query?: Cleaner<Q>
   body?: Cleaner<B>
   /** Response shape. Omit for a `204`. */

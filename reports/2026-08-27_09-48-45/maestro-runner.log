@@ -1,0 +1,31 @@
+09:48:45.443457 [INFO] === Test execution started ===
+09:48:45.443545 [INFO] Output directory: reports/2026-08-27_09-48-45
+09:48:45.443562 [INFO] Platform: android
+09:48:45.443573 [INFO] Driver: uiautomator2
+09:48:45.444074 [INFO] Validated 1 flow(s)
+09:48:45.444126 [INFO] Single device execution mode
+09:48:45.444145 [INFO] Starting flow execution (parallel: false, devices: [])
+09:48:45.444160 [INFO] Creating driver for single device execution
+09:48:45.444169 [INFO] Connecting to Android device: 56131FDCR003LJ
+09:48:45.788764 [INFO] Device info: google Pixel 10, SDK 36, Serial 56131FDCR003LJ, Emulator: false
+09:48:45.954086 [INFO] Starting UIAutomator2 server on device 56131FDCR003LJ
+09:48:47.027758 [WARN] failed to remove default socket forward for /tmp/uia2-56131FDCR003LJ.sock: adb forward --remove localfilesystem:/tmp/uia2-56131FDCR003LJ.sock: exit status 1: adb: error: listener 'localfilesystem:/tmp/uia2-56131FDCR003LJ.sock' not found
+09:48:47.056169 [WARN] failed to remove adb forward for tcp:6790: adb forward --remove tcp:6790: exit status 1: adb: error: listener 'tcp:6790' not found
+09:48:48.278557 [INFO] Creating UIAutomator2 session with capabilities: Platform=Android, Device=Pixel 10
+09:48:48.334602 [INFO] Session created successfully: eaea2189-4f26-4de8-a3bd-57cce15122a8
+09:48:48.743064 [INFO] Driver created: android on google Pixel 10
+09:48:48.761488 [INFO] === Starting flow: mr-pixelSignIn-fdf ===
+09:48:48.761507 [INFO] Flow file: /tmp/mr-pixelSignIn-fdf.yaml
+09:48:48.761517 [INFO] Total steps: 1
+09:48:48.821046 [DEBUG] Executing step 0: tapOn: text="Sign in"
+09:48:48.822118 [DEBUG] Flutter: parallel search (text="Sign in", id="")
+09:48:49.073460 [DEBUG] Flutter fallback: failed to get trees: no Flutter VM service found
+09:48:49.297874 [DEBUG] Flutter fallback: failed to get trees: no Flutter VM service found
+09:48:49.460934 [DEBUG] Flutter fallback: failed to get trees: no Flutter VM service found
+09:48:49.640355 [DEBUG] Flutter fallback: failed to get trees: no Flutter VM service found
+09:48:49.640608 [DEBUG] Step 0 completed successfully (819ms): tapOn: text="Sign in"
+09:48:49.679718 [INFO] === Flow completed: mr-pixelSignIn-fdf (status: passed, duration: 918ms, passed: 1, failed: 0, skipped: 0) ===
+09:48:50.466292 [WARN] failed to remove default socket forward for /tmp/uia2-56131FDCR003LJ.sock: adb forward --remove localfilesystem:/tmp/uia2-56131FDCR003LJ.sock: exit status 1: adb: error: listener 'localfilesystem:/tmp/uia2-56131FDCR003LJ.sock' not found
+09:48:50.483299 [WARN] failed to remove adb forward for tcp:6790: adb forward --remove tcp:6790: exit status 1: adb: error: listener 'tcp:6790' not found
+09:48:50.483324 [INFO] Flow execution completed: 1 passed, 0 failed, 0 skipped
+09:48:50.483529 [INFO] Generating reports...

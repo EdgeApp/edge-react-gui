@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="0" skipped="0" errors="0" time="0.927">
+  <testsuite name="maestro-runner" tests="1" failures="0" skipped="0" errors="0" time="0.927" timestamp="2026-08-27T09:48:48-07:00">
+    <testcase name="mr-pixelSignIn-fdf" classname="mr-pixelSignIn-fdf" time="0.822">
+      <properties>
+        <property name="file" value="/tmp/mr-pixelSignIn-fdf.yaml"/>
+        <property name="device.name" value="google Pixel 10"/>
+        <property name="device.id" value="56131FDCR003LJ"/>
+        <property name="device.platform" value="android"/>
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

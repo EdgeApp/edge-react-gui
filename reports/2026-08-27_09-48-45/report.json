@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "updateSeq": 7,
+  "status": "passed",
+  "startTime": "2026-08-27T09:48:48.752755-07:00",
+  "endTime": "2026-08-27T09:48:49.679792-07:00",
+  "lastUpdated": "2026-08-27T09:48:49.68828-07:00",
+  "device": {
+    "id": "56131FDCR003LJ",
+    "name": "google Pixel 10",
+    "platform": "android",
+    "osVersion": "36",
+    "isSimulator": false
+  },
+  "app": {
+    "id": "co.edgesecure.app",
+    "version": "99.99.99",
+    "build": "21000000"
+  },
+  "maestroRunner": {
+    "version": "1.1.25",
+    "driver": "uiautomator2"
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "running": 0,
+    "pending": 0
+  },
+  "flows": [
+    {
+      "index": 0,
+      "id": "flow-000",
+      "name": "mr-pixelSignIn-fdf",
+      "sourceFile": "/tmp/mr-pixelSignIn-fdf.yaml",
+      "device": {
+        "id": "56131FDCR003LJ",
+        "name": "google Pixel 10",
+        "platform": "android",
+        "osVersion": "36",
+        "isSimulator": false
+      },
+      "dataFile": "flows/flow-000.json",
+      "assetsDir": "assets/flow-000",
+      "status": "passed",
+      "updateSeq": 2,
+      "endTime": "2026-08-27T09:48:49.64238-07:00",
+      "duration": 822,
+      "lastUpdated": "2026-08-27T09:48:49.642949-07:00",
+      "commands": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0,
+        "running": 0,
+        "pending": 0
+      },
+      "attempts": 0
+    }
+  ]
+}

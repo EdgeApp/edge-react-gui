@@ -2,13 +2,21 @@ import { printJson } from '../client/output'
 import { command, findCommand, listCommands, UsageError } from '../command'
 import helpDocs from '../generated/helpDocs.json'
 
+interface ParamHelp {
+  /** How to supply it on the command line, or null when REST-only. */
+  pass: string | null
+  doc?: string
+  optional?: boolean
+}
+
 interface CommandHelp {
   summary: string
   description?: string
   core?: string
   method: string
   path: string
-  params?: Record<string, string>
+  usage: string
+  params?: Record<string, ParamHelp>
   returns?: Record<string, string>
   returnsDoc?: string
   notes?: string[]
@@ -41,7 +49,7 @@ const helpCmd = command(
     const docs = generated[target.name]
     printJson({
       name: target.name,
-      usage: target.usage ?? target.name,
+      usage: docs?.usage ?? target.usage ?? target.name,
       summary: docs?.summary ?? target.help ?? null,
       ...(docs?.description != null ? { description: docs.description } : {}),
       ...(docs?.core != null ? { core: docs.core } : {}),

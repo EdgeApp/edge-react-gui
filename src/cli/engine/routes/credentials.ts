@@ -64,7 +64,7 @@ export const checkPassword = route({
   core: 'account.checkPassword',
   method: 'POST',
   path: '/account/{sessionId}/check-password',
-  cli: { command: 'check-password', positional: 'password' },
+  cli: 'check-password',
   body: asObject({ password: doc(asString, PASSWORD_DOC) }).withRest,
   returns: asObject({
     ok: doc(asBoolean, 'False for a wrong password — not an error response.')
@@ -149,7 +149,7 @@ export const checkPin = route({
   core: 'account.checkPin',
   method: 'POST',
   path: '/account/{sessionId}/check-pin',
-  cli: { command: 'check-pin', positional: 'pin' },
+  cli: 'check-pin',
   body: asObject({
     pin: doc(asString, PIN_DOC),
     forDuressAccount: asOptional(doc(asBoolean, DURESS_DOC))
