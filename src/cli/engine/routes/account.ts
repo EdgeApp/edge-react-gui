@@ -1,9 +1,51 @@
-import type { Router } from '../router'
+import { asBoolean, asEither, asObject, asString, asValue } from 'cleaners'
+
+import { doc } from '../doc'
+import { route } from '../route'
+import { asSession } from '../schemas'
 import { getAccount, getSession } from './helpers'
 
-export function registerAccountRoutes(router: Router): void {
-  /** Engine composite: session registry plus EdgeAccount properties. */
-  router.add('GET', '/account/{sessionId}', ctx => {
+/**
+ * Account and session summary.
+ *
+ * Session fields are spread at the top level alongside the account's own
+ * properties — there is no nested `session` object.
+ *
+ * @note The `otpEnabled` and `otpResetPending` flags here are derived. For the
+ *   secret itself use `otp-key`.
+ * @coreNote Engine composite of the session record plus EdgeAccount
+ *   properties.
+ */
+export const accountInfo = route({
+  core: null,
+  method: 'GET',
+  path: '/account/{sessionId}',
+  cli: 'account-info',
+  returns: asObject({
+    appId: asString,
+    created: asEither(asString, asValue(null)),
+    lastLogin: asString,
+    loggedIn: asBoolean,
+    recoveryKey: doc(
+      asEither(asString, asValue(null)),
+      'Present only while recovery is configured.'
+    ),
+    otpEnabled: asBoolean,
+    otpResetPending: doc(
+      asBoolean,
+      'True while somebody has a reset pending against this account.'
+    ),
+    canDuressLogin: asBoolean,
+    isDuressAccount: asBoolean,
+    edgeLogin: doc(asBoolean, 'This account was reached by QR login.'),
+    keyLogin: asBoolean,
+    newAccount: asBoolean,
+    passwordLogin: asBoolean,
+    pinLogin: asBoolean,
+    recoveryLogin: asBoolean
+  }).withRest,
+
+  handler(ctx) {
     const session = getSession(ctx)
     const { account } = session
     const info = ctx.state.sessions.toInfo(session)
@@ -27,41 +69,121 @@ export function registerAccountRoutes(router: Router): void {
       pinLogin: account.pinLogin,
       recoveryLogin: account.recoveryLogin
     }
-  })
+  }
+})
 
-  /** account.logout() */
-  router.add('POST', '/account/{sessionId}/logout', async ctx => {
+/**
+ * Log out.
+ *
+ * Ends the session and drops it from the engine. Any subscription scoped to
+ * this account or its wallets is closed with it.
+ */
+export const logout = route({
+  core: 'account.logout',
+  method: 'POST',
+  path: '/account/{sessionId}/logout',
+  cli: {
+    command: 'logout',
+    notes: 'Also clears the stored id from `session.json`.'
+  },
+
+  async handler(ctx) {
     await ctx.state.sessions.logout(ctx.params.sessionId)
     return undefined
-  })
+  }
+})
 
-  /** Engine keepalive; no core equivalent. */
-  router.add('POST', '/account/{sessionId}/touch', ctx => {
+/**
+ * Keepalive.
+ *
+ * Resets the idle auto-logout timer without doing any other work.
+ *
+ * @coreNote Engine auto-logout timer; core has no idle concept.
+ */
+export const touchSession = route({
+  core: null,
+  method: 'POST',
+  path: '/account/{sessionId}/touch',
+  cli: 'touch',
+  returns: doc(asSession, 'The session, with a refreshed `expiresAt`.'),
+
+  handler(ctx) {
     return ctx.state.sessions.touch(ctx.params.sessionId)
-  })
+  }
+})
 
-  /** account.getLoginKey() */
-  router.add('GET', '/account/{sessionId}/get-login-key', async ctx => {
-    const account = getAccount(ctx)
-    return { loginKey: await account.getLoginKey() }
-  })
+/**
+ * Read the account login key.
+ *
+ * The key `login-with-key` takes. It grants full account access, so treat the
+ * output as secret.
+ */
+export const getLoginKey = route({
+  core: 'account.getLoginKey',
+  method: 'GET',
+  path: '/account/{sessionId}/get-login-key',
+  cli: 'get-login-key',
+  returns: asObject({
+    loginKey: doc(asString, 'base58. Full account access — keep it safe.')
+  }),
 
-  /** account.sync() */
-  router.add('POST', '/account/{sessionId}/sync', async ctx => {
-    const account = getAccount(ctx)
-    await account.sync()
+  async handler(ctx) {
+    return { loginKey: await getAccount(ctx).getLoginKey() }
+  }
+})
+
+/**
+ * Force an account data sync.
+ *
+ * Pushes and pulls the account repos immediately rather than waiting for the
+ * next scheduled sync.
+ */
+export const accountSync = route({
+  core: 'account.sync',
+  method: 'POST',
+  path: '/account/{sessionId}/sync',
+  cli: {
+    command: 'sync',
+    notes: 'Named `sync` for the account; the wallet one is `wallet-sync`.'
+  },
+  errors: ['NETWORK_ERROR'],
+
+  async handler(ctx) {
+    await getAccount(ctx).sync()
     return undefined
-  })
+  }
+})
 
-  /** account.deleteRemoteAccount() */
-  router.add(
-    'POST',
-    '/account/{sessionId}/delete-remote-account',
-    async ctx => {
-      const account = getAccount(ctx)
-      await account.deleteRemoteAccount()
-      await ctx.state.sessions.logout(ctx.params.sessionId)
-      return undefined
+/**
+ * Permanently delete the remote account.
+ *
+ * Irreversible. The account is removed from the login server, and funds in its
+ * wallets are unrecoverable without the keys. The session is logged out
+ * afterwards.
+ *
+ * @note The engine performs no confirmation check — the call runs as soon as
+ *   it arrives, so any guard has to live in the caller. The command requires
+ *   `--yes` for exactly this reason.
+ */
+export const deleteRemoteAccount = route({
+  core: 'account.deleteRemoteAccount',
+  method: 'POST',
+  path: '/account/{sessionId}/delete-remote-account',
+  cli: {
+    command: 'delete-remote-account',
+    extra: {
+      yes: {
+        kind: 'boolean',
+        required: true,
+        doc: 'Confirms intent. Without it the command refuses to run.'
+      }
     }
-  )
-}
+  },
+  errors: ['NETWORK_ERROR'],
+
+  async handler(ctx) {
+    await getAccount(ctx).deleteRemoteAccount()
+    await ctx.state.sessions.logout(ctx.params.sessionId)
+    return undefined
+  }
+})

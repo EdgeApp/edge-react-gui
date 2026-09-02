@@ -126,6 +126,8 @@ function proseFor(
   const out: Record<string, string> = {}
 
   const objectOf = (expr: ts.Expression): ts.Expression | undefined => {
+    // A shared field group is a bare object literal, not an asObject() call.
+    if (ts.isObjectLiteralExpression(expr)) return expr
     // asObject({…}) / asObject({…}).withRest / a name pointing at either.
     let cur: ts.Expression = expr
     if (ts.isPropertyAccessExpression(cur)) cur = cur.expression
@@ -154,31 +156,77 @@ function proseFor(
     return undefined
   }
 
-  // Prose attached to the whole cleaner, for pass-through responses.
+  // Resolve the prose argument: a literal, a `'a' + 'b'` concatenation, or a
+  // named constant shared between fields.
+  const proseText = (expr: ts.Expression): string | undefined => {
+    if (ts.isStringLiteral(expr) || ts.isNoSubstitutionTemplateLiteral(expr)) {
+      return expr.text
+    }
+    if (
+      ts.isBinaryExpression(expr) &&
+      expr.operatorToken.kind === ts.SyntaxKind.PlusToken
+    ) {
+      const left = proseText(expr.left)
+      const right = proseText(expr.right)
+      if (left != null && right != null) return left + right
+    }
+    if (ts.isIdentifier(expr)) {
+      let sym = checker.getSymbolAtLocation(expr)
+      if (sym != null && (sym.flags & ts.SymbolFlags.Alias) !== 0) {
+        sym = checker.getAliasedSymbol(sym)
+      }
+      const decl = sym?.declarations?.[0]
+      if (
+        decl != null &&
+        ts.isVariableDeclaration(decl) &&
+        decl.initializer != null
+      ) {
+        return proseText(decl.initializer)
+      }
+    }
+    return undefined
+  }
+
+  // A `doc(…)` call may sit inside a combinator — `asOptional(doc(…))` — so
+  // search the expression rather than only looking at its outermost call.
+  const findDoc = (expr: ts.Expression): string | undefined => {
+    if (ts.isCallExpression(expr)) {
+      if (expr.expression.getText() === 'doc' && expr.arguments.length > 1) {
+        return proseText(expr.arguments[1])
+      }
+      for (const arg of expr.arguments) {
+        const found = findDoc(arg)
+        if (found != null) return found
+      }
+    }
+    if (ts.isPropertyAccessExpression(expr)) return findDoc(expr.expression)
+    return undefined
+  }
+
+  // Prose attached to the whole cleaner, for pass-through responses. Only the
+  // outermost call counts: a nested field's prose is not the response's.
   let outer: ts.Expression = node
   if (ts.isPropertyAccessExpression(outer)) outer = outer.expression
   if (
     ts.isCallExpression(outer) &&
     outer.expression.getText() === 'doc' &&
-    outer.arguments.length > 1 &&
-    ts.isStringLiteral(outer.arguments[1])
+    outer.arguments.length > 1
   ) {
-    out[''] = outer.arguments[1].text
+    const whole = proseText(outer.arguments[1])
+    if (whole != null) out[''] = whole
   }
 
   const shape = objectOf(node)
   if (shape == null || !ts.isObjectLiteralExpression(shape)) return out
   for (const prop of shape.properties) {
-    if (!ts.isPropertyAssignment(prop)) continue
-    const value = prop.initializer
-    if (
-      ts.isCallExpression(value) &&
-      value.expression.getText() === 'doc' &&
-      value.arguments.length > 1 &&
-      ts.isStringLiteral(value.arguments[1])
-    ) {
-      out[prop.name.getText()] = value.arguments[1].text
+    if (ts.isSpreadAssignment(prop)) {
+      // `...loginOptionFields` — the spread object carries prose too.
+      Object.assign(out, proseFor(checker, prop.expression))
+      continue
     }
+    if (!ts.isPropertyAssignment(prop)) continue
+    const found = findDoc(prop.initializer)
+    if (found != null) out[prop.name.getText()] = found
   }
   return out
 }

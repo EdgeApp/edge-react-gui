@@ -1,18 +1,15 @@
+import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeAccountOptions,
   EdgePendingEdgeLogin
 } from 'edge-core-js'
 
+import { doc } from '../doc'
 import { engineError } from '../errors'
-import { requireBodyObject, type Router } from '../router'
+import { route } from '../route'
+import { asPendingEdgeLogin, asSession } from '../schemas'
 import type { SessionInfo } from '../sessions'
-import {
-  optionalBoolean,
-  optionalString,
-  requireString,
-  requireStringArray
-} from './helpers'
 
 interface PendingRecord {
   pendingId: string
@@ -74,17 +71,29 @@ function ensureEdgeSession(
   return record.sessionPromise
 }
 
-function accountOptionsFromBody(
-  body: Record<string, unknown>
-): EdgeAccountOptions {
+interface LoginOptions {
+  otp?: string
+  otpKey?: string
+  challengeId?: string
+}
+
+function accountOptions(body: LoginOptions): EdgeAccountOptions {
   const opts: EdgeAccountOptions = {}
-  const challengeId = optionalString(body, 'challengeId')
-  if (challengeId != null) opts.challengeId = challengeId
-  const otp = optionalString(body, 'otp')
-  if (otp != null) opts.otp = otp
-  const otpKey = optionalString(body, 'otpKey')
-  if (otpKey != null) opts.otpKey = otpKey
+  if (body.challengeId != null) opts.challengeId = body.challengeId
+  if (body.otp != null) opts.otp = body.otp
+  if (body.otpKey != null) opts.otpKey = body.otpKey
   return opts
+}
+
+/** Options every login and create call accepts, from `EdgeAccountOptions`. */
+const loginOptionFields = {
+  otp: asOptional(doc(asString, 'A current 2FA code.')),
+  otpKey: asOptional(
+    doc(asString, 'The 2FA secret itself, instead of a code.')
+  ),
+  challengeId: asOptional(
+    doc(asString, 'Supply after solving a CAPTCHA to retry the same request.')
+  )
 }
 
 function pendingSummary(
@@ -118,81 +127,205 @@ function getPending(pendingId: string): PendingRecord {
   return record
 }
 
-export function registerLoginRoutes(router: Router): void {
-  /** context.loginWithPassword(username, password, opts) */
-  router.add('POST', '/login-with-password', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const username = requireString(body, 'username')
-    const password = requireString(body, 'password')
+/**
+ * Log in with a password.
+ *
+ * @note With `--solve-captcha` the client solves a `CHALLENGE_REQUIRED`
+ *   response headlessly (ALTCHA proof-of-work) and retries once.
+ */
+export const loginWithPassword = route({
+  core: 'context.loginWithPassword',
+  method: 'POST',
+  path: '/login-with-password',
+  cli: { command: 'login-with-password', positional: 'username' },
+  body: asObject({
+    username: doc(asString, 'The account name.'),
+    password: doc(asString, 'The account password.'),
+    ...loginOptionFields
+  }).withRest,
+  returns: doc(asSession, 'A session with `loginMethod: "password"`.'),
+  errors: [
+    'PASSWORD_ERROR',
+    'USERNAME_ERROR',
+    'OTP_REQUIRED',
+    'CHALLENGE_REQUIRED',
+    'NETWORK_ERROR'
+  ],
+
+  async handler(ctx) {
     const account: EdgeAccount = await ctx.state.core.context.loginWithPassword(
-      username,
-      password,
-      accountOptionsFromBody(body)
+      ctx.body.username,
+      ctx.body.password,
+      accountOptions(ctx.body)
     )
     return await ctx.state.sessions.create(account, 'password')
-  })
+  }
+})
 
-  /** context.loginWithPIN(usernameOrLoginId, pin, opts) */
-  router.add('POST', '/login-with-pin', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const usernameOrLoginId = requireString(body, 'usernameOrLoginId')
-    const useLoginId = optionalBoolean(body, 'useLoginId')
-    const pin = requireString(body, 'pin')
+/**
+ * Log in with a device PIN.
+ *
+ * Only works on a device that has already saved a PIN for the account.
+ */
+export const loginWithPin = route({
+  core: 'context.loginWithPIN',
+  method: 'POST',
+  path: '/login-with-pin',
+  cli: { command: 'login-with-pin', positional: 'usernameOrLoginId' },
+  body: asObject({
+    usernameOrLoginId: doc(asString, 'A username, or a login id.'),
+    pin: doc(asString, 'The device PIN.'),
+    useLoginId: asOptional(doc(asBoolean, 'Treat the value as a login id.')),
+    ...loginOptionFields
+  }).withRest,
+  returns: doc(asSession, 'A session with `loginMethod: "pin"`.'),
+  errors: [
+    'PASSWORD_ERROR',
+    'PIN_DISABLED',
+    'USERNAME_ERROR',
+    'BAD_REQUEST',
+    'NETWORK_ERROR'
+  ],
+
+  async handler(ctx) {
     const account: EdgeAccount = await ctx.state.core.context.loginWithPIN(
-      usernameOrLoginId,
-      pin,
-      { ...accountOptionsFromBody(body), useLoginId }
+      ctx.body.usernameOrLoginId,
+      ctx.body.pin,
+      { ...accountOptions(ctx.body), useLoginId: ctx.body.useLoginId }
     )
     return await ctx.state.sessions.create(account, 'pin')
-  })
+  }
+})
 
-  /** context.loginWithKey(usernameOrLoginId, loginKey, opts) */
-  router.add('POST', '/login-with-key', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const usernameOrLoginId = requireString(body, 'usernameOrLoginId')
-    const loginKey = requireString(body, 'loginKey')
-    const useLoginId = optionalBoolean(body, 'useLoginId')
+/**
+ * Log in with an account login key.
+ *
+ * The key comes from `get-login-key` on an already-authenticated session.
+ */
+export const loginWithKey = route({
+  core: 'context.loginWithKey',
+  method: 'POST',
+  path: '/login-with-key',
+  cli: { command: 'login-with-key', positional: 'usernameOrLoginId' },
+  body: asObject({
+    usernameOrLoginId: doc(asString, 'A username, or a login id.'),
+    loginKey: doc(asString, 'From `get-login-key`.'),
+    useLoginId: asOptional(doc(asBoolean, 'Treat the value as a login id.')),
+    ...loginOptionFields
+  }).withRest,
+  returns: doc(asSession, 'A session with `loginMethod: "key"`.'),
+  errors: ['PASSWORD_ERROR', 'USERNAME_ERROR', 'NETWORK_ERROR'],
+
+  async handler(ctx) {
     const account: EdgeAccount = await ctx.state.core.context.loginWithKey(
-      usernameOrLoginId,
-      loginKey,
-      { ...accountOptionsFromBody(body), useLoginId }
+      ctx.body.usernameOrLoginId,
+      ctx.body.loginKey,
+      { ...accountOptions(ctx.body), useLoginId: ctx.body.useLoginId }
     )
     return await ctx.state.sessions.create(account, 'key')
-  })
+  }
+})
 
-  /** context.loginWithRecovery2(recoveryKey, username, answers, opts) */
-  router.add('POST', '/login-with-recovery', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const recoveryKey = requireString(body, 'recoveryKey')
-    const username = requireString(body, 'username')
-    const answers = requireStringArray(body, 'answers')
+/**
+ * Log in with recovery answers.
+ *
+ * Needs both the recovery key and the answers; neither works alone.
+ *
+ * @coreNote Our surface drops the `2` from core's recovery2 naming, and calls
+ *   the key `recoveryKey` to match what `change-recovery` returns.
+ */
+export const loginWithRecovery = route({
+  core: 'context.loginWithRecovery2',
+  method: 'POST',
+  path: '/login-with-recovery',
+  cli: {
+    command: 'login-with-recovery',
+    positional: 'username',
+    flags: { answer: { maps: 'answers', repeat: true } }
+  },
+  body: asObject({
+    recoveryKey: doc(asString, 'From `change-recovery`.'),
+    username: doc(asString, 'The account name.'),
+    answers: doc(asArray(asString), 'In the same order as the questions.'),
+    ...loginOptionFields
+  }).withRest,
+  returns: doc(asSession, 'A session with `loginMethod: "recovery"`.'),
+  errors: ['PASSWORD_ERROR', 'USERNAME_ERROR', 'NETWORK_ERROR'],
+
+  async handler(ctx) {
     const account: EdgeAccount =
       await ctx.state.core.context.loginWithRecovery2(
-        recoveryKey,
-        username,
-        answers,
-        accountOptionsFromBody(body)
+        ctx.body.recoveryKey,
+        ctx.body.username,
+        ctx.body.answers,
+        accountOptions(ctx.body)
       )
     return await ctx.state.sessions.create(account, 'recovery')
-  })
+  }
+})
 
-  /** context.createAccount(opts) */
-  router.add('POST', '/create-account', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const username = optionalString(body, 'username')
-    const password = optionalString(body, 'password')
-    const pin = optionalString(body, 'pin')
+/**
+ * Create an account.
+ *
+ * Every credential is optional over REST: omitting all three creates a light
+ * account with no username.
+ *
+ * @note The command requires a username, password and PIN. Creating a light
+ *   account is REST-only.
+ */
+export const createAccount = route({
+  core: 'context.createAccount',
+  method: 'POST',
+  path: '/create-account',
+  cli: { command: 'create-account', positional: 'username' },
+  body: asObject({
+    username: asOptional(doc(asString, 'The name to claim.')),
+    password: asOptional(doc(asString, 'The account password.')),
+    pin: asOptional(doc(asString, 'A device PIN to save.')),
+    ...loginOptionFields
+  }).withRest,
+  returns: doc(asSession, 'A session with `loginMethod: "create"`.'),
+  errors: [
+    'USERNAME_ERROR',
+    'CHALLENGE_REQUIRED',
+    'BAD_REQUEST',
+    'NETWORK_ERROR'
+  ],
+
+  async handler(ctx) {
     const account: EdgeAccount = await ctx.state.core.context.createAccount({
-      ...accountOptionsFromBody(body),
-      username,
-      password,
-      pin
+      ...accountOptions(ctx.body),
+      username: ctx.body.username,
+      password: ctx.body.password,
+      pin: ctx.body.pin
     })
     return await ctx.state.sessions.create(account, 'create')
-  })
+  }
+})
 
-  /** context.requestEdgeLogin(opts) */
-  router.add('POST', '/request-edge-login', async ctx => {
+/**
+ * Start a QR login.
+ *
+ * Asks the login server for a lobby another logged-in Edge device can approve.
+ * The returned `lobbyId` is what goes in the QR code.
+ *
+ * @note The pending login is an object handle with a 5 minute TTL. On expiry
+ *   the engine cancels the request on the login server for you.
+ */
+export const requestEdgeLogin = route({
+  core: 'context.requestEdgeLogin',
+  method: 'POST',
+  path: '/request-edge-login',
+  cli: {
+    command: 'request-edge-login',
+    notes:
+      'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session.'
+  },
+  body: asObject({}).withRest,
+  returns: asPendingEdgeLogin,
+  errors: ['NETWORK_ERROR'],
+
+  async handler(ctx) {
     const pending = await ctx.state.core.context.requestEdgeLogin({})
     const record: PendingRecord = {
       pendingId: '',
@@ -240,10 +373,31 @@ export function registerLoginRoutes(router: Router): void {
     )
 
     return pendingSummary(record, handle.expiresAt)
-  })
+  }
+})
 
-  /** Engine state for an in-flight requestEdgeLogin. */
-  router.add('GET', '/pending-edge-login/{pendingId}', async ctx => {
+/**
+ * Poll a pending QR login.
+ *
+ * Once `state` reaches `done` the engine has already created the session, so
+ * the response carries one ready to use.
+ *
+ * @note Session creation is attempted once. A failure is sticky, so later
+ *   polls report the same `error` rather than retrying.
+ * @note Polling does not extend the handle TTL; only the original 5 minute
+ *   window applies.
+ * @coreNote Engine state for an in-flight requestEdgeLogin; core exposes it as
+ *   EdgePendingEdgeLogin properties.
+ */
+export const pollEdgeLogin = route({
+  core: null,
+  method: 'GET',
+  path: '/pending-edge-login/{pendingId}',
+  cli: null,
+  returns: asPendingEdgeLogin,
+  errors: ['PENDING_LOGIN_NOT_FOUND', 'OBJECT_EXPIRED'],
+
+  async handler(ctx) {
     let expiresAt: string | undefined
     try {
       const handle = ctx.state.objects.get<PendingRecord>(
@@ -276,42 +430,65 @@ export function registerLoginRoutes(router: Router): void {
       }
     }
     return pendingSummary(record, expiresAt)
-  })
+  }
+})
 
-  /** EdgePendingEdgeLogin.cancelRequest() */
-  router.add(
-    'POST',
-    '/pending-edge-login/{pendingId}/cancel-request',
-    async ctx => {
-      const record = getPending(ctx.params.pendingId)
-      record.cancelled = true
+/**
+ * Cancel a pending QR login.
+ *
+ * @note If the login already completed and a session exists, that session is
+ *   force-logged-out too, so cancelling cannot leave an orphan visible in
+ *   `engine-sessions`.
+ */
+export const cancelEdgeLogin = route({
+  core: 'EdgePendingEdgeLogin.cancelRequest',
+  method: 'POST',
+  path: '/pending-edge-login/{pendingId}/cancel-request',
+  cli: { command: 'cancel-request', positional: 'pendingId' },
+  errors: ['PENDING_LOGIN_NOT_FOUND'],
+
+  async handler(ctx) {
+    const record = getPending(ctx.params.pendingId)
+    record.cancelled = true
+    try {
+      record.unwatchState?.()
+    } catch {
+      // best effort
+    }
+    // A completed edge login may already have created a session before the
+    // caller cancelled. Tear it down so cancelling cannot leave a logged-in
+    // orphan discoverable via GET /engine/sessions.
+    if (record.session != null) {
       try {
-        record.unwatchState?.()
+        await ctx.state.sessions.forceLogout(
+          record.session.sessionId,
+          'cancelled'
+        )
       } catch {
         // best effort
       }
-      // A completed edge login may already have created a session before the
-      // caller cancelled. Tear it down so cancelling cannot leave a logged-in
-      // orphan discoverable via GET /engine/sessions.
-      if (record.session != null) {
-        try {
-          await ctx.state.sessions.forceLogout(
-            record.session.sessionId,
-            'cancelled'
-          )
-        } catch {
-          // best effort
-        }
-        record.session = undefined
-      }
-      await ctx.state.objects.delete(ctx.params.pendingId)
-      pendingById.delete(ctx.params.pendingId)
-      return undefined
+      record.session = undefined
     }
-  )
+    await ctx.state.objects.delete(ctx.params.pendingId)
+    pendingById.delete(ctx.params.pendingId)
+    return undefined
+  }
+})
 
-  /** Engine session registry; no core equivalent. */
-  router.add('GET', '/engine/sessions', ctx => {
+/**
+ * List active sessions.
+ *
+ * @coreNote The session registry is an engine construct; core has no
+ *   multi-account session concept.
+ */
+export const engineSessions = route({
+  core: null,
+  method: 'GET',
+  path: '/engine/sessions',
+  cli: 'engine-sessions',
+  returns: doc(asArray(asSession), 'A bare array, not wrapped in a key.'),
+
+  handler(ctx) {
     return ctx.state.sessions.list()
-  })
-}
+  }
+})

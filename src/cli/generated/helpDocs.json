@@ -1,6 +1,207 @@
 {
   "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the JSDoc above each route() in src/cli/engine/routes. Edit the comment on the route, then run `npm run prepare` (or `npm run docs:api`).",
   "commands": {
+    "account-info": {
+      "summary": "Account and session summary.",
+      "method": "GET",
+      "path": "/account/{sessionId}",
+      "description": "Session fields are spread at the top level alongside the account's own properties — there is no nested `session` object.",
+      "returns": {
+        "appId": "string",
+        "created": "string | null",
+        "lastLogin": "string",
+        "loggedIn": "boolean",
+        "recoveryKey": "string | null — Present only while recovery is configured.",
+        "otpEnabled": "boolean",
+        "otpResetPending": "boolean — True while somebody has a reset pending against this account.",
+        "canDuressLogin": "boolean",
+        "isDuressAccount": "boolean",
+        "edgeLogin": "boolean — This account was reached by QR login.",
+        "keyLogin": "boolean",
+        "newAccount": "boolean",
+        "passwordLogin": "boolean",
+        "pinLogin": "boolean",
+        "recoveryLogin": "boolean"
+      },
+      "notes": [
+        "The `otpEnabled` and `otpResetPending` flags here are derived. For the secret itself use `otp-key`."
+      ]
+    },
+    "all-keys": {
+      "summary": "List every key in the account.",
+      "method": "GET",
+      "path": "/account/{sessionId}/all-keys",
+      "description": "Includes archived and deleted keys, unlike `currency-wallets`.",
+      "core": "account.allKeys",
+      "returns": {
+        "allKeys": "unknown[] — `EdgeWalletInfoFull[]`: id, type, keys, archived, deleted, hidden, sortIndex."
+      }
+    },
+    "approve-login-request": {
+      "summary": "Approve a login request.",
+      "method": "POST",
+      "path": "/account/{sessionId}/approve-login-request",
+      "description": "Grants the requesting device access to this account.",
+      "core": "EdgeLoginRequest.approve",
+      "params": {
+        "lobbyId": "From the QR code, or an `edge://edge/<lobbyId>` link."
+      },
+      "returns": {
+        "ok": "boolean — Always true; a failure arrives as an error envelope."
+      },
+      "notes": [
+        "The lobby is re-fetched on approve, so a request that expired between inspecting and approving fails with `404 NO_LOGIN_REQUEST`."
+      ],
+      "errors": [
+        "NO_LOGIN_REQUEST",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "approve-voucher": {
+      "summary": "Approve a voucher.",
+      "method": "POST",
+      "path": "/account/{sessionId}/approve-voucher",
+      "description": "Lets the waiting device finish logging in.",
+      "core": "account.approveVoucher",
+      "params": {
+        "voucherId": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`."
+      },
+      "errors": [
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "cancel-otp-reset": {
+      "summary": "Cancel a pending 2FA reset.",
+      "method": "POST",
+      "path": "/account/{sessionId}/cancel-otp-reset",
+      "description": "The defence against somebody else requesting a reset on your account: as long as you cancel before the timer runs out, their reset never lands.",
+      "core": "account.cancelOtpReset"
+    },
+    "cancel-request": {
+      "summary": "Cancel a pending QR login.",
+      "method": "POST",
+      "path": "/pending-edge-login/{pendingId}/cancel-request",
+      "core": "EdgePendingEdgeLogin.cancelRequest",
+      "notes": [
+        "If the login already completed and a session exists, that session is force-logged-out too, so cancelling cannot leave an orphan visible in `engine-sessions`."
+      ],
+      "errors": [
+        "PENDING_LOGIN_NOT_FOUND"
+      ]
+    },
+    "change-enabled-token-ids": {
+      "summary": "Set the enabled token set.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids",
+      "description": "Absolute: anything missing from `tokenIds` is disabled. Core has only this setter, so there is no add or remove call.",
+      "core": "wallet.changeEnabledTokenIds",
+      "params": {
+        "tokenIds": "The complete desired set."
+      },
+      "returns": {
+        "enabledTokenIds": "string[]"
+      },
+      "notes": [
+        "The command's `--add` and `--remove` are client-side sugar over this one route, and cost an extra read first."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "WALLET_NOT_FOUND",
+        "AMBIGUOUS_WALLET_ID"
+      ]
+    },
+    "change-password": {
+      "summary": "Set or change the password.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-password",
+      "description": "The login server enforces its own rules; `check-password-rules` scores a candidate first.",
+      "core": "account.changePassword",
+      "params": {
+        "password": "The new password."
+      },
+      "errors": [
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "change-pin": {
+      "summary": "Set or change the PIN.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-pin",
+      "core": "account.changePin",
+      "params": {
+        "pin": "The new PIN.",
+        "enableLogin": "Allow logging in with this PIN on this device.",
+        "forDuressAccount": "Act on the duress account rather than the real one."
+      },
+      "returns": {
+        "pin2Key": "string — The new PIN login key core returns."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "change-recovery": {
+      "summary": "Set recovery questions and answers.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-recovery",
+      "description": "The returned key is half of the credential: without it the answers alone cannot recover the account, so it has to be stored somewhere else.",
+      "core": "account.changeRecovery",
+      "params": {
+        "questions": "The questions to ask.",
+        "answers": "Same length and order as `questions`."
+      },
+      "returns": {
+        "recoveryKey": "string — Store this out of band. `login-with-recovery` needs it alongside the answers."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "change-username": {
+      "summary": "Change the username.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-username",
+      "description": "The old name is released, so it becomes available to anyone else.",
+      "core": "account.changeUsername",
+      "params": {
+        "username": "The new username.",
+        "password": "Required by core when the account has a password."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "change-wallet-states": {
+      "summary": "Archive, delete, hide, or reorder wallets.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-wallet-states",
+      "description": "The canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
+      "core": "account.changeWalletStates",
+      "params": {
+        "walletStates": "`EdgeWalletStates`: wallet ids to the flags being changed."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "check-password": {
+      "summary": "Verify a password.",
+      "method": "POST",
+      "path": "/account/{sessionId}/check-password",
+      "description": "Checks without changing anything, which is how a caller gates a destructive action behind a re-entry prompt.",
+      "core": "account.checkPassword",
+      "params": {
+        "password": "The account password."
+      },
+      "returns": {
+        "ok": "boolean — False for a wrong password — not an error response."
+      }
+    },
     "check-password-rules": {
       "summary": "Score a candidate password.",
       "method": "GET",
@@ -14,6 +215,71 @@
         "Send it with `curl --get --data-urlencode` rather than putting it in a shell-visible URL."
       ]
     },
+    "check-pin": {
+      "summary": "Verify a PIN.",
+      "method": "POST",
+      "path": "/account/{sessionId}/check-pin",
+      "core": "account.checkPin",
+      "params": {
+        "pin": "The device PIN, usually four digits.",
+        "forDuressAccount": "Act on the duress account rather than the real one."
+      },
+      "returns": {
+        "ok": "boolean — False for a wrong PIN — not an error response."
+      }
+    },
+    "create-account": {
+      "summary": "Create an account.",
+      "method": "POST",
+      "path": "/create-account",
+      "description": "Every credential is optional over REST: omitting all three creates a light account with no username.",
+      "core": "context.createAccount",
+      "params": {
+        "otp": "A current 2FA code.",
+        "otpKey": "The 2FA secret itself, instead of a code.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
+        "username": "The name to claim.",
+        "password": "The account password.",
+        "pin": "A device PIN to save."
+      },
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "A session with `loginMethod: \"create\"`.",
+      "notes": [
+        "The command requires a username, password and PIN. Creating a light account is REST-only."
+      ],
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "create-wallet": {
+      "summary": "Create a wallet from raw key JSON.",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-wallet",
+      "description": "The import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.",
+      "core": "account.createWallet",
+      "params": {
+        "type": "Wallet type, e.g. `wallet:bitcoin`.",
+        "keys": "Plugin key material. Omit to let core generate it."
+      },
+      "returns": {
+        "walletId": "string"
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
     "currency-configs": {
       "summary": "List plugin ids usable for wallet creation.",
       "method": "GET",
@@ -22,6 +288,115 @@
       "returns": {
         "pluginIds": "string[]"
       }
+    },
+    "delete-item": {
+      "summary": "Delete an item.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-item",
+      "core": "account.dataStore.deleteItem",
+      "params": {
+        "storeId": "Plugin or app namespace within the account data store.",
+        "itemId": "Key within the store."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "delete-password": {
+      "summary": "Remove password login.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-password",
+      "description": "The account keeps its other login methods; only the password stops working.",
+      "core": "account.deletePassword",
+      "errors": [
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "delete-pin": {
+      "summary": "Remove the PIN.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-pin",
+      "description": "PIN login stops working on this device; other methods are untouched.",
+      "core": "account.deletePin"
+    },
+    "delete-recovery": {
+      "summary": "Disable recovery login.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-recovery",
+      "description": "The existing recovery key stops working.",
+      "core": "account.deleteRecovery"
+    },
+    "delete-remote-account": {
+      "summary": "Permanently delete the remote account.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-remote-account",
+      "description": "Irreversible. The account is removed from the login server, and funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
+      "core": "account.deleteRemoteAccount",
+      "notes": [
+        "The engine performs no confirmation check — the call runs as soon as it arrives, so any guard has to live in the caller. The command requires `--yes` for exactly this reason."
+      ],
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "delete-store": {
+      "summary": "Delete an entire store.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-store",
+      "description": "Removes every item in it, which cannot be undone from this API.",
+      "core": "account.dataStore.deleteStore",
+      "params": {
+        "storeId": "Plugin or app namespace within the account data store."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "disable-otp": {
+      "summary": "Disable 2FA.",
+      "method": "POST",
+      "path": "/account/{sessionId}/disable-otp",
+      "description": "Logins stop requiring a code immediately.",
+      "core": "account.disableOtp"
+    },
+    "enable-otp": {
+      "summary": "Enable 2FA.",
+      "method": "POST",
+      "path": "/account/{sessionId}/enable-otp",
+      "description": "Record the returned key before leaving the terminal: it is the only copy.",
+      "core": "account.enableOtp",
+      "params": {
+        "timeout": "How long a reset request must wait before it completes. Core supplies the default when omitted."
+      },
+      "returns": {
+        "otpKey": "string | null — The new secret. The 2FA secret itself. Secret material — record it safely."
+      }
+    },
+    "encode-uri": {
+      "summary": "Build a payment URI.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallets/{walletId}/encode-uri",
+      "description": "For a receive screen or a QR code.",
+      "core": "wallet.encodeUri",
+      "params": {
+        "publicAddress": "Where the payment should go.",
+        "nativeAmount": "Amount, in the native unit.",
+        "label": "BIP21 `label`; becomes `metadata.name` when parsed back.",
+        "message": "BIP21 `message`; becomes `metadata.notes`.",
+        "currencyCode": "Disambiguates on chains that carry several assets."
+      },
+      "returns": {
+        "uri": "string — The encoded URI, ready for a QR code."
+      },
+      "notes": [
+        "Only these five fields are read; a fuller `EdgeEncodeUri` has its extras ignored."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "WALLET_NOT_FOUND",
+        "AMBIGUOUS_WALLET_ID"
+      ]
     },
     "engine-config": {
       "summary": "Configured context options.",
@@ -38,6 +413,49 @@
       "notes": [
         "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
       ]
+    },
+    "engine-sessions": {
+      "summary": "List active sessions.",
+      "method": "GET",
+      "path": "/engine/sessions",
+      "returns": {
+        "length": "number",
+        "toString": "() => string — function toString() { [native code] }",
+        "toLocaleString": "() => string — function toLocaleString() { [native code] }",
+        "pop?": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }",
+        "push": "(...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => number",
+        "concat": "{ (...items: ConcatArray<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; (...items: ({ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | ConcatArray<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>)[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
+        "join": "(separator?: string | undefined) => string",
+        "reverse": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
+        "shift?": "() => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }",
+        "slice": "(start?: number | undefined, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
+        "sort": "(compareFn?: ((a: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, b: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }) => number) | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
+        "splice": "{ (start: number, deleteCount?: number | undefined): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; (start: number, deleteCount: number, ...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
+        "unshift": "(...items: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => number",
+        "indexOf": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => number",
+        "lastIndexOf": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => number",
+        "every": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): this is S[]; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): boolean; }",
+        "some": "(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any) => boolean",
+        "forEach": "(callbackfn: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => void, thisArg?: any) => void",
+        "map": "<U>(callbackfn: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, thisArg?: any) => U[]",
+        "filter": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): S[]; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]; }",
+        "reduce": "{ (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, initialValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; <U>(callbackfn: (previousValue: U, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, initialValue: U): U; }",
+        "reduceRight": "{ (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; (callbackfn: (previousValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, initialValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }; <U>(callbackfn: (previousValue: U, currentValue: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, currentIndex: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U, initialValue: U): U; }",
+        "find": "{ <S extends { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => value is S, thisArg?: any): S | undefined; (predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any): { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | undefined; }",
+        "findIndex": "(predicate: (value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, obj: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => unknown, thisArg?: any) => number",
+        "fill": "(value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, start?: number | undefined, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
+        "copyWithin": "(target: number, start: number, end?: number | undefined) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]",
+        "entries": "() => IterableIterator<[number, { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }]>",
+        "keys": "() => IterableIterator<number>",
+        "values": "() => IterableIterator<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>",
+        "includes": "(searchElement: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, fromIndex?: number | undefined) => boolean",
+        "flatMap": "<U, This = undefined>(callback: (this: This, value: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }, index: number, array: { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]) => U | readonly U[], thisArg?: This | undefined) => U[]",
+        "flat": "<A, D extends number = 1>(this: A, depth?: D | undefined) => FlatArray<A, D>[]",
+        "__@iterator@157": "() => IterableIterator<{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }>",
+        "__@unscopables@159": "{ [x: number]: boolean | undefined; length?: boolean | undefined; toString?: boolean | undefined; toLocaleString?: boolean | undefined; pop?: boolean | undefined; push?: boolean | undefined; concat?: boolean | undefined; join?: boolean | undefined; reverse?: boolean | undefined; shift?: boolean | undefined; slice?: boolean | undefined; sort?: boolean | undefined; splice?: boolean | undefined; unshift?: boolean | undefined; indexOf?: boolean | undefined; lastIndexOf?: boolean | undefined; every?: boolean | undefined; some?: boolean | undefined; forEach?: boolean | undefined; map?: boolean | undefined; filter?: boolean | undefined; reduce?: boolean | undefined; reduceRight?: boolean | undefined; find?: boolean | undefined; findIndex?: boolean | undefined; fill?: boolean | undefined; copyWithin?: boolean | undefined; entries?: boolean | undefined; keys?: boolean | undefined; values?: boolean | undefined; includes?: boolean | undefined; flatMap?: boolean | undefined; flat?: boolean | undefined; [Symbol.iterator]?: boolean | undefined; readonly [Symbol.unscopables]?: boolean | undefined; at?: boolean | undefined; }",
+        "at?": "(index: number) => { sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }"
+      },
+      "returnsDoc": "A bare array, not wrapped in a key."
     },
     "engine-status": {
       "summary": "Engine liveness and summary.",
@@ -86,6 +504,24 @@
       },
       "returnsDoc": "`challengeUri` is absent when the server considers the challenge already satisfied.",
       "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "fetch-lobby": {
+      "summary": "Inspect a login request.",
+      "method": "GET",
+      "path": "/account/{sessionId}/fetch-lobby",
+      "description": "The other side of `request-edge-login`: shows who is asking, so a human can decide before approving.",
+      "core": "account.fetchLobby",
+      "params": {
+        "lobbyId": "From the QR code, or an `edge://edge/<lobbyId>` link."
+      },
+      "returns": {
+        "lobbyId": "string",
+        "loginRequest": "{ appId: string; displayName: string; displayImageDarkUrl: string | null; displayImageLightUrl: string | null; } | null — Null when the lobby carries no pending login request."
+      },
+      "errors": [
+        "BAD_REQUEST",
         "NETWORK_ERROR"
       ]
     },
@@ -143,6 +579,172 @@
         "BAD_REQUEST"
       ]
     },
+    "get-display-private-key": {
+      "summary": "Export the private key for display.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-display-private-key",
+      "description": "Secret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
+      "core": "account.getDisplayPrivateKey",
+      "params": {
+        "walletId": "Full base58 wallet id."
+      },
+      "returns": {
+        "key": "string — The displayable private key."
+      },
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "get-display-public-key": {
+      "summary": "Export the public key for display.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-display-public-key",
+      "description": "The xpub or equivalent — safe to share for watch-only use.",
+      "core": "account.getDisplayPublicKey",
+      "params": {
+        "walletId": "Full base58 wallet id."
+      },
+      "returns": {
+        "key": "string — The displayable public key."
+      },
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "get-item": {
+      "summary": "Read an item.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-item",
+      "description": "Values are opaque strings; encoding is the caller's business.",
+      "core": "account.dataStore.getItem",
+      "params": {
+        "storeId": "Plugin or app namespace within the account data store.",
+        "itemId": "Key within the store."
+      },
+      "returns": {
+        "value": "string — The stored string."
+      },
+      "errors": [
+        "NOT_FOUND",
+        "BAD_REQUEST"
+      ]
+    },
+    "get-login-key": {
+      "summary": "Read the account login key.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-login-key",
+      "description": "The key `login-with-key` takes. It grants full account access, so treat the output as secret.",
+      "core": "account.getLoginKey",
+      "returns": {
+        "loginKey": "string — base58. Full account access — keep it safe."
+      }
+    },
+    "get-pin": {
+      "summary": "Read the account PIN.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-pin",
+      "description": "Returns the PIN itself, not a status flag, so treat the output as secret.",
+      "core": "account.getPin",
+      "returns": {
+        "pin": "string | null — Null when no PIN is set."
+      }
+    },
+    "get-raw-private-key": {
+      "summary": "Read raw private key material.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-raw-private-key",
+      "description": "Secret. Whatever the plugin stores — seed, mnemonic, xpriv.",
+      "core": "account.getRawPrivateKey",
+      "params": {
+        "walletId": "Full base58 wallet id."
+      },
+      "returnsDoc": "The plugin's key object, at the top level.",
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "get-raw-public-key": {
+      "summary": "Read raw public key material.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-raw-public-key",
+      "core": "account.getRawPublicKey",
+      "params": {
+        "walletId": "Full base58 wallet id."
+      },
+      "returnsDoc": "The plugin's public key object.",
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "get-wallet-info": {
+      "summary": "Read one wallet's key info.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-wallet-info",
+      "core": "account.getWalletInfo",
+      "params": {
+        "id": "Full base58 wallet id."
+      },
+      "returnsDoc": "`EdgeWalletInfoFull`, verbatim from core — including the `keys` object.",
+      "notes": [
+        "An exact lookup: unlike the wallet-scoped routes this does not accept an id prefix."
+      ],
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "list-item-ids": {
+      "summary": "List item ids in a store.",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-item-ids",
+      "core": "account.dataStore.listItemIds",
+      "params": {
+        "storeId": "Plugin or app namespace within the account data store."
+      },
+      "returns": {
+        "itemIds": "string[]"
+      }
+    },
+    "list-splittable-wallet-types": {
+      "summary": "List chains a wallet can split into.",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-splittable-wallet-types",
+      "description": "Forked-chain support: which wallet types can be derived from these keys.",
+      "core": "account.listSplittableWalletTypes",
+      "params": {
+        "walletId": "Full base58 wallet id."
+      },
+      "returns": {
+        "walletTypes": "string[] — Types valid for `split`."
+      },
+      "errors": [
+        "WALLET_NOT_FOUND"
+      ]
+    },
+    "list-store-ids": {
+      "summary": "List data-store ids.",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-store-ids",
+      "description": "The account's synced key-value store, where plugins keep their own state.",
+      "core": "account.dataStore.listStoreIds",
+      "returns": {
+        "storeIds": "string[]"
+      }
+    },
+    "local-settings": {
+      "summary": "Change local settings.",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-local-settings",
+      "description": "Writes device-local account settings. Every option is a field on the body; `spamFilterOn` is the only one today, and new options are added alongside it.",
+      "params": {
+        "spamFilterOn": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+      },
+      "returns": {
+        "spamFilterOn": "boolean — Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+      },
+      "notes": [
+        "Omitting a field is a `400`, not a no-op, so a caller cannot clear a setting by accident."
+      ]
+    },
     "local-users": {
       "summary": "List local users on this device.",
       "method": "GET",
@@ -152,6 +754,288 @@
         "localUsers": "unknown[]"
       },
       "returnsDoc": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device."
+    },
+    "login-with-key": {
+      "summary": "Log in with an account login key.",
+      "method": "POST",
+      "path": "/login-with-key",
+      "description": "The key comes from `get-login-key` on an already-authenticated session.",
+      "core": "context.loginWithKey",
+      "params": {
+        "otp": "A current 2FA code.",
+        "otpKey": "The 2FA secret itself, instead of a code.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
+        "usernameOrLoginId": "A username, or a login id.",
+        "loginKey": "From `get-login-key`.",
+        "useLoginId": "Treat the value as a login id."
+      },
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "A session with `loginMethod: \"key\"`.",
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-password": {
+      "summary": "Log in with a password.",
+      "method": "POST",
+      "path": "/login-with-password",
+      "core": "context.loginWithPassword",
+      "params": {
+        "otp": "A current 2FA code.",
+        "otpKey": "The 2FA secret itself, instead of a code.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
+        "username": "The account name.",
+        "password": "The account password."
+      },
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "A session with `loginMethod: \"password\"`.",
+      "notes": [
+        "With `--solve-captcha` the client solves a `CHALLENGE_REQUIRED` response headlessly (ALTCHA proof-of-work) and retries once."
+      ],
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "OTP_REQUIRED",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-pin": {
+      "summary": "Log in with a device PIN.",
+      "method": "POST",
+      "path": "/login-with-pin",
+      "description": "Only works on a device that has already saved a PIN for the account.",
+      "core": "context.loginWithPIN",
+      "params": {
+        "otp": "A current 2FA code.",
+        "otpKey": "The 2FA secret itself, instead of a code.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
+        "usernameOrLoginId": "A username, or a login id.",
+        "pin": "The device PIN.",
+        "useLoginId": "Treat the value as a login id."
+      },
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "A session with `loginMethod: \"pin\"`.",
+      "errors": [
+        "PASSWORD_ERROR",
+        "PIN_DISABLED",
+        "USERNAME_ERROR",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-recovery": {
+      "summary": "Log in with recovery answers.",
+      "method": "POST",
+      "path": "/login-with-recovery",
+      "description": "Needs both the recovery key and the answers; neither works alone.",
+      "core": "context.loginWithRecovery2",
+      "params": {
+        "otp": "A current 2FA code.",
+        "otpKey": "The 2FA secret itself, instead of a code.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same request.",
+        "recoveryKey": "From `change-recovery`.",
+        "username": "The account name.",
+        "answers": "In the same order as the questions."
+      },
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "A session with `loginMethod: \"recovery\"`.",
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "NETWORK_ERROR"
+      ]
+    },
+    "logout": {
+      "summary": "Log out.",
+      "method": "POST",
+      "path": "/account/{sessionId}/logout",
+      "description": "Ends the session and drops it from the engine. Any subscription scoped to this account or its wallets is closed with it.",
+      "core": "account.logout"
+    },
+    "otp-key": {
+      "summary": "Read the 2FA secret and reset state.",
+      "method": "GET",
+      "path": "/account/{sessionId}/otp-key",
+      "core": "account.otpKey",
+      "returns": {
+        "otpKey": "string | null — Null when 2FA is off. The 2FA secret itself. Secret material — record it safely.",
+        "otpResetDate": "string | null — Set once somebody has requested a reset; cancel it with `cancel-otp-reset`."
+      }
+    },
+    "parse-uri": {
+      "summary": "Parse a payment URI or address.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallets/{walletId}/parse-uri",
+      "description": "What the GUI address tile does when you paste or scan something.",
+      "core": "wallet.parseUri",
+      "params": {
+        "uri": "A payment URI or a bare address.",
+        "currencyCode": "Disambiguates on chains that carry several assets."
+      },
+      "returnsDoc": "`EdgeParsedUri`: publicAddress, nativeAmount, currencyCode, metadata, paymentProtocolUrl, …",
+      "notes": [
+        "`spend` and `make-spend` run their `to` field through this same call, so parsing separately is only needed to inspect or confirm first."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "WALLET_NOT_FOUND",
+        "AMBIGUOUS_WALLET_ID"
+      ]
+    },
+    "pending-vouchers": {
+      "summary": "List pending 2FA vouchers.",
+      "method": "GET",
+      "path": "/account/{sessionId}/pending-vouchers",
+      "description": "When 2FA blocks a login, the login server issues a voucher that an already-trusted device can approve or reject.",
+      "core": "account.pendingVouchers",
+      "returns": {
+        "pendingVouchers": "unknown[] — `EdgePendingVoucher[]`: voucherId, activates, created, deviceDescription, ipDescription."
+      }
+    },
+    "rates-query": {
+      "summary": "Batch crypto and fiat rate lookups.",
+      "method": "POST",
+      "path": "/rates/query",
+      "description": "Concurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
+      "params": {
+        "crypto": "Crypto rates to fetch.",
+        "fiat": "Fiat rates to fetch."
+      },
+      "returns": {
+        "crypto": "{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no crypto rates were requested.",
+        "fiat": "{ fiatCode: string; targetFiat: string; date: string; rate: number; }[]"
+      },
+      "notes": [
+        "A rate the server cannot supply comes back as `0` rather than an error, so check for zero before dividing."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "rates-usd-to-native": {
+      "summary": "Convert a USD amount into native units.",
+      "method": "POST",
+      "path": "/rates/usd-to-native",
+      "description": "Turns a fiat notional into the native amount a spend needs.",
+      "params": {
+        "usdAmount": "A string, which must parse to a positive finite number.",
+        "pluginId": "Which chain to price.",
+        "tokenId": "Defaults to the native asset.",
+        "multiplier": "Native units per whole coin. Defaults per plugin.",
+        "date": "ISO-8601. Omitted, the current time is sent to the rates server."
+      },
+      "returns": {
+        "usdAmount": "number — Echoed as a number, though it is sent as a string.",
+        "pluginId": "string",
+        "tokenId": "string | null",
+        "multiplier": "string",
+        "date": "string",
+        "rate": "number — USD per whole coin at that date.",
+        "displayAmount": "string — Whole coins, to 8 decimal places.",
+        "nativeAmount": "string — What a spend actually takes."
+      },
+      "notes": [
+        "`displayAmount` is rounded to 8 decimals before conversion, so assets with finer precision lose the tail. For an exact figure use `rates-query` and do the arithmetic yourself.",
+        "Default multipliers cover bitcoin, ethereum, bitcoincash, litecoin and dogecoin; pass `multiplier` explicitly for anything else."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "NOT_FOUND",
+        "NETWORK_ERROR"
+      ]
+    },
+    "reject-voucher": {
+      "summary": "Reject a voucher.",
+      "method": "POST",
+      "path": "/account/{sessionId}/reject-voucher",
+      "description": "Denies the waiting device. The login it was issued for cannot complete.",
+      "core": "account.rejectVoucher",
+      "params": {
+        "voucherId": "From `pending-vouchers`, or an `OTP_REQUIRED` error’s `details.voucherId`."
+      },
+      "errors": [
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "repair-otp": {
+      "summary": "Re-point the account at a known 2FA secret.",
+      "method": "POST",
+      "path": "/account/{sessionId}/repair-otp",
+      "description": "For a device whose stored secret has drifted from the server's.",
+      "core": "account.repairOtp",
+      "params": {
+        "otpKey": "The secret the account should use."
+      },
+      "errors": [
+        "OTP_REQUIRED",
+        "BAD_REQUEST"
+      ]
+    },
+    "request-edge-login": {
+      "summary": "Start a QR login.",
+      "method": "POST",
+      "path": "/request-edge-login",
+      "description": "Asks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
+      "core": "context.requestEdgeLogin",
+      "returns": {
+        "objectId": "string",
+        "pendingId": "string",
+        "kind": "string",
+        "expiresAt": "string | null",
+        "lobbyId": "string",
+        "uri": "string",
+        "state": "string",
+        "username": "string | null",
+        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null",
+        "error": "string | null"
+      },
+      "notes": [
+        "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you."
+      ],
+      "errors": [
+        "NETWORK_ERROR"
+      ]
     },
     "request-otp-reset": {
       "summary": "Request a 2FA reset.",
@@ -173,6 +1057,48 @@
         "NETWORK_ERROR"
       ]
     },
+    "set-item": {
+      "summary": "Write an item.",
+      "method": "POST",
+      "path": "/account/{sessionId}/set-item",
+      "description": "Creates the store if it does not exist.",
+      "core": "account.dataStore.setItem",
+      "params": {
+        "storeId": "Plugin or app namespace within the account data store.",
+        "itemId": "Key within the store.",
+        "value": "The string to store."
+      },
+      "errors": [
+        "BAD_REQUEST"
+      ]
+    },
+    "sync": {
+      "summary": "Force an account data sync.",
+      "method": "POST",
+      "path": "/account/{sessionId}/sync",
+      "description": "Pushes and pulls the account repos immediately rather than waiting for the next scheduled sync.",
+      "core": "account.sync",
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "touch": {
+      "summary": "Keepalive.",
+      "method": "POST",
+      "path": "/account/{sessionId}/touch",
+      "description": "Resets the idle auto-logout timer without doing any other work.",
+      "returns": {
+        "sessionId": "string",
+        "username?": "string",
+        "rootLoginId": "string",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"",
+        "autoLogoutSeconds": "number",
+        "expiresAt": "string | null",
+        "lastActivityAt": "string",
+        "createdAt": "string"
+      },
+      "returnsDoc": "The session, with a refreshed `expiresAt`."
+    },
     "username-available": {
       "summary": "Check whether a username is free.",
       "method": "GET",
@@ -190,6 +1116,23 @@
         "USERNAME_ERROR",
         "CHALLENGE_REQUIRED",
         "NETWORK_ERROR"
+      ]
+    },
+    "wallet-tokens": {
+      "summary": "List a wallet's tokens.",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallets/{walletId}/tokens",
+      "description": "\"Enabled\" tokens are the ones the wallet syncs balances for; \"detected\" ones were seen on-chain but are not yet enabled.",
+      "returns": {
+        "allTokens": "{ [keys: string]: unknown; } — Built-in and custom together, keyed by tokenId. Large on EVM chains.",
+        "builtinTokens": "{ [keys: string]: unknown; }",
+        "customTokens": "{ [keys: string]: unknown; }",
+        "enabledTokenIds": "string[]",
+        "detectedTokenIds": "string[] — Seen on-chain but not enabled, so their balances are not synced."
+      },
+      "errors": [
+        "WALLET_NOT_FOUND",
+        "AMBIGUOUS_WALLET_ID"
       ]
     }
   }

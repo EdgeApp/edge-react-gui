@@ -47,6 +47,8 @@ export interface CliSpec {
   extra?: Record<string, CliExtraSpec>
   /** Fields sent at fixed values, for commands that preset part of a body. */
   preset?: Record<string, unknown>
+  /** Flag carrying the entire body as one JSON argument. */
+  bodyFlag?: string
   /** Exit codes for a streaming command. */
   exits?: Record<string, number>
   /** Behaviour the request shape cannot express. */
