@@ -151,7 +151,7 @@ export const spendGroup = group({
       notes: [
         'BIP21 `label` and `message` from `to` become `metadata.name` and `.notes`. An explicit `metadata` object wins. A bare get-addresses with no URI fields and no metadata is not tagged on disk.',
         '**`saveError` is the case to handle.** Once a transaction is broadcast the money is gone, so a failure inside `saveTx` cannot throw — it would hide the txid of a real payment. The engine returns `200` with the transaction plus `saveError`. Treat that as “sent, but not recorded locally”.',
-        'A `dryRun` handle expires in 5 minutes. Release it with `DELETE …/objects/{objectId}` if you abandon the spend.'
+        'A `dryRun` handle expires in 5 minutes. Release it with `POST …/objects/{objectId}/delete` if you abandon the spend.'
       ]
     }),
 
