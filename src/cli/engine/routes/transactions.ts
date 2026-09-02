@@ -225,10 +225,12 @@ export function registerTransactionRoutes(router: Router): void {
   router.add(
     'GET',
     '/account/{sessionId}/wallets/{walletId}/get-num-transactions',
-    ctx => {
+    async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-      const numTransactions = wallet.getNumTransactions({ tokenId })
+      // Typed as returning a number, but plugins resolve a promise here, so
+      // awaiting is what actually yields a serializable value.
+      const numTransactions = await wallet.getNumTransactions({ tokenId })
       return { numTransactions }
     }
   )
