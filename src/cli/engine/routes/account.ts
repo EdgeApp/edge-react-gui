@@ -245,8 +245,9 @@ export const deleteRemoteAccount = route({
 /**
  * List the account's wallets.
  *
- * @note The REST default for `waitForAll` is false; the command defaults it to
- *   true. A raw HTTP caller that skips it can see an incomplete list.
+ * @note Wallets load in the background after login, so a list taken straight
+ *   afterwards can be short. Pass `waitForAll`, or call `wait-for-all-wallets`
+ *   first, to be sure the account has finished loading.
  * @coreNote Filtered by account.activeWalletIds / archivedWalletIds /
  *   hiddenWalletIds.
  */
@@ -254,10 +255,7 @@ export const currencyWallets = route({
   core: 'account.currencyWallets',
   method: 'GET',
   path: '/account/{sessionId}/currency-wallets',
-  cli: {
-    command: 'currency-wallets',
-    flags: { noWait: { maps: 'waitForAll', invert: true } }
-  },
+  cli: 'currency-wallets',
   query: asObject({
     filter: asOptional(
       doc(
@@ -268,9 +266,10 @@ export const currencyWallets = route({
     waitForAll: asOptional(
       doc(
         asQueryBoolean,
-        'Await every wallet to load first. Without it a freshly logged-in ' +
-          'account may report fewer wallets than it has.'
-      )
+        'Await every wallet to load before answering. Without it a freshly ' +
+          'logged-in account may report fewer wallets than it has.'
+      ),
+      false
     )
   }).withRest,
   returns: asObject({

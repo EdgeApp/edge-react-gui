@@ -623,7 +623,7 @@
       "command": "currency-wallets",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<filter>] [--no-wait]",
+      "usage": "currency-wallets [--filter=<filter>] [--wait-for-all]",
       "help": "List the account's wallets.",
       "needsSession": true,
       "args": [
@@ -635,7 +635,7 @@
           "required": false
         },
         {
-          "flag": "no-wait",
+          "flag": "wait-for-all",
           "field": "waitForAll",
           "target": "query",
           "kind": "boolean",

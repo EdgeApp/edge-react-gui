@@ -965,7 +965,7 @@
       "summary": "List the account's wallets.",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<value>] [--no-wait]",
+      "usage": "currency-wallets [--filter=<value>] [--wait-for-all]",
       "core": "account.currencyWallets",
       "params": {
         "filter": {
@@ -974,8 +974,8 @@
           "optional": true
         },
         "waitForAll": {
-          "pass": "[--no-wait]",
-          "doc": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
+          "pass": "[--wait-for-all]",
+          "doc": "Await every wallet to load before answering. Without it a freshly logged-in account may report fewer wallets than it has.",
           "optional": true
         }
       },
@@ -983,7 +983,7 @@
         "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet in the account, including paused ones."
       },
       "notes": [
-        "The REST default for `waitForAll` is false; the command defaults it to true. A raw HTTP caller that skips it can see an incomplete list."
+        "Wallets load in the background after login, so a list taken straight afterwards can be short. Pass `waitForAll`, or call `wait-for-all-wallets` first, to be sure the account has finished loading."
       ]
     },
     "delete-item": {

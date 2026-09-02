@@ -2311,7 +2311,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>currency-wallets [--filter=&lt;filter&gt;] [--no-wait=&lt;waitForAll&gt;]</code></pre>
+    <pre class="usage"><code>currency-wallets [--filter=&lt;filter&gt;] [--wait-for-all=&lt;waitForAll&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -2336,7 +2336,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>waitForAll</code></td>
   <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.</td>
+  <td class="doc">Await every wallet to load before answering. Without it a freshly logged-in account may report fewer wallets than it has.</td>
 </tr></tbody></table>
   </div>
     
@@ -2382,7 +2382,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div>
     
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>The REST default for <code>waitForAll</code> is false; the command defaults it to true. A raw HTTP caller that skips it can see an incomplete list.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Wallets load in the background after login, so a list taken straight afterwards can be short. Pass <code>waitForAll</code>, or call <code>wait-for-all-wallets</code> first, to be sure the account has finished loading.</li></ul></div>
   </section><h2 id="localSettings">Local settings</h2>
       <div class="groupdoc"><p>Device-local account settings, stored outside the synced repos.</p>
 </div>

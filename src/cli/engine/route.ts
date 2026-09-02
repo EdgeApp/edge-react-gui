@@ -23,8 +23,6 @@ export interface CliFlagSpec {
   maps?: string
   /** Repeatable; collected into an array. */
   repeat?: boolean
-  /** Sends the inverse of the named boolean field. */
-  invert?: boolean
   doc?: string
 }
 

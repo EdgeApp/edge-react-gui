@@ -25,7 +25,6 @@ export interface ExtractedCliFlag {
   /** Request field it carries. */
   maps: string
   repeat?: boolean
-  invert?: boolean
   doc?: string
 }
 
@@ -361,7 +360,6 @@ function parseCli(node: ts.Expression | undefined): ExtractedCli | null {
         name: kebab(name),
         maps: spec != null ? str(spec, 'maps') ?? name : name,
         repeat: spec != null ? /repeat:\s*true/.test(spec.getText()) : false,
-        invert: spec != null ? /invert:\s*true/.test(spec.getText()) : false,
         doc: spec != null ? str(spec, 'doc') : undefined
       })
     }

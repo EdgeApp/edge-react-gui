@@ -1402,8 +1402,7 @@
             {
               "name": "answer",
               "maps": "answers",
-              "repeat": true,
-              "invert": false
+              "repeat": true
             }
           ],
           "extra": [],
@@ -2602,20 +2601,13 @@
       "get": {
         "operationId": "currencyWallets",
         "summary": "List the account's wallets.",
-        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>] [--no-wait=<waitForAll>]\n```\n\n",
+        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>] [--wait-for-all=<waitForAll>]\n```\n\n",
         "tags": [
           "Account"
         ],
         "x-cli": {
           "command": "currency-wallets",
-          "flags": [
-            {
-              "name": "no-wait",
-              "maps": "waitForAll",
-              "repeat": false,
-              "invert": true
-            }
-          ],
+          "flags": [],
           "extra": [],
           "custom": false,
           "preset": {}
@@ -2659,7 +2651,7 @@
             "name": "waitForAll",
             "in": "query",
             "required": false,
-            "description": "Await every wallet to load first. Without it a freshly logged-in account may report fewer wallets than it has.",
+            "description": "Await every wallet to load before answering. Without it a freshly logged-in account may report fewer wallets than it has.",
             "schema": {
               "type": "boolean"
             }
@@ -3417,14 +3409,12 @@
             {
               "name": "question",
               "maps": "questions",
-              "repeat": true,
-              "invert": false
+              "repeat": true
             },
             {
               "name": "answer",
               "maps": "answers",
-              "repeat": true,
-              "invert": false
+              "repeat": true
             }
           ],
           "extra": [],
@@ -6070,8 +6060,7 @@
             {
               "name": "bitwave-account",
               "maps": "bitwaveAccountId",
-              "repeat": false,
-              "invert": false
+              "repeat": false
             }
           ],
           "extra": [
@@ -7656,8 +7645,7 @@
             {
               "name": "plugin-id",
               "maps": "preferPluginId",
-              "repeat": false,
-              "invert": false
+              "repeat": false
             }
           ],
           "extra": [],
@@ -9172,8 +9160,7 @@
             {
               "name": "period-seconds",
               "maps": "period",
-              "repeat": false,
-              "invert": false
+              "repeat": false
             }
           ],
           "extra": [],
