@@ -1665,7 +1665,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-pirate-wallet (0.3.2):
+  - react-native-pirate-wallet (0.3.4):
     - React-Core
   - react-native-render-html (6.3.4):
     - React-Core
@@ -3413,7 +3413,7 @@ SPEC CHECKSUMS:
   react-native-monero: 8ea7a864e1481f662502472de7b460b0a73bf230
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-performance: f0471c84eda0f6625bd42a1f515b1b216f284b12
-  react-native-pirate-wallet: 4e9d6b059484cbc370eea2ec4056476537c61606
+  react-native-pirate-wallet: e89d5fe1be2b78c8d7ad80d9a754dba4fa3fc8c9
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 83e0ac3d023997de1c2e035af907cc4dc05f718c
