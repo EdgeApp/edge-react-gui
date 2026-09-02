@@ -7006,16 +7006,17 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/sign-tx/{walletId}": {
+    "/account/{sessionId}/sign-tx/{objectId}": {
       "post": {
         "operationId": "signTx",
         "summary": "Sign a staged transaction.",
-        "description": "**Core call:** `wallet.signTx`\n\n**Command line**\n\n```\nsign-tx <walletId> --object-id=<objectId>\n```\n\nKeeps the same handle and pushes its expiry out another five minutes.",
+        "description": "**Core call:** `wallet.signTx`\n\n**Command line**\n\n```\nsign-tx <objectId> <objectId>\n```\n\nKeeps the same handle and pushes its expiry out another five minutes.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "sign-tx",
+          "positional": "objectId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7034,10 +7035,10 @@
             }
           },
           {
-            "name": "walletId",
+            "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "An ephemeral object handle id.",
             "schema": {
               "type": "string"
             }
@@ -7117,16 +7118,17 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/broadcast-tx/{walletId}": {
+    "/account/{sessionId}/broadcast-tx/{objectId}": {
       "post": {
         "operationId": "broadcastTx",
         "summary": "Broadcast a signed transaction.",
-        "description": "**Core call:** `wallet.broadcastTx`\n\n**Command line**\n\n```\nbroadcast-tx <walletId> --object-id=<objectId>\n```\n\nThe irreversible step: once this returns, the funds have left the wallet.",
+        "description": "**Core call:** `wallet.broadcastTx`\n\n**Command line**\n\n```\nbroadcast-tx <objectId> <objectId>\n```\n\nThe irreversible step: once this returns, the funds have left the wallet.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "broadcast-tx",
+          "positional": "objectId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7145,10 +7147,10 @@
             }
           },
           {
-            "name": "walletId",
+            "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "An ephemeral object handle id.",
             "schema": {
               "type": "string"
             }
@@ -7228,16 +7230,17 @@
         }
       }
     },
-    "/account/{sessionId}/wallet/save-tx/{walletId}": {
+    "/account/{sessionId}/save-tx/{objectId}": {
       "post": {
         "operationId": "saveTx",
         "summary": "Record a transaction and release its handle.",
-        "description": "**Core call:** `wallet.saveTx`\n\n**Command line**\n\n```\nsave-tx <walletId> --object-id=<objectId>\n```\n\nFinal step. The handle is gone afterwards, so a second call is a 404.",
+        "description": "**Core call:** `wallet.saveTx`\n\n**Command line**\n\n```\nsave-tx <objectId> <objectId>\n```\n\nFinal step. The handle is gone afterwards, so a second call is a 404.",
         "tags": [
           "Spending"
         ],
         "x-cli": {
           "command": "save-tx",
+          "positional": "objectId",
           "flags": [],
           "extra": [],
           "custom": false,
@@ -7256,10 +7259,10 @@
             }
           },
           {
-            "name": "walletId",
+            "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "description": "An ephemeral object handle id.",
             "schema": {
               "type": "string"
             }

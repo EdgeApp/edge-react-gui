@@ -173,6 +173,44 @@ function requireTxHandle(
   return { objectId, transaction: record.value }
 }
 
+/**
+ * The wallet and transaction behind a `tx_` handle.
+ *
+ * A handle records the wallet it was staged against, so the later steps do
+ * not ask for it again: `make-spend` names a wallet, and everything after it
+ * names the handle. The session check still runs, so one session cannot
+ * advance another's transaction.
+ */
+function stagedTx(
+  ctx: RouteContext,
+  objectId: string
+): {
+  objectId: string
+  wallet: EdgeCurrencyWallet
+  transaction: EdgeTransaction
+} {
+  const record = ctx.state.objects.get<EdgeTransaction>(objectId, 'transaction')
+  if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
+    throw engineError(
+      'OBJECT_SESSION_MISMATCH',
+      `objectId ${objectId} belongs to a different session`,
+      400
+    )
+  }
+  if (record.walletId == null) {
+    throw engineError(
+      'OBJECT_WALLET_MISMATCH',
+      `objectId ${objectId} is not bound to a wallet`,
+      400
+    )
+  }
+  return {
+    objectId,
+    wallet: findWallet(getAccount(ctx), record.walletId),
+    transaction: record.value
+  }
+}
+
 function txHandleResponse(
   ctx: RouteContext,
   objectId: string,
@@ -428,8 +466,8 @@ export const makeSpend = route({
 export const signTx = route({
   core: 'wallet.signTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/sign-tx/{walletId}',
-  cli: 'sign-tx',
+  path: '/account/{sessionId}/sign-tx',
+  cli: { command: 'sign-tx', positional: 'objectId' },
   body: asObject({
     objectId: doc(asString, 'From `make-spend`.')
   }).withRest,
@@ -437,13 +475,11 @@ export const signTx = route({
   errors: ['BAD_REQUEST', ...HANDLE_ERRORS],
 
   async handler(ctx) {
-    const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-    const { objectId, transaction: unsigned } = requireTxHandle(
-      ctx,
-      body,
-      ctx.params.walletId
-    )
+    const {
+      objectId,
+      wallet,
+      transaction: unsigned
+    } = stagedTx(ctx, ctx.body.objectId)
     const transaction = await wallet.signTx(unsigned)
     return txHandleResponse(ctx, objectId, transaction)
   }
@@ -460,8 +496,8 @@ export const signTx = route({
 export const broadcastTx = route({
   core: 'wallet.broadcastTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/broadcast-tx/{walletId}',
-  cli: 'broadcast-tx',
+  path: '/account/{sessionId}/broadcast-tx',
+  cli: { command: 'broadcast-tx', positional: 'objectId' },
   body: asObject({
     objectId: doc(asString, 'From `sign-tx`.')
   }).withRest,
@@ -472,13 +508,11 @@ export const broadcastTx = route({
   errors: ['BAD_REQUEST', 'NETWORK_ERROR', ...HANDLE_ERRORS],
 
   async handler(ctx) {
-    const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-    const { objectId, transaction: signed } = requireTxHandle(
-      ctx,
-      body,
-      ctx.params.walletId
-    )
+    const {
+      objectId,
+      wallet,
+      transaction: signed
+    } = stagedTx(ctx, ctx.body.objectId)
     const transaction = await wallet.broadcastTx(signed)
     return txHandleResponse(ctx, objectId, transaction)
   }
@@ -492,8 +526,8 @@ export const broadcastTx = route({
 export const saveTx = route({
   core: 'wallet.saveTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/save-tx/{walletId}',
-  cli: 'save-tx',
+  path: '/account/{sessionId}/save-tx',
+  cli: { command: 'save-tx', positional: 'objectId' },
   body: asObject({
     objectId: doc(asString, 'The handle to persist and release.')
   }).withRest,
@@ -501,13 +535,7 @@ export const saveTx = route({
   errors: ['BAD_REQUEST', ...HANDLE_ERRORS],
 
   async handler(ctx) {
-    const body = ctx.body as SpendBody
-    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-    const { objectId, transaction } = requireTxHandle(
-      ctx,
-      body,
-      ctx.params.walletId
-    )
+    const { objectId, wallet, transaction } = stagedTx(ctx, ctx.body.objectId)
     await saveTxAndMetadata(wallet, transaction)
     await ctx.state.objects.delete(objectId)
     return { ok: true, objectId }

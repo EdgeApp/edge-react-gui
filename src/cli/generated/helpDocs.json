@@ -451,13 +451,13 @@
     "broadcast-tx": {
       "summary": "Broadcast a signed transaction.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/broadcast-tx/{walletId}",
-      "usage": "broadcast-tx <walletId> --object-id=<value>",
+      "path": "/account/{sessionId}/broadcast-tx/{objectId}",
+      "usage": "broadcast-tx <objectId>",
       "description": "The irreversible step: once this returns, the funds have left the wallet.",
       "core": "wallet.broadcastTx",
       "params": {
         "objectId": {
-          "pass": "--object-id=<value>",
+          "pass": "<objectId>",
           "doc": "From `sign-tx`.",
           "optional": false
         }
@@ -2389,13 +2389,13 @@
     "save-tx": {
       "summary": "Record a transaction and release its handle.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/save-tx/{walletId}",
-      "usage": "save-tx <walletId> --object-id=<value>",
+      "path": "/account/{sessionId}/save-tx/{objectId}",
+      "usage": "save-tx <objectId>",
       "description": "Final step. The handle is gone afterwards, so a second call is a 404.",
       "core": "wallet.saveTx",
       "params": {
         "objectId": {
-          "pass": "--object-id=<value>",
+          "pass": "<objectId>",
           "doc": "The handle to persist and release.",
           "optional": false
         }
@@ -2562,13 +2562,13 @@
     "sign-tx": {
       "summary": "Sign a staged transaction.",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/sign-tx/{walletId}",
-      "usage": "sign-tx <walletId> --object-id=<value>",
+      "path": "/account/{sessionId}/sign-tx/{objectId}",
+      "usage": "sign-tx <objectId>",
       "description": "Keeps the same handle and pushes its expiry out another five minutes.",
       "core": "wallet.signTx",
       "params": {
         "objectId": {
-          "pass": "--object-id=<value>",
+          "pass": "<objectId>",
           "doc": "From `make-spend`.",
           "optional": false
         }

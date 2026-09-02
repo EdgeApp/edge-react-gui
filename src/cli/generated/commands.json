@@ -311,20 +311,12 @@
     {
       "command": "broadcast-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/broadcast-tx/{walletId}",
-      "usage": "broadcast-tx <walletId> --object-id=<objectId>",
+      "path": "/account/{sessionId}/broadcast-tx/{objectId}",
+      "usage": "broadcast-tx <objectId>",
       "help": "Broadcast a signed transaction.",
       "needsSession": true,
-      "pathPositional": "walletId",
-      "args": [
-        {
-          "flag": "object-id",
-          "field": "objectId",
-          "target": "body",
-          "kind": "string",
-          "required": true
-        }
-      ]
+      "pathPositional": "objectId",
+      "args": []
     },
     {
       "command": "cancel-otp-reset",
@@ -1401,20 +1393,12 @@
     {
       "command": "save-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/save-tx/{walletId}",
-      "usage": "save-tx <walletId> --object-id=<objectId>",
+      "path": "/account/{sessionId}/save-tx/{objectId}",
+      "usage": "save-tx <objectId>",
       "help": "Record a transaction and release its handle.",
       "needsSession": true,
-      "pathPositional": "walletId",
-      "args": [
-        {
-          "flag": "object-id",
-          "field": "objectId",
-          "target": "body",
-          "kind": "string",
-          "required": true
-        }
-      ]
+      "pathPositional": "objectId",
+      "args": []
     },
     {
       "command": "save-tx-action",
@@ -1565,20 +1549,12 @@
     {
       "command": "sign-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallet/sign-tx/{walletId}",
-      "usage": "sign-tx <walletId> --object-id=<objectId>",
+      "path": "/account/{sessionId}/sign-tx/{objectId}",
+      "usage": "sign-tx <objectId>",
       "help": "Sign a staged transaction.",
       "needsSession": true,
-      "pathPositional": "walletId",
-      "args": [
-        {
-          "flag": "object-id",
-          "field": "objectId",
-          "target": "body",
-          "kind": "string",
-          "required": true
-        }
-      ]
+      "pathPositional": "objectId",
+      "args": []
     },
     {
       "command": "spend",
