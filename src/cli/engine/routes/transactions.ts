@@ -1,3 +1,4 @@
+import { asNumber, asObject, asOptional, asString } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeAssetAction,
@@ -29,15 +30,16 @@ import {
   parseExportFormats,
   type TxExportFormat
 } from '../../../util/txExport'
+import { doc } from '../doc'
 import { engineError } from '../errors'
 import { findWallet, parseTokenId } from '../resolve'
-import { requireBodyObject, type Router } from '../router'
+import { route } from '../route'
+import { asCoreValue, asTokenId } from '../schemas'
 import {
   getAccount,
   optionalQueryDate,
   optionalQueryInt,
-  optionalQueryString,
-  requireString
+  optionalQueryString
 } from './helpers'
 
 /**
@@ -53,244 +55,340 @@ function overlayDisplayMetadata(
   return fillTxMetadataForDisplay(tx, mergedData)
 }
 
-export function registerTransactionRoutes(router: Router): void {
-  /** wallet.getTransactions(opts), plus engine paging, fiat fill and export. */
-  router.add(
-    'GET',
-    '/account/{sessionId}/wallets/{walletId}/get-transactions',
-    async ctx => {
-      const account = getAccount(ctx)
-      const wallet = findWallet(account, ctx.params.walletId)
-      const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-      const startDate = optionalQueryDate(ctx.query, 'startDate')
-      const endDate = optionalQueryDate(ctx.query, 'endDate')
-      const searchString = optionalQueryString(ctx.query, 'searchString')
-      const spamThreshold = await resolveListSpamThreshold({
-        account,
-        wallet,
-        tokenId,
-        queryOverride: ctx.query.has('spamThreshold')
-          ? ctx.query.get('spamThreshold') ?? ''
-          : undefined
-      })
-      const limit = optionalQueryInt(ctx.query, 'limit')
-      const offset = optionalQueryInt(ctx.query, 'offset') ?? 0
+const TOKEN_ID_DOC = 'Defaults to the native asset.'
 
-      const fiatRaw = optionalQueryString(ctx.query, 'fiat')
-      let isoFiat: string
-      if (fiatRaw != null && fiatRaw !== '') {
-        const parsed = toIsoFiatCode(fiatRaw)
-        if (parsed == null) {
+/**
+ * List or export a wallet's transactions.
+ *
+ * Reads history, overlays the display metadata the GUI shows, fills historical
+ * fiat, and optionally formats the result — all on this one call.
+ *
+ * @note The metadata overlay and the fiat fill are response-only. Neither
+ *   writes to disk.
+ * @note `limit` and `offset` apply before the fiat fill, so a large page costs
+ *   proportionally more rates-server work.
+ * @note This is the one GET that can write: passing `bitwaveAccountId`
+ *   persists it to `exportTxInfo.json` on the wallet disklet.
+ * @returns Without `exportFormat`, the transactions themselves. With it, the
+ *   formatted files instead — the two shapes are mutually exclusive.
+ */
+export const getTransactions = route({
+  core: 'wallet.getTransactions',
+  method: 'GET',
+  path: '/account/{sessionId}/wallets/{walletId}/get-transactions',
+  cli: {
+    command: 'get-transactions',
+    flags: { bitwaveAccount: { maps: 'bitwaveAccountId' } },
+    extra: {
+      out: {
+        kind: 'string',
+        requiredWith: 'exportFormat',
+        doc: 'Where to write the returned files. One format: the path. Several: a stem, plus .csv / .qbo / .bitwave.csv.'
+      }
+    }
+  },
+  query: asObject({
+    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
+    limit: asOptional(
+      doc(asString, 'Omitting it returns every transaction from `offset` on.')
+    ),
+    offset: asOptional(doc(asString, 'Where to start. Defaults to 0.')),
+    startDate: asOptional(doc(asString, 'ISO-8601, or epoch milliseconds.')),
+    endDate: asOptional(doc(asString, 'ISO-8601, or epoch milliseconds.')),
+    searchString: asOptional(
+      doc(asString, 'Matches payee, category, notes and txid.')
+    ),
+    spamThreshold: asOptional(
+      doc(
+        asString,
+        'Native-amount floor. Omitted, the account spam-filter setting applies; passing it always overrides.'
+      )
+    ),
+    fiat: asOptional(
+      doc(
+        asString,
+        'Three-letter ISO 4217 code. Defaults to the account defaultIsoFiat.'
+      )
+    ),
+    exportFormat: asOptional(
+      doc(asString, 'Comma list of `csv`, `qbo`, `bitwave`.')
+    ),
+    bitwaveAccountId: asOptional(
+      doc(asString, 'A 400 unless `exportFormat` includes `bitwave`.')
+    )
+  }).withRest,
+  returns: doc(
+    asCoreValue,
+    '`{ transactions, total, isoFiat }`, or `{ ok, isoFiat, total, files }` when exportFormat is set.'
+  ),
+  errors: [
+    'BAD_REQUEST',
+    'MISSING_BITWAVE_ACCOUNT_ID',
+    'WALLET_NOT_FOUND',
+    'AMBIGUOUS_WALLET_ID'
+  ],
+
+  async handler(ctx) {
+    const account = getAccount(ctx)
+    const wallet = findWallet(account, ctx.params.walletId)
+    const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
+    const startDate = optionalQueryDate(ctx.query, 'startDate')
+    const endDate = optionalQueryDate(ctx.query, 'endDate')
+    const searchString = optionalQueryString(ctx.query, 'searchString')
+    const spamThreshold = await resolveListSpamThreshold({
+      account,
+      wallet,
+      tokenId,
+      queryOverride: ctx.query.has('spamThreshold')
+        ? ctx.query.get('spamThreshold') ?? ''
+        : undefined
+    })
+    const limit = optionalQueryInt(ctx.query, 'limit')
+    const offset = optionalQueryInt(ctx.query, 'offset') ?? 0
+
+    const fiatRaw = optionalQueryString(ctx.query, 'fiat')
+    let isoFiat: string
+    if (fiatRaw != null && fiatRaw !== '') {
+      const parsed = toIsoFiatCode(fiatRaw)
+      if (parsed == null) {
+        throw engineError(
+          'BAD_REQUEST',
+          'Query "fiat" must be a 3-letter currency code (e.g. USD)',
+          400
+        )
+      }
+      isoFiat = parsed
+    } else {
+      isoFiat = await readDefaultIsoFiat(account)
+    }
+
+    const transactions = await wallet.getTransactions({
+      tokenId,
+      startDate,
+      endDate,
+      searchString,
+      spamThreshold
+    })
+
+    const sliced =
+      limit == null
+        ? transactions.slice(offset)
+        : transactions.slice(offset, offset + limit)
+
+    const overlayed = sliced.map(tx =>
+      overlayDisplayMetadata(tx, account, wallet)
+    )
+    await fillTxsFiat({
+      wallet,
+      tokenId,
+      isoFiat,
+      txs: overlayed
+    })
+
+    const exportRaw = optionalQueryString(ctx.query, 'exportFormat')
+    let formats: TxExportFormat[]
+    try {
+      formats = parseExportFormats(exportRaw)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw engineError('BAD_REQUEST', message, 400)
+    }
+
+    const bitwaveAccountIdQuery = optionalQueryString(
+      ctx.query,
+      'bitwaveAccountId'
+    )
+    if (bitwaveAccountIdQuery != null && !formats.includes('bitwave')) {
+      throw engineError(
+        'BAD_REQUEST',
+        'Query "bitwaveAccountId" requires exportFormat to include bitwave',
+        400
+      )
+    }
+
+    if (formats.length === 0) {
+      return {
+        transactions: overlayed,
+        total: transactions.length,
+        isoFiat
+      }
+    }
+
+    const denom = getExchangeDenom(wallet.currencyConfig, tokenId)
+    const currencyCode =
+      tokenId == null
+        ? wallet.currencyInfo.currencyCode
+        : wallet.currencyConfig.allTokens[tokenId]?.currencyCode ?? tokenId
+
+    let bitwaveAccountId: string | undefined
+    if (formats.includes('bitwave')) {
+      if (bitwaveAccountIdQuery != null && bitwaveAccountIdQuery !== '') {
+        bitwaveAccountId = bitwaveAccountIdQuery
+        await mergeExportTxInfo(wallet, tokenId, {
+          bitwaveAccountId,
+          isExportBitwave: true
+        })
+      } else {
+        let saved: string | undefined
+        try {
+          const map = await readExportTxInfoMap(wallet)
+          saved = map[exportTxInfoKey(wallet, tokenId)]?.bitwaveAccountId
+        } catch {
+          saved = undefined
+        }
+        if (saved == null || saved === '') {
           throw engineError(
-            'BAD_REQUEST',
-            'Query "fiat" must be a 3-letter currency code (e.g. USD)',
+            'MISSING_BITWAVE_ACCOUNT_ID',
+            'Bitwave export requires bitwaveAccountId (query or exportTxInfo.json)',
             400
           )
         }
-        isoFiat = parsed
+        bitwaveAccountId = saved
+      }
+    }
+
+    const files: Array<{ format: TxExportFormat; contents: string }> = []
+    for (const format of formats) {
+      if (format === 'csv') {
+        files.push({
+          format,
+          contents: exportTransactionsToCSVInner(
+            overlayed,
+            currencyCode,
+            isoFiat,
+            denom.multiplier,
+            denom.name
+          )
+        })
+      } else if (format === 'qbo') {
+        files.push({
+          format,
+          contents: exportTransactionsToQBO(
+            overlayed,
+            isoFiat,
+            denom.multiplier
+          )
+        })
       } else {
-        isoFiat = await readDefaultIsoFiat(account)
-      }
-
-      const transactions = await wallet.getTransactions({
-        tokenId,
-        startDate,
-        endDate,
-        searchString,
-        spamThreshold
-      })
-
-      const sliced =
-        limit == null
-          ? transactions.slice(offset)
-          : transactions.slice(offset, offset + limit)
-
-      const overlayed = sliced.map(tx =>
-        overlayDisplayMetadata(tx, account, wallet)
-      )
-      await fillTxsFiat({
-        wallet,
-        tokenId,
-        isoFiat,
-        txs: overlayed
-      })
-
-      const exportRaw = optionalQueryString(ctx.query, 'exportFormat')
-      let formats: TxExportFormat[]
-      try {
-        formats = parseExportFormats(exportRaw)
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : String(error)
-        throw engineError('BAD_REQUEST', message, 400)
-      }
-
-      const bitwaveAccountIdQuery = optionalQueryString(
-        ctx.query,
-        'bitwaveAccountId'
-      )
-      if (bitwaveAccountIdQuery != null && !formats.includes('bitwave')) {
-        throw engineError(
-          'BAD_REQUEST',
-          'Query "bitwaveAccountId" requires exportFormat to include bitwave',
-          400
-        )
-      }
-
-      if (formats.length === 0) {
-        return {
-          transactions: overlayed,
-          total: transactions.length,
-          isoFiat
-        }
-      }
-
-      const denom = getExchangeDenom(wallet.currencyConfig, tokenId)
-      const currencyCode =
-        tokenId == null
-          ? wallet.currencyInfo.currencyCode
-          : wallet.currencyConfig.allTokens[tokenId]?.currencyCode ?? tokenId
-
-      let bitwaveAccountId: string | undefined
-      if (formats.includes('bitwave')) {
-        if (bitwaveAccountIdQuery != null && bitwaveAccountIdQuery !== '') {
-          bitwaveAccountId = bitwaveAccountIdQuery
-          await mergeExportTxInfo(wallet, tokenId, {
-            bitwaveAccountId,
-            isExportBitwave: true
-          })
-        } else {
-          let saved: string | undefined
-          try {
-            const map = await readExportTxInfoMap(wallet)
-            saved = map[exportTxInfoKey(wallet, tokenId)]?.bitwaveAccountId
-          } catch {
-            saved = undefined
-          }
-          if (saved == null || saved === '') {
-            throw engineError(
-              'MISSING_BITWAVE_ACCOUNT_ID',
-              'Bitwave export requires bitwaveAccountId (query or exportTxInfo.json)',
-              400
-            )
-          }
-          bitwaveAccountId = saved
-        }
-      }
-
-      const files: Array<{ format: TxExportFormat; contents: string }> = []
-      for (const format of formats) {
-        if (format === 'csv') {
-          files.push({
-            format,
-            contents: exportTransactionsToCSVInner(
-              overlayed,
-              currencyCode,
-              isoFiat,
-              denom.multiplier,
-              denom.name
-            )
-          })
-        } else if (format === 'qbo') {
-          files.push({
-            format,
-            contents: exportTransactionsToQBO(
-              overlayed,
-              isoFiat,
-              denom.multiplier
-            )
-          })
-        } else {
-          files.push({
-            format,
-            contents: await exportTransactionsToBitwave(
-              bitwaveAccountId!,
-              overlayed,
-              currencyCode,
-              denom.multiplier
-            )
-          })
-        }
-      }
-
-      return {
-        ok: true,
-        isoFiat,
-        total: transactions.length,
-        files
+        files.push({
+          format,
+          contents: await exportTransactionsToBitwave(
+            bitwaveAccountId!,
+            overlayed,
+            currencyCode,
+            denom.multiplier
+          )
+        })
       }
     }
-  )
 
-  /** wallet.getNumTransactions(opts) */
-  router.add(
-    'GET',
-    '/account/{sessionId}/wallets/{walletId}/get-num-transactions',
-    async ctx => {
-      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-      // Typed as returning a number, but plugins resolve a promise here, so
-      // awaiting is what actually yields a serializable value.
-      const numTransactions = await wallet.getNumTransactions({ tokenId })
-      return { numTransactions }
+    return {
+      ok: true,
+      isoFiat,
+      total: transactions.length,
+      files
     }
-  )
+  }
+})
 
-  /** wallet.saveTxMetadata(opts) */
-  router.add(
-    'POST',
-    '/account/{sessionId}/wallets/{walletId}/save-tx-metadata',
-    async ctx => {
-      const body = requireBodyObject(ctx.body)
-      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const txid = requireString(body, 'txid')
-      const tokenId = parseTokenId(
-        typeof body.tokenId === 'string' ? body.tokenId : undefined
-      )
-      if (body.metadata == null || typeof body.metadata !== 'object') {
-        throw engineError(
-          'BAD_REQUEST',
-          'Missing required field "metadata"',
-          400
-        )
-      }
-      await wallet.saveTxMetadata({
-        txid,
-        tokenId,
-        metadata: body.metadata as EdgeMetadataChange
-      })
-      return undefined
-    }
-  )
+/**
+ * Count transactions in a wallet.
+ *
+ * Cheaper than listing when only the total matters.
+ *
+ * @note Unfiltered: `spamThreshold`, dates and `searchString` do not apply, so
+ *   this can exceed `total` from `get-transactions`.
+ */
+export const getNumTransactions = route({
+  core: 'wallet.getNumTransactions',
+  method: 'GET',
+  path: '/account/{sessionId}/wallets/{walletId}/get-num-transactions',
+  cli: 'get-num-transactions',
+  query: asObject({
+    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC))
+  }).withRest,
+  returns: asObject({
+    numTransactions: doc(asNumber, 'Every transaction the wallet knows of.')
+  }),
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
-  /** wallet.saveTxAction(opts) */
-  router.add(
-    'POST',
-    '/account/{sessionId}/wallets/{walletId}/save-tx-action',
-    async ctx => {
-      const body = requireBodyObject(ctx.body)
-      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const txid = requireString(body, 'txid')
-      const tokenId = parseTokenId(
-        typeof body.tokenId === 'string' ? body.tokenId : undefined
-      )
-      if (body.savedAction == null || typeof body.savedAction !== 'object') {
-        throw engineError(
-          'BAD_REQUEST',
-          'Missing required field "savedAction"',
-          400
-        )
-      }
-      const assetAction =
-        body.assetAction != null && typeof body.assetAction === 'object'
-          ? (body.assetAction as EdgeAssetAction)
-          : { assetActionType: 'transfer' as const }
-      await wallet.saveTxAction({
-        txid,
-        tokenId,
-        assetAction,
-        savedAction: body.savedAction as EdgeTxAction
-      })
-      return undefined
-    }
-  )
-}
+  async handler(ctx) {
+    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
+    // Typed as returning a number, but plugins resolve a promise here, so
+    // awaiting is what actually yields a serializable value.
+    const numTransactions = await wallet.getNumTransactions({ tokenId })
+    return { numTransactions }
+  }
+})
+
+/**
+ * Save transaction metadata.
+ *
+ * One of only two routes that write transaction metadata to disk.
+ *
+ * @note `metadata` is an `EdgeMetadataChange`, so an explicit null clears a
+ *   field while an omitted one is left alone.
+ */
+export const saveTxMetadata = route({
+  core: 'wallet.saveTxMetadata',
+  method: 'POST',
+  path: '/account/{sessionId}/wallets/{walletId}/save-tx-metadata',
+  cli: 'save-tx-metadata',
+  body: asObject({
+    txid: doc(asString, 'Which transaction to tag.'),
+    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
+    metadata: doc(
+      asCoreValue,
+      '`EdgeMetadataChange`: name, category, notes, exchangeAmount.'
+    )
+  }).withRest,
+  errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
+
+  async handler(ctx) {
+    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    await wallet.saveTxMetadata({
+      txid: ctx.body.txid,
+      tokenId: parseTokenId(ctx.body.tokenId ?? undefined),
+      metadata: ctx.body.metadata as EdgeMetadataChange
+    })
+    return undefined
+  }
+})
+
+/**
+ * Save a transaction action.
+ *
+ * Records what a transaction *was* — a swap, a stake — beyond its metadata.
+ *
+ * @note When `assetAction` is omitted it defaults to
+ *   `{ assetActionType: 'transfer' }`.
+ */
+export const saveTxAction = route({
+  core: 'wallet.saveTxAction',
+  method: 'POST',
+  path: '/account/{sessionId}/wallets/{walletId}/save-tx-action',
+  cli: 'save-tx-action',
+  body: asObject({
+    txid: doc(asString, 'Which transaction to annotate.'),
+    tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
+    savedAction: doc(asCoreValue, '`EdgeTxAction` describing what happened.'),
+    assetAction: asOptional(doc(asCoreValue, '`EdgeAssetAction`.'))
+  }).withRest,
+  errors: ['BAD_REQUEST', 'WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
+
+  async handler(ctx) {
+    const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+    const assetAction =
+      ctx.body.assetAction != null && typeof ctx.body.assetAction === 'object'
+        ? (ctx.body.assetAction as EdgeAssetAction)
+        : { assetActionType: 'transfer' as const }
+    await wallet.saveTxAction({
+      txid: ctx.body.txid,
+      tokenId: parseTokenId(ctx.body.tokenId ?? undefined),
+      assetAction,
+      savedAction: ctx.body.savedAction as EdgeTxAction
+    })
+    return undefined
+  }
+})

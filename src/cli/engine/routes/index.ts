@@ -1,40 +1,33 @@
 /**
  * Route registration.
  *
- * Converted modules declare their calls with `route(…)`, which records them in
- * a registry; importing the module is enough. Modules still using
- * `register*Routes(router)` are registered directly until they are converted.
+ * Every call is declared with `route(…)`, which records it in a registry, so
+ * importing the module is all the registration a route needs.
  */
-// Declaration-style modules: imported for their side effect.
-import './context'
-import './login'
-import './keys'
-import './dataStore'
-import './credentials'
 import './account'
+import './admin'
+import './context'
+import './credentials'
+import './dataStore'
+import './events'
+import './keys'
+import './lobby'
+import './localSettings'
+import './login'
 import './otp'
 import './rates'
-import './uri'
-import './tokens'
-import './lobby'
-import './vouchers'
-import './localSettings'
+import './spend'
 import './status'
+import './swap'
+import './tokens'
+import './transactions'
+import './uri'
+import './vouchers'
+import './wallets'
 
 import { allRoutes, registerRoute } from '../route'
 import type { Router } from '../router'
-import { registerAdminRoutes } from './admin'
-import { registerSpendRoutes } from './spend'
-import { registerSwapRoutes } from './swap'
-import { registerTransactionRoutes } from './transactions'
-import { registerWalletsRoutes } from './wallets'
 
 export function registerRoutes(router: Router): void {
   for (const spec of allRoutes()) registerRoute(router, spec)
-
-  registerWalletsRoutes(router)
-  registerTransactionRoutes(router)
-  registerSpendRoutes(router)
-  registerSwapRoutes(router)
-  registerAdminRoutes(router)
 }

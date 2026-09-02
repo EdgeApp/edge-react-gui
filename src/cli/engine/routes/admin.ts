@@ -1,44 +1,110 @@
+import { asArray, asObject, asOptional, asString } from 'cleaners'
+
+import { doc } from '../doc'
 import { base58 } from '../encoding'
 import { engineError } from '../errors'
 import { getInternalStuff, type LobbyRequest } from '../internal'
-import { requireBodyObject, type Router } from '../router'
-import {
-  optionalNumber,
-  optionalQueryString,
-  requireQueryString,
-  requireString
-} from './helpers'
+import { route } from '../route'
+import { asCoreValue, asOk } from '../schemas'
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === 'object' && !Array.isArray(value)
 }
 
-export function registerAdminRoutes(router: Router): void {
-  /** context.$internalStuff.authRequest(method, path, body) */
-  router.add('POST', '/admin/auth-request', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const method = requireString(body, 'method')
-    const path = requireString(body, 'path')
+const REPO_KEYS = {
+  syncKey: doc(asString, 'Base58 repo sync key.'),
+  dataKey: doc(asString, 'Base58 repo data key.')
+}
+
+/**
+ * Raw login-server request.
+ *
+ * Sends an arbitrary request with the context's credentials attached.
+ * Debugging only — this is core's private surface.
+ */
+export const adminAuthRequest = route({
+  core: 'context.$internalStuff.authRequest',
+  method: 'POST',
+  path: '/admin/auth-request',
+  cli: { command: 'admin-auth-request' },
+  body: asObject({
+    method: doc(asString, 'HTTP method, e.g. `GET`.'),
+    path: doc(asString, 'Login-server path, not an engine path.'),
+    body: asOptional(
+      doc(asCoreValue, 'Request body, when the method takes one.')
+    )
+  }).withRest,
+  returns: doc(asCoreValue, 'Whatever the login server returned.'),
+  errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
+
+  async handler(ctx) {
+    const body = ctx.body
+    const { method, path } = body
     const requestBody = isPlainObject(body.body) ? body.body : undefined
     const internal = getInternalStuff(ctx.state.core.context)
     return await internal.authRequest(method, path, requestBody)
-  })
+  }
+})
 
-  /** context.$internalStuff.hashUsername(username) */
-  router.add('GET', '/admin/hash-username', async ctx => {
-    const username = requireQueryString(ctx.query, 'username')
+/**
+ * Hash a username.
+ *
+ * Reproduces the login server's hashing, to derive a login id offline.
+ */
+export const adminHashUsername = route({
+  core: 'context.$internalStuff.hashUsername',
+  method: 'GET',
+  path: '/admin/hash-username',
+  cli: { command: 'admin-hash-username', positional: 'username' },
+  query: asObject({ username: doc(asString, 'The name to hash.') }).withRest,
+  returns: asObject({ loginId: doc(asString, 'Base58.') }),
+
+  async handler(ctx) {
+    const { username } = ctx.query.valid
     const internal = getInternalStuff(ctx.state.core.context)
     const hash = await internal.hashUsername(username)
     return { loginId: base58.stringify(hash) }
-  })
+  }
+})
 
-  /** context.$internalStuff.makeLobby(lobbyRequest, period) */
-  router.add('POST', '/admin/make-lobby', async ctx => {
-    const body = requireBodyObject(ctx.body)
+/**
+ * Create a lobby.
+ *
+ * A lobby polls the login server until closed, so the engine parks it under a
+ * `lobby_` handle and closes it on expiry rather than leaking the poll.
+ *
+ * @note Release it with `admin-lobby-handle-delete`, or the poll runs for the
+ *   full five minutes.
+ */
+export const adminMakeLobby = route({
+  core: 'context.$internalStuff.makeLobby',
+  method: 'POST',
+  path: '/admin/make-lobby',
+  cli: {
+    command: 'admin-make-lobby',
+    flags: { periodSeconds: { maps: 'period' } }
+  },
+  body: asObject({
+    lobbyRequest: asOptional(doc(asCoreValue, 'Defaults to `{}`.')),
+    period: asOptional(doc(asCoreValue, 'Poll interval in seconds.'))
+  }).withRest,
+  returns: asObject({
+    objectId: doc(asString, 'The parked handle.'),
+    expiresAt: asString,
+    lobbyId: asString,
+    replies: doc(
+      asArray(asCoreValue),
+      'Empty at creation; re-read to see replies.'
+    )
+  }),
+  errors: ['NETWORK_ERROR'],
+
+  async handler(ctx) {
+    const body = ctx.body
     const lobbyRequest = isPlainObject(body.lobbyRequest)
       ? (body.lobbyRequest as unknown as LobbyRequest)
       : {}
-    const period = optionalNumber(body, 'period')
+    const period = typeof body.period === 'number' ? body.period : undefined
     const internal = getInternalStuff(ctx.state.core.context)
     const lobby = await internal.makeLobby(lobbyRequest, period)
     // A lobby polls the login server until it is closed. Returning only its id
@@ -58,10 +124,25 @@ export function registerAdminRoutes(router: Router): void {
       lobbyId: lobby.lobbyId,
       replies: lobby.replies
     }
-  })
+  }
+})
 
-  /** Releases the parked lobby handle, closing its login-server poll. */
-  router.add('POST', '/admin/lobby-handle/{objectId}/delete', async ctx => {
+/**
+ * Close a parked lobby.
+ *
+ * @note Not under `/account/{sessionId}/objects/`, because admin lobbies
+ *   belong to no session.
+ * @coreNote Engine handle store for a lobby created via makeLobby.
+ */
+export const adminDeleteLobbyHandle = route({
+  core: null,
+  method: 'POST',
+  path: '/admin/lobby-handle/{objectId}/delete',
+  cli: { command: 'admin-lobby-handle-delete', positional: 'objectId' },
+  returns: asOk,
+  errors: ['OBJECT_NOT_FOUND'],
+
+  async handler(ctx) {
     const deleted = await ctx.state.objects.delete(ctx.params.objectId)
     if (!deleted) {
       throw engineError(
@@ -71,19 +152,49 @@ export function registerAdminRoutes(router: Router): void {
       )
     }
     return { ok: true }
-  })
+  }
+})
 
-  /** context.$internalStuff.fetchLobbyRequest(lobbyId) */
-  router.add('GET', '/admin/fetch-lobby-request', async ctx => {
-    const lobbyId = requireQueryString(ctx.query, 'lobbyId')
+/**
+ * Read a lobby's contents.
+ */
+export const adminFetchLobbyRequest = route({
+  core: 'context.$internalStuff.fetchLobbyRequest',
+  method: 'GET',
+  path: '/admin/fetch-lobby-request',
+  cli: { command: 'admin-fetch-lobby-request', positional: 'lobbyId' },
+  query: asObject({ lobbyId: doc(asString, 'Which lobby to read.') }).withRest,
+  returns: doc(asCoreValue, 'The raw lobby request.'),
+  errors: ['NETWORK_ERROR'],
+
+  async handler(ctx) {
+    const { lobbyId } = ctx.query.valid
     const internal = getInternalStuff(ctx.state.core.context)
     return await internal.fetchLobbyRequest(lobbyId)
-  })
+  }
+})
 
-  /** context.$internalStuff.sendLobbyReply(lobbyId, lobbyRequest, replyData) */
-  router.add('POST', '/admin/send-lobby-reply', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const lobbyId = requireString(body, 'lobbyId')
+/**
+ * Reply to a lobby.
+ */
+export const adminSendLobbyReply = route({
+  core: 'context.$internalStuff.sendLobbyReply',
+  method: 'POST',
+  path: '/admin/send-lobby-reply',
+  cli: { command: 'admin-send-lobby-reply', positional: 'lobbyId' },
+  body: asObject({
+    lobbyId: doc(asString, 'Which lobby to answer.'),
+    lobbyRequest: doc(
+      asCoreValue,
+      'Normally the object from `admin-fetch-lobby-request`.'
+    ),
+    replyData: asOptional(doc(asCoreValue, 'Payload for the requester.'))
+  }).withRest,
+  errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
+
+  async handler(ctx) {
+    const body = ctx.body
+    const { lobbyId } = body
     if (!isPlainObject(body.lobbyRequest)) {
       throw engineError(
         'BAD_REQUEST',
@@ -98,21 +209,49 @@ export function registerAdminRoutes(router: Router): void {
       body.replyData
     )
     return undefined
-  })
+  }
+})
 
-  /** context.$internalStuff.syncRepo(syncKey) */
-  router.add('POST', '/admin/sync-repo', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const syncKey = requireString(body, 'syncKey')
+/**
+ * Sync a repo.
+ */
+export const adminSyncRepo = route({
+  core: 'context.$internalStuff.syncRepo',
+  method: 'POST',
+  path: '/admin/sync-repo',
+  cli: { command: 'admin-sync-repo', positional: 'syncKey' },
+  body: asObject({ syncKey: doc(asString, 'Base58 repo sync key.') }).withRest,
+  returns: doc(asCoreValue, 'The changeset summary.'),
+  errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
+
+  async handler(ctx) {
+    const body = ctx.body
+    const { syncKey } = body
     const internal = getInternalStuff(ctx.state.core.context)
     return await internal.syncRepo(base58.parse(syncKey))
-  })
+  }
+})
 
-  /** context.$internalStuff.getRepoDisklet(syncKey, dataKey).list(path) */
-  router.add('GET', '/admin/repo-list', async ctx => {
-    const syncKey = requireQueryString(ctx.query, 'syncKey')
-    const dataKey = requireQueryString(ctx.query, 'dataKey')
-    const path = optionalQueryString(ctx.query, 'path') ?? ''
+/**
+ * List repo contents.
+ */
+export const adminRepoList = route({
+  core: 'context.$internalStuff.getRepoDisklet',
+  method: 'GET',
+  path: '/admin/repo-list',
+  cli: { command: 'admin-repo-list', positional: 'syncKey' },
+  query: asObject({
+    ...REPO_KEYS,
+    path: asOptional(doc(asString, 'Subdirectory. Defaults to the repo root.'))
+  }).withRest,
+  returns: asObject({
+    listing: doc(asCoreValue, 'Path to entry type: `file` or `folder`.')
+  }),
+  errors: ['BAD_REQUEST'],
+
+  async handler(ctx) {
+    const { syncKey, dataKey } = ctx.query.valid
+    const path = ctx.query.valid.path ?? ''
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       base58.parse(syncKey),
@@ -120,13 +259,26 @@ export function registerAdminRoutes(router: Router): void {
     )
     const listing = await disklet.list(path)
     return { listing }
-  })
+  }
+})
 
-  /** context.$internalStuff.getRepoDisklet(syncKey, dataKey).getText(path) */
-  router.add('GET', '/admin/repo-get', async ctx => {
-    const syncKey = requireQueryString(ctx.query, 'syncKey')
-    const dataKey = requireQueryString(ctx.query, 'dataKey')
-    const path = requireQueryString(ctx.query, 'path')
+/**
+ * Read a repo file.
+ */
+export const adminRepoGet = route({
+  core: 'context.$internalStuff.getRepoDisklet',
+  method: 'GET',
+  path: '/admin/repo-get',
+  cli: { command: 'admin-repo-get', positional: 'syncKey' },
+  query: asObject({
+    ...REPO_KEYS,
+    path: doc(asString, 'Path within the repo.')
+  }).withRest,
+  returns: asObject({ text: doc(asString, 'The file contents.') }),
+  errors: ['NOT_FOUND', 'BAD_REQUEST'],
+
+  async handler(ctx) {
+    const { syncKey, dataKey, path } = ctx.query.valid
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       base58.parse(syncKey),
@@ -134,15 +286,30 @@ export function registerAdminRoutes(router: Router): void {
     )
     const text = await disklet.getText(path)
     return { text }
-  })
+  }
+})
 
-  /** context.$internalStuff.getRepoDisklet(syncKey, dataKey).setText(path) */
-  router.add('POST', '/admin/repo-set', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const syncKey = requireString(body, 'syncKey')
-    const dataKey = requireString(body, 'dataKey')
-    const path = requireString(body, 'path')
-    const text = requireString(body, 'text')
+/**
+ * Write a repo file.
+ *
+ * Writes directly into a synced repo, bypassing every core-level invariant. A
+ * malformed write can break the account for real clients.
+ */
+export const adminRepoSet = route({
+  core: 'context.$internalStuff.getRepoDisklet',
+  method: 'POST',
+  path: '/admin/repo-set',
+  cli: { command: 'admin-repo-set', positional: 'syncKey' },
+  body: asObject({
+    ...REPO_KEYS,
+    path: doc(asString, 'Path within the repo.'),
+    text: doc(asString, 'The contents to write.')
+  }).withRest,
+  errors: ['BAD_REQUEST'],
+
+  async handler(ctx) {
+    const body = ctx.body
+    const { syncKey, dataKey, path, text } = body
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       base58.parse(syncKey),
@@ -150,14 +317,26 @@ export function registerAdminRoutes(router: Router): void {
     )
     await disklet.setText(path, text)
     return undefined
-  })
+  }
+})
 
-  /** context.$internalStuff.getRepoDisklet(syncKey, dataKey).delete(path) */
-  router.add('POST', '/admin/repo-delete', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const syncKey = requireString(body, 'syncKey')
-    const dataKey = requireString(body, 'dataKey')
-    const path = requireString(body, 'path')
+/**
+ * Delete a repo file.
+ *
+ * Destructive, and not undoable from this API.
+ */
+export const adminRepoDelete = route({
+  core: 'context.$internalStuff.getRepoDisklet',
+  method: 'POST',
+  path: '/admin/repo-delete',
+  cli: { command: 'admin-repo-delete', positional: 'syncKey' },
+  body: asObject({ ...REPO_KEYS, path: doc(asString, 'Path within the repo.') })
+    .withRest,
+  errors: ['BAD_REQUEST'],
+
+  async handler(ctx) {
+    const body = ctx.body
+    const { syncKey, dataKey, path } = body
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       base58.parse(syncKey),
@@ -165,5 +344,5 @@ export function registerAdminRoutes(router: Router): void {
     )
     await disklet.delete(path)
     return undefined
-  })
-}
+  }
+})

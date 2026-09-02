@@ -4,12 +4,15 @@
  * Quotes are ephemeral object handles (`swap_` prefix, 5 min TTL). Approve
  * consumes the handle; close/delete releases it early.
  */
+import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import type { EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
 
+import { doc } from '../doc'
 import { engineError } from '../errors'
 import { findWallet, parseTokenId } from '../resolve'
-import { requireBodyObject, type Router } from '../router'
-import { getAccount, optionalString, requireString } from './helpers'
+import { route } from '../route'
+import { asCoreValue, asOkObject, asSwapQuote, asTokenId } from '../schemas'
+import { getAccount } from './helpers'
 
 function summarizeQuote(
   objectId: string,
@@ -49,19 +52,64 @@ function summarizeQuote(
   }
 }
 
-export function registerSwapRoutes(router: Router): void {
-  /** account.fetchSwapQuotes(request, opts) */
-  router.add('POST', '/account/{sessionId}/fetch-swap-quotes', async ctx => {
-    const body = requireBodyObject(ctx.body)
+/**
+ * Fetch swap quotes.
+ *
+ * Polls every enabled swap plugin and parks each result under its own `swap_`
+ * handle with a 5 minute TTL.
+ *
+ * @note Every returned quote holds an open plugin object. Approving one
+ *   releases only that handle; close the rest, or let them expire.
+ * @note An empty `quotes` array with `quoteCount: 0` is a success, not an
+ *   error — no plugin could serve the pair.
+ */
+export const fetchSwapQuotes = route({
+  core: 'account.fetchSwapQuotes',
+  method: 'POST',
+  path: '/account/{sessionId}/fetch-swap-quotes',
+  cli: {
+    command: 'fetch-swap-quotes',
+    flags: { pluginId: { maps: 'preferPluginId' } }
+  },
+  body: asObject({
+    fromWalletId: doc(asString, 'Source wallet. Accepts a unique prefix.'),
+    toWalletId: doc(asString, 'Destination wallet.'),
+    nativeAmount: doc(asString, 'How much, in native units.'),
+    fromTokenId: asOptional(doc(asTokenId, 'Defaults to the native asset.')),
+    toTokenId: asOptional(doc(asTokenId, 'Defaults to the native asset.')),
+    quoteFor: asOptional(
+      doc(
+        asString,
+        '`from` spends this much of the source, `to` receives this much at the destination, `max` sends everything. Defaults to `from`.'
+      )
+    ),
+    preferPluginId: asOptional(doc(asString, 'Restrict to one exchange.'))
+  }).withRest,
+  returns: asObject({
+    quoteCount: doc(asNumber, 'How many plugins answered.'),
+    quotes: asArray(asSwapQuote)
+  }),
+  errors: [
+    'BAD_REQUEST',
+    'SWAP_BELOW_LIMIT',
+    'SWAP_ABOVE_LIMIT',
+    'SWAP_CURRENCY',
+    'SWAP_PERMISSION',
+    'SWAP_ADDRESS',
+    'SAME_CURRENCY',
+    'INSUFFICIENT_FUNDS',
+    'WALLET_NOT_FOUND',
+    'NETWORK_ERROR'
+  ],
+
+  async handler(ctx) {
     const account = getAccount(ctx)
-    const fromWalletId = requireString(body, 'fromWalletId')
-    const toWalletId = requireString(body, 'toWalletId')
-    const fromWallet = findWallet(account, fromWalletId)
-    const toWallet = findWallet(account, toWalletId)
-    const fromTokenId = parseTokenId(optionalString(body, 'fromTokenId'))
-    const toTokenId = parseTokenId(optionalString(body, 'toTokenId'))
-    const nativeAmount = requireString(body, 'nativeAmount')
-    const quoteForRaw = optionalString(body, 'quoteFor') ?? 'from'
+    const fromWallet = findWallet(account, ctx.body.fromWalletId)
+    const toWallet = findWallet(account, ctx.body.toWalletId)
+    const fromTokenId = parseTokenId(ctx.body.fromTokenId ?? undefined)
+    const toTokenId = parseTokenId(ctx.body.toTokenId ?? undefined)
+    const { nativeAmount } = ctx.body
+    const quoteForRaw = ctx.body.quoteFor ?? 'from'
     if (
       quoteForRaw !== 'from' &&
       quoteForRaw !== 'to' &&
@@ -74,7 +122,7 @@ export function registerSwapRoutes(router: Router): void {
       )
     }
     const quoteFor = quoteForRaw
-    const preferPluginId = optionalString(body, 'preferPluginId')
+    const { preferPluginId } = ctx.body
 
     const request: EdgeSwapRequest = {
       fromWallet,
@@ -111,81 +159,136 @@ export function registerSwapRoutes(router: Router): void {
       quoteCount: results.length,
       quotes: results
     }
-  })
+  }
+})
 
-  router.add(
-    'GET',
-    '/account/{sessionId}/swap-quotes/{objectId}',
-    async ctx => {
-      const record = ctx.state.objects.get<EdgeSwapQuote>(
-        ctx.params.objectId,
-        'swap'
-      )
-      if (
-        record.sessionId != null &&
-        record.sessionId !== ctx.params.sessionId
-      ) {
-        throw engineError(
-          'OBJECT_SESSION_MISMATCH',
-          'objectId belongs to a different session',
-          400
-        )
-      }
-      const info = ctx.state.objects.toInfo(record)
-      return summarizeQuote(info.objectId, info.expiresAt, record.value)
-    }
-  )
+/**
+ * Re-read a quote.
+ *
+ * @note Check `quoteExpirationDate` as well as `expiresAt`: the plugin's price
+ *   can go stale before the handle does.
+ * @coreNote Engine handle store; the quote is a live EdgeSwapQuote held
+ *   server-side.
+ */
+export const getSwapQuote = route({
+  core: null,
+  method: 'GET',
+  path: '/account/{sessionId}/swap-quotes/{objectId}',
+  cli: { command: 'swap-quote-get', positional: 'objectId' },
+  returns: asSwapQuote,
+  errors: [
+    'OBJECT_NOT_FOUND',
+    'OBJECT_EXPIRED',
+    'OBJECT_KIND_MISMATCH',
+    'OBJECT_SESSION_MISMATCH'
+  ],
 
-  router.add(
-    'POST',
-    '/account/{sessionId}/swap-quotes/{objectId}/approve',
-    async ctx => {
-      const record = ctx.state.objects.get<EdgeSwapQuote>(
-        ctx.params.objectId,
-        'swap'
+  async handler(ctx) {
+    const record = ctx.state.objects.get<EdgeSwapQuote>(
+      ctx.params.objectId,
+      'swap'
+    )
+    if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
+      throw engineError(
+        'OBJECT_SESSION_MISMATCH',
+        'objectId belongs to a different session',
+        400
       )
-      if (
-        record.sessionId != null &&
-        record.sessionId !== ctx.params.sessionId
-      ) {
-        throw engineError(
-          'OBJECT_SESSION_MISMATCH',
-          'objectId belongs to a different session',
-          400
-        )
-      }
-      const result = await record.value.approve()
-      await ctx.state.objects.delete(ctx.params.objectId)
-      return {
-        ok: true,
-        objectId: ctx.params.objectId,
-        orderId: result.orderId ?? null,
-        destinationAddress: result.destinationAddress ?? null,
-        transaction: result.transaction
-      }
     }
-  )
+    const info = ctx.state.objects.toInfo(record)
+    return summarizeQuote(info.objectId, info.expiresAt, record.value)
+  }
+})
 
-  router.add(
-    'POST',
-    '/account/{sessionId}/swap-quotes/{objectId}/close',
-    async ctx => {
-      const record = ctx.state.objects.get<EdgeSwapQuote>(
-        ctx.params.objectId,
-        'swap'
+/**
+ * Execute a quote.
+ *
+ * Moves funds. The handle is released afterwards whether or not the response
+ * is read, so record `orderId` from it.
+ *
+ * @note The plugin attaches its own savedAction and assetAction metadata; the
+ *   engine adds none.
+ */
+export const approveSwapQuote = route({
+  core: 'EdgeSwapQuote.approve',
+  method: 'POST',
+  path: '/account/{sessionId}/swap-quotes/{objectId}/approve',
+  cli: { command: 'approve-swap-quote', positional: 'objectId' },
+  returns: asObject({
+    ok: asCoreValue,
+    objectId: doc(asString, 'The handle that was consumed.'),
+    orderId: doc(
+      asCoreValue,
+      "The exchange's order reference, when it gives one."
+    ),
+    destinationAddress: asCoreValue,
+    transaction: doc(asCoreValue, 'The on-chain send to the exchange.')
+  }),
+  errors: [
+    'OBJECT_NOT_FOUND',
+    'OBJECT_EXPIRED',
+    'OBJECT_KIND_MISMATCH',
+    'OBJECT_SESSION_MISMATCH',
+    'INSUFFICIENT_FUNDS',
+    'NETWORK_ERROR'
+  ],
+
+  async handler(ctx) {
+    const record = ctx.state.objects.get<EdgeSwapQuote>(
+      ctx.params.objectId,
+      'swap'
+    )
+    if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
+      throw engineError(
+        'OBJECT_SESSION_MISMATCH',
+        'objectId belongs to a different session',
+        400
       )
-      if (
-        record.sessionId != null &&
-        record.sessionId !== ctx.params.sessionId
-      ) {
-        throw engineError(
-          'OBJECT_SESSION_MISMATCH',
-          'objectId belongs to a different session',
-          400
-        )
-      }
-      await ctx.state.objects.delete(ctx.params.objectId)
-      return { ok: true, objectId: ctx.params.objectId }
     }
-  )
-}
+    const result = await record.value.approve()
+    await ctx.state.objects.delete(ctx.params.objectId)
+    return {
+      ok: true,
+      objectId: ctx.params.objectId,
+      orderId: result.orderId ?? null,
+      destinationAddress: result.destinationAddress ?? null,
+      transaction: result.transaction
+    }
+  }
+})
+
+/**
+ * Discard a quote.
+ *
+ * Closes the plugin object without executing, freeing whatever the exchange
+ * was holding.
+ */
+export const closeSwapQuote = route({
+  core: 'EdgeSwapQuote.close',
+  method: 'POST',
+  path: '/account/{sessionId}/swap-quotes/{objectId}/close',
+  cli: { command: 'close-swap-quote', positional: 'objectId' },
+  returns: asOkObject,
+  errors: [
+    'OBJECT_NOT_FOUND',
+    'OBJECT_EXPIRED',
+    'OBJECT_KIND_MISMATCH',
+    'OBJECT_SESSION_MISMATCH'
+  ],
+
+  async handler(ctx) {
+    const record = ctx.state.objects.get<EdgeSwapQuote>(
+      ctx.params.objectId,
+      'swap'
+    )
+    if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
+      throw engineError(
+        'OBJECT_SESSION_MISMATCH',
+        'objectId belongs to a different session',
+        400
+      )
+    }
+    await ctx.state.objects.delete(ctx.params.objectId)
+    return { ok: true, objectId: ctx.params.objectId }
+  }
+})
