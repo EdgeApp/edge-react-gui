@@ -589,16 +589,23 @@
       "get": {
         "operationId": "usernameAvailable",
         "summary": "Check whether a username is free",
-        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available <username>\n```\n\n",
+        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available <username> [--challenge-id=<id>]\n```\n\n",
         "tags": [
           "Context"
         ],
         "x-cli": [
           {
             "command": "username-available",
-            "usage": "username-available <username>",
+            "usage": "username-available <username> [--challenge-id=<id>]",
+            "flags": [
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
+                "target": "query"
+              }
+            ],
             "example": "edge-cli -t username-available alice",
-            "notes": "No flag for `challengeId`; the client sends one only when `--solve-captcha` has just solved a challenge and is retrying."
+            "notes": "An explicit `--challenge-id` wins over one that `--solve-captcha` has just obtained."
           }
         ],
         "x-core-call": "context.usernameAvailable",
@@ -1119,14 +1126,14 @@
       "post": {
         "operationId": "loginPassword",
         "summary": "Log in with a password",
-        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password <username> --password=<pass> [--otp=<code>]\n```\n\n",
+        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password <username> --password=<pass> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]\n```\n\n",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
             "command": "login-with-password",
-            "usage": "login-with-password <username> --password=<pass> [--otp=<code>]",
+            "usage": "login-with-password <username> --password=<pass> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]",
             "flags": [
               {
                 "flag": "--password=<pass>",
@@ -1136,6 +1143,16 @@
               {
                 "flag": "--otp=<code>",
                 "maps": "otp",
+                "target": "body"
+              },
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              },
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
                 "target": "body"
               }
             ],
@@ -1212,18 +1229,33 @@
       "post": {
         "operationId": "loginPin",
         "summary": "Log in with a device PIN",
-        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin <usernameOrLoginId> --pin=<pin>\n```\n\nOnly works on a device that has already saved a PIN for that account.",
+        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin <usernameOrLoginId> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]\n```\n\nOnly works on a device that has already saved a PIN for that account.",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
             "command": "login-with-pin",
-            "usage": "login-with-pin <usernameOrLoginId> --pin=<pin>",
+            "usage": "login-with-pin <usernameOrLoginId> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]",
             "flags": [
               {
                 "flag": "--pin=<pin>",
                 "maps": "pin",
+                "target": "body"
+              },
+              {
+                "flag": "--otp=<code>",
+                "maps": "otp",
+                "target": "body"
+              },
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              },
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
                 "target": "body"
               }
             ],
@@ -1306,18 +1338,33 @@
       "post": {
         "operationId": "loginKey",
         "summary": "Log in with an account login key",
-        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key <usernameOrLoginId> --login-key=<key>\n```\n\n",
+        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key <usernameOrLoginId> --login-key=<key> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]\n```\n\n",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
             "command": "login-with-key",
-            "usage": "login-with-key <usernameOrLoginId> --login-key=<key>",
+            "usage": "login-with-key <usernameOrLoginId> --login-key=<key> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]",
             "flags": [
               {
                 "flag": "--login-key=<key>",
                 "maps": "loginKey",
+                "target": "body"
+              },
+              {
+                "flag": "--otp=<code>",
+                "maps": "otp",
+                "target": "body"
+              },
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              },
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
                 "target": "body"
               }
             ],
@@ -1398,14 +1445,14 @@
       "post": {
         "operationId": "loginRecovery",
         "summary": "Log in with recovery answers",
-        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]\n```\n\n",
+        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …] [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]\n```\n\n",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
             "command": "login-with-recovery",
-            "usage": "login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]",
+            "usage": "login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …] [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]",
             "flags": [
               {
                 "flag": "--recovery-key=<key>",
@@ -1417,6 +1464,21 @@
                 "maps": "answers[]",
                 "target": "body",
                 "doc": "Repeat once per question, in order."
+              },
+              {
+                "flag": "--otp=<code>",
+                "maps": "otp",
+                "target": "body"
+              },
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              },
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
+                "target": "body"
               }
             ],
             "example": "edge-cli -t login-with-recovery alice --recovery-key='…' --answer=blue --answer=paris"
@@ -1500,14 +1562,14 @@
       "post": {
         "operationId": "createAccount",
         "summary": "Create an account",
-        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account <username> --password=<pass> --pin=<pin>\n```\n\nEvery credential is optional — omitting all three creates a light account with no username.",
+        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account <username> --password=<pass> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]\n```\n\nEvery credential is optional — omitting all three creates a light account with no username.",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
             "command": "create-account",
-            "usage": "create-account <username> --password=<pass> --pin=<pin>",
+            "usage": "create-account <username> --password=<pass> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]",
             "flags": [
               {
                 "flag": "--password=<pass>",
@@ -1517,6 +1579,21 @@
               {
                 "flag": "--pin=<pin>",
                 "maps": "pin",
+                "target": "body"
+              },
+              {
+                "flag": "--otp=<code>",
+                "maps": "otp",
+                "target": "body"
+              },
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              },
+              {
+                "flag": "--challenge-id=<id>",
+                "maps": "challengeId",
                 "target": "body"
               }
             ],

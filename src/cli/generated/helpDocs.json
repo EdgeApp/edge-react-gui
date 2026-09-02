@@ -9,6 +9,7 @@
       "params": {
         "password": "The candidate."
       },
+      "returnsDoc": "`EdgePasswordRules` from core: passed, tooShort, noNumber, noLowerCase, noUpperCase, secondsToCrack.",
       "notes": [
         "Send it with `curl --get --data-urlencode` rather than putting it in a shell-visible URL."
       ]
@@ -17,13 +18,23 @@
       "summary": "List plugin ids usable for wallet creation.",
       "method": "GET",
       "path": "/currency-configs",
-      "description": "Currency and accountbased plugins only — swap plugins are excluded."
+      "description": "Currency and accountbased plugins only — swap plugins are excluded.",
+      "returns": {
+        "pluginIds": "string[]"
+      }
     },
     "engine-config": {
       "summary": "Configured context options.",
       "method": "GET",
       "path": "/engine/config",
       "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+      "returns": {
+        "appId": "string",
+        "testMode": "boolean",
+        "directory": "string",
+        "servers": "{ [keys: string]: string; }",
+        "plugins": "string[]"
+      },
       "notes": [
         "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
       ]
@@ -33,6 +44,20 @@
       "method": "GET",
       "path": "/engine/status",
       "description": "The readiness probe the client polls after auto-spawning the engine.",
+      "returns": {
+        "pid": "number",
+        "apiVersion": "string",
+        "uptimeSeconds": "number",
+        "sessionCount": "number",
+        "testMode": "boolean",
+        "idleShutdownAt": "string | null",
+        "tcpPort": "number | null",
+        "socketPath": "string",
+        "locale": "string",
+        "decimalSeparator": "string",
+        "groupingSeparator": "string"
+      },
+      "returnsDoc": "`idleShutdownAt` is null while a session or a subscription holds the engine open, and `tcpPort` is null unless started with `--tcp`.",
       "errors": [
         "ENGINE_SHUTTING_DOWN"
       ]
@@ -42,6 +67,9 @@
       "method": "POST",
       "path": "/engine/stop",
       "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+      "returns": {
+        "ok": "boolean"
+      },
       "notes": [
         "In-flight callers may see `503 ENGINE_SHUTTING_DOWN` once teardown starts."
       ]
@@ -52,6 +80,11 @@
       "path": "/fetch-challenge",
       "description": "Lets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
       "core": "context.fetchChallenge",
+      "returns": {
+        "challengeId": "string",
+        "challengeUri?": "string"
+      },
+      "returnsDoc": "`challengeUri` is absent when the server considers the challenge already satisfied.",
       "errors": [
         "NETWORK_ERROR"
       ]
@@ -61,6 +94,7 @@
       "method": "GET",
       "path": "/fetch-login-messages",
       "core": "context.fetchLoginMessages",
+      "returnsDoc": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers. Passed straight through.",
       "errors": [
         "NETWORK_ERROR"
       ]
@@ -74,6 +108,9 @@
         "recoveryKey": "From `change-recovery`, stored by the user out of band.",
         "username": "Whose questions to fetch."
       },
+      "returns": {
+        "questions": "string[]"
+      },
       "errors": [
         "USERNAME_ERROR",
         "NETWORK_ERROR"
@@ -86,7 +123,11 @@
       "core": "context.fixUsername",
       "params": {
         "username": "The name to normalize."
-      }
+      },
+      "returns": {
+        "username": "string"
+      },
+      "returnsDoc": "The normalized value under `username`; the input is not echoed."
     },
     "forget-account": {
       "summary": "Forget an account on this device.",
@@ -106,7 +147,11 @@
       "summary": "List local users on this device.",
       "method": "GET",
       "path": "/local-users",
-      "core": "context.localUsers"
+      "core": "context.localUsers",
+      "returns": {
+        "localUsers": "unknown[]"
+      },
+      "returnsDoc": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device."
     },
     "request-otp-reset": {
       "summary": "Request a 2FA reset.",
@@ -118,6 +163,10 @@
         "username": "Whose 2FA to reset.",
         "otpResetToken": "From `details.resetToken` on an `OTP_REQUIRED` error."
       },
+      "returns": {
+        "resetDate": "string"
+      },
+      "returnsDoc": "When the reset completes if nobody cancels it.",
       "errors": [
         "USERNAME_ERROR",
         "BAD_REQUEST",
@@ -132,6 +181,10 @@
       "params": {
         "username": "The name to check.",
         "challengeId": "Supply after solving a CAPTCHA to retry the same check."
+      },
+      "returns": {
+        "username": "string",
+        "available": "boolean"
       },
       "errors": [
         "USERNAME_ERROR",

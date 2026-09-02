@@ -626,10 +626,10 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>username-available &lt;username&gt;</code></pre>
-        
+        <pre class="usage"><code>username-available &lt;username&gt; [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t username-available alice</code></pre>
-        <div class="note"><p>No flag for <code>challengeId</code>; the client sends one only when <code>--solve-captcha</code> has just solved a challenge and is retrying.</p>
+        <div class="note"><p>An explicit <code>--challenge-id</code> wins over one that <code>--solve-captcha</code> has just obtained.</p>
 </div>
       </div></div>
       <div class="pane rest">
@@ -1023,8 +1023,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>login-with-password &lt;username&gt; --password=&lt;pass&gt; [--otp=&lt;code&gt;]</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--password=&lt;pass&gt;</code></td><td><code>password</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
+        <pre class="usage"><code>login-with-password &lt;username&gt; --password=&lt;pass&gt; [--otp=&lt;code&gt;] [--otp-key=&lt;key&gt;] [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--password=&lt;pass&gt;</code></td><td><code>password</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp-key=&lt;key&gt;</code></td><td><code>otpKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t login-with-password alice --password='s3cret'</code></pre>
         <div class="note"><p>With <code>--solve-captcha</code>, a <code>CHALLENGE_REQUIRED</code> response is solved headlessly (ALTCHA proof-of-work) and the login retried once.</p>
 </div>
@@ -1125,8 +1125,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>login-with-pin &lt;usernameOrLoginId&gt; --pin=&lt;pin&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--pin=&lt;pin&gt;</code></td><td><code>pin</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
+        <pre class="usage"><code>login-with-pin &lt;usernameOrLoginId&gt; --pin=&lt;pin&gt; [--otp=&lt;code&gt;] [--otp-key=&lt;key&gt;] [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--pin=&lt;pin&gt;</code></td><td><code>pin</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp-key=&lt;key&gt;</code></td><td><code>otpKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t login-with-pin alice --pin=1234</code></pre>
         
       </div></div>
@@ -1232,8 +1232,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>login-with-key &lt;usernameOrLoginId&gt; --login-key=&lt;key&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--login-key=&lt;key&gt;</code></td><td><code>loginKey</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
+        <pre class="usage"><code>login-with-key &lt;usernameOrLoginId&gt; --login-key=&lt;key&gt; [--otp=&lt;code&gt;] [--otp-key=&lt;key&gt;] [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--login-key=&lt;key&gt;</code></td><td><code>loginKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp-key=&lt;key&gt;</code></td><td><code>otpKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t login-with-key alice --login-key='…'</code></pre>
         
       </div></div>
@@ -1339,8 +1339,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>login-with-recovery &lt;username&gt; --recovery-key=&lt;key&gt; --answer=&lt;text&gt; [--answer=&lt;text&gt; …]</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--recovery-key=&lt;key&gt;</code></td><td><code>recoveryKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--answer=&lt;text&gt;</code></td><td><code>answers[]</code> <span class="dim">body</span></td><td class="doc">Repeat once per question, in order.</td></tr></tbody></table>
+        <pre class="usage"><code>login-with-recovery &lt;username&gt; --recovery-key=&lt;key&gt; --answer=&lt;text&gt; [--answer=&lt;text&gt; …] [--otp=&lt;code&gt;] [--otp-key=&lt;key&gt;] [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--recovery-key=&lt;key&gt;</code></td><td><code>recoveryKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--answer=&lt;text&gt;</code></td><td><code>answers[]</code> <span class="dim">body</span></td><td class="doc">Repeat once per question, in order.</td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp-key=&lt;key&gt;</code></td><td><code>otpKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t login-with-recovery alice --recovery-key='…' --answer=blue --answer=paris</code></pre>
         
       </div></div>
@@ -1449,8 +1449,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="panes">
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
-        <pre class="usage"><code>create-account &lt;username&gt; --password=&lt;pass&gt; --pin=&lt;pin&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--password=&lt;pass&gt;</code></td><td><code>password</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--pin=&lt;pin&gt;</code></td><td><code>pin</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
+        <pre class="usage"><code>create-account &lt;username&gt; --password=&lt;pass&gt; --pin=&lt;pin&gt; [--otp=&lt;code&gt;] [--otp-key=&lt;key&gt;] [--challenge-id=&lt;id&gt;]</code></pre>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--password=&lt;pass&gt;</code></td><td><code>password</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--pin=&lt;pin&gt;</code></td><td><code>pin</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp=&lt;code&gt;</code></td><td><code>otp</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--otp-key=&lt;key&gt;</code></td><td><code>otpKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--challenge-id=&lt;id&gt;</code></td><td><code>challengeId</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t create-account alice --password='s3cret' --pin=1234</code></pre>
         <div class="note"><p>The command requires all three; the endpoint does not. Creating a light account with no username or password is REST-only.</p>
 </div>

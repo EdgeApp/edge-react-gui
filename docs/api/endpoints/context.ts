@@ -73,10 +73,17 @@ export const contextGroup = group({
       cli: [
         {
           command: 'username-available',
-          usage: 'username-available <username>',
+          usage: 'username-available <username> [--challenge-id=<id>]',
+          flags: [
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'query'
+            }
+          ],
           example: 'edge-cli -t username-available alice',
           notes:
-            'No flag for `challengeId`; the client sends one only when `--solve-captcha` has just solved a challenge and is retrying.'
+            'An explicit `--challenge-id` wins over one that `--solve-captcha` has just obtained.'
         }
       ],
       query: [

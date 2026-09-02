@@ -9,6 +9,8 @@ interface CommandHelp {
   method: string
   path: string
   params?: Record<string, string>
+  returns?: Record<string, string>
+  returnsDoc?: string
   notes?: string[]
   errors?: string[]
 }
@@ -45,6 +47,8 @@ const helpCmd = command(
       ...(docs?.core != null ? { core: docs.core } : {}),
       ...(docs != null ? { rest: `${docs.method} ${docs.path}` } : {}),
       ...(docs?.params != null ? { params: docs.params } : {}),
+      ...(docs?.returns != null ? { returns: docs.returns } : {}),
+      ...(docs?.returnsDoc != null ? { returnsDoc: docs.returnsDoc } : {}),
       ...(docs?.notes != null ? { notes: docs.notes } : {}),
       ...(docs?.errors != null ? { errors: docs.errors } : {}),
       needsSession: target.needsSession === true

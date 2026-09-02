@@ -24,10 +24,16 @@ export const loginGroup = group({
         {
           command: 'login-with-password',
           usage:
-            'login-with-password <username> --password=<pass> [--otp=<code>]',
+            'login-with-password <username> --password=<pass> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
           flags: [
             { flag: '--password=<pass>', maps: 'password', target: 'body' },
-            { flag: '--otp=<code>', maps: 'otp', target: 'body' }
+            { flag: '--otp=<code>', maps: 'otp', target: 'body' },
+            { flag: '--otp-key=<key>', maps: 'otpKey', target: 'body' },
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'body'
+            }
           ],
           example: "edge-cli -t login-with-password alice --password='s3cret'",
           notes:
@@ -65,8 +71,18 @@ export const loginGroup = group({
       cli: [
         {
           command: 'login-with-pin',
-          usage: 'login-with-pin <usernameOrLoginId> --pin=<pin>',
-          flags: [{ flag: '--pin=<pin>', maps: 'pin', target: 'body' }],
+          usage:
+            'login-with-pin <usernameOrLoginId> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
+          flags: [
+            { flag: '--pin=<pin>', maps: 'pin', target: 'body' },
+            { flag: '--otp=<code>', maps: 'otp', target: 'body' },
+            { flag: '--otp-key=<key>', maps: 'otpKey', target: 'body' },
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'body'
+            }
+          ],
           example: 'edge-cli -t login-with-pin alice --pin=1234'
         }
       ],
@@ -100,9 +116,17 @@ export const loginGroup = group({
       cli: [
         {
           command: 'login-with-key',
-          usage: 'login-with-key <usernameOrLoginId> --login-key=<key>',
+          usage:
+            'login-with-key <usernameOrLoginId> --login-key=<key> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
           flags: [
-            { flag: '--login-key=<key>', maps: 'loginKey', target: 'body' }
+            { flag: '--login-key=<key>', maps: 'loginKey', target: 'body' },
+            { flag: '--otp=<code>', maps: 'otp', target: 'body' },
+            { flag: '--otp-key=<key>', maps: 'otpKey', target: 'body' },
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'body'
+            }
           ],
           example: "edge-cli -t login-with-key alice --login-key='…'"
         }
@@ -134,7 +158,7 @@ export const loginGroup = group({
         {
           command: 'login-with-recovery',
           usage:
-            'login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]',
+            'login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …] [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
           flags: [
             {
               flag: '--recovery-key=<key>',
@@ -146,6 +170,13 @@ export const loginGroup = group({
               maps: 'answers[]',
               target: 'body',
               doc: 'Repeat once per question, in order.'
+            },
+            { flag: '--otp=<code>', maps: 'otp', target: 'body' },
+            { flag: '--otp-key=<key>', maps: 'otpKey', target: 'body' },
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'body'
             }
           ],
           example:
@@ -182,10 +213,18 @@ export const loginGroup = group({
       cli: [
         {
           command: 'create-account',
-          usage: 'create-account <username> --password=<pass> --pin=<pin>',
+          usage:
+            'create-account <username> --password=<pass> --pin=<pin> [--otp=<code>] [--otp-key=<key>] [--challenge-id=<id>]',
           flags: [
             { flag: '--password=<pass>', maps: 'password', target: 'body' },
-            { flag: '--pin=<pin>', maps: 'pin', target: 'body' }
+            { flag: '--pin=<pin>', maps: 'pin', target: 'body' },
+            { flag: '--otp=<code>', maps: 'otp', target: 'body' },
+            { flag: '--otp-key=<key>', maps: 'otpKey', target: 'body' },
+            {
+              flag: '--challenge-id=<id>',
+              maps: 'challengeId',
+              target: 'body'
+            }
           ],
           example:
             "edge-cli -t create-account alice --password='s3cret' --pin=1234",

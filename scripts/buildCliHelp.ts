@@ -25,6 +25,10 @@ interface CommandHelp {
   method: string
   path: string
   params?: Record<string, string>
+  /** Response fields, resolved from the `returns` cleaner's type. */
+  returns?: Record<string, string>
+  /** Prose from the `@returns` tag. */
+  returnsDoc?: string
   notes?: string[]
   errors?: string[]
 }
@@ -52,6 +56,15 @@ for (const r of extractRoutes()) {
   if (r.description != null) entry.description = r.description
   if (r.core != null) entry.core = r.core
   if (Object.keys(r.params).length > 0) entry.params = r.params
+  if (r.returns != null && r.returns.length > 0) {
+    entry.returns = Object.fromEntries(
+      r.returns.map(f => [f.name + (f.optional ? '?' : ''), f.type])
+    )
+  } else if (r.returnsType != null && r.returnsType !== 'unknown') {
+    // A non-object response (a pass-through core value) has no fields.
+    entry.returns = { '': r.returnsType }
+  }
+  if (r.returnsDoc != null) entry.returnsDoc = r.returnsDoc
   if (r.notes.length > 0) entry.notes = r.notes
   if (r.errors.length > 0) entry.errors = r.errors
   commands[name] = entry

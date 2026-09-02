@@ -228,6 +228,31 @@ for (const e of endpoints) {
   }
 }
 
+// Every flag a command really accepts must appear somewhere in its docs, or
+// they quietly understate what the CLI can do. A command may be bound to more
+// than one route, so its flags are gathered across every binding.
+const documentedFlags = new Map<string, Set<string>>()
+for (const e of endpoints) {
+  for (const c of e.cli) {
+    const set = documentedFlags.get(c.command) ?? new Set<string>()
+    for (const fl of c.flags ?? []) set.add(flagName(fl.flag))
+    for (const m of c.usage.matchAll(/--([a-z0-9-]+)/g)) set.add(m[1])
+    documentedFlags.set(c.command, set)
+  }
+}
+for (const [command, real] of flagsByCommand) {
+  const documented = documentedFlags.get(command)
+  if (documented == null) continue
+  for (const name of real) {
+    if (!documented.has(name)) {
+      fail(
+        'undocumented flag',
+        `"${command}" accepts --${name}, absent from the docs`
+      )
+    }
+  }
+}
+
 // ---------------------------------------------------------------- errors
 const knownCodes = new Set(errorCodes.map(e => e.code))
 for (const e of endpoints) {
