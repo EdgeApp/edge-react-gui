@@ -14,7 +14,7 @@ export const transactionsGroup = group({
       description:
         'Reads history, fills in the same display metadata and historical fiat the GUI shows, and optionally formats the result as CSV, QBO, or Bitwave. All of that happens on this one GET.',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/get-transactions',
+      path: '/account/{sessionId}/wallets/{walletId}/get-transactions',
       source: 'src/cli/engine/routes/transactions.ts',
       cli: [
         {
@@ -149,9 +149,22 @@ export const transactionsGroup = group({
       summary: 'Count transactions',
       description: 'Cheaper than listing when you only need the total.',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/get-num-transactions',
+      path: '/account/{sessionId}/wallets/{walletId}/get-num-transactions',
       source: 'src/cli/engine/routes/transactions.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'get-num-transactions',
+          usage: 'get-num-transactions <walletId> [--token-id=<id>]',
+          flags: [
+            {
+              flag: '--token-id=<id>',
+              maps: 'tokenId',
+              target: 'query'
+            }
+          ],
+          example: 'edge-cli get-num-transactions abc123'
+        }
+      ],
       pathParams: [sessionId, walletId],
       query: [
         { name: 'tokenId', schema: s.string(), default: 'null (native)' }
@@ -173,9 +186,34 @@ export const transactionsGroup = group({
         'One of only two routes that write transaction metadata to disk.',
       coreCall: 'wallet.saveTxMetadata',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/save-tx-metadata',
+      path: '/account/{sessionId}/wallets/{walletId}/save-tx-metadata',
       source: 'src/cli/engine/routes/transactions.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'save-tx-metadata',
+          usage:
+            "save-tx-metadata <walletId> --txid=<txid> --metadata='<json>' [--token-id=<id>]",
+          flags: [
+            {
+              flag: '--txid=<txid>',
+              maps: 'txid',
+              target: 'body'
+            },
+            {
+              flag: "--metadata='<json>'",
+              maps: 'metadata',
+              target: 'body'
+            },
+            {
+              flag: '--token-id=<id>',
+              maps: 'tokenId',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli save-tx-metadata abc123 --txid=deadbeef --metadata=\'{"name":"Coffee"}\''
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f('txid', s.string()),
@@ -201,9 +239,39 @@ export const transactionsGroup = group({
       summary: 'Save a transaction action',
       coreCall: 'wallet.saveTxAction',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/save-tx-action',
+      path: '/account/{sessionId}/wallets/{walletId}/save-tx-action',
       source: 'src/cli/engine/routes/transactions.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'save-tx-action',
+          usage:
+            "save-tx-action <walletId> --txid=<txid> --saved-action='<json>' [--asset-action='<json>'] [--token-id=<id>]",
+          flags: [
+            {
+              flag: '--txid=<txid>',
+              maps: 'txid',
+              target: 'body'
+            },
+            {
+              flag: "--saved-action='<json>'",
+              maps: 'savedAction',
+              target: 'body'
+            },
+            {
+              flag: "--asset-action='<json>'",
+              maps: 'assetAction',
+              target: 'body'
+            },
+            {
+              flag: '--token-id=<id>',
+              maps: 'tokenId',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli save-tx-action abc123 --txid=deadbeef --saved-action=\'{"actionType":"swap"}\''
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f('txid', s.string()),

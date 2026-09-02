@@ -48,8 +48,10 @@ function actualRoutes(): Set<string> {
 function actualCommands(): Set<string> {
   const source = read(COMMANDS_DIR)
   const found = new Set<string>()
-  // `command('name', …)` and the `objectIdCmd('name', …)` wrapper in wallet.ts.
-  const re = /(?<![\w.])(?:command|objectIdCmd)\(\s*'([a-z0-9-]+)'/g
+  // `command('name', …)` plus the wrappers in wallet.ts that register several
+  // commands from one body.
+  const re =
+    /(?<![\w.])(?:command|objectIdCmd|walletActionCmd)\(\s*'([a-z0-9-]+)'/g
   let m: RegExpExecArray | null
   while ((m = re.exec(source)) != null) found.add(m[1])
   return found
@@ -75,10 +77,18 @@ function actualFlags(): Map<string, Set<string>> {
     return flags
   }
 
-  // `objectIdCmd(name, …)` in wallet.ts registers several commands from one
-  // body, so its flags belong to every name it is called with.
-  const helper = /function objectIdCmd\([\s\S]*?\n\}/.exec(source)
-  const helperFlags = helper != null ? flagsIn(helper[0]) : new Set<string>()
+  // Wrappers in wallet.ts register several commands from one body, so each
+  // wrapper's flags belong to every name it is called with.
+  const helpers: Array<[RegExp, RegExp]> = [
+    [
+      /function objectIdCmd\([\s\S]*?\n\}/,
+      /^objectIdCmd\(\s*\n?\s*'([a-z0-9-]+)'/gm
+    ],
+    [
+      /function walletActionCmd\([\s\S]*?\n\}/,
+      /^walletActionCmd\(\s*\n?\s*'([a-z0-9-]+)'/gm
+    ]
+  ]
 
   for (const block of source.split(/\n(?=(?:const \w+ = )?command\()/)) {
     const name = /^(?:const \w+ = )?command\(\s*\n?\s*'([a-z0-9-]+)'/.exec(
@@ -86,9 +96,12 @@ function actualFlags(): Map<string, Set<string>> {
     )
     if (name != null) out.set(name[1], flagsIn(block))
   }
-  const calls = /^objectIdCmd\(\s*\n?\s*'([a-z0-9-]+)'/gm
-  let m: RegExpExecArray | null
-  while ((m = calls.exec(source)) != null) out.set(m[1], helperFlags)
+  for (const [bodyRe, callRe] of helpers) {
+    const body = bodyRe.exec(source)
+    const flags = body != null ? flagsIn(body[0]) : new Set<string>()
+    let m: RegExpExecArray | null
+    while ((m = callRe.exec(source)) != null) out.set(m[1], flags)
+  }
 
   return out
 }

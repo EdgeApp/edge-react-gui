@@ -5,7 +5,7 @@ import { sessionId, walletId } from './common'
 export const walletsGroup = group({
   id: 'wallets',
   title: 'Wallets',
-  doc: 'Account-level wallet listing and creation, then per-wallet calls under `/accounts/{sessionId}/wallets/{walletId}/`. The `{walletId}` segment is scope — it is the receiver of the core call — and accepts a unique prefix, so these routes can also return `404 WALLET_NOT_FOUND` or `409 AMBIGUOUS_WALLET_ID`.',
+  doc: 'Account-level wallet listing and creation, then per-wallet calls under `/account/{sessionId}/wallets/{walletId}/`. The `{walletId}` segment is scope — it is the receiver of the core call — and accepts a unique prefix, so these routes can also return `404 WALLET_NOT_FOUND` or `409 AMBIGUOUS_WALLET_ID`.',
   endpoints: [
     endpoint({
       id: 'currencyWallets',
@@ -14,7 +14,7 @@ export const walletsGroup = group({
       coreNote:
         'Filtered by account.activeWalletIds / archivedWalletIds / hiddenWalletIds.',
       method: 'GET',
-      path: '/accounts/{sessionId}/currency-wallets',
+      path: '/account/{sessionId}/currency-wallets',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {
@@ -63,7 +63,7 @@ export const walletsGroup = group({
       summary: 'Create a currency wallet',
       coreCall: 'account.createCurrencyWallet',
       method: 'POST',
-      path: '/accounts/{sessionId}/create-currency-wallet',
+      path: '/account/{sessionId}/create-currency-wallet',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {
@@ -101,9 +101,23 @@ export const walletsGroup = group({
         'Partial success is normal: each entry reports its own outcome and one failure does not roll back the others.',
       coreCall: 'account.createCurrencyWallets',
       method: 'POST',
-      path: '/accounts/{sessionId}/create-currency-wallets',
+      path: '/account/{sessionId}/create-currency-wallets',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'create-currency-wallets',
+          usage: "create-currency-wallets --create-wallets='<json>'",
+          flags: [
+            {
+              flag: "--create-wallets='<json>'",
+              maps: 'createWallets',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli create-currency-wallets --create-wallets=\'[{"walletType":"wallet:bitcoin"}]\''
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([
         f(
@@ -147,7 +161,7 @@ export const walletsGroup = group({
       coreNote:
         'Engine composite of EdgeCurrencyWallet properties plus its EdgeCurrencyConfig token map.',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}',
+      path: '/account/{sessionId}/wallets/{walletId}',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {
@@ -182,7 +196,7 @@ export const walletsGroup = group({
       summary: 'Rename a wallet',
       coreCall: 'wallet.renameWallet',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/rename-wallet',
+      path: '/account/{sessionId}/wallets/{walletId}/rename-wallet',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {
@@ -203,9 +217,24 @@ export const walletsGroup = group({
       summary: 'Change a wallet’s fiat currency',
       coreCall: 'wallet.setFiatCurrencyCode',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
+      path: '/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'set-fiat-currency-code',
+          usage:
+            'set-fiat-currency-code <walletId> --fiat-currency-code=<code>',
+          flags: [
+            {
+              flag: '--fiat-currency-code=<code>',
+              maps: 'fiatCurrencyCode',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli set-fiat-currency-code abc123 --fiat-currency-code=iso:EUR'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([f('fiatCurrencyCode', s.string({ example: 'iso:EUR' }))]),
       success: { status: 204 },
@@ -217,9 +246,22 @@ export const walletsGroup = group({
       summary: 'Pause or resume a wallet engine',
       coreCall: 'wallet.changePaused',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/change-paused',
+      path: '/account/{sessionId}/wallets/{walletId}/change-paused',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'change-paused',
+          usage: 'change-paused <walletId> --paused=true|false',
+          flags: [
+            {
+              flag: '--paused=<bool>',
+              maps: 'paused',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli change-paused abc123 --paused=true'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([f('paused', s.boolean())]),
       success: { status: 204 },
@@ -231,16 +273,23 @@ export const walletsGroup = group({
       summary: 'Nudge a wallet to sync',
       coreCall: 'wallet.sync',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/sync',
+      path: '/account/{sessionId}/wallets/{walletId}/sync',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'wallet-sync',
+          usage: 'wallet-sync <walletId>',
+          example: 'edge-cli wallet-sync abc123',
+          notes: 'Named `wallet-sync` because `sync` is `account.sync`.'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([], { open: true }),
       bodyDoc: 'None.',
       success: { status: 204 },
       errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
       notes: [
-        'Distinct from `POST /accounts/{sessionId}/sync`, which is `account.sync`.'
+        'Distinct from `POST /account/{sessionId}/sync`, which is `account.sync`.'
       ]
     }),
 
@@ -251,9 +300,15 @@ export const walletsGroup = group({
         'Drops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.',
       coreCall: 'wallet.resyncBlockchain',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/resync-blockchain',
+      path: '/account/{sessionId}/wallets/{walletId}/resync-blockchain',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'resync-blockchain',
+          usage: 'resync-blockchain <walletId>',
+          example: 'edge-cli resync-blockchain abc123'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([], { open: true }),
       bodyDoc: 'None.',
@@ -271,9 +326,23 @@ export const walletsGroup = group({
         'Forked-chain support: derive a wallet of a different type from the same keys.',
       coreCall: 'wallet.split',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/split',
+      path: '/account/{sessionId}/wallets/{walletId}/split',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'split',
+          usage: "split <walletId> --split-wallets='<json>'",
+          flags: [
+            {
+              flag: "--split-wallets='<json>'",
+              maps: 'splitWallets',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli split abc123 --split-wallets=\'[{"walletType":"wallet:bitcoincash"}]\''
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f(
@@ -313,9 +382,15 @@ export const walletsGroup = group({
         'Plugin-defined debug output. Shape varies by plugin and can be very large.',
       coreCall: 'wallet.dumpData',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/dump-data',
+      path: '/account/{sessionId}/wallets/{walletId}/dump-data',
       source: 'src/cli/engine/routes/wallets.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'dump-data',
+          usage: 'dump-data <walletId>',
+          example: 'edge-cli dump-data abc123'
+        }
+      ],
       pathParams: [sessionId, walletId],
       success: { status: 200, schema: s.core('EdgeDataDump') },
       errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID']
@@ -329,7 +404,7 @@ export const walletsGroup = group({
       coreNote:
         'Rendered as an array, with currencyCode and displayAmount added from the wallet’s denominations.',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/balance-map',
+      path: '/account/{sessionId}/wallets/{walletId}/balance-map',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {
@@ -362,7 +437,7 @@ export const walletsGroup = group({
       summary: 'Receive addresses',
       coreCall: 'wallet.getAddresses',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/get-addresses',
+      path: '/account/{sessionId}/wallets/{walletId}/get-addresses',
       source: 'src/cli/engine/routes/wallets.ts',
       cli: [
         {

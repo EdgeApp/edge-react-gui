@@ -4,7 +4,7 @@ import { getAccount, requireQueryString, requireString } from './helpers'
 
 export function registerLobbyRoutes(router: Router): void {
   /** account.fetchLobby(lobbyId) */
-  router.add('GET', '/accounts/{sessionId}/fetch-lobby', async ctx => {
+  router.add('GET', '/account/{sessionId}/fetch-lobby', async ctx => {
     const lobbyId = requireQueryString(ctx.query, 'lobbyId')
     const account = getAccount(ctx)
     const lobby = await account.fetchLobby(lobbyId)
@@ -26,7 +26,7 @@ export function registerLobbyRoutes(router: Router): void {
   /** EdgeLoginRequest.approve(), reached via account.fetchLobby(lobbyId) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/approve-login-request',
+    '/account/{sessionId}/approve-login-request',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const lobbyId = requireString(body, 'lobbyId')

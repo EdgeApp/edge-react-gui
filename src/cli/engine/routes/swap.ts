@@ -51,7 +51,7 @@ function summarizeQuote(
 
 export function registerSwapRoutes(router: Router): void {
   /** account.fetchSwapQuotes(request, opts) */
-  router.add('POST', '/accounts/{sessionId}/fetch-swap-quotes', async ctx => {
+  router.add('POST', '/account/{sessionId}/fetch-swap-quotes', async ctx => {
     const body = requireBodyObject(ctx.body)
     const account = getAccount(ctx)
     const fromWalletId = requireString(body, 'fromWalletId')
@@ -115,7 +115,7 @@ export function registerSwapRoutes(router: Router): void {
 
   router.add(
     'GET',
-    '/accounts/{sessionId}/swap-quotes/{objectId}',
+    '/account/{sessionId}/swap-quotes/{objectId}',
     async ctx => {
       const record = ctx.state.objects.get<EdgeSwapQuote>(
         ctx.params.objectId,
@@ -138,7 +138,7 @@ export function registerSwapRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/accounts/{sessionId}/swap-quotes/{objectId}/approve',
+    '/account/{sessionId}/swap-quotes/{objectId}/approve',
     async ctx => {
       const record = ctx.state.objects.get<EdgeSwapQuote>(
         ctx.params.objectId,
@@ -168,7 +168,7 @@ export function registerSwapRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/accounts/{sessionId}/swap-quotes/{objectId}/close',
+    '/account/{sessionId}/swap-quotes/{objectId}/close',
     async ctx => {
       const record = ctx.state.objects.get<EdgeSwapQuote>(
         ctx.params.objectId,

@@ -64,7 +64,7 @@ command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(sessionId)}/get-login-key`
+        `/account/${encodeURIComponent(sessionId)}/get-login-key`
       )
     )
   }
@@ -79,9 +79,7 @@ command(
   },
   async ctx => {
     const sessionId = requireSession(ctx)
-    printJson(
-      await ctx.client.get(`/accounts/${encodeURIComponent(sessionId)}`)
-    )
+    printJson(await ctx.client.get(`/account/${encodeURIComponent(sessionId)}`))
   }
 )
 
@@ -149,24 +147,24 @@ const pinLoginCmd = command(
   }
 )
 
-const recovery2LoginCmd = command(
-  'login-with-recovery2',
+const recoveryLoginCmd = command(
+  'login-with-recovery',
   {
     usage:
-      'login-with-recovery2 <username> --recovery-key=<key> --answer=<text> [--answer=…]',
+      'login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=…]',
     help: 'Log in with recovery-question answers'
   },
   async (ctx, argv) => {
-    const args = parseCommandArgs(recovery2LoginCmd, argv, {
+    const args = parseCommandArgs(recoveryLoginCmd, argv, {
       positional: 'required',
       flags: { 'recovery-key': 'string', answer: 'repeat' }
     })
     const answers = args.strings('answer')
     if (answers.length === 0) {
-      throw new UsageError(recovery2LoginCmd, 'Missing --answer')
+      throw new UsageError(recoveryLoginCmd, 'Missing --answer')
     }
-    const session = await ctx.client.post<Session>('/login-with-recovery2', {
-      recovery2Key: args.requireString('recovery-key'),
+    const session = await ctx.client.post<Session>('/login-with-recovery', {
+      recoveryKey: args.requireString('recovery-key'),
       username: args.positional,
       answers
     })
@@ -184,7 +182,7 @@ command(
   },
   async (ctx: CliContext) => {
     const sessionId = requireSession(ctx)
-    await ctx.client.post(`/accounts/${encodeURIComponent(sessionId)}/logout`)
+    await ctx.client.post(`/account/${encodeURIComponent(sessionId)}/logout`)
     ctx.setSessionId(null)
     printJson({ ok: true })
   }
@@ -237,5 +235,58 @@ command(
   },
   async ctx => {
     printJson(await ctx.client.post('/fetch-challenge'))
+  }
+)
+
+const fixUsernameCmd = command(
+  'fix-username',
+  {
+    usage: 'fix-username <username>',
+    help: 'Normalize a username the way the login server does (context.fixUsername)'
+  },
+  async (ctx, argv) => {
+    const { positional: username } = parseCommandArgs(fixUsernameCmd, argv, {
+      positional: 'required'
+    })
+    printJson(
+      await ctx.client.get(
+        `/fix-username?username=${encodeURIComponent(username!)}`
+      )
+    )
+  }
+)
+
+const checkPasswordRulesCmd = command(
+  'check-password-rules',
+  {
+    usage: 'check-password-rules --password=<password>',
+    help: 'Score a candidate password (context.checkPasswordRules)'
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(checkPasswordRulesCmd, argv, {
+      positional: 'none',
+      flags: { password: 'string' }
+    })
+    const query = new URLSearchParams({
+      password: args.requireString('password')
+    })
+    printJson(await ctx.client.get(`/check-password-rules?${query.toString()}`))
+  }
+)
+
+const cancelRequestCmd = command(
+  'cancel-request',
+  {
+    usage: 'cancel-request <pendingId>',
+    help: 'Cancel a pending QR login (EdgePendingEdgeLogin.cancelRequest)'
+  },
+  async (ctx, argv) => {
+    const { positional: pendingId } = parseCommandArgs(cancelRequestCmd, argv, {
+      positional: 'required'
+    })
+    await ctx.client.post(
+      `/pending-edge-login/${encodeURIComponent(pendingId!)}/cancel-request`
+    )
+    printJson({ ok: true })
   }
 )

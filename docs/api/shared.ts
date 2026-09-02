@@ -11,7 +11,7 @@ export const LOGIN_METHODS = [
   'password',
   'pin',
   'key',
-  'recovery2',
+  'recovery',
   'edge',
   'create'
 ]
@@ -24,7 +24,7 @@ export const schemas: NamedSchema[] = [
     schema: s.object([
       f('sessionId', s.string({ example: 'sess_9xKq2…' })),
       optNul('username', s.string({ example: 'alice' })),
-      f('rootLoginId', s.string()),
+      f('rootLoginId', s.string({ example: 'Lq4mP7…' })),
       f('loginMethod', s.string({ enum: LOGIN_METHODS })),
       f('autoLogoutSeconds', s.int(3600), '`0` disables auto-logout.'),
       nul('expiresAt', s.date(), '`null` when `autoLogoutSeconds` is `0`.'),
@@ -37,8 +37,8 @@ export const schemas: NamedSchema[] = [
     doc: 'One currency wallet. `walletId` and `id` are the same value; `id` is kept for callers written against the core object.',
     source: 'src/cli/engine/routes/wallets.ts (summarizeWallet)',
     schema: s.object([
-      f('walletId', s.string()),
-      f('id', s.string(), 'Alias of `walletId`.'),
+      f('walletId', s.string({ example: 'FS8xJ2kQ…' })),
+      f('id', s.string({ example: 'FS8xJ2kQ…' }), 'Alias of `walletId`.'),
       f('type', s.string({ example: 'wallet:bitcoin' })),
       nul('name', s.string({ example: 'My BTC' })),
       f('pluginId', s.string({ example: 'bitcoin' })),
@@ -70,8 +70,8 @@ export const schemas: NamedSchema[] = [
         s.string({ enum: ['transaction', 'pendingLogin', 'swap', 'lobby'] })
       ),
       f('expiresAt', s.date()),
-      opt('sessionId', s.string()),
-      opt('walletId', s.string())
+      opt('sessionId', s.string({ example: 'sess_9xKq2…' })),
+      opt('walletId', s.string({ example: 'FS8xJ2kQ…' }))
     ])
   },
   {
@@ -83,8 +83,8 @@ export const schemas: NamedSchema[] = [
       f('objectId', s.string({ example: 'tx_3fK9…' })),
       f('kind', s.string({ enum: ['transaction'] })),
       f('expiresAt', s.date()),
-      opt('sessionId', s.string()),
-      opt('walletId', s.string()),
+      opt('sessionId', s.string({ example: 'sess_9xKq2…' })),
+      opt('walletId', s.string({ example: 'FS8xJ2kQ…' })),
       f('transaction', s.core('EdgeTransaction'))
     ])
   },
@@ -110,13 +110,16 @@ export const schemas: NamedSchema[] = [
       f('pluginId', s.string({ example: 'changenow' })),
       f('isEstimate', s.boolean()),
       nul('canBePartial', s.boolean()),
-      nul('maxFulfillmentSeconds', s.int()),
-      nul('minReceiveAmount', s.amount()),
+      nul('maxFulfillmentSeconds', s.int(1800)),
+      nul('minReceiveAmount', s.amount('1000')),
       f('fromNativeAmount', s.amount('90000')),
-      f('toNativeAmount', s.amount()),
+      f('toNativeAmount', s.amount('4218900')),
       f(
         'networkFee',
-        s.object([f('nativeAmount', s.amount()), f('tokenId', s.tokenId())])
+        s.object([
+          f('nativeAmount', s.amount('452')),
+          f('tokenId', s.tokenId())
+        ])
       ),
       nul('quoteExpirationDate', s.date(), 'When the *quote* goes stale.'),
       f(
@@ -124,7 +127,7 @@ export const schemas: NamedSchema[] = [
         s.object([
           f('pluginId', s.string()),
           f('displayName', s.string({ example: 'ChangeNOW' })),
-          f('supportEmail', s.string()),
+          f('supportEmail', s.string({ example: 'support@changenow.io' })),
           nul('isDex', s.boolean())
         ])
       ),
@@ -135,8 +138,8 @@ export const schemas: NamedSchema[] = [
           f('toTokenId', s.tokenId()),
           f('nativeAmount', s.amount()),
           f('quoteFor', s.string({ enum: ['from', 'to', 'max'] })),
-          f('fromWalletId', s.string()),
-          f('toWalletId', s.string())
+          f('fromWalletId', s.string({ example: 'FS8xJ2kQ…' })),
+          f('toWalletId', s.string({ example: 'Rd3nT9pL…' }))
         ])
       )
     ])
@@ -173,13 +176,18 @@ export const schemas: NamedSchema[] = [
   {
     name: 'OkObject',
     doc: 'An acknowledgement that also names the handle the call consumed.',
-    schema: s.object([f('ok', s.boolean()), f('objectId', s.string())])
+    schema: s.object([
+      f('ok', s.boolean()),
+      f('objectId', s.string({ example: 'tx_3fK9…' }))
+    ])
   },
   {
     name: 'EnabledTokens',
     doc: 'The wallet’s enabled token set after the change.',
     source: 'src/cli/engine/routes/tokens.ts',
-    schema: s.object([f('enabledTokenIds', s.array(s.string()))])
+    schema: s.object([
+      f('enabledTokenIds', s.array(s.string({ example: '0xa0b86991…' })))
+    ])
   },
   {
     name: 'ErrorEnvelope',
@@ -190,7 +198,10 @@ export const schemas: NamedSchema[] = [
         'error',
         s.object([
           f('code', s.string({ example: 'WALLET_NOT_FOUND' })),
-          f('message', s.string()),
+          f(
+            'message',
+            s.string({ example: 'No wallet found matching: abc123' })
+          ),
           f('status', s.int(404)),
           opt(
             'details',

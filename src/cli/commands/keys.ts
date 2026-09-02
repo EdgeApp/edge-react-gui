@@ -12,9 +12,7 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.get(
-        `/accounts/${encodeURIComponent(sessionId)}/all-keys`
-      )
+      await ctx.client.get(`/account/${encodeURIComponent(sessionId)}/all-keys`)
     )
   }
 )
@@ -40,7 +38,7 @@ const keyAddCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(sessionId)}/create-wallet`,
+        `/account/${encodeURIComponent(sessionId)}/create-wallet`,
         body
       )
     )
@@ -61,9 +59,85 @@ const keyGetCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
+        `/account/${encodeURIComponent(
           sessionId
         )}/get-raw-private-key?walletId=${encodeURIComponent(walletId!)}`
+      )
+    )
+  }
+)
+
+const getWalletInfoCmd = command(
+  'get-wallet-info',
+  {
+    usage: 'get-wallet-info <walletId>',
+    help: 'Read one wallet’s key info (account.getWalletInfo)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const { positional: id } = parseCommandArgs(getWalletInfoCmd, argv, {
+      positional: 'required'
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.get(
+        `/account/${encodeURIComponent(
+          sessionId
+        )}/get-wallet-info?id=${encodeURIComponent(id!)}`
+      )
+    )
+  }
+)
+
+const getRawPublicKeyCmd = command(
+  'get-raw-public-key',
+  {
+    usage: 'get-raw-public-key <walletId>',
+    help: 'Read raw public key material (account.getRawPublicKey)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const { positional: walletId } = parseCommandArgs(
+      getRawPublicKeyCmd,
+      argv,
+      {
+        positional: 'required'
+      }
+    )
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.get(
+        `/account/${encodeURIComponent(
+          sessionId
+        )}/get-raw-public-key?walletId=${encodeURIComponent(walletId!)}`
+      )
+    )
+  }
+)
+
+const splittableTypesCmd = command(
+  'list-splittable-wallet-types',
+  {
+    usage: 'list-splittable-wallet-types <walletId>',
+    help: 'List chains a wallet can split into (account.listSplittableWalletTypes)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const { positional: walletId } = parseCommandArgs(
+      splittableTypesCmd,
+      argv,
+      {
+        positional: 'required'
+      }
+    )
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.get(
+        `/account/${encodeURIComponent(
+          sessionId
+        )}/list-splittable-wallet-types?walletId=${encodeURIComponent(
+          walletId!
+        )}`
       )
     )
   }

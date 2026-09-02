@@ -16,7 +16,7 @@ export const accountGroup = group({
       coreNote:
         'Engine composite of the session record plus EdgeAccount properties (username, rootLoginId, loggedIn, …).',
       method: 'GET',
-      path: '/accounts/{sessionId}',
+      path: '/account/{sessionId}',
       source: 'src/cli/engine/routes/account.ts',
       cli: [
         {
@@ -52,7 +52,7 @@ export const accountGroup = group({
         ])
       },
       notes: [
-        'For the 2FA secret itself use `GET /accounts/{sessionId}/otp-key`; the flags here are derived.'
+        'For the 2FA secret itself use `GET /account/{sessionId}/otp-key`; the flags here are derived.'
       ]
     }),
 
@@ -61,7 +61,7 @@ export const accountGroup = group({
       summary: 'Log out',
       coreCall: 'account.logout',
       method: 'POST',
-      path: '/accounts/{sessionId}/logout',
+      path: '/account/{sessionId}/logout',
       source: 'src/cli/engine/routes/account.ts',
       cli: [
         {
@@ -83,7 +83,7 @@ export const accountGroup = group({
       coreCall: null,
       coreNote: 'Engine auto-logout timer; core has no idle concept.',
       method: 'POST',
-      path: '/accounts/{sessionId}/touch',
+      path: '/account/{sessionId}/touch',
       source: 'src/cli/engine/routes/account.ts',
       cli: [{ command: 'touch', usage: 'touch', example: 'edge-cli touch' }],
       pathParams: [sessionId],
@@ -103,7 +103,7 @@ export const accountGroup = group({
         'The key `POST /login-with-key` takes. **Grants full account access — treat it as a secret.**',
       coreCall: 'account.getLoginKey',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-login-key',
+      path: '/account/{sessionId}/get-login-key',
       source: 'src/cli/engine/routes/account.ts',
       cli: [
         {
@@ -124,9 +124,15 @@ export const accountGroup = group({
       summary: 'Force an account data sync',
       coreCall: 'account.sync',
       method: 'POST',
-      path: '/accounts/{sessionId}/sync',
+      path: '/account/{sessionId}/sync',
       source: 'src/cli/engine/routes/account.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'sync',
+          usage: 'sync',
+          example: 'edge-cli sync'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([], { open: true }),
       bodyDoc: 'None.',
@@ -141,9 +147,24 @@ export const accountGroup = group({
         '**Irreversible.** The account is removed from the login server; funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.',
       coreCall: 'account.deleteRemoteAccount',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-remote-account',
+      path: '/account/{sessionId}/delete-remote-account',
       source: 'src/cli/engine/routes/account.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'delete-remote-account',
+          usage: 'delete-remote-account --yes',
+          flags: [
+            {
+              flag: '--yes',
+              maps: '—',
+              target: 'client',
+              doc: 'Required confirmation. The endpoint has no guard, so the command supplies one.'
+            }
+          ],
+          example: 'edge-cli delete-remote-account --yes',
+          notes: 'Irreversible. Clears the stored session afterwards.'
+        }
+      ],
       pathParams: [sessionId],
       success: { status: 204 },
       errors: ['NETWORK_ERROR'],
@@ -154,14 +175,14 @@ export const accountGroup = group({
 
     endpoint({
       id: 'localSettings',
-      summary: 'Read device-local account settings',
+      summary: 'Local settings',
       description:
-        'Stored in `Settings.json` on `account.localDisklet`, so they are **not synced** — a phone and a CLI have separate copies unless they share an Edge data directory.',
+        'Device-local account settings, stored in `Settings.json` on `account.localDisklet`. They are **not synced** — a phone and a CLI have separate copies unless they share an Edge data directory. Every setting is listed below; there is one today.',
       coreCall: null,
       coreNote:
         'GUI code (src/util/localAccountSettings), reached through account.localDisklet.',
       method: 'GET',
-      path: '/accounts/{sessionId}/local-settings',
+      path: '/account/{sessionId}/local-settings',
       source: 'src/cli/engine/routes/localSettings.ts',
       cli: [
         {
@@ -178,7 +199,7 @@ export const accountGroup = group({
           f(
             'spamFilterOn',
             s.boolean(),
-            'Hide spam transactions. Defaults to `true`, matching the GUI.'
+            'Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.'
           )
         ])
       }
@@ -186,11 +207,13 @@ export const accountGroup = group({
 
     endpoint({
       id: 'changeLocalSettings',
-      summary: 'Set the spam-filter toggle',
+      summary: 'Change local settings',
+      description:
+        'Writes device-local account settings. Every option is listed below; `spamFilterOn` is the only one today, and new options are added here as additional fields.',
       coreCall: null,
       coreNote: 'GUI code (src/util/localAccountSettings).',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-local-settings',
+      path: '/account/{sessionId}/change-local-settings',
       source: 'src/cli/engine/routes/localSettings.ts',
       cli: [
         {
@@ -208,8 +231,15 @@ export const accountGroup = group({
         }
       ],
       pathParams: [sessionId],
-      body: s.object([f('spamFilterOn', s.boolean())]),
-      bodyDoc: 'Required; omitting it is a `400`, not a no-op.',
+      body: s.object([
+        f(
+          'spamFilterOn',
+          s.boolean(),
+          'Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.'
+        )
+      ]),
+      bodyDoc:
+        'One field per setting. `spamFilterOn` is required; omitting it is a `400`, not a no-op, so a caller cannot accidentally clear a setting by sending an empty body.',
       success: {
         status: 200,
         schema: s.object([f('spamFilterOn', s.boolean())])

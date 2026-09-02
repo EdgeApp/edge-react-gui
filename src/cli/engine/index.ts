@@ -216,6 +216,8 @@ async function main(): Promise<void> {
     } catch {
       // ignore
     }
+    // Let subscribers learn why the stream ended before the socket closes.
+    events.closeAll('engineShutdown')
     logger.info('Engine shutdown complete')
     await logger.close()
     await new Promise<void>(resolve => {
@@ -243,6 +245,7 @@ async function main(): Promise<void> {
   const idle = new IdleShutdown({
     idleTimeoutSeconds: args.idleTimeoutSeconds,
     getSessionCount: () => sessions.size,
+    getSubscriberCount: () => events.clientCount,
     onFire: async () => {
       logger.warn('Idle timeout — shutting down')
       await shutdown()
@@ -250,6 +253,9 @@ async function main(): Promise<void> {
   })
   sessions.onSessionsChanged = () => {
     idle.notifySessionsChanged()
+  }
+  events.onClientsChanged = () => {
+    idle.notifySubscribersChanged()
   }
 
   const state: EngineState = {

@@ -14,7 +14,7 @@ export const swapGroup = group({
       description:
         'Polls every enabled swap plugin and parks each result as its own 5-minute handle.',
       method: 'POST',
-      path: '/accounts/{sessionId}/fetch-swap-quotes',
+      path: '/account/{sessionId}/fetch-swap-quotes',
       source: 'src/cli/engine/routes/swap.ts',
       cli: [
         {
@@ -102,7 +102,7 @@ export const swapGroup = group({
         'Engine handle store; the quote is a live EdgeSwapQuote held server-side.',
       summary: 'Re-read a quote',
       method: 'GET',
-      path: '/accounts/{sessionId}/swap-quotes/{objectId}',
+      path: '/account/{sessionId}/swap-quotes/{objectId}',
       source: 'src/cli/engine/routes/swap.ts',
       cli: [
         {
@@ -134,7 +134,7 @@ export const swapGroup = group({
       description:
         '**Moves funds.** Calls `quote.approve()`, then releases the handle.',
       method: 'POST',
-      path: '/accounts/{sessionId}/swap-quotes/{objectId}/approve',
+      path: '/account/{sessionId}/swap-quotes/{objectId}/approve',
       source: 'src/cli/engine/routes/swap.ts',
       cli: [
         {
@@ -185,7 +185,7 @@ export const swapGroup = group({
       description:
         'Closes the plugin object without executing, freeing whatever the exchange was holding.',
       method: 'POST',
-      path: '/accounts/{sessionId}/swap-quotes/{objectId}/close',
+      path: '/account/{sessionId}/swap-quotes/{objectId}/close',
       source: 'src/cli/engine/routes/swap.ts',
       cli: [
         {

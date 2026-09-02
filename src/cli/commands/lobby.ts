@@ -16,7 +16,7 @@ const lobbyLoginFetchCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
+        `/account/${encodeURIComponent(
           sessionId
         )}/fetch-lobby?lobbyId=${encodeURIComponent(lobbyId!)}`
       )
@@ -40,7 +40,7 @@ const lobbyLoginApproveCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(sessionId)}/approve-login-request`,
+        `/account/${encodeURIComponent(sessionId)}/approve-login-request`,
         { lobbyId }
       )
     )

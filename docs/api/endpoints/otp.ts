@@ -13,7 +13,7 @@ export const otpGroup = group({
       coreCall: 'account.otpKey',
       coreNote: 'Also carries account.otpResetDate.',
       method: 'GET',
-      path: '/accounts/{sessionId}/otp-key',
+      path: '/account/{sessionId}/otp-key',
       source: 'src/cli/engine/routes/otp.ts',
       cli: [
         { command: 'otp-key', usage: 'otp-key', example: 'edge-cli otp-key' }
@@ -37,7 +37,7 @@ export const otpGroup = group({
       summary: 'Enable 2FA',
       coreCall: 'account.enableOtp',
       method: 'POST',
-      path: '/accounts/{sessionId}/enable-otp',
+      path: '/account/{sessionId}/enable-otp',
       source: 'src/cli/engine/routes/otp.ts',
       cli: [
         {
@@ -68,7 +68,7 @@ export const otpGroup = group({
       summary: 'Disable 2FA',
       coreCall: 'account.disableOtp',
       method: 'POST',
-      path: '/accounts/{sessionId}/disable-otp',
+      path: '/account/{sessionId}/disable-otp',
       source: 'src/cli/engine/routes/otp.ts',
       cli: [
         {
@@ -88,7 +88,7 @@ export const otpGroup = group({
         'The defence against someone else requesting a reset on your account.',
       coreCall: 'account.cancelOtpReset',
       method: 'POST',
-      path: '/accounts/{sessionId}/cancel-otp-reset',
+      path: '/account/{sessionId}/cancel-otp-reset',
       source: 'src/cli/engine/routes/otp.ts',
       cli: [
         {
@@ -106,9 +106,22 @@ export const otpGroup = group({
       summary: 'Re-point the account at a known 2FA secret',
       coreCall: 'account.repairOtp',
       method: 'POST',
-      path: '/accounts/{sessionId}/repair-otp',
+      path: '/account/{sessionId}/repair-otp',
       source: 'src/cli/engine/routes/otp.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'repair-otp',
+          usage: 'repair-otp --otp-key=<otpKey>',
+          flags: [
+            {
+              flag: '--otp-key=<key>',
+              maps: 'otpKey',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli repair-otp --otp-key=NB2W…'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([f('otpKey', s.string({ example: 'NB2W…' }))]),
       success: { status: 204 },
@@ -127,9 +140,15 @@ export const vouchersGroup = group({
       summary: 'List pending vouchers',
       coreCall: 'account.pendingVouchers',
       method: 'GET',
-      path: '/accounts/{sessionId}/pending-vouchers',
+      path: '/account/{sessionId}/pending-vouchers',
       source: 'src/cli/engine/routes/vouchers.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'pending-vouchers',
+          usage: 'pending-vouchers',
+          example: 'edge-cli pending-vouchers'
+        }
+      ],
       pathParams: [sessionId],
       success: {
         status: 200,
@@ -153,9 +172,22 @@ export const vouchersGroup = group({
       description: 'Lets the waiting device finish logging in.',
       coreCall: 'account.approveVoucher',
       method: 'POST',
-      path: '/accounts/{sessionId}/approve-voucher',
+      path: '/account/{sessionId}/approve-voucher',
       source: 'src/cli/engine/routes/vouchers.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'approve-voucher',
+          usage: 'approve-voucher --voucher-id=<voucherId>',
+          flags: [
+            {
+              flag: '--voucher-id=<id>',
+              maps: 'voucherId',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli approve-voucher --voucher-id=abc'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([
         f(
@@ -173,9 +205,22 @@ export const vouchersGroup = group({
       summary: 'Reject a voucher',
       coreCall: 'account.rejectVoucher',
       method: 'POST',
-      path: '/accounts/{sessionId}/reject-voucher',
+      path: '/account/{sessionId}/reject-voucher',
       source: 'src/cli/engine/routes/vouchers.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'reject-voucher',
+          usage: 'reject-voucher --voucher-id=<voucherId>',
+          flags: [
+            {
+              flag: '--voucher-id=<id>',
+              maps: 'voucherId',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli reject-voucher --voucher-id=abc'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([f('voucherId', s.string())]),
       success: { status: 204 },
@@ -196,7 +241,7 @@ export const lobbyGroup = group({
         'Shows who is asking, so a human can decide before approving.',
       coreCall: 'account.fetchLobby',
       method: 'GET',
-      path: '/accounts/{sessionId}/fetch-lobby',
+      path: '/account/{sessionId}/fetch-lobby',
       source: 'src/cli/engine/routes/lobby.ts',
       cli: [
         {
@@ -240,7 +285,7 @@ export const lobbyGroup = group({
       coreCall: 'EdgeLoginRequest.approve',
       coreNote: 'Reached through account.fetchLobby(lobbyId).loginRequest.',
       method: 'POST',
-      path: '/accounts/{sessionId}/approve-login-request',
+      path: '/account/{sessionId}/approve-login-request',
       source: 'src/cli/engine/routes/lobby.ts',
       cli: [
         {

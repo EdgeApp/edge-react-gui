@@ -3,7 +3,7 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 function accountPath(sessionId: string, suffix: string): string {
-  return `/accounts/${encodeURIComponent(sessionId)}${suffix}`
+  return `/account/${encodeURIComponent(sessionId)}${suffix}`
 }
 
 const ratesQueryCmd = command(

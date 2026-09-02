@@ -70,6 +70,7 @@
     "publish:cli": "npm run build:cli && node -r sucrase/register scripts/publishCli.ts",
     "docs:api": "node -r sucrase/register scripts/buildApiDocs.ts",
     "docs:api:verify": "node -r sucrase/register scripts/verifyApiDocs.ts",
+    "test:cli:subscribe": "node -r sucrase/register scripts/testCliSubscribe.ts",
     "test:cli:interactive": "node -r sucrase/register scripts/testCliInteractive.ts",
     "test:cli:oneshot": "node -r sucrase/register scripts/testCli.ts",
     "test:cli:captcha": "node -r sucrase/register scripts/testCliCaptcha.ts",

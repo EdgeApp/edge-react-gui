@@ -12,7 +12,7 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.get(`/accounts/${encodeURIComponent(sessionId)}/otp-key`)
+      await ctx.client.get(`/account/${encodeURIComponent(sessionId)}/otp-key`)
     )
   }
 )
@@ -40,7 +40,7 @@ const otpEnableCmd = command(
     }
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(sessionId)}/enable-otp`,
+        `/account/${encodeURIComponent(sessionId)}/enable-otp`,
         { timeout }
       )
     )
@@ -57,7 +57,7 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     await ctx.client.post(
-      `/accounts/${encodeURIComponent(sessionId)}/disable-otp`
+      `/account/${encodeURIComponent(sessionId)}/disable-otp`
     )
     printJson({ ok: true })
   }
@@ -73,7 +73,7 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     await ctx.client.post(
-      `/accounts/${encodeURIComponent(sessionId)}/cancel-otp-reset`
+      `/account/${encodeURIComponent(sessionId)}/cancel-otp-reset`
     )
     printJson({ ok: true })
   }
@@ -96,5 +96,26 @@ const otpResetRequestCmd = command(
         otpResetToken: args.requireString('otp-reset-token')
       })
     )
+  }
+)
+
+const repairOtpCmd = command(
+  'repair-otp',
+  {
+    usage: 'repair-otp --otp-key=<otpKey>',
+    help: 'Re-point the account at a known 2FA secret (account.repairOtp)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(repairOtpCmd, argv, {
+      positional: 'none',
+      flags: { 'otp-key': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(
+      `/account/${encodeURIComponent(sessionId)}/repair-otp`,
+      { otpKey: args.requireString('otp-key') }
+    )
+    printJson({ ok: true })
   }
 )

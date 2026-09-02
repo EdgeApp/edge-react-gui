@@ -263,7 +263,7 @@ async function main(): Promise<void> {
     // The engine must settle the account before returning the session so
     // this create-account → login → create-wallet path is a first-try success.
     start = Date.now()
-    await unixRequest(sock, 'POST', `/accounts/${sessionId}/logout`)
+    await unixRequest(sock, 'POST', `/account/${sessionId}/logout`)
     let login = await unixRequest(sock, 'POST', '/login-with-password', {
       username: TEST_USER,
       password: TEST_PASS
@@ -301,7 +301,7 @@ async function main(): Promise<void> {
     const wallet = await unixRequest(
       sock,
       'POST',
-      `/accounts/${sid}/create-currency-wallet`,
+      `/account/${sid}/create-currency-wallet`,
       {
         walletType: 'wallet:bitcoin',
         name: 'Test BTC'
@@ -338,12 +338,12 @@ async function main(): Promise<void> {
 
     // Session touch
     start = Date.now()
-    const touch = await unixRequest(sock, 'POST', `/accounts/${sid}/touch`)
+    const touch = await unixRequest(sock, 'POST', `/account/${sid}/touch`)
     record('session touch', start, touch.status === 200)
 
     // Logout
     start = Date.now()
-    const logout = await unixRequest(sock, 'POST', `/accounts/${sid}/logout`)
+    const logout = await unixRequest(sock, 'POST', `/account/${sid}/logout`)
     record('logout', start, logout.status === 204 || logout.status === 200)
 
     // Edge login request returns lobbyId

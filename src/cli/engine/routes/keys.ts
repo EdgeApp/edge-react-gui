@@ -6,12 +6,12 @@ import { getAccount, requireQueryString, requireString } from './helpers'
 
 export function registerKeysRoutes(router: Router): void {
   /** account.allKeys */
-  router.add('GET', '/accounts/{sessionId}/all-keys', ctx => {
+  router.add('GET', '/account/{sessionId}/all-keys', ctx => {
     return { allKeys: getAccount(ctx).allKeys }
   })
 
   /** account.createWallet(type, keys) */
-  router.add('POST', '/accounts/{sessionId}/create-wallet', async ctx => {
+  router.add('POST', '/account/{sessionId}/create-wallet', async ctx => {
     const body = requireBodyObject(ctx.body)
     const type = requireString(body, 'type')
     const keys =
@@ -23,7 +23,7 @@ export function registerKeysRoutes(router: Router): void {
   })
 
   /** account.getWalletInfo(id) */
-  router.add('GET', '/accounts/{sessionId}/get-wallet-info', ctx => {
+  router.add('GET', '/account/{sessionId}/get-wallet-info', ctx => {
     const id = requireQueryString(ctx.query, 'id')
     const info = getAccount(ctx).getWalletInfo(id)
     if (info == null) {
@@ -37,13 +37,13 @@ export function registerKeysRoutes(router: Router): void {
   })
 
   /** account.getRawPrivateKey(walletId) */
-  router.add('GET', '/accounts/{sessionId}/get-raw-private-key', async ctx => {
+  router.add('GET', '/account/{sessionId}/get-raw-private-key', async ctx => {
     const walletId = requireQueryString(ctx.query, 'walletId')
     return await getAccount(ctx).getRawPrivateKey(walletId)
   })
 
   /** account.getRawPublicKey(walletId) */
-  router.add('GET', '/accounts/{sessionId}/get-raw-public-key', async ctx => {
+  router.add('GET', '/account/{sessionId}/get-raw-public-key', async ctx => {
     const walletId = requireQueryString(ctx.query, 'walletId')
     return await getAccount(ctx).getRawPublicKey(walletId)
   })
@@ -51,7 +51,7 @@ export function registerKeysRoutes(router: Router): void {
   /** account.getDisplayPrivateKey(privateWalletInfo) */
   router.add(
     'GET',
-    '/accounts/{sessionId}/get-display-private-key',
+    '/account/{sessionId}/get-display-private-key',
     async ctx => {
       const walletId = requireQueryString(ctx.query, 'walletId')
       const key = await getAccount(ctx).getDisplayPrivateKey(walletId)
@@ -62,7 +62,7 @@ export function registerKeysRoutes(router: Router): void {
   /** account.getDisplayPublicKey(publicWalletInfo) */
   router.add(
     'GET',
-    '/accounts/{sessionId}/get-display-public-key',
+    '/account/{sessionId}/get-display-public-key',
     async ctx => {
       const walletId = requireQueryString(ctx.query, 'walletId')
       const key = await getAccount(ctx).getDisplayPublicKey(walletId)
@@ -73,7 +73,7 @@ export function registerKeysRoutes(router: Router): void {
   /** account.listSplittableWalletTypes(walletId) */
   router.add(
     'GET',
-    '/accounts/{sessionId}/list-splittable-wallet-types',
+    '/account/{sessionId}/list-splittable-wallet-types',
     async ctx => {
       const walletId = requireQueryString(ctx.query, 'walletId')
       const walletTypes = await getAccount(ctx).listSplittableWalletTypes(
@@ -84,27 +84,23 @@ export function registerKeysRoutes(router: Router): void {
   )
 
   /** account.changeWalletStates(walletStates) */
-  router.add(
-    'POST',
-    '/accounts/{sessionId}/change-wallet-states',
-    async ctx => {
-      const body = requireBodyObject(ctx.body)
-      const walletStates = body.walletStates
-      if (
-        walletStates == null ||
-        typeof walletStates !== 'object' ||
-        Array.isArray(walletStates)
-      ) {
-        throw engineError(
-          'BAD_REQUEST',
-          'Missing required field "walletStates"',
-          400
-        )
-      }
-      await getAccount(ctx).changeWalletStates(
-        walletStates as unknown as EdgeWalletStates
+  router.add('POST', '/account/{sessionId}/change-wallet-states', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const walletStates = body.walletStates
+    if (
+      walletStates == null ||
+      typeof walletStates !== 'object' ||
+      Array.isArray(walletStates)
+    ) {
+      throw engineError(
+        'BAD_REQUEST',
+        'Missing required field "walletStates"',
+        400
       )
-      return undefined
     }
-  )
+    await getAccount(ctx).changeWalletStates(
+      walletStates as unknown as EdgeWalletStates
+    )
+    return undefined
+  })
 }

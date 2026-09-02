@@ -86,7 +86,7 @@ endpoint({
   summary: 'Balances for every asset in the wallet',
   description: 'Optional prose. Markdown.',
   method: 'GET',
-  path: '/accounts/{sessionId}/wallets/{walletId}/balance-map',
+  path: '/account/{sessionId}/wallets/{walletId}/balance-map',
   source: 'src/cli/engine/routes/wallets.ts',
   coreCall: 'wallet.balanceMap', // or null + coreNote
   cli: [

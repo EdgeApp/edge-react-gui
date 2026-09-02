@@ -122,7 +122,7 @@ async function main(): Promise<void> {
     console.log('CREATED session', create.json.sessionId)
 
     // Logout
-    await req(sock, 'POST', `/accounts/${create.json.sessionId}/logout`)
+    await req(sock, 'POST', `/account/${create.json.sessionId}/logout`)
 
     // Login again with captcha path
     let login = await req(sock, 'POST', '/login-with-password', {
@@ -148,7 +148,7 @@ async function main(): Promise<void> {
     await req(
       sock,
       'POST',
-      `/accounts/${login.json.sessionId}/delete-remote-account`
+      `/account/${login.json.sessionId}/delete-remote-account`
     )
     console.log('PASS captcha account create + login')
   } finally {

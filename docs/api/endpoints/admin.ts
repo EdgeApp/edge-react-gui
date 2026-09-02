@@ -130,14 +130,20 @@ export const adminGroup = group({
       method: 'POST',
       path: '/admin/lobby-handle/{objectId}/delete',
       source: 'src/cli/engine/routes/admin.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'admin-lobby-handle-delete',
+          usage: 'admin-lobby-handle-delete <objectId>',
+          example: 'edge-cli -t admin-lobby-handle-delete lobby_7Qk3…'
+        }
+      ],
       pathParams: [
         { name: 'objectId', schema: s.string({ example: 'lobby_7Qk3…' }) }
       ],
       success: { status: 200, schema: s.ref('Ok') },
       errors: ['OBJECT_NOT_FOUND'],
       notes: [
-        'Not under `/accounts/{sessionId}/objects/`, because admin lobbies belong to no session.'
+        'Not under `/account/{sessionId}/objects/`, because admin lobbies belong to no session.'
       ]
     }),
 

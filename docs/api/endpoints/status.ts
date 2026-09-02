@@ -149,7 +149,23 @@ export const engineGroup = group({
       method: 'GET',
       path: '/engine/events',
       source: 'src/cli/engine/server.ts, src/cli/engine/events.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'subscribe',
+          usage: 'subscribe [--type=<eventType>]',
+          flags: [
+            {
+              flag: '--type=<t>',
+              maps: '—',
+              target: 'client',
+              doc: 'Repeatable client-side filter; the engine always sends every event the scope allows.'
+            }
+          ],
+          example: 'edge-cli subscribe --type=core.log',
+          notes:
+            'Streams newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away.'
+        }
+      ],
       success: {
         status: 200,
         doc: '`text/event-stream`. Each frame is `event: <type>` then `data: <json>`. The stream opens with a `: ok` comment.'

@@ -113,11 +113,7 @@ export const loginGroup = group({
       ],
       body: s.object([
         f('username', s.string()),
-        f(
-          'loginKey',
-          s.string(),
-          'From `GET /accounts/{sessionId}/login-key`.'
-        ),
+        f('loginKey', s.string(), 'From `GET /account/{sessionId}/login-key`.'),
         opt('useLoginId', s.boolean(), 'Treat `username` as a login id.'),
         ...loginOpts
       ]),
@@ -130,21 +126,23 @@ export const loginGroup = group({
     }),
 
     endpoint({
-      id: 'loginRecovery2',
+      id: 'loginRecovery',
       coreCall: 'context.loginWithRecovery2',
+      coreNote:
+        'Our surface drops the `2`: Recovery1 is long gone, and a future revival would be suffixed `V1`. The body field is `recoveryKey`, matching what `change-recovery` returns (`account.recoveryKey`), rather than core’s `recovery2Key`.',
       summary: 'Log in with recovery answers',
       method: 'POST',
-      path: '/login-with-recovery2',
+      path: '/login-with-recovery',
       source: 'src/cli/engine/routes/login.ts',
       cli: [
         {
-          command: 'login-with-recovery2',
+          command: 'login-with-recovery',
           usage:
-            'login-with-recovery2 <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]',
+            'login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]',
           flags: [
             {
               flag: '--recovery-key=<key>',
-              maps: 'recovery2Key',
+              maps: 'recoveryKey',
               target: 'body'
             },
             {
@@ -155,11 +153,11 @@ export const loginGroup = group({
             }
           ],
           example:
-            "edge-cli -t login-with-recovery2 alice --recovery-key='…' --answer=blue --answer=paris"
+            "edge-cli -t login-with-recovery alice --recovery-key='…' --answer=blue --answer=paris"
         }
       ],
       body: s.object([
-        f('recovery2Key', s.string()),
+        f('recoveryKey', s.string()),
         f('username', s.string()),
         f(
           'answers',
@@ -171,7 +169,7 @@ export const loginGroup = group({
       success: {
         status: 200,
         schema: s.ref('Session'),
-        doc: '`loginMethod` is `recovery2`.'
+        doc: '`loginMethod` is `recovery`.'
       },
       errors: ['PASSWORD_ERROR', 'USERNAME_ERROR', 'NETWORK_ERROR']
     }),
@@ -287,7 +285,13 @@ export const loginGroup = group({
       method: 'POST',
       path: '/pending-edge-login/{pendingId}/cancel-request',
       source: 'src/cli/engine/routes/login.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'cancel-request',
+          usage: 'cancel-request <pendingId>',
+          example: 'edge-cli cancel-request pending_7Qk3…'
+        }
+      ],
       pathParams: [
         {
           name: 'pendingId',

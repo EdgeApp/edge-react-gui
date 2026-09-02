@@ -57,7 +57,7 @@ export function registerTransactionRoutes(router: Router): void {
   /** wallet.getTransactions(opts), plus engine paging, fiat fill and export. */
   router.add(
     'GET',
-    '/accounts/{sessionId}/wallets/{walletId}/get-transactions',
+    '/account/{sessionId}/wallets/{walletId}/get-transactions',
     async ctx => {
       const account = getAccount(ctx)
       const wallet = findWallet(account, ctx.params.walletId)
@@ -224,7 +224,7 @@ export function registerTransactionRoutes(router: Router): void {
   /** wallet.getNumTransactions(opts) */
   router.add(
     'GET',
-    '/accounts/{sessionId}/wallets/{walletId}/get-num-transactions',
+    '/account/{sessionId}/wallets/{walletId}/get-num-transactions',
     ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
@@ -236,7 +236,7 @@ export function registerTransactionRoutes(router: Router): void {
   /** wallet.saveTxMetadata(opts) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/save-tx-metadata',
+    '/account/{sessionId}/wallets/{walletId}/save-tx-metadata',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -263,7 +263,7 @@ export function registerTransactionRoutes(router: Router): void {
   /** wallet.saveTxAction(opts) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/save-tx-action',
+    '/account/{sessionId}/wallets/{walletId}/save-tx-action',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)

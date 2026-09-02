@@ -14,9 +14,27 @@ export const uriGroup = group({
       description:
         'What the GUI get-addresses tile does when you paste or scan something.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/parse-uri',
+      path: '/account/{sessionId}/wallets/{walletId}/parse-uri',
       source: 'src/cli/engine/routes/uri.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'parse-uri',
+          usage: 'parse-uri <walletId> --uri=<uri> [--currency-code=<code>]',
+          flags: [
+            {
+              flag: '--uri=<uri>',
+              maps: 'uri',
+              target: 'body'
+            },
+            {
+              flag: '--currency-code=<code>',
+              maps: 'currencyCode',
+              target: 'body'
+            }
+          ],
+          example: "edge-cli parse-uri abc123 --uri='bitcoin:bc1…?amount=0.01'"
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f(
@@ -49,9 +67,44 @@ export const uriGroup = group({
       summary: 'Build a payment URI',
       description: 'For a receive screen or QR code.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/encode-uri',
+      path: '/account/{sessionId}/wallets/{walletId}/encode-uri',
       source: 'src/cli/engine/routes/uri.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'encode-uri',
+          usage:
+            'encode-uri <walletId> --public-address=<addr> [--native-amount=<n>] [--label=<text>] [--message=<text>] [--currency-code=<code>]',
+          flags: [
+            {
+              flag: '--public-address=<addr>',
+              maps: 'publicAddress',
+              target: 'body'
+            },
+            {
+              flag: '--native-amount=<n>',
+              maps: 'nativeAmount',
+              target: 'body'
+            },
+            {
+              flag: '--label=<text>',
+              maps: 'label',
+              target: 'body'
+            },
+            {
+              flag: '--message=<text>',
+              maps: 'message',
+              target: 'body'
+            },
+            {
+              flag: '--currency-code=<code>',
+              maps: 'currencyCode',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli encode-uri abc123 --public-address=bc1qexample --native-amount=1000'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f('publicAddress', s.string({ example: 'bc1…' })),

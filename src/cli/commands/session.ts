@@ -23,7 +23,7 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.post(`/accounts/${encodeURIComponent(sessionId)}/touch`)
+      await ctx.client.post(`/account/${encodeURIComponent(sessionId)}/touch`)
     )
   }
 )
@@ -41,7 +41,7 @@ const spamFilterCmd = command(
       flags: { 'spam-filter-on': 'boolstr' }
     })
     const sessionId = requireSession(ctx)
-    const path = `/accounts/${encodeURIComponent(sessionId)}/local-settings`
+    const path = `/account/${encodeURIComponent(sessionId)}/local-settings`
     const spamFilterOn = args.boolstr('spam-filter-on')
     if (spamFilterOn == null) {
       printJson(await ctx.client.get(path))
@@ -49,7 +49,7 @@ const spamFilterCmd = command(
     }
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(sessionId)}/change-local-settings`,
+        `/account/${encodeURIComponent(sessionId)}/change-local-settings`,
         { spamFilterOn }
       )
     )

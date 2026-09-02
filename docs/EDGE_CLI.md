@@ -178,7 +178,7 @@ Successful login returns an opaque `sessionId` (`sess_` + base58 of 16 random
 bytes). Account-scoped REST paths look like:
 
 ```
-/accounts/{sessionId}/wallets/{walletId}/balance-map
+/account/{sessionId}/wallets/{walletId}/balance-map
 ```
 
 There is **no transport-level auth**. Core authenticates via password / PIN /
@@ -300,8 +300,8 @@ matches:
 |------|------|-----|
 | `context.forgetAccount` | `POST /forget-account` | `forget-account` |
 | `context.loginWithPassword` | `POST /login-with-password` | `login-with-password` |
-| `account.changePin` | `POST /accounts/{sessionId}/change-pin` | `change-pin` |
-| `wallet.getTransactions` | `GET /accounts/{sessionId}/wallets/{walletId}/get-transactions` | `get-transactions` |
+| `account.changePin` | `POST /account/{sessionId}/change-pin` | `change-pin` |
+| `wallet.getTransactions` | `GET /account/{sessionId}/wallets/{walletId}/get-transactions` | `get-transactions` |
 
 Parameters keep core's own names (`rootLoginId`, `otpResetToken`,
 `usernameOrLoginId`, `paymentProtocolUrl`). Path segments carry scope only —
@@ -316,6 +316,32 @@ say so in the docs.
 
 Where a command name would collide across scopes it takes a prefix: `sync` is
 `account.sync`, and `wallet.sync` is reachable over REST only.
+
+### Subscribing to events
+
+`edge-cli subscribe` holds a Server-Sent Events stream open and prints one JSON
+object per line until you interrupt it. It runs concurrently with ordinary
+one-shot commands, so a subscriber in one terminal watches what another
+terminal does:
+
+```bash
+# terminal 1
+edge-cli subscribe --type=session.created --type=session.expired
+
+# terminal 2
+edge-cli -t login-with-password alice --password='pass'
+edge-cli logout
+```
+
+A live subscription keeps the **engine** alive past its idle timeout — the
+stream would otherwise die under the subscriber. It does **not** keep an
+**account** logged in: the auto-logout timer still fires on schedule, and when
+it does, subscriptions that depend on that account or one of its wallets are
+closed with a `subscription.closed` frame. Context-level subscriptions survive,
+because the `EdgeContext` outlives every account.
+
+`subscribe` exits `0` on Ctrl-C, `3` when a session ended the stream, and `7`
+when the engine went away.
 
 ### Exit codes
 

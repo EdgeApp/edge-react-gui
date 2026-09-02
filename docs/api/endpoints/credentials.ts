@@ -12,7 +12,7 @@ export const credentialsGroup = group({
       summary: 'Set or change the password',
       coreCall: 'account.changePassword',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-password',
+      path: '/account/{sessionId}/change-password',
       source: 'src/cli/engine/routes/credentials.ts',
       cli: [
         {
@@ -35,9 +35,15 @@ export const credentialsGroup = group({
       summary: 'Remove password login',
       coreCall: 'account.deletePassword',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-password',
+      path: '/account/{sessionId}/delete-password',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'delete-password',
+          usage: 'delete-password',
+          example: 'edge-cli delete-password'
+        }
+      ],
       pathParams: [sessionId],
       success: { status: 204 },
       errors: ['BAD_REQUEST', 'NETWORK_ERROR']
@@ -50,9 +56,22 @@ export const credentialsGroup = group({
         'Checks without changing anything — useful to gate a destructive action.',
       coreCall: 'account.checkPassword',
       method: 'POST',
-      path: '/accounts/{sessionId}/check-password',
+      path: '/account/{sessionId}/check-password',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'check-password',
+          usage: 'check-password --password=<password>',
+          flags: [
+            {
+              flag: '--password=<password>',
+              maps: 'password',
+              target: 'body'
+            }
+          ],
+          example: "edge-cli check-password --password='s3cret'"
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([f('password', s.string())]),
       success: {
@@ -74,9 +93,16 @@ export const credentialsGroup = group({
         'Returns the PIN itself, not a status flag. Treat the response as secret.',
       coreCall: 'account.getPin',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-pin',
+      path: '/account/{sessionId}/get-pin',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'get-pin',
+          usage: 'get-pin',
+          example: 'edge-cli get-pin',
+          notes: 'Prints the PIN itself. Treat the output as secret.'
+        }
+      ],
       pathParams: [sessionId],
       success: {
         status: 200,
@@ -95,7 +121,7 @@ export const credentialsGroup = group({
       summary: 'Set or change the PIN',
       coreCall: 'account.changePin',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-pin',
+      path: '/account/{sessionId}/change-pin',
       source: 'src/cli/engine/routes/credentials.ts',
       cli: [
         {
@@ -125,7 +151,7 @@ export const credentialsGroup = group({
       summary: 'Remove the PIN',
       coreCall: 'account.deletePin',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-pin',
+      path: '/account/{sessionId}/delete-pin',
       source: 'src/cli/engine/routes/credentials.ts',
       cli: [
         {
@@ -143,9 +169,27 @@ export const credentialsGroup = group({
       summary: 'Verify a PIN',
       coreCall: 'account.checkPin',
       method: 'POST',
-      path: '/accounts/{sessionId}/check-pin',
+      path: '/account/{sessionId}/check-pin',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'check-pin',
+          usage: 'check-pin --pin=<pin> [--for-duress-account]',
+          flags: [
+            {
+              flag: '--pin=<pin>',
+              maps: 'pin',
+              target: 'body'
+            },
+            {
+              flag: '--for-duress-account',
+              maps: 'forDuressAccount',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli check-pin --pin=1234'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([
         f('pin', s.string()),
@@ -159,9 +203,28 @@ export const credentialsGroup = group({
       summary: 'Change the username',
       coreCall: 'account.changeUsername',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-username',
+      path: '/account/{sessionId}/change-username',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'change-username',
+          usage:
+            'change-username --username=<username> [--password=<password>]',
+          flags: [
+            {
+              flag: '--username=<username>',
+              maps: 'username',
+              target: 'body'
+            },
+            {
+              flag: '--password=<password>',
+              maps: 'password',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli change-username --username=alice2'
+        }
+      ],
       pathParams: [sessionId],
       body: s.object([
         f('username', s.string({ example: 'alice2' })),
@@ -180,7 +243,7 @@ export const credentialsGroup = group({
       summary: 'Set recovery questions and answers',
       coreCall: 'account.changeRecovery',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-recovery',
+      path: '/account/{sessionId}/change-recovery',
       source: 'src/cli/engine/routes/credentials.ts',
       cli: [
         {
@@ -215,7 +278,7 @@ export const credentialsGroup = group({
           f(
             'recoveryKey',
             s.string(),
-            'Core returns this string. It is what `POST /login-with-recovery2` calls `recovery2Key`.'
+            'Core returns this string. It is what `POST /login-with-recovery` calls `recoveryKey`.'
           )
         ])
       },
@@ -227,9 +290,15 @@ export const credentialsGroup = group({
       summary: 'Disable recovery login',
       coreCall: 'account.deleteRecovery',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-recovery',
+      path: '/account/{sessionId}/delete-recovery',
       source: 'src/cli/engine/routes/credentials.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'delete-recovery',
+          usage: 'delete-recovery',
+          example: 'edge-cli delete-recovery'
+        }
+      ],
       pathParams: [sessionId],
       success: { status: 204 }
     })

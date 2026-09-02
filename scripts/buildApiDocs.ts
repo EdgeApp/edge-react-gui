@@ -195,6 +195,140 @@ function schemaBlock(schema: Schema): string {
   return `<p class="lead">${typeLabel(schema)}</p>`
 }
 
+// -------------------------------------------------- TypeScript + examples
+
+/** Render a schema as TypeScript, expanding named refs one level deep. */
+function toTypeScript(schema: Schema, indent = 0, seen: string[] = []): string {
+  const pad = '  '.repeat(indent + 1)
+  const close = '  '.repeat(indent)
+  switch (schema.kind) {
+    case 'string':
+      return schema.enum != null
+        ? schema.enum.map(v => `'${v}'`).join(' | ')
+        : 'string'
+    case 'number':
+      return 'number'
+    case 'boolean':
+      return 'boolean'
+    case 'null':
+      return 'null'
+    case 'unknown':
+      return 'unknown'
+    case 'core':
+      return schema.name
+    case 'array': {
+      const inner = toTypeScript(schema.items, indent, seen)
+      return inner.includes('\n') ? `Array<${inner}>` : `${inner}[]`
+    }
+    case 'map':
+      return `{ [key: string]: ${toTypeScript(schema.values, indent, seen)} }`
+    case 'union':
+      return schema.of.map(one => toTypeScript(one, indent, seen)).join(' | ')
+    case 'ref': {
+      // Expand a named shape once, then fall back to the name to stay finite.
+      if (seen.includes(schema.name)) return schema.name
+      const named = schemas.find(n => n.name === schema.name)
+      if (named == null) return schema.name
+      return toTypeScript(named.schema, indent, [...seen, schema.name])
+    }
+    case 'object': {
+      const lines = schema.fields
+        .filter(field => !field.name.startsWith('…'))
+        .map(field => {
+          const opt = field.optional === true ? '?' : ''
+          let type = toTypeScript(field.schema, indent + 1, seen)
+          if (field.nullable === true) type = `${type} | null`
+          return `${pad}${field.name}${opt}: ${type}`
+        })
+      // Spread markers mean "every field of X", so inline that shape too.
+      const spreads = schema.fields
+        .filter(
+          field => field.name.startsWith('…') && field.schema.kind === 'ref'
+        )
+        .map(field => {
+          const name = (field.schema as { name: string }).name
+          const named = schemas.find(n => n.name === name)
+          if (named == null || named.schema.kind !== 'object') return []
+          return named.schema.fields.map(inner => {
+            const opt = inner.optional === true ? '?' : ''
+            let type = toTypeScript(inner.schema, indent + 1, [...seen, name])
+            if (inner.nullable === true) type = `${type} | null`
+            return `${pad}${inner.name}${opt}: ${type}`
+          })
+        })
+        .flat()
+      const all = [...spreads, ...lines]
+      if (all.length === 0) return '{}'
+      return `{\n${all.join('\n')}\n${close}}`
+    }
+  }
+}
+
+/** Synthesize an example value, preferring the `example` on each primitive. */
+function toExample(schema: Schema, seen: string[] = []): unknown {
+  switch (schema.kind) {
+    case 'string':
+      if (schema.example != null) return schema.example
+      if (schema.enum != null) return schema.enum[0]
+      if (schema.format === 'date-time') return '2026-09-02T16:35:00.000Z'
+      if (schema.format === 'byte') return 'aGVsbG8='
+      return 'string'
+    case 'number':
+      return schema.example ?? (schema.integer === true ? 0 : 0)
+    case 'boolean':
+      return true
+    case 'null':
+      return null
+    case 'unknown':
+      return {}
+    case 'core':
+      return `<${schema.name}>`
+    case 'array':
+      return [toExample(schema.items, seen)]
+    case 'map':
+      return { key: toExample(schema.values, seen) }
+    case 'union':
+      return toExample(schema.of[0], seen)
+    case 'ref': {
+      if (seen.includes(schema.name)) return `<${schema.name}>`
+      const named = schemas.find(n => n.name === schema.name)
+      if (named == null) return `<${schema.name}>`
+      return toExample(named.schema, [...seen, schema.name])
+    }
+    case 'object': {
+      const out: Record<string, unknown> = {}
+      for (const field of schema.fields) {
+        if (field.name.startsWith('…')) {
+          const inner = toExample(field.schema, seen)
+          if (inner != null && typeof inner === 'object') {
+            Object.assign(out, inner)
+          }
+          continue
+        }
+        out[field.name] =
+          field.nullable === true && field.optional === true
+            ? null
+            : toExample(field.schema, seen)
+      }
+      return out
+    }
+  }
+}
+
+/** Type + example + field table, the three views of one shape. */
+function shapeBlock(schema: Schema, label: string): string {
+  const ts = toTypeScript(schema)
+  const example = JSON.stringify(toExample(schema), null, 2)
+  return `<div class="shape">
+    <div class="shape-h">${esc(label)}</div>
+    <pre class="ts"><code>${esc(ts)}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>${esc(
+      example
+    )}</code></pre></details>
+    ${schemaBlock(schema)}
+  </div>`
+}
+
 // ------------------------------------------------------------ endpoint HTML
 
 function cliBlock(e: Endpoint): string {
@@ -299,7 +433,7 @@ function restBlock(e: Endpoint): string {
         }${
           e.body.kind === 'object' && e.body.fields.length === 0
             ? ''
-            : schemaBlock(e.body)
+            : shapeBlock(e.body, 'Request body')
         }`
   return `<div class="pane rest">
     <h4>REST</h4>
@@ -323,7 +457,11 @@ function responseBlock(e: Endpoint): string {
           e.success.doc != null
             ? `<div class="note">${mdBlock(e.success.doc)}</div>`
             : ''
-        }${e.success.schema != null ? schemaBlock(e.success.schema) : ''}`
+        }${
+          e.success.schema != null
+            ? shapeBlock(e.success.schema, 'Response body')
+            : ''
+        }`
   const errs =
     e.errors == null || e.errors.length === 0
       ? ''
@@ -566,6 +704,14 @@ h2:first-of-type { border-top: none; margin-top: 8px; }
 .cmdname { background: var(--accent); color: #fff; font-weight: 600; }
 .restonly { color: var(--dim); font-style: italic; font-size: 12px; }
 .src { color: var(--dim); font-size: 11px; font-family: var(--mono); }
+.shape { margin: 6px 0; }
+.shape-h { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--dim); margin-bottom: 4px; }
+pre.ts { background: var(--code); border-left: 3px solid var(--accent); }
+pre.json { background: transparent; border: 1px dashed var(--line); }
+.shape details { margin: 6px 0; }
+.shape summary { cursor: pointer; font-size: 12px; color: var(--dim); user-select: none; }
+.shape summary:hover { color: var(--accent); }
 .core { margin: 8px 0 2px; font-size: 13px; display: flex; align-items: baseline;
   gap: 8px; flex-wrap: wrap; }
 .core .lbl { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em;
@@ -671,7 +817,7 @@ function buildHtml(): string {
       <h3>${esc(n.name)}</h3>
       ${n.source != null ? `<span class="src">${esc(n.source)}</span>` : ''}
       <div class="note">${mdBlock(n.doc)}</div>
-      ${schemaBlock(n.schema)}
+      ${shapeBlock(n.schema, n.name)}
     </div>`
     )
     .join('')

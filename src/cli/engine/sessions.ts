@@ -11,7 +11,7 @@ export type LoginMethod =
   | 'password'
   | 'pin'
   | 'key'
-  | 'recovery2'
+  | 'recovery'
   | 'create'
   | 'edge'
 
@@ -148,6 +148,8 @@ export class SessionStore {
     } catch {
       // best effort
     }
+    // Anything reading this account cannot outlive it. Context streams stay.
+    this.events.closeScope(sessionId, 'logout')
     this.events.emit('session.expired', {
       sessionId: sessionId.slice(0, 10) + '…',
       reason: 'logout'
@@ -167,6 +169,7 @@ export class SessionStore {
     } catch {
       // best effort
     }
+    this.events.closeScope(sessionId, reason)
     this.events.emit('session.expired', {
       sessionId: sessionId.slice(0, 10) + '…',
       reason

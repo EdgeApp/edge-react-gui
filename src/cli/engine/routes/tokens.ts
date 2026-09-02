@@ -4,7 +4,7 @@ import { getAccount, requireStringArray } from './helpers'
 
 export function registerTokenRoutes(router: Router): void {
   /** Engine composite of EdgeCurrencyConfig token maps and wallet token lists. */
-  router.add('GET', '/accounts/{sessionId}/wallets/{walletId}/tokens', ctx => {
+  router.add('GET', '/account/{sessionId}/wallets/{walletId}/tokens', ctx => {
     const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
     return {
       allTokens: wallet.currencyConfig.allTokens,
@@ -18,7 +18,7 @@ export function registerTokenRoutes(router: Router): void {
   /** wallet.changeEnabledTokenIds(tokenIds) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
+    '/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const tokenIds = requireStringArray(body, 'tokenIds')

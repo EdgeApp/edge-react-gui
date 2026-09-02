@@ -137,6 +137,79 @@ export class ApiClient {
     return parsed as T
   }
 
+  /**
+   * Hold a Server-Sent Events stream open, handing each frame to `onEvent` as
+   * it arrives. Unlike `request`, nothing is buffered: the response body never
+   * ends until the engine closes it or the caller aborts.
+   *
+   * Resolves when the engine ends the stream, rejects if it cannot be opened.
+   */
+  async stream(
+    path: string,
+    onEvent: (event: string, data: unknown) => void,
+    opts: { signal?: AbortSignal } = {}
+  ): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
+      const req = http.request(
+        {
+          socketPath: this.opts.socketPath,
+          host: this.opts.host,
+          port: this.opts.port,
+          method: 'GET',
+          path,
+          headers: { Accept: 'text/event-stream' }
+        },
+        res => {
+          if (res.statusCode != null && res.statusCode >= 400) {
+            let raw = ''
+            res.setEncoding('utf8')
+            res.on('data', chunk => (raw += chunk))
+            res.on('end', () => {
+              try {
+                const parsed = JSON.parse(raw) as ApiErrorBody
+                reject(new ApiClientError(parsed.error))
+              } catch {
+                reject(
+                  new ApiClientError({
+                    code: 'INTERNAL_ERROR',
+                    message: `HTTP ${res.statusCode ?? 0}`,
+                    status: res.statusCode ?? 500
+                  })
+                )
+              }
+            })
+            return
+          }
+
+          // SSE frames are separated by a blank line. Hold a partial tail
+          // between chunks, since a frame can straddle a TCP read.
+          let buffer = ''
+          res.setEncoding('utf8')
+          res.on('data', (chunk: string) => {
+            buffer += chunk
+            let split = buffer.indexOf('\n\n')
+            while (split !== -1) {
+              const frame = buffer.slice(0, split)
+              buffer = buffer.slice(split + 2)
+              emitFrame(frame, onEvent)
+              split = buffer.indexOf('\n\n')
+            }
+          })
+          res.on('end', () => {
+            resolve()
+          })
+          res.on('error', reject)
+        }
+      )
+      req.on('error', reject)
+      opts.signal?.addEventListener('abort', () => {
+        req.destroy()
+        resolve()
+      })
+      req.end()
+    })
+  }
+
   async get<T = unknown>(path: string): Promise<T> {
     return await this.request<T>('GET', path)
   }
@@ -156,4 +229,27 @@ export class ApiClient {
   async delete<T = unknown>(path: string, body?: unknown): Promise<T> {
     return await this.request<T>('DELETE', path, body)
   }
+}
+
+/** Parse one `event:` / `data:` frame. Comment lines (`: ok`) are ignored. */
+function emitFrame(
+  frame: string,
+  onEvent: (event: string, data: unknown) => void
+): void {
+  let event = 'message'
+  const dataLines: string[] = []
+  for (const line of frame.split('\n')) {
+    if (line === '' || line.startsWith(':')) continue
+    if (line.startsWith('event:')) event = line.slice(6).trim()
+    else if (line.startsWith('data:')) dataLines.push(line.slice(5).trim())
+  }
+  if (dataLines.length === 0) return
+  const raw = dataLines.join('\n')
+  let data: unknown = raw
+  try {
+    data = JSON.parse(raw)
+  } catch {
+    // Leave non-JSON payloads as the raw string.
+  }
+  onEvent(event, data)
 }

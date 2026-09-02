@@ -63,7 +63,7 @@ function summarizeWallet(wallet: EdgeCurrencyWallet): Record<string, unknown> {
 
 export function registerWalletsRoutes(router: Router): void {
   /** account.currencyWallets */
-  router.add('GET', '/accounts/{sessionId}/currency-wallets', async ctx => {
+  router.add('GET', '/account/{sessionId}/currency-wallets', async ctx => {
     const account = getAccount(ctx)
     const filter = (optionalQueryString(ctx.query, 'filter') ??
       'active') as WalletFilter
@@ -81,7 +81,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** account.createCurrencyWallet(walletType, opts) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/create-currency-wallet',
+    '/account/{sessionId}/create-currency-wallet',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const walletType = requireString(body, 'walletType')
@@ -100,7 +100,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** account.createCurrencyWallets(createWallets) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/create-currency-wallets',
+    '/account/{sessionId}/create-currency-wallets',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const createWallets = body.createWallets
@@ -129,7 +129,7 @@ export function registerWalletsRoutes(router: Router): void {
   )
 
   /** Engine composite: EdgeCurrencyWallet properties plus its currency config. */
-  router.add('GET', '/accounts/{sessionId}/wallets/{walletId}', ctx => {
+  router.add('GET', '/account/{sessionId}/wallets/{walletId}', ctx => {
     const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
     return {
       ...summarizeWallet(wallet),
@@ -142,7 +142,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.renameWallet(name) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/rename-wallet',
+    '/account/{sessionId}/wallets/{walletId}/rename-wallet',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const name = requireString(body, 'name')
@@ -155,7 +155,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.setFiatCurrencyCode(fiatCurrencyCode) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
+    '/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const fiatCurrencyCode = requireString(body, 'fiatCurrencyCode')
@@ -168,7 +168,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.changePaused(paused) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/change-paused',
+    '/account/{sessionId}/wallets/{walletId}/change-paused',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const paused = requireBoolean(body, 'paused')
@@ -181,7 +181,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.sync() */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/sync',
+    '/account/{sessionId}/wallets/{walletId}/sync',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       await wallet.sync()
@@ -192,7 +192,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.resyncBlockchain() */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/resync-blockchain',
+    '/account/{sessionId}/wallets/{walletId}/resync-blockchain',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       await wallet.resyncBlockchain()
@@ -203,7 +203,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.split(splitWallets) */
   router.add(
     'POST',
-    '/accounts/{sessionId}/wallets/{walletId}/split',
+    '/account/{sessionId}/wallets/{walletId}/split',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const splitWallets = body.splitWallets
@@ -235,7 +235,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.dumpData() */
   router.add(
     'GET',
-    '/accounts/{sessionId}/wallets/{walletId}/dump-data',
+    '/account/{sessionId}/wallets/{walletId}/dump-data',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       return await wallet.dumpData()
@@ -245,7 +245,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.balanceMap */
   router.add(
     'GET',
-    '/accounts/{sessionId}/wallets/{walletId}/balance-map',
+    '/account/{sessionId}/wallets/{walletId}/balance-map',
     ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const balances = [...wallet.balanceMap.entries()].map(
@@ -270,7 +270,7 @@ export function registerWalletsRoutes(router: Router): void {
   /** wallet.getAddresses(opts) */
   router.add(
     'GET',
-    '/accounts/{sessionId}/wallets/{walletId}/get-addresses',
+    '/account/{sessionId}/wallets/{walletId}/get-addresses',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))

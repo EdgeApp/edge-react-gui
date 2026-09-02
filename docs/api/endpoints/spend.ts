@@ -30,7 +30,7 @@ export const spendGroup = group({
       description:
         'The amount that empties the wallet after fees, for a “send max” button.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/get-max-spendable',
+      path: '/account/{sessionId}/wallets/{walletId}/get-max-spendable',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -72,7 +72,7 @@ export const spendGroup = group({
       description:
         '`makeSpend` → `signTx` → optionally `broadcastTx` and `saveTx`, in one request. A completed spend leaves no handle behind.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/spend',
+      path: '/account/{sessionId}/wallets/{walletId}/spend',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -162,7 +162,7 @@ export const spendGroup = group({
       description:
         'First step of the staged workflow. Nothing is signed and no funds move.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/make-spend',
+      path: '/account/{sessionId}/wallets/{walletId}/make-spend',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -204,7 +204,7 @@ export const spendGroup = group({
       coreCall: 'wallet.signTx',
       summary: 'Sign a staged transaction',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/sign-tx',
+      path: '/account/{sessionId}/wallets/{walletId}/sign-tx',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -242,7 +242,7 @@ export const spendGroup = group({
       description:
         '**The irreversible step.** Once this returns, the funds have left the wallet.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/broadcast-tx',
+      path: '/account/{sessionId}/wallets/{walletId}/broadcast-tx',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -280,7 +280,7 @@ export const spendGroup = group({
       description:
         'Final step: persists via `saveTx` plus the metadata re-apply that spend uses, then deletes the handle.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/save-tx',
+      path: '/account/{sessionId}/wallets/{walletId}/save-tx',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -313,9 +313,22 @@ export const spendGroup = group({
       description:
         'Replace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/accelerate',
+      path: '/account/{sessionId}/wallets/{walletId}/accelerate',
       source: 'src/cli/engine/routes/spend.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'accelerate',
+          usage: 'accelerate <walletId> --object-id=<objectId>',
+          flags: [
+            {
+              flag: '--object-id=<id>',
+              maps: 'objectId',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli accelerate abc123 --object-id=tx_3fK9…'
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         opt('objectId', s.string(), 'Handle of the transaction to accelerate.'),
@@ -351,9 +364,23 @@ export const spendGroup = group({
       description:
         'Builds a transaction moving everything from an external private key into this wallet.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/sweep-private-keys',
+      path: '/account/{sessionId}/wallets/{walletId}/sweep-private-keys',
       source: 'src/cli/engine/routes/spend.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'sweep-private-keys',
+          usage: "sweep-private-keys <walletId> --spend-info='<json>'",
+          flags: [
+            {
+              flag: "--spend-info='<json>'",
+              maps: 'spendInfo',
+              target: 'body'
+            }
+          ],
+          example:
+            'edge-cli sweep-private-keys abc123 --spend-info=\'{"privateKeys":["…"]}\''
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         f(
@@ -382,9 +409,22 @@ export const spendGroup = group({
       description:
         'Message signing and proof-of-ownership, for plugins that support it.',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/sign-bytes',
+      path: '/account/{sessionId}/wallets/{walletId}/sign-bytes',
       source: 'src/cli/engine/routes/spend.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'sign-bytes',
+          usage: 'sign-bytes <walletId> --bytes=<base64>',
+          flags: [
+            {
+              flag: '--bytes=<base64>',
+              maps: 'bytes',
+              target: 'body'
+            }
+          ],
+          example: 'edge-cli sign-bytes abc123 --bytes=aGVsbG8='
+        }
+      ],
       pathParams: [sessionId, walletId],
       body: s.object([
         opt(
@@ -412,9 +452,24 @@ export const spendGroup = group({
       coreCall: 'wallet.getPaymentProtocolInfo',
       summary: 'Fetch a BIP70 payment request',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/get-payment-protocol-info',
+      path: '/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info',
       source: 'src/cli/engine/routes/spend.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'get-payment-protocol-info',
+          usage:
+            'get-payment-protocol-info <walletId> --payment-protocol-url=<url>',
+          flags: [
+            {
+              flag: '--payment-protocol-url=<url>',
+              maps: 'paymentProtocolUrl',
+              target: 'query'
+            }
+          ],
+          example:
+            "edge-cli get-payment-protocol-info abc123 --payment-protocol-url='https://…'"
+        }
+      ],
       pathParams: [sessionId, walletId],
       query: [
         {
@@ -446,7 +501,7 @@ export const spendGroup = group({
       description:
         'Works for every handle kind: transactions, pending logins, swap quotes.',
       method: 'GET',
-      path: '/accounts/{sessionId}/objects/{objectId}',
+      path: '/account/{sessionId}/objects/{objectId}',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {
@@ -486,7 +541,7 @@ export const spendGroup = group({
       description:
         'Runs the handle’s cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.',
       method: 'POST',
-      path: '/accounts/{sessionId}/objects/{objectId}/delete',
+      path: '/account/{sessionId}/objects/{objectId}/delete',
       source: 'src/cli/engine/routes/spend.ts',
       cli: [
         {

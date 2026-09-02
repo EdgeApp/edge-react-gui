@@ -12,7 +12,7 @@ export const dataStoreGroup = group({
       summary: 'List store ids',
       coreCall: 'account.dataStore.listStoreIds',
       method: 'GET',
-      path: '/accounts/{sessionId}/list-store-ids',
+      path: '/account/{sessionId}/list-store-ids',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {
@@ -33,7 +33,7 @@ export const dataStoreGroup = group({
       summary: 'List item ids in a store',
       coreCall: 'account.dataStore.listItemIds',
       method: 'GET',
-      path: '/accounts/{sessionId}/list-item-ids',
+      path: '/account/{sessionId}/list-item-ids',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {
@@ -61,7 +61,7 @@ export const dataStoreGroup = group({
       summary: 'Read an item',
       coreCall: 'account.dataStore.getItem',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-item',
+      path: '/account/{sessionId}/get-item',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {
@@ -90,7 +90,7 @@ export const dataStoreGroup = group({
       summary: 'Write an item',
       coreCall: 'account.dataStore.setItem',
       method: 'POST',
-      path: '/accounts/{sessionId}/set-item',
+      path: '/account/{sessionId}/set-item',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {
@@ -119,7 +119,7 @@ export const dataStoreGroup = group({
       summary: 'Delete an item',
       coreCall: 'account.dataStore.deleteItem',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-item',
+      path: '/account/{sessionId}/delete-item',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {
@@ -142,7 +142,7 @@ export const dataStoreGroup = group({
       summary: 'Delete an entire store',
       coreCall: 'account.dataStore.deleteStore',
       method: 'POST',
-      path: '/accounts/{sessionId}/delete-store',
+      path: '/account/{sessionId}/delete-store',
       source: 'src/cli/engine/routes/dataStore.ts',
       cli: [
         {

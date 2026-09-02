@@ -72,12 +72,12 @@ export function registerContextRoutes(router: Router): void {
     return { resetDate: resetDate.toISOString() }
   })
 
-  /** context.fetchRecovery2Questions(recovery2Key, username) */
-  router.add('GET', '/fetch-recovery2-questions', async ctx => {
-    const recovery2Key = requireQueryString(ctx.query, 'recovery2Key')
+  /** context.fetchRecovery2Questions(recoveryKey, username) */
+  router.add('GET', '/fetch-recovery-questions', async ctx => {
+    const recoveryKey = requireQueryString(ctx.query, 'recoveryKey')
     const username = requireQueryString(ctx.query, 'username')
     const questions = await ctx.state.core.context.fetchRecovery2Questions(
-      recovery2Key,
+      recoveryKey,
       username
     )
     return { questions }

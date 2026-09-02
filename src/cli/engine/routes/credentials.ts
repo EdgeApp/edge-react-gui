@@ -9,7 +9,7 @@ import {
 
 export function registerCredentialsRoutes(router: Router): void {
   /** account.changePassword(password) */
-  router.add('POST', '/accounts/{sessionId}/change-password', async ctx => {
+  router.add('POST', '/account/{sessionId}/change-password', async ctx => {
     const body = requireBodyObject(ctx.body)
     const password = requireString(body, 'password')
     await getAccount(ctx).changePassword(password)
@@ -17,13 +17,13 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.deletePassword() */
-  router.add('POST', '/accounts/{sessionId}/delete-password', async ctx => {
+  router.add('POST', '/account/{sessionId}/delete-password', async ctx => {
     await getAccount(ctx).deletePassword()
     return undefined
   })
 
   /** account.checkPassword(password) */
-  router.add('POST', '/accounts/{sessionId}/check-password', async ctx => {
+  router.add('POST', '/account/{sessionId}/check-password', async ctx => {
     const body = requireBodyObject(ctx.body)
     const password = requireString(body, 'password')
     const ok = await getAccount(ctx).checkPassword(password)
@@ -31,13 +31,13 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.getPin() */
-  router.add('GET', '/accounts/{sessionId}/get-pin', async ctx => {
+  router.add('GET', '/account/{sessionId}/get-pin', async ctx => {
     const pin = await getAccount(ctx).getPin()
     return { pin: pin ?? null }
   })
 
   /** account.changePin(opts) */
-  router.add('POST', '/accounts/{sessionId}/change-pin', async ctx => {
+  router.add('POST', '/account/{sessionId}/change-pin', async ctx => {
     const body = requireBodyObject(ctx.body)
     const pin = requireString(body, 'pin')
     const enableLogin = optionalBoolean(body, 'enableLogin')
@@ -51,13 +51,13 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.deletePin() */
-  router.add('POST', '/accounts/{sessionId}/delete-pin', async ctx => {
+  router.add('POST', '/account/{sessionId}/delete-pin', async ctx => {
     await getAccount(ctx).deletePin()
     return undefined
   })
 
   /** account.checkPin(pin, opts) */
-  router.add('POST', '/accounts/{sessionId}/check-pin', async ctx => {
+  router.add('POST', '/account/{sessionId}/check-pin', async ctx => {
     const body = requireBodyObject(ctx.body)
     const pin = requireString(body, 'pin')
     const forDuressAccount = optionalBoolean(body, 'forDuressAccount')
@@ -66,7 +66,7 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.changeUsername(opts) */
-  router.add('POST', '/accounts/{sessionId}/change-username', async ctx => {
+  router.add('POST', '/account/{sessionId}/change-username', async ctx => {
     const body = requireBodyObject(ctx.body)
     const username = requireString(body, 'username')
     const password = optionalString(body, 'password')
@@ -75,7 +75,7 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.changeRecovery(questions, answers) */
-  router.add('POST', '/accounts/{sessionId}/change-recovery', async ctx => {
+  router.add('POST', '/account/{sessionId}/change-recovery', async ctx => {
     const body = requireBodyObject(ctx.body)
     const questions = requireStringArray(body, 'questions')
     const answers = requireStringArray(body, 'answers')
@@ -84,7 +84,7 @@ export function registerCredentialsRoutes(router: Router): void {
   })
 
   /** account.deleteRecovery() */
-  router.add('POST', '/accounts/{sessionId}/delete-recovery', async ctx => {
+  router.add('POST', '/account/{sessionId}/delete-recovery', async ctx => {
     await getAccount(ctx).deleteRecovery()
     return undefined
   })

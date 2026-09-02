@@ -14,7 +14,7 @@ export const tokensGroup = group({
       coreNote:
         'Engine composite of EdgeCurrencyConfig token maps plus wallet.enabledTokenIds and wallet.detectedTokenIds.',
       method: 'GET',
-      path: '/accounts/{sessionId}/wallets/{walletId}/tokens',
+      path: '/account/{sessionId}/wallets/{walletId}/tokens',
       source: 'src/cli/engine/routes/tokens.ts',
       cli: [
         {
@@ -48,7 +48,7 @@ export const tokensGroup = group({
         'Absolute: anything missing from `tokenIds` is disabled. Core has only this setter — there is no add or remove call.',
       coreCall: 'wallet.changeEnabledTokenIds',
       method: 'POST',
-      path: '/accounts/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
+      path: '/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
       source: 'src/cli/engine/routes/tokens.ts',
       cli: [
         {

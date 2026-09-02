@@ -160,20 +160,20 @@ export function registerLoginRoutes(router: Router): void {
     return await ctx.state.sessions.create(account, 'key')
   })
 
-  /** context.loginWithRecovery2(recovery2Key, username, answers, opts) */
-  router.add('POST', '/login-with-recovery2', async ctx => {
+  /** context.loginWithRecovery2(recoveryKey, username, answers, opts) */
+  router.add('POST', '/login-with-recovery', async ctx => {
     const body = requireBodyObject(ctx.body)
-    const recovery2Key = requireString(body, 'recovery2Key')
+    const recoveryKey = requireString(body, 'recoveryKey')
     const username = requireString(body, 'username')
     const answers = requireStringArray(body, 'answers')
     const account: EdgeAccount =
       await ctx.state.core.context.loginWithRecovery2(
-        recovery2Key,
+        recoveryKey,
         username,
         answers,
         accountOptionsFromBody(body)
       )
-    return await ctx.state.sessions.create(account, 'recovery2')
+    return await ctx.state.sessions.create(account, 'recovery')
   })
 
   /** context.createAccount(opts) */

@@ -113,7 +113,7 @@ export function parseCommandArgs(
       return value
     },
     strings: name => strings[name] ?? [],
-    boolean: name => booleans[name] === true,
+    boolean: name => booleans[name],
     boolstr: name => {
       const raw = strings[name]?.[0]
       if (raw == null) return undefined

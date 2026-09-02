@@ -232,3 +232,23 @@ const adminRepoDeleteCmd = command(
     printJson({ ok: true })
   }
 )
+
+const adminLobbyHandleDeleteCmd = command(
+  'admin-lobby-handle-delete',
+  {
+    usage: 'admin-lobby-handle-delete <objectId>',
+    help: 'Close a parked admin lobby handle and stop its login-server poll'
+  },
+  async (ctx, argv) => {
+    const { positional: objectId } = parseCommandArgs(
+      adminLobbyHandleDeleteCmd,
+      argv,
+      { positional: 'required' }
+    )
+    printJson(
+      await ctx.client.post(
+        `/admin/lobby-handle/${encodeURIComponent(objectId!)}/delete`
+      )
+    )
+  }
+)

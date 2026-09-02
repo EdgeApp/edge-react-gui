@@ -8,7 +8,7 @@ import { getAccount, optionalBoolean } from './helpers'
 
 export function registerLocalSettingsRoutes(router: Router): void {
   /** GUI code, not core: account.localDisklet Settings.json. */
-  router.add('GET', '/accounts/{sessionId}/local-settings', async ctx => {
+  router.add('GET', '/account/{sessionId}/local-settings', async ctx => {
     const account = getAccount(ctx)
     const settings = await readLocalAccountSettingsFromDisk(account)
     return { spamFilterOn: settings.spamFilterOn }
@@ -17,7 +17,7 @@ export function registerLocalSettingsRoutes(router: Router): void {
   /** GUI code, not core: account.localDisklet Settings.json. */
   router.add(
     'POST',
-    '/accounts/{sessionId}/change-local-settings',
+    '/account/{sessionId}/change-local-settings',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const spamFilterOn = optionalBoolean(body, 'spamFilterOn')

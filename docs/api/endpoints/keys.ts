@@ -20,7 +20,7 @@ export const keysGroup = group({
       summary: 'List every key in the account',
       coreCall: 'account.allKeys',
       method: 'GET',
-      path: '/accounts/{sessionId}/all-keys',
+      path: '/account/{sessionId}/all-keys',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         { command: 'all-keys', usage: 'all-keys', example: 'edge-cli all-keys' }
@@ -50,7 +50,7 @@ export const keysGroup = group({
         'The import path. Use `create-currency-wallet` to make a fresh wallet with generated keys.',
       coreCall: 'account.createWallet',
       method: 'POST',
-      path: '/accounts/{sessionId}/create-wallet',
+      path: '/account/{sessionId}/create-wallet',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         {
@@ -80,9 +80,15 @@ export const keysGroup = group({
       summary: 'Read one wallet’s key info',
       coreCall: 'account.getWalletInfo',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-wallet-info',
+      path: '/account/{sessionId}/get-wallet-info',
       source: 'src/cli/engine/routes/keys.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'get-wallet-info',
+          usage: 'get-wallet-info <walletId>',
+          example: 'edge-cli get-wallet-info abc123'
+        }
+      ],
       pathParams: [sessionId],
       query: [
         {
@@ -110,7 +116,7 @@ export const keysGroup = group({
         '**Secret.** Whatever the plugin stores — seed, mnemonic, xpriv.',
       coreCall: 'account.getRawPrivateKey',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-raw-private-key',
+      path: '/account/{sessionId}/get-raw-private-key',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         {
@@ -134,9 +140,15 @@ export const keysGroup = group({
       summary: 'Read raw public key material',
       coreCall: 'account.getRawPublicKey',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-raw-public-key',
+      path: '/account/{sessionId}/get-raw-public-key',
       source: 'src/cli/engine/routes/keys.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'get-raw-public-key',
+          usage: 'get-raw-public-key <walletId>',
+          example: 'edge-cli get-raw-public-key abc123'
+        }
+      ],
       pathParams: [sessionId],
       query: [walletIdQuery],
       success: { status: 200, schema: s.map(s.unknown()) },
@@ -150,7 +162,7 @@ export const keysGroup = group({
         '**Secret.** The human-facing form — WIF, seed phrase, whatever the plugin shows in the GUI export screen.',
       coreCall: 'account.getDisplayPrivateKey',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-display-private-key',
+      path: '/account/{sessionId}/get-display-private-key',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         {
@@ -171,7 +183,7 @@ export const keysGroup = group({
       description: 'The xpub or equivalent — safe to share for watch-only use.',
       coreCall: 'account.getDisplayPublicKey',
       method: 'GET',
-      path: '/accounts/{sessionId}/get-display-public-key',
+      path: '/account/{sessionId}/get-display-public-key',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         {
@@ -191,9 +203,15 @@ export const keysGroup = group({
       summary: 'List chains a wallet can split into',
       coreCall: 'account.listSplittableWalletTypes',
       method: 'GET',
-      path: '/accounts/{sessionId}/list-splittable-wallet-types',
+      path: '/account/{sessionId}/list-splittable-wallet-types',
       source: 'src/cli/engine/routes/keys.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'list-splittable-wallet-types',
+          usage: 'list-splittable-wallet-types <walletId>',
+          example: 'edge-cli list-splittable-wallet-types abc123'
+        }
+      ],
       pathParams: [sessionId],
       query: [walletIdQuery],
       success: {
@@ -212,7 +230,7 @@ export const keysGroup = group({
         'The canonical backend for every wallet flag. There are no separate archive / unarchive / undelete verbs.',
       coreCall: 'account.changeWalletStates',
       method: 'POST',
-      path: '/accounts/{sessionId}/change-wallet-states',
+      path: '/account/{sessionId}/change-wallet-states',
       source: 'src/cli/engine/routes/keys.ts',
       cli: [
         {

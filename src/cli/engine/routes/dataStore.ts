@@ -3,20 +3,20 @@ import { getAccount, requireQueryString, requireString } from './helpers'
 
 export function registerDataStoreRoutes(router: Router): void {
   /** account.dataStore.listStoreIds() */
-  router.add('GET', '/accounts/{sessionId}/list-store-ids', async ctx => {
+  router.add('GET', '/account/{sessionId}/list-store-ids', async ctx => {
     const storeIds = await getAccount(ctx).dataStore.listStoreIds()
     return { storeIds }
   })
 
   /** account.dataStore.listItemIds(storeId) */
-  router.add('GET', '/accounts/{sessionId}/list-item-ids', async ctx => {
+  router.add('GET', '/account/{sessionId}/list-item-ids', async ctx => {
     const storeId = requireQueryString(ctx.query, 'storeId')
     const itemIds = await getAccount(ctx).dataStore.listItemIds(storeId)
     return { itemIds }
   })
 
   /** account.dataStore.getItem(storeId, itemId) */
-  router.add('GET', '/accounts/{sessionId}/get-item', async ctx => {
+  router.add('GET', '/account/{sessionId}/get-item', async ctx => {
     const storeId = requireQueryString(ctx.query, 'storeId')
     const itemId = requireQueryString(ctx.query, 'itemId')
     const value = await getAccount(ctx).dataStore.getItem(storeId, itemId)
@@ -24,7 +24,7 @@ export function registerDataStoreRoutes(router: Router): void {
   })
 
   /** account.dataStore.setItem(storeId, itemId, value) */
-  router.add('POST', '/accounts/{sessionId}/set-item', async ctx => {
+  router.add('POST', '/account/{sessionId}/set-item', async ctx => {
     const body = requireBodyObject(ctx.body)
     const storeId = requireString(body, 'storeId')
     const itemId = requireString(body, 'itemId')
@@ -34,7 +34,7 @@ export function registerDataStoreRoutes(router: Router): void {
   })
 
   /** account.dataStore.deleteItem(storeId, itemId) */
-  router.add('POST', '/accounts/{sessionId}/delete-item', async ctx => {
+  router.add('POST', '/account/{sessionId}/delete-item', async ctx => {
     const body = requireBodyObject(ctx.body)
     const storeId = requireString(body, 'storeId')
     const itemId = requireString(body, 'itemId')
@@ -43,7 +43,7 @@ export function registerDataStoreRoutes(router: Router): void {
   })
 
   /** account.dataStore.deleteStore(storeId) */
-  router.add('POST', '/accounts/{sessionId}/delete-store', async ctx => {
+  router.add('POST', '/account/{sessionId}/delete-store', async ctx => {
     const body = requireBodyObject(ctx.body)
     const storeId = requireString(body, 'storeId')
     await getAccount(ctx).dataStore.deleteStore(storeId)

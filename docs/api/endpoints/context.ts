@@ -104,7 +104,13 @@ export const contextGroup = group({
       method: 'GET',
       path: '/fix-username',
       source: 'src/cli/engine/routes/context.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'fix-username',
+          usage: 'fix-username <username>',
+          example: 'edge-cli fix-username Alice'
+        }
+      ],
       query: [{ name: 'username', schema: s.string(), required: true }],
       success: {
         status: 200,
@@ -121,7 +127,20 @@ export const contextGroup = group({
       method: 'GET',
       path: '/check-password-rules',
       source: 'src/cli/engine/routes/context.ts',
-      cli: [],
+      cli: [
+        {
+          command: 'check-password-rules',
+          usage: 'check-password-rules --password=<password>',
+          flags: [
+            {
+              flag: '--password=<password>',
+              maps: 'password',
+              target: 'query'
+            }
+          ],
+          example: "edge-cli check-password-rules --password='s3cret'"
+        }
+      ],
       query: [{ name: 'password', schema: s.string(), required: true }],
       success: {
         status: 200,
@@ -205,30 +224,32 @@ export const contextGroup = group({
     }),
 
     endpoint({
-      id: 'fetchRecovery2Questions',
+      id: 'fetchRecoveryQuestions',
       summary: 'Fetch a user’s recovery questions',
       coreCall: 'context.fetchRecovery2Questions',
+      coreNote:
+        'Our surface drops the `2` from the path, command and `recoveryKey` parameter.',
       method: 'GET',
-      path: '/fetch-recovery2-questions',
+      path: '/fetch-recovery-questions',
       source: 'src/cli/engine/routes/context.ts',
       cli: [
         {
-          command: 'fetch-recovery2-questions',
+          command: 'fetch-recovery-questions',
           usage:
-            'fetch-recovery2-questions <username> --recovery-key=<recovery2Key>',
+            'fetch-recovery-questions <username> --recovery-key=<recoveryKey>',
           flags: [
             {
               flag: '--recovery-key=<key>',
-              maps: 'recovery2Key',
+              maps: 'recoveryKey',
               target: 'query'
             }
           ],
           example:
-            "edge-cli -t fetch-recovery2-questions alice --recovery-key='…'"
+            "edge-cli -t fetch-recovery-questions alice --recovery-key='…'"
         }
       ],
       query: [
-        { name: 'recovery2Key', schema: s.string(), required: true },
+        { name: 'recoveryKey', schema: s.string(), required: true },
         { name: 'username', schema: s.string(), required: true }
       ],
       success: {

@@ -7,7 +7,7 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 function walletPath(sessionId: string, walletId: string, suffix = ''): string {
-  return `/accounts/${encodeURIComponent(
+  return `/account/${encodeURIComponent(
     sessionId
   )}/wallets/${encodeURIComponent(walletId)}${suffix}`
 }
@@ -27,7 +27,7 @@ const walletCreateCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(sessionId)}/create-currency-wallet`,
+        `/account/${encodeURIComponent(sessionId)}/create-currency-wallet`,
         { walletType: args.positional, name: args.string('name') }
       )
     )
@@ -53,7 +53,7 @@ const walletListCmd = command(
     query.set('waitForAll', String(!args.boolean('no-wait')))
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
+        `/account/${encodeURIComponent(
           sessionId
         )}/currency-wallets?${query.toString()}`
       )
@@ -142,7 +142,7 @@ const walletStateCmd = command(
     }
     const sessionId = requireSession(ctx)
     await ctx.client.post(
-      `/accounts/${encodeURIComponent(sessionId)}/change-wallet-states`,
+      `/account/${encodeURIComponent(sessionId)}/change-wallet-states`,
       { [args.positional!]: state }
     )
     printJson({ ok: true })
@@ -510,9 +510,9 @@ const objectGetCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
-          sessionId
-        )}/objects/${encodeURIComponent(objectId!)}`
+        `/account/${encodeURIComponent(sessionId)}/objects/${encodeURIComponent(
+          objectId!
+        )}`
       )
     )
   }
@@ -532,9 +532,9 @@ const objectDeleteCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/accounts/${encodeURIComponent(
-          sessionId
-        )}/objects/${encodeURIComponent(objectId!)}/delete`
+        `/account/${encodeURIComponent(sessionId)}/objects/${encodeURIComponent(
+          objectId!
+        )}/delete`
       )
     )
   }
@@ -628,7 +628,7 @@ const exportPublicCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
+        `/account/${encodeURIComponent(
           sessionId
         )}/get-display-public-key?walletId=${encodeURIComponent(walletId!)}`
       )
@@ -650,7 +650,7 @@ const exportPrivateCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/accounts/${encodeURIComponent(
+        `/account/${encodeURIComponent(
           sessionId
         )}/get-display-private-key?walletId=${encodeURIComponent(walletId!)}`
       )
@@ -666,5 +666,410 @@ command(
   },
   async ctx => {
     printJson(await ctx.client.get('/currency-configs'))
+  }
+)
+
+/** Wallet-scoped commands that take only `<walletId>` and post an empty body. */
+function walletActionCmd(name: string, suffix: string, help: string): void {
+  const cmd = command(
+    name,
+    { usage: `${name} <walletId>`, help, needsSession: true },
+    async (ctx, argv) => {
+      const { positional: walletId } = parseCommandArgs(cmd, argv, {
+        positional: 'required'
+      })
+      const sessionId = requireSession(ctx)
+      await ctx.client.post(walletPath(sessionId, walletId!, suffix))
+      printJson({ ok: true })
+    }
+  )
+}
+
+walletActionCmd(
+  'wallet-sync',
+  '/sync',
+  'Nudge one wallet to sync (wallet.sync)'
+)
+walletActionCmd(
+  'resync-blockchain',
+  '/resync-blockchain',
+  'Rescan the blockchain from scratch (wallet.resyncBlockchain)'
+)
+
+const dumpDataCmd = command(
+  'dump-data',
+  {
+    usage: 'dump-data <walletId>',
+    help: 'Dump wallet engine state for debugging (wallet.dumpData)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const { positional: walletId } = parseCommandArgs(dumpDataCmd, argv, {
+      positional: 'required'
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.get(walletPath(sessionId, walletId!, '/dump-data'))
+    )
+  }
+)
+
+const setFiatCmd = command(
+  'set-fiat-currency-code',
+  {
+    usage: 'set-fiat-currency-code <walletId> --fiat-currency-code=<code>',
+    help: 'Change a wallet’s fiat currency (wallet.setFiatCurrencyCode)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(setFiatCmd, argv, {
+      positional: 'required',
+      flags: { 'fiat-currency-code': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(
+      walletPath(sessionId, args.positional!, '/set-fiat-currency-code'),
+      { fiatCurrencyCode: args.requireString('fiat-currency-code') }
+    )
+    printJson({ ok: true })
+  }
+)
+
+const changePausedCmd = command(
+  'change-paused',
+  {
+    usage: 'change-paused <walletId> --paused=true|false',
+    help: 'Pause or resume a wallet engine (wallet.changePaused)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(changePausedCmd, argv, {
+      positional: 'required',
+      flags: { paused: 'boolstr' }
+    })
+    const paused = args.boolstr('paused')
+    if (paused == null) {
+      throw new UsageError(changePausedCmd, 'Missing --paused=true|false')
+    }
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(
+      walletPath(sessionId, args.positional!, '/change-paused'),
+      { paused }
+    )
+    printJson({ ok: true })
+  }
+)
+
+const splitCmd = command(
+  'split',
+  {
+    usage: "split <walletId> --split-wallets='<json>'",
+    help: 'Split a wallet into another chain (wallet.split)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(splitCmd, argv, {
+      positional: 'required',
+      flags: { 'split-wallets': 'string' }
+    })
+    let splitWallets: unknown
+    try {
+      splitWallets = JSON.parse(args.requireString('split-wallets'))
+    } catch {
+      throw new UsageError(splitCmd, '--split-wallets must be valid JSON')
+    }
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(walletPath(sessionId, args.positional!, '/split'), {
+        splitWallets
+      })
+    )
+  }
+)
+
+const createWalletsCmd = command(
+  'create-currency-wallets',
+  {
+    usage: "create-currency-wallets --create-wallets='<json>'",
+    help: 'Create several wallets at once (account.createCurrencyWallets)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(createWalletsCmd, argv, {
+      positional: 'none',
+      flags: { 'create-wallets': 'string' }
+    })
+    let createWallets: unknown
+    try {
+      createWallets = JSON.parse(args.requireString('create-wallets'))
+    } catch {
+      throw new UsageError(
+        createWalletsCmd,
+        '--create-wallets must be valid JSON'
+      )
+    }
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        `/account/${encodeURIComponent(sessionId)}/create-currency-wallets`,
+        { createWallets }
+      )
+    )
+  }
+)
+
+const numTxCmd = command(
+  'get-num-transactions',
+  {
+    usage: 'get-num-transactions <walletId> [--token-id=<id>]',
+    help: 'Count transactions in a wallet (wallet.getNumTransactions)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(numTxCmd, argv, {
+      positional: 'required',
+      flags: { 'token-id': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    const tokenId = args.string('token-id')
+    const query =
+      tokenId != null ? `?tokenId=${encodeURIComponent(tokenId)}` : ''
+    printJson(
+      await ctx.client.get(
+        walletPath(sessionId, args.positional!, `/get-num-transactions${query}`)
+      )
+    )
+  }
+)
+
+const saveTxMetadataCmd = command(
+  'save-tx-metadata',
+  {
+    usage:
+      "save-tx-metadata <walletId> --txid=<txid> --metadata='<json>' [--token-id=<id>]",
+    help: 'Write transaction metadata to disk (wallet.saveTxMetadata)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(saveTxMetadataCmd, argv, {
+      positional: 'required',
+      flags: { txid: 'string', metadata: 'string', 'token-id': 'string' }
+    })
+    let metadata: unknown
+    try {
+      metadata = JSON.parse(args.requireString('metadata'))
+    } catch {
+      throw new UsageError(saveTxMetadataCmd, '--metadata must be valid JSON')
+    }
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(
+      walletPath(sessionId, args.positional!, '/save-tx-metadata'),
+      {
+        txid: args.requireString('txid'),
+        tokenId: args.string('token-id'),
+        metadata
+      }
+    )
+    printJson({ ok: true })
+  }
+)
+
+const saveTxActionCmd = command(
+  'save-tx-action',
+  {
+    usage:
+      "save-tx-action <walletId> --txid=<txid> --saved-action='<json>' [--asset-action='<json>'] [--token-id=<id>]",
+    help: 'Write a transaction action to disk (wallet.saveTxAction)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(saveTxActionCmd, argv, {
+      positional: 'required',
+      flags: {
+        txid: 'string',
+        'saved-action': 'string',
+        'asset-action': 'string',
+        'token-id': 'string'
+      }
+    })
+    const parse = (raw: string): unknown => {
+      try {
+        return JSON.parse(raw)
+      } catch {
+        throw new UsageError(saveTxActionCmd, 'Action flags must be valid JSON')
+      }
+    }
+    const assetRaw = args.string('asset-action')
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(
+      walletPath(sessionId, args.positional!, '/save-tx-action'),
+      {
+        txid: args.requireString('txid'),
+        tokenId: args.string('token-id'),
+        savedAction: parse(args.requireString('saved-action')),
+        assetAction: assetRaw != null ? parse(assetRaw) : undefined
+      }
+    )
+    printJson({ ok: true })
+  }
+)
+
+const accelerateCmd = command(
+  'accelerate',
+  {
+    usage: 'accelerate <walletId> --object-id=<objectId>',
+    help: 'Fee-bump a pending transaction (wallet.accelerate)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(accelerateCmd, argv, {
+      positional: 'required',
+      flags: { 'object-id': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/accelerate'),
+        { objectId: args.requireString('object-id') }
+      )
+    )
+  }
+)
+
+const sweepCmd = command(
+  'sweep-private-keys',
+  {
+    usage: "sweep-private-keys <walletId> --spend-info='<json>'",
+    help: 'Sweep external private keys into this wallet (wallet.sweepPrivateKeys)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(sweepCmd, argv, {
+      positional: 'required',
+      flags: { 'spend-info': 'string' }
+    })
+    let spendInfo: unknown
+    try {
+      spendInfo = JSON.parse(args.requireString('spend-info'))
+    } catch {
+      throw new UsageError(sweepCmd, '--spend-info must be valid JSON')
+    }
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/sweep-private-keys'),
+        { spendInfo }
+      )
+    )
+  }
+)
+
+const signBytesCmd = command(
+  'sign-bytes',
+  {
+    usage: 'sign-bytes <walletId> --bytes=<base64>',
+    help: 'Sign arbitrary bytes (wallet.signBytes)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(signBytesCmd, argv, {
+      positional: 'required',
+      flags: { bytes: 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/sign-bytes'),
+        { bytes: args.requireString('bytes') }
+      )
+    )
+  }
+)
+
+const paymentProtocolCmd = command(
+  'get-payment-protocol-info',
+  {
+    usage: 'get-payment-protocol-info <walletId> --payment-protocol-url=<url>',
+    help: 'Fetch a BIP70 payment request (wallet.getPaymentProtocolInfo)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(paymentProtocolCmd, argv, {
+      positional: 'required',
+      flags: { 'payment-protocol-url': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    const query = new URLSearchParams({
+      paymentProtocolUrl: args.requireString('payment-protocol-url')
+    })
+    printJson(
+      await ctx.client.get(
+        walletPath(
+          sessionId,
+          args.positional!,
+          `/get-payment-protocol-info?${query.toString()}`
+        )
+      )
+    )
+  }
+)
+
+const parseUriCmd = command(
+  'parse-uri',
+  {
+    usage: 'parse-uri <walletId> --uri=<uri> [--currency-code=<code>]',
+    help: 'Parse a payment URI or address (wallet.parseUri)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(parseUriCmd, argv, {
+      positional: 'required',
+      flags: { uri: 'string', 'currency-code': 'string' }
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/parse-uri'),
+        {
+          uri: args.requireString('uri'),
+          currencyCode: args.string('currency-code')
+        }
+      )
+    )
+  }
+)
+
+const encodeUriCmd = command(
+  'encode-uri',
+  {
+    usage:
+      'encode-uri <walletId> --public-address=<addr> [--native-amount=<n>] [--label=<text>] [--message=<text>] [--currency-code=<code>]',
+    help: 'Build a payment URI (wallet.encodeUri)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(encodeUriCmd, argv, {
+      positional: 'required',
+      flags: {
+        'public-address': 'string',
+        'native-amount': 'string',
+        label: 'string',
+        message: 'string',
+        'currency-code': 'string'
+      }
+    })
+    const sessionId = requireSession(ctx)
+    printJson(
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/encode-uri'),
+        {
+          publicAddress: args.requireString('public-address'),
+          nativeAmount: args.string('native-amount'),
+          label: args.string('label'),
+          message: args.string('message'),
+          currencyCode: args.string('currency-code')
+        }
+      )
+    )
   }
 )

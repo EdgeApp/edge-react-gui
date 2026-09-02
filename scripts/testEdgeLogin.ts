@@ -143,13 +143,13 @@ async function main(): Promise<void> {
     const fetched = await req(
       sock,
       'GET',
-      `/accounts/${approverSession}/lobbies/${lobbyId}`
+      `/account/${approverSession}/lobbies/${lobbyId}`
     )
     console.log('lobby fetch', fetched.status, JSON.stringify(fetched.json))
     const approved = await req(
       sock,
       'POST',
-      `/accounts/${approverSession}/lobbies/${lobbyId}/approve`
+      `/account/${approverSession}/lobbies/${lobbyId}/approve`
     )
     console.log('lobby approve', approved.status, JSON.stringify(approved.json))
 
@@ -163,7 +163,7 @@ async function main(): Promise<void> {
         await req(
           sock,
           'POST',
-          `/accounts/${approverSession}/delete-remote-account`
+          `/account/${approverSession}/delete-remote-account`
         )
         return
       }

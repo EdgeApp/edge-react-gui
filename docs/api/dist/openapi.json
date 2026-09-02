@@ -54,7 +54,7 @@
     },
     {
       "name": "Wallets",
-      "description": "Account-level wallet listing and creation, then per-wallet calls under `/accounts/{sessionId}/wallets/{walletId}/`. The `{walletId}` segment is scope — it is the receiver of the core call — and accepts a unique prefix, so these routes can also return `404 WALLET_NOT_FOUND` or `409 AMBIGUOUS_WALLET_ID`."
+      "description": "Account-level wallet listing and creation, then per-wallet calls under `/account/{sessionId}/wallets/{walletId}/`. The `{walletId}` segment is scope — it is the receiver of the core call — and accepts a unique prefix, so these routes can also return `404 WALLET_NOT_FOUND` or `409 AMBIGUOUS_WALLET_ID`."
     },
     {
       "name": "Tokens",
@@ -430,11 +430,26 @@
       "get": {
         "operationId": "engineEvents",
         "summary": "Subscribe to engine events",
-        "description": "**Core call:** _none — Engine-side fan-out. `core.log` frames carry core’s onLog output._\n\n_No `edge-cli` command; REST only._\n\nServer-Sent Events. Handled directly in `server.ts` rather than through the router, so there is no command — attach with `curl -N` or any SSE client.",
+        "description": "**Core call:** _none — Engine-side fan-out. `core.log` frames carry core’s onLog output._\n\n**Command line**\n\n```\nsubscribe [--type=<eventType>]\n```\n\nServer-Sent Events. Handled directly in `server.ts` rather than through the router, so there is no command — attach with `curl -N` or any SSE client.",
         "tags": [
           "Engine"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "subscribe",
+            "usage": "subscribe [--type=<eventType>]",
+            "flags": [
+              {
+                "flag": "--type=<t>",
+                "maps": "—",
+                "target": "client",
+                "doc": "Repeatable client-side filter; the engine always sends every event the scope allows."
+              }
+            ],
+            "example": "edge-cli subscribe --type=core.log",
+            "notes": "Streams newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away."
+          }
+        ],
         "x-core-call": null,
         "x-core-note": "Engine-side fan-out. `core.log` frames carry core’s onLog output.",
         "x-source": "src/cli/engine/server.ts, src/cli/engine/events.ts",
@@ -649,11 +664,17 @@
       "get": {
         "operationId": "fixUsername",
         "summary": "Normalize a username",
-        "description": "**Core call:** `context.fixUsername`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username <username>\n```\n\n",
         "tags": [
           "Context"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "fix-username",
+            "usage": "fix-username <username>",
+            "example": "edge-cli fix-username Alice"
+          }
+        ],
         "x-core-call": "context.fixUsername",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
@@ -705,11 +726,24 @@
       "get": {
         "operationId": "checkPasswordRules",
         "summary": "Score a candidate password",
-        "description": "**Core call:** `context.checkPasswordRules`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `context.checkPasswordRules`\n\n**Command line**\n\n```\ncheck-password-rules --password=<password>\n```\n\n",
         "tags": [
           "Context"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "check-password-rules",
+            "usage": "check-password-rules --password=<password>",
+            "flags": [
+              {
+                "flag": "--password=<password>",
+                "maps": "password",
+                "target": "query"
+              }
+            ],
+            "example": "edge-cli check-password-rules --password='s3cret'"
+          }
+        ],
         "x-core-call": "context.checkPasswordRules",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
@@ -873,33 +907,34 @@
         }
       }
     },
-    "/fetch-recovery2-questions": {
+    "/fetch-recovery-questions": {
       "get": {
-        "operationId": "fetchRecovery2Questions",
+        "operationId": "fetchRecoveryQuestions",
         "summary": "Fetch a user’s recovery questions",
-        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery2-questions <username> --recovery-key=<recovery2Key>\n```\n\n",
+        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions <username> --recovery-key=<recoveryKey>\n```\n\n",
         "tags": [
           "Context"
         ],
         "x-cli": [
           {
-            "command": "fetch-recovery2-questions",
-            "usage": "fetch-recovery2-questions <username> --recovery-key=<recovery2Key>",
+            "command": "fetch-recovery-questions",
+            "usage": "fetch-recovery-questions <username> --recovery-key=<recoveryKey>",
             "flags": [
               {
                 "flag": "--recovery-key=<key>",
-                "maps": "recovery2Key",
+                "maps": "recoveryKey",
                 "target": "query"
               }
             ],
-            "example": "edge-cli -t fetch-recovery2-questions alice --recovery-key='…'"
+            "example": "edge-cli -t fetch-recovery-questions alice --recovery-key='…'"
           }
         ],
         "x-core-call": "context.fetchRecovery2Questions",
+        "x-core-note": "Our surface drops the `2` from the path, command and `recoveryKey` parameter.",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
           {
-            "name": "recovery2Key",
+            "name": "recoveryKey",
             "in": "query",
             "required": true,
             "description": "",
@@ -1326,7 +1361,7 @@
                   },
                   "loginKey": {
                     "type": "string",
-                    "description": "From `GET /accounts/{sessionId}/login-key`."
+                    "description": "From `GET /account/{sessionId}/login-key`."
                   },
                   "useLoginId": {
                     "type": "boolean",
@@ -1359,22 +1394,22 @@
         }
       }
     },
-    "/login-with-recovery2": {
+    "/login-with-recovery": {
       "post": {
-        "operationId": "loginRecovery2",
+        "operationId": "loginRecovery",
         "summary": "Log in with recovery answers",
-        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery2 <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]\n```\n\n",
+        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]\n```\n\n",
         "tags": [
           "Login"
         ],
         "x-cli": [
           {
-            "command": "login-with-recovery2",
-            "usage": "login-with-recovery2 <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]",
+            "command": "login-with-recovery",
+            "usage": "login-with-recovery <username> --recovery-key=<key> --answer=<text> [--answer=<text> …]",
             "flags": [
               {
                 "flag": "--recovery-key=<key>",
-                "maps": "recovery2Key",
+                "maps": "recoveryKey",
                 "target": "body"
               },
               {
@@ -1384,15 +1419,16 @@
                 "doc": "Repeat once per question, in order."
               }
             ],
-            "example": "edge-cli -t login-with-recovery2 alice --recovery-key='…' --answer=blue --answer=paris"
+            "example": "edge-cli -t login-with-recovery alice --recovery-key='…' --answer=blue --answer=paris"
           }
         ],
         "x-core-call": "context.loginWithRecovery2",
+        "x-core-note": "Our surface drops the `2`: Recovery1 is long gone, and a future revival would be suffixed `V1`. The body field is `recoveryKey`, matching what `change-recovery` returns (`account.recoveryKey`), rather than core’s `recovery2Key`.",
         "x-source": "src/cli/engine/routes/login.ts",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "`loginMethod` is `recovery2`.",
+            "description": "`loginMethod` is `recovery`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1419,7 +1455,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "recovery2Key": {
+                  "recoveryKey": {
                     "type": "string"
                   },
                   "username": {
@@ -1449,7 +1485,7 @@
                   }
                 },
                 "required": [
-                  "recovery2Key",
+                  "recoveryKey",
                   "username",
                   "answers"
                 ],
@@ -1668,11 +1704,17 @@
       "post": {
         "operationId": "cancelEdgeLogin",
         "summary": "Cancel a pending QR login",
-        "description": "**Core call:** `EdgePendingEdgeLogin.cancelRequest`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `EdgePendingEdgeLogin.cancelRequest`\n\n**Command line**\n\n```\ncancel-request <pendingId>\n```\n\n",
         "tags": [
           "Login"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "cancel-request",
+            "usage": "cancel-request <pendingId>",
+            "example": "edge-cli cancel-request pending_7Qk3…"
+          }
+        ],
         "x-core-call": "EdgePendingEdgeLogin.cancelRequest",
         "x-source": "src/cli/engine/routes/login.ts",
         "parameters": [
@@ -1703,7 +1745,7 @@
         }
       }
     },
-    "/accounts/{sessionId}": {
+    "/account/{sessionId}": {
       "get": {
         "operationId": "accountInfo",
         "summary": "Account and session summary",
@@ -1843,7 +1885,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/logout": {
+    "/account/{sessionId}/logout": {
       "post": {
         "operationId": "logout",
         "summary": "Log out",
@@ -1892,7 +1934,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/touch": {
+    "/account/{sessionId}/touch": {
       "post": {
         "operationId": "touchSession",
         "summary": "Keepalive",
@@ -1960,7 +2002,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-login-key": {
+    "/account/{sessionId}/get-login-key": {
       "get": {
         "operationId": "getLoginKey",
         "summary": "Read the account login key",
@@ -2025,15 +2067,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/sync": {
+    "/account/{sessionId}/sync": {
       "post": {
         "operationId": "accountSync",
         "summary": "Force an account data sync",
-        "description": "**Core call:** `account.sync`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.sync`\n\n**Command line**\n\n```\nsync\n```\n\n",
         "tags": [
           "Account"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "sync",
+            "usage": "sync",
+            "example": "edge-cli sync"
+          }
+        ],
         "x-core-call": "account.sync",
         "x-source": "src/cli/engine/routes/account.ts",
         "parameters": [
@@ -2079,15 +2127,30 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-remote-account": {
+    "/account/{sessionId}/delete-remote-account": {
       "post": {
         "operationId": "deleteRemoteAccount",
         "summary": "Permanently delete the remote account",
-        "description": "**Core call:** `account.deleteRemoteAccount`\n\n_No `edge-cli` command; REST only._\n\n**Irreversible.** The account is removed from the login server; funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
+        "description": "**Core call:** `account.deleteRemoteAccount`\n\n**Command line**\n\n```\ndelete-remote-account --yes\n```\n\n**Irreversible.** The account is removed from the login server; funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
         "tags": [
           "Account"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "delete-remote-account",
+            "usage": "delete-remote-account --yes",
+            "flags": [
+              {
+                "flag": "--yes",
+                "maps": "—",
+                "target": "client",
+                "doc": "Required confirmation. The endpoint has no guard, so the command supplies one."
+              }
+            ],
+            "example": "edge-cli delete-remote-account --yes",
+            "notes": "Irreversible. Clears the stored session afterwards."
+          }
+        ],
         "x-core-call": "account.deleteRemoteAccount",
         "x-source": "src/cli/engine/routes/account.ts",
         "parameters": [
@@ -2121,11 +2184,11 @@
         }
       }
     },
-    "/accounts/{sessionId}/local-settings": {
+    "/account/{sessionId}/local-settings": {
       "get": {
         "operationId": "localSettings",
-        "summary": "Read device-local account settings",
-        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings), reached through account.localDisklet._\n\n**Command line**\n\n```\nlocal-settings\n```\n\nStored in `Settings.json` on `account.localDisklet`, so they are **not synced** — a phone and a CLI have separate copies unless they share an Edge data directory.",
+        "summary": "Local settings",
+        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings), reached through account.localDisklet._\n\n**Command line**\n\n```\nlocal-settings\n```\n\nDevice-local account settings, stored in `Settings.json` on `account.localDisklet`. They are **not synced** — a phone and a CLI have separate copies unless they share an Edge data directory. Every setting is listed below; there is one today.",
         "tags": [
           "Account"
         ],
@@ -2164,7 +2227,7 @@
                   "properties": {
                     "spamFilterOn": {
                       "type": "boolean",
-                      "description": "Hide spam transactions. Defaults to `true`, matching the GUI."
+                      "description": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
                     }
                   },
                   "required": [
@@ -2188,11 +2251,11 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-local-settings": {
+    "/account/{sessionId}/change-local-settings": {
       "post": {
         "operationId": "changeLocalSettings",
-        "summary": "Set the spam-filter toggle",
-        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings)._\n\n**Command line**\n\n```\nlocal-settings [--spam-filter-on=true|false]\n```\n\n",
+        "summary": "Change local settings",
+        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings)._\n\n**Command line**\n\n```\nlocal-settings [--spam-filter-on=true|false]\n```\n\nWrites device-local account settings. Every option is listed below; `spamFilterOn` is the only one today, and new options are added here as additional fields.",
         "tags": [
           "Account"
         ],
@@ -2261,14 +2324,15 @@
         },
         "requestBody": {
           "required": true,
-          "description": "Required; omitting it is a `400`, not a no-op.",
+          "description": "One field per setting. `spamFilterOn` is required; omitting it is a `400`, not a no-op, so a caller cannot accidentally clear a setting by sending an empty body.",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "spamFilterOn": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
                   }
                 },
                 "required": [
@@ -2281,7 +2345,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-password": {
+    "/account/{sessionId}/change-password": {
       "post": {
         "operationId": "changePassword",
         "summary": "Set or change the password",
@@ -2355,15 +2419,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-password": {
+    "/account/{sessionId}/delete-password": {
       "post": {
         "operationId": "deletePassword",
         "summary": "Remove password login",
-        "description": "**Core call:** `account.deletePassword`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.deletePassword`\n\n**Command line**\n\n```\ndelete-password\n```\n\n",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "delete-password",
+            "usage": "delete-password",
+            "example": "edge-cli delete-password"
+          }
+        ],
         "x-core-call": "account.deletePassword",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2397,15 +2467,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/check-password": {
+    "/account/{sessionId}/check-password": {
       "post": {
         "operationId": "checkPassword",
         "summary": "Verify a password",
-        "description": "**Core call:** `account.checkPassword`\n\n_No `edge-cli` command; REST only._\n\nChecks without changing anything — useful to gate a destructive action.",
+        "description": "**Core call:** `account.checkPassword`\n\n**Command line**\n\n```\ncheck-password --password=<password>\n```\n\nChecks without changing anything — useful to gate a destructive action.",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "check-password",
+            "usage": "check-password --password=<password>",
+            "flags": [
+              {
+                "flag": "--password=<password>",
+                "maps": "password",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli check-password --password='s3cret'"
+          }
+        ],
         "x-core-call": "account.checkPassword",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2475,15 +2558,22 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-pin": {
+    "/account/{sessionId}/get-pin": {
       "get": {
         "operationId": "getPin",
         "summary": "Read the account PIN",
-        "description": "**Core call:** `account.getPin`\n\n_No `edge-cli` command; REST only._\n\nReturns the PIN itself, not a status flag. Treat the response as secret.",
+        "description": "**Core call:** `account.getPin`\n\n**Command line**\n\n```\nget-pin\n```\n\nReturns the PIN itself, not a status flag. Treat the response as secret.",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "get-pin",
+            "usage": "get-pin",
+            "example": "edge-cli get-pin",
+            "notes": "Prints the PIN itself. Treat the output as secret."
+          }
+        ],
         "x-core-call": "account.getPin",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2544,7 +2634,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-pin": {
+    "/account/{sessionId}/change-pin": {
       "post": {
         "operationId": "changePin",
         "summary": "Set or change the PIN",
@@ -2645,7 +2735,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-pin": {
+    "/account/{sessionId}/delete-pin": {
       "post": {
         "operationId": "deletePin",
         "summary": "Remove the PIN",
@@ -2693,15 +2783,33 @@
         }
       }
     },
-    "/accounts/{sessionId}/check-pin": {
+    "/account/{sessionId}/check-pin": {
       "post": {
         "operationId": "checkPin",
         "summary": "Verify a PIN",
-        "description": "**Core call:** `account.checkPin`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.checkPin`\n\n**Command line**\n\n```\ncheck-pin --pin=<pin> [--for-duress-account]\n```\n\n",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "check-pin",
+            "usage": "check-pin --pin=<pin> [--for-duress-account]",
+            "flags": [
+              {
+                "flag": "--pin=<pin>",
+                "maps": "pin",
+                "target": "body"
+              },
+              {
+                "flag": "--for-duress-account",
+                "maps": "forDuressAccount",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli check-pin --pin=1234"
+          }
+        ],
         "x-core-call": "account.checkPin",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2773,15 +2881,33 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-username": {
+    "/account/{sessionId}/change-username": {
       "post": {
         "operationId": "changeUsername",
         "summary": "Change the username",
-        "description": "**Core call:** `account.changeUsername`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.changeUsername`\n\n**Command line**\n\n```\nchange-username --username=<username> [--password=<password>]\n```\n\n",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "change-username",
+            "usage": "change-username --username=<username> [--password=<password>]",
+            "flags": [
+              {
+                "flag": "--username=<username>",
+                "maps": "username",
+                "target": "body"
+              },
+              {
+                "flag": "--password=<password>",
+                "maps": "password",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli change-username --username=alice2"
+          }
+        ],
         "x-core-call": "account.changeUsername",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2841,7 +2967,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-recovery": {
+    "/account/{sessionId}/change-recovery": {
       "post": {
         "operationId": "changeRecovery",
         "summary": "Set recovery questions and answers",
@@ -2895,7 +3021,7 @@
                   "properties": {
                     "recoveryKey": {
                       "type": "string",
-                      "description": "Core returns this string. It is what `POST /login-with-recovery2` calls `recovery2Key`."
+                      "description": "Core returns this string. It is what `POST /login-with-recovery` calls `recoveryKey`."
                     }
                   },
                   "required": [
@@ -2949,15 +3075,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-recovery": {
+    "/account/{sessionId}/delete-recovery": {
       "post": {
         "operationId": "deleteRecovery",
         "summary": "Disable recovery login",
-        "description": "**Core call:** `account.deleteRecovery`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.deleteRecovery`\n\n**Command line**\n\n```\ndelete-recovery\n```\n\n",
         "tags": [
           "Credentials"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "delete-recovery",
+            "usage": "delete-recovery",
+            "example": "edge-cli delete-recovery"
+          }
+        ],
         "x-core-call": "account.deleteRecovery",
         "x-source": "src/cli/engine/routes/credentials.ts",
         "parameters": [
@@ -2991,7 +3123,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/otp-key": {
+    "/account/{sessionId}/otp-key": {
       "get": {
         "operationId": "otpKey",
         "summary": "Read the 2FA secret and reset state",
@@ -3080,7 +3212,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/enable-otp": {
+    "/account/{sessionId}/enable-otp": {
       "post": {
         "operationId": "enableOtp",
         "summary": "Enable 2FA",
@@ -3176,7 +3308,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/disable-otp": {
+    "/account/{sessionId}/disable-otp": {
       "post": {
         "operationId": "disableOtp",
         "summary": "Disable 2FA",
@@ -3224,7 +3356,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/cancel-otp-reset": {
+    "/account/{sessionId}/cancel-otp-reset": {
       "post": {
         "operationId": "cancelOtpReset",
         "summary": "Cancel a pending 2FA reset",
@@ -3272,15 +3404,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/repair-otp": {
+    "/account/{sessionId}/repair-otp": {
       "post": {
         "operationId": "repairOtp",
         "summary": "Re-point the account at a known 2FA secret",
-        "description": "**Core call:** `account.repairOtp`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.repairOtp`\n\n**Command line**\n\n```\nrepair-otp --otp-key=<otpKey>\n```\n\n",
         "tags": [
           "Two-factor authentication"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "repair-otp",
+            "usage": "repair-otp --otp-key=<otpKey>",
+            "flags": [
+              {
+                "flag": "--otp-key=<key>",
+                "maps": "otpKey",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli repair-otp --otp-key=NB2W…"
+          }
+        ],
         "x-core-call": "account.repairOtp",
         "x-source": "src/cli/engine/routes/otp.ts",
         "parameters": [
@@ -3336,15 +3481,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/pending-vouchers": {
+    "/account/{sessionId}/pending-vouchers": {
       "get": {
         "operationId": "pendingVouchers",
         "summary": "List pending vouchers",
-        "description": "**Core call:** `account.pendingVouchers`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.pendingVouchers`\n\n**Command line**\n\n```\npending-vouchers\n```\n\n",
         "tags": [
           "Login vouchers"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "pending-vouchers",
+            "usage": "pending-vouchers",
+            "example": "edge-cli pending-vouchers"
+          }
+        ],
         "x-core-call": "account.pendingVouchers",
         "x-source": "src/cli/engine/routes/vouchers.ts",
         "parameters": [
@@ -3397,15 +3548,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/approve-voucher": {
+    "/account/{sessionId}/approve-voucher": {
       "post": {
         "operationId": "approveVoucher",
         "summary": "Approve a voucher",
-        "description": "**Core call:** `account.approveVoucher`\n\n_No `edge-cli` command; REST only._\n\nLets the waiting device finish logging in.",
+        "description": "**Core call:** `account.approveVoucher`\n\n**Command line**\n\n```\napprove-voucher --voucher-id=<voucherId>\n```\n\nLets the waiting device finish logging in.",
         "tags": [
           "Login vouchers"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "approve-voucher",
+            "usage": "approve-voucher --voucher-id=<voucherId>",
+            "flags": [
+              {
+                "flag": "--voucher-id=<id>",
+                "maps": "voucherId",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli approve-voucher --voucher-id=abc"
+          }
+        ],
         "x-core-call": "account.approveVoucher",
         "x-source": "src/cli/engine/routes/vouchers.ts",
         "parameters": [
@@ -3459,15 +3623,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/reject-voucher": {
+    "/account/{sessionId}/reject-voucher": {
       "post": {
         "operationId": "rejectVoucher",
         "summary": "Reject a voucher",
-        "description": "**Core call:** `account.rejectVoucher`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.rejectVoucher`\n\n**Command line**\n\n```\nreject-voucher --voucher-id=<voucherId>\n```\n\n",
         "tags": [
           "Login vouchers"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "reject-voucher",
+            "usage": "reject-voucher --voucher-id=<voucherId>",
+            "flags": [
+              {
+                "flag": "--voucher-id=<id>",
+                "maps": "voucherId",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli reject-voucher --voucher-id=abc"
+          }
+        ],
         "x-core-call": "account.rejectVoucher",
         "x-source": "src/cli/engine/routes/vouchers.ts",
         "parameters": [
@@ -3520,7 +3697,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/fetch-lobby": {
+    "/account/{sessionId}/fetch-lobby": {
       "get": {
         "operationId": "fetchLobby",
         "summary": "Inspect a login request",
@@ -3643,7 +3820,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/approve-login-request": {
+    "/account/{sessionId}/approve-login-request": {
       "post": {
         "operationId": "approveLoginRequest",
         "summary": "Approve a login request",
@@ -3718,7 +3895,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/all-keys": {
+    "/account/{sessionId}/all-keys": {
       "get": {
         "operationId": "allKeys",
         "summary": "List every key in the account",
@@ -3785,7 +3962,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/create-wallet": {
+    "/account/{sessionId}/create-wallet": {
       "post": {
         "operationId": "createWallet",
         "summary": "Create a wallet from raw key JSON",
@@ -3883,15 +4060,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-wallet-info": {
+    "/account/{sessionId}/get-wallet-info": {
       "get": {
         "operationId": "getWalletInfo",
         "summary": "Read one wallet’s key info",
-        "description": "**Core call:** `account.getWalletInfo`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.getWalletInfo`\n\n**Command line**\n\n```\nget-wallet-info <walletId>\n```\n\n",
         "tags": [
           "Keys"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "get-wallet-info",
+            "usage": "get-wallet-info <walletId>",
+            "example": "edge-cli get-wallet-info abc123"
+          }
+        ],
         "x-core-call": "account.getWalletInfo",
         "x-source": "src/cli/engine/routes/keys.ts",
         "parameters": [
@@ -3941,7 +4124,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-raw-private-key": {
+    "/account/{sessionId}/get-raw-private-key": {
       "get": {
         "operationId": "getRawPrivateKey",
         "summary": "Read raw private key material",
@@ -4009,15 +4192,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-raw-public-key": {
+    "/account/{sessionId}/get-raw-public-key": {
       "get": {
         "operationId": "getRawPublicKey",
         "summary": "Read raw public key material",
-        "description": "**Core call:** `account.getRawPublicKey`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.getRawPublicKey`\n\n**Command line**\n\n```\nget-raw-public-key <walletId>\n```\n\n",
         "tags": [
           "Keys"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "get-raw-public-key",
+            "usage": "get-raw-public-key <walletId>",
+            "example": "edge-cli get-raw-public-key abc123"
+          }
+        ],
         "x-core-call": "account.getRawPublicKey",
         "x-source": "src/cli/engine/routes/keys.ts",
         "parameters": [
@@ -4071,7 +4260,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-display-private-key": {
+    "/account/{sessionId}/get-display-private-key": {
       "get": {
         "operationId": "getDisplayPrivateKey",
         "summary": "Export the private key for display",
@@ -4147,7 +4336,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-display-public-key": {
+    "/account/{sessionId}/get-display-public-key": {
       "get": {
         "operationId": "getDisplayPublicKey",
         "summary": "Export the public key for display",
@@ -4223,15 +4412,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/list-splittable-wallet-types": {
+    "/account/{sessionId}/list-splittable-wallet-types": {
       "get": {
         "operationId": "listSplittableWalletTypes",
         "summary": "List chains a wallet can split into",
-        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n**Command line**\n\n```\nlist-splittable-wallet-types <walletId>\n```\n\n",
         "tags": [
           "Keys"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "list-splittable-wallet-types",
+            "usage": "list-splittable-wallet-types <walletId>",
+            "example": "edge-cli list-splittable-wallet-types abc123"
+          }
+        ],
         "x-core-call": "account.listSplittableWalletTypes",
         "x-source": "src/cli/engine/routes/keys.ts",
         "parameters": [
@@ -4299,7 +4494,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/change-wallet-states": {
+    "/account/{sessionId}/change-wallet-states": {
       "post": {
         "operationId": "changeWalletStates",
         "summary": "Archive, delete, hide, or reorder wallets",
@@ -4408,7 +4603,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/currency-wallets": {
+    "/account/{sessionId}/currency-wallets": {
       "get": {
         "operationId": "currencyWallets",
         "summary": "List wallets",
@@ -4513,7 +4708,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/create-currency-wallet": {
+    "/account/{sessionId}/create-currency-wallet": {
       "post": {
         "operationId": "createCurrencyWallet",
         "summary": "Create a currency wallet",
@@ -4611,15 +4806,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/create-currency-wallets": {
+    "/account/{sessionId}/create-currency-wallets": {
       "post": {
         "operationId": "createCurrencyWallets",
         "summary": "Create several wallets at once",
-        "description": "**Core call:** `account.createCurrencyWallets`\n\n_No `edge-cli` command; REST only._\n\nPartial success is normal: each entry reports its own outcome and one failure does not roll back the others.",
+        "description": "**Core call:** `account.createCurrencyWallets`\n\n**Command line**\n\n```\ncreate-currency-wallets --create-wallets='<json>'\n```\n\nPartial success is normal: each entry reports its own outcome and one failure does not roll back the others.",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "create-currency-wallets",
+            "usage": "create-currency-wallets --create-wallets='<json>'",
+            "flags": [
+              {
+                "flag": "--create-wallets='<json>'",
+                "maps": "createWallets",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli create-currency-wallets --create-wallets='[{\"walletType\":\"wallet:bitcoin\"}]'"
+          }
+        ],
         "x-core-call": "account.createCurrencyWallets",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -4713,7 +4921,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}": {
+    "/account/{sessionId}/wallets/{walletId}": {
       "get": {
         "operationId": "walletInfo",
         "summary": "Wallet detail",
@@ -4802,7 +5010,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/rename-wallet": {
+    "/account/{sessionId}/wallets/{walletId}/rename-wallet": {
       "post": {
         "operationId": "renameWallet",
         "summary": "Rename a wallet",
@@ -4888,15 +5096,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/set-fiat-currency-code": {
+    "/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code": {
       "post": {
         "operationId": "setFiatCurrencyCode",
         "summary": "Change a wallet’s fiat currency",
-        "description": "**Core call:** `wallet.setFiatCurrencyCode`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `wallet.setFiatCurrencyCode`\n\n**Command line**\n\n```\nset-fiat-currency-code <walletId> --fiat-currency-code=<code>\n```\n\n",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "set-fiat-currency-code",
+            "usage": "set-fiat-currency-code <walletId> --fiat-currency-code=<code>",
+            "flags": [
+              {
+                "flag": "--fiat-currency-code=<code>",
+                "maps": "fiatCurrencyCode",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli set-fiat-currency-code abc123 --fiat-currency-code=iso:EUR"
+          }
+        ],
         "x-core-call": "wallet.setFiatCurrencyCode",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -4964,15 +5185,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/change-paused": {
+    "/account/{sessionId}/wallets/{walletId}/change-paused": {
       "post": {
         "operationId": "changePaused",
         "summary": "Pause or resume a wallet engine",
-        "description": "**Core call:** `wallet.changePaused`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `wallet.changePaused`\n\n**Command line**\n\n```\nchange-paused <walletId> --paused=true|false\n```\n\n",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "change-paused",
+            "usage": "change-paused <walletId> --paused=true|false",
+            "flags": [
+              {
+                "flag": "--paused=<bool>",
+                "maps": "paused",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli change-paused abc123 --paused=true"
+          }
+        ],
         "x-core-call": "wallet.changePaused",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -5037,15 +5271,22 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/sync": {
+    "/account/{sessionId}/wallets/{walletId}/sync": {
       "post": {
         "operationId": "walletSync",
         "summary": "Nudge a wallet to sync",
-        "description": "**Core call:** `wallet.sync`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `wallet.sync`\n\n**Command line**\n\n```\nwallet-sync <walletId>\n```\n\n",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "wallet-sync",
+            "usage": "wallet-sync <walletId>",
+            "example": "edge-cli wallet-sync abc123",
+            "notes": "Named `wallet-sync` because `sync` is `account.sync`."
+          }
+        ],
         "x-core-call": "wallet.sync",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -5103,15 +5344,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/resync-blockchain": {
+    "/account/{sessionId}/wallets/{walletId}/resync-blockchain": {
       "post": {
         "operationId": "resyncBlockchain",
         "summary": "Rescan the blockchain from scratch",
-        "description": "**Core call:** `wallet.resyncBlockchain`\n\n_No `edge-cli` command; REST only._\n\nDrops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
+        "description": "**Core call:** `wallet.resyncBlockchain`\n\n**Command line**\n\n```\nresync-blockchain <walletId>\n```\n\nDrops cached chain state and re-scans. Expensive, and the wallet reports an incomplete balance until it finishes.",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "resync-blockchain",
+            "usage": "resync-blockchain <walletId>",
+            "example": "edge-cli resync-blockchain abc123"
+          }
+        ],
         "x-core-call": "wallet.resyncBlockchain",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -5169,15 +5416,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/split": {
+    "/account/{sessionId}/wallets/{walletId}/split": {
       "post": {
         "operationId": "splitWallet",
         "summary": "Split a wallet into another chain",
-        "description": "**Core call:** `wallet.split`\n\n_No `edge-cli` command; REST only._\n\nForked-chain support: derive a wallet of a different type from the same keys.",
+        "description": "**Core call:** `wallet.split`\n\n**Command line**\n\n```\nsplit <walletId> --split-wallets='<json>'\n```\n\nForked-chain support: derive a wallet of a different type from the same keys.",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "split",
+            "usage": "split <walletId> --split-wallets='<json>'",
+            "flags": [
+              {
+                "flag": "--split-wallets='<json>'",
+                "maps": "splitWallets",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli split abc123 --split-wallets='[{\"walletType\":\"wallet:bitcoincash\"}]'"
+          }
+        ],
         "x-core-call": "wallet.split",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -5280,15 +5540,21 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/dump-data": {
+    "/account/{sessionId}/wallets/{walletId}/dump-data": {
       "get": {
         "operationId": "dumpData",
         "summary": "Dump wallet engine state",
-        "description": "**Core call:** `wallet.dumpData`\n\n_No `edge-cli` command; REST only._\n\nPlugin-defined debug output. Shape varies by plugin and can be very large.",
+        "description": "**Core call:** `wallet.dumpData`\n\n**Command line**\n\n```\ndump-data <walletId>\n```\n\nPlugin-defined debug output. Shape varies by plugin and can be very large.",
         "tags": [
           "Wallets"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "dump-data",
+            "usage": "dump-data <walletId>",
+            "example": "edge-cli dump-data abc123"
+          }
+        ],
         "x-core-call": "wallet.dumpData",
         "x-source": "src/cli/engine/routes/wallets.ts",
         "parameters": [
@@ -5341,7 +5607,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/balance-map": {
+    "/account/{sessionId}/wallets/{walletId}/balance-map": {
       "get": {
         "operationId": "balanceMap",
         "summary": "Balances for every asset in the wallet",
@@ -5429,7 +5695,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/get-addresses": {
+    "/account/{sessionId}/wallets/{walletId}/get-addresses": {
       "get": {
         "operationId": "getAddresses",
         "summary": "Receive addresses",
@@ -5533,7 +5799,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/tokens": {
+    "/account/{sessionId}/wallets/{walletId}/tokens": {
       "get": {
         "operationId": "walletTokens",
         "summary": "List a wallet’s tokens",
@@ -5642,7 +5908,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/change-enabled-token-ids": {
+    "/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids": {
       "post": {
         "operationId": "changeEnabledTokenIds",
         "summary": "Set the enabled token set",
@@ -5753,7 +6019,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/get-transactions": {
+    "/account/{sessionId}/wallets/{walletId}/get-transactions": {
       "get": {
         "operationId": "getTransactions",
         "summary": "List or export transactions",
@@ -6053,15 +6319,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/get-num-transactions": {
+    "/account/{sessionId}/wallets/{walletId}/get-num-transactions": {
       "get": {
         "operationId": "getNumTransactions",
         "summary": "Count transactions",
-        "description": "**Core call:** `wallet.getNumTransactions`\n\n_No `edge-cli` command; REST only._\n\nCheaper than listing when you only need the total.",
+        "description": "**Core call:** `wallet.getNumTransactions`\n\n**Command line**\n\n```\nget-num-transactions <walletId> [--token-id=<id>]\n```\n\nCheaper than listing when you only need the total.",
         "tags": [
           "Transactions"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "get-num-transactions",
+            "usage": "get-num-transactions <walletId> [--token-id=<id>]",
+            "flags": [
+              {
+                "flag": "--token-id=<id>",
+                "maps": "tokenId",
+                "target": "query"
+              }
+            ],
+            "example": "edge-cli get-num-transactions abc123"
+          }
+        ],
         "x-core-call": "wallet.getNumTransactions",
         "x-source": "src/cli/engine/routes/transactions.ts",
         "parameters": [
@@ -6135,15 +6414,38 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/save-tx-metadata": {
+    "/account/{sessionId}/wallets/{walletId}/save-tx-metadata": {
       "post": {
         "operationId": "saveTxMetadata",
         "summary": "Save transaction metadata",
-        "description": "**Core call:** `wallet.saveTxMetadata`\n\n_No `edge-cli` command; REST only._\n\nOne of only two routes that write transaction metadata to disk.",
+        "description": "**Core call:** `wallet.saveTxMetadata`\n\n**Command line**\n\n```\nsave-tx-metadata <walletId> --txid=<txid> --metadata='<json>' [--token-id=<id>]\n```\n\nOne of only two routes that write transaction metadata to disk.",
         "tags": [
           "Transactions"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "save-tx-metadata",
+            "usage": "save-tx-metadata <walletId> --txid=<txid> --metadata='<json>' [--token-id=<id>]",
+            "flags": [
+              {
+                "flag": "--txid=<txid>",
+                "maps": "txid",
+                "target": "body"
+              },
+              {
+                "flag": "--metadata='<json>'",
+                "maps": "metadata",
+                "target": "body"
+              },
+              {
+                "flag": "--token-id=<id>",
+                "maps": "tokenId",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli save-tx-metadata abc123 --txid=deadbeef --metadata='{\"name\":\"Coffee\"}'"
+          }
+        ],
         "x-core-call": "wallet.saveTxMetadata",
         "x-source": "src/cli/engine/routes/transactions.ts",
         "parameters": [
@@ -6223,15 +6525,43 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/save-tx-action": {
+    "/account/{sessionId}/wallets/{walletId}/save-tx-action": {
       "post": {
         "operationId": "saveTxAction",
         "summary": "Save a transaction action",
-        "description": "**Core call:** `wallet.saveTxAction`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `wallet.saveTxAction`\n\n**Command line**\n\n```\nsave-tx-action <walletId> --txid=<txid> --saved-action='<json>' [--asset-action='<json>'] [--token-id=<id>]\n```\n\n",
         "tags": [
           "Transactions"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "save-tx-action",
+            "usage": "save-tx-action <walletId> --txid=<txid> --saved-action='<json>' [--asset-action='<json>'] [--token-id=<id>]",
+            "flags": [
+              {
+                "flag": "--txid=<txid>",
+                "maps": "txid",
+                "target": "body"
+              },
+              {
+                "flag": "--saved-action='<json>'",
+                "maps": "savedAction",
+                "target": "body"
+              },
+              {
+                "flag": "--asset-action='<json>'",
+                "maps": "assetAction",
+                "target": "body"
+              },
+              {
+                "flag": "--token-id=<id>",
+                "maps": "tokenId",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli save-tx-action abc123 --txid=deadbeef --saved-action='{\"actionType\":\"swap\"}'"
+          }
+        ],
         "x-core-call": "wallet.saveTxAction",
         "x-source": "src/cli/engine/routes/transactions.ts",
         "parameters": [
@@ -6314,7 +6644,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/get-max-spendable": {
+    "/account/{sessionId}/wallets/{walletId}/get-max-spendable": {
       "post": {
         "operationId": "getMaxSpendable",
         "summary": "Largest sendable amount",
@@ -6455,7 +6785,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/spend": {
+    "/account/{sessionId}/wallets/{walletId}/spend": {
       "post": {
         "operationId": "spend",
         "summary": "Send funds",
@@ -6649,7 +6979,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/make-spend": {
+    "/account/{sessionId}/wallets/{walletId}/make-spend": {
       "post": {
         "operationId": "makeSpend",
         "summary": "Build an unsigned transaction",
@@ -6783,7 +7113,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/sign-tx": {
+    "/account/{sessionId}/wallets/{walletId}/sign-tx": {
       "post": {
         "operationId": "signTx",
         "summary": "Sign a staged transaction",
@@ -6880,7 +7210,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/broadcast-tx": {
+    "/account/{sessionId}/wallets/{walletId}/broadcast-tx": {
       "post": {
         "operationId": "broadcastTx",
         "summary": "Broadcast a signed transaction",
@@ -6974,7 +7304,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/save-tx": {
+    "/account/{sessionId}/wallets/{walletId}/save-tx": {
       "post": {
         "operationId": "saveTx",
         "summary": "Record a transaction and release its handle",
@@ -7067,15 +7397,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/accelerate": {
+    "/account/{sessionId}/wallets/{walletId}/accelerate": {
       "post": {
         "operationId": "accelerate",
         "summary": "Fee-bump a pending transaction",
-        "description": "**Core call:** `wallet.accelerate`\n\n_No `edge-cli` command; REST only._\n\nReplace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
+        "description": "**Core call:** `wallet.accelerate`\n\n**Command line**\n\n```\naccelerate <walletId> --object-id=<objectId>\n```\n\nReplace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.",
         "tags": [
           "Spending"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "accelerate",
+            "usage": "accelerate <walletId> --object-id=<objectId>",
+            "flags": [
+              {
+                "flag": "--object-id=<id>",
+                "maps": "objectId",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli accelerate abc123 --object-id=tx_3fK9…"
+          }
+        ],
         "x-core-call": "wallet.accelerate",
         "x-source": "src/cli/engine/routes/spend.ts",
         "parameters": [
@@ -7149,15 +7492,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/sweep-private-keys": {
+    "/account/{sessionId}/wallets/{walletId}/sweep-private-keys": {
       "post": {
         "operationId": "sweepPrivateKeys",
         "summary": "Sweep private keys into this wallet",
-        "description": "**Core call:** `wallet.sweepPrivateKeys`\n\n_No `edge-cli` command; REST only._\n\nBuilds a transaction moving everything from an external private key into this wallet.",
+        "description": "**Core call:** `wallet.sweepPrivateKeys`\n\n**Command line**\n\n```\nsweep-private-keys <walletId> --spend-info='<json>'\n```\n\nBuilds a transaction moving everything from an external private key into this wallet.",
         "tags": [
           "Spending"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "sweep-private-keys",
+            "usage": "sweep-private-keys <walletId> --spend-info='<json>'",
+            "flags": [
+              {
+                "flag": "--spend-info='<json>'",
+                "maps": "spendInfo",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli sweep-private-keys abc123 --spend-info='{\"privateKeys\":[\"…\"]}'"
+          }
+        ],
         "x-core-call": "wallet.sweepPrivateKeys",
         "x-source": "src/cli/engine/routes/spend.ts",
         "parameters": [
@@ -7230,15 +7586,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/sign-bytes": {
+    "/account/{sessionId}/wallets/{walletId}/sign-bytes": {
       "post": {
         "operationId": "signBytes",
         "summary": "Sign arbitrary bytes",
-        "description": "**Core call:** `wallet.signBytes`\n\n_No `edge-cli` command; REST only._\n\nMessage signing and proof-of-ownership, for plugins that support it.",
+        "description": "**Core call:** `wallet.signBytes`\n\n**Command line**\n\n```\nsign-bytes <walletId> --bytes=<base64>\n```\n\nMessage signing and proof-of-ownership, for plugins that support it.",
         "tags": [
           "Spending"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "sign-bytes",
+            "usage": "sign-bytes <walletId> --bytes=<base64>",
+            "flags": [
+              {
+                "flag": "--bytes=<base64>",
+                "maps": "bytes",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli sign-bytes abc123 --bytes=aGVsbG8="
+          }
+        ],
         "x-core-call": "wallet.signBytes",
         "x-source": "src/cli/engine/routes/spend.ts",
         "parameters": [
@@ -7330,15 +7699,28 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/get-payment-protocol-info": {
+    "/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info": {
       "get": {
         "operationId": "getPaymentProtocolInfo",
         "summary": "Fetch a BIP70 payment request",
-        "description": "**Core call:** `wallet.getPaymentProtocolInfo`\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** `wallet.getPaymentProtocolInfo`\n\n**Command line**\n\n```\nget-payment-protocol-info <walletId> --payment-protocol-url=<url>\n```\n\n",
         "tags": [
           "Spending"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "get-payment-protocol-info",
+            "usage": "get-payment-protocol-info <walletId> --payment-protocol-url=<url>",
+            "flags": [
+              {
+                "flag": "--payment-protocol-url=<url>",
+                "maps": "paymentProtocolUrl",
+                "target": "query"
+              }
+            ],
+            "example": "edge-cli get-payment-protocol-info abc123 --payment-protocol-url='https://…'"
+          }
+        ],
         "x-core-call": "wallet.getPaymentProtocolInfo",
         "x-source": "src/cli/engine/routes/spend.ts",
         "parameters": [
@@ -7400,7 +7782,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/objects/{objectId}": {
+    "/account/{sessionId}/objects/{objectId}": {
       "get": {
         "operationId": "getObject",
         "summary": "Inspect an object handle",
@@ -7477,7 +7859,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/objects/{objectId}/delete": {
+    "/account/{sessionId}/objects/{objectId}/delete": {
       "post": {
         "operationId": "deleteObject",
         "summary": "Release an object handle",
@@ -7545,7 +7927,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/fetch-swap-quotes": {
+    "/account/{sessionId}/fetch-swap-quotes": {
       "post": {
         "operationId": "fetchSwapQuotes",
         "summary": "Fetch swap quotes",
@@ -7724,7 +8106,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/swap-quotes/{objectId}": {
+    "/account/{sessionId}/swap-quotes/{objectId}": {
       "get": {
         "operationId": "getSwapQuote",
         "summary": "Re-read a quote",
@@ -7791,7 +8173,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/swap-quotes/{objectId}/approve": {
+    "/account/{sessionId}/swap-quotes/{objectId}/approve": {
       "post": {
         "operationId": "approveSwapQuote",
         "summary": "Execute a quote",
@@ -7907,7 +8289,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/swap-quotes/{objectId}/close": {
+    "/account/{sessionId}/swap-quotes/{objectId}/close": {
       "post": {
         "operationId": "closeSwapQuote",
         "summary": "Discard a quote",
@@ -7970,15 +8352,33 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/parse-uri": {
+    "/account/{sessionId}/wallets/{walletId}/parse-uri": {
       "post": {
         "operationId": "parseUri",
         "summary": "Parse a payment URI or get-addresses",
-        "description": "**Core call:** `wallet.parseUri`\n\n_No `edge-cli` command; REST only._\n\nWhat the GUI get-addresses tile does when you paste or scan something.",
+        "description": "**Core call:** `wallet.parseUri`\n\n**Command line**\n\n```\nparse-uri <walletId> --uri=<uri> [--currency-code=<code>]\n```\n\nWhat the GUI get-addresses tile does when you paste or scan something.",
         "tags": [
           "Payment URIs"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "parse-uri",
+            "usage": "parse-uri <walletId> --uri=<uri> [--currency-code=<code>]",
+            "flags": [
+              {
+                "flag": "--uri=<uri>",
+                "maps": "uri",
+                "target": "body"
+              },
+              {
+                "flag": "--currency-code=<code>",
+                "maps": "currencyCode",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli parse-uri abc123 --uri='bitcoin:bc1…?amount=0.01'"
+          }
+        ],
         "x-core-call": "wallet.parseUri",
         "x-source": "src/cli/engine/routes/uri.ts",
         "parameters": [
@@ -8058,15 +8458,48 @@
         }
       }
     },
-    "/accounts/{sessionId}/wallets/{walletId}/encode-uri": {
+    "/account/{sessionId}/wallets/{walletId}/encode-uri": {
       "post": {
         "operationId": "encodeUri",
         "summary": "Build a payment URI",
-        "description": "**Core call:** `wallet.encodeUri`\n\n_No `edge-cli` command; REST only._\n\nFor a receive screen or QR code.",
+        "description": "**Core call:** `wallet.encodeUri`\n\n**Command line**\n\n```\nencode-uri <walletId> --public-address=<addr> [--native-amount=<n>] [--label=<text>] [--message=<text>] [--currency-code=<code>]\n```\n\nFor a receive screen or QR code.",
         "tags": [
           "Payment URIs"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "encode-uri",
+            "usage": "encode-uri <walletId> --public-address=<addr> [--native-amount=<n>] [--label=<text>] [--message=<text>] [--currency-code=<code>]",
+            "flags": [
+              {
+                "flag": "--public-address=<addr>",
+                "maps": "publicAddress",
+                "target": "body"
+              },
+              {
+                "flag": "--native-amount=<n>",
+                "maps": "nativeAmount",
+                "target": "body"
+              },
+              {
+                "flag": "--label=<text>",
+                "maps": "label",
+                "target": "body"
+              },
+              {
+                "flag": "--message=<text>",
+                "maps": "message",
+                "target": "body"
+              },
+              {
+                "flag": "--currency-code=<code>",
+                "maps": "currencyCode",
+                "target": "body"
+              }
+            ],
+            "example": "edge-cli encode-uri abc123 --public-address=bc1qexample --native-amount=1000"
+          }
+        ],
         "x-core-call": "wallet.encodeUri",
         "x-source": "src/cli/engine/routes/uri.ts",
         "parameters": [
@@ -8555,7 +8988,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/list-store-ids": {
+    "/account/{sessionId}/list-store-ids": {
       "get": {
         "operationId": "listStoreIds",
         "summary": "List store ids",
@@ -8622,7 +9055,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/list-item-ids": {
+    "/account/{sessionId}/list-item-ids": {
       "get": {
         "operationId": "listItemIds",
         "summary": "List item ids in a store",
@@ -8701,7 +9134,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/get-item": {
+    "/account/{sessionId}/get-item": {
       "get": {
         "operationId": "getItem",
         "summary": "Read an item",
@@ -8790,7 +9223,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/set-item": {
+    "/account/{sessionId}/set-item": {
       "post": {
         "operationId": "setItem",
         "summary": "Write an item",
@@ -8878,7 +9311,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-item": {
+    "/account/{sessionId}/delete-item": {
       "post": {
         "operationId": "deleteItem",
         "summary": "Delete an item",
@@ -8956,7 +9389,7 @@
         }
       }
     },
-    "/accounts/{sessionId}/delete-store": {
+    "/account/{sessionId}/delete-store": {
       "post": {
         "operationId": "deleteStore",
         "summary": "Delete an entire store",
@@ -9285,11 +9718,17 @@
       "post": {
         "operationId": "adminDeleteLobbyHandle",
         "summary": "Close a parked lobby",
-        "description": "**Core call:** _none — Engine handle store for a lobby created via makeLobby._\n\n_No `edge-cli` command; REST only._\n\n",
+        "description": "**Core call:** _none — Engine handle store for a lobby created via makeLobby._\n\n**Command line**\n\n```\nadmin-lobby-handle-delete <objectId>\n```\n\n",
         "tags": [
           "Admin"
         ],
-        "x-cli": [],
+        "x-cli": [
+          {
+            "command": "admin-lobby-handle-delete",
+            "usage": "admin-lobby-handle-delete <objectId>",
+            "example": "edge-cli -t admin-lobby-handle-delete lobby_7Qk3…"
+          }
+        ],
         "x-core-call": null,
         "x-core-note": "Engine handle store for a lobby created via makeLobby.",
         "x-source": "src/cli/engine/routes/admin.ts",
@@ -9936,7 +10375,10 @@
             ]
           },
           "rootLoginId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "Lq4mP7…"
+            ]
           },
           "loginMethod": {
             "type": "string",
@@ -9944,7 +10386,7 @@
               "password",
               "pin",
               "key",
-              "recovery2",
+              "recovery",
               "edge",
               "create"
             ]
@@ -9993,10 +10435,16 @@
         "type": "object",
         "properties": {
           "walletId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "FS8xJ2kQ…"
+            ]
           },
           "id": {
             "type": "string",
+            "examples": [
+              "FS8xJ2kQ…"
+            ],
             "description": "Alias of `walletId`."
           },
           "type": {
@@ -10130,10 +10578,16 @@
             "format": "date-time"
           },
           "sessionId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "sess_9xKq2…"
+            ]
           },
           "walletId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "FS8xJ2kQ…"
+            ]
           }
         },
         "required": [
@@ -10164,10 +10618,16 @@
             "format": "date-time"
           },
           "sessionId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "sess_9xKq2…"
+            ]
           },
           "walletId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "FS8xJ2kQ…"
+            ]
           },
           "transaction": {
             "description": "`EdgeTransaction` from edge-core-js"
@@ -10265,7 +10725,10 @@
           "maxFulfillmentSeconds": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "examples": [
+                  1800
+                ]
               },
               {
                 "type": "null"
@@ -10275,7 +10738,10 @@
           "minReceiveAmount": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "1000"
+                ]
               },
               {
                 "type": "null"
@@ -10289,13 +10755,19 @@
             ]
           },
           "toNativeAmount": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "4218900"
+            ]
           },
           "networkFee": {
             "type": "object",
             "properties": {
               "nativeAmount": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "452"
+                ]
               },
               "tokenId": {
                 "oneOf": [
@@ -10339,7 +10811,10 @@
                 ]
               },
               "supportEmail": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "support@changenow.io"
+                ]
               },
               "isDex": {
                 "anyOf": [
@@ -10395,10 +10870,16 @@
                 ]
               },
               "fromWalletId": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "FS8xJ2kQ…"
+                ]
               },
               "toWalletId": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "Rd3nT9pL…"
+                ]
               }
             },
             "required": [
@@ -10550,7 +11031,10 @@
             "type": "boolean"
           },
           "objectId": {
-            "type": "string"
+            "type": "string",
+            "examples": [
+              "tx_3fK9…"
+            ]
           }
         },
         "required": [
@@ -10566,7 +11050,10 @@
           "enabledTokenIds": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "examples": [
+                "0xa0b86991…"
+              ]
             }
           }
         },
@@ -10589,7 +11076,10 @@
                 ]
               },
               "message": {
-                "type": "string"
+                "type": "string",
+                "examples": [
+                  "No wallet found matching: abc123"
+                ]
               },
               "status": {
                 "type": "integer",
