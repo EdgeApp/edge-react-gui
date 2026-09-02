@@ -161,7 +161,7 @@ export const adminGroup = group({
           example: 'edge-cli -t admin-fetch-lobby-request HbC9mVJ2xR4tN8pL'
         }
       ],
-      pathParams: [{ name: 'lobbyId', schema: s.string() }],
+      query: [{ name: 'lobbyId', schema: s.string(), required: true }],
       success: {
         status: 200,
         schema: s.unknown('The raw lobby request from `fetchLobbyRequest`.')
@@ -192,8 +192,8 @@ export const adminGroup = group({
           example: `edge-cli -t admin-send-lobby-reply LOBBY --lobby-request='{}'`
         }
       ],
-      pathParams: [{ name: 'lobbyId', schema: s.string() }],
       body: s.object([
+        f('lobbyId', s.string()),
         f(
           'lobbyRequest',
           s.map(s.unknown()),
@@ -239,14 +239,17 @@ export const adminGroup = group({
           command: 'admin-repo-list',
           usage: 'admin-repo-list <syncKey> --data-key=<key> [--path=<path>]',
           flags: [
-            { flag: '--data-key=<key>', maps: 'dataKey', target: 'path' },
+            { flag: '--data-key=<key>', maps: 'dataKey', target: 'query' },
             { flag: '--path=<path>', maps: 'path', target: 'query' }
           ],
           example: 'edge-cli -t admin-repo-list SYNCKEY --data-key=DATAKEY'
         }
       ],
-      pathParams: [syncKey, dataKey],
-      query: [{ name: 'path', schema: s.string(), default: '"" (repo root)' }],
+      query: [
+        { ...syncKey, required: true },
+        { ...dataKey, required: true },
+        { name: 'path', schema: s.string(), default: '"" (repo root)' }
+      ],
       success: {
         status: 200,
         schema: s.object([
@@ -272,15 +275,18 @@ export const adminGroup = group({
           command: 'admin-repo-get',
           usage: 'admin-repo-get <syncKey> --data-key=<key> --path=<path>',
           flags: [
-            { flag: '--data-key=<key>', maps: 'dataKey', target: 'path' },
+            { flag: '--data-key=<key>', maps: 'dataKey', target: 'query' },
             { flag: '--path=<path>', maps: 'path', target: 'query' }
           ],
           example:
             'edge-cli -t admin-repo-get SYNCKEY --data-key=DATAKEY --path=Settings.json'
         }
       ],
-      pathParams: [syncKey, dataKey],
-      query: [{ name: 'path', schema: s.string(), required: true }],
+      query: [
+        { ...syncKey, required: true },
+        { ...dataKey, required: true },
+        { name: 'path', schema: s.string(), required: true }
+      ],
       success: { status: 200, schema: s.object([f('text', s.string())]) },
       errors: ['NOT_FOUND', 'BAD_REQUEST']
     }),
@@ -300,16 +306,19 @@ export const adminGroup = group({
           usage:
             'admin-repo-set <syncKey> --data-key=<key> --path=<path> --text=<text>',
           flags: [
-            { flag: '--data-key=<key>', maps: 'dataKey', target: 'path' },
-            { flag: '--path=<path>', maps: 'path', target: 'query' },
+            { flag: '--data-key=<key>', maps: 'dataKey', target: 'body' },
+            { flag: '--path=<path>', maps: 'path', target: 'body' },
             { flag: '--text=<text>', maps: 'text', target: 'body' }
           ],
           example: `edge-cli -t admin-repo-set SYNCKEY --data-key=DATAKEY --path=a/b.json --text='{}'`
         }
       ],
-      pathParams: [syncKey, dataKey],
-      query: [{ name: 'path', schema: s.string(), required: true }],
-      body: s.object([f('text', s.string())]),
+      body: s.object([
+        f('syncKey', s.string({ example: 'SYNCKEY' }), 'Base58 repo sync key.'),
+        f('dataKey', s.string({ example: 'DATAKEY' }), 'Base58 repo data key.'),
+        f('path', s.string()),
+        f('text', s.string())
+      ]),
       success: { status: 204 },
       errors: ['BAD_REQUEST']
     }),
@@ -327,15 +336,18 @@ export const adminGroup = group({
           command: 'admin-repo-delete',
           usage: 'admin-repo-delete <syncKey> --data-key=<key> --path=<path>',
           flags: [
-            { flag: '--data-key=<key>', maps: 'dataKey', target: 'path' },
+            { flag: '--data-key=<key>', maps: 'dataKey', target: 'query' },
             { flag: '--path=<path>', maps: 'path', target: 'query' }
           ],
           example:
             'edge-cli -t admin-repo-delete SYNCKEY --data-key=DATAKEY --path=a/b.json'
         }
       ],
-      pathParams: [syncKey, dataKey],
-      query: [{ name: 'path', schema: s.string(), required: true }],
+      body: s.object([
+        f('syncKey', s.string({ example: 'SYNCKEY' }), 'Base58 repo sync key.'),
+        f('dataKey', s.string({ example: 'DATAKEY' }), 'Base58 repo data key.'),
+        f('path', s.string())
+      ]),
       success: { status: 204 },
       errors: ['BAD_REQUEST']
     })

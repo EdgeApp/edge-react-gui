@@ -473,10 +473,10 @@ export const spendGroup = group({
       pathParams: [sessionId, walletId],
       query: [
         {
-          name: 'url',
+          name: 'paymentProtocolUrl',
           schema: s.string(),
           required: true,
-          doc: 'The payment-request URL.'
+          doc: 'Core parameter name; the payment-request URL.'
         }
       ],
       success: {

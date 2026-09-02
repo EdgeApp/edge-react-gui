@@ -71,13 +71,9 @@ export const loginGroup = group({
         }
       ],
       body: s.object([
-        opt('username', s.string(), 'Required unless `loginId` is given.'),
-        opt(
-          'loginId',
-          s.string(),
-          'Log in by login id instead of username; sets `useLoginId` for core.'
-        ),
+        f('usernameOrLoginId', s.string()),
         f('pin', s.string({ example: '1234' })),
+        opt('useLoginId', s.boolean(), 'Treat the value as a login id.'),
         ...loginOpts
       ]),
       success: {
@@ -112,7 +108,7 @@ export const loginGroup = group({
         }
       ],
       body: s.object([
-        f('username', s.string()),
+        f('usernameOrLoginId', s.string()),
         f('loginKey', s.string(), 'From `GET /account/{sessionId}/login-key`.'),
         opt('useLoginId', s.boolean(), 'Treat `username` as a login id.'),
         ...loginOpts

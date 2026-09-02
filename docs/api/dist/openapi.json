@@ -1262,19 +1262,18 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
-                    "type": "string",
-                    "description": "Required unless `loginId` is given."
-                  },
-                  "loginId": {
-                    "type": "string",
-                    "description": "Log in by login id instead of username; sets `useLoginId` for core."
+                  "usernameOrLoginId": {
+                    "type": "string"
                   },
                   "pin": {
                     "type": "string",
                     "examples": [
                       "1234"
                     ]
+                  },
+                  "useLoginId": {
+                    "type": "boolean",
+                    "description": "Treat the value as a login id."
                   },
                   "otp": {
                     "type": "string",
@@ -1293,6 +1292,7 @@
                   }
                 },
                 "required": [
+                  "usernameOrLoginId",
                   "pin"
                 ],
                 "additionalProperties": false
@@ -1356,7 +1356,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
+                  "usernameOrLoginId": {
                     "type": "string"
                   },
                   "loginKey": {
@@ -1384,7 +1384,7 @@
                   }
                 },
                 "required": [
-                  "username",
+                  "usernameOrLoginId",
                   "loginKey"
                 ],
                 "additionalProperties": false
@@ -7749,10 +7749,10 @@
             }
           },
           {
-            "name": "url",
+            "name": "paymentProtocolUrl",
             "in": "query",
             "required": true,
-            "description": "The payment-request URL.",
+            "description": "Core parameter name; the payment-request URL.",
             "schema": {
               "type": "string"
             }
@@ -9789,8 +9789,9 @@
         "parameters": [
           {
             "name": "lobbyId",
-            "in": "path",
+            "in": "query",
             "required": true,
+            "description": "",
             "schema": {
               "type": "string"
             }
@@ -9849,16 +9850,7 @@
         ],
         "x-core-call": "context.$internalStuff.sendLobbyReply",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [
-          {
-            "name": "lobbyId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "No content."
@@ -9881,6 +9873,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "lobbyId": {
+                    "type": "string"
+                  },
                   "lobbyRequest": {
                     "type": "object",
                     "additionalProperties": {},
@@ -9889,6 +9884,7 @@
                   "replyData": {}
                 },
                 "required": [
+                  "lobbyId",
                   "lobbyRequest"
                 ],
                 "additionalProperties": false
@@ -9976,7 +9972,7 @@
               {
                 "flag": "--data-key=<key>",
                 "maps": "dataKey",
-                "target": "path"
+                "target": "query"
               },
               {
                 "flag": "--path=<path>",
@@ -9992,7 +9988,7 @@
         "parameters": [
           {
             "name": "syncKey",
-            "in": "path",
+            "in": "query",
             "required": true,
             "description": "Base58 repo sync key.",
             "schema": {
@@ -10004,7 +10000,7 @@
           },
           {
             "name": "dataKey",
-            "in": "path",
+            "in": "query",
             "required": true,
             "description": "Base58 repo data key.",
             "schema": {
@@ -10081,7 +10077,7 @@
               {
                 "flag": "--data-key=<key>",
                 "maps": "dataKey",
-                "target": "path"
+                "target": "query"
               },
               {
                 "flag": "--path=<path>",
@@ -10097,7 +10093,7 @@
         "parameters": [
           {
             "name": "syncKey",
-            "in": "path",
+            "in": "query",
             "required": true,
             "description": "Base58 repo sync key.",
             "schema": {
@@ -10109,7 +10105,7 @@
           },
           {
             "name": "dataKey",
-            "in": "path",
+            "in": "query",
             "required": true,
             "description": "Base58 repo data key.",
             "schema": {
@@ -10178,12 +10174,12 @@
               {
                 "flag": "--data-key=<key>",
                 "maps": "dataKey",
-                "target": "path"
+                "target": "body"
               },
               {
                 "flag": "--path=<path>",
                 "maps": "path",
-                "target": "query"
+                "target": "body"
               },
               {
                 "flag": "--text=<text>",
@@ -10196,41 +10192,7 @@
         ],
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [
-          {
-            "name": "syncKey",
-            "in": "path",
-            "required": true,
-            "description": "Base58 repo sync key.",
-            "schema": {
-              "type": "string",
-              "examples": [
-                "SYNCKEY"
-              ]
-            }
-          },
-          {
-            "name": "dataKey",
-            "in": "path",
-            "required": true,
-            "description": "Base58 repo data key.",
-            "schema": {
-              "type": "string",
-              "examples": [
-                "DATAKEY"
-              ]
-            }
-          },
-          {
-            "name": "path",
-            "in": "query",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "No content."
@@ -10253,11 +10215,31 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "syncKey": {
+                    "type": "string",
+                    "examples": [
+                      "SYNCKEY"
+                    ],
+                    "description": "Base58 repo sync key."
+                  },
+                  "dataKey": {
+                    "type": "string",
+                    "examples": [
+                      "DATAKEY"
+                    ],
+                    "description": "Base58 repo data key."
+                  },
+                  "path": {
+                    "type": "string"
+                  },
                   "text": {
                     "type": "string"
                   }
                 },
                 "required": [
+                  "syncKey",
+                  "dataKey",
+                  "path",
                   "text"
                 ],
                 "additionalProperties": false
@@ -10283,7 +10265,7 @@
               {
                 "flag": "--data-key=<key>",
                 "maps": "dataKey",
-                "target": "path"
+                "target": "query"
               },
               {
                 "flag": "--path=<path>",
@@ -10296,41 +10278,7 @@
         ],
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [
-          {
-            "name": "syncKey",
-            "in": "path",
-            "required": true,
-            "description": "Base58 repo sync key.",
-            "schema": {
-              "type": "string",
-              "examples": [
-                "SYNCKEY"
-              ]
-            }
-          },
-          {
-            "name": "dataKey",
-            "in": "path",
-            "required": true,
-            "description": "Base58 repo data key.",
-            "schema": {
-              "type": "string",
-              "examples": [
-                "DATAKEY"
-              ]
-            }
-          },
-          {
-            "name": "path",
-            "in": "query",
-            "required": true,
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "204": {
             "description": "No content."
@@ -10342,6 +10290,41 @@
                 "schema": {
                   "$ref": "#/components/schemas/ErrorEnvelope"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "syncKey": {
+                    "type": "string",
+                    "examples": [
+                      "SYNCKEY"
+                    ],
+                    "description": "Base58 repo sync key."
+                  },
+                  "dataKey": {
+                    "type": "string",
+                    "examples": [
+                      "DATAKEY"
+                    ],
+                    "description": "Base58 repo data key."
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "syncKey",
+                  "dataKey",
+                  "path"
+                ],
+                "additionalProperties": false
               }
             }
           }

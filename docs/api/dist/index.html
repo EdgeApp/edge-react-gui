@@ -1138,35 +1138,35 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h5>Body</h5><div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
-  username?: string
-  loginId?: string
+  usernameOrLoginId: string
   pin: string
+  useLoginId?: boolean
   otp?: string
   otpKey?: string
   challengeId?: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
-  &quot;username&quot;: &quot;string&quot;,
-  &quot;loginId&quot;: &quot;string&quot;,
+  &quot;usernameOrLoginId&quot;: &quot;string&quot;,
   &quot;pin&quot;: &quot;1234&quot;,
+  &quot;useLoginId&quot;: true,
   &quot;otp&quot;: &quot;123456&quot;,
   &quot;otpKey&quot;: &quot;string&quot;,
   &quot;challengeId&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr class="d0">
-  <td class="k"><code>username</code></td>
-  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Required unless <code>loginId</code> is given.</td>
-</tr>
-<tr class="d0">
-  <td class="k"><code>loginId</code></td>
-  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Log in by login id instead of username; sets <code>useLoginId</code> for core.</td>
+  <td class="k"><code>usernameOrLoginId</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc"></td>
 </tr>
 <tr class="d0">
   <td class="k"><code>pin</code></td>
   <td class="ty"><span class="t">string</span> </td>
   <td class="doc"></td>
+</tr>
+<tr class="d0">
+  <td class="k"><code>useLoginId</code></td>
+  <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Treat the value as a login id.</td>
 </tr>
 <tr class="d0">
   <td class="k"><code>otp</code></td>
@@ -1245,7 +1245,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h5>Body</h5><div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
-  username: string
+  usernameOrLoginId: string
   loginKey: string
   useLoginId?: boolean
   otp?: string
@@ -1253,7 +1253,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   challengeId?: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
-  &quot;username&quot;: &quot;string&quot;,
+  &quot;usernameOrLoginId&quot;: &quot;string&quot;,
   &quot;loginKey&quot;: &quot;string&quot;,
   &quot;useLoginId&quot;: true,
   &quot;otp&quot;: &quot;123456&quot;,
@@ -1261,7 +1261,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;challengeId&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr class="d0">
-  <td class="k"><code>username</code></td>
+  <td class="k"><code>usernameOrLoginId</code></td>
   <td class="ty"><span class="t">string</span> </td>
   <td class="doc"></td>
 </tr>
@@ -5872,11 +5872,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h4>REST</h4>
     <p class="route"><span class="m m-GET">GET</span><code>/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info</code></p>
     <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>sessionId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">From a successful login. The CLI supplies this from <code>session.json</code>, <code>--session</code>, or <code>EDGE_CLI_SESSION</code>.</td></tr><tr><td class="k"><code>walletId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">A full base58 wallet id <strong>or a unique prefix</strong>. An ambiguous prefix returns <code>409 AMBIGUOUS_WALLET_ID</code> with <code>details.candidates</code>.</td></tr></tbody></table>
-    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>url</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">The payment-request URL.</td></tr></tbody></table>
+    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>paymentProtocolUrl</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">Core parameter name; the payment-request URL.</td></tr></tbody></table>
     
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
-  'http://localhost/account/$SESS/wallets/$WID/get-payment-protocol-info?url=…'</code></pre>
+  'http://localhost/account/$SESS/wallets/$WID/get-payment-protocol-info?paymentProtocolUrl=…'</code></pre>
   </div>
     </div>
     <div class="pane resp">
@@ -7474,12 +7474,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-GET">GET</span><code>/admin/fetch-lobby-request</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>lobbyId</code></td><td class="ty"><span class="t">string</span></td><td class="doc"></td></tr></tbody></table>
     
+    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>lobbyId</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc"></td></tr></tbody></table>
     
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
-  'http://localhost/admin/fetch-lobby-request'</code></pre>
+  'http://localhost/admin/fetch-lobby-request?lobbyId=…'</code></pre>
   </div>
     </div>
     <div class="pane resp">
@@ -7511,21 +7511,28 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-POST">POST</span><code>/admin/send-lobby-reply</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>lobbyId</code></td><td class="ty"><span class="t">string</span></td><td class="doc"></td></tr></tbody></table>
+    
     
     <h5>Body</h5><div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
+  lobbyId: string
   lobbyRequest: { [key: string]: unknown }
   replyData?: unknown
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
+  &quot;lobbyId&quot;: &quot;string&quot;,
   &quot;lobbyRequest&quot;: {
     &quot;key&quot;: {}
   },
   &quot;replyData&quot;: {}
 }</code></pre></details>
     <table class="fields"><tbody><tr class="d0">
+  <td class="k"><code>lobbyId</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc"></td>
+</tr>
+<tr class="d0">
   <td class="k"><code>lobbyRequest</code></td>
   <td class="ty"><span class="t">{ [key]: </span><span class="t">any</span><span class="t"> }</span> </td>
   <td class="doc">Required. Normally the object from <code>admin-fetch-lobby-request</code>.</td>
@@ -7614,19 +7621,19 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
         <pre class="usage"><code>admin-repo-list &lt;syncKey&gt; --data-key=&lt;key&gt; [--path=&lt;path&gt;]</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">path</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">query</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t admin-repo-list SYNCKEY --data-key=DATAKEY</code></pre>
         
       </div></div>
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-GET">GET</span><code>/admin/repo-list</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo data key.</td></tr></tbody></table>
-    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag opt">optional</span> <span class="flag def">default &quot;&quot; (repo root)</span></td><td class="doc"></td></tr></tbody></table>
+    
+    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">Base58 repo data key.</td></tr><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag opt">optional</span> <span class="flag def">default &quot;&quot; (repo root)</span></td><td class="doc"></td></tr></tbody></table>
     
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
-  'http://localhost/admin/repo-list'</code></pre>
+  'http://localhost/admin/repo-list?syncKey=…&amp;dataKey=…'</code></pre>
   </div>
     </div>
     <div class="pane resp">
@@ -7661,19 +7668,19 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
         <pre class="usage"><code>admin-repo-get &lt;syncKey&gt; --data-key=&lt;key&gt; --path=&lt;path&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">path</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">query</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t admin-repo-get SYNCKEY --data-key=DATAKEY --path=Settings.json</code></pre>
         
       </div></div>
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-GET">GET</span><code>/admin/repo-get</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo data key.</td></tr></tbody></table>
-    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc"></td></tr></tbody></table>
+    
+    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc">Base58 repo data key.</td></tr><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc"></td></tr></tbody></table>
     
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
-  'http://localhost/admin/repo-get?path=…'</code></pre>
+  'http://localhost/admin/repo-get?syncKey=…&amp;dataKey=…&amp;path=…'</code></pre>
   </div>
     </div>
     <div class="pane resp">
@@ -7707,24 +7714,45 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
         <pre class="usage"><code>admin-repo-set &lt;syncKey&gt; --data-key=&lt;key&gt; --path=&lt;path&gt; --text=&lt;text&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">path</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr><tr><td><code>--text=&lt;text&gt;</code></td><td><code>text</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">body</span></td><td class="doc"></td></tr><tr><td><code>--text=&lt;text&gt;</code></td><td><code>text</code> <span class="dim">body</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t admin-repo-set SYNCKEY --data-key=DATAKEY --path=a/b.json --text='{}'</code></pre>
         
       </div></div>
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-POST">POST</span><code>/admin/repo-set</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo data key.</td></tr></tbody></table>
-    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc"></td></tr></tbody></table>
+    
+    
     <h5>Body</h5><div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
+  syncKey: string
+  dataKey: string
+  path: string
   text: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
+  &quot;syncKey&quot;: &quot;SYNCKEY&quot;,
+  &quot;dataKey&quot;: &quot;DATAKEY&quot;,
+  &quot;path&quot;: &quot;string&quot;,
   &quot;text&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr class="d0">
+  <td class="k"><code>syncKey</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc">Base58 repo sync key.</td>
+</tr>
+<tr class="d0">
+  <td class="k"><code>dataKey</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc">Base58 repo data key.</td>
+</tr>
+<tr class="d0">
+  <td class="k"><code>path</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc"></td>
+</tr>
+<tr class="d0">
   <td class="k"><code>text</code></td>
   <td class="ty"><span class="t">string</span> </td>
   <td class="doc"></td>
@@ -7735,7 +7763,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   -X POST \
   -H 'Content-Type: application/json' \
   -d '{…}' \
-  'http://localhost/admin/repo-set?path=…'</code></pre>
+  'http://localhost/admin/repo-set'</code></pre>
   </div>
     </div>
     <div class="pane resp">
@@ -7756,20 +7784,49 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="pane cli"><h4>Command line</h4><div class="cmd">
         
         <pre class="usage"><code>admin-repo-delete &lt;syncKey&gt; --data-key=&lt;key&gt; --path=&lt;path&gt;</code></pre>
-        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">path</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
+        <table class="flags"><thead><tr><th>Flag</th><th>Becomes</th><th></th></tr></thead><tbody><tr><td><code>--data-key=&lt;key&gt;</code></td><td><code>dataKey</code> <span class="dim">query</span></td><td class="doc"></td></tr><tr><td><code>--path=&lt;path&gt;</code></td><td><code>path</code> <span class="dim">query</span></td><td class="doc"></td></tr></tbody></table>
         <pre class="ex"><code>$ edge-cli -t admin-repo-delete SYNCKEY --data-key=DATAKEY --path=a/b.json</code></pre>
         
       </div></div>
       <div class="pane rest">
     <h4>REST</h4>
     <p class="route"><span class="m m-POST">POST</span><code>/admin/repo-delete</code></p>
-    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>syncKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo sync key.</td></tr><tr><td class="k"><code>dataKey</code></td><td class="ty"><span class="t">string</span></td><td class="doc">Base58 repo data key.</td></tr></tbody></table>
-    <h5>Query</h5><table class="fields"><tbody><tr><td class="k"><code>path</code></td><td class="ty"><span class="t">string</span> <span class="flag req">required</span></td><td class="doc"></td></tr></tbody></table>
     
+    
+    <h5>Body</h5><div class="shape">
+    <div class="shape-h">Request body</div>
+    <pre class="ts"><code>{
+  syncKey: string
+  dataKey: string
+  path: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;syncKey&quot;: &quot;SYNCKEY&quot;,
+  &quot;dataKey&quot;: &quot;DATAKEY&quot;,
+  &quot;path&quot;: &quot;string&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr class="d0">
+  <td class="k"><code>syncKey</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc">Base58 repo sync key.</td>
+</tr>
+<tr class="d0">
+  <td class="k"><code>dataKey</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc">Base58 repo data key.</td>
+</tr>
+<tr class="d0">
+  <td class="k"><code>path</code></td>
+  <td class="ty"><span class="t">string</span> </td>
+  <td class="doc"></td>
+</tr></tbody></table>
+  </div>
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
-  'http://localhost/admin/repo-delete?path=…'</code></pre>
+  -H 'Content-Type: application/json' \
+  -d '{…}' \
+  'http://localhost/admin/repo-delete'</code></pre>
   </div>
     </div>
     <div class="pane resp">
