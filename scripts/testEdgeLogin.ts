@@ -143,19 +143,19 @@ async function main(): Promise<void> {
     const fetched = await req(
       sock,
       'GET',
-      `/account/${approverSession}/lobbies/${lobbyId}`
+      `/account/${approverSession}/fetch-lobby/${lobbyId}`
     )
     console.log('lobby fetch', fetched.status, JSON.stringify(fetched.json))
     const approved = await req(
       sock,
       'POST',
-      `/account/${approverSession}/lobbies/${lobbyId}/approve`
+      `/account/${approverSession}/approve-login-request/${lobbyId}`
     )
     console.log('lobby approve', approved.status, JSON.stringify(approved.json))
 
     const deadline = Date.now() + 60_000
     while (Date.now() < deadline) {
-      const st = await req(sock, 'GET', `/request-edge-login/${pendingId}`)
+      const st = await req(sock, 'GET', `/pending-edge-login/${pendingId}`)
       console.log('poll', st.json?.state)
       if (st.json?.state === 'done' && st.json?.session != null) {
         console.log('PASS request-edge-login', st.json.session.sessionId)

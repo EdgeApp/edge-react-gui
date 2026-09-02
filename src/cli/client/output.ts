@@ -98,7 +98,10 @@ function exitCodeForApiError(code: string, status: number): number {
   ) {
     return EXIT.VALIDATION
   }
-  if (code === 'NETWORK_ERROR' || status === 503) return EXIT.NETWORK
+  // Before the 503 test below: the engine only ever sends this code with a
+  // 503, so testing status first made EXIT.ENGINE unreachable and reported a
+  // daemon that is going away as a network failure.
   if (code === 'ENGINE_SHUTTING_DOWN') return EXIT.ENGINE
+  if (code === 'NETWORK_ERROR' || status === 503) return EXIT.NETWORK
   return EXIT.GENERIC
 }

@@ -324,15 +324,15 @@ async function main(): Promise<void> {
 
     if (walletId != null) {
       start = Date.now()
-      const info = cli(`wallet-info ${walletId}`)
+      const info = cli(`wallet-info --wallet-id=${walletId}`)
       record('cli wallet-info', start, info.code === 0)
 
       start = Date.now()
-      const bal = cli(`balance-map ${walletId}`)
+      const bal = cli(`balance-map --wallet-id=${walletId}`)
       record('cli balance-map', start, bal.code === 0)
 
       start = Date.now()
-      const addr = cli(`get-addresses ${walletId}`)
+      const addr = cli(`get-addresses --wallet-id=${walletId}`)
       record('cli get-addresses', start, addr.code === 0)
     }
 
