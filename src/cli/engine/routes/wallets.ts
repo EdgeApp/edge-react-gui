@@ -208,8 +208,8 @@ export const createCurrencyWallets = route({
 export const walletInfo = route({
   core: null,
   method: 'GET',
-  path: '/account/{sessionId}/wallet/{walletId}',
-  cli: 'wallet-info',
+  path: '/account/{sessionId}/wallet',
+  cli: { command: 'wallet-info', positional: 'walletId' },
   returns: doc(
     asCoreValue,
     'Every WalletSummary field, plus denominations, walletSettings and allTokens.'
@@ -233,8 +233,8 @@ export const walletInfo = route({
 export const renameWallet = route({
   core: 'wallet.renameWallet',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/rename-wallet/{walletId}',
-  cli: 'rename-wallet',
+  path: '/account/{sessionId}/wallet/rename-wallet',
+  cli: { command: 'rename-wallet', positional: 'walletId' },
   body: asObject({ name: doc(asString, 'The new display name.') }).withRest,
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
 
@@ -253,8 +253,8 @@ export const renameWallet = route({
 export const setFiatCurrencyCode = route({
   core: 'wallet.setFiatCurrencyCode',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}',
-  cli: 'set-fiat-currency-code',
+  path: '/account/{sessionId}/wallet/set-fiat-currency-code',
+  cli: { command: 'set-fiat-currency-code', positional: 'walletId' },
   body: asObject({
     fiatCurrencyCode: doc(asString, 'e.g. `iso:EUR`.')
   }).withRest,
@@ -276,8 +276,8 @@ export const setFiatCurrencyCode = route({
 export const changePaused = route({
   core: 'wallet.changePaused',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/change-paused/{walletId}',
-  cli: 'change-paused',
+  path: '/account/{sessionId}/wallet/change-paused',
+  cli: { command: 'change-paused', positional: 'walletId' },
   body: asObject({ paused: doc(asBoolean, 'True to stop syncing.') }).withRest,
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
 
@@ -296,8 +296,8 @@ export const changePaused = route({
 export const walletSync = route({
   core: 'wallet.sync',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/sync/{walletId}',
-  cli: 'wallet-sync',
+  path: '/account/{sessionId}/wallet/sync',
+  cli: { command: 'wallet-sync', positional: 'walletId' },
   errors: WALLET_ERRORS,
 
   async handler(ctx) {
@@ -319,8 +319,8 @@ export const walletSync = route({
 export const resyncBlockchain = route({
   core: 'wallet.resyncBlockchain',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/resync-blockchain/{walletId}',
-  cli: 'resync-blockchain',
+  path: '/account/{sessionId}/wallet/resync-blockchain',
+  cli: { command: 'resync-blockchain', positional: 'walletId' },
   errors: WALLET_ERRORS,
 
   async handler(ctx) {
@@ -339,8 +339,8 @@ export const resyncBlockchain = route({
 export const splitWallet = route({
   core: 'wallet.split',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/split/{walletId}',
-  cli: { command: 'split', bodyFlag: 'split-wallets' },
+  path: '/account/{sessionId}/wallet/split',
+  cli: { command: 'split', bodyFlag: 'split-wallets', positional: 'walletId' },
   body: asObject({
     splitWallets: doc(
       asArray(asCoreValue),
@@ -381,8 +381,8 @@ export const splitWallet = route({
 export const dumpData = route({
   core: 'wallet.dumpData',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/dump-data/{walletId}',
-  cli: 'dump-data',
+  path: '/account/{sessionId}/wallet/dump-data',
+  cli: { command: 'dump-data', positional: 'walletId' },
   returns: doc(asCoreValue, '`EdgeDataDump`, straight from the plugin.'),
   errors: WALLET_ERRORS,
 
@@ -405,8 +405,9 @@ export const dumpData = route({
 export const balanceMap = route({
   core: 'wallet.balanceMap',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/balance-map/{walletId}',
+  path: '/account/{sessionId}/wallet/balance-map',
   cli: {
+    positional: 'walletId',
     command: 'balance-map',
     custom: true,
     extra: {
@@ -451,8 +452,8 @@ export const balanceMap = route({
 export const getAddresses = route({
   core: 'wallet.getAddresses',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/get-addresses/{walletId}',
-  cli: 'get-addresses',
+  path: '/account/{sessionId}/wallet/get-addresses',
+  cli: { command: 'get-addresses', positional: 'walletId' },
   query: asObject({
     tokenId: asOptional(doc(asTokenId, 'Defaults to the native asset.')),
     forceIndex: asOptional(doc(asString, 'Derive at a specific index.'))

@@ -75,8 +75,9 @@ const TOKEN_ID_DOC = 'Defaults to the native asset.'
 export const getTransactions = route({
   core: 'wallet.getTransactions',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/get-transactions/{walletId}',
+  path: '/account/{sessionId}/wallet/get-transactions',
   cli: {
+    positional: 'walletId',
     command: 'get-transactions',
     custom: true,
     flags: { bitwaveAccount: { maps: 'bitwaveAccountId' } },
@@ -303,8 +304,8 @@ export const getTransactions = route({
 export const getNumTransactions = route({
   core: 'wallet.getNumTransactions',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/get-num-transactions/{walletId}',
-  cli: 'get-num-transactions',
+  path: '/account/{sessionId}/wallet/get-num-transactions',
+  cli: { command: 'get-num-transactions', positional: 'walletId' },
   query: asObject({
     tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC))
   }).withRest,
@@ -334,8 +335,8 @@ export const getNumTransactions = route({
 export const saveTxMetadata = route({
   core: 'wallet.saveTxMetadata',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/save-tx-metadata/{walletId}',
-  cli: 'save-tx-metadata',
+  path: '/account/{sessionId}/wallet/save-tx-metadata',
+  cli: { command: 'save-tx-metadata', positional: 'walletId' },
   body: asObject({
     txid: doc(asString, 'Which transaction to tag.'),
     tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),
@@ -368,8 +369,8 @@ export const saveTxMetadata = route({
 export const saveTxAction = route({
   core: 'wallet.saveTxAction',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/save-tx-action/{walletId}',
-  cli: 'save-tx-action',
+  path: '/account/{sessionId}/wallet/save-tx-action',
+  cli: { command: 'save-tx-action', positional: 'walletId' },
   body: asObject({
     txid: doc(asString, 'Which transaction to annotate.'),
     tokenId: asOptional(doc(asTokenId, TOKEN_ID_DOC)),

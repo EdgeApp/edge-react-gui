@@ -181,6 +181,21 @@ for (const r of routes) {
       )
     }
   }
+
+  // A written `path` carries scope and command only. The positional is
+  // appended from `cli.positional`, so spelling it out here would be a second
+  // copy of the same name, free to disagree with the first. `{sessionId}` is
+  // scope rather than an argument, and a route with no command has nothing to
+  // derive from.
+  for (const m of r.declaredPath.matchAll(/\{(\w+)\}/g)) {
+    if (m[1] === 'sessionId') continue
+    if (r.cli == null) continue
+    fail(
+      'path shape',
+      `${r.id} writes {${m[1]}} into its path; declare ` +
+        `\`positional: '${m[1]}'\` on the command and let the path derive it`
+    )
+  }
 }
 
 // ---------------------------------------------------------------- commands

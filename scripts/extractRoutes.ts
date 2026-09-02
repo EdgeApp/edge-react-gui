@@ -61,6 +61,8 @@ export interface ExtractedRoute {
   coreNote?: string
   method: string
   routePath: string
+  /** The `path` as written, before the positional is appended. */
+  declaredPath: string
   /** Field the path carries as its final segment, or null. */
   pathPositional: string | null
   cli: ExtractedCli | null
@@ -588,6 +590,7 @@ export function extractRoutes(): ExtractedRoute[] {
           coreNote,
           method: literal(arg, 'method') ?? '',
           routePath,
+          declaredPath,
           pathPositional,
           cli,
           cliExtra: parseCliList(cliNode).slice(1),

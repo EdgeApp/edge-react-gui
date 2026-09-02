@@ -4146,7 +4146,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>wallet-info &lt;walletId&gt;</code></pre>
+    <pre class="usage"><code>wallet-info &lt;walletId&gt; &lt;walletId&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4176,7 +4176,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>rename-wallet &lt;walletId&gt; --name=&lt;name&gt;</code></pre>
+    <pre class="usage"><code>rename-wallet &lt;walletId&gt; &lt;walletId&gt; --name=&lt;name&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4222,7 +4222,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>set-fiat-currency-code &lt;walletId&gt; --fiat-currency-code=&lt;fiatCurrencyCode&gt;</code></pre>
+    <pre class="usage"><code>set-fiat-currency-code &lt;walletId&gt; &lt;walletId&gt; --fiat-currency-code=&lt;fiatCurrencyCode&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4268,7 +4268,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>change-paused &lt;walletId&gt; --paused=&lt;paused&gt;</code></pre>
+    <pre class="usage"><code>change-paused &lt;walletId&gt; &lt;walletId&gt; --paused=&lt;paused&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4313,7 +4313,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>wallet-sync &lt;walletId&gt;</code></pre>
+    <pre class="usage"><code>wallet-sync &lt;walletId&gt; &lt;walletId&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4344,7 +4344,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>resync-blockchain &lt;walletId&gt;</code></pre>
+    <pre class="usage"><code>resync-blockchain &lt;walletId&gt; &lt;walletId&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4375,7 +4375,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>split &lt;walletId&gt; --split-wallets='&lt;json&gt;'</code></pre>
+    <pre class="usage"><code>split &lt;walletId&gt; &lt;walletId&gt; --split-wallets='&lt;json&gt;'</code></pre>
     
     
   </div><div class="pane rest">
@@ -4438,7 +4438,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>dump-data &lt;walletId&gt;</code></pre>
+    <pre class="usage"><code>dump-data &lt;walletId&gt; &lt;walletId&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4469,7 +4469,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>balance-map &lt;walletId&gt; [--token-id=&lt;value&gt;]</code></pre>
+    <pre class="usage"><code>balance-map &lt;walletId&gt; &lt;walletId&gt; [--token-id=&lt;value&gt;]</code></pre>
     <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--token-id</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Client-side filter; core has no single-balance accessor.</td></tr></tbody></table>
     
   </div><div class="pane rest">
@@ -4513,7 +4513,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>get-addresses &lt;walletId&gt; [--token-id=&lt;tokenId&gt;] [--force-index=&lt;forceIndex&gt;]</code></pre>
+    <pre class="usage"><code>get-addresses &lt;walletId&gt; &lt;walletId&gt; [--token-id=&lt;tokenId&gt;] [--force-index=&lt;forceIndex&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4581,7 +4581,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>wallet-tokens &lt;walletId&gt;</code></pre>
+    <pre class="usage"><code>wallet-tokens &lt;walletId&gt; &lt;walletId&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4656,7 +4656,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>change-enabled-token-ids &lt;walletId&gt; --token-ids=&lt;tokenIds&gt; [--add=&lt;value&gt;] [--remove=&lt;value&gt;]</code></pre>
+    <pre class="usage"><code>change-enabled-token-ids &lt;walletId&gt; &lt;walletId&gt; --token-ids=&lt;tokenIds&gt; [--add=&lt;value&gt;] [--remove=&lt;value&gt;]</code></pre>
     <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--add</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Read the current set, add this id, write it back.</td></tr><tr><td class="k"><code>--remove</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Read the current set, drop this id, write it back.</td></tr></tbody></table>
     
   </div><div class="pane rest">
@@ -4722,7 +4722,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>get-transactions &lt;walletId&gt; [--token-id=&lt;tokenId&gt;] [--limit=&lt;limit&gt;] [--offset=&lt;offset&gt;] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--search-string=&lt;searchString&gt;] [--spam-threshold=&lt;spamThreshold&gt;] [--fiat=&lt;fiat&gt;] [--export-format=&lt;exportFormat&gt;] [--bitwave-account=&lt;bitwaveAccountId&gt;] [--out=&lt;value&gt;]</code></pre>
+    <pre class="usage"><code>get-transactions &lt;walletId&gt; &lt;walletId&gt; [--token-id=&lt;tokenId&gt;] [--limit=&lt;limit&gt;] [--offset=&lt;offset&gt;] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--search-string=&lt;searchString&gt;] [--spam-threshold=&lt;spamThreshold&gt;] [--fiat=&lt;fiat&gt;] [--export-format=&lt;exportFormat&gt;] [--bitwave-account=&lt;bitwaveAccountId&gt;] [--out=&lt;value&gt;]</code></pre>
     <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--out</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Where to write the returned files. One format: the path. Several: a stem, plus .csv / .qbo / .bitwave.csv.</td></tr></tbody></table>
     
   </div><div class="pane rest">
@@ -4829,7 +4829,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>get-num-transactions &lt;walletId&gt; [--token-id=&lt;tokenId&gt;]</code></pre>
+    <pre class="usage"><code>get-num-transactions &lt;walletId&gt; &lt;walletId&gt; [--token-id=&lt;tokenId&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4885,7 +4885,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>save-tx-metadata &lt;walletId&gt; --txid=&lt;txid&gt; [--token-id=&lt;tokenId&gt;] --metadata=&lt;metadata&gt;</code></pre>
+    <pre class="usage"><code>save-tx-metadata &lt;walletId&gt; &lt;walletId&gt; --txid=&lt;txid&gt; [--token-id=&lt;tokenId&gt;] --metadata=&lt;metadata&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -4945,7 +4945,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>save-tx-action &lt;walletId&gt; --txid=&lt;txid&gt; [--token-id=&lt;tokenId&gt;] --saved-action=&lt;savedAction&gt; [--asset-action=&lt;assetAction&gt;]</code></pre>
+    <pre class="usage"><code>save-tx-action &lt;walletId&gt; &lt;walletId&gt; --txid=&lt;txid&gt; [--token-id=&lt;tokenId&gt;] --saved-action=&lt;savedAction&gt; [--asset-action=&lt;assetAction&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5015,7 +5015,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>get-max-spendable &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;]</code></pre>
+    <pre class="usage"><code>get-max-spendable &lt;walletId&gt; &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5109,7 +5109,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>spend &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;] [--use-max=&lt;useMax&gt;] [--dry-run=&lt;dryRun&gt;] [--broadcast=&lt;broadcast&gt;] [--save=&lt;save&gt;]</code></pre>
+    <pre class="usage"><code>spend &lt;walletId&gt; &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;] [--use-max=&lt;useMax&gt;] [--dry-run=&lt;dryRun&gt;] [--broadcast=&lt;broadcast&gt;] [--save=&lt;save&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5219,7 +5219,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>make-spend &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;]</code></pre>
+    <pre class="usage"><code>make-spend &lt;walletId&gt; &lt;walletId&gt; [--spend-info=&lt;spendInfo&gt;] [--to=&lt;to&gt;] [--native-amount=&lt;nativeAmount&gt;] [--amount=&lt;amount&gt;] [--token-id=&lt;tokenId&gt;] [--metadata=&lt;metadata&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5603,7 +5603,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>accelerate &lt;walletId&gt; [--object-id=&lt;objectId&gt;] [--transaction=&lt;transaction&gt;]</code></pre>
+    <pre class="usage"><code>accelerate &lt;walletId&gt; &lt;walletId&gt; [--object-id=&lt;objectId&gt;] [--transaction=&lt;transaction&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5705,7 +5705,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>sweep-private-keys &lt;walletId&gt; --spend-info=&lt;spendInfo&gt;</code></pre>
+    <pre class="usage"><code>sweep-private-keys &lt;walletId&gt; &lt;walletId&gt; --spend-info=&lt;spendInfo&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -5799,7 +5799,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>sign-bytes &lt;walletId&gt; [--bytes=&lt;bytes&gt;] [--data=&lt;data&gt;] [--other-params=&lt;otherParams&gt;]</code></pre>
+    <pre class="usage"><code>sign-bytes &lt;walletId&gt; &lt;walletId&gt; [--bytes=&lt;bytes&gt;] [--data=&lt;data&gt;] [--other-params=&lt;otherParams&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -5872,7 +5872,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>get-payment-protocol-info &lt;walletId&gt; --payment-protocol-url=&lt;paymentProtocolUrl&gt;</code></pre>
+    <pre class="usage"><code>get-payment-protocol-info &lt;walletId&gt; &lt;walletId&gt; --payment-protocol-url=&lt;paymentProtocolUrl&gt;</code></pre>
     
     
   </div><div class="pane rest">
@@ -6411,7 +6411,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>parse-uri &lt;walletId&gt; --uri=&lt;uri&gt; [--currency-code=&lt;currencyCode&gt;]</code></pre>
+    <pre class="usage"><code>parse-uri &lt;walletId&gt; &lt;walletId&gt; --uri=&lt;uri&gt; [--currency-code=&lt;currencyCode&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -6465,7 +6465,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>encode-uri &lt;walletId&gt; --public-address=&lt;publicAddress&gt; [--native-amount=&lt;nativeAmount&gt;] [--label=&lt;label&gt;] [--message=&lt;message&gt;] [--currency-code=&lt;currencyCode&gt;]</code></pre>
+    <pre class="usage"><code>encode-uri &lt;walletId&gt; &lt;walletId&gt; --public-address=&lt;publicAddress&gt; [--native-amount=&lt;nativeAmount&gt;] [--label=&lt;label&gt;] [--message=&lt;message&gt;] [--currency-code=&lt;currencyCode&gt;]</code></pre>
     
     
   </div><div class="pane rest">

@@ -20,8 +20,8 @@ const CURRENCY_CODE_DOC = 'Disambiguates on chains that carry several assets.'
 export const parseUri = route({
   core: 'wallet.parseUri',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/parse-uri/{walletId}',
-  cli: 'parse-uri',
+  path: '/account/{sessionId}/wallet/parse-uri',
+  cli: { command: 'parse-uri', positional: 'walletId' },
   body: asObject({
     uri: doc(asString, 'A payment URI or a bare address.'),
     currencyCode: asOptional(doc(asString, CURRENCY_CODE_DOC))
@@ -49,8 +49,8 @@ export const parseUri = route({
 export const encodeUri = route({
   core: 'wallet.encodeUri',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/encode-uri/{walletId}',
-  cli: 'encode-uri',
+  path: '/account/{sessionId}/wallet/encode-uri',
+  cli: { command: 'encode-uri', positional: 'walletId' },
   body: asObject({
     publicAddress: doc(asString, 'Where the payment should go.'),
     nativeAmount: asOptional(doc(asString, 'Amount, in the native unit.')),

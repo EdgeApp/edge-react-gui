@@ -241,8 +241,8 @@ const HANDLE_ERRORS = [
 export const getMaxSpendable = route({
   core: 'wallet.getMaxSpendable',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/get-max-spendable/{walletId}',
-  cli: 'get-max-spendable',
+  path: '/account/{sessionId}/wallet/get-max-spendable',
+  cli: { command: 'get-max-spendable', positional: 'walletId' },
   body: asObject({
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
@@ -298,11 +298,12 @@ export const getMaxSpendable = route({
 export const spend = route({
   core: null,
   method: 'POST',
-  path: '/account/{sessionId}/wallet/spend/{walletId}',
+  path: '/account/{sessionId}/wallet/spend',
   cli: [
-    { command: 'spend' },
+    { command: 'spend', positional: 'walletId' },
     {
       command: 'spend-max',
+      positional: 'walletId',
       preset: { useMax: true },
       notes: 'The same route with `useMax` preset, so it sends everything.'
     }
@@ -418,8 +419,8 @@ export const spend = route({
 export const makeSpend = route({
   core: 'wallet.makeSpend',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/make-spend/{walletId}',
-  cli: 'make-spend',
+  path: '/account/{sessionId}/wallet/make-spend',
+  cli: { command: 'make-spend', positional: 'walletId' },
   body: asObject({
     spendInfo: asOptional(
       doc(asCoreValue, 'A full `EdgeSpendInfo`, used as-is when present.')
@@ -554,8 +555,8 @@ export const saveTx = route({
 export const accelerate = route({
   core: 'wallet.accelerate',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/accelerate/{walletId}',
-  cli: 'accelerate',
+  path: '/account/{sessionId}/wallet/accelerate',
+  cli: { command: 'accelerate', positional: 'walletId' },
   body: asObject({
     objectId: asOptional(doc(asString, 'Handle of the transaction to bump.')),
     transaction: asOptional(doc(asCoreValue, 'Or the transaction itself.'))
@@ -610,8 +611,8 @@ export const accelerate = route({
 export const sweepPrivateKeys = route({
   core: 'wallet.sweepPrivateKeys',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/sweep-private-keys/{walletId}',
-  cli: 'sweep-private-keys',
+  path: '/account/{sessionId}/wallet/sweep-private-keys',
+  cli: { command: 'sweep-private-keys', positional: 'walletId' },
   body: asObject({
     spendInfo: doc(
       asCoreValue,
@@ -658,8 +659,8 @@ export const sweepPrivateKeys = route({
 export const signBytes = route({
   core: 'wallet.signBytes',
   method: 'POST',
-  path: '/account/{sessionId}/wallet/sign-bytes/{walletId}',
-  cli: 'sign-bytes',
+  path: '/account/{sessionId}/wallet/sign-bytes',
+  cli: { command: 'sign-bytes', positional: 'walletId' },
   body: asObject({
     bytes: asOptional(doc(asString, 'Base64. Defaults to empty when absent.')),
     data: asOptional(doc(asString, 'Legacy alias for `bytes`.')),
@@ -691,8 +692,8 @@ export const signBytes = route({
 export const getPaymentProtocolInfo = route({
   core: 'wallet.getPaymentProtocolInfo',
   method: 'GET',
-  path: '/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}',
-  cli: 'get-payment-protocol-info',
+  path: '/account/{sessionId}/wallet/get-payment-protocol-info',
+  cli: { command: 'get-payment-protocol-info', positional: 'walletId' },
   query: asObject({
     paymentProtocolUrl: doc(asString, 'The payment-request URL.')
   }).withRest,
