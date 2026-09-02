@@ -7,6 +7,11 @@ import {
 } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
+/** A login URL carries the account it names as its final segment. */
+function loginPath(command: string, nameOrId: string): string {
+  return `/${command}/${encodeURIComponent(nameOrId)}`
+}
+
 interface Session {
   sessionId: string
   username?: string
@@ -32,7 +37,6 @@ const accountCreateCmd = command(
       }
     })
     const session = await ctx.client.post<Session>('/create-account', {
-      username: args.positional,
       password: args.requireString('password'),
       pin: args.requireString('pin'),
       otp: args.string('otp'),
@@ -61,13 +65,15 @@ const passwordLoginCmd = command(
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>('/login-with-password', {
-      username: args.positional,
-      password: args.requireString('password'),
-      otp: args.string('otp'),
-      otpKey: args.string('otp-key'),
-      challengeId: args.string('challenge-id') ?? ctx.challengeId
-    })
+    const session = await ctx.client.post<Session>(
+      loginPath('login-with-password', args.positional ?? ''),
+      {
+        password: args.requireString('password'),
+        otp: args.string('otp'),
+        otpKey: args.string('otp-key'),
+        challengeId: args.string('challenge-id') ?? ctx.challengeId
+      }
+    )
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -90,13 +96,15 @@ const keyLoginCmd = command(
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>('/login-with-key', {
-      usernameOrLoginId: args.positional,
-      loginKey: args.requireString('login-key'),
-      otp: args.string('otp'),
-      otpKey: args.string('otp-key'),
-      challengeId: args.string('challenge-id') ?? ctx.challengeId
-    })
+    const session = await ctx.client.post<Session>(
+      loginPath('login-with-key', args.positional ?? ''),
+      {
+        loginKey: args.requireString('login-key'),
+        otp: args.string('otp'),
+        otpKey: args.string('otp-key'),
+        challengeId: args.string('challenge-id') ?? ctx.challengeId
+      }
+    )
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -119,13 +127,15 @@ const pinLoginCmd = command(
         'challenge-id': 'string'
       }
     })
-    const session = await ctx.client.post<Session>('/login-with-pin', {
-      usernameOrLoginId: args.positional,
-      pin: args.requireString('pin'),
-      otp: args.string('otp'),
-      otpKey: args.string('otp-key'),
-      challengeId: args.string('challenge-id') ?? ctx.challengeId
-    })
+    const session = await ctx.client.post<Session>(
+      loginPath('login-with-pin', args.positional ?? ''),
+      {
+        pin: args.requireString('pin'),
+        otp: args.string('otp'),
+        otpKey: args.string('otp-key'),
+        challengeId: args.string('challenge-id') ?? ctx.challengeId
+      }
+    )
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }
@@ -153,11 +163,13 @@ const recoveryLoginCmd = command(
     if (answers.length === 0) {
       throw new UsageError(recoveryLoginCmd, 'Missing --answer')
     }
-    const session = await ctx.client.post<Session>('/login-with-recovery', {
-      recoveryKey: args.requireString('recovery-key'),
-      username: args.positional,
-      answers
-    })
+    const session = await ctx.client.post<Session>(
+      loginPath('login-with-recovery', args.positional ?? ''),
+      {
+        recoveryKey: args.requireString('recovery-key'),
+        answers
+      }
+    )
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
   }

@@ -203,7 +203,7 @@ const HANDLE_ERRORS = [
 export const getMaxSpendable = route({
   core: 'wallet.getMaxSpendable',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/get-max-spendable',
+  path: '/account/{sessionId}/wallet/get-max-spendable/{walletId}',
   cli: 'get-max-spendable',
   body: asObject({
     spendInfo: asOptional(
@@ -260,7 +260,7 @@ export const getMaxSpendable = route({
 export const spend = route({
   core: null,
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/spend',
+  path: '/account/{sessionId}/wallet/spend/{walletId}',
   cli: [
     { command: 'spend' },
     {
@@ -380,7 +380,7 @@ export const spend = route({
 export const makeSpend = route({
   core: 'wallet.makeSpend',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/make-spend',
+  path: '/account/{sessionId}/wallet/make-spend/{walletId}',
   cli: 'make-spend',
   body: asObject({
     spendInfo: asOptional(
@@ -428,7 +428,7 @@ export const makeSpend = route({
 export const signTx = route({
   core: 'wallet.signTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/sign-tx',
+  path: '/account/{sessionId}/wallet/sign-tx/{walletId}',
   cli: 'sign-tx',
   body: asObject({
     objectId: doc(asString, 'From `make-spend`.')
@@ -460,7 +460,7 @@ export const signTx = route({
 export const broadcastTx = route({
   core: 'wallet.broadcastTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/broadcast-tx',
+  path: '/account/{sessionId}/wallet/broadcast-tx/{walletId}',
   cli: 'broadcast-tx',
   body: asObject({
     objectId: doc(asString, 'From `sign-tx`.')
@@ -492,7 +492,7 @@ export const broadcastTx = route({
 export const saveTx = route({
   core: 'wallet.saveTx',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/save-tx',
+  path: '/account/{sessionId}/wallet/save-tx/{walletId}',
   cli: 'save-tx',
   body: asObject({
     objectId: doc(asString, 'The handle to persist and release.')
@@ -526,7 +526,7 @@ export const saveTx = route({
 export const accelerate = route({
   core: 'wallet.accelerate',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/accelerate',
+  path: '/account/{sessionId}/wallet/accelerate/{walletId}',
   cli: 'accelerate',
   body: asObject({
     objectId: asOptional(doc(asString, 'Handle of the transaction to bump.')),
@@ -582,7 +582,7 @@ export const accelerate = route({
 export const sweepPrivateKeys = route({
   core: 'wallet.sweepPrivateKeys',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/sweep-private-keys',
+  path: '/account/{sessionId}/wallet/sweep-private-keys/{walletId}',
   cli: 'sweep-private-keys',
   body: asObject({
     spendInfo: doc(
@@ -630,7 +630,7 @@ export const sweepPrivateKeys = route({
 export const signBytes = route({
   core: 'wallet.signBytes',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/sign-bytes',
+  path: '/account/{sessionId}/wallet/sign-bytes/{walletId}',
   cli: 'sign-bytes',
   body: asObject({
     bytes: asOptional(doc(asString, 'Base64. Defaults to empty when absent.')),
@@ -663,7 +663,7 @@ export const signBytes = route({
 export const getPaymentProtocolInfo = route({
   core: 'wallet.getPaymentProtocolInfo',
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info',
+  path: '/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}',
   cli: 'get-payment-protocol-info',
   query: asObject({
     paymentProtocolUrl: doc(asString, 'The payment-request URL.')
@@ -697,7 +697,7 @@ export const getPaymentProtocolInfo = route({
 export const getObject = route({
   core: null,
   method: 'GET',
-  path: '/account/{sessionId}/objects/{objectId}',
+  path: '/account/{sessionId}/object',
   cli: { command: 'object-get', positional: 'objectId' },
   returns: doc(
     asObjectHandle,
@@ -732,7 +732,7 @@ export const getObject = route({
 export const deleteObject = route({
   core: null,
   method: 'POST',
-  path: '/account/{sessionId}/objects/{objectId}/delete',
+  path: '/account/{sessionId}/object/delete',
   cli: { command: 'object-delete', positional: 'objectId' },
   returns: asOkObject,
   errors: ['OBJECT_NOT_FOUND', 'OBJECT_EXPIRED', 'OBJECT_SESSION_MISMATCH'],

@@ -29,7 +29,6 @@ interface CommandSpec {
   usage: string
   help: string
   needsSession: boolean
-  positional?: ArgSpec
   pathPositional?: string
   args: ArgSpec[]
   bodyFlag?: string
@@ -66,10 +65,8 @@ for (const spec of (table as { commands: CommandSpec[] }).commands) {
       }
       if (spec.bodyFlag != null) flags[spec.bodyFlag] = 'string'
 
-      const takesPositional =
-        spec.positional != null || spec.pathPositional != null
       const args = parseCommandArgs(cmd, argv, {
-        positional: takesPositional ? 'required' : 'none',
+        positional: spec.pathPositional != null ? 'required' : 'none',
         flags
       })
 
@@ -88,8 +85,6 @@ for (const spec of (table as { commands: CommandSpec[] }).commands) {
       if (spec.preset != null) {
         body = { ...(body ?? {}), ...spec.preset }
       }
-      if (spec.positional != null) put(spec.positional, args.positional)
-
       if (spec.bodyFlag != null) {
         const raw = args.requireString(spec.bodyFlag)
         body = parseJson(raw, spec, spec.bodyFlag) as Record<string, unknown>

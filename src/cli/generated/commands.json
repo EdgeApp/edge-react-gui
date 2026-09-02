@@ -4,7 +4,7 @@
     {
       "command": "accelerate",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/accelerate",
+      "path": "/account/{sessionId}/wallet/accelerate/{walletId}",
       "usage": "accelerate <walletId> [--object-id=<objectId>] [--transaction='<json>']",
       "help": "Fee-bump a pending transaction.",
       "needsSession": true,
@@ -69,37 +69,27 @@
     {
       "command": "admin-fetch-lobby-request",
       "method": "GET",
-      "path": "/admin/fetch-lobby-request",
+      "path": "/admin/fetch-lobby-request/{lobbyId}",
       "usage": "admin-fetch-lobby-request <lobbyId>",
       "help": "Read a lobby's contents.",
       "needsSession": false,
-      "positional": {
-        "field": "lobbyId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "lobbyId",
       "args": []
     },
     {
       "command": "admin-hash-username",
       "method": "GET",
-      "path": "/admin/hash-username",
+      "path": "/admin/hash-username/{username}",
       "usage": "admin-hash-username <username>",
       "help": "Hash a username.",
       "needsSession": false,
-      "positional": {
-        "field": "username",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "username",
       "args": []
     },
     {
       "command": "admin-lobby-handle-delete",
       "method": "POST",
-      "path": "/admin/lobby-handle/{objectId}/delete",
+      "path": "/admin/lobby-handle/delete/{objectId}",
       "usage": "admin-lobby-handle-delete <objectId>",
       "help": "Close a parked lobby.",
       "needsSession": false,
@@ -133,16 +123,11 @@
     {
       "command": "admin-repo-delete",
       "method": "POST",
-      "path": "/admin/repo-delete",
+      "path": "/admin/repo-delete/{syncKey}",
       "usage": "admin-repo-delete <syncKey> --path=<path> --data-key=<dataKey>",
       "help": "Delete a repo file.",
       "needsSession": false,
-      "positional": {
-        "field": "syncKey",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "syncKey",
       "args": [
         {
           "flag": "path",
@@ -163,16 +148,11 @@
     {
       "command": "admin-repo-get",
       "method": "GET",
-      "path": "/admin/repo-get",
+      "path": "/admin/repo-get/{syncKey}",
       "usage": "admin-repo-get <syncKey> --path=<path> --data-key=<dataKey>",
       "help": "Read a repo file.",
       "needsSession": false,
-      "positional": {
-        "field": "syncKey",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "syncKey",
       "args": [
         {
           "flag": "path",
@@ -193,16 +173,11 @@
     {
       "command": "admin-repo-list",
       "method": "GET",
-      "path": "/admin/repo-list",
+      "path": "/admin/repo-list/{syncKey}",
       "usage": "admin-repo-list <syncKey> [--path=<path>] --data-key=<dataKey>",
       "help": "List repo contents.",
       "needsSession": false,
-      "positional": {
-        "field": "syncKey",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "syncKey",
       "args": [
         {
           "flag": "path",
@@ -223,16 +198,11 @@
     {
       "command": "admin-repo-set",
       "method": "POST",
-      "path": "/admin/repo-set",
+      "path": "/admin/repo-set/{syncKey}",
       "usage": "admin-repo-set <syncKey> --path=<path> --text=<text> --data-key=<dataKey>",
       "help": "Write a repo file.",
       "needsSession": false,
-      "positional": {
-        "field": "syncKey",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "syncKey",
       "args": [
         {
           "flag": "path",
@@ -260,16 +230,11 @@
     {
       "command": "admin-send-lobby-reply",
       "method": "POST",
-      "path": "/admin/send-lobby-reply",
+      "path": "/admin/send-lobby-reply/{lobbyId}",
       "usage": "admin-send-lobby-reply <lobbyId> --lobby-request='<json>' [--reply-data='<json>']",
       "help": "Reply to a lobby.",
       "needsSession": false,
-      "positional": {
-        "field": "lobbyId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "lobbyId",
       "args": [
         {
           "flag": "lobby-request",
@@ -290,16 +255,11 @@
     {
       "command": "admin-sync-repo",
       "method": "POST",
-      "path": "/admin/sync-repo",
+      "path": "/admin/sync-repo/{syncKey}",
       "usage": "admin-sync-repo <syncKey>",
       "help": "Sync a repo.",
       "needsSession": false,
-      "positional": {
-        "field": "syncKey",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "syncKey",
       "args": []
     },
     {
@@ -314,22 +274,17 @@
     {
       "command": "approve-login-request",
       "method": "POST",
-      "path": "/account/{sessionId}/approve-login-request",
+      "path": "/account/{sessionId}/approve-login-request/{lobbyId}",
       "usage": "approve-login-request <lobbyId>",
       "help": "Approve a login request.",
       "needsSession": true,
-      "positional": {
-        "field": "lobbyId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "lobbyId",
       "args": []
     },
     {
       "command": "approve-swap-quote",
       "method": "POST",
-      "path": "/account/{sessionId}/swap-quotes/{objectId}/approve",
+      "path": "/account/{sessionId}/swap-quote/approve/{objectId}",
       "usage": "approve-swap-quote <objectId>",
       "help": "Execute a quote.",
       "needsSession": true,
@@ -356,7 +311,7 @@
     {
       "command": "broadcast-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/broadcast-tx",
+      "path": "/account/{sessionId}/wallet/broadcast-tx/{walletId}",
       "usage": "broadcast-tx <walletId> --object-id=<objectId>",
       "help": "Broadcast a signed transaction.",
       "needsSession": true,
@@ -383,7 +338,7 @@
     {
       "command": "cancel-request",
       "method": "POST",
-      "path": "/pending-edge-login/{pendingId}/cancel-request",
+      "path": "/pending-edge-login/cancel-request/{pendingId}",
       "usage": "cancel-request <pendingId>",
       "help": "Cancel a pending QR login.",
       "needsSession": false,
@@ -410,7 +365,7 @@
     {
       "command": "change-paused",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/change-paused",
+      "path": "/account/{sessionId}/wallet/change-paused/{walletId}",
       "usage": "change-paused <walletId> --paused",
       "help": "Pause or resume a wallet engine.",
       "needsSession": true,
@@ -565,7 +520,7 @@
     {
       "command": "close-swap-quote",
       "method": "POST",
-      "path": "/account/{sessionId}/swap-quotes/{objectId}/close",
+      "path": "/account/{sessionId}/swap-quote/close/{objectId}",
       "usage": "close-swap-quote <objectId>",
       "help": "Discard a quote.",
       "needsSession": true,
@@ -659,16 +614,11 @@
     {
       "command": "delete-item",
       "method": "POST",
-      "path": "/account/{sessionId}/delete-item",
+      "path": "/account/{sessionId}/delete-item/{storeId}",
       "usage": "delete-item <storeId> --item-id=<itemId>",
       "help": "Delete an item.",
       "needsSession": true,
-      "positional": {
-        "field": "storeId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "storeId",
       "args": [
         {
           "flag": "item-id",
@@ -709,16 +659,11 @@
     {
       "command": "delete-store",
       "method": "POST",
-      "path": "/account/{sessionId}/delete-store",
+      "path": "/account/{sessionId}/delete-store/{storeId}",
       "usage": "delete-store <storeId>",
       "help": "Delete an entire store.",
       "needsSession": true,
-      "positional": {
-        "field": "storeId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "storeId",
       "args": []
     },
     {
@@ -733,7 +678,7 @@
     {
       "command": "dump-data",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}/dump-data",
+      "path": "/account/{sessionId}/wallet/dump-data/{walletId}",
       "usage": "dump-data <walletId>",
       "help": "Dump wallet engine state.",
       "needsSession": true,
@@ -760,7 +705,7 @@
     {
       "command": "encode-uri",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/encode-uri",
+      "path": "/account/{sessionId}/wallet/encode-uri/{walletId}",
       "usage": "encode-uri <walletId> --public-address=<publicAddress> [--native-amount=<nativeAmount>] [--label=<label>] [--message=<message>] [--currency-code=<currencyCode>]",
       "help": "Build a payment URI.",
       "needsSession": true,
@@ -851,16 +796,11 @@
     {
       "command": "fetch-lobby",
       "method": "GET",
-      "path": "/account/{sessionId}/fetch-lobby",
+      "path": "/account/{sessionId}/fetch-lobby/{lobbyId}",
       "usage": "fetch-lobby <lobbyId>",
       "help": "Inspect a login request.",
       "needsSession": true,
-      "positional": {
-        "field": "lobbyId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "lobbyId",
       "args": []
     },
     {
@@ -875,16 +815,11 @@
     {
       "command": "fetch-recovery-questions",
       "method": "GET",
-      "path": "/fetch-recovery-questions",
+      "path": "/fetch-recovery-questions/{username}",
       "usage": "fetch-recovery-questions <username> --recovery-key=<recoveryKey>",
       "help": "Fetch a user’s recovery questions.",
       "needsSession": false,
-      "positional": {
-        "field": "username",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "username",
       "args": [
         {
           "flag": "recovery-key",
@@ -957,37 +892,27 @@
     {
       "command": "fix-username",
       "method": "GET",
-      "path": "/fix-username",
+      "path": "/fix-username/{username}",
       "usage": "fix-username <username>",
       "help": "Normalize a username.",
       "needsSession": false,
-      "positional": {
-        "field": "username",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "username",
       "args": []
     },
     {
       "command": "forget-account",
       "method": "POST",
-      "path": "/forget-account",
+      "path": "/forget-account/{rootLoginId}",
       "usage": "forget-account <rootLoginId>",
       "help": "Forget an account on this device.",
       "needsSession": false,
-      "positional": {
-        "field": "rootLoginId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "rootLoginId",
       "args": []
     },
     {
       "command": "get-addresses",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}/get-addresses",
+      "path": "/account/{sessionId}/wallet/get-addresses/{walletId}",
       "usage": "get-addresses <walletId> [--token-id=<tokenId>] [--force-index=<forceIndex>]",
       "help": "Receive addresses.",
       "needsSession": true,
@@ -1012,46 +937,31 @@
     {
       "command": "get-display-private-key",
       "method": "GET",
-      "path": "/account/{sessionId}/get-display-private-key",
+      "path": "/account/{sessionId}/get-display-private-key/{walletId}",
       "usage": "get-display-private-key <walletId>",
       "help": "Export the private key for display.",
       "needsSession": true,
-      "positional": {
-        "field": "walletId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "walletId",
       "args": []
     },
     {
       "command": "get-display-public-key",
       "method": "GET",
-      "path": "/account/{sessionId}/get-display-public-key",
+      "path": "/account/{sessionId}/get-display-public-key/{walletId}",
       "usage": "get-display-public-key <walletId>",
       "help": "Export the public key for display.",
       "needsSession": true,
-      "positional": {
-        "field": "walletId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "walletId",
       "args": []
     },
     {
       "command": "get-item",
       "method": "GET",
-      "path": "/account/{sessionId}/get-item",
+      "path": "/account/{sessionId}/get-item/{storeId}",
       "usage": "get-item <storeId> --item-id=<itemId>",
       "help": "Read an item.",
       "needsSession": true,
-      "positional": {
-        "field": "storeId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "storeId",
       "args": [
         {
           "flag": "item-id",
@@ -1074,7 +984,7 @@
     {
       "command": "get-max-spendable",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/get-max-spendable",
+      "path": "/account/{sessionId}/wallet/get-max-spendable/{walletId}",
       "usage": "get-max-spendable <walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>']",
       "help": "Largest sendable amount.",
       "needsSession": true,
@@ -1127,7 +1037,7 @@
     {
       "command": "get-num-transactions",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}/get-num-transactions",
+      "path": "/account/{sessionId}/wallet/get-num-transactions/{walletId}",
       "usage": "get-num-transactions <walletId> [--token-id=<tokenId>]",
       "help": "Count transactions in a wallet.",
       "needsSession": true,
@@ -1145,7 +1055,7 @@
     {
       "command": "get-payment-protocol-info",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info",
+      "path": "/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}",
       "usage": "get-payment-protocol-info <walletId> --payment-protocol-url=<paymentProtocolUrl>",
       "help": "Fetch a BIP70 payment request.",
       "needsSession": true,
@@ -1172,76 +1082,51 @@
     {
       "command": "get-raw-private-key",
       "method": "GET",
-      "path": "/account/{sessionId}/get-raw-private-key",
+      "path": "/account/{sessionId}/get-raw-private-key/{walletId}",
       "usage": "get-raw-private-key <walletId>",
       "help": "Read raw private key material.",
       "needsSession": true,
-      "positional": {
-        "field": "walletId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "walletId",
       "args": []
     },
     {
       "command": "get-raw-public-key",
       "method": "GET",
-      "path": "/account/{sessionId}/get-raw-public-key",
+      "path": "/account/{sessionId}/get-raw-public-key/{walletId}",
       "usage": "get-raw-public-key <walletId>",
       "help": "Read raw public key material.",
       "needsSession": true,
-      "positional": {
-        "field": "walletId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "walletId",
       "args": []
     },
     {
       "command": "get-wallet-info",
       "method": "GET",
-      "path": "/account/{sessionId}/get-wallet-info",
+      "path": "/account/{sessionId}/get-wallet-info/{id}",
       "usage": "get-wallet-info <id>",
       "help": "Read one wallet's key info.",
       "needsSession": true,
-      "positional": {
-        "field": "id",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "id",
       "args": []
     },
     {
       "command": "list-item-ids",
       "method": "GET",
-      "path": "/account/{sessionId}/list-item-ids",
+      "path": "/account/{sessionId}/list-item-ids/{storeId}",
       "usage": "list-item-ids <storeId>",
       "help": "List item ids in a store.",
       "needsSession": true,
-      "positional": {
-        "field": "storeId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "storeId",
       "args": []
     },
     {
       "command": "list-splittable-wallet-types",
       "method": "GET",
-      "path": "/account/{sessionId}/list-splittable-wallet-types",
+      "path": "/account/{sessionId}/list-splittable-wallet-types/{walletId}",
       "usage": "list-splittable-wallet-types <walletId>",
       "help": "List chains a wallet can split into.",
       "needsSession": true,
-      "positional": {
-        "field": "walletId",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "walletId",
       "args": []
     },
     {
@@ -1265,7 +1150,7 @@
     {
       "command": "make-spend",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/make-spend",
+      "path": "/account/{sessionId}/wallet/make-spend/{walletId}",
       "usage": "make-spend <walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>']",
       "help": "Build an unsigned transaction.",
       "needsSession": true,
@@ -1318,7 +1203,7 @@
     {
       "command": "object-delete",
       "method": "POST",
-      "path": "/account/{sessionId}/objects/{objectId}/delete",
+      "path": "/account/{sessionId}/object/delete/{objectId}",
       "usage": "object-delete <objectId>",
       "help": "Release an object handle.",
       "needsSession": true,
@@ -1328,7 +1213,7 @@
     {
       "command": "object-get",
       "method": "GET",
-      "path": "/account/{sessionId}/objects/{objectId}",
+      "path": "/account/{sessionId}/object/{objectId}",
       "usage": "object-get <objectId>",
       "help": "Inspect an object handle.",
       "needsSession": true,
@@ -1347,7 +1232,7 @@
     {
       "command": "parse-uri",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/parse-uri",
+      "path": "/account/{sessionId}/wallet/parse-uri/{walletId}",
       "usage": "parse-uri <walletId> --uri=<uri> [--currency-code=<currencyCode>]",
       "help": "Parse a payment URI or address.",
       "needsSession": true,
@@ -1453,7 +1338,7 @@
     {
       "command": "rename-wallet",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/rename-wallet",
+      "path": "/account/{sessionId}/wallet/rename-wallet/{walletId}",
       "usage": "rename-wallet <walletId> --name=<name>",
       "help": "Rename a wallet.",
       "needsSession": true,
@@ -1488,16 +1373,11 @@
     {
       "command": "request-otp-reset",
       "method": "POST",
-      "path": "/request-otp-reset",
+      "path": "/request-otp-reset/{username}",
       "usage": "request-otp-reset <username> --otp-reset-token=<otpResetToken>",
       "help": "Request a 2FA reset.",
       "needsSession": false,
-      "positional": {
-        "field": "username",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "username",
       "args": [
         {
           "flag": "otp-reset-token",
@@ -1511,7 +1391,7 @@
     {
       "command": "resync-blockchain",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/resync-blockchain",
+      "path": "/account/{sessionId}/wallet/resync-blockchain/{walletId}",
       "usage": "resync-blockchain <walletId>",
       "help": "Rescan the blockchain from scratch.",
       "needsSession": true,
@@ -1521,7 +1401,7 @@
     {
       "command": "save-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/save-tx",
+      "path": "/account/{sessionId}/wallet/save-tx/{walletId}",
       "usage": "save-tx <walletId> --object-id=<objectId>",
       "help": "Record a transaction and release its handle.",
       "needsSession": true,
@@ -1539,7 +1419,7 @@
     {
       "command": "save-tx-action",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/save-tx-action",
+      "path": "/account/{sessionId}/wallet/save-tx-action/{walletId}",
       "usage": "save-tx-action <walletId> --txid=<txid> [--token-id=<tokenId>] --saved-action='<json>' [--asset-action='<json>']",
       "help": "Save a transaction action.",
       "needsSession": true,
@@ -1578,7 +1458,7 @@
     {
       "command": "save-tx-metadata",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/save-tx-metadata",
+      "path": "/account/{sessionId}/wallet/save-tx-metadata/{walletId}",
       "usage": "save-tx-metadata <walletId> --txid=<txid> [--token-id=<tokenId>] --metadata='<json>'",
       "help": "Save transaction metadata.",
       "needsSession": true,
@@ -1610,7 +1490,7 @@
     {
       "command": "set-fiat-currency-code",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code",
+      "path": "/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}",
       "usage": "set-fiat-currency-code <walletId> --fiat-currency-code=<fiatCurrencyCode>",
       "help": "Change a wallet's fiat currency.",
       "needsSession": true,
@@ -1628,16 +1508,11 @@
     {
       "command": "set-item",
       "method": "POST",
-      "path": "/account/{sessionId}/set-item",
+      "path": "/account/{sessionId}/set-item/{storeId}",
       "usage": "set-item <storeId> --item-id=<itemId> --value=<value>",
       "help": "Write an item.",
       "needsSession": true,
-      "positional": {
-        "field": "storeId",
-        "target": "body",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "storeId",
       "args": [
         {
           "flag": "item-id",
@@ -1658,7 +1533,7 @@
     {
       "command": "sign-bytes",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/sign-bytes",
+      "path": "/account/{sessionId}/wallet/sign-bytes/{walletId}",
       "usage": "sign-bytes <walletId> [--bytes=<bytes>] [--data=<data>] [--other-params='<json>']",
       "help": "Sign arbitrary bytes.",
       "needsSession": true,
@@ -1690,7 +1565,7 @@
     {
       "command": "sign-tx",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/sign-tx",
+      "path": "/account/{sessionId}/wallet/sign-tx/{walletId}",
       "usage": "sign-tx <walletId> --object-id=<objectId>",
       "help": "Sign a staged transaction.",
       "needsSession": true,
@@ -1708,7 +1583,7 @@
     {
       "command": "spend",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/spend",
+      "path": "/account/{sessionId}/wallet/spend/{walletId}",
       "usage": "spend <walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>'] [--use-max] [--dry-run] [--broadcast] [--save]",
       "help": "Send funds.",
       "needsSession": true,
@@ -1789,7 +1664,7 @@
     {
       "command": "spend-max",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/spend",
+      "path": "/account/{sessionId}/wallet/spend/{walletId}",
       "usage": "spend-max <walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>'] [--use-max] [--dry-run] [--broadcast] [--save]",
       "help": "Send funds.",
       "needsSession": true,
@@ -1873,7 +1748,7 @@
     {
       "command": "split",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/split",
+      "path": "/account/{sessionId}/wallet/split/{walletId}",
       "usage": "split <walletId> --split-wallets='<json>'",
       "help": "Split a wallet into another chain.",
       "needsSession": true,
@@ -1884,7 +1759,7 @@
     {
       "command": "swap-quote-get",
       "method": "GET",
-      "path": "/account/{sessionId}/swap-quotes/{objectId}",
+      "path": "/account/{sessionId}/swap-quote/{objectId}",
       "usage": "swap-quote-get <objectId>",
       "help": "Re-read a quote.",
       "needsSession": true,
@@ -1894,7 +1769,7 @@
     {
       "command": "sweep-private-keys",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/sweep-private-keys",
+      "path": "/account/{sessionId}/wallet/sweep-private-keys/{walletId}",
       "usage": "sweep-private-keys <walletId> --spend-info='<json>'",
       "help": "Sweep private keys into this wallet.",
       "needsSession": true,
@@ -1930,16 +1805,11 @@
     {
       "command": "username-available",
       "method": "GET",
-      "path": "/username-available",
+      "path": "/username-available/{username}",
       "usage": "username-available <username> [--challenge-id=<challengeId>]",
       "help": "Check whether a username is free.",
       "needsSession": false,
-      "positional": {
-        "field": "username",
-        "target": "query",
-        "kind": "string",
-        "required": true
-      },
+      "pathPositional": "username",
       "args": [
         {
           "flag": "challenge-id",
@@ -1953,7 +1823,7 @@
     {
       "command": "wallet-info",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}",
+      "path": "/account/{sessionId}/wallet/{walletId}",
       "usage": "wallet-info <walletId>",
       "help": "Wallet detail.",
       "needsSession": true,
@@ -1963,7 +1833,7 @@
     {
       "command": "wallet-sync",
       "method": "POST",
-      "path": "/account/{sessionId}/wallets/{walletId}/sync",
+      "path": "/account/{sessionId}/wallet/sync/{walletId}",
       "usage": "wallet-sync <walletId>",
       "help": "Nudge one wallet to sync.",
       "needsSession": true,
@@ -1973,7 +1843,7 @@
     {
       "command": "wallet-tokens",
       "method": "GET",
-      "path": "/account/{sessionId}/wallets/{walletId}/tokens",
+      "path": "/account/{sessionId}/wallet/tokens/{walletId}",
       "usage": "wallet-tokens <walletId>",
       "help": "List a wallet's tokens.",
       "needsSession": true,

@@ -39,8 +39,23 @@ export interface CliExtraSpec {
 
 export interface CliSpec {
   command: string
-  /** Request field taken as the bare positional argument. */
+  /**
+   * Request field taken as the bare positional argument.
+   *
+   * A positional also decides the REST path: it becomes the final path
+   * segment, so `--username` on the command line and `{username}` in the URL
+   * are the same value declared once. `routePath` derives that, which is why
+   * `path` must not spell the parameter out itself.
+   */
   positional?: string
+  /**
+   * Keeps an optional positional out of the path.
+   *
+   * A path segment cannot be absent, so a positional the caller may omit has
+   * to stay in the body. Only `create-account` needs this, for light accounts
+   * that have no username.
+   */
+  positionalInPath?: false
   /** Overrides for flags whose name is not the kebab-cased field name. */
   flags?: Record<string, CliFlagSpec>
   /** Client-only flags. */
@@ -169,19 +184,60 @@ function queryToObject(query: URLSearchParams): Record<string, unknown> {
   return out
 }
 
+/**
+ * The URL a route actually answers on.
+ *
+ * `path` carries the scope — the account, the wallet, the handle — and the
+ * command. A positional argument is appended to it, so the REST path reads in
+ * the same order the command does: `wallet/get-addresses/{walletId}` for
+ * `get-addresses <walletId>`. Named arguments stay in the query or the body.
+ */
+export function routePath(spec: RouteSpec<any, any, any>): string {
+  const positional = positionalParam(spec)
+  return positional == null ? spec.path : `${spec.path}/{${positional}}`
+}
+
+/** The field a route carries on the path, or null when it takes none. */
+export function positionalParam(spec: RouteSpec<any, any, any>): string | null {
+  const cli = spec.cli
+  if (cli == null || typeof cli === 'string' || Array.isArray(cli)) return null
+  if (cli.positional == null || cli.positionalInPath === false) return null
+  return cli.positional
+}
+
 export function registerRoute(
   router: Router,
   spec: RouteSpec<any, any, any>
 ): void {
   if (spec.stream != null) return // served directly by the HTTP handler
-  router.add(spec.method, spec.path, async ctx => {
+  const positional = positionalParam(spec)
+  router.add(spec.method, routePath(spec), async ctx => {
+    // The positional arrives as a path segment, but it is declared as an
+    // ordinary field, so it is folded back in before the cleaner runs. The
+    // handler reads it from the same place whichever transport it came over.
+    const fromPath = (raw: Record<string, unknown>): Record<string, unknown> =>
+      positional == null
+        ? raw
+        : { ...raw, [positional]: ctx.params[positional] }
+
     if (spec.query != null) {
-      const parsed = clean(spec.query, queryToObject(ctx.query), 'query')
+      const parsed = clean(
+        spec.query,
+        fromPath(queryToObject(ctx.query)),
+        'query'
+      )
       ;(ctx.query as any).valid = parsed
     }
     if (spec.body != null) {
-      const raw = spec.method === 'GET' ? {} : requireBodyObject(ctx.body)
-      ctx.body = clean(spec.body, raw, 'body')
+      // A POST whose every field rides on the path has nothing left to send,
+      // so an absent body means an empty one. A body that is present but not
+      // an object is still a bad request, and the cleaner reports any field
+      // that is genuinely missing.
+      const raw =
+        spec.method === 'GET' || ctx.body == null
+          ? {}
+          : requireBodyObject(ctx.body)
+      ctx.body = clean(spec.body, fromPath(raw), 'body')
     }
     const response = await spec.handler(ctx as any)
     checkResponse(spec, ctx, response)

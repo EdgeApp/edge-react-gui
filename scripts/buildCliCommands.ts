@@ -44,9 +44,12 @@ interface CommandSpec {
   usage: string
   help: string
   needsSession: boolean
-  /** Field taken as the bare positional argument. */
-  positional?: ArgSpec
-  /** Path parameter taken as the positional, e.g. `{walletId}`. */
+  /**
+   * Path parameter taken as the bare positional argument.
+   *
+   * Every positional is a path parameter now, whether it started as scope
+   * (`{walletId}`) or as a declared field the route path appends.
+   */
   pathPositional?: string
   args: ArgSpec[]
   /** Flag carrying the whole body as one JSON argument. */
@@ -73,35 +76,24 @@ function specFor(r: ExtractedRoute, cli: ExtractedCli): CommandSpec {
   ]
 
   // `{sessionId}` comes from the stored session; any other path parameter is
-  // the command's positional argument.
+  // the command's positional argument. A positional that is also a declared
+  // field is already on the path, so it must not be sent again as a flag.
   const pathPositional = r.pathParams.find(p => p !== 'sessionId')
-  let positional: ArgSpec | undefined
   const args: ArgSpec[] = []
   for (const { f, target } of fields) {
+    if (f.name === pathPositional) continue
     const mapped = cli.flags.find(x => x.maps === f.name)
-    const spec: ArgSpec = {
+    args.push({
       flag: mapped?.name ?? kebab(f.name),
       field: f.name,
       target,
       kind: mapped?.repeat === true ? 'repeat' : kindOf(f.type),
       required: !f.optional
-    }
-    if (cli.positional === f.name) {
-      positional = { ...spec, flag: undefined }
-    } else {
-      args.push(spec)
-    }
+    })
   }
 
-  if (pathPositional != null && positional != null) {
-    throw new Error(
-      `${cli.command}: takes both a path parameter and a positional field; ` +
-        'mark it `custom: true` and hand-write it.'
-    )
-  }
   const parts = [cli.command]
   if (pathPositional != null) parts.push(`<${pathPositional}>`)
-  if (positional != null) parts.push(`<${positional.field}>`)
   if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)
   else {
     for (const a of args) {
@@ -122,7 +114,6 @@ function specFor(r: ExtractedRoute, cli: ExtractedCli): CommandSpec {
     usage: parts.join(' '),
     help: r.summary,
     needsSession: r.pathParams.includes('sessionId'),
-    positional,
     pathPositional,
     args: cli.bodyFlag != null ? [] : args,
     bodyFlag: cli.bodyFlag,

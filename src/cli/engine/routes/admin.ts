@@ -140,7 +140,7 @@ export const adminMakeLobby = route({
 export const adminDeleteLobbyHandle = route({
   core: null,
   method: 'POST',
-  path: '/admin/lobby-handle/{objectId}/delete',
+  path: '/admin/lobby-handle/delete',
   cli: { command: 'admin-lobby-handle-delete', positional: 'objectId' },
   returns: asOk,
   errors: ['OBJECT_NOT_FOUND'],

@@ -40,6 +40,8 @@ export interface ExtractedCliExtra {
 export interface ExtractedCli {
   command: string
   positional?: string
+  /** False when an optional positional has to stay off the path. */
+  positionalInPath?: false
   bodyFlag?: string
   flags: ExtractedCliFlag[]
   extra: ExtractedCliExtra[]
@@ -59,6 +61,8 @@ export interface ExtractedRoute {
   coreNote?: string
   method: string
   routePath: string
+  /** Field the path carries as its final segment, or null. */
+  pathPositional: string | null
   cli: ExtractedCli | null
   /** Additional commands this route backs, e.g. `spend-max`. */
   cliExtra: ExtractedCli[]
@@ -366,6 +370,9 @@ function parseCli(node: ts.Expression | undefined): ExtractedCli | null {
   return {
     command,
     positional: str(node, 'positional'),
+    positionalInPath: /positionalInPath:\s*false/.test(node.getText())
+      ? false
+      : undefined,
     bodyFlag: str(node, 'bodyFlag'),
     flags,
     extra,
@@ -558,6 +565,20 @@ export function extractRoutes(): ExtractedRoute[] {
         const returnsNode = propNode(arg, 'returns')
         const cliNode = propNode(arg, 'cli')
 
+        // The declared `path` carries scope and command; a positional is
+        // appended to it. Mirrors `routePath` in src/cli/engine/route.ts,
+        // which is what the engine actually serves.
+        const declaredPath = literal(arg, 'path') ?? ''
+        const cli = parseCliList(cliNode)[0] ?? null
+        const pathPositional =
+          cli?.positional != null && cli.positionalInPath !== false
+            ? cli.positional
+            : null
+        const routePath =
+          pathPositional == null
+            ? declaredPath
+            : `${declaredPath}/{${pathPositional}}`
+
         out.push({
           id: decl.name.getText(),
           file: path.basename(file),
@@ -566,12 +587,11 @@ export function extractRoutes(): ExtractedRoute[] {
           core: literal(arg, 'core'),
           coreNote,
           method: literal(arg, 'method') ?? '',
-          routePath: literal(arg, 'path') ?? '',
-          cli: parseCliList(cliNode)[0] ?? null,
+          routePath,
+          pathPositional,
+          cli,
           cliExtra: parseCliList(cliNode).slice(1),
-          pathParams: [
-            ...(literal(arg, 'path') ?? '').matchAll(/\{(\w+)\}/g)
-          ].map(m => m[1]),
+          pathParams: [...routePath.matchAll(/\{(\w+)\}/g)].map(m => m[1]),
           group: path.basename(file, '.ts'),
           isStream: propNode(arg, 'stream') != null,
           errors: arrayLiteral(arg, 'errors'),

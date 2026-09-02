@@ -18,7 +18,7 @@ import { getAccount } from './helpers'
 export const walletTokens = route({
   core: null,
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}/tokens',
+  path: '/account/{sessionId}/wallet/tokens/{walletId}',
   cli: 'wallet-tokens',
   returns: asObject({
     allTokens: doc(
@@ -68,7 +68,7 @@ export const walletTokens = route({
 export const changeEnabledTokenIds = route({
   core: 'wallet.changeEnabledTokenIds',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids',
+  path: '/account/{sessionId}/wallet/change-enabled-token-ids/{walletId}',
   cli: {
     command: 'change-enabled-token-ids',
     custom: true,

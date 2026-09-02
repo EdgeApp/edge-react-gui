@@ -400,11 +400,11 @@
         }
       }
     },
-    "/forget-account": {
+    "/forget-account/{rootLoginId}": {
       "post": {
         "operationId": "forgetAccount",
         "summary": "Forget an account on this device.",
-        "description": "**Core call:** `context.forgetAccount`\n\n**Command line**\n\n```\nforget-account <rootLoginId>\n```\n\nRemoves locally cached credentials. The remote account is untouched.",
+        "description": "**Core call:** `context.forgetAccount`\n\n**Command line**\n\n```\nforget-account <rootLoginId> <rootLoginId>\n```\n\nRemoves locally cached credentials. The remote account is untouched.",
         "tags": [
           "Context"
         ],
@@ -418,7 +418,16 @@
         },
         "x-core-call": "context.forgetAccount",
         "x-source": "src/cli/engine/routes/context.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "rootLoginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "No content."
@@ -455,11 +464,11 @@
         }
       }
     },
-    "/username-available": {
+    "/username-available/{username}": {
       "get": {
         "operationId": "usernameAvailable",
         "summary": "Check whether a username is free.",
-        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available <username> [--challenge-id=<challengeId>]\n```\n\n",
+        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available <username> <username> [--challenge-id=<challengeId>]\n```\n\n",
         "tags": [
           "Context"
         ],
@@ -474,6 +483,14 @@
         "x-core-call": "context.usernameAvailable",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "username",
             "in": "query",
@@ -531,11 +548,11 @@
         }
       }
     },
-    "/fix-username": {
+    "/fix-username/{username}": {
       "get": {
         "operationId": "fixUsername",
         "summary": "Normalize a username.",
-        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username <username>\n```\n\nApplies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
+        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username <username> <username>\n```\n\nApplies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
         "tags": [
           "Context"
         ],
@@ -550,6 +567,14 @@
         "x-core-call": "context.fixUsername",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "username",
             "in": "query",
@@ -683,11 +708,11 @@
         }
       }
     },
-    "/request-otp-reset": {
+    "/request-otp-reset/{username}": {
       "post": {
         "operationId": "requestOtpReset",
         "summary": "Request a 2FA reset.",
-        "description": "**Core call:** `context.requestOtpReset`\n\n**Command line**\n\n```\nrequest-otp-reset <username> --otp-reset-token=<otpResetToken>\n```\n\nStarts the timed reset a user falls back on after losing their authenticator.",
+        "description": "**Core call:** `context.requestOtpReset`\n\n**Command line**\n\n```\nrequest-otp-reset <username> <username> --otp-reset-token=<otpResetToken>\n```\n\nStarts the timed reset a user falls back on after losing their authenticator.",
         "tags": [
           "Context"
         ],
@@ -701,7 +726,16 @@
         },
         "x-core-call": "context.requestOtpReset",
         "x-source": "src/cli/engine/routes/context.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "When the reset completes if nobody cancels it.",
@@ -759,11 +793,11 @@
         }
       }
     },
-    "/fetch-recovery-questions": {
+    "/fetch-recovery-questions/{username}": {
       "get": {
         "operationId": "fetchRecoveryQuestions",
         "summary": "Fetch a user’s recovery questions.",
-        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions <username> --recovery-key=<recoveryKey>\n```\n\n",
+        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions <username> <username> --recovery-key=<recoveryKey>\n```\n\n",
         "tags": [
           "Context"
         ],
@@ -779,6 +813,14 @@
         "x-core-note": "Our surface drops the `2` from the path, command and `recoveryKey` parameter; a future Recovery1 would be suffixed `V1`.",
         "x-source": "src/cli/engine/routes/context.ts",
         "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "recoveryKey",
             "in": "query",
@@ -944,11 +986,11 @@
         }
       }
     },
-    "/login-with-password": {
+    "/login-with-password/{username}": {
       "post": {
         "operationId": "loginWithPassword",
         "summary": "Log in with a password.",
-        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --password=<password>\n```\n\n",
+        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password <username> <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --password=<password>\n```\n\n",
         "tags": [
           "Login"
         ],
@@ -962,7 +1004,16 @@
         },
         "x-core-call": "context.loginWithPassword",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"password\"`.",
@@ -1092,11 +1143,11 @@
         }
       }
     },
-    "/login-with-pin": {
+    "/login-with-pin/{usernameOrLoginId}": {
       "post": {
         "operationId": "loginWithPin",
         "summary": "Log in with a device PIN.",
-        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --pin=<pin> [--use-login-id=<useLoginId>]\n```\n\nOnly works on a device that has already saved a PIN for the account.",
+        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin <usernameOrLoginId> <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --pin=<pin> [--use-login-id=<useLoginId>]\n```\n\nOnly works on a device that has already saved a PIN for the account.",
         "tags": [
           "Login"
         ],
@@ -1110,7 +1161,16 @@
         },
         "x-core-call": "context.loginWithPIN",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "usernameOrLoginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"pin\"`.",
@@ -1244,11 +1304,11 @@
         }
       }
     },
-    "/login-with-key": {
+    "/login-with-key/{usernameOrLoginId}": {
       "post": {
         "operationId": "loginWithKey",
         "summary": "Log in with an account login key.",
-        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --login-key=<loginKey> [--use-login-id=<useLoginId>]\n```\n\nThe key comes from `get-login-key` on an already-authenticated session.",
+        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key <usernameOrLoginId> <usernameOrLoginId> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --login-key=<loginKey> [--use-login-id=<useLoginId>]\n```\n\nThe key comes from `get-login-key` on an already-authenticated session.",
         "tags": [
           "Login"
         ],
@@ -1262,7 +1322,16 @@
         },
         "x-core-call": "context.loginWithKey",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "usernameOrLoginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"key\"`.",
@@ -1396,11 +1465,11 @@
         }
       }
     },
-    "/login-with-recovery": {
+    "/login-with-recovery/{username}": {
       "post": {
         "operationId": "loginWithRecovery",
         "summary": "Log in with recovery answers.",
-        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --answer=<answers>\n```\n\nNeeds both the recovery key and the answers; neither works alone.",
+        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery <username> <username> [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --answer=<answers>\n```\n\nNeeds both the recovery key and the answers; neither works alone.",
         "tags": [
           "Login"
         ],
@@ -1422,7 +1491,16 @@
         "x-core-call": "context.loginWithRecovery2",
         "x-core-note": "Our surface drops the `2` from core's recovery2 naming, and calls the key `recoveryKey` to match what `change-recovery` returns.",
         "x-source": "src/cli/engine/routes/login.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A session with `loginMethod: \"recovery\"`.",
@@ -1571,6 +1649,7 @@
         "x-cli": {
           "command": "create-account",
           "positional": "username",
+          "positionalInPath": false,
           "flags": [],
           "extra": [],
           "custom": true,
@@ -2004,7 +2083,7 @@
         }
       }
     },
-    "/pending-edge-login/{pendingId}/cancel-request": {
+    "/pending-edge-login/cancel-request/{pendingId}": {
       "post": {
         "operationId": "cancelEdgeLogin",
         "summary": "Cancel a pending QR login.",
@@ -3939,11 +4018,11 @@
         }
       }
     },
-    "/account/{sessionId}/fetch-lobby": {
+    "/account/{sessionId}/fetch-lobby/{lobbyId}": {
       "get": {
         "operationId": "fetchLobby",
         "summary": "Inspect a login request.",
-        "description": "**Core call:** `account.fetchLobby`\n\n**Command line**\n\n```\nfetch-lobby <lobbyId>\n```\n\nThe other side of `request-edge-login`: shows who is asking, so a human can decide before approving.",
+        "description": "**Core call:** `account.fetchLobby`\n\n**Command line**\n\n```\nfetch-lobby <lobbyId> <lobbyId>\n```\n\nThe other side of `request-edge-login`: shows who is asking, so a human can decide before approving.",
         "tags": [
           "Approving a QR login"
         ],
@@ -3963,6 +4042,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -4028,11 +4115,11 @@
         }
       }
     },
-    "/account/{sessionId}/approve-login-request": {
+    "/account/{sessionId}/approve-login-request/{lobbyId}": {
       "post": {
         "operationId": "approveLoginRequest",
         "summary": "Approve a login request.",
-        "description": "**Core call:** `EdgeLoginRequest.approve`\n\n**Command line**\n\n```\napprove-login-request <lobbyId>\n```\n\nGrants the requesting device access to this account.",
+        "description": "**Core call:** `EdgeLoginRequest.approve`\n\n**Command line**\n\n```\napprove-login-request <lobbyId> <lobbyId>\n```\n\nGrants the requesting device access to this account.",
         "tags": [
           "Approving a QR login"
         ],
@@ -4053,6 +4140,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -4256,11 +4351,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-wallet-info": {
+    "/account/{sessionId}/get-wallet-info/{id}": {
       "get": {
         "operationId": "getWalletInfo",
         "summary": "Read one wallet's key info.",
-        "description": "**Core call:** `account.getWalletInfo`\n\n**Command line**\n\n```\nget-wallet-info <id>\n```\n\n",
+        "description": "**Core call:** `account.getWalletInfo`\n\n**Command line**\n\n```\nget-wallet-info <id> <id>\n```\n\n",
         "tags": [
           "Keys"
         ],
@@ -4286,6 +4381,14 @@
           },
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
             "in": "query",
             "required": true,
             "description": "Full base58 wallet id.",
@@ -4304,7 +4407,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4316,11 +4419,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-raw-private-key": {
+    "/account/{sessionId}/get-raw-private-key/{walletId}": {
       "get": {
         "operationId": "getRawPrivateKey",
         "summary": "Read raw private key material.",
-        "description": "**Core call:** `account.getRawPrivateKey`\n\n**Command line**\n\n```\nget-raw-private-key <walletId>\n```\n\nSecret. Whatever the plugin stores — seed, mnemonic, xpriv.",
+        "description": "**Core call:** `account.getRawPrivateKey`\n\n**Command line**\n\n```\nget-raw-private-key <walletId> <walletId>\n```\n\nSecret. Whatever the plugin stores — seed, mnemonic, xpriv.",
         "tags": [
           "Keys"
         ],
@@ -4346,6 +4449,15 @@
           },
           {
             "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
             "in": "query",
             "required": true,
             "description": "Full base58 wallet id.",
@@ -4364,7 +4476,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4376,11 +4488,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-raw-public-key": {
+    "/account/{sessionId}/get-raw-public-key/{walletId}": {
       "get": {
         "operationId": "getRawPublicKey",
         "summary": "Read raw public key material.",
-        "description": "**Core call:** `account.getRawPublicKey`\n\n**Command line**\n\n```\nget-raw-public-key <walletId>\n```\n\n",
+        "description": "**Core call:** `account.getRawPublicKey`\n\n**Command line**\n\n```\nget-raw-public-key <walletId> <walletId>\n```\n\n",
         "tags": [
           "Keys"
         ],
@@ -4406,6 +4518,15 @@
           },
           {
             "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
             "in": "query",
             "required": true,
             "description": "Full base58 wallet id.",
@@ -4424,7 +4545,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4436,11 +4557,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-display-private-key": {
+    "/account/{sessionId}/get-display-private-key/{walletId}": {
       "get": {
         "operationId": "getDisplayPrivateKey",
         "summary": "Export the private key for display.",
-        "description": "**Core call:** `account.getDisplayPrivateKey`\n\n**Command line**\n\n```\nget-display-private-key <walletId>\n```\n\nSecret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
+        "description": "**Core call:** `account.getDisplayPrivateKey`\n\n**Command line**\n\n```\nget-display-private-key <walletId> <walletId>\n```\n\nSecret. The human-facing form — WIF, seed phrase, whatever the plugin shows on its export screen.",
         "tags": [
           "Keys"
         ],
@@ -4460,6 +4581,15 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4495,7 +4625,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4507,11 +4637,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-display-public-key": {
+    "/account/{sessionId}/get-display-public-key/{walletId}": {
       "get": {
         "operationId": "getDisplayPublicKey",
         "summary": "Export the public key for display.",
-        "description": "**Core call:** `account.getDisplayPublicKey`\n\n**Command line**\n\n```\nget-display-public-key <walletId>\n```\n\nThe xpub or equivalent — safe to share for watch-only use.",
+        "description": "**Core call:** `account.getDisplayPublicKey`\n\n**Command line**\n\n```\nget-display-public-key <walletId> <walletId>\n```\n\nThe xpub or equivalent — safe to share for watch-only use.",
         "tags": [
           "Keys"
         ],
@@ -4531,6 +4661,15 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4566,7 +4705,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4578,11 +4717,11 @@
         }
       }
     },
-    "/account/{sessionId}/list-splittable-wallet-types": {
+    "/account/{sessionId}/list-splittable-wallet-types/{walletId}": {
       "get": {
         "operationId": "listSplittableWalletTypes",
         "summary": "List chains a wallet can split into.",
-        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n**Command line**\n\n```\nlist-splittable-wallet-types <walletId>\n```\n\nForked-chain support: which wallet types can be derived from these keys.",
+        "description": "**Core call:** `account.listSplittableWalletTypes`\n\n**Command line**\n\n```\nlist-splittable-wallet-types <walletId> <walletId>\n```\n\nForked-chain support: which wallet types can be derived from these keys.",
         "tags": [
           "Keys"
         ],
@@ -4602,6 +4741,15 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -4640,7 +4788,7 @@
             }
           },
           "default": {
-            "description": "WALLET_NOT_FOUND",
+            "description": "WALLET_NOT_FOUND, AMBIGUOUS_WALLET_ID",
             "content": {
               "application/json": {
                 "schema": {
@@ -4652,11 +4800,11 @@
         }
       }
     },
-    "/account/{sessionId}/change-wallet-states": {
+    "/account/{sessionId}/change-wallet-states/{walletId}": {
       "post": {
         "operationId": "changeWalletStates",
         "summary": "Archive, delete, hide, or reorder wallets.",
-        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states <walletId> [--wallet-states=<walletStates>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
+        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states <walletId> <walletId> [--wallet-states=<walletStates>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
         "tags": [
           "Keys"
         ],
@@ -4702,6 +4850,15 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
+            "in": "path",
+            "required": true,
+            "description": "A full base58 wallet id or a unique prefix. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
             "schema": {
               "type": "string"
             }
@@ -5128,7 +5285,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}": {
+    "/account/{sessionId}/wallet/{walletId}": {
       "get": {
         "operationId": "walletInfo",
         "summary": "Wallet detail.",
@@ -5188,7 +5345,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/rename-wallet": {
+    "/account/{sessionId}/wallet/rename-wallet/{walletId}": {
       "post": {
         "operationId": "renameWallet",
         "summary": "Rename a wallet.",
@@ -5261,7 +5418,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code": {
+    "/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}": {
       "post": {
         "operationId": "setFiatCurrencyCode",
         "summary": "Change a wallet's fiat currency.",
@@ -5334,7 +5491,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/change-paused": {
+    "/account/{sessionId}/wallet/change-paused/{walletId}": {
       "post": {
         "operationId": "changePaused",
         "summary": "Pause or resume a wallet engine.",
@@ -5407,7 +5564,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/sync": {
+    "/account/{sessionId}/wallet/sync/{walletId}": {
       "post": {
         "operationId": "walletSync",
         "summary": "Nudge one wallet to sync.",
@@ -5461,7 +5618,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/resync-blockchain": {
+    "/account/{sessionId}/wallet/resync-blockchain/{walletId}": {
       "post": {
         "operationId": "resyncBlockchain",
         "summary": "Rescan the blockchain from scratch.",
@@ -5515,7 +5672,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/split": {
+    "/account/{sessionId}/wallet/split/{walletId}": {
       "post": {
         "operationId": "splitWallet",
         "summary": "Split a wallet into another chain.",
@@ -5607,7 +5764,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/dump-data": {
+    "/account/{sessionId}/wallet/dump-data/{walletId}": {
       "get": {
         "operationId": "dumpData",
         "summary": "Dump wallet engine state.",
@@ -5666,7 +5823,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/balance-map": {
+    "/account/{sessionId}/wallet/balance-map/{walletId}": {
       "get": {
         "operationId": "balanceMap",
         "summary": "Balances for every asset in the wallet.",
@@ -5754,7 +5911,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/get-addresses": {
+    "/account/{sessionId}/wallet/get-addresses/{walletId}": {
       "get": {
         "operationId": "getAddresses",
         "summary": "Receive addresses.",
@@ -5850,7 +6007,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/tokens": {
+    "/account/{sessionId}/wallet/tokens/{walletId}": {
       "get": {
         "operationId": "walletTokens",
         "summary": "List a wallet's tokens.",
@@ -5944,7 +6101,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/change-enabled-token-ids": {
+    "/account/{sessionId}/wallet/change-enabled-token-ids/{walletId}": {
       "post": {
         "operationId": "changeEnabledTokenIds",
         "summary": "Set the enabled token set.",
@@ -6052,7 +6209,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/get-transactions": {
+    "/account/{sessionId}/wallet/get-transactions/{walletId}": {
       "get": {
         "operationId": "getTransactions",
         "summary": "List or export a wallet's transactions.",
@@ -6223,7 +6380,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/get-num-transactions": {
+    "/account/{sessionId}/wallet/get-num-transactions/{walletId}": {
       "get": {
         "operationId": "getNumTransactions",
         "summary": "Count transactions in a wallet.",
@@ -6309,7 +6466,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/save-tx-metadata": {
+    "/account/{sessionId}/wallet/save-tx-metadata/{walletId}": {
       "post": {
         "operationId": "saveTxMetadata",
         "summary": "Save transaction metadata.",
@@ -6397,7 +6554,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/save-tx-action": {
+    "/account/{sessionId}/wallet/save-tx-action/{walletId}": {
       "post": {
         "operationId": "saveTxAction",
         "summary": "Save a transaction action.",
@@ -6488,7 +6645,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/get-max-spendable": {
+    "/account/{sessionId}/wallet/get-max-spendable/{walletId}": {
       "post": {
         "operationId": "getMaxSpendable",
         "summary": "Largest sendable amount.",
@@ -6599,7 +6756,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/spend": {
+    "/account/{sessionId}/wallet/spend/{walletId}": {
       "post": {
         "operationId": "spend",
         "summary": "Send funds.",
@@ -6716,7 +6873,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/make-spend": {
+    "/account/{sessionId}/wallet/make-spend/{walletId}": {
       "post": {
         "operationId": "makeSpend",
         "summary": "Build an unsigned transaction.",
@@ -6849,7 +7006,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/sign-tx": {
+    "/account/{sessionId}/wallet/sign-tx/{walletId}": {
       "post": {
         "operationId": "signTx",
         "summary": "Sign a staged transaction.",
@@ -6960,7 +7117,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/broadcast-tx": {
+    "/account/{sessionId}/wallet/broadcast-tx/{walletId}": {
       "post": {
         "operationId": "broadcastTx",
         "summary": "Broadcast a signed transaction.",
@@ -7071,7 +7228,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/save-tx": {
+    "/account/{sessionId}/wallet/save-tx/{walletId}": {
       "post": {
         "operationId": "saveTx",
         "summary": "Record a transaction and release its handle.",
@@ -7165,7 +7322,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/accelerate": {
+    "/account/{sessionId}/wallet/accelerate/{walletId}": {
       "post": {
         "operationId": "accelerate",
         "summary": "Fee-bump a pending transaction.",
@@ -7276,7 +7433,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/sweep-private-keys": {
+    "/account/{sessionId}/wallet/sweep-private-keys/{walletId}": {
       "post": {
         "operationId": "sweepPrivateKeys",
         "summary": "Sweep private keys into this wallet.",
@@ -7386,7 +7543,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/sign-bytes": {
+    "/account/{sessionId}/wallet/sign-bytes/{walletId}": {
       "post": {
         "operationId": "signBytes",
         "summary": "Sign arbitrary bytes.",
@@ -7479,7 +7636,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/get-payment-protocol-info": {
+    "/account/{sessionId}/wallet/get-payment-protocol-info/{walletId}": {
       "get": {
         "operationId": "getPaymentProtocolInfo",
         "summary": "Fetch a BIP70 payment request.",
@@ -7547,7 +7704,7 @@
         }
       }
     },
-    "/account/{sessionId}/objects/{objectId}": {
+    "/account/{sessionId}/object/{objectId}": {
       "get": {
         "operationId": "getObject",
         "summary": "Inspect an object handle.",
@@ -7637,7 +7794,7 @@
         }
       }
     },
-    "/account/{sessionId}/objects/{objectId}/delete": {
+    "/account/{sessionId}/object/delete/{objectId}": {
       "post": {
         "operationId": "deleteObject",
         "summary": "Release an object handle.",
@@ -7883,7 +8040,7 @@
         }
       }
     },
-    "/account/{sessionId}/swap-quotes/{objectId}": {
+    "/account/{sessionId}/swap-quote/{objectId}": {
       "get": {
         "operationId": "getSwapQuote",
         "summary": "Re-read a quote.",
@@ -8078,7 +8235,7 @@
         }
       }
     },
-    "/account/{sessionId}/swap-quotes/{objectId}/approve": {
+    "/account/{sessionId}/swap-quote/approve/{objectId}": {
       "post": {
         "operationId": "approveSwapQuote",
         "summary": "Execute a quote.",
@@ -8165,7 +8322,7 @@
         }
       }
     },
-    "/account/{sessionId}/swap-quotes/{objectId}/close": {
+    "/account/{sessionId}/swap-quote/close/{objectId}": {
       "post": {
         "operationId": "closeSwapQuote",
         "summary": "Discard a quote.",
@@ -8241,7 +8398,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/parse-uri": {
+    "/account/{sessionId}/wallet/parse-uri/{walletId}": {
       "post": {
         "operationId": "parseUri",
         "summary": "Parse a payment URI or address.",
@@ -8323,7 +8480,7 @@
         }
       }
     },
-    "/account/{sessionId}/wallets/{walletId}/encode-uri": {
+    "/account/{sessionId}/wallet/encode-uri/{walletId}": {
       "post": {
         "operationId": "encodeUri",
         "summary": "Build a payment URI.",
@@ -8752,11 +8909,11 @@
         }
       }
     },
-    "/account/{sessionId}/list-item-ids": {
+    "/account/{sessionId}/list-item-ids/{storeId}": {
       "get": {
         "operationId": "listItemIds",
         "summary": "List item ids in a store.",
-        "description": "**Core call:** `account.dataStore.listItemIds`\n\n**Command line**\n\n```\nlist-item-ids <storeId>\n```\n\n",
+        "description": "**Core call:** `account.dataStore.listItemIds`\n\n**Command line**\n\n```\nlist-item-ids <storeId> <storeId>\n```\n\n",
         "tags": [
           "Data store"
         ],
@@ -8776,6 +8933,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -8826,11 +8991,11 @@
         }
       }
     },
-    "/account/{sessionId}/get-item": {
+    "/account/{sessionId}/get-item/{storeId}": {
       "get": {
         "operationId": "getItem",
         "summary": "Read an item.",
-        "description": "**Core call:** `account.dataStore.getItem`\n\n**Command line**\n\n```\nget-item <storeId> --item-id=<itemId>\n```\n\nValues are opaque strings; encoding is the caller's business.",
+        "description": "**Core call:** `account.dataStore.getItem`\n\n**Command line**\n\n```\nget-item <storeId> <storeId> --item-id=<itemId>\n```\n\nValues are opaque strings; encoding is the caller's business.",
         "tags": [
           "Data store"
         ],
@@ -8850,6 +9015,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -8906,11 +9079,11 @@
         }
       }
     },
-    "/account/{sessionId}/set-item": {
+    "/account/{sessionId}/set-item/{storeId}": {
       "post": {
         "operationId": "setItem",
         "summary": "Write an item.",
-        "description": "**Core call:** `account.dataStore.setItem`\n\n**Command line**\n\n```\nset-item <storeId> --item-id=<itemId> --value=<value>\n```\n\nCreates the store if it does not exist.",
+        "description": "**Core call:** `account.dataStore.setItem`\n\n**Command line**\n\n```\nset-item <storeId> <storeId> --item-id=<itemId> --value=<value>\n```\n\nCreates the store if it does not exist.",
         "tags": [
           "Data store"
         ],
@@ -8930,6 +9103,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -8981,11 +9162,11 @@
         }
       }
     },
-    "/account/{sessionId}/delete-item": {
+    "/account/{sessionId}/delete-item/{storeId}": {
       "post": {
         "operationId": "deleteItem",
         "summary": "Delete an item.",
-        "description": "**Core call:** `account.dataStore.deleteItem`\n\n**Command line**\n\n```\ndelete-item <storeId> --item-id=<itemId>\n```\n\n",
+        "description": "**Core call:** `account.dataStore.deleteItem`\n\n**Command line**\n\n```\ndelete-item <storeId> <storeId> --item-id=<itemId>\n```\n\n",
         "tags": [
           "Data store"
         ],
@@ -9005,6 +9186,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9051,11 +9240,11 @@
         }
       }
     },
-    "/account/{sessionId}/delete-store": {
+    "/account/{sessionId}/delete-store/{storeId}": {
       "post": {
         "operationId": "deleteStore",
         "summary": "Delete an entire store.",
-        "description": "**Core call:** `account.dataStore.deleteStore`\n\n**Command line**\n\n```\ndelete-store <storeId>\n```\n\nRemoves every item in it, which cannot be undone from this API.",
+        "description": "**Core call:** `account.dataStore.deleteStore`\n\n**Command line**\n\n```\ndelete-store <storeId> <storeId>\n```\n\nRemoves every item in it, which cannot be undone from this API.",
         "tags": [
           "Data store"
         ],
@@ -9075,6 +9264,14 @@
             "in": "path",
             "required": true,
             "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -9183,11 +9380,11 @@
         }
       }
     },
-    "/admin/hash-username": {
+    "/admin/hash-username/{username}": {
       "get": {
         "operationId": "adminHashUsername",
         "summary": "Hash a username.",
-        "description": "**Core call:** `context.$internalStuff.hashUsername`\n\n**Command line**\n\n```\nadmin-hash-username <username>\n```\n\nReproduces the login server's hashing, to derive a login id offline.",
+        "description": "**Core call:** `context.$internalStuff.hashUsername`\n\n**Command line**\n\n```\nadmin-hash-username <username> <username>\n```\n\nReproduces the login server's hashing, to derive a login id offline.",
         "tags": [
           "Admin"
         ],
@@ -9202,6 +9399,14 @@
         "x-core-call": "context.$internalStuff.hashUsername",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "username",
             "in": "query",
@@ -9337,7 +9542,7 @@
         }
       }
     },
-    "/admin/lobby-handle/{objectId}/delete": {
+    "/admin/lobby-handle/delete/{objectId}": {
       "post": {
         "operationId": "adminDeleteLobbyHandle",
         "summary": "Close a parked lobby.",
@@ -9400,11 +9605,11 @@
         }
       }
     },
-    "/admin/fetch-lobby-request": {
+    "/admin/fetch-lobby-request/{lobbyId}": {
       "get": {
         "operationId": "adminFetchLobbyRequest",
         "summary": "Read a lobby's contents.",
-        "description": "**Core call:** `context.$internalStuff.fetchLobbyRequest`\n\n**Command line**\n\n```\nadmin-fetch-lobby-request <lobbyId>\n```\n\n",
+        "description": "**Core call:** `context.$internalStuff.fetchLobbyRequest`\n\n**Command line**\n\n```\nadmin-fetch-lobby-request <lobbyId> <lobbyId>\n```\n\n",
         "tags": [
           "Admin"
         ],
@@ -9419,6 +9624,14 @@
         "x-core-call": "context.$internalStuff.fetchLobbyRequest",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "lobbyId",
             "in": "query",
@@ -9451,11 +9664,11 @@
         }
       }
     },
-    "/admin/send-lobby-reply": {
+    "/admin/send-lobby-reply/{lobbyId}": {
       "post": {
         "operationId": "adminSendLobbyReply",
         "summary": "Reply to a lobby.",
-        "description": "**Core call:** `context.$internalStuff.sendLobbyReply`\n\n**Command line**\n\n```\nadmin-send-lobby-reply <lobbyId> --lobby-request=<lobbyRequest> [--reply-data=<replyData>]\n```\n\n",
+        "description": "**Core call:** `context.$internalStuff.sendLobbyReply`\n\n**Command line**\n\n```\nadmin-send-lobby-reply <lobbyId> <lobbyId> --lobby-request=<lobbyRequest> [--reply-data=<replyData>]\n```\n\n",
         "tags": [
           "Admin"
         ],
@@ -9469,7 +9682,16 @@
         },
         "x-core-call": "context.$internalStuff.sendLobbyReply",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "No content."
@@ -9513,11 +9735,11 @@
         }
       }
     },
-    "/admin/sync-repo": {
+    "/admin/sync-repo/{syncKey}": {
       "post": {
         "operationId": "adminSyncRepo",
         "summary": "Sync a repo.",
-        "description": "**Core call:** `context.$internalStuff.syncRepo`\n\n**Command line**\n\n```\nadmin-sync-repo <syncKey>\n```\n\n",
+        "description": "**Core call:** `context.$internalStuff.syncRepo`\n\n**Command line**\n\n```\nadmin-sync-repo <syncKey> <syncKey>\n```\n\n",
         "tags": [
           "Admin"
         ],
@@ -9531,7 +9753,16 @@
         },
         "x-core-call": "context.$internalStuff.syncRepo",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "syncKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The changeset summary.",
@@ -9573,11 +9804,11 @@
         }
       }
     },
-    "/admin/repo-list": {
+    "/admin/repo-list/{syncKey}": {
       "get": {
         "operationId": "adminRepoList",
         "summary": "List repo contents.",
-        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-list <syncKey> [--path=<path>] --data-key=<dataKey>\n```\n\n",
+        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-list <syncKey> <syncKey> [--path=<path>] --data-key=<dataKey>\n```\n\n",
         "tags": [
           "Admin"
         ],
@@ -9592,6 +9823,14 @@
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
+          {
+            "name": "syncKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "path",
             "in": "query",
@@ -9652,11 +9891,11 @@
         }
       }
     },
-    "/admin/repo-get": {
+    "/admin/repo-get/{syncKey}": {
       "get": {
         "operationId": "adminRepoGet",
         "summary": "Read a repo file.",
-        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-get <syncKey> --path=<path> --data-key=<dataKey>\n```\n\n",
+        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-get <syncKey> <syncKey> --path=<path> --data-key=<dataKey>\n```\n\n",
         "tags": [
           "Admin"
         ],
@@ -9671,6 +9910,14 @@
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
+          {
+            "name": "syncKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "path",
             "in": "query",
@@ -9732,11 +9979,11 @@
         }
       }
     },
-    "/admin/repo-set": {
+    "/admin/repo-set/{syncKey}": {
       "post": {
         "operationId": "adminRepoSet",
         "summary": "Write a repo file.",
-        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-set <syncKey> --path=<path> --text=<text> --data-key=<dataKey>\n```\n\nWrites directly into a synced repo, bypassing every core-level invariant. A malformed write can break the account for real clients.",
+        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-set <syncKey> <syncKey> --path=<path> --text=<text> --data-key=<dataKey>\n```\n\nWrites directly into a synced repo, bypassing every core-level invariant. A malformed write can break the account for real clients.",
         "tags": [
           "Admin"
         ],
@@ -9750,7 +9997,16 @@
         },
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "syncKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "No content."
@@ -9802,11 +10058,11 @@
         }
       }
     },
-    "/admin/repo-delete": {
+    "/admin/repo-delete/{syncKey}": {
       "post": {
         "operationId": "adminRepoDelete",
         "summary": "Delete a repo file.",
-        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-delete <syncKey> --path=<path> --data-key=<dataKey>\n```\n\nDestructive, and not undoable from this API.",
+        "description": "**Core call:** `context.$internalStuff.getRepoDisklet`\n\n**Command line**\n\n```\nadmin-repo-delete <syncKey> <syncKey> --path=<path> --data-key=<dataKey>\n```\n\nDestructive, and not undoable from this API.",
         "tags": [
           "Admin"
         ],
@@ -9820,7 +10076,16 @@
         },
         "x-core-call": "context.$internalStuff.getRepoDisklet",
         "x-source": "src/cli/engine/routes/admin.ts",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "syncKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "204": {
             "description": "No content."

@@ -10,9 +10,26 @@ import type { EdgeWalletStates } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { engineError } from '../errors'
+import { findWallet } from '../resolve'
 import { route } from '../route'
+import type { RouteContext } from '../router'
 import { asCoreValue } from '../schemas'
 import { getAccount } from './helpers'
+
+/**
+ * The full wallet id behind a `walletId` query field.
+ *
+ * These routes hand the id straight to core, which only knows full ids. The
+ * documented contract is that any unique prefix works, so resolve it here
+ * rather than making these five calls the exceptions.
+ */
+function walletIdFor(
+  ctx: RouteContext & {
+    query: { valid: { walletId: string } }
+  }
+): string {
+  return findWallet(getAccount(ctx), ctx.query.valid.walletId).id
+}
 
 const WALLET_ID_QUERY_DOC = 'Full base58 wallet id.'
 
@@ -90,7 +107,7 @@ export const getWalletInfo = route({
     asCoreValue,
     '`EdgeWalletInfoFull`, verbatim from core — including the `keys` object.'
   ),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   handler(ctx) {
     const info = getAccount(ctx).getWalletInfo(ctx.query.valid.id)
@@ -117,10 +134,11 @@ export const getRawPrivateKey = route({
   cli: { command: 'get-raw-private-key', positional: 'walletId' },
   query: asWalletIdQuery,
   returns: doc(asCoreValue, "The plugin's key object, at the top level."),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    return await getAccount(ctx).getRawPrivateKey(ctx.query.valid.walletId)
+    const account = getAccount(ctx)
+    return await account.getRawPrivateKey(walletIdFor(ctx))
   }
 })
 
@@ -134,10 +152,11 @@ export const getRawPublicKey = route({
   cli: { command: 'get-raw-public-key', positional: 'walletId' },
   query: asWalletIdQuery,
   returns: doc(asCoreValue, "The plugin's public key object."),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    return await getAccount(ctx).getRawPublicKey(ctx.query.valid.walletId)
+    const account = getAccount(ctx)
+    return await account.getRawPublicKey(walletIdFor(ctx))
   }
 })
 
@@ -154,12 +173,10 @@ export const getDisplayPrivateKey = route({
   cli: { command: 'get-display-private-key', positional: 'walletId' },
   query: asWalletIdQuery,
   returns: asObject({ key: doc(asString, 'The displayable private key.') }),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const key = await getAccount(ctx).getDisplayPrivateKey(
-      ctx.query.valid.walletId
-    )
+    const key = await getAccount(ctx).getDisplayPrivateKey(walletIdFor(ctx))
     return { key }
   }
 })
@@ -176,12 +193,10 @@ export const getDisplayPublicKey = route({
   cli: { command: 'get-display-public-key', positional: 'walletId' },
   query: asWalletIdQuery,
   returns: asObject({ key: doc(asString, 'The displayable public key.') }),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
-    const key = await getAccount(ctx).getDisplayPublicKey(
-      ctx.query.valid.walletId
-    )
+    const key = await getAccount(ctx).getDisplayPublicKey(walletIdFor(ctx))
     return { key }
   }
 })
@@ -200,11 +215,11 @@ export const listSplittableWalletTypes = route({
   returns: asObject({
     walletTypes: doc(asArray(asString), 'Types valid for `split`.')
   }),
-  errors: ['WALLET_NOT_FOUND'],
+  errors: ['WALLET_NOT_FOUND', 'AMBIGUOUS_WALLET_ID'],
 
   async handler(ctx) {
     const walletTypes = await getAccount(ctx).listSplittableWalletTypes(
-      ctx.query.valid.walletId
+      walletIdFor(ctx)
     )
     return { walletTypes }
   }

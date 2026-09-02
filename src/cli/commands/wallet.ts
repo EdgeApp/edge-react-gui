@@ -6,10 +6,16 @@ import { printJson } from '../client/output'
 import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
-function walletPath(sessionId: string, walletId: string, suffix = ''): string {
+/**
+ * A wallet-scoped URL: scope, then command, then the wallet it acts on.
+ *
+ * The wallet id comes last so the path reads in the same order the command
+ * does — `wallet/balance-map/{walletId}` for `balance-map <walletId>`.
+ */
+function walletPath(sessionId: string, walletId: string, verb = ''): string {
   return `/account/${encodeURIComponent(
     sessionId
-  )}/wallets/${encodeURIComponent(walletId)}${suffix}`
+  )}/wallet${verb}/${encodeURIComponent(walletId)}`
 }
 
 const walletStateCmd = command(
@@ -162,11 +168,8 @@ const txListCmd = command(
       transactions?: unknown
       files?: Array<{ format: TxExportFormat; contents: string }>
     }>(
-      walletPath(
-        sessionId,
-        args.positional!,
-        `/get-transactions${qs !== '' ? `?${qs}` : ''}`
-      )
+      walletPath(sessionId, args.positional!, '/get-transactions') +
+        (qs !== '' ? `?${qs}` : '')
     )
 
     if (formats.length === 0 || result.files == null) {

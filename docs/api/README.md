@@ -20,10 +20,13 @@ route or command edit — `npm run docs:api:verify` will fail otherwise.
 ## Naming
 
 Routes are named after the core call they front, kebab-cased, and the command
-matches: `context.forgetAccount` becomes `POST /forget-account` and
-`forget-account`. Parameters keep core's names. Path segments carry scope only
-(`sessionId`, `walletId`, `objectId`); core arguments travel in the query for
-`GET` and the body for `POST`. Only `GET` and `POST` are used, since core has no
+matches: `context.forgetAccount` becomes `POST /forget-account/{rootLoginId}`
+and `forget-account <rootLoginId>`. Parameters keep core's names.
+
+A path reads in the order the command does — scope, command, then the single
+positional argument, which is always the final segment. Collection segments
+are singular, since each call acts on one thing. Everything else travels in
+the query for `GET` and the body for `POST`. Only `GET` and `POST` are used, since core has no
 HTTP verbs, and a core method returning `void` answers `204`.
 
 Endpoints with no core equivalent set `coreCall: null` and must explain

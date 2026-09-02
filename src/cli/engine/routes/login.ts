@@ -286,7 +286,14 @@ export const createAccount = route({
   core: 'context.createAccount',
   method: 'POST',
   path: '/create-account',
-  cli: { command: 'create-account', custom: true, positional: 'username' },
+  cli: {
+    command: 'create-account',
+    custom: true,
+    positional: 'username',
+    // A light account has no username, so the positional is optional and
+    // cannot become a path segment.
+    positionalInPath: false
+  },
   body: asObject({
     username: asOptional(doc(asString, 'The name to claim.')),
     password: asOptional(doc(asString, 'The account password.')),
@@ -453,7 +460,7 @@ export const pollEdgeLogin = route({
 export const cancelEdgeLogin = route({
   core: 'EdgePendingEdgeLogin.cancelRequest',
   method: 'POST',
-  path: '/pending-edge-login/{pendingId}/cancel-request',
+  path: '/pending-edge-login/cancel-request',
   cli: { command: 'cancel-request', positional: 'pendingId' },
   errors: ['PENDING_LOGIN_NOT_FOUND'],
 

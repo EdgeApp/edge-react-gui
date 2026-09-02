@@ -58,12 +58,13 @@ function passForm(cli: ExtractedCli, field: string, optional: boolean): string {
 
 function usageFor(r: ExtractedRoute, cli: ExtractedCli): string {
   const parts = [cli.command]
+  // A positional is a path parameter, so the path is the single source for
+  // it; `cli.positional` only names which field it carries.
   for (const p of r.pathParams) if (p !== 'sessionId') parts.push(`<${p}>`)
-  if (cli.positional != null) parts.push(`<${cli.positional}>`)
   if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)
   else {
     for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
-      if (f.name === cli.positional) continue
+      if (r.pathParams.includes(f.name)) continue
       parts.push(passForm(cli, f.name, f.optional))
     }
   }

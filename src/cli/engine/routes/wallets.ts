@@ -208,7 +208,7 @@ export const createCurrencyWallets = route({
 export const walletInfo = route({
   core: null,
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}',
+  path: '/account/{sessionId}/wallet/{walletId}',
   cli: 'wallet-info',
   returns: doc(
     asCoreValue,
@@ -233,7 +233,7 @@ export const walletInfo = route({
 export const renameWallet = route({
   core: 'wallet.renameWallet',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/rename-wallet',
+  path: '/account/{sessionId}/wallet/rename-wallet/{walletId}',
   cli: 'rename-wallet',
   body: asObject({ name: doc(asString, 'The new display name.') }).withRest,
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
@@ -253,7 +253,7 @@ export const renameWallet = route({
 export const setFiatCurrencyCode = route({
   core: 'wallet.setFiatCurrencyCode',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
+  path: '/account/{sessionId}/wallet/set-fiat-currency-code/{walletId}',
   cli: 'set-fiat-currency-code',
   body: asObject({
     fiatCurrencyCode: doc(asString, 'e.g. `iso:EUR`.')
@@ -276,7 +276,7 @@ export const setFiatCurrencyCode = route({
 export const changePaused = route({
   core: 'wallet.changePaused',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/change-paused',
+  path: '/account/{sessionId}/wallet/change-paused/{walletId}',
   cli: 'change-paused',
   body: asObject({ paused: doc(asBoolean, 'True to stop syncing.') }).withRest,
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
@@ -296,7 +296,7 @@ export const changePaused = route({
 export const walletSync = route({
   core: 'wallet.sync',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/sync',
+  path: '/account/{sessionId}/wallet/sync/{walletId}',
   cli: 'wallet-sync',
   errors: WALLET_ERRORS,
 
@@ -319,7 +319,7 @@ export const walletSync = route({
 export const resyncBlockchain = route({
   core: 'wallet.resyncBlockchain',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/resync-blockchain',
+  path: '/account/{sessionId}/wallet/resync-blockchain/{walletId}',
   cli: 'resync-blockchain',
   errors: WALLET_ERRORS,
 
@@ -339,7 +339,7 @@ export const resyncBlockchain = route({
 export const splitWallet = route({
   core: 'wallet.split',
   method: 'POST',
-  path: '/account/{sessionId}/wallets/{walletId}/split',
+  path: '/account/{sessionId}/wallet/split/{walletId}',
   cli: { command: 'split', bodyFlag: 'split-wallets' },
   body: asObject({
     splitWallets: doc(
@@ -381,7 +381,7 @@ export const splitWallet = route({
 export const dumpData = route({
   core: 'wallet.dumpData',
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}/dump-data',
+  path: '/account/{sessionId}/wallet/dump-data/{walletId}',
   cli: 'dump-data',
   returns: doc(asCoreValue, '`EdgeDataDump`, straight from the plugin.'),
   errors: WALLET_ERRORS,
@@ -405,7 +405,7 @@ export const dumpData = route({
 export const balanceMap = route({
   core: 'wallet.balanceMap',
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}/balance-map',
+  path: '/account/{sessionId}/wallet/balance-map/{walletId}',
   cli: {
     command: 'balance-map',
     custom: true,
@@ -451,7 +451,7 @@ export const balanceMap = route({
 export const getAddresses = route({
   core: 'wallet.getAddresses',
   method: 'GET',
-  path: '/account/{sessionId}/wallets/{walletId}/get-addresses',
+  path: '/account/{sessionId}/wallet/get-addresses/{walletId}',
   cli: 'get-addresses',
   query: asObject({
     tokenId: asOptional(doc(asTokenId, 'Defaults to the native asset.')),

@@ -129,6 +129,60 @@ for (const [key, count] of seen) {
   if (count > 1) fail('duplicate route', `${key} declared ${count} times`)
 }
 
+// ------------------------------------------------------------ path shape
+// A REST path reads in the same order the command does: scope, then command,
+// then the one argument the command takes bare. Anything the caller names
+// stays in the query or the body.
+for (const r of routes) {
+  const segments = r.routePath.split('/').filter(x => x !== '')
+  const params = segments.filter(x => x.startsWith('{'))
+
+  for (const [i, seg] of segments.entries()) {
+    if (!seg.startsWith('{')) continue
+    const name = seg.slice(1, -1)
+    if (name === 'sessionId') continue
+    if (i !== segments.length - 1) {
+      fail(
+        'path shape',
+        `${r.method} ${r.routePath} puts {${name}} before a literal segment; ` +
+          'a positional is the final segment'
+      )
+    }
+  }
+
+  // `{sessionId}` is scope, so it may lead; nothing else may repeat it.
+  if (params.length > 2) {
+    fail(
+      'path shape',
+      `${r.method} ${r.routePath} takes more than one argument`
+    )
+  }
+
+  // A plural collection segment means the call acts on many; these all act on
+  // exactly one.
+  for (const seg of segments) {
+    if (seg === 'wallets' || seg === 'objects' || seg === 'swap-quotes') {
+      fail(
+        'path shape',
+        `${r.method} ${r.routePath} names "${seg}" plural but acts on one`
+      )
+    }
+  }
+
+  // The positional must actually be on the path, or the CLI and REST disagree
+  // about where the argument goes.
+  const pos = r.cli?.positional
+  if (pos != null && r.cli?.positionalInPath !== false) {
+    if (!r.routePath.endsWith(`/{${pos}}`)) {
+      fail(
+        'path shape',
+        `${r.method} ${r.routePath} declares positional "${pos}" but does not ` +
+          'carry it as the final path segment'
+      )
+    }
+  }
+}
+
 // ---------------------------------------------------------------- commands
 const claimed = new Set<string>()
 for (const r of routes) {

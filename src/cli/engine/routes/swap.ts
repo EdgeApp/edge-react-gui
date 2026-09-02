@@ -177,7 +177,7 @@ export const fetchSwapQuotes = route({
 export const getSwapQuote = route({
   core: null,
   method: 'GET',
-  path: '/account/{sessionId}/swap-quotes/{objectId}',
+  path: '/account/{sessionId}/swap-quote',
   cli: { command: 'swap-quote-get', positional: 'objectId' },
   returns: asSwapQuote,
   errors: [
@@ -216,7 +216,7 @@ export const getSwapQuote = route({
 export const approveSwapQuote = route({
   core: 'EdgeSwapQuote.approve',
   method: 'POST',
-  path: '/account/{sessionId}/swap-quotes/{objectId}/approve',
+  path: '/account/{sessionId}/swap-quote/approve',
   cli: { command: 'approve-swap-quote', positional: 'objectId' },
   returns: asObject({
     ok: doc(
@@ -276,7 +276,7 @@ export const approveSwapQuote = route({
 export const closeSwapQuote = route({
   core: 'EdgeSwapQuote.close',
   method: 'POST',
-  path: '/account/{sessionId}/swap-quotes/{objectId}/close',
+  path: '/account/{sessionId}/swap-quote/close',
   cli: { command: 'close-swap-quote', positional: 'objectId' },
   returns: asOkObject,
   errors: [
