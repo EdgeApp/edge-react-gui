@@ -1,0 +1,143 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the JSDoc above each route() in src/cli/engine/routes. Edit the comment on the route, then run `npm run prepare` (or `npm run docs:api`).",
+  "commands": {
+    "check-password-rules": {
+      "summary": "Score a candidate password.",
+      "method": "GET",
+      "path": "/check-password-rules",
+      "core": "context.checkPasswordRules",
+      "params": {
+        "password": "The candidate."
+      },
+      "notes": [
+        "Send it with `curl --get --data-urlencode` rather than putting it in a shell-visible URL."
+      ]
+    },
+    "currency-configs": {
+      "summary": "List plugin ids usable for wallet creation.",
+      "method": "GET",
+      "path": "/currency-configs",
+      "description": "Currency and accountbased plugins only — swap plugins are excluded."
+    },
+    "engine-config": {
+      "summary": "Configured context options.",
+      "method": "GET",
+      "path": "/engine/config",
+      "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+      "notes": [
+        "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
+      ]
+    },
+    "engine-status": {
+      "summary": "Engine liveness and summary.",
+      "method": "GET",
+      "path": "/engine/status",
+      "description": "The readiness probe the client polls after auto-spawning the engine.",
+      "errors": [
+        "ENGINE_SHUTTING_DOWN"
+      ]
+    },
+    "engine-stop": {
+      "summary": "Stop the engine.",
+      "method": "POST",
+      "path": "/engine/stop",
+      "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+      "notes": [
+        "In-flight callers may see `503 ENGINE_SHUTTING_DOWN` once teardown starts."
+      ]
+    },
+    "fetch-challenge": {
+      "summary": "Pre-fetch a CAPTCHA challenge.",
+      "method": "POST",
+      "path": "/fetch-challenge",
+      "description": "Lets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
+      "core": "context.fetchChallenge",
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "fetch-login-messages": {
+      "summary": "Fetch login-server messages for every local user.",
+      "method": "GET",
+      "path": "/fetch-login-messages",
+      "core": "context.fetchLoginMessages",
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "fetch-recovery-questions": {
+      "summary": "Fetch a user’s recovery questions.",
+      "method": "GET",
+      "path": "/fetch-recovery-questions",
+      "core": "context.fetchRecovery2Questions",
+      "params": {
+        "recoveryKey": "From `change-recovery`, stored by the user out of band.",
+        "username": "Whose questions to fetch."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "NETWORK_ERROR"
+      ]
+    },
+    "fix-username": {
+      "summary": "Normalize a username.",
+      "method": "GET",
+      "path": "/fix-username",
+      "core": "context.fixUsername",
+      "params": {
+        "username": "The name to normalize."
+      }
+    },
+    "forget-account": {
+      "summary": "Forget an account on this device.",
+      "method": "POST",
+      "path": "/forget-account",
+      "description": "Removes locally cached credentials. The remote account is untouched.",
+      "core": "context.forgetAccount",
+      "params": {
+        "rootLoginId": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it."
+      },
+      "errors": [
+        "USER_NOT_FOUND",
+        "BAD_REQUEST"
+      ]
+    },
+    "local-users": {
+      "summary": "List local users on this device.",
+      "method": "GET",
+      "path": "/local-users",
+      "core": "context.localUsers"
+    },
+    "request-otp-reset": {
+      "summary": "Request a 2FA reset.",
+      "method": "POST",
+      "path": "/request-otp-reset",
+      "description": "Starts the timed reset a user falls back on after losing their authenticator.",
+      "core": "context.requestOtpReset",
+      "params": {
+        "username": "Whose 2FA to reset.",
+        "otpResetToken": "From `details.resetToken` on an `OTP_REQUIRED` error."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "username-available": {
+      "summary": "Check whether a username is free.",
+      "method": "GET",
+      "path": "/username-available",
+      "core": "context.usernameAvailable",
+      "params": {
+        "username": "The name to check.",
+        "challengeId": "Supply after solving a CAPTCHA to retry the same check."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    }
+  }
+}

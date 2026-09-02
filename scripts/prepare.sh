@@ -39,5 +39,10 @@ fi
 node ./node_modules/.bin/rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
 
+# Regenerate the API reference and the CLI's help text from the route
+# declarations. Both are committed, so a fresh clone works without this; the
+# writes are skipped when nothing changed, so prepare never dirties git.
+npm run docs:api
+
 # Create contract type definitions:
 npm run typechain

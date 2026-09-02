@@ -18,6 +18,7 @@ import { groups } from '../docs/api'
 import type { Field, Schema } from '../docs/api/schema'
 import { CLI_EXIT_CODES, errorCodes, schemas } from '../docs/api/shared'
 import type { Endpoint } from '../docs/api/types'
+import { writeIfChanged } from './writeIfChanged'
 
 const OUT = path.resolve(__dirname, '../docs/api/dist')
 const API_VERSION = '1.0.0'
@@ -928,17 +929,22 @@ q.addEventListener('input', () => {
 
 fs.mkdirSync(OUT, { recursive: true })
 const spec = buildOpenApi()
-fs.writeFileSync(
+const html = buildHtml()
+const wroteJson = writeIfChanged(
   path.join(OUT, 'openapi.json'),
   JSON.stringify(spec, null, 2) + '\n'
 )
-fs.writeFileSync(path.join(OUT, 'index.html'), buildHtml())
+const wroteHtml = writeIfChanged(path.join(OUT, 'index.html'), html)
 
 const count = groups.reduce((n, g) => n + g.endpoints.length, 0)
 console.log(`✓ ${count} calls in ${groups.length} groups`)
 console.log(
-  `  docs/api/dist/openapi.json  ${(JSON.stringify(spec).length / 1024) | 0} KB`
+  `  ${wroteJson ? 'wrote' : 'unchanged'} docs/api/dist/openapi.json  ${
+    (JSON.stringify(spec).length / 1024) | 0
+  } KB`
 )
 console.log(
-  `  docs/api/dist/index.html    ${(buildHtml().length / 1024) | 0} KB`
+  `  ${wroteHtml ? 'wrote' : 'unchanged'} docs/api/dist/index.html    ${
+    (html.length / 1024) | 0
+  } KB`
 )

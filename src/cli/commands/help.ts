@@ -1,11 +1,28 @@
 import { printJson } from '../client/output'
 import { command, findCommand, listCommands, UsageError } from '../command'
+import helpDocs from '../generated/helpDocs.json'
+
+interface CommandHelp {
+  summary: string
+  description?: string
+  core?: string
+  method: string
+  path: string
+  params?: Record<string, string>
+  notes?: string[]
+  errors?: string[]
+}
+
+const generated: Record<string, CommandHelp> = helpDocs.commands as Record<
+  string,
+  CommandHelp
+>
 
 const helpCmd = command(
   'help',
   {
     usage: 'help [<command>]',
-    help: 'List all commands, or show usage/help for one command'
+    help: 'List all commands, or show usage and documentation for one command'
   },
   (_ctx, argv) => {
     if (argv.length > 1) throw new UsageError(helpCmd)
@@ -17,10 +34,19 @@ const helpCmd = command(
 
     const [name] = argv
     const target = findCommand(name)
+    // Prose comes from the route's JSDoc via src/cli/generated/helpDocs.json.
+    // Commands not yet declared with route() fall back to their own string.
+    const docs = generated[target.name]
     printJson({
       name: target.name,
       usage: target.usage ?? target.name,
-      help: target.help ?? null,
+      summary: docs?.summary ?? target.help ?? null,
+      ...(docs?.description != null ? { description: docs.description } : {}),
+      ...(docs?.core != null ? { core: docs.core } : {}),
+      ...(docs != null ? { rest: `${docs.method} ${docs.path}` } : {}),
+      ...(docs?.params != null ? { params: docs.params } : {}),
+      ...(docs?.notes != null ? { notes: docs.notes } : {}),
+      ...(docs?.errors != null ? { errors: docs.errors } : {}),
       needsSession: target.needsSession === true
     })
   }
