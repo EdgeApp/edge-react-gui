@@ -2597,11 +2597,56 @@
         }
       }
     },
+    "/account/{sessionId}/wait-for-all-wallets": {
+      "post": {
+        "operationId": "waitForAllWallets",
+        "summary": "Wait for every wallet to finish loading.",
+        "description": "**Core call:** `account.waitForAllWallets`\n\n**Command line**\n\n```\nwait-for-all-wallets\n```\n\nWallets load in the background after login, so a list taken straight afterwards can be short. This resolves once each active wallet has either loaded or failed — balances may still be syncing afterwards.",
+        "tags": [
+          "Account"
+        ],
+        "x-cli": {
+          "command": "wait-for-all-wallets",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.waitForAllWallets",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/account/{sessionId}/currency-wallets": {
       "get": {
         "operationId": "currencyWallets",
         "summary": "List the account's wallets.",
-        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>] [--wait-for-all=<waitForAll>]\n```\n\n",
+        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets [--filter=<filter>]\n```\n\n",
         "tags": [
           "Account"
         ],
@@ -2645,15 +2690,6 @@
                   "description": "\"all\""
                 }
               ]
-            }
-          },
-          {
-            "name": "waitForAll",
-            "in": "query",
-            "required": false,
-            "description": "Await every wallet to load before answering. Without it a freshly logged-in account may report fewer wallets than it has.",
-            "schema": {
-              "type": "boolean"
             }
           }
         ],

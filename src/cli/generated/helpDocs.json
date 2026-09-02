@@ -965,17 +965,12 @@
       "summary": "List the account's wallets.",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<value>] [--wait-for-all]",
+      "usage": "currency-wallets [--filter=<value>]",
       "core": "account.currencyWallets",
       "params": {
         "filter": {
           "pass": "[--filter=<value>]",
           "doc": "Which of the account’s wallet lists to read. Defaults to `active`.",
-          "optional": true
-        },
-        "waitForAll": {
-          "pass": "[--wait-for-all]",
-          "doc": "Await every wallet to load before answering. Without it a freshly logged-in account may report fewer wallets than it has.",
           "optional": true
         }
       },
@@ -983,7 +978,7 @@
         "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet in the account, including paused ones."
       },
       "notes": [
-        "Wallets load in the background after login, so a list taken straight afterwards can be short. Pass `waitForAll`, or call `wait-for-all-wallets` first, to be sure the account has finished loading."
+        "Wallets load in the background after login, so a list taken straight afterwards can be short. Call `wait-for-all-wallets` first to be sure the account has finished loading."
       ]
     },
     "delete-item": {
@@ -3056,6 +3051,18 @@
         "USERNAME_ERROR",
         "CHALLENGE_REQUIRED",
         "NETWORK_ERROR"
+      ]
+    },
+    "wait-for-all-wallets": {
+      "summary": "Wait for every wallet to finish loading.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wait-for-all-wallets",
+      "usage": "wait-for-all-wallets",
+      "description": "Wallets load in the background after login, so a list taken straight afterwards can be short. This resolves once each active wallet has either loaded or failed — balances may still be syncing afterwards.",
+      "core": "account.waitForAllWallets",
+      "notes": [
+        "There is no timeout: a wallet that never resolves holds this open. The engine's own idle shutdown does not fire while a request is in flight, so give the client one.",
+        "Nothing is returned. Call `currency-wallets` afterwards to see the result, including any wallet that failed to load."
       ]
     },
     "wallet-info": {

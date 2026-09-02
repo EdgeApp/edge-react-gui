@@ -623,7 +623,7 @@
       "command": "currency-wallets",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<filter>] [--wait-for-all]",
+      "usage": "currency-wallets [--filter=<filter>]",
       "help": "List the account's wallets.",
       "needsSession": true,
       "args": [
@@ -632,13 +632,6 @@
           "field": "filter",
           "target": "query",
           "kind": "string",
-          "required": false
-        },
-        {
-          "flag": "wait-for-all",
-          "field": "waitForAll",
-          "target": "query",
-          "kind": "boolean",
           "required": false
         }
       ]
@@ -2072,6 +2065,15 @@
           "required": false
         }
       ]
+    },
+    {
+      "command": "wait-for-all-wallets",
+      "method": "POST",
+      "path": "/account/{sessionId}/wait-for-all-wallets",
+      "usage": "wait-for-all-wallets",
+      "help": "Wait for every wallet to finish loading.",
+      "needsSession": true,
+      "args": []
     },
     {
       "command": "wallet-info",

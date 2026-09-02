@@ -11,7 +11,7 @@ import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { route } from '../route'
-import { asQueryBoolean, asSession, asWalletSummary } from '../schemas'
+import { asSession, asWalletSummary } from '../schemas'
 import { getAccount, getSession, summarizeWallet } from './helpers'
 
 /** Which of the account's three wallet lists to read. */
@@ -243,11 +243,36 @@ export const deleteRemoteAccount = route({
 })
 
 /**
+ * Wait for every wallet to finish loading.
+ *
+ * Wallets load in the background after login, so a list taken straight
+ * afterwards can be short. This resolves once each active wallet has either
+ * loaded or failed — balances may still be syncing afterwards.
+ *
+ * @note There is no timeout: a wallet that never resolves holds this open.
+ *   The engine's own idle shutdown does not fire while a request is in
+ *   flight, so give the client one.
+ * @note Nothing is returned. Call `currency-wallets` afterwards to see the
+ *   result, including any wallet that failed to load.
+ */
+export const waitForAllWallets = route({
+  core: 'account.waitForAllWallets',
+  method: 'POST',
+  path: '/account/{sessionId}/wait-for-all-wallets',
+  cli: 'wait-for-all-wallets',
+
+  async handler(ctx) {
+    await getAccount(ctx).waitForAllWallets()
+    return undefined
+  }
+})
+
+/**
  * List the account's wallets.
  *
  * @note Wallets load in the background after login, so a list taken straight
- *   afterwards can be short. Pass `waitForAll`, or call `wait-for-all-wallets`
- *   first, to be sure the account has finished loading.
+ *   afterwards can be short. Call `wait-for-all-wallets` first to be sure the
+ *   account has finished loading.
  * @coreNote Filtered by account.activeWalletIds / archivedWalletIds /
  *   hiddenWalletIds.
  */
@@ -262,14 +287,6 @@ export const currencyWallets = route({
         asWalletFilter,
         'Which of the account\u2019s wallet lists to read. Defaults to `active`.'
       )
-    ),
-    waitForAll: asOptional(
-      doc(
-        asQueryBoolean,
-        'Await every wallet to load before answering. Without it a freshly ' +
-          'logged-in account may report fewer wallets than it has.'
-      ),
-      false
     )
   }).withRest,
   returns: asObject({
@@ -281,8 +298,7 @@ export const currencyWallets = route({
 
   async handler(ctx) {
     const account = getAccount(ctx)
-    const { filter = 'active', waitForAll = false } = ctx.query.valid
-    if (waitForAll) await account.waitForAllWallets()
+    const { filter = 'active' } = ctx.query.valid
 
     const currencyWallets = walletIdsForFilter(account, filter)
       .map(id => account.currencyWallets[id])
