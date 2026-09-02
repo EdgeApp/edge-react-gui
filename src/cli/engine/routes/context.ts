@@ -226,6 +226,9 @@ export const requestOtpReset = route({
  */
 export const fetchRecoveryQuestions = route({
   core: 'context.fetchRecovery2Questions',
+  coreExtra: {
+    recoveryKey: 'Core calls it recovery2Key. The `2` is dropped throughout.'
+  },
   method: 'GET',
   path: '/fetch-recovery-questions',
   cli: 'fetch-recovery-questions',

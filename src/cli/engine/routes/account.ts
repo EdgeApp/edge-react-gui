@@ -278,6 +278,11 @@ export const waitForAllWallets = route({
  */
 export const currencyWallets = route({
   core: 'account.currencyWallets',
+  coreExtra: {
+    filter:
+      'Core has no filter: it exposes activeWalletIds, archivedWalletIds and ' +
+      'hiddenWalletIds as separate lists. This picks between them.'
+  },
   method: 'GET',
   path: '/account/{sessionId}/currency-wallets',
   cli: 'currency-wallets',

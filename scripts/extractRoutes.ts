@@ -58,6 +58,8 @@ export interface ExtractedRoute {
   coreNote?: string
   method: string
   routePath: string
+  /** Fields core has no parameter for, mapped to the reason they exist. */
+  coreExtra: Record<string, string>
   /** The `path` as written, before the positional is appended. */
   declaredPath: string
   /** Field the path carries as its final segment, or null. */
@@ -293,6 +295,31 @@ function proseFor(
     if (!ts.isPropertyAssignment(prop)) continue
     const found = findDoc(prop.initializer)
     if (found != null) out[prop.name.getText()] = found
+  }
+  return out
+}
+
+/** Read `{ key: 'text', … }` from a property, for `coreExtra`. */
+function recordLiteral(
+  arg: ts.ObjectLiteralExpression,
+  key: string
+): Record<string, string> {
+  const out: Record<string, string> = {}
+  const node = propNode(arg, key)
+  if (node == null || !ts.isObjectLiteralExpression(node)) return out
+  for (const prop of node.properties) {
+    if (!ts.isPropertyAssignment(prop)) continue
+    const name = prop.name.getText().replace(/'/g, '')
+    const init = prop.initializer
+    if (ts.isStringLiteral(init) || ts.isNoSubstitutionTemplateLiteral(init)) {
+      out[name] = init.text
+    } else {
+      // A concatenation spanning lines.
+      out[name] = init
+        .getText()
+        .replace(/'\s*\+\s*'/g, '')
+        .replace(/^'|'$/g, '')
+    }
   }
   return out
 }
@@ -596,6 +623,7 @@ export function extractRoutes(): ExtractedRoute[] {
           description,
           core: literal(arg, 'core'),
           coreNote,
+          coreExtra: recordLiteral(arg, 'coreExtra'),
           method: literal(arg, 'method') ?? '',
           routePath,
           declaredPath,

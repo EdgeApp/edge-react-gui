@@ -752,7 +752,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#fetchRecoveryQuestions">Fetch a user’s recovery questions.</a></h3>
       <div class="ids"><code class="cmdname">fetch-recovery-questions</code><span class="src" title="Declared in">src/cli/engine/routes/context.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>context.fetchRecovery2Questions</code> <span class="dim">Our surface drops the <code>2</code> from the path, command and <code>recoveryKey</code> parameter; a future Recovery1 would be suffixed <code>V1</code>.</span></p>
+    <p class="core"><span class="lbl">core</span><code>context.fetchRecovery2Questions</code> <span class="dim">Our surface drops the <code>2</code> from the path, command and <code>recoveryKey</code> parameter; a future Recovery1 would be suffixed <code>V1</code>.</span></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>recoveryKey</code> — Core calls it recovery2Key. The <code>2</code> is dropped throughout.</li></ul></div>
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
@@ -1340,7 +1340,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#loginWithRecovery">Log in with recovery answers.</a></h3>
       <div class="ids"><code class="cmdname">login-with-recovery</code><span class="src" title="Declared in">src/cli/engine/routes/login.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>context.loginWithRecovery2</code> <span class="dim">Our surface drops the <code>2</code> from core&#39;s recovery2 naming, and calls the key <code>recoveryKey</code> to match what <code>change-recovery</code> returns.</span></p>
+    <p class="core"><span class="lbl">core</span><code>context.loginWithRecovery2</code> <span class="dim">Our surface drops the <code>2</code> from core&#39;s recovery2 naming, and calls the key <code>recoveryKey</code> to match what <code>change-recovery</code> returns.</span></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>recoveryKey</code> — Core calls it recovery2Key. The <code>2</code> is dropped throughout.</li></ul></div>
     <div class="desc"><p>Needs both the recovery key and the answers; neither works alone.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -2338,7 +2338,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#currencyWallets">List the account's wallets.</a></h3>
       <div class="ids"><code class="cmdname">currency-wallets</code><span class="src" title="Declared in">src/cli/engine/routes/account.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>account.currencyWallets</code> <span class="dim">Filtered by account.activeWalletIds / archivedWalletIds / hiddenWalletIds.</span></p>
+    <p class="core"><span class="lbl">core</span><code>account.currencyWallets</code> <span class="dim">Filtered by account.activeWalletIds / archivedWalletIds / hiddenWalletIds.</span></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>filter</code> — Core has no filter: it exposes activeWalletIds, archivedWalletIds and hiddenWalletIds as separate lists. This picks between them.</li></ul></div>
     
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
@@ -3439,7 +3439,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#approveLoginRequest">Approve a login request.</a></h3>
       <div class="ids"><code class="cmdname">approve-login-request</code><span class="src" title="Declared in">src/cli/engine/routes/lobby.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>EdgeLoginRequest.approve</code> <span class="dim">Reached through account.fetchLobby(lobbyId).loginRequest.</span></p>
+    <p class="core"><span class="lbl">core</span><code>EdgeLoginRequest.approve</code> <span class="dim">Reached through account.fetchLobby(lobbyId).loginRequest.</span></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>lobbyId</code> — Core calls approve() on a request object. Over HTTP there is no object to hold, so the lobby names which one to approve.</li></ul></div>
     <div class="desc"><p>Grants the requesting device access to this account.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -4919,7 +4919,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#getTransactions">List or export a wallet's transactions.</a></h3>
       <div class="ids"><code class="cmdname">get-transactions</code><span class="src" title="Declared in">src/cli/engine/routes/transactions.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.getTransactions</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.getTransactions</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>limit</code> — Engine-side paging; core returns every match.</li><li><code>offset</code> — Engine-side paging; core returns every match.</li><li><code>fiat</code> — Selects the currency the engine values each transaction in.</li><li><code>exportFormat</code> — Engine-side rendering to CSV, QBO or Bitwave.</li><li><code>bitwaveAccountId</code> — Required by the Bitwave export format.</li></ul></div>
     <div class="desc"><p>Reads history, overlays the display metadata the GUI shows, fills historical fiat, and optionally formats the result — all on this one call.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -5240,7 +5240,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#getMaxSpendable">Largest sendable amount.</a></h3>
       <div class="ids"><code class="cmdname">get-max-spendable</code><span class="src" title="Declared in">src/cli/engine/routes/spend.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.getMaxSpendable</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.getMaxSpendable</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>to</code> — Shorthand the engine expands into <code>spendTargets</code>, so a one-output send needs no nested JSON.</li><li><code>nativeAmount</code> — Amount for the <code>to</code> shorthand, in the smallest unit.</li><li><code>amount</code> — Amount for the <code>to</code> shorthand, in whole coins.</li></ul></div>
     <div class="desc"><p>What empties the wallet after fees. A destination is still required, since fees depend on it.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -5458,7 +5458,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#makeSpend">Build an unsigned transaction.</a></h3>
       <div class="ids"><code class="cmdname">make-spend</code><span class="src" title="Declared in">src/cli/engine/routes/spend.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.makeSpend</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.makeSpend</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>to</code> — Shorthand the engine expands into <code>spendTargets</code>, so a one-output send needs no nested JSON.</li><li><code>nativeAmount</code> — Amount for the <code>to</code> shorthand, in the smallest unit.</li><li><code>amount</code> — Amount for the <code>to</code> shorthand, in whole coins.</li></ul></div>
     <div class="desc"><p>First step of the staged workflow: nothing is signed and no funds move. Inspect <code>transaction.networkFee</code> on the result before signing.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -5810,7 +5810,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#accelerate">Fee-bump a pending transaction.</a></h3>
       <div class="ids"><code class="cmdname">accelerate</code><span class="src" title="Declared in">src/cli/engine/routes/spend.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.accelerate</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.accelerate</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>transaction</code> — Core names the parameter <code>tx</code>. Spelled out here to match the <code>transaction</code> field every staged-transaction response returns.</li></ul></div>
     <div class="desc"><p>Replace-by-fee, where the plugin supports it. Returns a new unsigned transaction to sign and broadcast.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -5919,7 +5919,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#sweepPrivateKeys">Sweep private keys into this wallet.</a></h3>
       <div class="ids"><code class="cmdname">sweep-private-keys</code><span class="src" title="Declared in">src/cli/engine/routes/spend.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.sweepPrivateKeys</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.sweepPrivateKeys</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>spendInfo</code> — Core names this one <code>edgeSpendInfo</code> while <code>makeSpend</code> names the same type <code>spendInfo</code>. Both are <code>spendInfo</code> here.</li></ul></div>
     <div class="desc"><p>Builds a transaction moving everything from an external key. Returns an unsigned handle: sign, broadcast and save it like any staged spend.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -6020,12 +6020,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#signBytes">Sign arbitrary bytes.</a></h3>
       <div class="ids"><code class="cmdname">sign-bytes</code><span class="src" title="Declared in">src/cli/engine/routes/spend.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>wallet.signBytes</code></p>
+    <p class="core"><span class="lbl">core</span><code>wallet.signBytes</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>bytes</code> — Core takes a Uint8Array named <code>buf</code>. JSON cannot carry bytes, so this is base64 text.</li></ul></div>
     <div class="desc"><p>Message signing and proof-of-ownership, for plugins that support it.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>sign-bytes --wallet-id=&lt;walletId&gt; [--bytes=&lt;bytes&gt;] [--data=&lt;data&gt;] [--other-params=&lt;otherParams&gt;]</code></pre>
+    <pre class="usage"><code>sign-bytes --wallet-id=&lt;walletId&gt; [--bytes=&lt;bytes&gt;] [--other-params=&lt;otherParams&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -6039,13 +6039,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <pre class="ts"><code>{
   walletId: string
   bytes?: string
-  data?: string
   otherParams?: unknown
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
   &quot;walletId&quot;: &quot;FS8xJ2kQ…&quot;,
   &quot;bytes&quot;: &quot;string&quot;,
-  &quot;data&quot;: &quot;string&quot;,
   &quot;otherParams&quot;: {}
 }</code></pre></details>
     <table class="fields"><tbody><tr>
@@ -6059,21 +6057,16 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="doc">Base64. Defaults to empty when absent.</td>
 </tr>
 <tr>
-  <td class="k"><code>data</code></td>
-  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Legacy alias for <code>bytes</code>.</td>
-</tr>
-<tr>
   <td class="k"><code>otherParams</code></td>
   <td class="ty"><span class="t">unknown</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Plugin-specific options.</td>
+  <td class="doc">Plugin-specific options. Bitcoin needs <code>{ publicAddress }</code>; other plugins take nothing, or refuse the call entirely.</td>
 </tr></tbody></table>
   </div>
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;walletId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;bytes&quot;:&quot;string&quot;,&quot;data&quot;:&quot;string&quot;,&quot;otherParams&quot;:{}}' \
+  -d '{&quot;walletId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;bytes&quot;:&quot;string&quot;,&quot;otherParams&quot;:{}}' \
   'http://localhost/account/$SESS/wallet/sign-bytes'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -6094,7 +6087,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>Invalid base64 decodes to empty rather than erroring, so validate before sending.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Invalid base64 decodes to empty rather than erroring, so validate before sending.</li><li>Support is per plugin, and failures surface as <code>500 INTERNAL_ERROR</code> from the plugin rather than as a typed error: litecoin answers &quot;litecoin doesn&#39;t support signBytes&quot;, and bitcoin requires <code>otherParams.publicAddress</code> naming which address to sign with.</li></ul></div>
   </section><section class="endpoint" id="getPaymentProtocolInfo">
     <header>
       <h3><a href="#getPaymentProtocolInfo">Fetch a BIP70 payment request.</a></h3>
@@ -6277,7 +6270,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#fetchSwapQuotes">Fetch swap quotes.</a></h3>
       <div class="ids"><code class="cmdname">fetch-swap-quotes</code><span class="src" title="Declared in">src/cli/engine/routes/swap.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>account.fetchSwapQuotes</code></p>
+    <p class="core"><span class="lbl">core</span><code>account.fetchSwapQuotes</code></p><div class="note"><p><strong>Differs from core:</strong></p><ul><li><code>fromWalletId</code> — Core takes the wallet object; over HTTP it is an id.</li><li><code>toWalletId</code> — Core takes the wallet object; over HTTP it is an id.</li></ul></div>
     <div class="desc"><p>Polls every enabled swap plugin and parks each result under its own <code>swap_</code> handle with a 5 minute TTL.</p>
 </div>
     <div class="panes"><div class="pane cli">

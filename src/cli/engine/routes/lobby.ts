@@ -67,6 +67,11 @@ export const fetchLobby = route({
  */
 export const approveLoginRequest = route({
   core: 'EdgeLoginRequest.approve',
+  coreExtra: {
+    lobbyId:
+      'Core calls approve() on a request object. Over HTTP there is no ' +
+      'object to hold, so the lobby names which one to approve.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/approve-login-request',
   cli: { command: 'approve-login-request', positional: 'lobbyId' },

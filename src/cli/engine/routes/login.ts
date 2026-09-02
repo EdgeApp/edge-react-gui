@@ -242,6 +242,9 @@ export const loginWithKey = route({
  */
 export const loginWithRecovery = route({
   core: 'context.loginWithRecovery2',
+  coreExtra: {
+    recoveryKey: 'Core calls it recovery2Key. The `2` is dropped throughout.'
+  },
   method: 'POST',
   path: '/login-with-recovery',
   cli: {

@@ -76,6 +76,13 @@ const TOKEN_ID_DOC = 'Defaults to the native asset.'
  */
 export const getTransactions = route({
   core: 'wallet.getTransactions',
+  coreExtra: {
+    limit: 'Engine-side paging; core returns every match.',
+    offset: 'Engine-side paging; core returns every match.',
+    fiat: 'Selects the currency the engine values each transaction in.',
+    exportFormat: 'Engine-side rendering to CSV, QBO or Bitwave.',
+    bitwaveAccountId: 'Required by the Bitwave export format.'
+  },
   method: 'GET',
   path: '/account/{sessionId}/wallet/get-transactions',
   cli: {

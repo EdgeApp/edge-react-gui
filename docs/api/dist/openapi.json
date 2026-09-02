@@ -7345,7 +7345,7 @@
       "post": {
         "operationId": "signBytes",
         "summary": "Sign arbitrary bytes.",
-        "description": "**Core call:** `wallet.signBytes`\n\n**Command line**\n\n```\nsign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--data=<data>] [--other-params=<otherParams>]\n```\n\nMessage signing and proof-of-ownership, for plugins that support it.",
+        "description": "**Core call:** `wallet.signBytes`\n\n**Command line**\n\n```\nsign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--other-params=<otherParams>]\n```\n\nMessage signing and proof-of-ownership, for plugins that support it.",
         "tags": [
           "Spending"
         ],
@@ -7415,12 +7415,8 @@
                     "type": "string",
                     "description": "Base64. Defaults to empty when absent."
                   },
-                  "data": {
-                    "type": "string",
-                    "description": "Legacy alias for `bytes`."
-                  },
                   "otherParams": {
-                    "description": "Plugin-specific options."
+                    "description": "Plugin-specific options. Bitcoin needs `{ publicAddress }`; other plugins take nothing, or refuse the call entirely."
                   }
                 },
                 "required": [

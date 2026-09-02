@@ -1745,7 +1745,7 @@
       "command": "sign-bytes",
       "method": "POST",
       "path": "/account/{sessionId}/wallet/sign-bytes",
-      "usage": "sign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--data=<data>] [--other-params='<json>']",
+      "usage": "sign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--other-params='<json>']",
       "help": "Sign arbitrary bytes.",
       "needsSession": true,
       "args": [
@@ -1759,13 +1759,6 @@
         {
           "flag": "bytes",
           "field": "bytes",
-          "target": "body",
-          "kind": "string",
-          "required": false
-        },
-        {
-          "flag": "data",
-          "field": "data",
           "target": "body",
           "kind": "string",
           "required": false

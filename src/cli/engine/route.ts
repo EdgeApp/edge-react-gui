@@ -81,6 +81,19 @@ export interface RouteSpec<Q = unknown, B = unknown, R = unknown> {
   /** The `edge-core-js` call this fronts, or null with a `coreNote`. */
   core: string | null
   coreNote?: string
+  /**
+   * Request fields the core call has no parameter for, and why.
+   *
+   * The API is core's signature in another representation, so a field core
+   * does not know about is either a deliberate convenience or a mistake.
+   * Writing the reason is what tells the two apart: `currency-wallets` once
+   * carried a `waitForAll` that core has no parameter for — waiting is a
+   * separate method — and nothing caught it.
+   *
+   * `checkCoreAlignment` resolves the real signature and fails on a
+   * difference that is not listed here, or a listing that is no longer true.
+   */
+  coreExtra?: Record<string, string>
   method: HttpMethod
   path: string
   /** Command name, a spec, or several when one route backs more than one. */

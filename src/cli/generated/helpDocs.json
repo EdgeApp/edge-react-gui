@@ -2657,7 +2657,7 @@
       "summary": "Sign arbitrary bytes.",
       "method": "POST",
       "path": "/account/{sessionId}/wallet/sign-bytes",
-      "usage": "sign-bytes --wallet-id=<value> [--bytes=<value>] [--data=<value>] [--other-params=<value>]",
+      "usage": "sign-bytes --wallet-id=<value> [--bytes=<value>] [--other-params=<value>]",
       "description": "Message signing and proof-of-ownership, for plugins that support it.",
       "core": "wallet.signBytes",
       "params": {
@@ -2671,14 +2671,9 @@
           "doc": "Base64. Defaults to empty when absent.",
           "optional": true
         },
-        "data": {
-          "pass": "[--data=<value>]",
-          "doc": "Legacy alias for `bytes`.",
-          "optional": true
-        },
         "otherParams": {
           "pass": "[--other-params=<value>]",
-          "doc": "Plugin-specific options.",
+          "doc": "Plugin-specific options. Bitcoin needs `{ publicAddress }`; other plugins take nothing, or refuse the call entirely.",
           "optional": true
         }
       },
@@ -2686,7 +2681,8 @@
         "signature": "string — Base64."
       },
       "notes": [
-        "Invalid base64 decodes to empty rather than erroring, so validate before sending."
+        "Invalid base64 decodes to empty rather than erroring, so validate before sending.",
+        "Support is per plugin, and failures surface as `500 INTERNAL_ERROR` from the plugin rather than as a typed error: litecoin answers \"litecoin doesn't support signBytes\", and bitcoin requires `otherParams.publicAddress` naming which address to sign with."
       ],
       "errors": [
         "BAD_REQUEST"

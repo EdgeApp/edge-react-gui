@@ -236,6 +236,13 @@ const HANDLE_ERRORS = [
  */
 export const getMaxSpendable = route({
   core: 'wallet.getMaxSpendable',
+  coreExtra: {
+    to:
+      'Shorthand the engine expands into `spendTargets`, so a one-output ' +
+      'send needs no nested JSON.',
+    nativeAmount: 'Amount for the `to` shorthand, in the smallest unit.',
+    amount: 'Amount for the `to` shorthand, in whole coins.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/wallet/get-max-spendable',
   cli: 'get-max-spendable',
@@ -415,6 +422,13 @@ export const spend = route({
  */
 export const makeSpend = route({
   core: 'wallet.makeSpend',
+  coreExtra: {
+    to:
+      'Shorthand the engine expands into `spendTargets`, so a one-output ' +
+      'send needs no nested JSON.',
+    nativeAmount: 'Amount for the `to` shorthand, in the smallest unit.',
+    amount: 'Amount for the `to` shorthand, in whole coins.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/wallet/make-spend',
   cli: 'make-spend',
@@ -552,6 +566,11 @@ export const saveTx = route({
  */
 export const accelerate = route({
   core: 'wallet.accelerate',
+  coreExtra: {
+    transaction:
+      'Core names the parameter `tx`. Spelled out here to match the ' +
+      '`transaction` field every staged-transaction response returns.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/wallet/accelerate',
   cli: 'accelerate',
@@ -609,6 +628,11 @@ export const accelerate = route({
  */
 export const sweepPrivateKeys = route({
   core: 'wallet.sweepPrivateKeys',
+  coreExtra: {
+    spendInfo:
+      'Core names this one `edgeSpendInfo` while `makeSpend` names the same ' +
+      'type `spendInfo`. Both are `spendInfo` here.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/wallet/sweep-private-keys',
   cli: 'sweep-private-keys',
@@ -655,17 +679,31 @@ export const sweepPrivateKeys = route({
  *
  * @note Invalid base64 decodes to empty rather than erroring, so validate
  *   before sending.
+ * @note Support is per plugin, and failures surface as `500 INTERNAL_ERROR`
+ *   from the plugin rather than as a typed error: litecoin answers
+ *   "litecoin doesn't support signBytes", and bitcoin requires
+ *   `otherParams.publicAddress` naming which address to sign with.
  */
 export const signBytes = route({
   core: 'wallet.signBytes',
+  coreExtra: {
+    bytes:
+      'Core takes a Uint8Array named `buf`. JSON cannot carry bytes, so this ' +
+      'is base64 text.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/wallet/sign-bytes',
   cli: 'sign-bytes',
   body: asObject({
     walletId: asWalletId,
     bytes: asOptional(doc(asString, 'Base64. Defaults to empty when absent.')),
-    data: asOptional(doc(asString, 'Legacy alias for `bytes`.')),
-    otherParams: asOptional(doc(asCoreValue, 'Plugin-specific options.'))
+    otherParams: asOptional(
+      doc(
+        asCoreValue,
+        'Plugin-specific options. Bitcoin needs `{ publicAddress }`; other ' +
+          'plugins take nothing, or refuse the call entirely.'
+      )
+    )
   }).withRest,
   returns: asObject({ signature: doc(asString, 'Base64.') }),
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
@@ -673,10 +711,9 @@ export const signBytes = route({
   async handler(ctx) {
     const body = ctx.body as SpendBody
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
-    // Prefer the documented `bytes` field; accept legacy `data` too.
-    const data =
-      optionalString(body, 'bytes') ?? optionalString(body, 'data') ?? ''
-    const bytes = new Uint8Array(Buffer.from(data, 'base64'))
+    const bytes = new Uint8Array(
+      Buffer.from(optionalString(body, 'bytes') ?? '', 'base64')
+    )
     const otherParams = isPlainObject(body.otherParams)
       ? body.otherParams
       : undefined

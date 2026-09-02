@@ -224,9 +224,16 @@ function coreLine(e: ExtractedRoute): string {
       e.coreNote != null ? md(e.coreNote) : 'No direct core call.'
     }</em></p>`
   }
+  const diffs = Object.entries(e.coreExtra)
+  const extra =
+    diffs.length === 0
+      ? ''
+      : `<div class="note"><p><strong>Differs from core:</strong></p><ul>${diffs
+          .map(([k, v]) => `<li><code>${esc(k)}</code> — ${md(v)}</li>`)
+          .join('')}</ul></div>`
   return `<p class="core"><span class="lbl">core</span><code>${esc(
     e.core
-  )}</code>${note}</p>`
+  )}</code>${note}</p>${extra}`
 }
 
 function kebabOf(name: string): string {

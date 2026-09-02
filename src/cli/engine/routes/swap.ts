@@ -65,6 +65,10 @@ function summarizeQuote(
  */
 export const fetchSwapQuotes = route({
   core: 'account.fetchSwapQuotes',
+  coreExtra: {
+    fromWalletId: 'Core takes the wallet object; over HTTP it is an id.',
+    toWalletId: 'Core takes the wallet object; over HTTP it is an id.'
+  },
   method: 'POST',
   path: '/account/{sessionId}/fetch-swap-quotes',
   cli: {
