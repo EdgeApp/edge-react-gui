@@ -71,6 +71,8 @@ function readsFromQuery(fn: string): Set<string> {
 
 const handlers = handlerSources()
 const problems: string[] = []
+let described = 0
+let total = 0
 
 for (const e of endpoints) {
   const fn = handlers.get(`${e.method} ${e.path}`)
@@ -95,25 +97,34 @@ for (const e of endpoints) {
   }
 }
 
-// A `@param` carries the one thing a cleaner cannot: the prose. The field
-// *name* is the part that is stated twice, so hold the two together — a tag
-// naming nothing is dead, and a field with no tag is undocumented.
+// Every declared field needs a description, and every description needs a
+// field. Prose normally sits beside the field as `doc(cleaner, 'text')`;
+// a `@param` tag is still accepted, and must name something real.
 for (const r of extractRoutes()) {
-  const fields = new Set(
-    [...(r.query ?? []), ...(r.body ?? [])].map(f => f.name)
-  )
+  const fields = [...(r.query ?? []), ...(r.body ?? [])]
+  const names = new Set(fields.map(f => f.name))
+
+  for (const field of fields) {
+    const described = field.doc != null || field.name in r.params
+    if (!described) {
+      problems.push(
+        `${r.id}: field "${field.name}" has no description — wrap it as ` +
+          `doc(${field.name}Cleaner, '…') or add @param ${field.name}`
+      )
+    }
+  }
   for (const name of Object.keys(r.params)) {
-    if (!fields.has(name)) {
+    if (!names.has(name)) {
       problems.push(
         `${r.id}: @param ${name} names no field in the query or body cleaner`
       )
     }
   }
-  for (const name of fields) {
-    if (!(name in r.params)) {
-      problems.push(`${r.id}: field "${name}" has no @param describing it`)
-    }
-  }
+  // Response fields are documented the same way, but describing every one is
+  // not required: a name and a type often say it, and forcing a sentence per
+  // field produces filler. Prose is added where the shape is surprising.
+  described += (r.returns ?? []).filter(f => f.doc != null).length
+  total += (r.returns ?? []).length
 }
 
 if (problems.length > 0) {
@@ -124,5 +135,6 @@ if (problems.length > 0) {
 const declared = extractRoutes()
 console.log(
   `✓ request contracts match: ${handlers.size} handlers agree with their docs, ` +
-    `${declared.length} declared route(s) documented field-for-field`
+    `${declared.length} declared route(s) fully described ` +
+    `(${described}/${total} response fields carry prose)`
 )

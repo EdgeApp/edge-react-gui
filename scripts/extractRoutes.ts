@@ -38,6 +38,7 @@ export interface ExtractedRoute {
   query?: ExtractedField[]
   body?: ExtractedField[]
   returns?: ExtractedField[]
+  returnsProse?: string
   returnsType?: string
 }
 
@@ -110,6 +111,78 @@ function fieldsOf(
   return { fields, type: typeText }
 }
 
+/**
+ * Field prose written as `doc(cleaner, 'text')`.
+ *
+ * Read from the syntax tree rather than at runtime, because request cleaners
+ * use `.withRest`, which discards the `.shape` a runtime walk would need.
+ * Resolves a bare identifier (`returns: asSession`) back to its declaration,
+ * so a shared response shape carries its prose once.
+ */
+function proseFor(
+  checker: ts.TypeChecker,
+  node: ts.Expression
+): Record<string, string> {
+  const out: Record<string, string> = {}
+
+  const objectOf = (expr: ts.Expression): ts.Expression | undefined => {
+    // asObject({…}) / asObject({…}).withRest / a name pointing at either.
+    let cur: ts.Expression = expr
+    if (ts.isPropertyAccessExpression(cur)) cur = cur.expression
+    if (ts.isIdentifier(cur)) {
+      let sym = checker.getSymbolAtLocation(cur)
+      // An import is an alias; follow it to the real declaration so a shared
+      // response shape carries its prose from wherever it is defined.
+      if (sym != null && (sym.flags & ts.SymbolFlags.Alias) !== 0) {
+        sym = checker.getAliasedSymbol(sym)
+      }
+      const decl = sym?.declarations?.[0]
+      if (
+        decl != null &&
+        ts.isVariableDeclaration(decl) &&
+        decl.initializer != null
+      ) {
+        return objectOf(decl.initializer)
+      }
+      return undefined
+    }
+    if (ts.isCallExpression(cur)) {
+      const callee = cur.expression.getText()
+      if (callee === 'doc') return objectOf(cur.arguments[0])
+      if (callee.startsWith('asObject')) return cur.arguments[0]
+    }
+    return undefined
+  }
+
+  // Prose attached to the whole cleaner, for pass-through responses.
+  let outer: ts.Expression = node
+  if (ts.isPropertyAccessExpression(outer)) outer = outer.expression
+  if (
+    ts.isCallExpression(outer) &&
+    outer.expression.getText() === 'doc' &&
+    outer.arguments.length > 1 &&
+    ts.isStringLiteral(outer.arguments[1])
+  ) {
+    out[''] = outer.arguments[1].text
+  }
+
+  const shape = objectOf(node)
+  if (shape == null || !ts.isObjectLiteralExpression(shape)) return out
+  for (const prop of shape.properties) {
+    if (!ts.isPropertyAssignment(prop)) continue
+    const value = prop.initializer
+    if (
+      ts.isCallExpression(value) &&
+      value.expression.getText() === 'doc' &&
+      value.arguments.length > 1 &&
+      ts.isStringLiteral(value.arguments[1])
+    ) {
+      out[prop.name.getText()] = value.arguments[1].text
+    }
+  }
+  return out
+}
+
 /** Split a JSDoc comment into prose and tags. */
 function readJsDoc(node: ts.Node): {
   summary: string
@@ -145,6 +218,19 @@ function readJsDoc(node: ts.Node): {
     description: paras.length > 1 ? paras.slice(1).join('\n\n') : undefined,
     tags
   }
+}
+
+/** Resolved fields, each carrying the prose written beside it. */
+function withProse(
+  checker: ts.TypeChecker,
+  node: ts.Expression | undefined
+): ExtractedField[] | undefined {
+  if (node == null) return undefined
+  const prose = proseFor(checker, node)
+  return fieldsOf(checker, node).fields.map(f => ({
+    ...f,
+    doc: prose[f.name]
+  }))
 }
 
 export function extractRoutes(): ExtractedRoute[] {
@@ -216,13 +302,12 @@ export function extractRoutes(): ExtractedRoute[] {
           bodyNote,
           returnsDoc,
           params,
-          query:
-            queryNode != null ? fieldsOf(checker, queryNode).fields : undefined,
-          body:
-            bodyNode != null ? fieldsOf(checker, bodyNode).fields : undefined,
-          returns:
+          query: withProse(checker, queryNode),
+          body: withProse(checker, bodyNode),
+          returns: withProse(checker, returnsNode),
+          returnsProse:
             returnsNode != null
-              ? fieldsOf(checker, returnsNode).fields
+              ? proseFor(checker, returnsNode)['']
               : undefined,
           returnsType:
             returnsNode != null

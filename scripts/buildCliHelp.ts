@@ -25,7 +25,7 @@ interface CommandHelp {
   method: string
   path: string
   params?: Record<string, string>
-  /** Response fields, resolved from the `returns` cleaner's type. */
+  /** Response fields: type, plus the prose written beside each one. */
   returns?: Record<string, string>
   /** Prose from the `@returns` tag. */
   returnsDoc?: string
@@ -55,16 +55,26 @@ for (const r of extractRoutes()) {
   }
   if (r.description != null) entry.description = r.description
   if (r.core != null) entry.core = r.core
-  if (Object.keys(r.params).length > 0) entry.params = r.params
+  // Field prose now lives beside the field, in the cleaner.
+  const described = [...(r.query ?? []), ...(r.body ?? [])].filter(
+    f => f.doc != null
+  )
+  const params: Record<string, string> = { ...r.params }
+  for (const f of described) params[f.name] = f.doc!
+  if (Object.keys(params).length > 0) entry.params = params
   if (r.returns != null && r.returns.length > 0) {
     entry.returns = Object.fromEntries(
-      r.returns.map(f => [f.name + (f.optional ? '?' : ''), f.type])
+      r.returns.map(f => [
+        f.name + (f.optional ? '?' : ''),
+        f.doc != null ? `${f.type} — ${f.doc}` : f.type
+      ])
     )
   } else if (r.returnsType != null && r.returnsType !== 'unknown') {
     // A non-object response (a pass-through core value) has no fields.
     entry.returns = { '': r.returnsType }
   }
-  if (r.returnsDoc != null) entry.returnsDoc = r.returnsDoc
+  const returnsProse = r.returnsProse ?? r.returnsDoc
+  if (returnsProse != null) entry.returnsDoc = returnsProse
   if (r.notes.length > 0) entry.notes = r.notes
   if (r.errors.length > 0) entry.errors = r.errors
   commands[name] = entry

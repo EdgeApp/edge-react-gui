@@ -22,6 +22,8 @@ import {
   asValue
 } from 'cleaners'
 
+import { doc } from './doc'
+
 /** `EdgeTokenId`: a contract id, or null for the native asset. */
 export const asTokenId = asEither(asString, asValue(null))
 
@@ -31,7 +33,9 @@ export const asCoreValue = asUnknown
 export const asVoid = asValue(undefined)
 
 /** A bare acknowledgement. */
-export const asOk = asObject({ ok: asBoolean })
+export const asOk = asObject({
+  ok: doc(asBoolean, 'Always true; a failure arrives as an error envelope.')
+})
 
 /** An acknowledgement naming the handle the call consumed. */
 export const asOkObject = asObject({ ok: asBoolean, objectId: asString })

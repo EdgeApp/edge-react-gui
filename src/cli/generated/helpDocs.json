@@ -68,7 +68,7 @@
       "path": "/engine/stop",
       "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
       "returns": {
-        "ok": "boolean"
+        "ok": "boolean — Always true; a failure arrives as an error envelope."
       },
       "notes": [
         "In-flight callers may see `503 ENGINE_SHUTTING_DOWN` once teardown starts."
@@ -94,7 +94,7 @@
       "method": "GET",
       "path": "/fetch-login-messages",
       "core": "context.fetchLoginMessages",
-      "returnsDoc": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers. Passed straight through.",
+      "returnsDoc": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.",
       "errors": [
         "NETWORK_ERROR"
       ]
@@ -120,14 +120,14 @@
       "summary": "Normalize a username.",
       "method": "GET",
       "path": "/fix-username",
+      "description": "Applies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
       "core": "context.fixUsername",
       "params": {
         "username": "The name to normalize."
       },
       "returns": {
-        "username": "string"
-      },
-      "returnsDoc": "The normalized value under `username`; the input is not echoed."
+        "username": "string — The normalized value. The input is not echoed."
+      }
     },
     "forget-account": {
       "summary": "Forget an account on this device.",

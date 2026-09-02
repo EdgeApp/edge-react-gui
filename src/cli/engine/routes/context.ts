@@ -1,5 +1,6 @@
 import { asArray, asBoolean, asObject, asOptional, asString } from 'cleaners'
 
+import { doc } from '../doc'
 import { engineError } from '../errors'
 import { route } from '../route'
 import { asCoreValue } from '../schemas'
@@ -98,16 +99,20 @@ export const usernameAvailable = route({
 /**
  * Normalize a username.
  *
- * @param username The name to normalize.
- * @returns The normalized value under `username`; the input is not echoed.
+ * Applies the same rules the login server does, so a caller can show the user
+ * what their name will actually be before creating an account.
  */
 export const fixUsername = route({
   core: 'context.fixUsername',
   method: 'GET',
   path: '/fix-username',
   cli: { command: 'fix-username', positional: 'username' },
-  query: asObject({ username: asString }).withRest,
-  returns: asObject({ username: asString }),
+  query: asObject({
+    username: doc(asString, 'The name to normalize.')
+  }).withRest,
+  returns: asObject({
+    username: doc(asString, 'The normalized value. The input is not echoed.')
+  }),
 
   handler(ctx) {
     return {
@@ -149,7 +154,10 @@ export const fetchLoginMessages = route({
   method: 'GET',
   path: '/fetch-login-messages',
   cli: 'fetch-login-messages',
-  returns: asCoreValue,
+  returns: doc(
+    asCoreValue,
+    '`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.'
+  ),
   errors: ['NETWORK_ERROR'],
 
   async handler(ctx) {
