@@ -39,9 +39,14 @@ function read(dir: string): string {
 function actualRoutes(): Set<string> {
   const source = read(ROUTES_DIR)
   const found = new Set<string>()
-  const re = /router\.add\(\s*'([A-Z]+)',\s*'([^']+)'/g
+  // Legacy form: router.add('GET', '/path', handler)
+  const addRe = /router\.add\(\s*'([A-Z]+)',\s*'([^']+)'/g
   let m: RegExpExecArray | null
-  while ((m = re.exec(source)) != null) found.add(`${m[1]} ${m[2]}`)
+  while ((m = addRe.exec(source)) != null) found.add(`${m[1]} ${m[2]}`)
+  // Declaration form: route({ …, method: 'GET', path: '/path', … })
+  const routeRe =
+    /\broute\(\{[\s\S]*?\bmethod:\s*'([A-Z]+)',\s*\n?\s*path:\s*'([^']+)'/g
+  while ((m = routeRe.exec(source)) != null) found.add(`${m[1]} ${m[2]}`)
   return found
 }
 

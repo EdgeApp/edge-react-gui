@@ -186,7 +186,7 @@ export const requestOtpReset = route({
 })
 
 /**
- * Fetch a user's recovery questions.
+ * Fetch a user’s recovery questions.
  *
  * @param recoveryKey From `change-recovery`, stored by the user out of band.
  * @param username Whose questions to fetch.

@@ -24,9 +24,10 @@ function handlerSources(): Map<string, string> {
       continue
     }
     const src = fs.readFileSync(path.join(ROUTES, name), 'utf8')
-    const re = /router\.add\(\s*'([A-Z]+)',\s*'([^']+)',\s*/g
+    // Legacy form: the handler is the third argument to router.add.
+    const addRe = /router\.add\(\s*'([A-Z]+)',\s*'([^']+)',\s*/g
     let m: RegExpExecArray | null
-    while ((m = re.exec(src)) != null) {
+    while ((m = addRe.exec(src)) != null) {
       let depth = 1
       let i = m.index + m[0].length
       while (i < src.length && depth > 0) {
@@ -36,6 +37,12 @@ function handlerSources(): Map<string, string> {
         i++
       }
       out.set(`${m[1]} ${m[2]}`, src.slice(m.index + m[0].length, i - 1))
+    }
+    // Declaration form: the whole route({…}) body, which contains the handler.
+    const routeRe =
+      /\broute\(\{([\s\S]*?\bmethod:\s*'([A-Z]+)',\s*\n?\s*path:\s*'([^']+)'[\s\S]*?)\n\}\)/g
+    while ((m = routeRe.exec(src)) != null) {
+      out.set(`${m[2]} ${m[3]}`, m[1])
     }
   }
   return out
