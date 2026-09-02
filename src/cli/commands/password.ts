@@ -3,9 +3,9 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 const passwordSetupCmd = command(
-  'password-setup',
+  'change-password',
   {
-    usage: 'password-setup --password=<password>',
+    usage: 'change-password --password=<password>',
     help: 'Create or change the account password',
     needsSession: true
   },
@@ -15,8 +15,8 @@ const passwordSetupCmd = command(
       flags: { password: 'string' }
     })
     const sessionId = requireSession(ctx)
-    await ctx.client.put(
-      `/v1/accounts/${encodeURIComponent(sessionId)}/password`,
+    await ctx.client.post(
+      `/accounts/${encodeURIComponent(sessionId)}/change-password`,
       { password: args.requireString('password') }
     )
     printJson({ ok: true })

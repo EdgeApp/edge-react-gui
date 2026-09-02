@@ -78,6 +78,17 @@ export function optionalBoolean(
   return value
 }
 
+export function requireBoolean(
+  body: Record<string, unknown>,
+  key: string
+): boolean {
+  const value = body[key]
+  if (typeof value !== 'boolean') {
+    throw engineError('BAD_REQUEST', `Missing required field "${key}"`, 400)
+  }
+  return value
+}
+
 export function optionalNumber(
   body: Record<string, unknown>,
   key: string

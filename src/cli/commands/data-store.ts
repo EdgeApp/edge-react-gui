@@ -2,102 +2,127 @@ import { printJson } from '../client/output'
 import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
-const dataStoreListCmd = command(
-  'data-store-list',
+function accountPath(sessionId: string, suffix: string): string {
+  return `/accounts/${encodeURIComponent(sessionId)}${suffix}`
+}
+
+command(
+  'list-store-ids',
   {
-    usage: 'data-store-list [<storeId>]',
-    help: 'List data-store ids, or item ids within a store',
+    usage: 'list-store-ids',
+    help: 'List data-store ids in the account (account.dataStore.listStoreIds)',
+    needsSession: true
+  },
+  async ctx => {
+    const sessionId = requireSession(ctx)
+    printJson(await ctx.client.get(accountPath(sessionId, '/list-store-ids')))
+  }
+)
+
+const listItemIdsCmd = command(
+  'list-item-ids',
+  {
+    usage: 'list-item-ids <storeId>',
+    help: 'List item ids in one store (account.dataStore.listItemIds)',
     needsSession: true
   },
   async (ctx, argv) => {
-    const { positional: storeId } = parseCommandArgs(dataStoreListCmd, argv, {
-      positional: 'optional'
+    const { positional: storeId } = parseCommandArgs(listItemIdsCmd, argv, {
+      positional: 'required'
     })
     const sessionId = requireSession(ctx)
-    const base = `/v1/accounts/${encodeURIComponent(sessionId)}/data-stores`
     printJson(
       await ctx.client.get(
-        storeId != null ? `${base}/${encodeURIComponent(storeId)}` : base
+        accountPath(
+          sessionId,
+          `/list-item-ids?storeId=${encodeURIComponent(storeId!)}`
+        )
       )
     )
   }
 )
 
-const dataStoreGetCmd = command(
-  'data-store-get',
+const getItemCmd = command(
+  'get-item',
   {
-    usage: 'data-store-get <storeId> --item-id=<itemId>',
-    help: 'Read a data-store item',
+    usage: 'get-item <storeId> --item-id=<itemId>',
+    help: 'Read one data-store item (account.dataStore.getItem)',
     needsSession: true
   },
   async (ctx, argv) => {
-    const args = parseCommandArgs(dataStoreGetCmd, argv, {
+    const args = parseCommandArgs(getItemCmd, argv, {
       positional: 'required',
       flags: { 'item-id': 'string' }
     })
     const sessionId = requireSession(ctx)
-    const storeId = args.positional!
-    const itemId = args.requireString('item-id')
+    const query = new URLSearchParams({
+      storeId: args.positional!,
+      itemId: args.requireString('item-id')
+    })
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
-          sessionId
-        )}/data-stores/${encodeURIComponent(
-          storeId
-        )}/items/${encodeURIComponent(itemId)}`
+        accountPath(sessionId, `/get-item?${query.toString()}`)
       )
     )
   }
 )
 
-const dataStoreSetCmd = command(
-  'data-store-set',
+const setItemCmd = command(
+  'set-item',
   {
-    usage: 'data-store-set <storeId> --item-id=<itemId> --value=<text>',
-    help: 'Write a data-store item',
+    usage: 'set-item <storeId> --item-id=<itemId> --value=<text>',
+    help: 'Write one data-store item (account.dataStore.setItem)',
     needsSession: true
   },
   async (ctx, argv) => {
-    const args = parseCommandArgs(dataStoreSetCmd, argv, {
+    const args = parseCommandArgs(setItemCmd, argv, {
       positional: 'required',
       flags: { 'item-id': 'string', value: 'string' }
     })
     const sessionId = requireSession(ctx)
-    const storeId = args.positional!
-    const itemId = args.requireString('item-id')
-    await ctx.client.put(
-      `/v1/accounts/${encodeURIComponent(
-        sessionId
-      )}/data-stores/${encodeURIComponent(storeId)}/items/${encodeURIComponent(
-        itemId
-      )}`,
-      { value: args.requireString('value') }
-    )
+    await ctx.client.post(accountPath(sessionId, '/set-item'), {
+      storeId: args.positional,
+      itemId: args.requireString('item-id'),
+      value: args.requireString('value')
+    })
     printJson({ ok: true })
   }
 )
 
-const dataStoreDeleteCmd = command(
-  'data-store-delete',
+const deleteItemCmd = command(
+  'delete-item',
   {
-    usage: 'data-store-delete <storeId> [--item-id=<itemId>]',
-    help: 'Delete a data-store item, or an entire store',
+    usage: 'delete-item <storeId> --item-id=<itemId>',
+    help: 'Delete one data-store item (account.dataStore.deleteItem)',
     needsSession: true
   },
   async (ctx, argv) => {
-    const args = parseCommandArgs(dataStoreDeleteCmd, argv, {
+    const args = parseCommandArgs(deleteItemCmd, argv, {
       positional: 'required',
       flags: { 'item-id': 'string' }
     })
     const sessionId = requireSession(ctx)
-    const storeId = args.positional!
-    const itemId = args.string('item-id')
-    const base = `/v1/accounts/${encodeURIComponent(
-      sessionId
-    )}/data-stores/${encodeURIComponent(storeId)}`
-    await ctx.client.delete(
-      itemId != null ? `${base}/items/${encodeURIComponent(itemId)}` : base
-    )
+    await ctx.client.post(accountPath(sessionId, '/delete-item'), {
+      storeId: args.positional,
+      itemId: args.requireString('item-id')
+    })
+    printJson({ ok: true })
+  }
+)
+
+const deleteStoreCmd = command(
+  'delete-store',
+  {
+    usage: 'delete-store <storeId>',
+    help: 'Delete an entire data store (account.dataStore.deleteStore)',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const { positional: storeId } = parseCommandArgs(deleteStoreCmd, argv, {
+      positional: 'required'
+    })
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(accountPath(sessionId, '/delete-store'), { storeId })
     printJson({ ok: true })
   }
 )

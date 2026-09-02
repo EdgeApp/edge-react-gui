@@ -7,22 +7,25 @@ import {
 } from './helpers'
 
 export function registerContextRoutes(router: Router): void {
-  router.add('GET', '/v1/users', ctx => {
-    return { users: ctx.state.core.context.localUsers }
+  /** context.localUsers */
+  router.add('GET', '/local-users', ctx => {
+    return { localUsers: ctx.state.core.context.localUsers }
   })
 
-  router.add('DELETE', '/v1/users/{loginIdOrUsername}', async ctx => {
-    const { loginIdOrUsername } = ctx.params
+  /** context.forgetAccount(rootLoginId) */
+  router.add('POST', '/forget-account', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const rootLoginId = requireString(body, 'rootLoginId')
     const { context } = ctx.state.core
+    // Core takes a rootLoginId. A username is accepted as a convenience so the
+    // caller does not have to hash it first, and is resolved locally.
     const found = context.localUsers.find(
-      user =>
-        user.loginId === loginIdOrUsername ||
-        user.username === loginIdOrUsername
+      user => user.loginId === rootLoginId || user.username === rootLoginId
     )
     if (found == null) {
       throw engineError(
         'USER_NOT_FOUND',
-        `No local user matching: ${loginIdOrUsername}`,
+        `No local user matching: ${rootLoginId}`,
         404
       )
     }
@@ -30,7 +33,8 @@ export function registerContextRoutes(router: Router): void {
     return undefined
   })
 
-  router.add('GET', '/v1/username-available', async ctx => {
+  /** context.usernameAvailable(username, { challengeId }) */
+  router.add('GET', '/username-available', async ctx => {
     const username = requireQueryString(ctx.query, 'username')
     const challengeId = optionalQueryString(ctx.query, 'challengeId')
     const available = await ctx.state.core.context.usernameAvailable(username, {
@@ -39,32 +43,37 @@ export function registerContextRoutes(router: Router): void {
     return { username, available }
   })
 
-  router.add('GET', '/v1/fix-username', ctx => {
+  /** context.fixUsername(username) */
+  router.add('GET', '/fix-username', ctx => {
     const username = requireQueryString(ctx.query, 'username')
     return { username: ctx.state.core.context.fixUsername(username) }
   })
 
-  router.add('GET', '/v1/password-rules', ctx => {
+  /** context.checkPasswordRules(password) */
+  router.add('GET', '/check-password-rules', ctx => {
     const password = requireQueryString(ctx.query, 'password')
     return ctx.state.core.context.checkPasswordRules(password)
   })
 
-  router.add('GET', '/v1/login-messages', async ctx => {
+  /** context.fetchLoginMessages() */
+  router.add('GET', '/fetch-login-messages', async ctx => {
     return await ctx.state.core.context.fetchLoginMessages()
   })
 
-  router.add('POST', '/v1/otp-reset', async ctx => {
+  /** context.requestOtpReset(username, otpResetToken) */
+  router.add('POST', '/request-otp-reset', async ctx => {
     const body = requireBodyObject(ctx.body)
     const username = requireString(body, 'username')
-    const resetToken = requireString(body, 'resetToken')
+    const otpResetToken = requireString(body, 'otpResetToken')
     const resetDate = await ctx.state.core.context.requestOtpReset(
       username,
-      resetToken
+      otpResetToken
     )
     return { resetDate: resetDate.toISOString() }
   })
 
-  router.add('GET', '/v1/recovery2-questions', async ctx => {
+  /** context.fetchRecovery2Questions(recovery2Key, username) */
+  router.add('GET', '/fetch-recovery2-questions', async ctx => {
     const recovery2Key = requireQueryString(ctx.query, 'recovery2Key')
     const username = requireQueryString(ctx.query, 'username')
     const questions = await ctx.state.core.context.fetchRecovery2Questions(
@@ -74,11 +83,13 @@ export function registerContextRoutes(router: Router): void {
     return { questions }
   })
 
-  router.add('POST', '/v1/challenge', async ctx => {
+  /** context.fetchChallenge() */
+  router.add('POST', '/fetch-challenge', async ctx => {
     return await ctx.state.core.context.fetchChallenge()
   })
 
-  router.add('GET', '/v1/currency-configs', ctx => {
+  /** Engine view of the enabled currency plugins, for create-currency-wallet. */
+  router.add('GET', '/currency-configs', ctx => {
     // Wallet-create only accepts currency/accountbased plugins — not swap.
     return { pluginIds: ctx.state.core.currencyPluginIds }
   })

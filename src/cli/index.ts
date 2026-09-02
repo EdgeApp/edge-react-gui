@@ -197,7 +197,7 @@ async function main(): Promise<number> {
           await ctx.client.post<{
             sessionId: string
             username?: string
-          }>('/v1/login/password', {
+          }>('/login-with-password', {
             username: options.username,
             password: options.password,
             challengeId

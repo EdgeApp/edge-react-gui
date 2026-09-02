@@ -1,14 +1,16 @@
 import { engineError } from '../errors'
-import type { Router } from '../router'
-import { getAccount } from './helpers'
+import { requireBodyObject, type Router } from '../router'
+import { getAccount, requireQueryString, requireString } from './helpers'
 
 export function registerLobbyRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/lobbies/{lobbyId}', async ctx => {
+  /** account.fetchLobby(lobbyId) */
+  router.add('GET', '/accounts/{sessionId}/fetch-lobby', async ctx => {
+    const lobbyId = requireQueryString(ctx.query, 'lobbyId')
     const account = getAccount(ctx)
-    const lobby = await account.fetchLobby(ctx.params.lobbyId)
+    const lobby = await account.fetchLobby(lobbyId)
     const { loginRequest } = lobby
     return {
-      lobbyId: ctx.params.lobbyId,
+      lobbyId,
       loginRequest:
         loginRequest == null
           ? null
@@ -21,12 +23,15 @@ export function registerLobbyRoutes(router: Router): void {
     }
   })
 
+  /** EdgeLoginRequest.approve(), reached via account.fetchLobby(lobbyId) */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/lobbies/{lobbyId}/approve',
+    '/accounts/{sessionId}/approve-login-request',
     async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const lobbyId = requireString(body, 'lobbyId')
       const account = getAccount(ctx)
-      const lobby = await account.fetchLobby(ctx.params.lobbyId)
+      const lobby = await account.fetchLobby(lobbyId)
       if (lobby.loginRequest == null) {
         throw engineError(
           'NO_LOGIN_REQUEST',

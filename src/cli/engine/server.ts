@@ -51,7 +51,7 @@ async function handleRequest(
     const pathname = url.pathname
 
     // SSE special-case
-    if (req.method === 'GET' && pathname === '/v1/events') {
+    if (req.method === 'GET' && pathname === '/engine/events') {
       state.events.addSseClient(res)
       return
     }

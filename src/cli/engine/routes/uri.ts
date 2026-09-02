@@ -5,9 +5,10 @@ import { requireBodyObject, type Router } from '../router'
 import { getAccount, requireString } from './helpers'
 
 export function registerUriRoutes(router: Router): void {
+  /** wallet.parseUri(uri, currencyCode) */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/parse-uri',
+    '/accounts/{sessionId}/wallets/{walletId}/parse-uri',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const uri = requireString(body, 'uri')
@@ -18,9 +19,10 @@ export function registerUriRoutes(router: Router): void {
     }
   )
 
+  /** wallet.encodeUri(obj) */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/encode-uri',
+    '/accounts/{sessionId}/wallets/{walletId}/encode-uri',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const publicAddress = requireString(body, 'publicAddress')

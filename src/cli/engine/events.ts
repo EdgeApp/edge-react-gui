@@ -9,7 +9,7 @@ type Listener = (event: string, data: unknown) => void
 const MAX_SSE_BUFFER_BYTES = 1024 * 1024
 
 /**
- * Simple SSE hub. Clients connect via GET /v1/events.
+ * Simple SSE hub. Clients connect via GET /engine/events.
  */
 export class EventHub {
   private readonly listeners = new Set<Listener>()

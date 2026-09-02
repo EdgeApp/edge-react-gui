@@ -7,28 +7,34 @@ import { requireBodyObject, type Router } from '../router'
 import { getAccount, optionalBoolean } from './helpers'
 
 export function registerLocalSettingsRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/local-settings', async ctx => {
+  /** GUI code, not core: account.localDisklet Settings.json. */
+  router.add('GET', '/accounts/{sessionId}/local-settings', async ctx => {
     const account = getAccount(ctx)
     const settings = await readLocalAccountSettingsFromDisk(account)
     return { spamFilterOn: settings.spamFilterOn }
   })
 
-  router.add('PATCH', '/v1/accounts/{sessionId}/local-settings', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const spamFilterOn = optionalBoolean(body, 'spamFilterOn')
-    if (spamFilterOn == null) {
-      throw engineError(
-        'BAD_REQUEST',
-        'Missing required field "spamFilterOn"',
-        400
-      )
+  /** GUI code, not core: account.localDisklet Settings.json. */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/change-local-settings',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const spamFilterOn = optionalBoolean(body, 'spamFilterOn')
+      if (spamFilterOn == null) {
+        throw engineError(
+          'BAD_REQUEST',
+          'Missing required field "spamFilterOn"',
+          400
+        )
+      }
+      const account = getAccount(ctx)
+      const settings = await readLocalAccountSettingsFromDisk(account)
+      const updated = await writeLocalAccountSettingsToDisk(account, {
+        ...settings,
+        spamFilterOn
+      })
+      return { spamFilterOn: updated.spamFilterOn }
     }
-    const account = getAccount(ctx)
-    const settings = await readLocalAccountSettingsFromDisk(account)
-    const updated = await writeLocalAccountSettingsToDisk(account, {
-      ...settings,
-      spamFilterOn
-    })
-    return { spamFilterOn: updated.spamFilterOn }
-  })
+  )
 }

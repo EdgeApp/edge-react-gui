@@ -33,7 +33,7 @@ const adminAuthRequestCmd = command(
     const body =
       bodyRaw != null ? parseJsonFlag(adminAuthRequestCmd, bodyRaw) : undefined
     printJson(
-      await ctx.client.post('/v1/admin/auth-request', {
+      await ctx.client.post('/admin/auth-request', {
         method: args.requireString('method'),
         path: args.requireString('path'),
         body
@@ -55,16 +55,14 @@ const adminHashUsernameCmd = command(
       { positional: 'required' }
     )
     const query = new URLSearchParams({ username: username! })
-    printJson(
-      await ctx.client.get(`/v1/admin/hash-username?${query.toString()}`)
-    )
+    printJson(await ctx.client.get(`/admin/hash-username?${query.toString()}`))
   }
 )
 
 const adminLobbyCreateCmd = command(
-  'admin-lobby-create',
+  'admin-make-lobby',
   {
-    usage: "admin-lobby-create [--body='<json>'] [--period-seconds=<n>]",
+    usage: "admin-make-lobby [--body='<json>'] [--period-seconds=<n>]",
     help: 'Create a lobby and return its id and current replies'
   },
   async (ctx, argv) => {
@@ -87,15 +85,15 @@ const adminLobbyCreateCmd = command(
       }
     }
     printJson(
-      await ctx.client.post('/v1/admin/lobby', { lobbyRequest, period })
+      await ctx.client.post('/admin/make-lobby', { lobbyRequest, period })
     )
   }
 )
 
 const adminLobbyFetchCmd = command(
-  'admin-lobby-fetch',
+  'admin-fetch-lobby-request',
   {
-    usage: 'admin-lobby-fetch <lobbyId>',
+    usage: 'admin-fetch-lobby-request <lobbyId>',
     help: "Fetch a lobby's contents"
   },
   async (ctx, argv) => {
@@ -103,16 +101,18 @@ const adminLobbyFetchCmd = command(
       positional: 'required'
     })
     printJson(
-      await ctx.client.get(`/v1/admin/lobby/${encodeURIComponent(lobbyId!)}`)
+      await ctx.client.get(
+        `/admin/fetch-lobby-request?lobbyId=${encodeURIComponent(lobbyId!)}`
+      )
     )
   }
 )
 
 const adminLobbyReplyCmd = command(
-  'admin-lobby-reply',
+  'admin-send-lobby-reply',
   {
     usage:
-      "admin-lobby-reply <lobbyId> --lobby-request='<json>' [--reply-data='<json>']",
+      "admin-send-lobby-reply <lobbyId> --lobby-request='<json>' [--reply-data='<json>']",
     help: 'Send a reply to a lobby'
   },
   async (ctx, argv) => {
@@ -127,25 +127,26 @@ const adminLobbyReplyCmd = command(
     const replyRaw = args.string('reply-data')
     const replyData =
       replyRaw != null ? parseJsonFlag(adminLobbyReplyCmd, replyRaw) : undefined
-    await ctx.client.post(
-      `/v1/admin/lobby/${encodeURIComponent(args.positional!)}/reply`,
-      { lobbyRequest, replyData }
-    )
+    await ctx.client.post('/admin/send-lobby-reply', {
+      lobbyId: args.positional,
+      lobbyRequest,
+      replyData
+    })
     printJson({ ok: true })
   }
 )
 
 const adminRepoSyncCmd = command(
-  'admin-repo-sync',
+  'admin-sync-repo',
   {
-    usage: 'admin-repo-sync <syncKey>',
+    usage: 'admin-sync-repo <syncKey>',
     help: 'Sync a repo by its base58 sync key'
   },
   async (ctx, argv) => {
     const { positional: syncKey } = parseCommandArgs(adminRepoSyncCmd, argv, {
       positional: 'required'
     })
-    printJson(await ctx.client.post('/v1/admin/repos/sync', { syncKey }))
+    printJson(await ctx.client.post('/admin/sync-repo', { syncKey }))
   }
 )
 
@@ -160,16 +161,13 @@ const adminRepoListCmd = command(
       positional: 'required',
       flags: { 'data-key': 'string', path: 'string' }
     })
+    const query = new URLSearchParams({
+      syncKey: args.positional!,
+      dataKey: args.requireString('data-key')
+    })
     const path = args.string('path')
-    const query =
-      path != null ? `?${new URLSearchParams({ path }).toString()}` : ''
-    printJson(
-      await ctx.client.get(
-        `/v1/admin/repos/${encodeURIComponent(
-          args.positional!
-        )}/${encodeURIComponent(args.requireString('data-key'))}/files${query}`
-      )
-    )
+    if (path != null) query.set('path', path)
+    printJson(await ctx.client.get(`/admin/repo-list?${query.toString()}`))
   }
 )
 
@@ -184,16 +182,12 @@ const adminRepoGetCmd = command(
       positional: 'required',
       flags: { 'data-key': 'string', path: 'string' }
     })
-    const query = new URLSearchParams({ path: args.requireString('path') })
-    printJson(
-      await ctx.client.get(
-        `/v1/admin/repos/${encodeURIComponent(
-          args.positional!
-        )}/${encodeURIComponent(
-          args.requireString('data-key')
-        )}/file?${query.toString()}`
-      )
-    )
+    const query = new URLSearchParams({
+      syncKey: args.positional!,
+      dataKey: args.requireString('data-key'),
+      path: args.requireString('path')
+    })
+    printJson(await ctx.client.get(`/admin/repo-get?${query.toString()}`))
   }
 )
 
@@ -209,15 +203,12 @@ const adminRepoSetCmd = command(
       positional: 'required',
       flags: { 'data-key': 'string', path: 'string', text: 'string' }
     })
-    const query = new URLSearchParams({ path: args.requireString('path') })
-    await ctx.client.put(
-      `/v1/admin/repos/${encodeURIComponent(
-        args.positional!
-      )}/${encodeURIComponent(
-        args.requireString('data-key')
-      )}/file?${query.toString()}`,
-      { text: args.requireString('text') }
-    )
+    await ctx.client.post('/admin/repo-set', {
+      syncKey: args.positional,
+      dataKey: args.requireString('data-key'),
+      path: args.requireString('path'),
+      text: args.requireString('text')
+    })
     printJson({ ok: true })
   }
 )
@@ -233,14 +224,11 @@ const adminRepoDeleteCmd = command(
       positional: 'required',
       flags: { 'data-key': 'string', path: 'string' }
     })
-    const query = new URLSearchParams({ path: args.requireString('path') })
-    await ctx.client.delete(
-      `/v1/admin/repos/${encodeURIComponent(
-        args.positional!
-      )}/${encodeURIComponent(
-        args.requireString('data-key')
-      )}/file?${query.toString()}`
-    )
+    await ctx.client.post('/admin/repo-delete', {
+      syncKey: args.positional,
+      dataKey: args.requireString('data-key'),
+      path: args.requireString('path')
+    })
     printJson({ ok: true })
   }
 )

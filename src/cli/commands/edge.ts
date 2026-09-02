@@ -19,13 +19,15 @@ async function sleep(ms: number): Promise<void> {
 }
 
 command(
-  'edge-login',
+  'request-edge-login',
   {
-    usage: 'edge-login',
+    usage: 'request-edge-login',
     help: 'Request a QR / lobby Edge login and wait for approval'
   },
   async ctx => {
-    const pending = await ctx.client.post<PendingEdgeLogin>('/v1/login/edge')
+    const pending = await ctx.client.post<PendingEdgeLogin>(
+      '/request-edge-login'
+    )
     printJson(pending)
 
     const deadline = Date.now() + TIMEOUT_MS
@@ -40,7 +42,7 @@ command(
       }
       await sleep(POLL_INTERVAL_MS)
       current = await ctx.client.get<PendingEdgeLogin>(
-        `/v1/login/edge/${encodeURIComponent(pending.pendingId)}`
+        `/pending-edge-login/${encodeURIComponent(pending.pendingId)}`
       )
     }
 

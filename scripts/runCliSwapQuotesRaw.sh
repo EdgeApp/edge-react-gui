@@ -65,8 +65,8 @@ sleep 1
 
 META=$(mktemp -d /tmp/edge-cli-swap-XXXXXX)
 
-run_capture "$META/login.json" "${CLI[@]}" password-login "$USER" --password="$PASS"
-run_capture "$META/wallets.json" "${CLI[@]}" wallet-list
+run_capture "$META/login.json" "${CLI[@]}" login-with-password "$USER" --password="$PASS"
+run_capture "$META/wallets.json" "${CLI[@]}" currency-wallets
 
 BTC_ID=$(node -e '
 const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));
@@ -79,8 +79,8 @@ const w=(j.wallets||[]).find(x=>x.type==="wallet:ethereum");
 process.stdout.write(w?w.walletId:"");
 ' "$META/wallets.json")
 
-run "${CLI[@]}" balance "$BTC_ID"
-run "${CLI[@]}" balance "$ETH_ID"
+run "${CLI[@]}" balance-map "$BTC_ID"
+run "${CLI[@]}" balance-map "$ETH_ID"
 
 # $90 of BTC as source (quoteFor=from)
 run_capture "$META/rate-from.json" "${CLI[@]}" rates-usd-to-native --usd-amount=90 --plugin-id=bitcoin
@@ -98,7 +98,7 @@ PLUGINS=(changehero changenow exolix godex letsexchange swapuz rango thorchain s
 
 # Forward quotes: spend ~$90 BTC → ETH
 for p in "${PLUGINS[@]}"; do
-  run_capture "$META/q-from-$p.json" "${CLI[@]}" swap-quote --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_FROM" --quote-for=from --plugin-id="$p"
+  run_capture "$META/q-from-$p.json" "${CLI[@]}" fetch-swap-quotes --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_FROM" --quote-for=from --plugin-id="$p"
   OID=$(node -e '
 try {
   const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));
@@ -108,13 +108,13 @@ try {
 ' "$META/q-from-$p.json")
   if [ -n "$OID" ]; then
     run "${CLI[@]}" swap-quote-get "$OID"
-    run "${CLI[@]}" swap-quote-close "$OID"
+    run "${CLI[@]}" close-swap-quote "$OID"
   fi
 done
 
 # Reverse quotes: receive ~$90 ETH, source BTC
 for p in "${PLUGINS[@]}"; do
-  run_capture "$META/q-to-$p.json" "${CLI[@]}" swap-quote --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_TO" --quote-for=to --plugin-id="$p"
+  run_capture "$META/q-to-$p.json" "${CLI[@]}" fetch-swap-quotes --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_TO" --quote-for=to --plugin-id="$p"
   OID=$(node -e '
 try {
   const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));
@@ -123,12 +123,12 @@ try {
 } catch { process.stdout.write(""); }
 ' "$META/q-to-$p.json")
   if [ -n "$OID" ]; then
-    run "${CLI[@]}" swap-quote-close "$OID"
+    run "${CLI[@]}" close-swap-quote "$OID"
   fi
 done
 
 # All providers at once (no preferPluginId)
-run_capture "$META/q-all-from.json" "${CLI[@]}" swap-quote --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_FROM" --quote-for=from
+run_capture "$META/q-all-from.json" "${CLI[@]}" fetch-swap-quotes --from-wallet-id="$BTC_ID" --to-wallet-id="$ETH_ID" --native-amount="$NATIVE_FROM" --quote-for=from
 # Close any returned handles
 node -e '
 const fs=require("fs");
@@ -138,7 +138,7 @@ try {
   for (const q of j.quotes||[]) {
     if (!q.objectId) continue;
     try {
-      execSync("node -r sucrase/register src/cli/index.ts -t -d "+JSON.stringify(process.env.HOME+"/.edge-cli/persistent-test")+" --solve-captcha swap-quote-close "+q.objectId, {stdio:"ignore"});
+      execSync("node -r sucrase/register src/cli/index.ts -t -d "+JSON.stringify(process.env.HOME+"/.edge-cli/persistent-test")+" --solve-captcha close-swap-quote "+q.objectId, {stdio:"ignore"});
     } catch {}
   }
 } catch {}

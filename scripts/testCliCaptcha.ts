@@ -93,7 +93,7 @@ async function main(): Promise<void> {
 
   try {
     // Create — expect challenge or success
-    let create = await req(sock, 'POST', '/v1/login/create', {
+    let create = await req(sock, 'POST', '/create-account', {
       username: USER,
       password: PASS,
       pin: PIN
@@ -109,7 +109,7 @@ async function main(): Promise<void> {
       const ok = await solveCaptcha(challengeUri)
       console.log('solveCaptcha', ok)
       if (!ok) throw new Error('CAPTCHA failed')
-      create = await req(sock, 'POST', '/v1/login/create', {
+      create = await req(sock, 'POST', '/create-account', {
         username: USER,
         password: PASS,
         pin: PIN,
@@ -122,10 +122,10 @@ async function main(): Promise<void> {
     console.log('CREATED session', create.json.sessionId)
 
     // Logout
-    await req(sock, 'DELETE', `/v1/accounts/${create.json.sessionId}`)
+    await req(sock, 'POST', `/accounts/${create.json.sessionId}/logout`)
 
     // Login again with captcha path
-    let login = await req(sock, 'POST', '/v1/login/password', {
+    let login = await req(sock, 'POST', '/login-with-password', {
       username: USER,
       password: PASS
     })
@@ -133,7 +133,7 @@ async function main(): Promise<void> {
     if (login.json?.error?.code === 'CHALLENGE_REQUIRED') {
       const { challengeId, challengeUri } = login.json.error.details
       await solveCaptcha(challengeUri)
-      login = await req(sock, 'POST', '/v1/login/password', {
+      login = await req(sock, 'POST', '/login-with-password', {
         username: USER,
         password: PASS,
         challengeId
@@ -145,7 +145,11 @@ async function main(): Promise<void> {
     console.log('LOGGED IN session', login.json.sessionId)
 
     // Cleanup remote account
-    await req(sock, 'DELETE', `/v1/accounts/${login.json.sessionId}/remote`)
+    await req(
+      sock,
+      'POST',
+      `/accounts/${login.json.sessionId}/delete-remote-account`
+    )
     console.log('PASS captcha account create + login')
   } finally {
     engine.kill('SIGTERM')

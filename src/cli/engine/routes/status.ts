@@ -2,7 +2,7 @@ import { getAppliedLocale } from '../../../locales/bootLocale'
 import { API_VERSION, type Router } from '../router'
 
 export function registerStatusRoutes(router: Router): void {
-  router.add('GET', '/v1/status', ctx => {
+  router.add('GET', '/engine/status', ctx => {
     const { state } = ctx
     const applied = getAppliedLocale()
     return {
@@ -20,7 +20,7 @@ export function registerStatusRoutes(router: Router): void {
     }
   })
 
-  router.add('GET', '/v1/config', ctx => {
+  router.add('GET', '/engine/config', ctx => {
     const { core } = ctx.state
     const plugins = Object.keys(core.pluginsInit).filter(pluginId =>
       Boolean(core.pluginsInit[pluginId])
@@ -34,7 +34,7 @@ export function registerStatusRoutes(router: Router): void {
     }
   })
 
-  router.add('POST', '/v1/shutdown', ctx => {
+  router.add('POST', '/engine/stop', ctx => {
     // Respond first; process.exit inside shutdown would otherwise hang the client.
     setImmediate(() => {
       ctx.state.shutdown().catch(() => {})

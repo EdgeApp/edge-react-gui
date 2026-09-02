@@ -3,37 +3,35 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 command(
-  'session-list',
+  'engine-sessions',
   {
-    usage: 'session-list',
+    usage: 'engine-sessions',
     help: 'List active engine sessions'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/sessions'))
+    printJson(await ctx.client.get('/engine/sessions'))
   }
 )
 
 command(
-  'session-touch',
+  'touch',
   {
-    usage: 'session-touch',
+    usage: 'touch',
     help: 'Keepalive; refresh the auto-logout timer for the current session',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.post(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/touch`
-      )
+      await ctx.client.post(`/accounts/${encodeURIComponent(sessionId)}/touch`)
     )
   }
 )
 
 const spamFilterCmd = command(
-  'spam-filter',
+  'local-settings',
   {
-    usage: 'spam-filter [--spam-filter-on=true|false]',
+    usage: 'local-settings [--spam-filter-on=true|false]',
     help: 'Show or set the local “hide spam transactions” toggle',
     needsSession: true
   },
@@ -43,12 +41,17 @@ const spamFilterCmd = command(
       flags: { 'spam-filter-on': 'boolstr' }
     })
     const sessionId = requireSession(ctx)
-    const path = `/v1/accounts/${encodeURIComponent(sessionId)}/local-settings`
+    const path = `/accounts/${encodeURIComponent(sessionId)}/local-settings`
     const spamFilterOn = args.boolstr('spam-filter-on')
     if (spamFilterOn == null) {
       printJson(await ctx.client.get(path))
       return
     }
-    printJson(await ctx.client.patch(path, { spamFilterOn }))
+    printJson(
+      await ctx.client.post(
+        `/accounts/${encodeURIComponent(sessionId)}/change-local-settings`,
+        { spamFilterOn }
+      )
+    )
   }
 )

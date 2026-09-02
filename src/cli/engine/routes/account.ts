@@ -2,7 +2,8 @@ import type { Router } from '../router'
 import { getAccount, getSession } from './helpers'
 
 export function registerAccountRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}', ctx => {
+  /** Engine composite: session registry plus EdgeAccount properties. */
+  router.add('GET', '/accounts/{sessionId}', ctx => {
     const session = getSession(ctx)
     const { account } = session
     const info = ctx.state.sessions.toInfo(session)
@@ -28,30 +29,39 @@ export function registerAccountRoutes(router: Router): void {
     }
   })
 
-  router.add('DELETE', '/v1/accounts/{sessionId}', async ctx => {
+  /** account.logout() */
+  router.add('POST', '/accounts/{sessionId}/logout', async ctx => {
     await ctx.state.sessions.logout(ctx.params.sessionId)
     return undefined
   })
 
-  router.add('POST', '/v1/accounts/{sessionId}/touch', ctx => {
+  /** Engine keepalive; no core equivalent. */
+  router.add('POST', '/accounts/{sessionId}/touch', ctx => {
     return ctx.state.sessions.touch(ctx.params.sessionId)
   })
 
-  router.add('GET', '/v1/accounts/{sessionId}/login-key', async ctx => {
+  /** account.getLoginKey() */
+  router.add('GET', '/accounts/{sessionId}/get-login-key', async ctx => {
     const account = getAccount(ctx)
     return { loginKey: await account.getLoginKey() }
   })
 
-  router.add('POST', '/v1/accounts/{sessionId}/sync', async ctx => {
+  /** account.sync() */
+  router.add('POST', '/accounts/{sessionId}/sync', async ctx => {
     const account = getAccount(ctx)
     await account.sync()
-    return { ok: true }
-  })
-
-  router.add('DELETE', '/v1/accounts/{sessionId}/remote', async ctx => {
-    const account = getAccount(ctx)
-    await account.deleteRemoteAccount()
-    await ctx.state.sessions.logout(ctx.params.sessionId)
     return undefined
   })
+
+  /** account.deleteRemoteAccount() */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/delete-remote-account',
+    async ctx => {
+      const account = getAccount(ctx)
+      await account.deleteRemoteAccount()
+      await ctx.state.sessions.logout(ctx.params.sessionId)
+      return undefined
+    }
+  )
 }

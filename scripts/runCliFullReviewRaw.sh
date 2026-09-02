@@ -90,27 +90,27 @@ try {
 ' "$META/status.json")
 
 run "${CLI[@]}" engine-config
-run "${CLI[@]}" username-list
-run "${CLI[@]}" challenge-create
-run "${CLI[@]}" messages-fetch
+run "${CLI[@]}" local-users
+run "${CLI[@]}" fetch-challenge
+run "${CLI[@]}" fetch-login-messages
 if [ -n "$SOCK" ]; then
-  run curl -s --unix-socket "$SOCK" http://localhost/v1/currency-configs
+  run curl -s --unix-socket "$SOCK" http://localhost/currency-configs
 fi
 
 # --- Account create + login ---
-run "${CLI[@]}" account-create "$USER" --password="$PASS" --pin="$PIN"
+run "${CLI[@]}" create-account "$USER" --password="$PASS" --pin="$PIN"
 run "${CLI[@]}" account-info
-run "${CLI[@]}" account-key
-run "${CLI[@]}" session-list
-run "${CLI[@]}" session-touch
+run "${CLI[@]}" get-login-key
+run "${CLI[@]}" engine-sessions
+run "${CLI[@]}" touch
 
 run "${CLI[@]}" logout
-run "${CLI[@]}" password-login "$USER" --password="$PASS"
+run "${CLI[@]}" login-with-password "$USER" --password="$PASS"
 
 run "${CLI[@]}" logout
-run "${CLI[@]}" pin-login "$USER" --pin="$PIN"
+run "${CLI[@]}" login-with-pin "$USER" --pin="$PIN"
 
-silent_capture "$META/account-key.json" "${CLI[@]}" account-key
+silent_capture "$META/account-key.json" "${CLI[@]}" get-login-key
 LOGIN_KEY=$(node -e '
 const fs=require("fs");
 try {
@@ -121,27 +121,27 @@ try {
 
 run "${CLI[@]}" logout
 if [ -n "$LOGIN_KEY" ]; then
-  run "${CLI[@]}" key-login "$USER" --login-key="$LOGIN_KEY"
+  run "${CLI[@]}" login-with-key "$USER" --login-key="$LOGIN_KEY"
 else
-  run "${CLI[@]}" password-login "$USER" --password="$PASS"
+  run "${CLI[@]}" login-with-password "$USER" --password="$PASS"
 fi
 
-run "${CLI[@]}" account-available "$USER"
-run "${CLI[@]}" account-available "${USER}zz_nope"
-run "${CLI[@]}" username-list
+run "${CLI[@]}" username-available "$USER"
+run "${CLI[@]}" username-available "${USER}zz_nope"
+run "${CLI[@]}" local-users
 
-run "${CLI[@]}" otp-status
-run "${CLI[@]}" otp-enable
-run "${CLI[@]}" otp-status
-run "${CLI[@]}" otp-disable
-run "${CLI[@]}" pin-setup --pin=2468
-run "${CLI[@]}" password-setup --password="${PASS}x"
-run "${CLI[@]}" password-setup --password="$PASS"
-run "${CLI[@]}" recovery2-setup --question="What is your favorite color?" --answer=blue --question="What is your pet name?" --answer=fluffy
+run "${CLI[@]}" otp-key
+run "${CLI[@]}" enable-otp
+run "${CLI[@]}" otp-key
+run "${CLI[@]}" disable-otp
+run "${CLI[@]}" change-pin --pin=2468
+run "${CLI[@]}" change-password --password="${PASS}x"
+run "${CLI[@]}" change-password --password="$PASS"
+run "${CLI[@]}" change-recovery --question="What is your favorite color?" --answer=blue --question="What is your pet name?" --answer=fluffy
 
 # --- Wallets ---
-run "${CLI[@]}" wallet-create wallet:bitcoin --name="Review BTC"
-silent_capture "$META/wallet-list.json" "${CLI[@]}" wallet-list
+run "${CLI[@]}" create-currency-wallet wallet:bitcoin --name="Review BTC"
+silent_capture "$META/wallet-list.json" "${CLI[@]}" currency-wallets
 WID=$(node -e '
 const fs=require("fs");
 try {
@@ -151,18 +151,18 @@ try {
 } catch { process.stdout.write(""); }
 ' "$META/wallet-list.json")
 
-run "${CLI[@]}" wallet-list
+run "${CLI[@]}" currency-wallets
 if [ -n "$WID" ]; then
   run "${CLI[@]}" wallet-info "$WID"
-  run "${CLI[@]}" wallet-rename "$WID" --name="Renamed BTC"
-  run "${CLI[@]}" balance "$WID"
-  run "${CLI[@]}" address "$WID"
-  run "${CLI[@]}" tx-list "$WID"
-  run "${CLI[@]}" token-list "$WID"
-  run "${CLI[@]}" token-detected "$WID"
-  run "${CLI[@]}" export-public "$WID"
+  run "${CLI[@]}" rename-wallet "$WID" --name="Renamed BTC"
+  run "${CLI[@]}" balance-map "$WID"
+  run "${CLI[@]}" get-addresses "$WID"
+  run "${CLI[@]}" get-transactions "$WID"
+  run "${CLI[@]}" wallet-tokens "$WID"
+  run "${CLI[@]}" wallet-tokens "$WID"
+  run "${CLI[@]}" get-display-public-key "$WID"
 
-  silent_capture "$META/address.json" "${CLI[@]}" address "$WID"
+  silent_capture "$META/address.json" "${CLI[@]}" get-addresses "$WID"
   ADDR=$(node -e '
 const fs=require("fs");
 try {
@@ -183,7 +183,7 @@ try {
 ' "$META/address.json")
 
   if [ -n "$ADDR" ]; then
-    run "${CLI[@]}" max-spendable "$WID" --to="$ADDR"
+    run "${CLI[@]}" get-max-spendable "$WID" --to="$ADDR"
     run "${CLI[@]}" spend "$WID" --to="$ADDR" --native-amount=1000 --dry-run
     # Staged spend handle path (make → object-get → object-delete)
     run_capture "$META/make-spend.json" "${CLI[@]}" make-spend "$WID" --to="$ADDR" --native-amount=1000
@@ -199,42 +199,42 @@ try {
     fi
     run "${CLI[@]}" spend-max "$WID" --to="$ADDR" --dry-run
   fi
-  run "${CLI[@]}" key-list
-  run "${CLI[@]}" key-get "$WID"
-  run "${CLI[@]}" wallet-state "$WID" --archived=true
-  run "${CLI[@]}" wallet-state "$WID" --archived=false
+  run "${CLI[@]}" all-keys
+  run "${CLI[@]}" get-raw-private-key "$WID"
+  run "${CLI[@]}" change-wallet-states "$WID" --archived=true
+  run "${CLI[@]}" change-wallet-states "$WID" --archived=false
 fi
 
 # --- Data store ---
-run "${CLI[@]}" data-store-set reviewStore --item-id=item1 --value="hello-cli-review"
-run "${CLI[@]}" data-store-list
-run "${CLI[@]}" data-store-list reviewStore
-run "${CLI[@]}" data-store-get reviewStore --item-id=item1
-run "${CLI[@]}" data-store-delete reviewStore --item-id=item1
+run "${CLI[@]}" set-item reviewStore --item-id=item1 --value="hello-cli-review"
+run "${CLI[@]}" list-store-ids
+run "${CLI[@]}" list-store-ids reviewStore
+run "${CLI[@]}" get-item reviewStore --item-id=item1
+run "${CLI[@]}" delete-item reviewStore --item-id=item1
 
 # --- Edge login via REST ---
 if [ -n "$SOCK" ]; then
-  run_capture "$META/edge-pending.json" curl -s --unix-socket "$SOCK" -X POST http://localhost/v1/login/edge
+  run_capture "$META/edge-pending.json" curl -s --unix-socket "$SOCK" -X POST http://localhost/request-edge-login
   PENDING=$(node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.stdout.write(String(j.pendingId||j.objectId||""))' "$META/edge-pending.json")
   LOBBY=$(node -e 'const j=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")); process.stdout.write(String(j.lobbyId||""))' "$META/edge-pending.json")
 
   if [ -n "$PENDING" ]; then
-    run curl -s --unix-socket "$SOCK" "http://localhost/v1/login/edge/$PENDING"
+    run curl -s --unix-socket "$SOCK" "http://localhost/request-edge-login/$PENDING"
   fi
   if [ -n "$LOBBY" ]; then
-    run "${CLI[@]}" lobby-login-fetch "$LOBBY"
-    run "${CLI[@]}" lobby-login-approve "$LOBBY"
+    run "${CLI[@]}" fetch-lobby "$LOBBY"
+    run "${CLI[@]}" approve-login-request "$LOBBY"
     sleep 2
-    run curl -s --unix-socket "$SOCK" "http://localhost/v1/login/edge/$PENDING"
+    run curl -s --unix-socket "$SOCK" "http://localhost/request-edge-login/$PENDING"
   fi
 
-  run curl -s --unix-socket "$SOCK" http://localhost/v1/status
+  run curl -s --unix-socket "$SOCK" http://localhost/engine/status
 fi
-run curl -s http://127.0.0.1:9008/v1/status
+run curl -s http://127.0.0.1:9008/engine/status
 
 # --- Help ---
 run "${CLI[@]}" help
-run "${CLI[@]}" help wallet-create
+run "${CLI[@]}" help create-currency-wallet
 
 # --- Stop this review's engine so automated suites can spawn their own ---
 run "${CLI[@]}" logout

@@ -2,16 +2,17 @@ import { requireBodyObject, type Router } from '../router'
 import { getAccount, optionalNumber, requireString } from './helpers'
 
 export function registerOtpRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/otp', ctx => {
+  /** account.otpKey and account.otpResetDate */
+  router.add('GET', '/accounts/{sessionId}/otp-key', ctx => {
     const account = getAccount(ctx)
     return {
-      enabled: account.otpKey != null,
       otpKey: account.otpKey ?? null,
       otpResetDate: account.otpResetDate?.toISOString() ?? null
     }
   })
 
-  router.add('PUT', '/v1/accounts/{sessionId}/otp', async ctx => {
+  /** account.enableOtp(timeout) */
+  router.add('POST', '/accounts/{sessionId}/enable-otp', async ctx => {
     const body = requireBodyObject(ctx.body)
     const timeout = optionalNumber(body, 'timeout')
     const account = getAccount(ctx)
@@ -19,17 +20,20 @@ export function registerOtpRoutes(router: Router): void {
     return { otpKey: account.otpKey ?? null }
   })
 
-  router.add('DELETE', '/v1/accounts/{sessionId}/otp', async ctx => {
+  /** account.disableOtp() */
+  router.add('POST', '/accounts/{sessionId}/disable-otp', async ctx => {
     await getAccount(ctx).disableOtp()
     return undefined
   })
 
-  router.add('DELETE', '/v1/accounts/{sessionId}/otp/reset', async ctx => {
+  /** account.cancelOtpReset() */
+  router.add('POST', '/accounts/{sessionId}/cancel-otp-reset', async ctx => {
     await getAccount(ctx).cancelOtpReset()
     return undefined
   })
 
-  router.add('POST', '/v1/accounts/{sessionId}/otp/repair', async ctx => {
+  /** account.repairOtp(otpKey) */
+  router.add('POST', '/accounts/{sessionId}/repair-otp', async ctx => {
     const body = requireBodyObject(ctx.body)
     const otpKey = requireString(body, 'otpKey')
     await getAccount(ctx).repairOtp(otpKey)

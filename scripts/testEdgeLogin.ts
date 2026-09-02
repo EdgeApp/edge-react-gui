@@ -1,7 +1,7 @@
 /**
  * Edge-login E2E against login-tester without the GUI:
  * 1. Create+login an approving account
- * 2. Request edge-login (returns lobbyId + uri)
+ * 2. Request request-edge-login (returns lobbyId + uri)
  * 3. Approve the lobby from the logged-in account
  * 4. Poll until the pending login completes with a session
  *
@@ -67,7 +67,7 @@ async function req(
 }
 
 async function createWithCaptcha(sock: string): Promise<string> {
-  let create = await req(sock, 'POST', '/v1/login/create', {
+  let create = await req(sock, 'POST', '/create-account', {
     username: USER,
     password: PASS,
     pin: PIN
@@ -76,7 +76,7 @@ async function createWithCaptcha(sock: string): Promise<string> {
     const { challengeId, challengeUri } = create.json.error.details
     const ok = await solveCaptcha(challengeUri)
     if (!ok) throw new Error('CAPTCHA failed')
-    create = await req(sock, 'POST', '/v1/login/create', {
+    create = await req(sock, 'POST', '/create-account', {
       username: USER,
       password: PASS,
       pin: PIN,
@@ -125,7 +125,7 @@ async function main(): Promise<void> {
     const approverSession = await createWithCaptcha(sock)
     console.log('approver session', approverSession)
 
-    const pending = await req(sock, 'POST', '/v1/login/edge')
+    const pending = await req(sock, 'POST', '/request-edge-login')
     if (pending.status !== 200) {
       throw new Error(`edge login failed: ${JSON.stringify(pending.json)}`)
     }
@@ -143,24 +143,28 @@ async function main(): Promise<void> {
     const fetched = await req(
       sock,
       'GET',
-      `/v1/accounts/${approverSession}/lobbies/${lobbyId}`
+      `/accounts/${approverSession}/lobbies/${lobbyId}`
     )
     console.log('lobby fetch', fetched.status, JSON.stringify(fetched.json))
     const approved = await req(
       sock,
       'POST',
-      `/v1/accounts/${approverSession}/lobbies/${lobbyId}/approve`
+      `/accounts/${approverSession}/lobbies/${lobbyId}/approve`
     )
     console.log('lobby approve', approved.status, JSON.stringify(approved.json))
 
     const deadline = Date.now() + 60_000
     while (Date.now() < deadline) {
-      const st = await req(sock, 'GET', `/v1/login/edge/${pendingId}`)
+      const st = await req(sock, 'GET', `/request-edge-login/${pendingId}`)
       console.log('poll', st.json?.state)
       if (st.json?.state === 'done' && st.json?.session != null) {
-        console.log('PASS edge-login', st.json.session.sessionId)
+        console.log('PASS request-edge-login', st.json.session.sessionId)
         // Cleanup
-        await req(sock, 'DELETE', `/v1/accounts/${approverSession}/remote`)
+        await req(
+          sock,
+          'POST',
+          `/accounts/${approverSession}/delete-remote-account`
+        )
         return
       }
       if (st.json?.state === 'error' || st.json?.state === 'closed') {
@@ -168,7 +172,7 @@ async function main(): Promise<void> {
       }
       await new Promise(resolve => setTimeout(resolve, 1500))
     }
-    throw new Error('Timed out waiting for edge-login approval')
+    throw new Error('Timed out waiting for request-edge-login approval')
   } finally {
     engine.kill('SIGTERM')
     fs.rmSync(TMP, { recursive: true, force: true })

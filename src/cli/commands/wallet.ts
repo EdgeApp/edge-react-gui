@@ -7,15 +7,15 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 function walletPath(sessionId: string, walletId: string, suffix = ''): string {
-  return `/v1/accounts/${encodeURIComponent(
+  return `/accounts/${encodeURIComponent(
     sessionId
   )}/wallets/${encodeURIComponent(walletId)}${suffix}`
 }
 
 const walletCreateCmd = command(
-  'wallet-create',
+  'create-currency-wallet',
   {
-    usage: 'wallet-create <walletType> [--name=<name>]',
+    usage: 'create-currency-wallet <walletType> [--name=<name>]',
     help: 'Create a new currency wallet',
     needsSession: true
   },
@@ -27,7 +27,7 @@ const walletCreateCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/wallets`,
+        `/accounts/${encodeURIComponent(sessionId)}/create-currency-wallet`,
         { walletType: args.positional, name: args.string('name') }
       )
     )
@@ -35,9 +35,9 @@ const walletCreateCmd = command(
 )
 
 const walletListCmd = command(
-  'wallet-list',
+  'currency-wallets',
   {
-    usage: 'wallet-list [--filter=active|archived|hidden|all] [--no-wait]',
+    usage: 'currency-wallets [--filter=active|archived|hidden|all] [--no-wait]',
     help: 'List wallets in the current account',
     needsSession: true
   },
@@ -53,9 +53,9 @@ const walletListCmd = command(
     query.set('waitForAll', String(!args.boolean('no-wait')))
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/wallets?${query.toString()}`
+        )}/currency-wallets?${query.toString()}`
       )
     )
   }
@@ -78,9 +78,9 @@ const walletInfoCmd = command(
 )
 
 const walletRenameCmd = command(
-  'wallet-rename',
+  'rename-wallet',
   {
-    usage: 'wallet-rename <walletId> --name=<name>',
+    usage: 'rename-wallet <walletId> --name=<name>',
     help: 'Rename a wallet',
     needsSession: true
   },
@@ -91,18 +91,21 @@ const walletRenameCmd = command(
     })
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.patch(walletPath(sessionId, args.positional!), {
-        name: args.requireString('name')
-      })
+      await ctx.client.post(
+        walletPath(sessionId, args.positional!, '/rename-wallet'),
+        {
+          name: args.requireString('name')
+        }
+      )
     )
   }
 )
 
 const walletStateCmd = command(
-  'wallet-state',
+  'change-wallet-states',
   {
     usage:
-      'wallet-state <walletId> [--archived=true|false] [--deleted=true|false] [--hidden=true|false] [--sort-index=N]',
+      'change-wallet-states <walletId> [--archived=true|false] [--deleted=true|false] [--hidden=true|false] [--sort-index=N]',
     help: 'Set wallet archived/deleted/hidden/sortIndex (account.changeWalletStates)',
     needsSession: true
   },
@@ -138,8 +141,8 @@ const walletStateCmd = command(
       )
     }
     const sessionId = requireSession(ctx)
-    await ctx.client.patch(
-      `/v1/accounts/${encodeURIComponent(sessionId)}/wallet-states`,
+    await ctx.client.post(
+      `/accounts/${encodeURIComponent(sessionId)}/change-wallet-states`,
       { [args.positional!]: state }
     )
     printJson({ ok: true })
@@ -147,10 +150,10 @@ const walletStateCmd = command(
 )
 
 const balanceCmd = command(
-  'balance',
+  'balance-map',
   {
-    usage: 'balance <walletId> [--token-id=<tokenId>]',
-    help: 'Show native and exchange balance for a wallet (or one token)',
+    usage: 'balance-map <walletId> [--token-id=<tokenId>]',
+    help: 'Show native and exchange balance-map for a wallet (or one token)',
     needsSession: true
   },
   async (ctx, argv) => {
@@ -160,18 +163,23 @@ const balanceCmd = command(
     })
     const sessionId = requireSession(ctx)
     const tokenId = args.string('token-id')
-    const suffix =
-      tokenId != null ? `/balances/${encodeURIComponent(tokenId)}` : '/balances'
-    printJson(
-      await ctx.client.get(walletPath(sessionId, args.positional!, suffix))
-    )
+    const result = await ctx.client.get<{
+      balances: Array<{ tokenId: string | null }>
+    }>(walletPath(sessionId, args.positional!, '/balance-map'))
+    if (tokenId == null) {
+      printJson(result)
+      return
+    }
+    printJson({
+      balances: result.balances.filter(entry => entry.tokenId === tokenId)
+    })
   }
 )
 
 const addressCmd = command(
-  'address',
+  'get-addresses',
   {
-    usage: 'address <walletId> [--token-id=<tokenId>]',
+    usage: 'get-addresses <walletId> [--token-id=<tokenId>]',
     help: 'Show receive addresses for a wallet',
     needsSession: true
   },
@@ -186,17 +194,17 @@ const addressCmd = command(
       tokenId != null ? `?tokenId=${encodeURIComponent(tokenId)}` : ''
     printJson(
       await ctx.client.get(
-        walletPath(sessionId, args.positional!, `/addresses${query}`)
+        walletPath(sessionId, args.positional!, `/get-addresses${query}`)
       )
     )
   }
 )
 
 const txListCmd = command(
-  'tx-list',
+  'get-transactions',
   {
     usage:
-      'tx-list <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]',
+      'get-transactions <walletId> [--token-id=<id>] [--limit=<n>] [--offset=<n>] [--start-date=<ISO-8601>] [--end-date=<ISO-8601>] [--search-string=<text>] [--fiat=USD] [--export-format=csv,qbo,bitwave] [--out=<path>] [--bitwave-account=<id>]',
     help: 'List or export wallet transactions (JSON by default; CSV/QBO/Bitwave via REST exportFormat)',
     needsSession: true
   },
@@ -270,7 +278,7 @@ const txListCmd = command(
       walletPath(
         sessionId,
         args.positional!,
-        `/transactions${qs !== '' ? `?${qs}` : ''}`
+        `/get-transactions${qs !== '' ? `?${qs}` : ''}`
       )
     )
 
@@ -331,7 +339,7 @@ const spendCmd = command(
   'spend',
   {
     usage:
-      'spend <walletId> --to=<address> --native-amount=<amount> [--token-id=<id>] [--dry-run]',
+      'spend <walletId> --to=<get-addresses> --native-amount=<amount> [--token-id=<id>] [--dry-run]',
     help: 'Send funds from a wallet',
     needsSession: true
   },
@@ -361,8 +369,9 @@ const spendCmd = command(
 const spendMaxCmd = command(
   'spend-max',
   {
-    usage: 'spend-max <walletId> --to=<address> [--token-id=<id>] [--dry-run]',
-    help: 'Send the entire spendable balance from a wallet',
+    usage:
+      'spend-max <walletId> --to=<get-addresses> [--token-id=<id>] [--dry-run]',
+    help: 'Send the entire spendable balance-map from a wallet',
     needsSession: true
   },
   async (ctx, argv) => {
@@ -383,9 +392,10 @@ const spendMaxCmd = command(
 )
 
 const maxSpendableCmd = command(
-  'max-spendable',
+  'get-max-spendable',
   {
-    usage: 'max-spendable <walletId> --to=<address> [--token-id=<id>]',
+    usage:
+      'get-max-spendable <walletId> --to=<get-addresses> [--token-id=<id>]',
     help: 'Calculate the maximum spendable amount for a wallet',
     needsSession: true
   },
@@ -397,7 +407,7 @@ const maxSpendableCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        walletPath(sessionId, args.positional!, '/max-spendable'),
+        walletPath(sessionId, args.positional!, '/get-max-spendable'),
         {
           to: args.requireString('to'),
           tokenId: args.string('token-id')
@@ -411,7 +421,7 @@ const makeSpendCmd = command(
   'make-spend',
   {
     usage:
-      "make-spend <walletId> --to=<address> --native-amount=<amount> [--token-id=<id>] | make-spend <walletId> --spend-info='<json>'",
+      "make-spend <walletId> --to=<get-addresses> --native-amount=<amount> [--token-id=<id>] | make-spend <walletId> --spend-info='<json>'",
     help: 'Build an unsigned spend; returns objectId (expires in 5 min)',
     needsSession: true
   },
@@ -500,7 +510,7 @@ const objectGetCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
         )}/objects/${encodeURIComponent(objectId!)}`
       )
@@ -521,19 +531,19 @@ const objectDeleteCmd = command(
     })
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.delete(
-        `/v1/accounts/${encodeURIComponent(
+      await ctx.client.post(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/objects/${encodeURIComponent(objectId!)}`
+        )}/objects/${encodeURIComponent(objectId!)}/delete`
       )
     )
   }
 )
 
 const tokenListCmd = command(
-  'token-list',
+  'wallet-tokens',
   {
-    usage: 'token-list <walletId>',
+    usage: 'wallet-tokens <walletId>',
     help: 'List available, enabled, and detected tokens for a wallet',
     needsSession: true
   },
@@ -546,78 +556,69 @@ const tokenListCmd = command(
   }
 )
 
-const tokenEnableCmd = command(
-  'token-enable',
+const changeEnabledTokenIdsCmd = command(
+  'change-enabled-token-ids',
   {
-    usage: 'token-enable <walletId> --token-id=<tokenId>',
-    help: 'Enable a token on a wallet',
+    usage:
+      'change-enabled-token-ids <walletId> (--token-ids=<a,b,c> | --add=<id> | --remove=<id>)',
+    help: 'Set the wallet\u2019s enabled token set (wallet.changeEnabledTokenIds)',
     needsSession: true
   },
   async (ctx, argv) => {
-    const args = parseCommandArgs(tokenEnableCmd, argv, {
+    const args = parseCommandArgs(changeEnabledTokenIdsCmd, argv, {
       positional: 'required',
-      flags: { 'token-id': 'string' }
+      flags: { 'token-ids': 'string', add: 'repeat', remove: 'repeat' }
     })
     const sessionId = requireSession(ctx)
+    const walletId = args.positional!
+    const listed = args.string('token-ids')
+    const added = args.strings('add')
+    const removed = args.strings('remove')
+
+    if (listed != null && (added.length > 0 || removed.length > 0)) {
+      throw new UsageError(
+        changeEnabledTokenIdsCmd,
+        '--token-ids cannot be combined with --add or --remove'
+      )
+    }
+
+    let tokenIds: string[]
+    if (listed != null) {
+      tokenIds = listed
+        .split(',')
+        .map(id => id.trim())
+        .filter(id => id !== '')
+    } else if (added.length > 0 || removed.length > 0) {
+      // --add / --remove are client-side sugar: core only has a full setter,
+      // so read the current set first and send back the whole list.
+      const current = await ctx.client.get<{ enabledTokenIds: string[] }>(
+        walletPath(sessionId, walletId, '/tokens')
+      )
+      const next = new Set(current.enabledTokenIds)
+      for (const id of added) next.add(id)
+      for (const id of removed) next.delete(id)
+      tokenIds = [...next]
+    } else {
+      throw new UsageError(
+        changeEnabledTokenIdsCmd,
+        'Provide --token-ids, --add, or --remove'
+      )
+    }
+
     printJson(
       await ctx.client.post(
-        walletPath(sessionId, args.positional!, '/enabled-tokens'),
-        { tokenId: args.requireString('token-id') }
+        walletPath(sessionId, walletId, '/change-enabled-token-ids'),
+        { tokenIds }
       )
     )
-  }
-)
-
-const tokenDisableCmd = command(
-  'token-disable',
-  {
-    usage: 'token-disable <walletId> --token-id=<tokenId>',
-    help: 'Disable a token on a wallet',
-    needsSession: true
-  },
-  async (ctx, argv) => {
-    const args = parseCommandArgs(tokenDisableCmd, argv, {
-      positional: 'required',
-      flags: { 'token-id': 'string' }
-    })
-    const sessionId = requireSession(ctx)
-    const tokenId = args.requireString('token-id')
-    printJson(
-      await ctx.client.delete(
-        walletPath(
-          sessionId,
-          args.positional!,
-          `/enabled-tokens/${encodeURIComponent(tokenId)}`
-        )
-      )
-    )
-  }
-)
-
-const tokenDetectedCmd = command(
-  'token-detected',
-  {
-    usage: 'token-detected <walletId>',
-    help: 'List detected but unenabled tokens for a wallet',
-    needsSession: true
-  },
-  async (ctx, argv) => {
-    const { positional: walletId } = parseCommandArgs(tokenDetectedCmd, argv, {
-      positional: 'required'
-    })
-    const sessionId = requireSession(ctx)
-    const info = await ctx.client.get<{ detectedTokenIds: string[] }>(
-      walletPath(sessionId, walletId!, '/tokens')
-    )
-    printJson({ detectedTokenIds: info.detectedTokenIds })
   }
 )
 
 const exportPublicCmd = command(
-  'export-public',
+  'get-display-public-key',
   {
-    usage: 'export-public <walletId>',
-    help: 'Export the public key for a wallet (xpub, address, etc.)',
+    usage: 'get-display-public-key <walletId>',
+    help: 'Export the public key for a wallet (xpub, get-addresses, etc.)',
     needsSession: true
   },
   async (ctx, argv) => {
@@ -627,18 +628,18 @@ const exportPublicCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/keys/${encodeURIComponent(walletId!)}/public-display`
+        )}/get-display-public-key?walletId=${encodeURIComponent(walletId!)}`
       )
     )
   }
 )
 
 const exportPrivateCmd = command(
-  'export-private',
+  'get-display-private-key',
   {
-    usage: 'export-private <walletId>',
+    usage: 'get-display-private-key <walletId>',
     help: 'Export the private key for a wallet (WIF, seed, etc.)',
     needsSession: true
   },
@@ -649,21 +650,21 @@ const exportPrivateCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/keys/${encodeURIComponent(walletId!)}/private-display`
+        )}/get-display-private-key?walletId=${encodeURIComponent(walletId!)}`
       )
     )
   }
 )
 
 command(
-  'plugin-list',
+  'currency-configs',
   {
-    usage: 'plugin-list',
-    help: 'List currency plugins available for wallet-create'
+    usage: 'currency-configs',
+    help: 'List currency plugins available for create-currency-wallet'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/currency-configs'))
+    printJson(await ctx.client.get('/currency-configs'))
   }
 )

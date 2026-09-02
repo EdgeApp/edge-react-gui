@@ -175,7 +175,7 @@ function txHandleResponse(
 export function registerSpendRoutes(router: Router): void {
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/max-spendable',
+    '/accounts/{sessionId}/wallets/{walletId}/get-max-spendable',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -189,7 +189,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/spend',
+    '/accounts/{sessionId}/wallets/{walletId}/spend',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -257,7 +257,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/make-spend',
+    '/accounts/{sessionId}/wallets/{walletId}/make-spend',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -275,7 +275,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/sign-tx',
+    '/accounts/{sessionId}/wallets/{walletId}/sign-tx',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -291,7 +291,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/broadcast-tx',
+    '/accounts/{sessionId}/wallets/{walletId}/broadcast-tx',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -307,7 +307,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/save-tx',
+    '/accounts/{sessionId}/wallets/{walletId}/save-tx',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -324,7 +324,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/accelerate',
+    '/accounts/{sessionId}/wallets/{walletId}/accelerate',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -362,7 +362,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/sweep',
+    '/accounts/{sessionId}/wallets/{walletId}/sweep-private-keys',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -386,7 +386,7 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/sign-bytes',
+    '/accounts/{sessionId}/wallets/{walletId}/sign-bytes',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
@@ -404,40 +404,36 @@ export function registerSpendRoutes(router: Router): void {
 
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/payment-protocol',
+    '/accounts/{sessionId}/wallets/{walletId}/get-payment-protocol-info',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const url = requireQueryString(ctx.query, 'url')
-      return await wallet.getPaymentProtocolInfo(url)
+      const paymentProtocolUrl = requireQueryString(
+        ctx.query,
+        'paymentProtocolUrl'
+      )
+      return await wallet.getPaymentProtocolInfo(paymentProtocolUrl)
     }
   )
 
   // Inspect / release ephemeral transaction handles
-  router.add(
-    'GET',
-    '/v1/accounts/{sessionId}/objects/{objectId}',
-    async ctx => {
-      const record = ctx.state.objects.get(ctx.params.objectId)
-      if (
-        record.sessionId != null &&
-        record.sessionId !== ctx.params.sessionId
-      ) {
-        throw engineError(
-          'OBJECT_SESSION_MISMATCH',
-          `objectId belongs to a different session`,
-          400
-        )
-      }
-      return {
-        ...ctx.state.objects.toInfo(record),
-        value: record.value
-      }
+  router.add('GET', '/accounts/{sessionId}/objects/{objectId}', async ctx => {
+    const record = ctx.state.objects.get(ctx.params.objectId)
+    if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
+      throw engineError(
+        'OBJECT_SESSION_MISMATCH',
+        `objectId belongs to a different session`,
+        400
+      )
     }
-  )
+    return {
+      ...ctx.state.objects.toInfo(record),
+      value: record.value
+    }
+  })
 
   router.add(
-    'DELETE',
-    '/v1/accounts/{sessionId}/objects/{objectId}',
+    'POST',
+    '/accounts/{sessionId}/objects/{objectId}/delete',
     async ctx => {
       const record = ctx.state.objects.get(ctx.params.objectId)
       if (

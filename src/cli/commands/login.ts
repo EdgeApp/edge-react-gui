@@ -14,9 +14,9 @@ interface Session {
 }
 
 const accountAvailableCmd = command(
-  'account-available',
+  'username-available',
   {
-    usage: 'account-available <username>',
+    usage: 'username-available <username>',
     help: 'Check whether a username is available'
   },
   async (ctx, argv) => {
@@ -27,16 +27,14 @@ const accountAvailableCmd = command(
     )
     const query = new URLSearchParams({ username: username! })
     if (ctx.challengeId != null) query.set('challengeId', ctx.challengeId)
-    printJson(
-      await ctx.client.get(`/v1/username-available?${query.toString()}`)
-    )
+    printJson(await ctx.client.get(`/username-available?${query.toString()}`))
   }
 )
 
 const accountCreateCmd = command(
-  'account-create',
+  'create-account',
   {
-    usage: 'account-create <username> --password=<pass> --pin=<pin>',
+    usage: 'create-account <username> --password=<pass> --pin=<pin>',
     help: 'Create a new Edge account'
   },
   async (ctx, argv) => {
@@ -44,7 +42,7 @@ const accountCreateCmd = command(
       positional: 'required',
       flags: { password: 'string', pin: 'string' }
     })
-    const session = await ctx.client.post<Session>('/v1/login/create', {
+    const session = await ctx.client.post<Session>('/create-account', {
       username: args.positional,
       password: args.requireString('password'),
       pin: args.requireString('pin'),
@@ -56,9 +54,9 @@ const accountCreateCmd = command(
 )
 
 command(
-  'account-key',
+  'get-login-key',
   {
-    usage: 'account-key',
+    usage: 'get-login-key',
     help: "Show the current account's login key",
     needsSession: true
   },
@@ -66,7 +64,7 @@ command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/login-key`
+        `/accounts/${encodeURIComponent(sessionId)}/get-login-key`
       )
     )
   }
@@ -82,15 +80,15 @@ command(
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.get(`/v1/accounts/${encodeURIComponent(sessionId)}`)
+      await ctx.client.get(`/accounts/${encodeURIComponent(sessionId)}`)
     )
   }
 )
 
 const passwordLoginCmd = command(
-  'password-login',
+  'login-with-password',
   {
-    usage: 'password-login <username> --password=<pass> [--otp=<code>]',
+    usage: 'login-with-password <username> --password=<pass> [--otp=<code>]',
     help: 'Log in with a username and password'
   },
   async (ctx, argv) => {
@@ -98,7 +96,7 @@ const passwordLoginCmd = command(
       positional: 'required',
       flags: { password: 'string', otp: 'string' }
     })
-    const session = await ctx.client.post<Session>('/v1/login/password', {
+    const session = await ctx.client.post<Session>('/login-with-password', {
       username: args.positional,
       password: args.requireString('password'),
       otp: args.string('otp'),
@@ -110,9 +108,9 @@ const passwordLoginCmd = command(
 )
 
 const keyLoginCmd = command(
-  'key-login',
+  'login-with-key',
   {
-    usage: 'key-login <username> --login-key=<key>',
+    usage: 'login-with-key <usernameOrLoginId> --login-key=<key>',
     help: 'Log in with a raw account login key'
   },
   async (ctx, argv) => {
@@ -120,8 +118,8 @@ const keyLoginCmd = command(
       positional: 'required',
       flags: { 'login-key': 'string' }
     })
-    const session = await ctx.client.post<Session>('/v1/login/key', {
-      username: args.positional,
+    const session = await ctx.client.post<Session>('/login-with-key', {
+      usernameOrLoginId: args.positional,
       loginKey: args.requireString('login-key'),
       challengeId: ctx.challengeId
     })
@@ -131,9 +129,9 @@ const keyLoginCmd = command(
 )
 
 const pinLoginCmd = command(
-  'pin-login',
+  'login-with-pin',
   {
-    usage: 'pin-login <username> --pin=<pin>',
+    usage: 'login-with-pin <usernameOrLoginId> --pin=<pin>',
     help: 'Log in with a device PIN'
   },
   async (ctx, argv) => {
@@ -141,8 +139,8 @@ const pinLoginCmd = command(
       positional: 'required',
       flags: { pin: 'string' }
     })
-    const session = await ctx.client.post<Session>('/v1/login/pin', {
-      username: args.positional,
+    const session = await ctx.client.post<Session>('/login-with-pin', {
+      usernameOrLoginId: args.positional,
       pin: args.requireString('pin'),
       challengeId: ctx.challengeId
     })
@@ -152,10 +150,10 @@ const pinLoginCmd = command(
 )
 
 const recovery2LoginCmd = command(
-  'recovery2-login',
+  'login-with-recovery2',
   {
     usage:
-      'recovery2-login <username> --recovery-key=<key> --answer=<text> [--answer=…]',
+      'login-with-recovery2 <username> --recovery-key=<key> --answer=<text> [--answer=…]',
     help: 'Log in with recovery-question answers'
   },
   async (ctx, argv) => {
@@ -167,7 +165,7 @@ const recovery2LoginCmd = command(
     if (answers.length === 0) {
       throw new UsageError(recovery2LoginCmd, 'Missing --answer')
     }
-    const session = await ctx.client.post<Session>('/v1/login/recovery2', {
+    const session = await ctx.client.post<Session>('/login-with-recovery2', {
       recovery2Key: args.requireString('recovery-key'),
       username: args.positional,
       answers
@@ -186,56 +184,58 @@ command(
   },
   async (ctx: CliContext) => {
     const sessionId = requireSession(ctx)
-    await ctx.client.delete(`/v1/accounts/${encodeURIComponent(sessionId)}`)
+    await ctx.client.post(`/accounts/${encodeURIComponent(sessionId)}/logout`)
     ctx.setSessionId(null)
     printJson({ ok: true })
   }
 )
 
 command(
-  'username-list',
+  'local-users',
   {
-    usage: 'username-list',
+    usage: 'local-users',
     help: 'List local usernames known to this device'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/users'))
+    printJson(await ctx.client.get('/local-users'))
   }
 )
 
 const usernameDeleteCmd = command(
-  'username-delete',
+  'forget-account',
   {
-    usage: 'username-delete <username>',
-    help: 'Forget a username (and its local credentials) on this device'
+    usage: 'forget-account <rootLoginId>',
+    help: 'Forget an account on this device (accepts a rootLoginId or username)'
   },
   async (ctx, argv) => {
-    const { positional: username } = parseCommandArgs(usernameDeleteCmd, argv, {
-      positional: 'required'
-    })
-    await ctx.client.delete(`/v1/users/${encodeURIComponent(username!)}`)
+    const { positional: rootLoginId } = parseCommandArgs(
+      usernameDeleteCmd,
+      argv,
+      { positional: 'required' }
+    )
+    await ctx.client.post('/forget-account', { rootLoginId })
     printJson({ ok: true })
   }
 )
 
 command(
-  'messages-fetch',
+  'fetch-login-messages',
   {
-    usage: 'messages-fetch',
+    usage: 'fetch-login-messages',
     help: 'Fetch login messages for all local users'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/login-messages'))
+    printJson(await ctx.client.get('/fetch-login-messages'))
   }
 )
 
 command(
-  'challenge-create',
+  'fetch-challenge',
   {
-    usage: 'challenge-create',
+    usage: 'fetch-challenge',
     help: 'Prefetch a CAPTCHA challenge'
   },
   async ctx => {
-    printJson(await ctx.client.post('/v1/challenge'))
+    printJson(await ctx.client.post('/fetch-challenge'))
   }
 )

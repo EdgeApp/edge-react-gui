@@ -48,7 +48,7 @@ export function registerRatesRoutes(router: Router): void {
    * getHistoricalFiatRate (shared GUI batching queue).
    * Missing date → current ISO timestamp sent to the rates server.
    */
-  router.add('POST', '/v1/rates/query', async ctx => {
+  router.add('POST', '/rates/query', async ctx => {
     const body = requireBodyObject(ctx.body)
     const cryptoRaw = body.crypto
     const fiatRaw = body.fiat
@@ -135,7 +135,7 @@ export function registerRatesRoutes(router: Router): void {
   })
 
   /** USD → native amount via getHistoricalCryptoRate. */
-  router.add('POST', '/v1/rates/usd-to-native', async ctx => {
+  router.add('POST', '/rates/usd-to-native', async ctx => {
     const body = requireBodyObject(ctx.body)
     const usdRaw = requireString(body, 'usdAmount')
     const usdAmount = Number(usdRaw)

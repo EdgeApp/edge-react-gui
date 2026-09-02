@@ -119,7 +119,8 @@ function getPending(pendingId: string): PendingRecord {
 }
 
 export function registerLoginRoutes(router: Router): void {
-  router.add('POST', '/v1/login/password', async ctx => {
+  /** context.loginWithPassword(username, password, opts) */
+  router.add('POST', '/login-with-password', async ctx => {
     const body = requireBodyObject(ctx.body)
     const username = requireString(body, 'username')
     const password = requireString(body, 'password')
@@ -131,11 +132,11 @@ export function registerLoginRoutes(router: Router): void {
     return await ctx.state.sessions.create(account, 'password')
   })
 
-  router.add('POST', '/v1/login/pin', async ctx => {
+  /** context.loginWithPIN(usernameOrLoginId, pin, opts) */
+  router.add('POST', '/login-with-pin', async ctx => {
     const body = requireBodyObject(ctx.body)
-    const loginId = optionalString(body, 'loginId')
-    const useLoginId = loginId != null
-    const usernameOrLoginId = loginId ?? requireString(body, 'username')
+    const usernameOrLoginId = requireString(body, 'usernameOrLoginId')
+    const useLoginId = optionalBoolean(body, 'useLoginId')
     const pin = requireString(body, 'pin')
     const account: EdgeAccount = await ctx.state.core.context.loginWithPIN(
       usernameOrLoginId,
@@ -145,20 +146,22 @@ export function registerLoginRoutes(router: Router): void {
     return await ctx.state.sessions.create(account, 'pin')
   })
 
-  router.add('POST', '/v1/login/key', async ctx => {
+  /** context.loginWithKey(usernameOrLoginId, loginKey, opts) */
+  router.add('POST', '/login-with-key', async ctx => {
     const body = requireBodyObject(ctx.body)
-    const username = requireString(body, 'username')
+    const usernameOrLoginId = requireString(body, 'usernameOrLoginId')
     const loginKey = requireString(body, 'loginKey')
     const useLoginId = optionalBoolean(body, 'useLoginId')
     const account: EdgeAccount = await ctx.state.core.context.loginWithKey(
-      username,
+      usernameOrLoginId,
       loginKey,
       { ...accountOptionsFromBody(body), useLoginId }
     )
     return await ctx.state.sessions.create(account, 'key')
   })
 
-  router.add('POST', '/v1/login/recovery2', async ctx => {
+  /** context.loginWithRecovery2(recovery2Key, username, answers, opts) */
+  router.add('POST', '/login-with-recovery2', async ctx => {
     const body = requireBodyObject(ctx.body)
     const recovery2Key = requireString(body, 'recovery2Key')
     const username = requireString(body, 'username')
@@ -173,7 +176,8 @@ export function registerLoginRoutes(router: Router): void {
     return await ctx.state.sessions.create(account, 'recovery2')
   })
 
-  router.add('POST', '/v1/login/create', async ctx => {
+  /** context.createAccount(opts) */
+  router.add('POST', '/create-account', async ctx => {
     const body = requireBodyObject(ctx.body)
     const username = optionalString(body, 'username')
     const password = optionalString(body, 'password')
@@ -187,7 +191,8 @@ export function registerLoginRoutes(router: Router): void {
     return await ctx.state.sessions.create(account, 'create')
   })
 
-  router.add('POST', '/v1/login/edge', async ctx => {
+  /** context.requestEdgeLogin(opts) */
+  router.add('POST', '/request-edge-login', async ctx => {
     const pending = await ctx.state.core.context.requestEdgeLogin({})
     const record: PendingRecord = {
       pendingId: '',
@@ -237,7 +242,8 @@ export function registerLoginRoutes(router: Router): void {
     return pendingSummary(record, handle.expiresAt)
   })
 
-  router.add('GET', '/v1/login/edge/{pendingId}', async ctx => {
+  /** Engine state for an in-flight requestEdgeLogin. */
+  router.add('GET', '/pending-edge-login/{pendingId}', async ctx => {
     let expiresAt: string | undefined
     try {
       const handle = ctx.state.objects.get<PendingRecord>(
@@ -272,34 +278,40 @@ export function registerLoginRoutes(router: Router): void {
     return pendingSummary(record, expiresAt)
   })
 
-  router.add('DELETE', '/v1/login/edge/{pendingId}', async ctx => {
-    const record = getPending(ctx.params.pendingId)
-    record.cancelled = true
-    try {
-      record.unwatchState?.()
-    } catch {
-      // best effort
-    }
-    // A completed edge login may already have created a session before the
-    // caller cancelled. Tear it down so DELETE cannot leave a logged-in
-    // orphan discoverable via GET /v1/sessions.
-    if (record.session != null) {
+  /** EdgePendingEdgeLogin.cancelRequest() */
+  router.add(
+    'POST',
+    '/pending-edge-login/{pendingId}/cancel-request',
+    async ctx => {
+      const record = getPending(ctx.params.pendingId)
+      record.cancelled = true
       try {
-        await ctx.state.sessions.forceLogout(
-          record.session.sessionId,
-          'cancelled'
-        )
+        record.unwatchState?.()
       } catch {
         // best effort
       }
-      record.session = undefined
+      // A completed edge login may already have created a session before the
+      // caller cancelled. Tear it down so cancelling cannot leave a logged-in
+      // orphan discoverable via GET /engine/sessions.
+      if (record.session != null) {
+        try {
+          await ctx.state.sessions.forceLogout(
+            record.session.sessionId,
+            'cancelled'
+          )
+        } catch {
+          // best effort
+        }
+        record.session = undefined
+      }
+      await ctx.state.objects.delete(ctx.params.pendingId)
+      pendingById.delete(ctx.params.pendingId)
+      return undefined
     }
-    await ctx.state.objects.delete(ctx.params.pendingId)
-    pendingById.delete(ctx.params.pendingId)
-    return undefined
-  })
+  )
 
-  router.add('GET', '/v1/sessions', ctx => {
+  /** Engine session registry; no core equivalent. */
+  router.add('GET', '/engine/sessions', ctx => {
     return ctx.state.sessions.list()
   })
 }

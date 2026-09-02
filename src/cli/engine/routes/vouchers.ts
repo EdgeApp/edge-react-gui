@@ -1,26 +1,25 @@
-import type { Router } from '../router'
-import { getAccount } from './helpers'
+import { requireBodyObject, type Router } from '../router'
+import { getAccount, requireString } from './helpers'
 
 export function registerVoucherRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/vouchers', ctx => {
-    return getAccount(ctx).pendingVouchers
+  /** account.pendingVouchers */
+  router.add('GET', '/accounts/{sessionId}/pending-vouchers', ctx => {
+    return { pendingVouchers: getAccount(ctx).pendingVouchers }
   })
 
-  router.add(
-    'POST',
-    '/v1/accounts/{sessionId}/vouchers/{voucherId}/approve',
-    async ctx => {
-      await getAccount(ctx).approveVoucher(ctx.params.voucherId)
-      return undefined
-    }
-  )
+  /** account.approveVoucher(voucherId) */
+  router.add('POST', '/accounts/{sessionId}/approve-voucher', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const voucherId = requireString(body, 'voucherId')
+    await getAccount(ctx).approveVoucher(voucherId)
+    return undefined
+  })
 
-  router.add(
-    'POST',
-    '/v1/accounts/{sessionId}/vouchers/{voucherId}/reject',
-    async ctx => {
-      await getAccount(ctx).rejectVoucher(ctx.params.voucherId)
-      return undefined
-    }
-  )
+  /** account.rejectVoucher(voucherId) */
+  router.add('POST', '/accounts/{sessionId}/reject-voucher', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const voucherId = requireString(body, 'voucherId')
+    await getAccount(ctx).rejectVoucher(voucherId)
+    return undefined
+  })
 }

@@ -8,7 +8,7 @@ command(
     help: 'Show engine pid, uptime, session count, and idle shutdown info'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/status'))
+    printJson(await ctx.client.get('/engine/status'))
   }
 )
 
@@ -19,7 +19,7 @@ command(
     help: 'Show engine appId, servers, testMode, and loaded plugins'
   },
   async ctx => {
-    printJson(await ctx.client.get('/v1/config'))
+    printJson(await ctx.client.get('/engine/config'))
   }
 )
 
@@ -30,6 +30,6 @@ command(
     help: 'Gracefully shut down the engine daemon'
   },
   async ctx => {
-    printJson(await ctx.client.post('/v1/shutdown'))
+    printJson(await ctx.client.post('/engine/stop'))
   }
 )

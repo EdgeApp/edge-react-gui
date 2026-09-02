@@ -156,7 +156,7 @@ async function main(): Promise<void> {
   try {
     // Config asserts tester servers
     let start = Date.now()
-    const config = await unixRequest(sock, 'GET', '/v1/config')
+    const config = await unixRequest(sock, 'GET', '/engine/config')
     const okConfig =
       config.status === 200 &&
       config.json.testMode === true &&
@@ -173,7 +173,7 @@ async function main(): Promise<void> {
 
     // Status over unix and TCP must match
     start = Date.now()
-    const statusUnix = await unixRequest(sock, 'GET', '/v1/status')
+    const statusUnix = await unixRequest(sock, 'GET', '/engine/status')
     const statusTcp = await new Promise<{ status: number; json: any }>(
       (resolve, reject) => {
         const req = http.request(
@@ -181,7 +181,7 @@ async function main(): Promise<void> {
             method: 'GET',
             host: '127.0.0.1',
             port: 9008,
-            path: '/v1/status'
+            path: '/engine/status'
           },
           res => {
             const chunks: Buffer[] = []
@@ -218,7 +218,7 @@ async function main(): Promise<void> {
 
     // Challenge + account create with CAPTCHA
     start = Date.now()
-    let create = await unixRequest(sock, 'POST', '/v1/login/create', {
+    let create = await unixRequest(sock, 'POST', '/create-account', {
       username: TEST_USER,
       password: TEST_PASS,
       pin: TEST_PIN
@@ -230,7 +230,7 @@ async function main(): Promise<void> {
       const { challengeId, challengeUri } = create.json.error.details
       const ok = await solveCaptcha(challengeUri)
       if (!ok) throw new Error('CAPTCHA solve failed')
-      create = await unixRequest(sock, 'POST', '/v1/login/create', {
+      create = await unixRequest(sock, 'POST', '/create-account', {
         username: TEST_USER,
         password: TEST_PASS,
         pin: TEST_PIN,
@@ -263,8 +263,8 @@ async function main(): Promise<void> {
     // The engine must settle the account before returning the session so
     // this create-account → login → create-wallet path is a first-try success.
     start = Date.now()
-    await unixRequest(sock, 'DELETE', `/v1/accounts/${sessionId}`)
-    let login = await unixRequest(sock, 'POST', '/v1/login/password', {
+    await unixRequest(sock, 'POST', `/accounts/${sessionId}/logout`)
+    let login = await unixRequest(sock, 'POST', '/login-with-password', {
       username: TEST_USER,
       password: TEST_PASS
     })
@@ -274,7 +274,7 @@ async function main(): Promise<void> {
     ) {
       const { challengeId, challengeUri } = login.json.error.details
       await solveCaptcha(challengeUri)
-      login = await unixRequest(sock, 'POST', '/v1/login/password', {
+      login = await unixRequest(sock, 'POST', '/login-with-password', {
         username: TEST_USER,
         password: TEST_PASS,
         challengeId
@@ -301,7 +301,7 @@ async function main(): Promise<void> {
     const wallet = await unixRequest(
       sock,
       'POST',
-      `/v1/accounts/${sid}/wallets`,
+      `/accounts/${sid}/create-currency-wallet`,
       {
         walletType: 'wallet:bitcoin',
         name: 'Test BTC'
@@ -319,8 +319,8 @@ async function main(): Promise<void> {
     const walletId = (wallet.json?.walletId ?? wallet.json?.id) as string
 
     start = Date.now()
-    const list = cli('wallet-list --filter=all')
-    record('cli wallet-list', start, list.code === 0)
+    const list = cli('currency-wallets --filter=all')
+    record('cli currency-wallets', start, list.code === 0)
 
     if (walletId != null) {
       start = Date.now()
@@ -328,29 +328,29 @@ async function main(): Promise<void> {
       record('cli wallet-info', start, info.code === 0)
 
       start = Date.now()
-      const bal = cli(`balance ${walletId}`)
-      record('cli balance', start, bal.code === 0)
+      const bal = cli(`balance-map ${walletId}`)
+      record('cli balance-map', start, bal.code === 0)
 
       start = Date.now()
-      const addr = cli(`address ${walletId}`)
-      record('cli address', start, addr.code === 0)
+      const addr = cli(`get-addresses ${walletId}`)
+      record('cli get-addresses', start, addr.code === 0)
     }
 
     // Session touch
     start = Date.now()
-    const touch = await unixRequest(sock, 'POST', `/v1/accounts/${sid}/touch`)
+    const touch = await unixRequest(sock, 'POST', `/accounts/${sid}/touch`)
     record('session touch', start, touch.status === 200)
 
     // Logout
     start = Date.now()
-    const logout = await unixRequest(sock, 'DELETE', `/v1/accounts/${sid}`)
+    const logout = await unixRequest(sock, 'POST', `/accounts/${sid}/logout`)
     record('logout', start, logout.status === 204 || logout.status === 200)
 
     // Edge login request returns lobbyId
     start = Date.now()
-    const edge = await unixRequest(sock, 'POST', '/v1/login/edge')
+    const edge = await unixRequest(sock, 'POST', '/request-edge-login')
     record(
-      'edge-login returns lobbyId',
+      'request-edge-login returns lobbyId',
       start,
       edge.status === 200 &&
         typeof edge.json?.lobbyId === 'string' &&
@@ -359,7 +359,11 @@ async function main(): Promise<void> {
       edge.json?.uri
     )
     if (edge.json?.pendingId != null) {
-      await unixRequest(sock, 'DELETE', `/v1/login/edge/${edge.json.pendingId}`)
+      await unixRequest(
+        sock,
+        'POST',
+        `/pending-edge-login/${edge.json.pendingId}/cancel-request`
+      )
     }
   } finally {
     engine.kill('SIGTERM')

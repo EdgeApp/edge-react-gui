@@ -6,10 +6,12 @@ import { findWallet, getMultiplier, parseTokenId } from '../resolve'
 import { requireBodyObject, type Router } from '../router'
 import {
   getAccount,
-  optionalBoolean,
   optionalQueryBoolean,
+  optionalQueryInt,
   optionalQueryString,
-  optionalString
+  optionalString,
+  requireBoolean,
+  requireString
 } from './helpers'
 
 type WalletFilter = 'active' | 'archived' | 'hidden' | 'all'
@@ -60,7 +62,8 @@ function summarizeWallet(wallet: EdgeCurrencyWallet): Record<string, unknown> {
 }
 
 export function registerWalletsRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/wallets', async ctx => {
+  /** account.currencyWallets */
+  router.add('GET', '/accounts/{sessionId}/currency-wallets', async ctx => {
     const account = getAccount(ctx)
     const filter = (optionalQueryString(ctx.query, 'filter') ??
       'active') as WalletFilter
@@ -68,57 +71,65 @@ export function registerWalletsRoutes(router: Router): void {
     if (waitForAll) await account.waitForAllWallets()
 
     const ids = walletIdsForFilter(account, filter)
-    const wallets = ids
+    const currencyWallets = ids
       .map(id => account.currencyWallets[id])
       .filter((wallet): wallet is EdgeCurrencyWallet => wallet != null)
       .map(summarizeWallet)
-    return { wallets }
+    return { currencyWallets }
   })
 
-  router.add('POST', '/v1/accounts/{sessionId}/wallets', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    // Accept both the CLI field (`walletType`) and the REST doc field (`type`).
-    const walletType =
-      optionalString(body, 'walletType') ?? optionalString(body, 'type')
-    if (walletType == null) {
-      throw engineError(
-        'BAD_REQUEST',
-        'Missing required field "walletType" (or "type")',
-        400
-      )
+  /** account.createCurrencyWallet(walletType, opts) */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/create-currency-wallet',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const walletType = requireString(body, 'walletType')
+      const name = optionalString(body, 'name')
+      const fiatCurrencyCode = optionalString(body, 'fiatCurrencyCode')
+      const importText = optionalString(body, 'importText')
+      const wallet = await getAccount(ctx).createCurrencyWallet(walletType, {
+        name,
+        fiatCurrencyCode,
+        importText
+      })
+      return summarizeWallet(wallet)
     }
-    const name = optionalString(body, 'name')
-    const fiatCurrencyCode = optionalString(body, 'fiatCurrencyCode')
-    const wallet = await getAccount(ctx).createCurrencyWallet(walletType, {
-      name,
-      fiatCurrencyCode
-    })
-    return summarizeWallet(wallet)
-  })
+  )
 
-  router.add('POST', '/v1/accounts/{sessionId}/wallets/batch', async ctx => {
-    const body = requireBodyObject(ctx.body)
-    const wallets = body.wallets
-    if (!Array.isArray(wallets)) {
-      throw engineError('BAD_REQUEST', 'Field "wallets" must be an array', 400)
+  /** account.createCurrencyWallets(createWallets) */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/create-currency-wallets',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const createWallets = body.createWallets
+      if (!Array.isArray(createWallets)) {
+        throw engineError(
+          'BAD_REQUEST',
+          'Field "createWallets" must be an array',
+          400
+        )
+      }
+      const results = await getAccount(ctx).createCurrencyWallets(createWallets)
+      return {
+        results: results.map(result =>
+          result.ok
+            ? { ok: true, wallet: summarizeWallet(result.result) }
+            : {
+                ok: false,
+                error:
+                  result.error instanceof Error
+                    ? result.error.message
+                    : String(result.error)
+              }
+        )
+      }
     }
-    const results = await getAccount(ctx).createCurrencyWallets(wallets)
-    return {
-      results: results.map(result =>
-        result.ok
-          ? { ok: true, wallet: summarizeWallet(result.result) }
-          : {
-              ok: false,
-              error:
-                result.error instanceof Error
-                  ? result.error.message
-                  : String(result.error)
-            }
-      )
-    }
-  })
+  )
 
-  router.add('GET', '/v1/accounts/{sessionId}/wallets/{walletId}', ctx => {
+  /** Engine composite: EdgeCurrencyWallet properties plus its currency config. */
+  router.add('GET', '/accounts/{sessionId}/wallets/{walletId}', ctx => {
     const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
     return {
       ...summarizeWallet(wallet),
@@ -128,47 +139,71 @@ export function registerWalletsRoutes(router: Router): void {
     }
   })
 
+  /** wallet.renameWallet(name) */
   router.add(
-    'PATCH',
-    '/v1/accounts/{sessionId}/wallets/{walletId}',
+    'POST',
+    '/accounts/{sessionId}/wallets/{walletId}/rename-wallet',
     async ctx => {
       const body = requireBodyObject(ctx.body)
+      const name = requireString(body, 'name')
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const name = optionalString(body, 'name')
-      if (name != null) await wallet.renameWallet(name)
-      const fiatCurrencyCode = optionalString(body, 'fiatCurrencyCode')
-      if (fiatCurrencyCode != null) {
-        await wallet.setFiatCurrencyCode(fiatCurrencyCode)
-      }
-      const paused = optionalBoolean(body, 'paused')
-      if (paused != null) await wallet.changePaused(paused)
-      return summarizeWallet(wallet)
+      await wallet.renameWallet(name)
+      return undefined
     }
   )
 
+  /** wallet.setFiatCurrencyCode(fiatCurrencyCode) */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/sync',
+    '/accounts/{sessionId}/wallets/{walletId}/set-fiat-currency-code',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const fiatCurrencyCode = requireString(body, 'fiatCurrencyCode')
+      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+      await wallet.setFiatCurrencyCode(fiatCurrencyCode)
+      return undefined
+    }
+  )
+
+  /** wallet.changePaused(paused) */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/wallets/{walletId}/change-paused',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const paused = requireBoolean(body, 'paused')
+      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+      await wallet.changePaused(paused)
+      return undefined
+    }
+  )
+
+  /** wallet.sync() */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/wallets/{walletId}/sync',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       await wallet.sync()
-      return { ok: true }
+      return undefined
     }
   )
 
+  /** wallet.resyncBlockchain() */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/resync',
+    '/accounts/{sessionId}/wallets/{walletId}/resync-blockchain',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       await wallet.resyncBlockchain()
-      return { ok: true }
+      return undefined
     }
   )
 
+  /** wallet.split(splitWallets) */
   router.add(
     'POST',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/split',
+    '/accounts/{sessionId}/wallets/{walletId}/split',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const splitWallets = body.splitWallets
@@ -197,30 +232,20 @@ export function registerWalletsRoutes(router: Router): void {
     }
   )
 
+  /** wallet.dumpData() */
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/dump',
+    '/accounts/{sessionId}/wallets/{walletId}/dump-data',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       return await wallet.dumpData()
     }
   )
 
+  /** wallet.balanceMap */
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/splittable-types',
-    async ctx => {
-      const account = getAccount(ctx)
-      // Ensures the walletId is valid & belongs to this account:
-      findWallet(account, ctx.params.walletId)
-      const types = await account.listSplittableWalletTypes(ctx.params.walletId)
-      return { types }
-    }
-  )
-
-  router.add(
-    'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/balances',
+    '/accounts/{sessionId}/wallets/{walletId}/balance-map',
     ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const balances = [...wallet.balanceMap.entries()].map(
@@ -242,29 +267,15 @@ export function registerWalletsRoutes(router: Router): void {
     }
   )
 
+  /** wallet.getAddresses(opts) */
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/balances/{tokenId}',
-    ctx => {
-      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
-      const tokenId = parseTokenId(ctx.params.tokenId)
-      const nativeAmount = wallet.balanceMap.get(tokenId) ?? '0'
-      const multiplier = getMultiplier(wallet, tokenId)
-      return {
-        tokenId,
-        nativeAmount,
-        displayAmount: div(nativeAmount, multiplier, 18)
-      }
-    }
-  )
-
-  router.add(
-    'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/addresses',
+    '/accounts/{sessionId}/wallets/{walletId}/get-addresses',
     async ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-      const addresses = await wallet.getAddresses({ tokenId })
+      const forceIndex = optionalQueryInt(ctx.query, 'forceIndex')
+      const addresses = await wallet.getAddresses({ tokenId, forceIndex })
       return { addresses }
     }
   )

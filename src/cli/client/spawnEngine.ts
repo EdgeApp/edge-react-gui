@@ -40,7 +40,7 @@ async function sleep(ms: number): Promise<void> {
 async function pingEngine(socketPath: string): Promise<boolean> {
   try {
     const client = new ApiClient({ socketPath, timeoutMs: 3000 })
-    await client.get('/v1/status')
+    await client.get('/engine/status')
     return true
   } catch {
     return false
@@ -49,7 +49,7 @@ async function pingEngine(socketPath: string): Promise<boolean> {
 
 async function warnIfEngineLocaleDiffers(client: ApiClient): Promise<void> {
   try {
-    const status = await client.get<{ locale?: string }>('/v1/status')
+    const status = await client.get<{ locale?: string }>('/engine/status')
     const wanted = getAppliedLocale().languageTag
     if (
       status.locale != null &&

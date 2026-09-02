@@ -3,24 +3,24 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 command(
-  'otp-status',
+  'otp-key',
   {
-    usage: 'otp-status',
+    usage: 'otp-key',
     help: 'Show OTP (two-factor) status for the current account',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.get(`/v1/accounts/${encodeURIComponent(sessionId)}/otp`)
+      await ctx.client.get(`/accounts/${encodeURIComponent(sessionId)}/otp-key`)
     )
   }
 )
 
 const otpEnableCmd = command(
-  'otp-enable',
+  'enable-otp',
   {
-    usage: 'otp-enable [--timeout=<seconds>]',
+    usage: 'enable-otp [--timeout=<seconds>]',
     help: 'Enable OTP; optional timeout is the reset window in seconds',
     needsSession: true
   },
@@ -39,8 +39,8 @@ const otpEnableCmd = command(
       }
     }
     printJson(
-      await ctx.client.put(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/otp`,
+      await ctx.client.post(
+        `/accounts/${encodeURIComponent(sessionId)}/enable-otp`,
         { timeout }
       )
     )
@@ -48,50 +48,52 @@ const otpEnableCmd = command(
 )
 
 command(
-  'otp-disable',
+  'disable-otp',
   {
-    usage: 'otp-disable',
+    usage: 'disable-otp',
     help: 'Disable OTP for the current account',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
-    await ctx.client.delete(`/v1/accounts/${encodeURIComponent(sessionId)}/otp`)
+    await ctx.client.post(
+      `/accounts/${encodeURIComponent(sessionId)}/disable-otp`
+    )
     printJson({ ok: true })
   }
 )
 
 command(
-  'otp-reset-cancel',
+  'cancel-otp-reset',
   {
-    usage: 'otp-reset-cancel',
+    usage: 'cancel-otp-reset',
     help: 'Cancel a pending OTP reset',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
-    await ctx.client.delete(
-      `/v1/accounts/${encodeURIComponent(sessionId)}/otp/reset`
+    await ctx.client.post(
+      `/accounts/${encodeURIComponent(sessionId)}/cancel-otp-reset`
     )
     printJson({ ok: true })
   }
 )
 
 const otpResetRequestCmd = command(
-  'otp-reset-request',
+  'request-otp-reset',
   {
-    usage: 'otp-reset-request <username> --reset-token=<token>',
+    usage: 'request-otp-reset <username> --otp-reset-token=<token>',
     help: 'Request an OTP reset for a username'
   },
   async (ctx, argv) => {
     const args = parseCommandArgs(otpResetRequestCmd, argv, {
       positional: 'required',
-      flags: { 'reset-token': 'string' }
+      flags: { 'otp-reset-token': 'string' }
     })
     printJson(
-      await ctx.client.post('/v1/otp-reset', {
+      await ctx.client.post('/request-otp-reset', {
         username: args.positional,
-        resetToken: args.requireString('reset-token')
+        otpResetToken: args.requireString('otp-reset-token')
       })
     )
   }

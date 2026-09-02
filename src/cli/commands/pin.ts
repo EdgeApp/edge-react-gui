@@ -3,9 +3,9 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 const pinSetupCmd = command(
-  'pin-setup',
+  'change-pin',
   {
-    usage: 'pin-setup --pin=<pin>',
+    usage: 'change-pin --pin=<pin>',
     help: 'Create or change the device PIN',
     needsSession: true
   },
@@ -16,8 +16,8 @@ const pinSetupCmd = command(
     })
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.put(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/pin`,
+      await ctx.client.post(
+        `/accounts/${encodeURIComponent(sessionId)}/change-pin`,
         { pin: args.requireString('pin') }
       )
     )
@@ -25,15 +25,17 @@ const pinSetupCmd = command(
 )
 
 command(
-  'pin-delete',
+  'delete-pin',
   {
-    usage: 'pin-delete',
+    usage: 'delete-pin',
     help: 'Remove the device PIN',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
-    await ctx.client.delete(`/v1/accounts/${encodeURIComponent(sessionId)}/pin`)
+    await ctx.client.post(
+      `/accounts/${encodeURIComponent(sessionId)}/delete-pin`
+    )
     printJson({ ok: true })
   }
 )

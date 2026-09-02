@@ -3,9 +3,9 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 const lobbyLoginFetchCmd = command(
-  'lobby-login-fetch',
+  'fetch-lobby',
   {
-    usage: 'lobby-login-fetch <lobbyId>',
+    usage: 'fetch-lobby <lobbyId>',
     help: 'Fetch an Edge login request from a lobby',
     needsSession: true
   },
@@ -16,18 +16,18 @@ const lobbyLoginFetchCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/lobbies/${encodeURIComponent(lobbyId!)}`
+        )}/fetch-lobby?lobbyId=${encodeURIComponent(lobbyId!)}`
       )
     )
   }
 )
 
 const lobbyLoginApproveCmd = command(
-  'lobby-login-approve',
+  'approve-login-request',
   {
-    usage: 'lobby-login-approve <lobbyId>',
+    usage: 'approve-login-request <lobbyId>',
     help: "Approve a lobby's pending login request",
     needsSession: true
   },
@@ -40,9 +40,8 @@ const lobbyLoginApproveCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/v1/accounts/${encodeURIComponent(
-          sessionId
-        )}/lobbies/${encodeURIComponent(lobbyId!)}/approve`
+        `/accounts/${encodeURIComponent(sessionId)}/approve-login-request`,
+        { lobbyId }
       )
     )
   }

@@ -1,68 +1,52 @@
 import { requireBodyObject, type Router } from '../router'
-import { getAccount, requireString } from './helpers'
+import { getAccount, requireQueryString, requireString } from './helpers'
 
 export function registerDataStoreRoutes(router: Router): void {
-  router.add('GET', '/v1/accounts/{sessionId}/data-stores', async ctx => {
+  /** account.dataStore.listStoreIds() */
+  router.add('GET', '/accounts/{sessionId}/list-store-ids', async ctx => {
     const storeIds = await getAccount(ctx).dataStore.listStoreIds()
     return { storeIds }
   })
 
-  router.add(
-    'GET',
-    '/v1/accounts/{sessionId}/data-stores/{storeId}',
-    async ctx => {
-      const itemIds = await getAccount(ctx).dataStore.listItemIds(
-        ctx.params.storeId
-      )
-      return { itemIds }
-    }
-  )
+  /** account.dataStore.listItemIds(storeId) */
+  router.add('GET', '/accounts/{sessionId}/list-item-ids', async ctx => {
+    const storeId = requireQueryString(ctx.query, 'storeId')
+    const itemIds = await getAccount(ctx).dataStore.listItemIds(storeId)
+    return { itemIds }
+  })
 
-  router.add(
-    'DELETE',
-    '/v1/accounts/{sessionId}/data-stores/{storeId}',
-    async ctx => {
-      await getAccount(ctx).dataStore.deleteStore(ctx.params.storeId)
-      return undefined
-    }
-  )
+  /** account.dataStore.getItem(storeId, itemId) */
+  router.add('GET', '/accounts/{sessionId}/get-item', async ctx => {
+    const storeId = requireQueryString(ctx.query, 'storeId')
+    const itemId = requireQueryString(ctx.query, 'itemId')
+    const value = await getAccount(ctx).dataStore.getItem(storeId, itemId)
+    return { value }
+  })
 
-  router.add(
-    'GET',
-    '/v1/accounts/{sessionId}/data-stores/{storeId}/items/{itemId}',
-    async ctx => {
-      const value = await getAccount(ctx).dataStore.getItem(
-        ctx.params.storeId,
-        ctx.params.itemId
-      )
-      return { value }
-    }
-  )
+  /** account.dataStore.setItem(storeId, itemId, value) */
+  router.add('POST', '/accounts/{sessionId}/set-item', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const storeId = requireString(body, 'storeId')
+    const itemId = requireString(body, 'itemId')
+    const value = requireString(body, 'value')
+    await getAccount(ctx).dataStore.setItem(storeId, itemId, value)
+    return undefined
+  })
 
-  router.add(
-    'PUT',
-    '/v1/accounts/{sessionId}/data-stores/{storeId}/items/{itemId}',
-    async ctx => {
-      const body = requireBodyObject(ctx.body)
-      const value = requireString(body, 'value')
-      await getAccount(ctx).dataStore.setItem(
-        ctx.params.storeId,
-        ctx.params.itemId,
-        value
-      )
-      return undefined
-    }
-  )
+  /** account.dataStore.deleteItem(storeId, itemId) */
+  router.add('POST', '/accounts/{sessionId}/delete-item', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const storeId = requireString(body, 'storeId')
+    const itemId = requireString(body, 'itemId')
+    await getAccount(ctx).dataStore.deleteItem(storeId, itemId)
+    return undefined
+  })
 
-  router.add(
-    'DELETE',
-    '/v1/accounts/{sessionId}/data-stores/{storeId}/items/{itemId}',
-    async ctx => {
-      await getAccount(ctx).dataStore.deleteItem(
-        ctx.params.storeId,
-        ctx.params.itemId
-      )
-      return undefined
-    }
-  )
+  /** account.dataStore.deleteStore(storeId) */
+  router.add('POST', '/accounts/{sessionId}/delete-store', async ctx => {
+    const body = requireBodyObject(ctx.body)
+    const storeId = requireString(body, 'storeId')
+    await getAccount(ctx).dataStore.deleteStore(storeId)
+    return undefined
+  })
 }

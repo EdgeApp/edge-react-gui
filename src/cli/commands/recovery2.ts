@@ -3,10 +3,10 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 const recovery2SetupCmd = command(
-  'recovery2-setup',
+  'change-recovery',
   {
     usage:
-      'recovery2-setup --question=<q> --answer=<a> [--question= --answer=]…',
+      'change-recovery --question=<q> --answer=<a> [--question= --answer=]…',
     help: 'Set recovery questions and answers for the current account',
     needsSession: true
   },
@@ -25,8 +25,8 @@ const recovery2SetupCmd = command(
     }
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.put(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/recovery`,
+      await ctx.client.post(
+        `/accounts/${encodeURIComponent(sessionId)}/change-recovery`,
         { questions, answers }
       )
     )
@@ -34,9 +34,9 @@ const recovery2SetupCmd = command(
 )
 
 const recovery2QuestionsCmd = command(
-  'recovery2-questions',
+  'fetch-recovery2-questions',
   {
-    usage: 'recovery2-questions <username> --recovery-key=<key>',
+    usage: 'fetch-recovery2-questions <username> --recovery-key=<key>',
     help: "Show a user's recovery questions"
   },
   async (ctx, argv) => {
@@ -49,7 +49,7 @@ const recovery2QuestionsCmd = command(
       username: args.positional!
     })
     printJson(
-      await ctx.client.get(`/v1/recovery2-questions?${query.toString()}`)
+      await ctx.client.get(`/fetch-recovery2-questions?${query.toString()}`)
     )
   }
 )

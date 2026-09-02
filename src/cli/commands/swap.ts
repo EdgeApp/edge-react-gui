@@ -3,7 +3,7 @@ import { command, requireSession } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 function accountPath(sessionId: string, suffix: string): string {
-  return `/v1/accounts/${encodeURIComponent(sessionId)}${suffix}`
+  return `/accounts/${encodeURIComponent(sessionId)}${suffix}`
 }
 
 const ratesQueryCmd = command(
@@ -18,7 +18,7 @@ const ratesQueryCmd = command(
       flags: { body: 'string' }
     })
     const body = JSON.parse(args.requireString('body'))
-    printJson(await ctx.client.post('/v1/rates/query', body))
+    printJson(await ctx.client.post('/rates/query', body))
   }
 )
 
@@ -39,7 +39,7 @@ const ratesUsdToNativeCmd = command(
       }
     })
     printJson(
-      await ctx.client.post('/v1/rates/usd-to-native', {
+      await ctx.client.post('/rates/usd-to-native', {
         usdAmount: args.requireString('usd-amount'),
         pluginId: args.requireString('plugin-id'),
         tokenId: args.string('token-id') ?? null
@@ -49,10 +49,10 @@ const ratesUsdToNativeCmd = command(
 )
 
 const swapQuoteCmd = command(
-  'swap-quote',
+  'fetch-swap-quotes',
   {
     usage:
-      'swap-quote --from-wallet-id=<id> --to-wallet-id=<id> --native-amount=<n> [--quote-for=from|to|max] [--plugin-id=<id>] [--from-token-id=<id>] [--to-token-id=<id>]',
+      'fetch-swap-quotes --from-wallet-id=<id> --to-wallet-id=<id> --native-amount=<n> [--quote-for=from|to|max] [--plugin-id=<id>] [--from-token-id=<id>] [--to-token-id=<id>]',
     help: 'Fetch swap quotes; each quote is an objectId handle (5 min TTL)',
     needsSession: true
   },
@@ -71,7 +71,7 @@ const swapQuoteCmd = command(
     })
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.post(accountPath(sessionId, '/swap/quotes'), {
+      await ctx.client.post(accountPath(sessionId, '/fetch-swap-quotes'), {
         fromWalletId: args.requireString('from-wallet-id'),
         toWalletId: args.requireString('to-wallet-id'),
         fromTokenId: args.string('from-token-id') ?? null,
@@ -98,16 +98,16 @@ const swapQuoteGetCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        accountPath(sessionId, `/swap/quotes/${encodeURIComponent(objectId!)}`)
+        accountPath(sessionId, `/swap-quotes/${encodeURIComponent(objectId!)}`)
       )
     )
   }
 )
 
 const swapApproveCmd = command(
-  'swap-approve',
+  'approve-swap-quote',
   {
-    usage: 'swap-approve <objectId>',
+    usage: 'approve-swap-quote <objectId>',
     help: 'Approve/execute a staged swap quote and release the handle',
     needsSession: true
   },
@@ -120,7 +120,7 @@ const swapApproveCmd = command(
       await ctx.client.post(
         accountPath(
           sessionId,
-          `/swap/quotes/${encodeURIComponent(objectId!)}/approve`
+          `/swap-quotes/${encodeURIComponent(objectId!)}/approve`
         )
       )
     )
@@ -128,9 +128,9 @@ const swapApproveCmd = command(
 )
 
 const swapQuoteCloseCmd = command(
-  'swap-quote-close',
+  'close-swap-quote',
   {
-    usage: 'swap-quote-close <objectId>',
+    usage: 'close-swap-quote <objectId>',
     help: 'Close a staged swap quote without executing',
     needsSession: true
   },
@@ -140,8 +140,11 @@ const swapQuoteCloseCmd = command(
     })
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.delete(
-        accountPath(sessionId, `/swap/quotes/${encodeURIComponent(objectId!)}`)
+      await ctx.client.post(
+        accountPath(
+          sessionId,
+          `/swap-quotes/${encodeURIComponent(objectId!)}/close`
+        )
       )
     )
   }

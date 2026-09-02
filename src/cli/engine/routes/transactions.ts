@@ -36,7 +36,8 @@ import {
   getAccount,
   optionalQueryDate,
   optionalQueryInt,
-  optionalQueryString
+  optionalQueryString,
+  requireString
 } from './helpers'
 
 /**
@@ -53,9 +54,10 @@ function overlayDisplayMetadata(
 }
 
 export function registerTransactionRoutes(router: Router): void {
+  /** wallet.getTransactions(opts), plus engine paging, fiat fill and export. */
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/transactions',
+    '/accounts/{sessionId}/wallets/{walletId}/get-transactions',
     async ctx => {
       const account = getAccount(ctx)
       const wallet = findWallet(account, ctx.params.walletId)
@@ -219,49 +221,73 @@ export function registerTransactionRoutes(router: Router): void {
     }
   )
 
+  /** wallet.getNumTransactions(opts) */
   router.add(
     'GET',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/transactions/count',
-    async ctx => {
+    '/accounts/{sessionId}/wallets/{walletId}/get-num-transactions',
+    ctx => {
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
       const tokenId = parseTokenId(optionalQueryString(ctx.query, 'tokenId'))
-      const count = await wallet.getNumTransactions({ tokenId })
-      return { count }
+      const numTransactions = wallet.getNumTransactions({ tokenId })
+      return { numTransactions }
     }
   )
 
+  /** wallet.saveTxMetadata(opts) */
   router.add(
-    'PATCH',
-    '/v1/accounts/{sessionId}/wallets/{walletId}/transactions/{txid}',
+    'POST',
+    '/accounts/{sessionId}/wallets/{walletId}/save-tx-metadata',
     async ctx => {
       const body = requireBodyObject(ctx.body)
       const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+      const txid = requireString(body, 'txid')
       const tokenId = parseTokenId(
         typeof body.tokenId === 'string' ? body.tokenId : undefined
       )
-      const { txid } = ctx.params
-
-      if (body.metadata != null && typeof body.metadata === 'object') {
-        await wallet.saveTxMetadata({
-          txid,
-          tokenId,
-          metadata: body.metadata as EdgeMetadataChange
-        })
+      if (body.metadata == null || typeof body.metadata !== 'object') {
+        throw engineError(
+          'BAD_REQUEST',
+          'Missing required field "metadata"',
+          400
+        )
       }
+      await wallet.saveTxMetadata({
+        txid,
+        tokenId,
+        metadata: body.metadata as EdgeMetadataChange
+      })
+      return undefined
+    }
+  )
 
-      if (body.savedAction != null && typeof body.savedAction === 'object') {
-        const assetAction =
-          body.assetAction != null && typeof body.assetAction === 'object'
-            ? (body.assetAction as EdgeAssetAction)
-            : { assetActionType: 'transfer' as const }
-        await wallet.saveTxAction({
-          txid,
-          tokenId,
-          assetAction,
-          savedAction: body.savedAction as EdgeTxAction
-        })
+  /** wallet.saveTxAction(opts) */
+  router.add(
+    'POST',
+    '/accounts/{sessionId}/wallets/{walletId}/save-tx-action',
+    async ctx => {
+      const body = requireBodyObject(ctx.body)
+      const wallet = findWallet(getAccount(ctx), ctx.params.walletId)
+      const txid = requireString(body, 'txid')
+      const tokenId = parseTokenId(
+        typeof body.tokenId === 'string' ? body.tokenId : undefined
+      )
+      if (body.savedAction == null || typeof body.savedAction !== 'object') {
+        throw engineError(
+          'BAD_REQUEST',
+          'Missing required field "savedAction"',
+          400
+        )
       }
-
+      const assetAction =
+        body.assetAction != null && typeof body.assetAction === 'object'
+          ? (body.assetAction as EdgeAssetAction)
+          : { assetActionType: 'transfer' as const }
+      await wallet.saveTxAction({
+        txid,
+        tokenId,
+        assetAction,
+        savedAction: body.savedAction as EdgeTxAction
+      })
       return undefined
     }
   )

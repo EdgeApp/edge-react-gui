@@ -3,24 +3,26 @@ import { command, requireSession, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
 
 command(
-  'key-list',
+  'all-keys',
   {
-    usage: 'key-list',
+    usage: 'all-keys',
     help: 'List all keys in the account',
     needsSession: true
   },
   async ctx => {
     const sessionId = requireSession(ctx)
     printJson(
-      await ctx.client.get(`/v1/accounts/${encodeURIComponent(sessionId)}/keys`)
+      await ctx.client.get(
+        `/accounts/${encodeURIComponent(sessionId)}/all-keys`
+      )
     )
   }
 )
 
 const keyAddCmd = command(
-  'key-add',
+  'create-wallet',
   {
-    usage: "key-add --key-info='<key-info-json>'",
+    usage: "create-wallet --key-info='<key-info-json>'",
     help: 'Create a wallet from raw key JSON, e.g. {"type":"wallet:bitcoin","keys":{...}}',
     needsSession: true
   },
@@ -38,7 +40,7 @@ const keyAddCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.post(
-        `/v1/accounts/${encodeURIComponent(sessionId)}/keys`,
+        `/accounts/${encodeURIComponent(sessionId)}/create-wallet`,
         body
       )
     )
@@ -46,9 +48,9 @@ const keyAddCmd = command(
 )
 
 const keyGetCmd = command(
-  'key-get',
+  'get-raw-private-key',
   {
-    usage: 'key-get <walletId>',
+    usage: 'get-raw-private-key <walletId>',
     help: 'Read the raw private key material for a wallet',
     needsSession: true
   },
@@ -59,9 +61,9 @@ const keyGetCmd = command(
     const sessionId = requireSession(ctx)
     printJson(
       await ctx.client.get(
-        `/v1/accounts/${encodeURIComponent(
+        `/accounts/${encodeURIComponent(
           sessionId
-        )}/keys/${encodeURIComponent(walletId!)}/private-raw`
+        )}/get-raw-private-key?walletId=${encodeURIComponent(walletId!)}`
       )
     )
   }

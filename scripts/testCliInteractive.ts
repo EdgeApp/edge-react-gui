@@ -39,8 +39,8 @@ async function main(): Promise<void> {
   try {
     run('engine-status')
     run('engine-config')
-    run('username-list')
-    run('challenge-create')
+    run('local-users')
+    run('fetch-challenge')
     console.log('PASS interactive smoke')
   } finally {
     engine.kill('SIGTERM')
