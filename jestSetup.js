@@ -36,8 +36,9 @@ require('react-native-reanimated').setUpTests()
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 
-// The RN 0.85 jest preset returns undefined from Keyboard.addListener; return a
-// removable subscription so effect cleanups (showListener.remove()) don't throw.
+// The NativeEventEmitter automock above makes Keyboard.addListener return
+// undefined; return a removable subscription so effect cleanups
+// (showListener.remove()) don't throw.
 require('react-native').Keyboard.addListener = () => ({ remove: () => {} })
 
 for (const log in global.console) {
