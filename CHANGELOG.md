@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: A "no tokens match your search" message on the Manage Tokens search. An address for a token the wallet's list does not carry used to render an empty scene, which is indistinguishable from a search that is not working.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
