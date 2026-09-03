@@ -6,7 +6,7 @@ import {
   exportTransactionsToBitwave,
   exportTransactionsToCSVInner,
   exportTransactionsToQBO
-} from '../../actions/TransactionExportActions'
+} from '../../util/txExport'
 
 const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', {
   encoding: 'utf8'
