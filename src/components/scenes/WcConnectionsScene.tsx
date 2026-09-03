@@ -41,7 +41,7 @@ export interface WcConnectionsParams {
   uri?: string
 }
 
-export const WcConnectionsScene = (props: Props) => {
+export const WcConnectionsScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { uri } = route.params ?? {}
   const theme = useTheme()
@@ -57,7 +57,7 @@ export const WcConnectionsScene = (props: Props) => {
 
   useMount(() => {
     if (uri != null)
-      onScanSuccess(uri).catch(err => {
+      onScanSuccess(uri).catch((err: unknown) => {
         showError(err)
       })
   })
@@ -72,7 +72,7 @@ export const WcConnectionsScene = (props: Props) => {
     'WcConnectionsScene'
   )
 
-  const onScanSuccess = async (qrResult: string) => {
+  const onScanSuccess = async (qrResult: string): Promise<void> => {
     setConnecting(true)
     try {
       let proposal = sessionProposal.get(qrResult)
@@ -119,11 +119,13 @@ export const WcConnectionsScene = (props: Props) => {
     setConnecting(false)
   }
 
-  const handleActiveConnectionPress = (wcConnectionInfo: WcConnectionInfo) => {
+  const handleActiveConnectionPress = (
+    wcConnectionInfo: WcConnectionInfo
+  ): void => {
     navigation.navigate('wcDisconnect', { wcConnectionInfo })
   }
 
-  const handleNewConnectionPress = async () => {
+  const handleNewConnectionPress = async (): Promise<void> => {
     if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       await Promise.resolve()
     } else {
