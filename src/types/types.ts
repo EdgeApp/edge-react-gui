@@ -205,6 +205,7 @@ export const asReviewTriggerData = asObject({
 })
 
 const asLocalAccountSettingsInner = asObject({
+  cameraScamWarningShown: asMaybe(asBoolean, false),
   contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
   notifState: asMaybe(asNotifState, asNotifState({})),
