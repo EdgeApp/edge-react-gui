@@ -15,9 +15,14 @@ import {
   type PasswordReminder,
   type SpendingLimits
 } from '../types/types'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  readLocalAccountSettingsFromDisk,
+  writeLocalAccountSettingsToDisk
+} from '../util/localAccountSettings'
 import { logActivity } from '../util/logger'
 
-export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+export { LOCAL_SETTINGS_FILENAME }
 
 // Long enough to read the instructions in the balance-hidden toast:
 const TOAST_HIDE_MS = 5000
@@ -304,21 +309,10 @@ export const readLocalAccountSettings = async (
     return localAccountSettings
   }
 
-  try {
-    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
-    const json = JSON.parse(text)
-    const settings = asLocalAccountSettings(json)
-    emitAccountSettings(settings)
-    readSettingsFromDisk = true
-    return settings
-  } catch (error: unknown) {
-    // If Settings.json doesn't exist yet, return defaults without writing.
-    // Defaults can be derived from cleaners. Only write when values change.
-    const defaults = asLocalAccountSettings({})
-    emitAccountSettings(defaults)
-    readSettingsFromDisk = true
-    return defaults
-  }
+  const settings = await readLocalAccountSettingsFromDisk(account)
+  emitAccountSettings(settings)
+  readSettingsFromDisk = true
+  return settings
 }
 
 export const writeLocalAccountSettings = async (
@@ -327,9 +321,6 @@ export const writeLocalAccountSettings = async (
 ): Promise<LocalAccountSettings> => {
   // Refresh cache, notify callers
   emitAccountSettings(settings)
-
-  const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
-
+  await writeLocalAccountSettingsToDisk(account, settings)
   return settings
 }
