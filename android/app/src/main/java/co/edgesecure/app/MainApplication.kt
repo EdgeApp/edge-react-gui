@@ -129,6 +129,11 @@ class MainApplication :
           // dimmed after becoming enabled, and labels render at a stale font
           // size. Keep them off, matching how the app rendered before the
           // architecture switch.
+          // The master recycling switch defaults off in 0.86.0, but pin it so
+          // a future point release cannot flip it on and silently activate
+          // the image recycler (which defaults on under the master switch):
+          override fun enableViewRecycling(): Boolean = false
+
           override fun enableViewRecyclingForText(): Boolean = false
 
           override fun enableViewRecyclingForView(): Boolean = false
