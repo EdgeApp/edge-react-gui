@@ -371,7 +371,7 @@
       "command": "change-paused",
       "method": "POST",
       "path": "/account/{sessionId}/wallet/change-paused",
-      "usage": "change-paused --wallet-id=<walletId> --paused=<paused>",
+      "usage": "change-paused --wallet-id=<walletId> --paused=true|false",
       "help": "Pause or resume a wallet engine.",
       "needsSession": true,
       "args": [
@@ -426,7 +426,7 @@
       "command": "change-recovery",
       "method": "POST",
       "path": "/account/{sessionId}/change-recovery",
-      "usage": "change-recovery --question=<questions> --answer=<answers>",
+      "usage": "change-recovery --question=<questions> … --answer=<answers> …",
       "help": "Set recovery questions and answers.",
       "needsSession": true,
       "args": [
@@ -623,7 +623,7 @@
       "command": "currency-wallets",
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
-      "usage": "currency-wallets [--filter=<filter>]",
+      "usage": "currency-wallets [--filter=active|archived|hidden|all]",
       "help": "List the account's wallets.",
       "needsSession": true,
       "args": [

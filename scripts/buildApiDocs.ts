@@ -18,6 +18,7 @@ import path from 'path'
 import { groupOrder, sectionOrder } from '../docs/api/groups'
 import { CLI_EXIT_CODES, errorCodes } from '../docs/api/shared'
 import { SCOPE_PARAMS } from '../src/cli/engine/doc'
+import { usageFor } from './cliUsage'
 import {
   type ExtractedCli,
   type ExtractedField,
@@ -267,35 +268,6 @@ function coreLine(e: ExtractedRoute): string {
   )}</code>${note}</p>${extra}`
 }
 
-function kebabOf(name: string): string {
-  return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase())
-}
-
-function usageString(e: ExtractedRoute): string {
-  const cli = e.cli
-  if (cli == null) return ''
-  const parts = [cli.command]
-  for (const p of e.pathParams) {
-    if (p !== 'sessionId') parts.push(`<${p}>`)
-  }
-  if (cli.positional != null) parts.push(`<${cli.positional}>`)
-  if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)
-  const fields = [...(e.query ?? []), ...(e.body ?? [])]
-  for (const f of fields) {
-    if (f.name === cli.positional) continue
-    if (cli.bodyFlag != null) continue
-    const mapped = cli.flags.find(x => x.maps === f.name)
-    const name = mapped?.name ?? kebabOf(f.name)
-    const token = `--${name}=<${f.name}>`
-    parts.push(f.optional ? `[${token}]` : token)
-  }
-  for (const x of cli.extra) {
-    const token = x.kind === 'boolean' ? `--${x.name}` : `--${x.name}=<value>`
-    parts.push(x.required === true ? token : `[${token}]`)
-  }
-  return parts.join(' ')
-}
-
 function cliBlock(e: ExtractedRoute): string {
   if (e.cli == null) {
     return `<div class="pane cli none"><h4>Command line</h4>
@@ -319,7 +291,7 @@ function cliBlock(e: ExtractedRoute): string {
           .join('')}</tbody></table>`
   return `<div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>${esc(usageString(e))}</code></pre>
+    <pre class="usage"><code>${esc(usageFor(e, e.cli))}</code></pre>
     ${extras}
     ${cli.notes != null ? `<div class="note">${mdBlock(cli.notes)}</div>` : ''}
   </div>`
@@ -495,7 +467,7 @@ function buildOpenApi(): Record<string, unknown> {
           : `**Core call:** _none — ${e.coreNote ?? ''}_\n\n`
       const cliMd =
         e.cli != null
-          ? '**Command line**\n\n```\n' + usageString(e) + '\n```\n\n'
+          ? '**Command line**\n\n```\n' + usageFor(e, e.cli) + '\n```\n\n'
           : '_No `edge-cli` command; REST only._\n\n'
       const op: Record<string, unknown> = {
         operationId: e.id,
