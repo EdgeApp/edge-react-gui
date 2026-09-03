@@ -144,9 +144,18 @@ index 462a84a..3e65f32 100644
              fontWeight: 'normal'
          });
 diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
-index e70234c..1a08cb6 100644
+index e70234c..d14a3b2 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
+@@ -3,7 +3,7 @@
+  * edge-login-ui-rn!
+  */
+ import * as React from 'react';
+-import { BackHandler, Dimensions, View } from 'react-native';
++import { BackHandler, Dimensions, Keyboard, Platform, View } from 'react-native';
+ import { Gesture, GestureDetector, ScrollView } from 'react-native-gesture-handler';
+ import { cacheStyles } from 'react-native-patina';
+ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 @@ -13,7 +13,7 @@ import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeed
  import { CloseIcon } from '../icons/ThemedIcons';
  import { useTheme } from '../services/ThemeContext';
@@ -156,7 +165,42 @@ index e70234c..1a08cb6 100644
  const BACKGROUND_ALPHA = 0.7;
  const SCROLL_INDICATOR_INSET_FIX = { right: 1 };
  const safeAreaGap = 64; // Overkill to avoid bottom of screen
-@@ -123,7 +123,13 @@ const getStyles = cacheStyles((theme) => ({
+@@ -66,6 +66,22 @@ export function EdgeModal(props) {
+             backHandler.remove();
+         };
+     }, [handleCancel]);
++    // Track the keyboard on the JS thread. This file cannot use
++    // react-native-keyboard-controller like edge-react-gui's copy: the host
++    // app's KeyboardProvider mounts below this library's Airship layer, so
++    // listen to React Native's own keyboard events instead:
++    // Seed from the live state, since a modal can mount while the keyboard is
++    // already open. (Optional call: isVisible is missing on very old RN.)
++    const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(() => { var _a, _b; return (_b = (_a = Keyboard.isVisible) === null || _a === void 0 ? void 0 : _a.call(Keyboard)) !== null && _b !== void 0 ? _b : false; });
++    React.useEffect(() => {
++        const isIos = Platform.OS === 'ios';
++        const showListener = Keyboard.addListener(isIos ? 'keyboardWillShow' : 'keyboardDidShow', () => setIsKeyboardOpen(true));
++        const hideListener = Keyboard.addListener(isIos ? 'keyboardWillHide' : 'keyboardDidHide', () => setIsKeyboardOpen(false));
++        return () => {
++            showListener.remove();
++            hideListener.remove();
++        };
++    }, []);
+     const gesture = Gesture.Pan()
+         .onUpdate(e => {
+         offset.value = e.translationY;
+@@ -86,7 +102,10 @@ export function EdgeModal(props) {
+     const modalStyle = useAnimatedStyle(() => ({
+         transform: [{ translateY: Math.max(-dragSlop, offset.value) }]
+     }));
+-    const bottomGap = safeAreaGap + dragSlop;
++    // The gap that lets the modal bleed past the bottom of the screen is
++    // rendered behind the keyboard, so drop it while the keyboard is open or
++    // it pushes the modal's own content underneath:
++    const bottomGap = (isKeyboardOpen ? 0 : safeAreaGap) + dragSlop;
+     const isHeaderless = title == null && onCancel == null;
+     const isCustomTitle = title != null && typeof title !== 'string';
+     const modalLayout = {
+@@ -123,7 +142,13 @@ const getStyles = cacheStyles((theme) => ({
      },
      modal: {
          alignSelf: 'flex-end',
@@ -314,8 +358,29 @@ index 8a5c3f3..e4699a4 100644
  import { cacheStyles } from 'react-native-patina';
  import { sprintf } from 'sprintf-js';
  import { maybeRouteComplete } from '../../../actions/LoginInitActions';
+diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/EdgeText.js b/node_modules/edge-login-ui-rn/lib/components/themed/EdgeText.js
+index b8257fd..6af380a 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/themed/EdgeText.js
++++ b/node_modules/edge-login-ui-rn/lib/components/themed/EdgeText.js
+@@ -45,11 +45,15 @@ export const EdgeText = (props) => {
+     const { children, style, disableFontScaling = false } = props, rest = __rest(props, ["children", "style", "disableFontScaling"]);
+     const theme = useTheme();
+     const styles = getStyles(theme);
++    // Android's new architecture shrinks auto-sized text far below
++    // `minimumFontScale`, leaving labels illegibly small, so let text truncate
++    // there instead of shrinking:
++    const autoShrink = Platform.OS !== 'android' && !disableFontScaling;
+     let { numberOfLines = 1 } = props;
+     if (typeof children === 'string' && children.includes('\n')) {
+         numberOfLines = numberOfLines + ((_a = children.match(/\n/g)) !== null && _a !== void 0 ? _a : []).length;
+     }
+-    return (React.createElement(Text, Object.assign({ allowFontScaling: false, style: [styles.common, style, androidAdjustTextStyle(theme)], numberOfLines: numberOfLines, adjustsFontSizeToFit: !disableFontScaling, minimumFontScale: 0.65 }, rest), children));
++    return (React.createElement(Text, Object.assign({ allowFontScaling: false, style: [styles.common, style, androidAdjustTextStyle(theme)], numberOfLines: numberOfLines, adjustsFontSizeToFit: autoShrink, minimumFontScale: 0.65 }, rest), children));
+ };
+ /** Makes the contents of an `EdgeText` or `Paragraph` smaller (0.75rem).
+  * Unless used within a `Paragraph` block, provides no outer spacing. */
 diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js b/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
-index 324ee0f..7f0fd48 100644
+index 324ee0f..22c791a 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/themed/FilledTextInput.js
 @@ -83,8 +83,9 @@ export const FilledTextInput = React.forwardRef((props, ref) => {
@@ -330,6 +395,36 @@ index 324ee0f..7f0fd48 100644
      React.useEffect(() => {
          disableAnimation.value = withTiming(disabled ? 1 : 0);
      }, [disableAnimation, disabled]);
+@@ -312,7 +313,8 @@ const PlaceholderText = styled(Animated.Text)(theme => ({ disableAnimation, focu
+             const fontSizeScaled = oneRem * scale.value * 0.75;
+             return {
+                 color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
+-                fontSize: interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled])
++                // Clamp in case an animated scale passes through 0:
++                fontSize: Math.max(interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled]), 1)
+             };
+         })
+     ];
+@@ -337,7 +339,8 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)(theme => ({ dis
+         },
+         useAnimatedStyle(() => ({
+             color: interpolateTextColor(focusAnimation, disableAnimation),
+-            fontSize: scale.value * rem
++            // Clamp in case an animated scale passes through 0:
++            fontSize: Math.max(scale.value * rem, 1)
+         }))
+     ];
+ });
+@@ -361,7 +364,8 @@ const StyledNumericInput = styledWithRef(NumericInput)(theme => ({ disableAnimat
+         },
+         useAnimatedStyle(() => ({
+             color: interpolateTextColor(focusAnimation, disableAnimation),
+-            fontSize: scale.value * rem
++            // Clamp in case an animated scale passes through 0:
++            fontSize: Math.max(scale.value * rem, 1)
+         }))
+     ];
+ });
 diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js b/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
 index 5fed31f..ad8aea7 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/themed/PinButton.js
@@ -342,7 +437,7 @@ index 5fed31f..ad8aea7 100644
  import { usePendingPress } from '../../hooks/usePendingPress';
  import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides';
 diff --git a/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js b/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
-index 7288462..466b83d 100644
+index 7288462..e6f001e 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/themed/SimpleTextInput.js
 @@ -69,8 +69,9 @@ export const SimpleTextInput = React.forwardRef((props, ref) => {
@@ -357,6 +452,26 @@ index 7288462..466b83d 100644
      React.useEffect(() => {
          disableAnimation.value = withTiming(disabled ? 1 : 0);
      }, [disableAnimation, disabled]);
+@@ -183,7 +184,8 @@ const PlaceholderText = styled(Animated.Text)(theme => ({ disableAnimation, focu
+             return {
+                 opacity: interpolate(hasValueAnimation.value, [0, 1], [1, 0]),
+                 color: interpolatePlaceholderTextColor(focusAnimation, disableAnimation),
+-                fontSize: scale.value * rem
++                // Clamp in case an animated scale passes through 0:
++                fontSize: Math.max(scale.value * rem, 1)
+             };
+         })
+     ];
+@@ -202,7 +204,8 @@ const InputField = styledWithRef(AnimatedTextInput)(theme => ({ disableAnimation
+         },
+         useAnimatedStyle(() => ({
+             color: interpolateTextColor(focusAnimation, disableAnimation),
+-            fontSize: scale.value * rem
++            // Clamp in case an animated scale passes through 0:
++            fontSize: Math.max(scale.value * rem, 1)
+         }))
+     ];
+ });
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
 index 1ce7388..d6101c1 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.d.ts
