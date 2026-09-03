@@ -798,10 +798,10 @@ const PlaceholderText = styled(Animated.Text)<{
               focusAnimation,
               disableAnimation
             ),
-            fontSize: interpolate(
-              shift.value,
-              [0, 1],
-              [fontSizeBase, fontSizeScaled]
+            // Clamp in case an animated scale passes through 0:
+            fontSize: Math.max(
+              interpolate(shift.value, [0, 1], [fontSizeBase, fontSizeScaled]),
+              1
             )
           }
         })
