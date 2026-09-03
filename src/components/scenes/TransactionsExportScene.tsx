@@ -1,4 +1,3 @@
-import { asBoolean, asObject, asString } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
@@ -28,6 +27,13 @@ import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import {
+  EXPORT_TX_INFO_FILE,
+  type ExportTxInfo,
+  exportTxInfoKey,
+  mergeExportTxInfo,
+  readExportTxInfoMap
+} from '../../util/exportTxInfo'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -78,20 +84,6 @@ interface State {
   isExportCsv: boolean
   isExportBitwave: boolean
 }
-
-const EXPORT_TX_INFO_FILE = 'exportTxInfo.json'
-
-const asExportTxInfo = asObject({
-  bitwaveAccountId: asString,
-  isExportQbo: asBoolean,
-  isExportCsv: asBoolean,
-  isExportBitwave: asBoolean
-})
-
-const asExportTxInfoMap = asObject(asExportTxInfo)
-
-type ExportTxInfoMap = ReturnType<typeof asExportTxInfoMap>
-type ExportTxInfo = ReturnType<typeof asExportTxInfo>
 
 class TransactionsExportSceneComponent extends React.PureComponent<
   Props,
@@ -165,13 +157,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
   loadInfoFile = async (): Promise<void> => {
     const { sourceWallet, tokenId } = this.props.route.params
-    const { disklet } = sourceWallet
-    const result = await disklet.getText(EXPORT_TX_INFO_FILE)
-    const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+    const exportTxInfoMap = await readExportTxInfoMap(sourceWallet)
+    const tokenCurrencyCode = exportTxInfoKey(sourceWallet, tokenId)
+    const info = exportTxInfoMap[tokenCurrencyCode]
+    if (info == null) return
 
-    const { isExportBitwave, isExportCsv, isExportQbo } =
-      exportTxInfoMap[tokenCurrencyCode]
+    const { isExportBitwave, isExportCsv, isExportQbo } = info
 
     this.setState({
       isExportBitwave,
@@ -307,13 +298,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const { sourceWallet, tokenId } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } =
       this.state
-    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+    const tokenCurrencyCode = exportTxInfoKey(sourceWallet, tokenId)
 
     let exportTxInfo: ExportTxInfo | undefined
-    let exportTxInfoMap: ExportTxInfoMap | undefined
     try {
-      const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
-      exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
+      const exportTxInfoMap = await readExportTxInfoMap(sourceWallet)
       exportTxInfo = exportTxInfoMap[tokenCurrencyCode]
     } catch (e) {
       console.log(
@@ -357,17 +346,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       exportTxInfo?.isExportCsv !== isExportCsv ||
       exportTxInfo?.isExportQbo !== isExportQbo
     ) {
-      exportTxInfoMap ??= {}
-      exportTxInfoMap[tokenCurrencyCode] = {
+      await mergeExportTxInfo(sourceWallet, tokenId, {
         bitwaveAccountId: accountId,
         isExportBitwave,
         isExportQbo,
         isExportCsv
-      }
-      await sourceWallet.disklet.setText(
-        EXPORT_TX_INFO_FILE,
-        JSON.stringify(exportTxInfoMap)
-      )
+      })
     }
 
     if (startDate.getTime() > endDate.getTime()) {
