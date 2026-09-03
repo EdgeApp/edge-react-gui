@@ -225,6 +225,54 @@ edge-cli touch
 edge-cli logout
 ```
 
+## CAPTCHA
+
+`usernameAvailable`, `createAccount`, and `loginWithPassword` can raise a
+login-server CAPTCHA. The engine does **not** solve it. It returns:
+
+```json
+{
+  "error": {
+    "code": "CHALLENGE_REQUIRED",
+    "status": 403,
+    "message": "Login requires a CAPTCHA",
+    "details": {
+      "challengeId": "GTNMhqW1...",
+      "challengeUri": "https://login-tester.edge.app/api/v2/captcha/..."
+    }
+  }
+}
+```
+
+Options:
+
+1. **CLI helper** — `--solve-captcha` on any login command headlessly
+   solves ALTCHA PoW at `challengeUri` and retries with `challengeId`.
+2. **Manual** — open the URI in a browser, then re-run the command with
+   `--challenge-id <id>` (or pass `challengeId` in the REST body).
+3. **Prefetch** — `edge-cli fetch-challenge` → `POST /fetch-challenge`.
+
+Automated tests use the same ALTCHA solver (see `src/cli/client/solveCaptcha.ts`).
+
+## Edge login (QR / barcode)
+
+`edge-cli request-edge-login` requests a pending Edge login and prints JSON the
+approving device can use:
+
+```json
+{
+  "pendingId": "sess-pending_7Qk3...",
+  "lobbyId": "HbC9mVJ2xR4tN8pL",
+  "uri": "edge://edge/HbC9mVJ2xR4tN8pL",
+  "state": "pending"
+}
+```
+
+Approve from another logged-in Edge device (Scan QR), or paste `uri` /
+`lobbyId` via **Scan QR → Enter** (useful with Maestro on the iOS simulator).
+Poll with `GET /pending-edge-login/{pendingId}` until `state` is `done`
+(it then carries the session) or `error`.
+
 ## Command shape
 
 Commands are not listed here. The full reference — every command paired with
@@ -264,6 +312,36 @@ as the reference.
 For the native asset, omit `--token-id` rather than passing the literal
 `null`. An empty `--name=` is a usage error, as are unknown flags and extra
 positionals.
+
+### Subscribing to events
+
+`edge-cli subscribe` holds a Server-Sent Events stream open and prints one JSON
+object per line until you interrupt it. It runs concurrently with ordinary
+one-shot commands, so a subscriber in one terminal watches what another
+terminal does:
+
+```bash
+# terminal 1
+edge-cli subscribe --type=session.created --type=session.expired
+
+# terminal 2
+edge-cli -t login-with-password --username=alice --password='pass'
+edge-cli logout
+```
+
+A live subscription keeps the **engine** alive past its idle timeout — the
+stream would otherwise die under the subscriber. It does **not** keep an
+**account** logged in: the auto-logout timer still fires on schedule.
+
+Every subscription is context-scoped, and a logout does not end one. The stream
+carries context-level events and survives for as long as the engine does, so a
+subscriber that logged in, was auto-logged-out, and logged in again keeps the
+same stream. `subscription.closed` is sent when the **engine** stops, not when
+a session does.
+
+`subscribe` exits `0` on Ctrl-C, `3` when a session ended the stream
+(`logout`, `expired`, `cancelled`), and `7` when the engine went away — or for
+any close reason it does not recognise.
 
 ### Exit codes
 
