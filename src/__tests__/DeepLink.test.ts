@@ -162,6 +162,36 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('walletShare', () => {
+    makeLinkTests({
+      'https://deep.edge.app/request-wallets/1234567890a': {
+        type: 'walletShareRequest',
+        lobbyId: '1234567890a'
+      },
+      'https://deep.edge.app/share-wallets/1234567890a': {
+        type: 'walletShareOffer',
+        lobbyId: '1234567890a'
+      },
+      'edge://request-wallets/1234567890a': {
+        type: 'walletShareRequest',
+        lobbyId: '1234567890a'
+      },
+      'edge://share-wallets/1234567890a': {
+        type: 'walletShareOffer',
+        lobbyId: '1234567890a'
+      }
+    })
+
+    it('Missing lobby id', () => {
+      expect(() =>
+        parseDeepLink('https://deep.edge.app/request-wallets/')
+      ).toThrow(SyntaxError)
+      expect(() =>
+        parseDeepLink('https://deep.edge.app/share-wallets')
+      ).toThrow(SyntaxError)
+    })
+  })
+
   describe('passwordRecovery', function () {
     makeLinkTests({
       'edge://recovery?token=1234567890a': {
@@ -709,7 +739,9 @@ describe('getDeepLinkReadiness', function () {
       'wallets'
     ],
     [{ type: 'rewards', pluginId: 'bitcoin', tokenId: null }, 'wallets'],
-    [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets']
+    [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets'],
+    [{ type: 'walletShareOffer', lobbyId: 'lobby' }, 'wallets'],
+    [{ type: 'walletShareRequest', lobbyId: 'lobby' }, 'wallets']
   ]
 
   for (const [link, expected] of cases) {

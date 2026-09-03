@@ -35,6 +35,7 @@ import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
 import { launchPaymentProto } from './PaymentProtoActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
+import { acceptOfferedWallets, shareWalletsToLobby } from './WalletShareActions'
 
 // These are the asset types that we'll manually check for when deep linking with a
 // URI for the format edge://pay/bitcoin/[privateKey]
@@ -117,6 +118,12 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
     case 'walletConnect':
       return 'wallets'
 
+    // Sharing lists the account's wallets to pick from, and receiving waits
+    // on `waitForCurrencyWallet`, so both want the wallets booted:
+    case 'walletShareOffer':
+    case 'walletShareRequest':
+      return 'wallets'
+
     // These check `state.ui.exchangeInfo` for a disabled plugin. That comes
     // from the info server, which has no readiness flag of its own, so they
     // keep waiting for wallets to give the fetch time to land:
@@ -181,6 +188,14 @@ async function handleLink(
           passwordRecoveryKey: link.passwordRecoveryKey
         })
       )
+      break
+
+    case 'walletShareRequest':
+      await shareWalletsToLobby(account, link.lobbyId)
+      break
+
+    case 'walletShareOffer':
+      await acceptOfferedWallets(account, link.lobbyId)
       break
 
     case 'plugin': {

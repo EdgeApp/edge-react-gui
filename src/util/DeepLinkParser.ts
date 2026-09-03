@@ -192,6 +192,23 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return { type: 'edgeLogin', lobbyId }
     }
 
+    // Wallet sharing. Core emits these on the `deep.edge.app` host, which the
+    // prefix table above normalizes to `edge://` before we get here.
+    case 'request-wallets': {
+      const [lobbyId] = pathParts
+      if (lobbyId == null || lobbyId === '') {
+        throw new SyntaxError('No wallet share lobby id')
+      }
+      return { type: 'walletShareRequest', lobbyId }
+    }
+    case 'share-wallets': {
+      const [lobbyId] = pathParts
+      if (lobbyId == null || lobbyId === '') {
+        throw new SyntaxError('No wallet share lobby id')
+      }
+      return { type: 'walletShareOffer', lobbyId }
+    }
+
     case 'pay': {
       const [protocol = '', ...deepPath] = pathParts
       const path = deepPath.join('/')

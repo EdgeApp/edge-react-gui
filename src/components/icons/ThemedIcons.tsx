@@ -177,3 +177,7 @@ export const DeleteIcon = makeFontIcon(FontAwesome, 'times')
 export const QuestionIcon = makeFontIcon(SimpleLineIcons, 'question')
 
 export const ChatBubblesIcon = makeFontIcon(Ionicons, 'chatbubbles-outline')
+
+export const ShareIcon = makeFontIcon(Ionicons, 'share-outline')
+export const DownloadIcon = makeFontIcon(Ionicons, 'download-outline')
+export const CheckmarkCircleIcon = makeFontIcon(Ionicons, 'checkmark-circle')

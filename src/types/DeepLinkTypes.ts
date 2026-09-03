@@ -15,6 +15,8 @@
  *   - plugin: GUI plugin deep link
  *   - promotion: Activate a promotion code
  *   - recovery: Password recovery
+ *   - request-wallets: Another account asks us to share wallets with it
+ *   - share-wallets: Another account offers to share wallets with us
  *   - sell: Sell flow entry, optionally pinning a ramp provider / payment type
  *   - swap: Crypto-to-crypto swap
  *   - x-callback-url: Address request
@@ -79,6 +81,26 @@ export interface PaymentRedirectLink {
 
 export interface EdgeLoginLink {
   type: 'edgeLogin'
+  lobbyId: string
+}
+
+/**
+ * Another account wants wallets from us. It published a lobby and is showing
+ * `https://deep.edge.app/request-wallets/<lobbyId>`; we are the sharer, so
+ * this opens the select → mode → confirm flow.
+ */
+export interface WalletShareRequestLink {
+  type: 'walletShareRequest'
+  lobbyId: string
+}
+
+/**
+ * Another account is offering wallets to us. It published a lobby and is
+ * showing `https://deep.edge.app/share-wallets/<lobbyId>`; we are the
+ * receiver, so this opens the accept flow.
+ */
+export interface WalletShareOfferLink {
+  type: 'walletShareOffer'
   lobbyId: string
 }
 
@@ -231,6 +253,8 @@ export type DeepLink =
   | RampCreateLink
   | RampLink
   | RewardsLink
+  | WalletShareOfferLink
+  | WalletShareRequestLink
   | {
       type: 'other'
       protocol: string // Without the ':'
