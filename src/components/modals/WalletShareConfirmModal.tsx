@@ -70,7 +70,7 @@ export const WalletShareConfirmModal: React.FC<Props> = props => {
           <WalletShareSummaryRow
             key={wallet.id}
             wallet={wallet}
-            mode={modeById.get(wallet.id) ?? 'view-only'}
+            mode={modeById.get(wallet.id) ?? 'viewOnly'}
             isLast={index === wallets.length - 1}
           />
         ))}

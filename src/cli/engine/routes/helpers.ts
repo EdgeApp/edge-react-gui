@@ -168,10 +168,19 @@ export function optionalQueryBoolean(
   return raw === 'true' || raw === '1'
 }
 
-/** The wallet fields every listing and creation route returns. */
+/**
+ * The wallet fields every listing and creation route returns.
+ *
+ * `viewOnly` and `sharingState` come from the account's key list rather than
+ * the wallet object. The engine can hold several logged-in accounts, and a
+ * wallet id shared between two of them is one wallet object with a different
+ * answer per account.
+ */
 export function summarizeWallet(
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+  account?: EdgeAccount
 ): Record<string, unknown> {
+  const keyInfo = account?.allKeys.find(info => info.id === wallet.id)
   return {
     walletId: wallet.id,
     id: wallet.id,
@@ -188,7 +197,9 @@ export function summarizeWallet(
         : undefined,
     paused: wallet.paused,
     imported: wallet.imported,
-    canSign: wallet.canSign,
+    canSign: keyInfo?.viewOnly != null ? !keyInfo.viewOnly : wallet.canSign,
+    viewOnly: keyInfo?.viewOnly ?? wallet.viewOnly,
+    sharingState: keyInfo?.sharing ?? wallet.sharingState ?? null,
     created: wallet.created?.toISOString() ?? null,
     enabledTokenIds: wallet.enabledTokenIds,
     detectedTokenIds: wallet.detectedTokenIds,

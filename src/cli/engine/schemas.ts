@@ -155,6 +155,33 @@ export const asSession = asObject({
   createdAt: doc(asString, 'When the login completed.')
 })
 
+/** One party's side of a single share, for a wallet's audit trail. */
+export const asWalletShareRecord = asObject({
+  name: doc(
+    asString,
+    "The other party's chosen identity, empty if they gave none."
+  ),
+  shareType: doc(asValue('viewOnly', 'spend'), 'What that share handed over.'),
+  sharingDate: doc(asString, 'When the share happened, as an ISO date.')
+})
+
+/**
+ * A wallet's sharing history.
+ *
+ * History, not authority: it grants nothing, cannot revoke, and each account
+ * keeps its own copy, so the two sides may disagree.
+ */
+export const asWalletSharingState = asObject({
+  sharedWith: doc(
+    asArray(asWalletShareRecord),
+    'Parties this account gave the wallet to.'
+  ),
+  sharedFrom: doc(
+    asArray(asWalletShareRecord),
+    'Parties this account received the wallet from.'
+  )
+})
+
 /** One currency wallet. `walletId` and `id` are the same value. */
 export const asWalletSummary = asObject({
   walletId: doc(
@@ -187,7 +214,17 @@ export const asWalletSummary = asObject({
   canSign: doc(
     asOptional(asBoolean),
     'False when the wallet holds no private key, so it can watch and sync ' +
-      'but not spend. A wallet shared `view-only` arrives this way.'
+      'but not spend. A wallet shared `viewOnly` arrives this way.'
+  ),
+  viewOnly: doc(
+    asOptional(asBoolean),
+    'True when the wallet holds only viewing keys. Read from the key ' +
+      'structure itself, never from the sharing records.'
+  ),
+  sharingState: doc(
+    asOptional(asEither(asWalletSharingState, asValue(null))),
+    'Who this wallet was shared with and who shared it here, null when it ' +
+      'has no sharing history.'
   ),
   created: doc(
     asEither(asString, asValue(null)),
@@ -407,8 +444,8 @@ export const asErrorEnvelope = asObject({
 export const asWalletShareSpec = asObject({
   walletId: doc(asString, 'The wallet to share. A full wallet id.'),
   mode: doc(
-    asValue('view-only', 'spend'),
-    'What the recipient may do with this wallet. `view-only` sends the ' +
+    asValue('viewOnly', 'spend'),
+    'What the recipient may do with this wallet. `viewOnly` sends the ' +
       'storage and public keys, so the wallet syncs and shows balances but ' +
       'cannot sign. `spend` sends the private keys as well. Chosen per ' +
       'wallet, so one share can mix the two.'
@@ -439,6 +476,10 @@ export const asPendingWalletShare = asObject({
     'When the lobby closes and the QR code stops working.'
   ),
   lobbyId: doc(asString, 'Lobby the other device connects to.'),
+  counterpartyName: doc(
+    asEither(asString, asValue(null)),
+    "The other party's chosen identity, null until they identify themselves."
+  ),
   uri: doc(
     asString,
     'The `https://deep.edge.app` link to render as a QR code for the other ' +

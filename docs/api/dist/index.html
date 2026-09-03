@@ -2465,6 +2465,19 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     paused: boolean;
     imported: boolean | undefined;
     canSign: boolean | undefined;
+    viewOnly: boolean | undefined;
+    sharingState: {
+      sharedWith: {
+        name: string;
+        shareType: string;
+        sharingDate: string
+      }[];
+      sharedFrom: {
+        name: string;
+        shareType: string;
+        sharingDate: string
+      }[]
+    } | null | undefined;
     created: string | null;
     enabledTokenIds: string[];
     detectedTokenIds: string[];
@@ -2478,7 +2491,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>currencyWallets</code></td>
-  <td class="ty"><span class="t">{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; canSign: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[]</span></td>
+  <td class="ty"><span class="t">{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; canSign: boolean | undefined; viewOnly: boolean | undefined; sharingState: { sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; } | null | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[]</span></td>
   <td class="doc">Every wallet in the account, including paused ones.</td>
 </tr></tbody></table>
   </div>
@@ -2556,6 +2569,19 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   paused: boolean
   imported?: boolean
   canSign?: boolean
+  viewOnly?: boolean
+  sharingState?: {
+    sharedWith: {
+      name: string;
+      shareType: string;
+      sharingDate: string
+    }[];
+    sharedFrom: {
+      name: string;
+      shareType: string;
+      sharingDate: string
+    }[]
+  } | null
   created: string | null
   enabledTokenIds: string[]
   detectedTokenIds: string[]
@@ -2575,6 +2601,8 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;paused&quot;: true,
   &quot;imported&quot;: true,
   &quot;canSign&quot;: true,
+  &quot;viewOnly&quot;: true,
+  &quot;sharingState&quot;: {},
   &quot;created&quot;: &quot;string&quot;,
   &quot;enabledTokenIds&quot;: [
     &quot;string&quot;
@@ -2649,7 +2677,17 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>canSign</code></td>
   <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
-  <td class="doc">False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared <code>view-only</code> arrives this way.</td>
+  <td class="doc">False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared <code>viewOnly</code> arrives this way.</td>
+</tr>
+<tr>
+  <td class="k"><code>viewOnly</code></td>
+  <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
+  <td class="doc">True when the wallet holds only viewing keys. Read from the key structure itself, never from the sharing records.</td>
+</tr>
+<tr>
+  <td class="k"><code>sharingState</code></td>
+  <td class="ty"><span class="t">{ sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; } | null</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Who this wallet was shared with and who shared it here, null when it has no sharing history.</td>
 </tr>
 <tr>
   <td class="k"><code>created</code></td>
@@ -3718,7 +3756,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>request-wallet-share [--timeout=&lt;timeout&gt;]</code></pre>
+    <pre class="usage"><code>request-wallet-share [--display-name=&lt;displayName&gt;] [--timeout=&lt;timeout&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -3730,12 +3768,19 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
+  displayName?: string
   timeout?: number
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
+  &quot;displayName&quot;: &quot;string&quot;,
   &quot;timeout&quot;: 0
 }</code></pre></details>
     <table class="fields"><tbody><tr>
+  <td class="k"><code>displayName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.</td>
+</tr>
+<tr>
   <td class="k"><code>timeout</code></td>
   <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
   <td class="doc">How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes.</td>
@@ -3745,7 +3790,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;timeout&quot;:0}' \
+  -d '{&quot;displayName&quot;:&quot;string&quot;,&quot;timeout&quot;:0}' \
   'http://localhost/account/$SESS/request-wallet-share'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -3758,6 +3803,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   kind: string
   expiresAt: string | null
   lobbyId: string
+  counterpartyName: string | null
   uri: string
   state: string
   sharedWallets: {
@@ -3773,6 +3819,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;kind&quot;: &quot;string&quot;,
   &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
   &quot;lobbyId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;,
   &quot;uri&quot;: &quot;string&quot;,
   &quot;state&quot;: &quot;string&quot;,
   &quot;sharedWallets&quot;: [
@@ -3807,6 +3854,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
   <td class="doc">Lobby the other device connects to.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">The other party&#39;s chosen identity, null until they identify themselves.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>
@@ -3847,7 +3899,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>offer-wallet-share --wallets='&lt;json&gt;' [--timeout=&lt;timeout&gt;]</code></pre>
+    <pre class="usage"><code>offer-wallet-share --wallets='&lt;json&gt;' [--display-name=&lt;displayName&gt;] [--timeout=&lt;timeout&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -3863,18 +3915,25 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     walletId: string;
     mode: string
   }[]
+  displayName?: string
   timeout?: number
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
   &quot;wallets&quot;: [
     {}
   ],
+  &quot;displayName&quot;: &quot;string&quot;,
   &quot;timeout&quot;: 0
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>wallets</code></td>
   <td class="ty"><span class="t">{ walletId: string; mode: string; }[]</span></td>
   <td class="doc">The wallets to share, each with its own mode, as JSON: <code>[{&quot;walletId&quot;:&quot;…&quot;,&quot;mode&quot;:&quot;spend&quot;}]</code>.</td>
+</tr>
+<tr>
+  <td class="k"><code>displayName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.</td>
 </tr>
 <tr>
   <td class="k"><code>timeout</code></td>
@@ -3886,7 +3945,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;wallets&quot;:[{}],&quot;timeout&quot;:0}' \
+  -d '{&quot;wallets&quot;:[{}],&quot;displayName&quot;:&quot;string&quot;,&quot;timeout&quot;:0}' \
   'http://localhost/account/$SESS/offer-wallet-share'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -3899,6 +3958,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   kind: string
   expiresAt: string | null
   lobbyId: string
+  counterpartyName: string | null
   uri: string
   state: string
   sharedWallets: {
@@ -3914,6 +3974,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;kind&quot;: &quot;string&quot;,
   &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
   &quot;lobbyId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;,
   &quot;uri&quot;: &quot;string&quot;,
   &quot;state&quot;: &quot;string&quot;,
   &quot;sharedWallets&quot;: [
@@ -3948,6 +4009,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
   <td class="doc">Lobby the other device connects to.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">The other party&#39;s chosen identity, null until they identify themselves.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>
@@ -3988,7 +4054,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>approve-wallet-share &lt;lobbyId&gt; --wallets='&lt;json&gt;'</code></pre>
+    <pre class="usage"><code>approve-wallet-share &lt;lobbyId&gt; --wallets='&lt;json&gt;' [--display-name=&lt;displayName&gt;] [--counterparty-name=&lt;counterpartyName&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4004,23 +4070,37 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     walletId: string;
     mode: string
   }[]
+  displayName?: string
+  counterpartyName?: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
   &quot;wallets&quot;: [
     {}
-  ]
+  ],
+  &quot;displayName&quot;: &quot;string&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>wallets</code></td>
   <td class="ty"><span class="t">{ walletId: string; mode: string; }[]</span></td>
   <td class="doc">The wallets to share, each with its own mode, as JSON: <code>[{&quot;walletId&quot;:&quot;…&quot;,&quot;mode&quot;:&quot;spend&quot;}]</code>.</td>
+</tr>
+<tr>
+  <td class="k"><code>displayName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A human-readable identity for this account, sent to the other party encrypted alongside the wallets.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The other party&#39;s name, as read from the <code>name</code> parameter of the link being answered. Recorded in each wallet&#39;s sharing history. A name that arrives over the wire wins.</td>
 </tr></tbody></table>
   </div>
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;lobbyId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;wallets&quot;:[{}]}' \
+  -d '{&quot;lobbyId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;wallets&quot;:[{}],&quot;displayName&quot;:&quot;string&quot;,&quot;counterpartyName&quot;:&quot;string&quot;}' \
   'http://localhost/account/$SESS/approve-wallet-share/$LOBBYID'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -4052,7 +4132,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>accept-wallet-share &lt;lobbyId&gt; [--timeout=&lt;timeout&gt;]</code></pre>
+    <pre class="usage"><code>accept-wallet-share &lt;lobbyId&gt; [--display-name=&lt;displayName&gt;] [--counterparty-name=&lt;counterpartyName&gt;] [--timeout=&lt;timeout&gt;]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4064,12 +4144,26 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
+  displayName?: string
+  counterpartyName?: string
   timeout?: number
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
+  &quot;displayName&quot;: &quot;string&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;,
   &quot;timeout&quot;: 0
 }</code></pre></details>
     <table class="fields"><tbody><tr>
+  <td class="k"><code>displayName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A human-readable identity for this account, sent to the other party encrypted alongside the wallets.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The other party&#39;s name, as read from the <code>name</code> parameter of the link being answered. Recorded in each wallet&#39;s sharing history. A name that arrives over the wire wins.</td>
+</tr>
+<tr>
   <td class="k"><code>timeout</code></td>
   <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
   <td class="doc">How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes.</td>
@@ -4079,7 +4173,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;lobbyId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;timeout&quot;:0}' \
+  -d '{&quot;lobbyId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;displayName&quot;:&quot;string&quot;,&quot;counterpartyName&quot;:&quot;string&quot;,&quot;timeout&quot;:0}' \
   'http://localhost/account/$SESS/accept-wallet-share/$LOBBYID'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -4092,6 +4186,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   kind: string
   expiresAt: string | null
   lobbyId: string
+  counterpartyName: string | null
   uri: string
   state: string
   sharedWallets: {
@@ -4107,6 +4202,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;kind&quot;: &quot;string&quot;,
   &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
   &quot;lobbyId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;,
   &quot;uri&quot;: &quot;string&quot;,
   &quot;state&quot;: &quot;string&quot;,
   &quot;sharedWallets&quot;: [
@@ -4141,6 +4237,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
   <td class="doc">Lobby the other device connects to.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">The other party&#39;s chosen identity, null until they identify themselves.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>
@@ -4204,6 +4305,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   kind: string
   expiresAt: string | null
   lobbyId: string
+  counterpartyName: string | null
   uri: string
   state: string
   sharedWallets: {
@@ -4219,6 +4321,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;kind&quot;: &quot;string&quot;,
   &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
   &quot;lobbyId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;counterpartyName&quot;: &quot;string&quot;,
   &quot;uri&quot;: &quot;string&quot;,
   &quot;state&quot;: &quot;string&quot;,
   &quot;sharedWallets&quot;: [
@@ -4253,6 +4356,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>lobbyId</code></td>
   <td class="ty"><span class="t">string</span></td>
   <td class="doc">Lobby the other device connects to.</td>
+</tr>
+<tr>
+  <td class="k"><code>counterpartyName</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">The other party&#39;s chosen identity, null until they identify themselves.</td>
 </tr>
 <tr>
   <td class="k"><code>uri</code></td>

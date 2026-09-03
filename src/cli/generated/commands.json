@@ -36,11 +36,25 @@
       "command": "accept-wallet-share",
       "method": "POST",
       "path": "/account/{sessionId}/accept-wallet-share/{lobbyId}",
-      "usage": "accept-wallet-share <lobbyId> [--timeout=<timeout>]",
+      "usage": "accept-wallet-share <lobbyId> [--display-name=<displayName>] [--counterparty-name=<counterpartyName>] [--timeout=<timeout>]",
       "help": "Take wallets from an account that offered them.",
       "needsSession": true,
       "pathPositional": "lobbyId",
       "args": [
+        {
+          "flag": "display-name",
+          "field": "displayName",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "counterparty-name",
+          "field": "counterpartyName",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
         {
           "flag": "timeout",
           "field": "timeout",
@@ -343,7 +357,7 @@
       "command": "approve-wallet-share",
       "method": "POST",
       "path": "/account/{sessionId}/approve-wallet-share/{lobbyId}",
-      "usage": "approve-wallet-share <lobbyId> --wallets='<json>'",
+      "usage": "approve-wallet-share <lobbyId> --wallets='<json>' [--display-name=<displayName>] [--counterparty-name=<counterpartyName>]",
       "help": "Send wallets to an account that asked for them.",
       "needsSession": true,
       "pathPositional": "lobbyId",
@@ -354,6 +368,20 @@
           "target": "body",
           "kind": "json",
           "required": true
+        },
+        {
+          "flag": "display-name",
+          "field": "displayName",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "counterparty-name",
+          "field": "counterpartyName",
+          "target": "body",
+          "kind": "string",
+          "required": false
         }
       ]
     },
@@ -1426,7 +1454,7 @@
       "command": "offer-wallet-share",
       "method": "POST",
       "path": "/account/{sessionId}/offer-wallet-share",
-      "usage": "offer-wallet-share --wallets='<json>' [--timeout=<timeout>]",
+      "usage": "offer-wallet-share --wallets='<json>' [--display-name=<displayName>] [--timeout=<timeout>]",
       "help": "Offer wallets to another account.",
       "needsSession": true,
       "args": [
@@ -1436,6 +1464,13 @@
           "target": "body",
           "kind": "json",
           "required": true
+        },
+        {
+          "flag": "display-name",
+          "field": "displayName",
+          "target": "body",
+          "kind": "string",
+          "required": false
         },
         {
           "flag": "timeout",
@@ -1660,10 +1695,17 @@
       "command": "request-wallet-share",
       "method": "POST",
       "path": "/account/{sessionId}/request-wallet-share",
-      "usage": "request-wallet-share [--timeout=<timeout>]",
+      "usage": "request-wallet-share [--display-name=<displayName>] [--timeout=<timeout>]",
       "help": "Ask another account for wallets.",
       "needsSession": true,
       "args": [
+        {
+          "flag": "display-name",
+          "field": "displayName",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
         {
           "flag": "timeout",
           "field": "timeout",

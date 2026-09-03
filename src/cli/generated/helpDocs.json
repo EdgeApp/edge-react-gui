@@ -45,7 +45,7 @@
       "summary": "Take wallets from an account that offered them.",
       "method": "POST",
       "path": "/account/{sessionId}/accept-wallet-share/{lobbyId}",
-      "usage": "accept-wallet-share <lobbyId> [--timeout=<timeout>]",
+      "usage": "accept-wallet-share <lobbyId> [--display-name=<displayName>] [--counterparty-name=<counterpartyName>] [--timeout=<timeout>]",
       "description": "Answers a `share-wallets` lobby. The offering side already chose the wallets and their modes, so there is nothing to pick here — poll the handle until `state` is `done`.",
       "core": "account.acceptWalletShare",
       "params": {
@@ -53,6 +53,16 @@
           "pass": "<lobbyId>",
           "doc": "From the QR code, or the last path segment of a `https://deep.edge.app/share-wallets/<lobbyId>` link.",
           "optional": false
+        },
+        "displayName": {
+          "pass": "[--display-name=<displayName>]",
+          "doc": "A human-readable identity for this account, sent to the other party encrypted alongside the wallets.",
+          "optional": true
+        },
+        "counterpartyName": {
+          "pass": "[--counterparty-name=<counterpartyName>]",
+          "doc": "The other party's name, as read from the `name` parameter of the link being answered. Recorded in each wallet's sharing history. A name that arrives over the wire wins.",
+          "optional": true
         },
         "timeout": {
           "pass": "[--timeout=<timeout>]",
@@ -66,6 +76,7 @@
         "kind": "string — What the handle refers to, which decides the calls that accept it.",
         "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
         "lobbyId": "string — Lobby the other device connects to.",
+        "counterpartyName": "string | null — The other party's chosen identity, null until they identify themselves.",
         "uri": "string — The `https://deep.edge.app` link to render as a QR code for the other device to scan.",
         "state": "string — How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved.",
         "sharedWallets": "{ walletId: string; mode: string; }[] | null — Each wallet in the share with the mode it was shared at, known once the payload has been exchanged.",
@@ -472,7 +483,7 @@
       "summary": "Send wallets to an account that asked for them.",
       "method": "POST",
       "path": "/account/{sessionId}/approve-wallet-share/{lobbyId}",
-      "usage": "approve-wallet-share <lobbyId> --wallets='<json>'",
+      "usage": "approve-wallet-share <lobbyId> --wallets='<json>' [--display-name=<displayName>] [--counterparty-name=<counterpartyName>]",
       "description": "Answers a `request-wallets` lobby. This is where the sharer decides both which wallets go and what the recipient may do with each one, so it is the point where spend authority is granted. It cannot be taken back.",
       "core": "account.approveWalletShare",
       "params": {
@@ -485,6 +496,16 @@
           "pass": "--wallets='<json>'",
           "doc": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`.",
           "optional": false
+        },
+        "displayName": {
+          "pass": "[--display-name=<displayName>]",
+          "doc": "A human-readable identity for this account, sent to the other party encrypted alongside the wallets.",
+          "optional": true
+        },
+        "counterpartyName": {
+          "pass": "[--counterparty-name=<counterpartyName>]",
+          "doc": "The other party's name, as read from the `name` parameter of the link being answered. Recorded in each wallet's sharing history. A name that arrives over the wire wins.",
+          "optional": true
         }
       },
       "returns": {
@@ -973,7 +994,9 @@
         "syncRatio?": "string — Sync progress as a percentage, for display.",
         "paused": "boolean — True while the engine is not syncing this wallet.",
         "imported?": "boolean — True when the keys came from an import rather than being generated here.",
-        "canSign?": "boolean — False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared `view-only` arrives this way.",
+        "canSign?": "boolean — False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared `viewOnly` arrives this way.",
+        "viewOnly?": "boolean — True when the wallet holds only viewing keys. Read from the key structure itself, never from the sharing records.",
+        "sharingState?": "{ sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; } | null — Who this wallet was shared with and who shared it here, null when it has no sharing history.",
         "created": "string | null — When the wallet was created, null for wallets predating the field.",
         "enabledTokenIds": "string[] — Tokens the user turned on.",
         "detectedTokenIds": "string[] — Tokens found on-chain that are not enabled yet.",
@@ -1057,7 +1080,7 @@
         }
       },
       "returns": {
-        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; canSign: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet in the account, including paused ones."
+        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; canSign: boolean | undefined; viewOnly: boolean | undefined; sharingState: { sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; } | null | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet in the account, including paused ones."
       },
       "notes": [
         "Wallets load in the background after login, so a list taken straight afterwards can be short. Call `wait-for-all-wallets` first to be sure the account has finished loading."
@@ -2278,7 +2301,7 @@
       "summary": "Offer wallets to another account.",
       "method": "POST",
       "path": "/account/{sessionId}/offer-wallet-share",
-      "usage": "offer-wallet-share --wallets='<json>' [--timeout=<timeout>]",
+      "usage": "offer-wallet-share --wallets='<json>' [--display-name=<displayName>] [--timeout=<timeout>]",
       "description": "The mirror of `request-wallet-share`: this side picks the wallets and their modes up front, then publishes a link for the recipient to scan. The keys only move once they accept.",
       "core": "account.offerWalletShare",
       "params": {
@@ -2286,6 +2309,11 @@
           "pass": "--wallets='<json>'",
           "doc": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`.",
           "optional": false
+        },
+        "displayName": {
+          "pass": "[--display-name=<displayName>]",
+          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.",
+          "optional": true
         },
         "timeout": {
           "pass": "[--timeout=<timeout>]",
@@ -2299,6 +2327,7 @@
         "kind": "string — What the handle refers to, which decides the calls that accept it.",
         "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
         "lobbyId": "string — Lobby the other device connects to.",
+        "counterpartyName": "string | null — The other party's chosen identity, null until they identify themselves.",
         "uri": "string — The `https://deep.edge.app` link to render as a QR code for the other device to scan.",
         "state": "string — How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved.",
         "sharedWallets": "{ walletId: string; mode: string; }[] | null — Each wallet in the share with the mode it was shared at, known once the payload has been exchanged.",
@@ -2407,6 +2436,7 @@
         "kind": "string — What the handle refers to, which decides the calls that accept it.",
         "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
         "lobbyId": "string — Lobby the other device connects to.",
+        "counterpartyName": "string | null — The other party's chosen identity, null until they identify themselves.",
         "uri": "string — The `https://deep.edge.app` link to render as a QR code for the other device to scan.",
         "state": "string — How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved.",
         "sharedWallets": "{ walletId: string; mode: string; }[] | null — Each wallet in the share with the mode it was shared at, known once the payload has been exchanged.",
@@ -2629,10 +2659,15 @@
       "summary": "Ask another account for wallets.",
       "method": "POST",
       "path": "/account/{sessionId}/request-wallet-share",
-      "usage": "request-wallet-share [--timeout=<timeout>]",
+      "usage": "request-wallet-share [--display-name=<displayName>] [--timeout=<timeout>]",
       "description": "Publishes a lobby and returns the link to show as a QR code. The other device scans it and picks which of its wallets to send, so this side chooses nothing — poll the handle until `state` is `done` to see what arrived.",
       "core": "account.requestWalletShare",
       "params": {
+        "displayName": {
+          "pass": "[--display-name=<displayName>]",
+          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.",
+          "optional": true
+        },
         "timeout": {
           "pass": "[--timeout=<timeout>]",
           "doc": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes.",
@@ -2645,6 +2680,7 @@
         "kind": "string — What the handle refers to, which decides the calls that accept it.",
         "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
         "lobbyId": "string — Lobby the other device connects to.",
+        "counterpartyName": "string | null — The other party's chosen identity, null until they identify themselves.",
         "uri": "string — The `https://deep.edge.app` link to render as a QR code for the other device to scan.",
         "state": "string — How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved.",
         "sharedWallets": "{ walletId: string; mode: string; }[] | null — Each wallet in the share with the mode it was shared at, known once the payload has been exchanged.",

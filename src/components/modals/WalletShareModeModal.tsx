@@ -67,7 +67,7 @@ export const WalletShareModeModal: React.FC<Props> = props => {
     bridge.resolve(
       wallets.map(wallet => ({
         walletId: wallet.id,
-        mode: spendIds.has(wallet.id) ? 'spend' : 'view-only'
+        mode: spendIds.has(wallet.id) ? 'spend' : 'viewOnly'
       }))
     )
   })

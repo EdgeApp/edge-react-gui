@@ -6,8 +6,8 @@
  * own mode, so a single share can hand over one wallet watch-only and another
  * with full spend authority.
  */
-import type { EdgeAccount, EdgeWalletShareSpec } from 'edge-core-js'
 import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
+import type { EdgeAccount, EdgeWalletShareSpec } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { engineError } from '../errors'
@@ -26,6 +26,23 @@ const TIMEOUT_DOC =
 const WALLETS_DOC =
   'The wallets to share, each with its own mode, as JSON: ' +
   '`[{"walletId":"…","mode":"spend"}]`.'
+
+const DISPLAY_NAME_DOC =
+  'A human-readable identity for this account, shown to the other party so ' +
+  'they know who they are dealing with. Arbitrary - it need not be a real ' +
+  'name. It rides in the `name` parameter of the link this call publishes, ' +
+  'so it reaches the person scanning the QR and never the login server.\n\n' +
+  'Supply it on every call. It is never filled in from `local-settings`, ' +
+  'whose `nickname` is a stored value this command does not read.'
+
+const SENT_NAME_DOC =
+  'A human-readable identity for this account, sent to the other party ' +
+  'encrypted alongside the wallets.'
+
+const COUNTERPARTY_NAME_DOC =
+  "The other party's name, as read from the `name` parameter of the link " +
+  "being answered. Recorded in each wallet's sharing history. A name that " +
+  'arrives over the wire wins.'
 
 /** Match the core lobby default (10 minutes). */
 const DEFAULT_SHARE_TTL_MS = 10 * 60 * 1000
@@ -64,6 +81,7 @@ function shareSummary(
     lobbyId: pending.id,
     uri: pending.uri,
     state: pending.state,
+    counterpartyName: pending.counterpartyName ?? null,
     sharedWallets: pending.sharedWallets ?? null,
     receivedWalletIds: pending.receivedWalletIds ?? null,
     error: error == null ? null : errorText(error)
@@ -152,16 +170,18 @@ export const requestWalletShare = route({
   path: '/account/{sessionId}/request-wallet-share',
   cli: { command: 'request-wallet-share' },
   body: asObject({
+    displayName: asOptional(doc(asString, DISPLAY_NAME_DOC)),
     timeout: asOptional(doc(asNumber, TIMEOUT_DOC))
   }).withRest,
   returns: asPendingWalletShare,
   errors: ['NETWORK_ERROR'],
 
   async handler(ctx) {
-    const { timeout } = ctx.body
-    const pending = await getAccount(ctx).requestWalletShare(
-      timeout != null ? { timeout } : undefined
-    )
+    const { displayName, timeout } = ctx.body
+    const pending = await getAccount(ctx).requestWalletShare({
+      displayName,
+      timeout
+    })
     const { record, expiresAt } = trackPending(ctx, pending, ttlFor(timeout))
     return shareSummary(record, expiresAt)
   }
@@ -185,19 +205,20 @@ export const offerWalletShare = route({
   cli: { command: 'offer-wallet-share' },
   body: asObject({
     wallets: doc(asArray(asWalletShareSpec), WALLETS_DOC),
+    displayName: asOptional(doc(asString, DISPLAY_NAME_DOC)),
     timeout: asOptional(doc(asNumber, TIMEOUT_DOC))
   }).withRest,
   returns: asPendingWalletShare,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
   async handler(ctx) {
-    const { wallets, timeout } = ctx.body
+    const { wallets, displayName, timeout } = ctx.body
     if (wallets.length === 0) {
       throw engineError('BAD_REQUEST', 'Must share at least one wallet', 400)
     }
     const pending = await getAccount(ctx).offerWalletShare(
       wallets as EdgeWalletShareSpec[],
-      timeout != null ? { timeout } : undefined
+      { displayName, timeout }
     )
     const { record, expiresAt } = trackPending(ctx, pending, ttlFor(timeout))
     return shareSummary(record, expiresAt)
@@ -221,19 +242,22 @@ export const approveWalletShare = route({
   cli: { command: 'approve-wallet-share', positional: 'lobbyId' },
   body: asObject({
     lobbyId: doc(asString, LOBBY_ID_DOC),
-    wallets: doc(asArray(asWalletShareSpec), WALLETS_DOC)
+    wallets: doc(asArray(asWalletShareSpec), WALLETS_DOC),
+    displayName: asOptional(doc(asString, SENT_NAME_DOC)),
+    counterpartyName: asOptional(doc(asString, COUNTERPARTY_NAME_DOC))
   }).withRest,
   returns: asOk,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
   async handler(ctx) {
-    const { lobbyId, wallets } = ctx.body
+    const { lobbyId, wallets, displayName, counterpartyName } = ctx.body
     if (wallets.length === 0) {
       throw engineError('BAD_REQUEST', 'Must share at least one wallet', 400)
     }
     await getAccount(ctx).approveWalletShare(
       lobbyId,
-      wallets as EdgeWalletShareSpec[]
+      wallets as EdgeWalletShareSpec[],
+      { displayName, counterpartyName }
     )
     return { ok: true }
   }
@@ -257,17 +281,20 @@ export const acceptWalletShare = route({
       'From the QR code, or the last path segment of a ' +
         '`https://deep.edge.app/share-wallets/<lobbyId>` link.'
     ),
+    displayName: asOptional(doc(asString, SENT_NAME_DOC)),
+    counterpartyName: asOptional(doc(asString, COUNTERPARTY_NAME_DOC)),
     timeout: asOptional(doc(asNumber, TIMEOUT_DOC))
   }).withRest,
   returns: asPendingWalletShare,
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
   async handler(ctx) {
-    const { lobbyId, timeout } = ctx.body
-    const pending = await getAccount(ctx).acceptWalletShare(
-      lobbyId,
-      timeout != null ? { timeout } : undefined
-    )
+    const { lobbyId, displayName, counterpartyName, timeout } = ctx.body
+    const pending = await getAccount(ctx).acceptWalletShare(lobbyId, {
+      displayName,
+      counterpartyName,
+      timeout
+    })
     const { record, expiresAt } = trackPending(ctx, pending, ttlFor(timeout))
     return shareSummary(record, expiresAt)
   }
@@ -285,7 +312,11 @@ export const pollWalletShare = route({
   path: '/account/{sessionId}/pending-wallet-share',
   cli: { command: 'poll-wallet-share', positional: 'shareId' },
   returns: asPendingWalletShare,
-  errors: ['PENDING_SHARE_NOT_FOUND', 'OBJECT_SESSION_MISMATCH', 'OBJECT_EXPIRED'],
+  errors: [
+    'PENDING_SHARE_NOT_FOUND',
+    'OBJECT_SESSION_MISMATCH',
+    'OBJECT_EXPIRED'
+  ],
 
   handler(ctx) {
     const { shareId, sessionId } = ctx.params

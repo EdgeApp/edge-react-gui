@@ -35,9 +35,10 @@ export const walletInfo = route({
   errors: WALLET_ERRORS,
 
   handler(ctx) {
-    const wallet = findWallet(getAccount(ctx), ctx.query.valid.walletId)
+    const account = getAccount(ctx)
+    const wallet = findWallet(account, ctx.query.valid.walletId)
     return {
-      ...summarizeWallet(wallet),
+      ...summarizeWallet(wallet, account),
       denominations: wallet.currencyInfo.denominations,
       walletSettings: wallet.walletSettings,
       allTokens: wallet.currencyConfig.allTokens
@@ -188,7 +189,10 @@ export const splitWallet = route({
     return {
       results: results.map(result =>
         result.ok
-          ? { ok: true, wallet: summarizeWallet(result.result) }
+          ? {
+              ok: true,
+              wallet: summarizeWallet(result.result, getAccount(ctx))
+            }
           : {
               ok: false,
               error:

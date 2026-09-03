@@ -123,7 +123,7 @@ describe('Wallet sharing modals', () => {
           bridge={fakeAirshipBridge}
           wallets={[walletA, walletB]}
           specs={[
-            { walletId: walletA.id, mode: 'view-only' },
+            { walletId: walletA.id, mode: 'viewOnly' },
             { walletId: walletB.id, mode: 'spend' }
           ]}
           onConfirm={async () => {}}
@@ -140,7 +140,7 @@ describe('Wallet sharing modals', () => {
         <WalletShareReceivedModal
           bridge={fakeAirshipBridge}
           entries={[
-            { wallet: walletA, mode: 'view-only' },
+            { wallet: walletA, mode: 'viewOnly' },
             { wallet: walletB, mode: 'spend' }
           ]}
         />

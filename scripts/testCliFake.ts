@@ -66,6 +66,19 @@ function ok(label: string, ...args: string[]): Run {
   return run
 }
 
+/** Assert something about a response the CLI already returned. */
+function check(label: string, good: boolean, detail: string): void {
+  if (good) {
+    passes++
+    console.log(`OK   ${label}`)
+  } else {
+    failures++
+    console.error(
+      `FAIL ${label} — ${detail.replace(/\s+/g, ' ').slice(0, 200)}`
+    )
+  }
+}
+
 /** Run a command that is expected to fail, and say why that is correct. */
 function refuses(label: string, code: string, ...args: string[]): void {
   const run = cli(...args)
@@ -310,21 +323,28 @@ function main(): void {
     const asB = `--session=${sessionB}`
 
     // Flow 1: the recipient publishes a link, the sharer answers it.
-    const request = ok('request-wallet-share', asB, 'request-wallet-share')
+    const request = ok(
+      'request-wallet-share',
+      asB,
+      'request-wallet-share',
+      '--display-name=Bob'
+    )
     const requestLobby: string = request.json?.lobbyId ?? ''
     const requestShareId: string = request.json?.shareId ?? ''
-    if (!/^https:\/\/deep\.edge\.app\/request-wallets\//.test(
-      request.json?.uri ?? ''
-    )) {
+    if (
+      !/^https:\/\/deep\.edge\.app\/request-wallets\/[^?]+\?name=Bob$/.test(
+        request.json?.uri ?? ''
+      )
+    ) {
       failures++
       console.error(
-        `FAIL request-wallet-share uri — expected a deep.edge.app link, got ${String(
+        `FAIL request-wallet-share uri — expected a deep.edge.app link naming Bob, got ${String(
           request.json?.uri
         )}`
       )
     } else {
       passes++
-      console.log('OK   request-wallet-share uri is a deep.edge.app link')
+      console.log('OK   request-wallet-share uri names the asker')
     }
 
     ok(
@@ -332,9 +352,16 @@ function main(): void {
       asA,
       'approve-wallet-share',
       requestLobby,
-      `--wallets=[{"walletId":"${walletId}","mode":"view-only"}]`
+      `--wallets=[{"walletId":"${walletId}","mode":"viewOnly"}]`,
+      '--display-name=Alice',
+      '--counterparty-name=Bob'
     )
-    let polled = ok('poll-wallet-share', asB, 'poll-wallet-share', requestShareId)
+    let polled = ok(
+      'poll-wallet-share',
+      asB,
+      'poll-wallet-share',
+      requestShareId
+    )
     for (let i = 0; i < 20 && polled.json?.state !== 'done'; i++) {
       spawnSync('sleep', ['1'])
       polled = cli(asB, 'poll-wallet-share', requestShareId)
@@ -351,19 +378,92 @@ function main(): void {
       )
     }
 
+    // The recipient learns who sent the wallets, and the wallet arrives
+    // view-only with the exchange recorded against it:
+    check(
+      'poll-wallet-share names the sharer',
+      polled.json?.counterpartyName === 'Alice',
+      String(polled.json?.counterpartyName)
+    )
+    const sharedWallet =
+      cli(asB, 'wallet-info', `--wallet-id=${walletId}`).json ?? {}
+    check(
+      'shared wallet is viewOnly',
+      sharedWallet.viewOnly === true && sharedWallet.canSign === false,
+      `viewOnly=${String(sharedWallet.viewOnly)} canSign=${String(
+        sharedWallet.canSign
+      )}`
+    )
+    const sharedFrom = sharedWallet.sharingState?.sharedFrom ?? []
+    check(
+      'recipient recorded who shared it',
+      sharedFrom.length === 1 &&
+        sharedFrom[0].name === 'Alice' &&
+        sharedFrom[0].shareType === 'viewOnly' &&
+        !Number.isNaN(Date.parse(String(sharedFrom[0].sharingDate))),
+      JSON.stringify({ sharedFrom, sharingState: sharedWallet.sharingState })
+    )
+    const sharerWallet =
+      cli(asA, 'wallet-info', `--wallet-id=${walletId}`).json ?? {}
+    const sharedWith = sharerWallet.sharingState?.sharedWith ?? []
+    check(
+      'sharer recorded who received it',
+      sharedWith.length === 1 &&
+        sharedWith[0].name === 'Bob' &&
+        sharedWith[0].shareType === 'viewOnly',
+      JSON.stringify(sharedWith)
+    )
+    check(
+      'sharer wallet is not viewOnly',
+      sharerWallet.viewOnly === false && sharerWallet.canSign === true,
+      JSON.stringify({
+        viewOnly: sharerWallet.viewOnly,
+        canSign: sharerWallet.canSign,
+        id: sharerWallet.walletId,
+        name: sharerWallet.name
+      })
+    )
+
     // Flow 2: the sharer publishes a link, the recipient answers it. This is
     // the two-lobby handshake, so it proves the second lobby round trips.
     const offer = ok(
       'offer-wallet-share',
       asA,
       'offer-wallet-share',
-      `--wallets=[{"walletId":"${walletId}","mode":"spend"}]`
+      `--wallets=[{"walletId":"${walletId}","mode":"spend"}]`,
+      '--display-name=Alice'
+    )
+    check(
+      'offer-wallet-share uri names the offerer',
+      /^https:\/\/deep\.edge\.app\/share-wallets\/[^?]+\?name=Alice$/.test(
+        offer.json?.uri ?? ''
+      ),
+      String(offer.json?.uri)
     )
     ok(
       'accept-wallet-share',
       asB,
       'accept-wallet-share',
-      offer.json?.lobbyId ?? ''
+      offer.json?.lobbyId ?? '',
+      '--display-name=Bob',
+      '--counterparty-name=Alice'
+    )
+
+    // The spend share upgrades the wallet the recipient held view-only:
+    let upgraded = cli(asB, 'wallet-info', `--wallet-id=${walletId}`).json ?? {}
+    for (let i = 0; i < 20 && upgraded.viewOnly !== false; i++) {
+      spawnSync('sleep', ['1'])
+      upgraded = cli(asB, 'wallet-info', `--wallet-id=${walletId}`).json ?? {}
+    }
+    check(
+      'spend share upgrades a viewOnly wallet',
+      upgraded.viewOnly === false && upgraded.canSign === true,
+      `viewOnly=${String(upgraded.viewOnly)}`
+    )
+    check(
+      'the second share earns its own audit entry',
+      (upgraded.sharingState?.sharedFrom ?? []).length === 2,
+      JSON.stringify(upgraded.sharingState?.sharedFrom)
     )
 
     // Cancelling closes a lobby that was published by mistake.
@@ -371,6 +471,13 @@ function main(): void {
       'request-wallet-share (to cancel)',
       asB,
       'request-wallet-share'
+    )
+    check(
+      'a nameless request publishes a bare link',
+      /^https:\/\/deep\.edge\.app\/request-wallets\/[^?]+$/.test(
+        doomed.json?.uri ?? ''
+      ),
+      String(doomed.json?.uri)
     )
     ok(
       'cancel-wallet-share',

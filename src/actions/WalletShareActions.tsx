@@ -181,7 +181,7 @@ async function awaitPendingShare(
         return {
           wallet,
           mode:
-            modeById.get(walletId) ?? (wallet.canSign ? 'spend' : 'view-only')
+            modeById.get(walletId) ?? (wallet.canSign ? 'spend' : 'viewOnly')
         }
       })
     )

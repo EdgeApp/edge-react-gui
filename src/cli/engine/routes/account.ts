@@ -312,7 +312,7 @@ export const currencyWallets = route({
     const currencyWallets = walletIdsForFilter(account, filter)
       .map(id => account.currencyWallets[id])
       .filter((wallet): wallet is EdgeCurrencyWallet => wallet != null)
-      .map(summarizeWallet)
+      .map(wallet => summarizeWallet(wallet, account))
     return { currencyWallets }
   }
 })
@@ -350,7 +350,7 @@ export const createCurrencyWallet = route({
         importText: ctx.body.importText
       }
     )
-    return summarizeWallet(wallet)
+    return summarizeWallet(wallet, getAccount(ctx))
   }
 })
 
@@ -386,7 +386,10 @@ export const createCurrencyWallets = route({
     return {
       results: results.map(result =>
         result.ok
-          ? { ok: true, wallet: summarizeWallet(result.result) }
+          ? {
+              ok: true,
+              wallet: summarizeWallet(result.result, getAccount(ctx))
+            }
           : {
               ok: false,
               error:

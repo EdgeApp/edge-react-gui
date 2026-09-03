@@ -2726,6 +2726,15 @@
                             "description": "undefined; canSign: boolean"
                           },
                           {
+                            "description": "undefined; viewOnly: boolean"
+                          },
+                          {
+                            "description": "undefined; sharingState: { sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; }"
+                          },
+                          {
+                            "type": "null"
+                          },
+                          {
                             "description": "undefined; created: string"
                           },
                           {
@@ -2848,7 +2857,22 @@
                     },
                     "canSign": {
                       "type": "boolean",
-                      "description": "False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared `view-only` arrives this way."
+                      "description": "False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared `viewOnly` arrives this way."
+                    },
+                    "viewOnly": {
+                      "type": "boolean",
+                      "description": "True when the wallet holds only viewing keys. Read from the key structure itself, never from the sharing records."
+                    },
+                    "sharingState": {
+                      "anyOf": [
+                        {
+                          "description": "{ sharedWith: { name: string; shareType: string; sharingDate: string; }[]; sharedFrom: { name: string; shareType: string; sharingDate: string; }[]; }"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Who this wallet was shared with and who shared it here, null when it has no sharing history."
                     },
                     "created": {
                       "anyOf": [
@@ -4533,7 +4557,7 @@
       "post": {
         "operationId": "requestWalletShare",
         "summary": "Ask another account for wallets.",
-        "description": "**Core call:** `account.requestWalletShare`\n\n**Command line**\n\n```\nrequest-wallet-share [--timeout=<timeout>]\n```\n\nPublishes a lobby and returns the link to show as a QR code. The other device scans it and picks which of its wallets to send, so this side chooses nothing — poll the handle until `state` is `done` to see what arrived.",
+        "description": "**Core call:** `account.requestWalletShare`\n\n**Command line**\n\n```\nrequest-wallet-share [--display-name=<displayName>] [--timeout=<timeout>]\n```\n\nPublishes a lobby and returns the link to show as a QR code. The other device scans it and picks which of its wallets to send, so this side chooses nothing — poll the handle until `state` is `done` to see what arrived.",
         "tags": [
           "Sharing wallets"
         ],
@@ -4592,6 +4616,17 @@
                       "type": "string",
                       "description": "Lobby the other device connects to."
                     },
+                    "counterpartyName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The other party's chosen identity, null until they identify themselves."
+                    },
                     "uri": {
                       "type": "string",
                       "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
@@ -4646,6 +4681,7 @@
                     "kind",
                     "expiresAt",
                     "lobbyId",
+                    "counterpartyName",
                     "uri",
                     "state",
                     "sharedWallets",
@@ -4674,6 +4710,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "displayName": {
+                    "type": "string",
+                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server."
+                  },
                   "timeout": {
                     "type": "number",
                     "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
@@ -4689,7 +4729,7 @@
       "post": {
         "operationId": "offerWalletShare",
         "summary": "Offer wallets to another account.",
-        "description": "**Core call:** `account.offerWalletShare`\n\n**Command line**\n\n```\noffer-wallet-share --wallets='<json>' [--timeout=<timeout>]\n```\n\nThe mirror of `request-wallet-share`: this side picks the wallets and their modes up front, then publishes a link for the recipient to scan. The keys only move once they accept.",
+        "description": "**Core call:** `account.offerWalletShare`\n\n**Command line**\n\n```\noffer-wallet-share --wallets='<json>' [--display-name=<displayName>] [--timeout=<timeout>]\n```\n\nThe mirror of `request-wallet-share`: this side picks the wallets and their modes up front, then publishes a link for the recipient to scan. The keys only move once they accept.",
         "tags": [
           "Sharing wallets"
         ],
@@ -4748,6 +4788,17 @@
                       "type": "string",
                       "description": "Lobby the other device connects to."
                     },
+                    "counterpartyName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The other party's chosen identity, null until they identify themselves."
+                    },
                     "uri": {
                       "type": "string",
                       "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
@@ -4802,6 +4853,7 @@
                     "kind",
                     "expiresAt",
                     "lobbyId",
+                    "counterpartyName",
                     "uri",
                     "state",
                     "sharedWallets",
@@ -4837,6 +4889,10 @@
                     },
                     "description": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`."
                   },
+                  "displayName": {
+                    "type": "string",
+                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server."
+                  },
                   "timeout": {
                     "type": "number",
                     "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
@@ -4855,7 +4911,7 @@
       "post": {
         "operationId": "approveWalletShare",
         "summary": "Send wallets to an account that asked for them.",
-        "description": "**Core call:** `account.approveWalletShare`\n\n**Command line**\n\n```\napprove-wallet-share <lobbyId> --wallets='<json>'\n```\n\nAnswers a `request-wallets` lobby. This is where the sharer decides both which wallets go and what the recipient may do with each one, so it is the point where spend authority is granted. It cannot be taken back.",
+        "description": "**Core call:** `account.approveWalletShare`\n\n**Command line**\n\n```\napprove-wallet-share <lobbyId> --wallets='<json>' [--display-name=<displayName>] [--counterparty-name=<counterpartyName>]\n```\n\nAnswers a `request-wallets` lobby. This is where the sharer decides both which wallets go and what the recipient may do with each one, so it is the point where spend authority is granted. It cannot be taken back.",
         "tags": [
           "Sharing wallets"
         ],
@@ -4933,6 +4989,14 @@
                       "description": "{ walletId: string; mode: string; }"
                     },
                     "description": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`."
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "A human-readable identity for this account, sent to the other party encrypted alongside the wallets."
+                  },
+                  "counterpartyName": {
+                    "type": "string",
+                    "description": "The other party's name, as read from the `name` parameter of the link being answered. Recorded in each wallet's sharing history. A name that arrives over the wire wins."
                   }
                 },
                 "required": [
@@ -4948,7 +5012,7 @@
       "post": {
         "operationId": "acceptWalletShare",
         "summary": "Take wallets from an account that offered them.",
-        "description": "**Core call:** `account.acceptWalletShare`\n\n**Command line**\n\n```\naccept-wallet-share <lobbyId> [--timeout=<timeout>]\n```\n\nAnswers a `share-wallets` lobby. The offering side already chose the wallets and their modes, so there is nothing to pick here — poll the handle until `state` is `done`.",
+        "description": "**Core call:** `account.acceptWalletShare`\n\n**Command line**\n\n```\naccept-wallet-share <lobbyId> [--display-name=<displayName>] [--counterparty-name=<counterpartyName>] [--timeout=<timeout>]\n```\n\nAnswers a `share-wallets` lobby. The offering side already chose the wallets and their modes, so there is nothing to pick here — poll the handle until `state` is `done`.",
         "tags": [
           "Sharing wallets"
         ],
@@ -5017,6 +5081,17 @@
                       "type": "string",
                       "description": "Lobby the other device connects to."
                     },
+                    "counterpartyName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The other party's chosen identity, null until they identify themselves."
+                    },
                     "uri": {
                       "type": "string",
                       "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
@@ -5071,6 +5146,7 @@
                     "kind",
                     "expiresAt",
                     "lobbyId",
+                    "counterpartyName",
                     "uri",
                     "state",
                     "sharedWallets",
@@ -5099,6 +5175,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "displayName": {
+                    "type": "string",
+                    "description": "A human-readable identity for this account, sent to the other party encrypted alongside the wallets."
+                  },
+                  "counterpartyName": {
+                    "type": "string",
+                    "description": "The other party's name, as read from the `name` parameter of the link being answered. Recorded in each wallet's sharing history. A name that arrives over the wire wins."
+                  },
                   "timeout": {
                     "type": "number",
                     "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
@@ -5184,6 +5268,17 @@
                       "type": "string",
                       "description": "Lobby the other device connects to."
                     },
+                    "counterpartyName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The other party's chosen identity, null until they identify themselves."
+                    },
                     "uri": {
                       "type": "string",
                       "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
@@ -5238,6 +5333,7 @@
                     "kind",
                     "expiresAt",
                     "lobbyId",
+                    "counterpartyName",
                     "uri",
                     "state",
                     "sharedWallets",
