@@ -40,7 +40,7 @@ tags:
     id: "sideMenuButton"
 - tapOn: "Logout"
 - tapOn: "Exit PIN"
-- assertVisible: ${USERNAME}
+- assertVisible: ${USERNAME1}
 - tapOn: "Username"
 - eraseText
 - inputText: ${USERNAME2}
@@ -79,7 +79,7 @@ tags:
     id: "sideMenuButton"
 - tapOn:
     id: "downArrow"
-- assertVisible: ${USERNAME}
+- assertVisible: ${USERNAME1}
 - assertVisible: ${USERNAME2}
 - assertVisible: ${USERNAME3}
 
@@ -89,22 +89,22 @@ tags:
     index: 0
 - assertVisible: ${".*Forget Account.*"}
 - tapOn: "Cancel"
-- assertVisible: ${USERNAME}
+- assertVisible: ${USERNAME1}
 - assertVisible: ${USERNAME2}
 - assertVisible: ${USERNAME3}
 # Delete first account
 - tapOn:
     id: "sideMenuClose"
     index: 1
-- assertVisible: ${".*" + USERNAME + ".*"} # Username in confirmation modal
+- assertVisible: ${".*" + USERNAME1 + ".*"} # Username in confirmation modal
 - tapOn: "Forget"
-- assertNotVisible: ${USERNAME}
+- assertNotVisible: ${USERNAME1}
 - tapOn: ${USERNAME2}
 
 # View, forget, switch accounts from PIN login screen
 - assertVisible: ${USERNAME2}
 - tapOn: ${USERNAME2}
-- assertNotVisible: ${USERNAME}
+- assertNotVisible: ${USERNAME1}
 - assertVisible: ${USERNAME2}
 - assertVisible: ${USERNAME3}
 - tapOn:

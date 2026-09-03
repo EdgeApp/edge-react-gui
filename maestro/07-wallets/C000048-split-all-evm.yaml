@@ -34,12 +34,12 @@ tags:
 - tapOn: ".*Split Wallet"
 
 # Verify split wallet scene
-- assertVisible: Create Wallet From Seed
+- assertVisible: Split Wallet
 - assertVisible: Search Wallets
 
 # Define expected EVM networks (ordered by appearance)
 - evalScript: |
-    ${var evmNetworks = [
+    ${output.evmNetworks = [
       "zkSync",
       "Optimism",
       "Ethereum Classic",
@@ -52,7 +52,6 @@ tags:
       "Abstract",
       "Arbitrum One",
       "Base",
-      "Botanix Bitcoin",
       "Celo",
       "EthereumPoW",
       "Filecoin FEVM",
@@ -62,9 +61,9 @@ tags:
     ]}
 
 # Loop over each network and scroll until visible
-- evalScript: ${var index = 0}
+- evalScript: ${output.index = 0}
 - repeat:
-    times: ${evmNetworks.length}
+    times: ${output.evmNetworks.length}
     commands:
     #   # Once search can accomodate multiple words
     #   # Search is slower but more reliable
@@ -82,15 +81,15 @@ tags:
           maxRetries: 2
           commands:
             - scrollUntilVisible:
-                element: ${".*" + evmNetworks[index]}
+                element: ${".*" + output.evmNetworks[output.index]}
                 direction: DOWN
                 centerElement: true
                 speed: 1
                 timeout: 1000
                 optional: true
-            - tapOn: ${".*" + evmNetworks[index]}
+            - tapOn: ${".*" + output.evmNetworks[output.index]}
                 
-      - evalScript: ${index++}
+      - evalScript: ${output.index++}
     
 - tapOn: Next
 
@@ -108,4 +107,3 @@ tags:
 
 
 - stopApp
-

@@ -157,6 +157,7 @@ export const WalletSettingsModal: React.FC<Props> = props => {
       scroll
     >
       <ModalFilledTextInput
+        testID="walletSettingsNameInput"
         autoCorrect={false}
         autoFocus={false}
         value={name}
@@ -208,6 +209,7 @@ export const WalletSettingsModal: React.FC<Props> = props => {
       <ModalButtons
         primary={{
           label: lstrings.string_done_cap,
+          testID: 'walletSettingsDoneButton',
           onPress: handleSubmit,
           disabled: isSubmitting,
           spinner: isSubmitting

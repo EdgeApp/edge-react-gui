@@ -23,8 +23,8 @@ tags:
 # All networks that support tokens (and import seed)
 # EVMs: Only Sonic and Pulsechain (others tested via regular asset sync)
 - evalScript: ${
-    var wallets = '[
-      "Coreum",
+    output.wallets = '[
+      "TX",
       "Osmosis",
       "Avalanche",
       "Solana",
@@ -40,7 +40,7 @@ tags:
 - runFlow:
     file: ../common/import-wallets.yaml
     env:
-      ASSET_NAMES: ${wallets}
+      ASSET_NAMES: ${output.wallets}
     # label: "Import wallets"
 
 - runFlow:
@@ -54,7 +54,7 @@ tags:
 
 # Tokens matching the imported networks
 - evalScript: ${
-    var tokens = [
+    output.tokens = [
       "ATOM",
       "JOE",
       "PYTH",
@@ -94,17 +94,17 @@ tags:
 #     visible: ${".*New tokens were detected and enabled on " + WALLET_NAME + ".*"}
 #     timeout: 60000
 
-- evalScript: ${var index = 0}
+- evalScript: ${output.index = 0}
 - repeat:
-    times: ${tokens.length}
+    times: ${output.tokens.length}
     commands:
       - scrollUntilVisible:
-          element: ${tokens[index]}
+          element: ${output.tokens[output.index]}
           direction: UP
           timeout: 20000
           optional: true
       - scrollUntilVisible:
-          element: ${tokens[index]}
+          element: ${output.tokens[output.index]}
           direction: DOWN
           timeout: 90000
       - scrollUntilVisible:
@@ -114,7 +114,7 @@ tags:
           timeout: 10000
           optional: true
           label: "Scroll to bottom."
-      - evalScript: ${index++}
+      - evalScript: ${output.index++}
 
 
 

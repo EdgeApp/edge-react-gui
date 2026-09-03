@@ -23,8 +23,8 @@ tags:
     visible: "Username and password are correct. This device cannot log in because\
     \ it does not have the right 2-factor code."
     timeout: 15000
-- assertVisible: "Enter Backup Code"
-- tapOn: "Enter Backup Code"
+- assertVisible: "Enter 2FA code"
+- tapOn: "Enter 2FA code"
 - inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
 - assertVisible: "Submit"
 
@@ -36,40 +36,127 @@ tags:
     text: "Submit"
     optional: true
 
-# If the request notifications modal show with "Security is Our Priority"
-# Cancel it
-- tapOn:
-    text: "Cancel"
-    optional: true
-
-# If the 2FA warning shows up for another device, deny it
-- tapOn:
-    text: "Deny"
-    optional: true
-- tapOn:
-    text: "Deny All"
-    optional: true
-- tapOn:
-    text: "Deny"
-    optional: true
-- tapOn:
-    text: "Deny All"
-    optional: true
-- tapOn:
-    text: "SKIP"
-    optional: true
-- tapOn:
-    text: "SKIP"
-    optional: true
-
-# If the request notifications modal show with "Security is Our Priority"
-# Cancel it
+# Wait for the delayed request-notifications modal, then verify it is gone.
 - extendedWaitUntil:
-    visible: "Security is Our Priority"
-    timeout: 20000
+    visible:
+      id: "modal-close-button"
+    timeout: 30000
     optional: true
 - tapOn:
-    text: "Cancel"
+    id: "modal-close-button"
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "modal-close-button"
+    timeout: 10000
+    optional: true
+
+# Wait for the security-alert scene before checking its available actions.
+- extendedWaitUntil:
+    visible:
+      id: "securityAlertDenyButton"
+    timeout: 30000
+    optional: true
+
+# A second request-notifications modal can be queued over the alert scene.
+- extendedWaitUntil:
+    visible:
+      id: "modal-close-button"
+    timeout: 10000
+    optional: true
+- tapOn:
+    id: "modal-close-button"
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "modal-close-button"
+    timeout: 10000
+    optional: true
+
+# Prefer Deny All when it is exposed. The zero settle timeout lets Maestro
+# observe the loading-state identifier before waiting for it to disappear.
+- runFlow:
+    when:
+      visible:
+        id: "securityAlertDenyAllButton"
+    commands:
+      - tapOn:
+          id: "securityAlertDenyAllButton"
+          waitToSettleTimeoutMs: 0
+      - extendedWaitUntil:
+          visible:
+            id: "securityAlertDenyAllButton.spinner"
+          timeout: 5000
+      - extendedWaitUntil:
+          notVisible:
+            id: "securityAlertDenyAllButton.spinner"
+          timeout: 20000
+      - extendedWaitUntil:
+          notVisible:
+            id: "securityAlertDenyAllButton"
+          timeout: 20000
+
+# Android does not expose the off-screen Deny All footer. Clear any remaining
+# vouchers individually, bounded to avoid an unending cleanup loop.
+- runFlow:
+    when:
+      visible:
+        id: "securityAlertDenyButton"
+    commands:
+      - repeat:
+          times: 10
+          commands:
+            - runFlow:
+                when:
+                  visible:
+                    id: "securityAlertDenyButton"
+                commands:
+                  - runFlow:
+                      when:
+                        visible:
+                          id: "modal-close-button"
+                      commands:
+                        - tapOn:
+                            id: "modal-close-button"
+                        - extendedWaitUntil:
+                            notVisible:
+                              id: "modal-close-button"
+                            timeout: 10000
+                  - tapOn:
+                      id: "securityAlertDenyButton"
+                      waitToSettleTimeoutMs: 0
+                  - extendedWaitUntil:
+                      visible:
+                        id: "securityAlertDenyButton.spinner"
+                      timeout: 5000
+                  - extendedWaitUntil:
+                      notVisible:
+                        id: "securityAlertDenyButton.spinner"
+                      timeout: 20000
+      - extendedWaitUntil:
+          notVisible:
+            id: "securityAlertDenyButton"
+          timeout: 20000
+- tapOn:
+    text: "SKIP"
+    optional: true
+- tapOn:
+    text: "SKIP"
+    optional: true
+
+# Dismiss any notification prompt queued after the denial actions.
+- extendedWaitUntil:
+    visible:
+      id: "modal-close-button"
+    timeout: 10000
+    optional: true
+- tapOn:
+    id: "modal-close-button"
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "modal-close-button"
+    timeout: 10000
     optional: true
 
 # If the survey modal shows, dismiss it
