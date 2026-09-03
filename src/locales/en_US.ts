@@ -277,6 +277,9 @@ const strings = {
   transaction_list_search_no_result: 'Search returned no results',
   transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
+  fragment_wallets_unhide_balance_text: 'Unhide Balance',
+  fragment_wallets_balance_hidden_toast:
+    'Balances are hidden. Tap “Unhide Balance” to show them again.',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
   fragment_wallets_delete_token_prompt_2s:
