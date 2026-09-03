@@ -8,7 +8,7 @@ import {
 } from '@walletconnect/utils'
 import type { Web3WalletTypes } from '@walletconnect/web3wallet'
 import type { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
-import type { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -20,6 +20,11 @@ import { useSelector } from '../types/reactRedux'
 import type { WalletConnectChainId, WcConnectionInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
+import {
+  forgetSessionWallet,
+  lookupSessionWallet,
+  rememberSessionWallet
+} from '../util/walletConnectSessionStore'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
 
@@ -91,11 +96,8 @@ export function useWalletConnect(): WalletConnect {
     const accounts = await getAccounts(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = getWalletIdFromSessionNamespace(
-        session.namespaces,
-        accounts
-      )
-      if (walletId == null) continue
+      const walletId = await resolveSessionWalletId(account, session, accounts)
+      if (walletId == null || currencyWallets[walletId] == null) continue
 
       const connection = parseConnection(session, walletId)
       connections.push(connection)
@@ -145,11 +147,10 @@ export function useWalletConnect(): WalletConnect {
           .walletConnectV2ChainId
       if (chainId == null) return
 
-      const address = await wallet.getReceiveAddress({ tokenId: null })
-      const supportedNamespaces = getSupportedNamespaces(
-        chainId,
-        address.publicAddress
-      )
+      const address = await getWalletConnectAddress(wallet)
+      if (address == null) return
+
+      const supportedNamespaces = getSupportedNamespaces(chainId, address)
 
       // Check that we support all required methods. A dapp can require a
       // namespace this wallet does not serve at all, in which case there is
@@ -170,7 +171,7 @@ export function useWalletConnect(): WalletConnect {
         }
       }
 
-      await runWithTimeout(
+      const session = await runWithTimeout(
         client.approveSession({
           id: proposal.id,
           namespaces: buildApprovedNamespaces({
@@ -180,6 +181,7 @@ export function useWalletConnect(): WalletConnect {
         }),
         20000
       )
+      await rememberSessionWallet(account, session.topic, walletId)
     }
   )
 
@@ -212,6 +214,7 @@ export function useWalletConnect(): WalletConnect {
       }),
       10000
     )
+    await forgetSessionWallet(account, topic)
     Airship.show(bridge => (
       <FlashNotification
         bridge={bridge}
@@ -343,13 +346,48 @@ export const getAccounts = async (
       SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
-    const address = await currencyWallets[walletId].getReceiveAddress({
-      tokenId: null
-    })
-    const account = `${chainId.namespace}:${chainId.reference}:${address.publicAddress}`
+    const address = await getWalletConnectAddress(wallet)
+    if (address == null) continue
+
+    const account = `${chainId.namespace}:${chainId.reference}:${address}`
     map.set(account, walletId)
   }
   return map
+}
+
+/**
+ * The address a WalletConnect session advertises for a wallet. Native SegWit is
+ * preferred where a chain offers it, since that is the address Edge shows the
+ * user as their receive address and therefore the one a verifier expects to see
+ * a proof-of-ownership signature against. Every other chain reports a single
+ * address and is unaffected.
+ */
+export const getWalletConnectAddress = async (
+  wallet: EdgeCurrencyWallet
+): Promise<string | undefined> => {
+  const addresses = await wallet.getAddresses({ tokenId: null })
+  const address =
+    addresses.find(address => address.addressType === 'segwitAddress') ??
+    addresses.find(address => address.addressType === 'publicAddress') ??
+    addresses[0]
+  // A wallet that reports no address cannot take part in a session. Returning
+  // undefined keeps it out of the account map instead of throwing, which would
+  // take down session listing and request routing for every other wallet.
+  return address?.publicAddress
+}
+
+/**
+ * The wallet that approved a session: the remembered mapping first, since it
+ * survives receive-address rotation, then the address carried on the session.
+ */
+export const resolveSessionWalletId = async (
+  account: EdgeAccount,
+  session: SessionTypes.Struct,
+  accounts: Map<string, string>
+): Promise<string | undefined> => {
+  const remembered = await lookupSessionWallet(account, session.topic)
+  if (remembered != null) return remembered
+  return getWalletIdFromSessionNamespace(session.namespaces, accounts)
 }
 
 export const getWalletIdFromSessionNamespace = (

@@ -10,7 +10,10 @@ import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstan
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useUnmount } from '../../hooks/useUnmount'
-import { useWalletConnect } from '../../hooks/useWalletConnect'
+import {
+  getWalletConnectAddress,
+  useWalletConnect
+} from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
@@ -70,8 +73,8 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   useAsyncEffect(
     async () => {
-      const r = await wallet.getReceiveAddress({ tokenId: null })
-      setWalletAddress(r.publicAddress)
+      const address = await getWalletConnectAddress(wallet)
+      if (address != null) setWalletAddress(address)
     },
     [wallet],
     'WcConnectScene'
