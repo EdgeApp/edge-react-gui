@@ -36,6 +36,7 @@
   "action_display_message_complete_bank": "Your loan is complete! \nYou should see funds in your bank account in 1-4 days",
   "bitpay_metadata_name": "Invoice ID: %s",
   "bitcoin_received": "%1$s Received",
+  "boot_failed_message_1s": "Edge failed to start: %1$s",
   "dialog_title": "Set Auto Logoff time",
   "share_subject": "Hey, I think you should try %s",
   "share_message": "You can buy, store, and trade dozens of cryptocurrencies all in one app.",
