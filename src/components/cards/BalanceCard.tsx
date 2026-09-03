@@ -185,10 +185,11 @@ export const BalanceCard: React.FC<Props> = props => {
       </UnscaledText>
       <EdgeTouchableOpacity
         style={styles.balanceContainer}
+        testID="balanceCardToggle"
         onPress={handleToggleAccountBalanceVisibility}
       >
         <View style={styles.titleContainer}>
-          <EdgeText style={theme.cardTextShadow}>
+          <EdgeText style={theme.cardTextShadow} testID="balanceCardTitle">
             {isBalanceVisible
               ? lstrings.fragment_wallets_balance_text
               : lstrings.fragment_wallets_unhide_balance_text}

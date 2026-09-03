@@ -98,6 +98,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         "opacity": 1,
       }
     }
+    testID="balanceCardToggle"
   >
     <View
       style={
@@ -132,6 +133,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             null,
           ]
         }
+        testID="balanceCardTitle"
       >
         Total Balance
       </Text>
