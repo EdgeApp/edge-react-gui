@@ -488,6 +488,9 @@ const AmountAnimatedNumericInput = React.forwardRef<
   return (
     <View>
       <Text
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
         allowFontScaling={false}
         numberOfLines={1}
         style={[style, sizerStyle]}
