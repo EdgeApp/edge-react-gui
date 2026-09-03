@@ -13,12 +13,11 @@
  */
 import path from 'path'
 
+import { passForm, usageFor } from './cliUsage'
 import {
   type ExtractedCli,
-  type ExtractedField,
   type ExtractedRoute,
-  extractRoutes,
-  kebab
+  extractRoutes
 } from './extractRoutes'
 import { writeIfChanged } from './writeIfChanged'
 
@@ -44,53 +43,6 @@ interface CommandHelp {
   returnsDoc?: string
   notes?: string[]
   errors?: string[]
-}
-
-/**
- * True for a field the command takes as a bare switch rather than a value.
- *
- * Only an optional boolean qualifies: a required one needs `=true|false`,
- * since a bare flag has no way to say false.
- */
-function isSwitch(field: ExtractedField): boolean {
-  if (!field.optional) return false
-  return field.type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
-}
-
-/** How a request field is supplied on the command line, if at all. */
-function passForm(cli: ExtractedCli, field: ExtractedField): string {
-  if (cli.positional === field.name) return `<${field.name}>`
-  if (cli.bodyFlag != null) return `--${cli.bodyFlag}='<json>'`
-  const mapped = cli.flags.find(f => f.maps === field.name)
-  const name = mapped?.name ?? kebab(field.name)
-  const token =
-    mapped?.repeat === true
-      ? `--${name}=<value> …`
-      : isSwitch(field)
-      ? `--${name}`
-      : field.type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
-      ? `--${name}=true|false`
-      : `--${name}=<value>`
-  return field.optional ? `[${token}]` : token
-}
-
-function usageFor(r: ExtractedRoute, cli: ExtractedCli): string {
-  const parts = [cli.command]
-  // A positional is a path parameter, so the path is the single source for
-  // it; `cli.positional` only names which field it carries.
-  for (const p of r.pathParams) if (p !== 'sessionId') parts.push(`<${p}>`)
-  if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)
-  else {
-    for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
-      if (r.pathParams.includes(f.name)) continue
-      parts.push(passForm(cli, f))
-    }
-  }
-  for (const x of cli.extra) {
-    const token = x.kind === 'boolean' ? `--${x.name}` : `--${x.name}=<value>`
-    parts.push(x.required === true ? token : `[${token}]`)
-  }
-  return parts.join(' ')
 }
 
 function helpFor(r: ExtractedRoute, cli: ExtractedCli): CommandHelp {

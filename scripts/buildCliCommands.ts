@@ -16,6 +16,7 @@
  */
 import path from 'path'
 
+import { usageFor } from './cliUsage'
 import {
   type ExtractedCli,
   type ExtractedRoute,
@@ -106,26 +107,11 @@ function specFor(r: ExtractedRoute, cli: ExtractedCli): CommandSpec {
     )
   }
 
-  const parts = [cli.command]
-  if (pathPositional != null) parts.push(`<${pathPositional}>`)
-  if (cli.bodyFlag != null) parts.push(`--${cli.bodyFlag}='<json>'`)
-  else {
-    for (const a of args) {
-      const token =
-        a.kind === 'boolean'
-          ? `--${a.flag ?? ''}`
-          : a.kind === 'json'
-          ? `--${a.flag ?? ''}='<json>'`
-          : `--${a.flag ?? ''}=<${a.field}>`
-      parts.push(a.required ? token : `[${token}]`)
-    }
-  }
-
   return {
     command: cli.command,
     method: r.method,
     path: r.routePath,
-    usage: parts.join(' '),
+    usage: usageFor(r, cli),
     help: r.summary,
     needsSession: r.pathParams.includes('sessionId'),
     pathPositional,
