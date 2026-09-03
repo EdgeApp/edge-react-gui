@@ -1,0 +1,1138 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Edge CLI",
+    "version": "1.0.0",
+    "description": "The `edge-cli` command line and the `edge-engine` JSON REST API, generated from the route declarations in `src/cli/engine/routes/`."
+  },
+  "servers": [
+    {
+      "url": "http://localhost",
+      "description": "Unix socket at ~/.edge-cli/run/<profile>/engine.sock"
+    },
+    {
+      "url": "http://127.0.0.1:9008",
+      "description": "Loopback TCP, when started with --tcp=9008"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Lifecycle",
+      "description": "Lifecycle and configuration of the `edge-engine` daemon. None of these have an `edge-core-js` equivalent — they describe the daemon itself — and none need a session."
+    },
+    {
+      "name": "Device and usernames",
+      "description": "Calls on the shared `EdgeContext`: local device state and login-server queries that do not need a session."
+    },
+    {
+      "name": "Login methods",
+      "description": "Every successful login returns a [Session](#schema-Session) and registers it in the engine, so later calls need only the `sessionId`. The CLI writes that id to `session.json` automatically."
+    },
+    {
+      "name": "Session",
+      "description": "Calls on a logged-in `EdgeAccount`, addressed by `sessionId`. All of these can also return `401 INVALID_SESSION` or `401 SESSION_EXPIRED`."
+    },
+    {
+      "name": "Object handles",
+      "description": "A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them."
+    },
+    {
+      "name": "Event stream",
+      "description": "A Server-Sent Events feed of engine activity, served outside the router because the response never ends."
+    }
+  ],
+  "paths": {
+    "/engine/status": {
+      "get": {
+        "operationId": "engineStatus",
+        "summary": "Engine liveness and summary.",
+        "description": "**Core call:** _none — Engine lifecycle; the daemon is not part of the core API._\n\n**Command line**\n\n```\nengine-status\n```\n\nThe readiness probe the client polls after auto-spawning the engine.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-status",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine lifecycle; the daemon is not part of the core API.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "`idleShutdownAt` is null while a session or a subscription holds the engine open, and `tcpPort` is null unless started with `--tcp`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pid": {
+                      "type": "number",
+                      "description": "The daemon process, for `kill` when it will not stop."
+                    },
+                    "apiVersion": {
+                      "type": "string",
+                      "description": "The API this engine speaks. A client refusing to talk to an older engine checks this."
+                    },
+                    "uptimeSeconds": {
+                      "type": "number",
+                      "description": "How long the daemon has been running."
+                    },
+                    "sessionCount": {
+                      "type": "number",
+                      "description": "Logged-in accounts held open right now."
+                    },
+                    "testMode": {
+                      "type": "boolean",
+                      "description": "True when pointed at the tester fleet."
+                    },
+                    "idleShutdownAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled."
+                    },
+                    "tcpPort": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The loopback port, null unless started with `--tcp`."
+                    },
+                    "socketPath": {
+                      "type": "string",
+                      "description": "Unix socket the CLI connects to."
+                    },
+                    "locale": {
+                      "type": "string",
+                      "description": "Language tag the engine resolved at boot."
+                    },
+                    "decimalSeparator": {
+                      "type": "string",
+                      "description": "Decimal mark for that locale."
+                    },
+                    "groupingSeparator": {
+                      "type": "string",
+                      "description": "Thousands mark for that locale."
+                    }
+                  },
+                  "required": [
+                    "pid",
+                    "apiVersion",
+                    "uptimeSeconds",
+                    "sessionCount",
+                    "testMode",
+                    "idleShutdownAt",
+                    "tcpPort",
+                    "socketPath",
+                    "locale",
+                    "decimalSeparator",
+                    "groupingSeparator"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "ENGINE_SHUTTING_DOWN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/config": {
+      "get": {
+        "operationId": "engineConfig",
+        "summary": "Configured context options.",
+        "description": "**Core call:** _none — Reflects the EdgeContextOptions the engine supplied at startup._\n\n**Command line**\n\n```\nengine-config\n```\n\nWhat the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-config",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Reflects the EdgeContextOptions the engine supplied at startup.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "appId": {
+                      "type": "string",
+                      "description": "Application ID the engine was started with."
+                    },
+                    "testMode": {
+                      "type": "boolean",
+                      "description": "True when the engine is pointed at the tester fleet."
+                    },
+                    "directory": {
+                      "type": "string",
+                      "description": "Working directory holding the core data."
+                    },
+                    "servers": {
+                      "anyOf": [
+                        {
+                          "description": "{ [keys: string]: string"
+                        },
+                        {
+                          "description": "string[]; }"
+                        }
+                      ],
+                      "description": "The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet."
+                    },
+                    "plugins": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Plugin IDs the engine loaded, sorted."
+                    }
+                  },
+                  "required": [
+                    "appId",
+                    "testMode",
+                    "directory",
+                    "servers",
+                    "plugins"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/stop": {
+      "post": {
+        "operationId": "engineStop",
+        "summary": "Stop the engine.",
+        "description": "**Core call:** _none — Engine lifecycle. Internally calls `context.close()`._\n\n**Command line**\n\n```\nengine-stop\n```\n\nLogs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-stop",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine lifecycle. Internally calls `context.close()`.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/local-users": {
+      "get": {
+        "operationId": "localUsers",
+        "summary": "List local users on this device.",
+        "description": "**Core call:** `context.localUsers`\n\n**Command line**\n\n```\nlocal-users\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "local-users",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.localUsers",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "localUsers": {
+                      "type": "array",
+                      "items": {},
+                      "description": "`EdgeUserInfo[]`: one entry per account cached on this device."
+                    }
+                  },
+                  "required": [
+                    "localUsers"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/username-available": {
+      "get": {
+        "operationId": "usernameAvailable",
+        "summary": "Check whether a username is free.",
+        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available --username=<username> [--challenge-id=<challengeId>]\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "username-available",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.usernameAvailable",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "description": "The name to check.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "challengeId",
+            "in": "query",
+            "required": false,
+            "description": "Supply after solving a CAPTCHA to retry the same check.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "The name that was checked, echoed back."
+                    },
+                    "available": {
+                      "type": "boolean",
+                      "description": "True when nobody holds this name. It is not reserved by asking."
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "available"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, CHALLENGE_REQUIRED, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetch-login-messages": {
+      "get": {
+        "operationId": "fetchLoginMessages",
+        "summary": "Fetch login-server messages for every local user.",
+        "description": "**Core call:** `context.fetchLoginMessages`\n\n**Command line**\n\n```\nfetch-login-messages\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "fetch-login-messages",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.fetchLoginMessages",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login-with-password": {
+      "post": {
+        "operationId": "loginWithPassword",
+        "summary": "Log in with a password.",
+        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username=<username> --password=<password>\n```\n\n",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "login-with-password",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.loginWithPassword",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"password\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "anyOf": [
+                        {
+                          "description": "\"password\""
+                        },
+                        {
+                          "description": "\"pin\""
+                        },
+                        {
+                          "description": "\"key\""
+                        },
+                        {
+                          "description": "\"recovery\""
+                        },
+                        {
+                          "description": "\"edge\""
+                        },
+                        {
+                          "description": "\"create\""
+                        }
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PASSWORD_ERROR, USERNAME_ERROR, OTP_REQUIRED, CHALLENGE_REQUIRED, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The account name."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The account password."
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-account": {
+      "post": {
+        "operationId": "createAccount",
+        "summary": "Create an account.",
+        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] [--username=<username>] [--password=<password>] [--pin=<pin>]\n```\n\nEvery credential is optional over REST: omitting all three creates a light account with no username.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "create-account",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.createAccount",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"create\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "anyOf": [
+                        {
+                          "description": "\"password\""
+                        },
+                        {
+                          "description": "\"pin\""
+                        },
+                        {
+                          "description": "\"key\""
+                        },
+                        {
+                          "description": "\"recovery\""
+                        },
+                        {
+                          "description": "\"edge\""
+                        },
+                        {
+                          "description": "\"create\""
+                        }
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, CHALLENGE_REQUIRED, BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The name to claim."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The account password."
+                  },
+                  "pin": {
+                    "type": "string",
+                    "description": "A device PIN to save."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/sessions": {
+      "get": {
+        "operationId": "engineSessions",
+        "summary": "List active sessions.",
+        "description": "**Core call:** _none — The session registry is an engine construct; core has no multi-account session concept._\n\n**Command line**\n\n```\nengine-sessions\n```\n\n",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "engine-sessions",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "The session registry is an engine construct; core has no multi-account session concept.",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A bare array, not wrapped in a key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "description": "{ sessionId: string; username: string"
+                      },
+                      {
+                        "description": "undefined; rootLoginId: string; loginMethod: \"password\""
+                      },
+                      {
+                        "description": "\"pin\""
+                      },
+                      {
+                        "description": "\"key\""
+                      },
+                      {
+                        "description": "\"recovery\""
+                      },
+                      {
+                        "description": "\"edge\""
+                      },
+                      {
+                        "description": "\"create\"; autoLogoutSeconds: number; expiresAt: string"
+                      },
+                      {
+                        "description": "null; lastActivityAt: string; createdAt: string; }"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "Log out.",
+        "description": "**Core call:** `account.logout`\n\n**Command line**\n\n```\nlogout\n```\n\nEnds the session and drops it from the engine.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "logout",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {},
+          "notes": "Also clears the stored id from `session.json`."
+        },
+        "x-core-call": "account.logout",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/object/{objectId}": {
+      "get": {
+        "operationId": "getObject",
+        "summary": "Inspect an object handle.",
+        "description": "**Core call:** _none — Engine handle store; core identifies these values by object reference._\n\n**Command line**\n\n```\nobject-get <objectId> <objectId>\n```\n\nWorks for every kind: transactions, pending logins, swap quotes.",
+        "tags": [
+          "Object handles"
+        ],
+        "x-cli": {
+          "command": "object-get",
+          "positional": "objectId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine handle store; core identifies these values by object reference.",
+        "x-source": "src/cli/engine/routes/objects.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "objectId",
+            "in": "path",
+            "required": true,
+            "description": "An ephemeral object handle id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The handle fields, plus a `value` holding the live core object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
+                    },
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
+                    },
+                    "walletId": {
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "kind",
+                    "expiresAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_SESSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/object/delete/{objectId}": {
+      "post": {
+        "operationId": "deleteObject",
+        "summary": "Release an object handle.",
+        "description": "**Core call:** _none — Engine handle store._\n\n**Command line**\n\n```\nobject-delete <objectId> <objectId>\n```\n\nRuns the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
+        "tags": [
+          "Object handles"
+        ],
+        "x-cli": {
+          "command": "object-delete",
+          "positional": "objectId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine handle store.",
+        "x-source": "src/cli/engine/routes/objects.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "objectId",
+            "in": "path",
+            "required": true,
+            "description": "An ephemeral object handle id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    },
+                    "objectId": {
+                      "type": "string",
+                      "description": "The handle this call consumed. It is now expired."
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "objectId"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_SESSION_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/events": {
+      "get": {
+        "operationId": "engineEvents",
+        "summary": "Subscribe to engine events.",
+        "description": "**Core call:** _none — Engine-side fan-out; `core.log` frames carry core's onLog output._\n\n**Command line**\n\n```\nsubscribe [--type=<value>]\n```\n\nHolds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.\n\nA live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.",
+        "tags": [
+          "Event stream"
+        ],
+        "x-cli": {
+          "command": "subscribe",
+          "flags": [],
+          "extra": [
+            {
+              "name": "type",
+              "kind": "repeat",
+              "required": false,
+              "doc": "Client-side filter; the engine always sends everything the scope allows."
+            }
+          ],
+          "custom": true,
+          "preset": {},
+          "notes": "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away."
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine-side fan-out; `core.log` frames carry core's onLog output.",
+        "x-source": "src/cli/engine/routes/events.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "One frame per event, as `event:` then `data:` lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "The event name."
+                    },
+                    "data": {
+                      "description": "Payload, shaped by the event type."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorEnvelope": {
+        "type": "object",
+        "description": "Every failure, on both transports.",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status": {
+                "type": "number"
+              },
+              "details": {}
+            },
+            "required": [
+              "code",
+              "message",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  }
+}

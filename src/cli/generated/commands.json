@@ -1,0 +1,103 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliCommands.ts from the route declarations in src/cli/engine/routes. Commands marked `custom: true` in a declaration are hand-written instead; see src/cli/commands/.",
+  "commands": [
+    {
+      "command": "engine-config",
+      "method": "GET",
+      "path": "/engine/config",
+      "usage": "engine-config",
+      "help": "Configured context options.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-sessions",
+      "method": "GET",
+      "path": "/engine/sessions",
+      "usage": "engine-sessions",
+      "help": "List active sessions.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-status",
+      "method": "GET",
+      "path": "/engine/status",
+      "usage": "engine-status",
+      "help": "Engine liveness and summary.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-stop",
+      "method": "POST",
+      "path": "/engine/stop",
+      "usage": "engine-stop",
+      "help": "Stop the engine.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-login-messages",
+      "method": "GET",
+      "path": "/fetch-login-messages",
+      "usage": "fetch-login-messages",
+      "help": "Fetch login-server messages for every local user.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "local-users",
+      "method": "GET",
+      "path": "/local-users",
+      "usage": "local-users",
+      "help": "List local users on this device.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "object-delete",
+      "method": "POST",
+      "path": "/account/{sessionId}/object/delete/{objectId}",
+      "usage": "object-delete <objectId>",
+      "help": "Release an object handle.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "object-get",
+      "method": "GET",
+      "path": "/account/{sessionId}/object/{objectId}",
+      "usage": "object-get <objectId>",
+      "help": "Inspect an object handle.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "username-available",
+      "method": "GET",
+      "path": "/username-available",
+      "usage": "username-available --username=<username> [--challenge-id=<challengeId>]",
+      "help": "Check whether a username is free.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "challenge-id",
+          "field": "challengeId",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
