@@ -1,0 +1,310 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the route declarations in src/cli/engine/routes. Edit the declaration, then run `npm run prepare` (or `npm run docs:api`).",
+  "commands": {
+    "create-account": {
+      "summary": "Create an account.",
+      "method": "POST",
+      "path": "/create-account",
+      "usage": "create-account [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] [--username=<value>] [--password=<value>] [--pin=<value>]",
+      "description": "Every credential is optional over REST: omitting all three creates a light account with no username.",
+      "core": "context.createAccount",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "[--username=<value>]",
+          "doc": "The name to claim.",
+          "optional": true
+        },
+        "password": {
+          "pass": "[--password=<value>]",
+          "doc": "The account password.",
+          "optional": true
+        },
+        "pin": {
+          "pass": "[--pin=<value>]",
+          "doc": "A device PIN to save.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"create\"`.",
+      "notes": [
+        "The command requires a username, password and PIN. Creating a light account is REST-only."
+      ],
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "engine-config": {
+      "summary": "Configured context options.",
+      "method": "GET",
+      "path": "/engine/config",
+      "usage": "engine-config",
+      "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+      "returns": {
+        "appId": "string — Application ID the engine was started with.",
+        "testMode": "boolean — True when the engine is pointed at the tester fleet.",
+        "directory": "string — Working directory holding the core data.",
+        "servers": "{ [keys: string]: string | string[]; } — The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet.",
+        "plugins": "string[] — Plugin IDs the engine loaded, sorted."
+      },
+      "notes": [
+        "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
+      ]
+    },
+    "engine-sessions": {
+      "summary": "List active sessions.",
+      "method": "GET",
+      "path": "/engine/sessions",
+      "usage": "engine-sessions",
+      "returns": {
+        "": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]"
+      },
+      "returnsDoc": "A bare array, not wrapped in a key."
+    },
+    "engine-status": {
+      "summary": "Engine liveness and summary.",
+      "method": "GET",
+      "path": "/engine/status",
+      "usage": "engine-status",
+      "description": "The readiness probe the client polls after auto-spawning the engine.",
+      "returns": {
+        "pid": "number — The daemon process, for `kill` when it will not stop.",
+        "apiVersion": "string — The API this engine speaks. A client refusing to talk to an older engine checks this.",
+        "uptimeSeconds": "number — How long the daemon has been running.",
+        "sessionCount": "number — Logged-in accounts held open right now.",
+        "testMode": "boolean — True when pointed at the tester fleet.",
+        "idleShutdownAt": "string | null — When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled.",
+        "tcpPort": "number | null — The loopback port, null unless started with `--tcp`.",
+        "socketPath": "string — Unix socket the CLI connects to.",
+        "locale": "string — Language tag the engine resolved at boot.",
+        "decimalSeparator": "string — Decimal mark for that locale.",
+        "groupingSeparator": "string — Thousands mark for that locale."
+      },
+      "returnsDoc": "`idleShutdownAt` is null while a session or a subscription holds the engine open, and `tcpPort` is null unless started with `--tcp`.",
+      "errors": [
+        "ENGINE_SHUTTING_DOWN"
+      ]
+    },
+    "engine-stop": {
+      "summary": "Stop the engine.",
+      "method": "POST",
+      "path": "/engine/stop",
+      "usage": "engine-stop",
+      "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+      "returns": {
+        "ok": "boolean — Always true; a failure arrives as an error envelope."
+      },
+      "notes": [
+        "In-flight callers may see `503 ENGINE_SHUTTING_DOWN` once teardown starts."
+      ]
+    },
+    "fetch-login-messages": {
+      "summary": "Fetch login-server messages for every local user.",
+      "method": "GET",
+      "path": "/fetch-login-messages",
+      "usage": "fetch-login-messages",
+      "core": "context.fetchLoginMessages",
+      "returnsDoc": "`EdgeLoginMessages` from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.",
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "local-users": {
+      "summary": "List local users on this device.",
+      "method": "GET",
+      "path": "/local-users",
+      "usage": "local-users",
+      "core": "context.localUsers",
+      "returns": {
+        "localUsers": "unknown[] — `EdgeUserInfo[]`: one entry per account cached on this device."
+      },
+      "returnsDoc": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device."
+    },
+    "login-with-password": {
+      "summary": "Log in with a password.",
+      "method": "POST",
+      "path": "/login-with-password",
+      "usage": "login-with-password [--otp=<value>] [--otp-key=<value>] [--challenge-id=<value>] --username=<value> --password=<value>",
+      "core": "context.loginWithPassword",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<value>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<value>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "--username=<value>",
+          "doc": "The account name.",
+          "optional": false
+        },
+        "password": {
+          "pass": "--password=<value>",
+          "doc": "The account password.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"password\" | \"pin\" | \"key\" | \"recovery\" | \"edge\" | \"create\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"password\"`.",
+      "notes": [
+        "With `--solve-captcha` the client solves a `CHALLENGE_REQUIRED` response headlessly (ALTCHA proof-of-work) and retries once."
+      ],
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "OTP_REQUIRED",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    },
+    "logout": {
+      "summary": "Log out.",
+      "method": "POST",
+      "path": "/account/{sessionId}/logout",
+      "usage": "logout",
+      "description": "Ends the session and drops it from the engine.",
+      "core": "account.logout",
+      "notes": [
+        "Also clears the stored id from `session.json`."
+      ]
+    },
+    "object-delete": {
+      "summary": "Release an object handle.",
+      "method": "POST",
+      "path": "/account/{sessionId}/object/delete/{objectId}",
+      "usage": "object-delete <objectId>",
+      "description": "Runs the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
+      "returns": {
+        "ok": "boolean — Always true; a failure arrives as an error envelope.",
+        "objectId": "string — The handle this call consumed. It is now expired."
+      },
+      "errors": [
+        "OBJECT_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_SESSION_MISMATCH"
+      ]
+    },
+    "object-get": {
+      "summary": "Inspect an object handle.",
+      "method": "GET",
+      "path": "/account/{sessionId}/object/{objectId}",
+      "usage": "object-get <objectId>",
+      "description": "Works for every kind: transactions, pending logins, swap quotes.",
+      "returns": {
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one."
+      },
+      "returnsDoc": "The handle fields, plus a `value` holding the live core object.",
+      "notes": [
+        "Reading does not extend the TTL. Only a step that updates the value does."
+      ],
+      "errors": [
+        "OBJECT_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_SESSION_MISMATCH"
+      ]
+    },
+    "subscribe": {
+      "summary": "Subscribe to engine events.",
+      "method": "GET",
+      "path": "/engine/events",
+      "usage": "subscribe [--type=<value>]",
+      "description": "Holds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.\n\nA live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.",
+      "params": {
+        "type": {
+          "pass": "--type=<value>",
+          "doc": "Client-side filter; the engine always sends everything the scope allows.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "type": "string — The event name.",
+        "data": "unknown — Payload, shaped by the event type."
+      },
+      "returnsDoc": "One frame per event, as `event:` then `data:` lines.",
+      "notes": [
+        "Frame types: `core.log`, `session.created`, `session.expired`, `engine.shutdown`, and `subscription.closed` when the engine ends it.",
+        "`sessionId` in event payloads is truncated to its first 10 characters.",
+        "A client more than 1 MiB behind is disconnected rather than buffered.",
+        "Served directly by the HTTP handler rather than through the router, because the response never ends.",
+        "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away."
+      ]
+    },
+    "username-available": {
+      "summary": "Check whether a username is free.",
+      "method": "GET",
+      "path": "/username-available",
+      "usage": "username-available --username=<value> [--challenge-id=<value>]",
+      "core": "context.usernameAvailable",
+      "params": {
+        "username": {
+          "pass": "--username=<value>",
+          "doc": "The name to check.",
+          "optional": false
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<value>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same check.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "username": "string — The name that was checked, echoed back.",
+        "available": "boolean — True when nobody holds this name. It is not reserved by asking."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    }
+  }
+}

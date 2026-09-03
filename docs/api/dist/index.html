@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edge CLI API</title>
+<style>
+:root {
+  --bg: #fff; --fg: #16181d; --dim: #6b7280; --line: #e5e7eb; --card: #fafafa;
+  --accent: #2563eb; --code: #f3f4f6; --warn: #b45309; --ok: #047857;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117; --fg: #e6edf3; --dim: #8b949e; --line: #262c36; --card: #131920;
+    --accent: #6ea8ff; --code: #1a212b; --warn: #d29922; --ok: #3fb950;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+code, pre { font-family: var(--mono); font-size: 13px; }
+code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code); padding: 12px 14px; border-radius: 8px; overflow-x: auto; margin: 8px 0; }
+pre code { background: none; padding: 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.layout { display: flex; align-items: flex-start; }
+nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto; flex: 0 0 270px;
+  border-right: 1px solid var(--line); padding: 20px 12px 60px;
+}
+nav h1 { font-size: 15px; margin: 0 8px 4px; }
+nav .ver { font-size: 12px; color: var(--dim); margin: 0 8px 14px; }
+nav input {
+  width: 100%; padding: 7px 10px; margin-bottom: 14px; font: inherit; font-size: 13px;
+  border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--fg);
+}
+nav .s { font: 700 12px/1.5 var(--sans); text-transform: uppercase; letter-spacing: .08em;
+  color: var(--fg); margin: 18px 0 4px; padding-top: 10px; border-top: 1px solid var(--line); }
+nav .s:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+nav .g { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--dim);
+  margin: 16px 8px 5px; font-weight: 600; }
+nav a.e { display: block; padding: 3px 8px; border-radius: 5px; font-size: 13px; color: var(--fg); }
+nav a.e:hover { background: var(--card); text-decoration: none; }
+nav a.e code { background: none; padding: 0; color: var(--accent); }
+nav a.e .restonly { color: var(--dim); font-style: italic; font-size: 12px; }
+
+main { flex: 1 1 auto; min-width: 0; padding: 32px 40px 120px; max-width: 1000px; }
+h2 { font-size: 22px; margin: 48px 0 6px; padding-top: 14px; border-top: 1px solid var(--line); }
+h3.sub { font-size: 16px; margin: 30px 0 4px; color: var(--fg); }
+h2:first-of-type { border-top: none; margin-top: 8px; }
+.groupdoc { color: var(--dim); margin: 0 0 8px; }
+
+.endpoint { border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px;
+  margin: 18px 0; background: var(--card); }
+.endpoint header { display: flex; flex-wrap: wrap; align-items: baseline;
+  justify-content: space-between; gap: 8px; }
+.endpoint h3 { font-size: 17px; margin: 0; }
+.endpoint h3 a { color: var(--fg); }
+.ids { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cmdname { background: var(--accent); color: #fff; font-weight: 600; }
+.restonly { color: var(--dim); font-style: italic; font-size: 12px; }
+.src { color: var(--dim); font-size: 11px; font-family: var(--mono); }
+.shape { margin: 6px 0; }
+.shape-h { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--dim); margin-bottom: 4px; }
+pre.ts { background: var(--code); border-left: 3px solid var(--accent); }
+pre.json { background: transparent; border: 1px dashed var(--line); }
+.shape details { margin: 6px 0; }
+.shape summary { cursor: pointer; font-size: 12px; color: var(--dim); user-select: none; }
+.shape summary:hover { color: var(--accent); }
+.core { margin: 8px 0 2px; font-size: 13px; display: flex; align-items: baseline;
+  gap: 8px; flex-wrap: wrap; }
+.core .lbl { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em;
+  color: var(--dim); border: 1px solid var(--line); border-radius: 3px; padding: 1px 5px; }
+.core code { color: var(--ok); }
+.core.none em { color: var(--dim); font-style: italic; }
+.desc { margin: 8px 0 4px; }
+.desc p { margin: 6px 0; }
+
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+@media (max-width: 900px) { .panes { grid-template-columns: 1fr; } }
+.pane { background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 12px 14px;
+  /* A grid item defaults to min-width:auto, so a long unbreakable line makes
+     the column wider than its 1fr share and shoves the next pane sideways.
+     `overflow-x` on the <pre> never gets a chance until this is 0. */
+  min-width: 0; }
+.pane h4 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--dim); }
+.pane h5 { margin: 12px 0 4px; font-size: 12px; color: var(--dim); font-weight: 600; }
+.pane.resp, .pane.notes { margin-top: 16px; }
+.pane.cli.none p { margin: 0; }
+.cmd + .cmd { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+/* A command line is a sentence, not a table: wrap it at the spaces rather
+   than making the reader scroll a pane sideways. `get-transactions` is 322
+   characters. */
+.usage, .ex { white-space: pre-wrap; overflow-wrap: break-word; }
+.usage { background: var(--code); }
+.ex { background: transparent; border: 1px dashed var(--line); }
+.lead { margin: 4px 0; color: var(--dim); font-size: 13px; }
+.note { font-size: 13px; }
+.note p { margin: 4px 0; }
+.pane.notes ul { margin: 0; padding-left: 20px; }
+.pane.notes li { margin: 5px 0; }
+
+.route { margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+.m { font: 600 11px var(--mono); padding: 2px 7px; border-radius: 4px; color: #fff; }
+.m-GET { background: #2563eb; } .m-POST { background: #047857; }
+.m-PUT { background: #b45309; } .m-PATCH { background: #7c3aed; }
+.m-DELETE { background: #b91c1c; }
+
+table { border-collapse: collapse; width: 100%; margin: 4px 0; }
+table.fields td, table.flags td, table.flags th { padding: 4px 8px 4px 0;
+  vertical-align: top; font-size: 13px; border-bottom: 1px solid var(--line); }
+table.flags th { text-align: left; font-size: 11px; color: var(--dim); text-transform: uppercase; }
+td.k { white-space: nowrap; width: 1%; }
+td.ty { white-space: nowrap; width: 1%; }
+td.doc { color: var(--dim); }
+tr.d1 td.k { padding-left: 18px; } tr.d2 td.k { padding-left: 36px; }
+.t { color: var(--dim); font-family: var(--mono); font-size: 12px; }
+.t.core { color: var(--warn); border-bottom: 1px dotted var(--warn); cursor: help; }
+.dim { color: var(--dim); }
+.ref { font-family: var(--mono); font-size: 12px; }
+.flag { font-size: 10px; padding: 1px 5px; border-radius: 3px; border: 1px solid var(--line);
+  color: var(--dim); text-transform: uppercase; letter-spacing: .04em; }
+.flag.req { color: var(--warn); border-color: var(--warn); }
+.st { font: 600 11px var(--mono); padding: 1px 6px; border-radius: 4px;
+  background: var(--code); margin-right: 5px; }
+.st.ok { color: var(--ok); }
+.errs { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+a.err { font: 12px var(--mono); border: 1px solid var(--line); border-radius: 5px;
+  padding: 2px 7px; color: var(--fg); }
+a.err:hover { border-color: var(--accent); text-decoration: none; }
+
+.schema { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 14px 0;
+  background: var(--card); }
+.schema h3 { margin: 0 0 2px; font-size: 15px; font-family: var(--mono); }
+.schema .src { display: block; margin-bottom: 6px; }
+.hidden { display: none; }
+</style>
+</head><body>
+<div class="layout">
+<nav>
+  <h1>Edge CLI API</h1>
+  <p class="ver">v1.0.0 · 13 calls</p>
+  <input id="q" type="search" placeholder="Filter…" autocomplete="off">
+  <a class="e" href="#overview"><strong>Overview</strong></a>
+  <div class="s">Engine</div><div class="g">Lifecycle</div><a class="e" href="#engineStatus" data-s="engine liveness and summary. /engine/status engine-status"><code>engine-status</code></a><a class="e" href="#engineConfig" data-s="configured context options. /engine/config engine-config"><code>engine-config</code></a><a class="e" href="#engineStop" data-s="stop the engine. /engine/stop engine-stop"><code>engine-stop</code></a><div class="g">Event stream</div><a class="e" href="#engineEvents" data-s="subscribe to engine events. /engine/events subscribe"><code>subscribe</code></a><div class="s">Context</div><div class="g">Device and usernames</div><a class="e" href="#localUsers" data-s="list local users on this device. /local-users local-users"><code>local-users</code></a><a class="e" href="#usernameAvailable" data-s="check whether a username is free. /username-available username-available"><code>username-available</code></a><a class="e" href="#fetchLoginMessages" data-s="fetch login-server messages for every local user. /fetch-login-messages fetch-login-messages"><code>fetch-login-messages</code></a><div class="g">Login methods</div><a class="e" href="#loginWithPassword" data-s="log in with a password. /login-with-password login-with-password"><code>login-with-password</code></a><a class="e" href="#createAccount" data-s="create an account. /create-account create-account"><code>create-account</code></a><a class="e" href="#engineSessions" data-s="list active sessions. /engine/sessions engine-sessions"><code>engine-sessions</code></a><div class="s">Account</div><div class="g">Session</div><a class="e" href="#logout" data-s="log out. /account/{sessionid}/logout logout"><code>logout</code></a><div class="s">Object handles</div><div class="g">Object handles</div><a class="e" href="#getObject" data-s="inspect an object handle. /account/{sessionid}/object/{objectid} object-get"><code>object-get</code></a><a class="e" href="#deleteObject" data-s="release an object handle. /account/{sessionid}/object/delete/{objectid} object-delete"><code>object-delete</code></a>
+  <div class="g">Reference</div>
+  <a class="e" href="#errors">Error codes</a>
+  <a class="e" href="#exit-codes">Exit codes</a>
+</nav>
+<main>
+<h2 id="overview">Overview</h2>
+<div class="groupdoc"><p>Every entry is one API call shown twice: as an <code>edge-cli</code> command, then as the JSON REST request that command sends. Both are generated from a single declaration in <code>src/cli/engine/routes/</code>, so the two forms cannot drift apart.</p>
+<p>Routes are named after the <code>edge-core-js</code> call they front, kebab-cased: <code>context.forgetAccount</code> becomes <code>POST /forget-account</code>, and the command is <code>forget-account</code>. Parameters carry core&#39;s own names. Every entry states its core call, or says why there is none. Only <code>GET</code> and <code>POST</code> appear — core has no HTTP verbs, so reads are GET and everything else is POST.</p>
+<p>The <code>edge-cli</code> client is a thin one-shot process. A long-lived <code>edge-engine</code> daemon owns the <code>EdgeContext</code> and every logged-in account, serving this API over a Unix socket at <code>~/.edge-cli/run/&lt;profile&gt;/engine.sock</code>, plus loopback TCP when started with <code>--tcp=9008</code>.</p>
+<p><strong>There is no transport authentication.</strong> The socket is owner-only (<code>0600</code>) and TCP is loopback, so anything that can reach the engine can act as every logged-in account.</p>
+<p><a id="object-handles"></a>
+<strong>Ephemeral object handles.</strong> In <code>edge-core-js</code> a method-bearing value is identified by object reference — you call <code>wallet.signTx(tx)</code> on the very <code>tx</code> that <code>makeSpend</code> returned. That does not survive HTTP, so the engine parks such values under an <code>objectId</code> with a 5 minute TTL and later steps name the id. Reads do not extend the TTL; only a step that updates the value does. Finishing a workflow, or <code>POST …/objects/{objectId}/delete</code>, releases the handle early. Expired handles return <code>410 OBJECT_EXPIRED</code>.</p>
+<p><strong>Serialization.</strong> <code>Uint8Array</code> becomes base64, <code>Date</code> becomes an ISO-8601 string, <code>Map</code> becomes an object, amounts are always decimal strings, and <code>EdgeTokenId</code> is JSON <code>null</code> for a native asset.</p>
+<p><strong>Testing.</strong> Always pass <code>-t</code> / <code>--test</code> to point at the <code>*-tester.edge.app</code> servers.</p>
+</div>
+<h2 id="engine">Engine</h2>
+      <div class="groupdoc"><p>The <code>edge-engine</code> daemon itself. None of these have an <code>edge-core-js</code> equivalent — they describe the process — and none need a session.</p>
+</div>
+      <h3 class="sub" id="status">Lifecycle</h3>
+          <div class="groupdoc"><p>Lifecycle and configuration of the <code>edge-engine</code> daemon. None of these have an <code>edge-core-js</code> equivalent — they describe the daemon itself — and none need a session.</p>
+</div>
+          <section class="endpoint" id="engineStatus">
+    <header>
+      <h3><a href="#engineStatus">Engine liveness and summary.</a></h3>
+      <div class="ids"><code class="cmdname">engine-status</code><span class="src" title="Declared in">src/cli/engine/routes/status.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Engine lifecycle; the daemon is not part of the core API.</em></p>
+    <div class="desc"><p>The readiness probe the client polls after auto-spawning the engine.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>engine-status</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/engine/status</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/engine/status'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p><code>idleShutdownAt</code> is null while a session or a subscription holds the engine open, and <code>tcpPort</code> is null unless started with <code>--tcp</code>.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  pid: number
+  apiVersion: string
+  uptimeSeconds: number
+  sessionCount: number
+  testMode: boolean
+  idleShutdownAt: string | null
+  tcpPort: number | null
+  socketPath: string
+  locale: string
+  decimalSeparator: string
+  groupingSeparator: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;pid&quot;: 0,
+  &quot;apiVersion&quot;: &quot;string&quot;,
+  &quot;uptimeSeconds&quot;: 1,
+  &quot;sessionCount&quot;: 1,
+  &quot;testMode&quot;: true,
+  &quot;idleShutdownAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;tcpPort&quot;: 0,
+  &quot;socketPath&quot;: &quot;string&quot;,
+  &quot;locale&quot;: &quot;string&quot;,
+  &quot;decimalSeparator&quot;: &quot;string&quot;,
+  &quot;groupingSeparator&quot;: &quot;string&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>pid</code></td>
+  <td class="ty"><span class="t">number</span></td>
+  <td class="doc">The daemon process, for <code>kill</code> when it will not stop.</td>
+</tr>
+<tr>
+  <td class="k"><code>apiVersion</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The API this engine speaks. A client refusing to talk to an older engine checks this.</td>
+</tr>
+<tr>
+  <td class="k"><code>uptimeSeconds</code></td>
+  <td class="ty"><span class="t">number</span></td>
+  <td class="doc">How long the daemon has been running.</td>
+</tr>
+<tr>
+  <td class="k"><code>sessionCount</code></td>
+  <td class="ty"><span class="t">number</span></td>
+  <td class="doc">Logged-in accounts held open right now.</td>
+</tr>
+<tr>
+  <td class="k"><code>testMode</code></td>
+  <td class="ty"><span class="t">boolean</span></td>
+  <td class="doc">True when pointed at the tester fleet.</td>
+</tr>
+<tr>
+  <td class="k"><code>idleShutdownAt</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">When the engine will exit for want of work. Null while a session or a subscription is holding it open, and null when the timeout is disabled.</td>
+</tr>
+<tr>
+  <td class="k"><code>tcpPort</code></td>
+  <td class="ty"><span class="t">number | null</span></td>
+  <td class="doc">The loopback port, null unless started with <code>--tcp</code>.</td>
+</tr>
+<tr>
+  <td class="k"><code>socketPath</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Unix socket the CLI connects to.</td>
+</tr>
+<tr>
+  <td class="k"><code>locale</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Language tag the engine resolved at boot.</td>
+</tr>
+<tr>
+  <td class="k"><code>decimalSeparator</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Decimal mark for that locale.</td>
+</tr>
+<tr>
+  <td class="k"><code>groupingSeparator</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Thousands mark for that locale.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-ENGINE_SHUTTING_DOWN" class="err" title="Idle or explicit shutdown already in progress."><span class="st">503</span>ENGINE_SHUTTING_DOWN</a></p>
+  </div>
+    
+  </section><section class="endpoint" id="engineConfig">
+    <header>
+      <h3><a href="#engineConfig">Configured context options.</a></h3>
+      <div class="ids"><code class="cmdname">engine-config</code><span class="src" title="Declared in">src/cli/engine/routes/status.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Reflects the EdgeContextOptions the engine supplied at startup.</em></p>
+    <div class="desc"><p>What the engine passed to <code>makeEdgeContext</code>. Contains no secrets. Use it to assert tester hosts before a test run.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>engine-config</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/engine/config</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/engine/config'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  appId: string
+  testMode: boolean
+  directory: string
+  servers: {
+    [keys: string]: string | string[]
+  }
+  plugins: string[]
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;appId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;testMode&quot;: true,
+  &quot;directory&quot;: &quot;string&quot;,
+  &quot;servers&quot;: {},
+  &quot;plugins&quot;: [
+    &quot;string&quot;
+  ]
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>appId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Application ID the engine was started with.</td>
+</tr>
+<tr>
+  <td class="k"><code>testMode</code></td>
+  <td class="ty"><span class="t">boolean</span></td>
+  <td class="doc">True when the engine is pointed at the tester fleet.</td>
+</tr>
+<tr>
+  <td class="k"><code>directory</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Working directory holding the core data.</td>
+</tr>
+<tr>
+  <td class="k"><code>servers</code></td>
+  <td class="ty"><span class="t">{ [keys: string]: string | string[]; }</span></td>
+  <td class="doc">The URLs this engine talks to, keyed by role. <code>syncServer</code> is a list, since core rotates across the sync fleet.</td>
+</tr>
+<tr>
+  <td class="k"><code>plugins</code></td>
+  <td class="ty"><span class="t">string[]</span></td>
+  <td class="doc">Plugin IDs the engine loaded, sorted.</td>
+</tr></tbody></table>
+  </div>
+    
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Outside <code>-t</code> / <code>--test</code>, <code>servers</code> is an empty object — core is using its built-in production defaults, so there is nothing to echo back.</li></ul></div>
+  </section><section class="endpoint" id="engineStop">
+    <header>
+      <h3><a href="#engineStop">Stop the engine.</a></h3>
+      <div class="ids"><code class="cmdname">engine-stop</code><span class="src" title="Declared in">src/cli/engine/routes/status.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Engine lifecycle. Internally calls <code>context.close()</code>.</em></p>
+    <div class="desc"><p>Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>engine-stop</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-POST">POST</span><code>/engine/stop</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  -X POST \
+  'http://localhost/engine/stop'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  ok: boolean
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;ok&quot;: true
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>ok</code></td>
+  <td class="ty"><span class="t">boolean</span></td>
+  <td class="doc">Always true; a failure arrives as an error envelope.</td>
+</tr></tbody></table>
+  </div>
+    
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>In-flight callers may see <code>503 ENGINE_SHUTTING_DOWN</code> once teardown starts.</li></ul></div>
+  </section><h3 class="sub" id="events">Event stream</h3>
+          <div class="groupdoc"><p>A Server-Sent Events feed of engine activity, served outside the router because the response never ends.</p>
+</div>
+          <section class="endpoint" id="engineEvents">
+    <header>
+      <h3><a href="#engineEvents">Subscribe to engine events.</a></h3>
+      <div class="ids"><code class="cmdname">subscribe</code><span class="src" title="Declared in">src/cli/engine/routes/events.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Engine-side fan-out; <code>core.log</code> frames carry core&#39;s onLog output.</em></p>
+    <div class="desc"><p>Holds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.</p>
+<p>A live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>subscribe [--type=&lt;value&gt;]</code></pre>
+    <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--type</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Client-side filter; the engine always sends everything the scope allows.</td></tr></tbody></table>
+    <div class="note"><p>Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away.</p>
+</div>
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/engine/events</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/engine/events'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>One frame per event, as <code>event:</code> then <code>data:</code> lines.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  type: string
+  data: unknown
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;type&quot;: &quot;string&quot;,
+  &quot;data&quot;: {}
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>type</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The event name.</td>
+</tr>
+<tr>
+  <td class="k"><code>data</code></td>
+  <td class="ty"><span class="t">unknown</span></td>
+  <td class="doc">Payload, shaped by the event type.</td>
+</tr></tbody></table>
+  </div>
+    
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Frame types: <code>core.log</code>, <code>session.created</code>, <code>session.expired</code>, <code>engine.shutdown</code>, and <code>subscription.closed</code> when the engine ends it.</li><li><code>sessionId</code> in event payloads is truncated to its first 10 characters.</li><li>A client more than 1 MiB behind is disconnected rather than buffered.</li><li>Served directly by the HTTP handler rather than through the router, because the response never ends.</li></ul></div>
+  </section><h2 id="context">Context</h2>
+      <div class="groupdoc"><p>Calls on the shared <code>EdgeContext</code>: device state, username queries, and every way of logging in. None of them need a session, because a session is what they produce.</p>
+</div>
+      <h3 class="sub" id="context">Device and usernames</h3>
+          <div class="groupdoc"><p>Calls on the shared <code>EdgeContext</code>: local device state and login-server queries that do not need a session.</p>
+</div>
+          <section class="endpoint" id="localUsers">
+    <header>
+      <h3><a href="#localUsers">List local users on this device.</a></h3>
+      <div class="ids"><code class="cmdname">local-users</code><span class="src" title="Declared in">src/cli/engine/routes/context.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>context.localUsers</code></p>
+    
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>local-users</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/local-users</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/local-users'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>Everything <code>context.localUsers</code> reports, including which login methods each user has enabled on this device.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  localUsers: unknown[]
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;localUsers&quot;: [
+    {}
+  ]
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>localUsers</code></td>
+  <td class="ty"><span class="t">unknown[]</span></td>
+  <td class="doc"><code>EdgeUserInfo[]</code>: one entry per account cached on this device.</td>
+</tr></tbody></table>
+  </div>
+    
+  </div>
+    
+  </section><section class="endpoint" id="usernameAvailable">
+    <header>
+      <h3><a href="#usernameAvailable">Check whether a username is free.</a></h3>
+      <div class="ids"><code class="cmdname">username-available</code><span class="src" title="Declared in">src/cli/engine/routes/context.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>context.usernameAvailable</code></p>
+    
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>username-available --username=&lt;username&gt; [--challenge-id=&lt;challengeId&gt;]</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/username-available</code></p>
+    
+    <div class="shape">
+    <div class="shape-h">Query</div>
+    <pre class="ts"><code>{
+  username: string
+  challengeId?: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;challengeId&quot;: &quot;FS8xJ2kQ…&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The name to check.</td>
+</tr>
+<tr>
+  <td class="k"><code>challengeId</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Supply after solving a CAPTCHA to retry the same check.</td>
+</tr></tbody></table>
+  </div>
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/username-available?username=…'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  username: string
+  available: boolean
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;available&quot;: true
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The name that was checked, echoed back.</td>
+</tr>
+<tr>
+  <td class="k"><code>available</code></td>
+  <td class="ty"><span class="t">boolean</span></td>
+  <td class="doc">True when nobody holds this name. It is not reserved by asking.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
+  </div>
+    
+  </section><section class="endpoint" id="fetchLoginMessages">
+    <header>
+      <h3><a href="#fetchLoginMessages">Fetch login-server messages for every local user.</a></h3>
+      <div class="ids"><code class="cmdname">fetch-login-messages</code><span class="src" title="Declared in">src/cli/engine/routes/context.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>context.fetchLoginMessages</code></p>
+    
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>fetch-login-messages</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/fetch-login-messages</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/fetch-login-messages'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p><code>EdgeLoginMessages</code> from core, keyed by loginId; each value carries otpResetPending and pendingVouchers.</p>
+</div><pre class="ts"><code>unknown</code></pre>
+    <h5>Errors</h5><p class="errs"><a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
+  </div>
+    
+  </section><h3 class="sub" id="login">Login methods</h3>
+          <div class="groupdoc"><p>Every successful login returns a <a href="#schema-Session">Session</a> and registers it in the engine, so later calls need only the <code>sessionId</code>. The CLI writes that id to <code>session.json</code> automatically.</p>
+</div>
+          <section class="endpoint" id="loginWithPassword">
+    <header>
+      <h3><a href="#loginWithPassword">Log in with a password.</a></h3>
+      <div class="ids"><code class="cmdname">login-with-password</code><span class="src" title="Declared in">src/cli/engine/routes/login.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>context.loginWithPassword</code></p>
+    
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>login-with-password [--otp=&lt;otp&gt;] [--otp-key=&lt;otpKey&gt;] [--challenge-id=&lt;challengeId&gt;] --username=&lt;username&gt; --password=&lt;password&gt;</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-POST">POST</span><code>/login-with-password</code></p>
+    
+    
+    
+    <div class="shape">
+    <div class="shape-h">Request body</div>
+    <pre class="ts"><code>{
+  otp?: string
+  otpKey?: string
+  challengeId?: string
+  username: string
+  password: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;otp&quot;: &quot;string&quot;,
+  &quot;otpKey&quot;: &quot;string&quot;,
+  &quot;challengeId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;password&quot;: &quot;string&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>otp</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A current 2FA code.</td>
+</tr>
+<tr>
+  <td class="k"><code>otpKey</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The 2FA secret itself, instead of a code.</td>
+</tr>
+<tr>
+  <td class="k"><code>challengeId</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Supply after solving a CAPTCHA to retry the same request.</td>
+</tr>
+<tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The account name.</td>
+</tr>
+<tr>
+  <td class="k"><code>password</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The account password.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{&quot;otp&quot;:&quot;string&quot;,&quot;otpKey&quot;:&quot;string&quot;,&quot;challengeId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;username&quot;:&quot;string&quot;,&quot;password&quot;:&quot;string&quot;}' \
+  'http://localhost/login-with-password'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>A session with <code>loginMethod: &quot;password&quot;</code>.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  sessionId: string
+  username?: string
+  rootLoginId: string
+  loginMethod: &quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;
+  autoLogoutSeconds: number
+  expiresAt: string | null
+  lastActivityAt: string
+  createdAt: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;sessionId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;rootLoginId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;loginMethod&quot;: &quot;&lt;\&quot;password\&quot;&gt;&quot;,
+  &quot;autoLogoutSeconds&quot;: 1,
+  &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;lastActivityAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;createdAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>sessionId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
+</tr>
+<tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
+</tr>
+<tr>
+  <td class="k"><code>rootLoginId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
+</tr>
+<tr>
+  <td class="k"><code>loginMethod</code></td>
+  <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
+  <td class="doc">How this session was established.</td>
+</tr>
+<tr>
+  <td class="k"><code>autoLogoutSeconds</code></td>
+  <td class="ty"><span class="t">number</span></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
+</tr>
+<tr>
+  <td class="k"><code>expiresAt</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
+</tr>
+<tr>
+  <td class="k"><code>lastActivityAt</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
+</tr>
+<tr>
+  <td class="k"><code>createdAt</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">When the login completed.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-PASSWORD_ERROR" class="err" title="Wrong password, PIN, or recovery answers."><span class="st">401</span>PASSWORD_ERROR</a> <a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-OTP_REQUIRED" class="err" title="Missing or wrong 2FA token."><span class="st">401</span>OTP_REQUIRED</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>With <code>--solve-captcha</code> the client solves a <code>CHALLENGE_REQUIRED</code> response headlessly (ALTCHA proof-of-work) and retries once.</li></ul></div>
+  </section><section class="endpoint" id="createAccount">
+    <header>
+      <h3><a href="#createAccount">Create an account.</a></h3>
+      <div class="ids"><code class="cmdname">create-account</code><span class="src" title="Declared in">src/cli/engine/routes/login.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>context.createAccount</code></p>
+    <div class="desc"><p>Every credential is optional over REST: omitting all three creates a light account with no username.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>create-account [--otp=&lt;otp&gt;] [--otp-key=&lt;otpKey&gt;] [--challenge-id=&lt;challengeId&gt;] [--username=&lt;username&gt;] [--password=&lt;password&gt;] [--pin=&lt;pin&gt;]</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-POST">POST</span><code>/create-account</code></p>
+    
+    
+    
+    <div class="shape">
+    <div class="shape-h">Request body</div>
+    <pre class="ts"><code>{
+  otp?: string
+  otpKey?: string
+  challengeId?: string
+  username?: string
+  password?: string
+  pin?: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;otp&quot;: &quot;string&quot;,
+  &quot;otpKey&quot;: &quot;string&quot;,
+  &quot;challengeId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;password&quot;: &quot;string&quot;,
+  &quot;pin&quot;: &quot;string&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>otp</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A current 2FA code.</td>
+</tr>
+<tr>
+  <td class="k"><code>otpKey</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The 2FA secret itself, instead of a code.</td>
+</tr>
+<tr>
+  <td class="k"><code>challengeId</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Supply after solving a CAPTCHA to retry the same request.</td>
+</tr>
+<tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The name to claim.</td>
+</tr>
+<tr>
+  <td class="k"><code>password</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The account password.</td>
+</tr>
+<tr>
+  <td class="k"><code>pin</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A device PIN to save.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{&quot;otp&quot;:&quot;string&quot;,&quot;otpKey&quot;:&quot;string&quot;,&quot;challengeId&quot;:&quot;FS8xJ2kQ…&quot;,&quot;username&quot;:&quot;string&quot;,&quot;password&quot;:&quot;string&quot;,&quot;pin&quot;:&quot;string&quot;}' \
+  'http://localhost/create-account'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>A session with <code>loginMethod: &quot;create&quot;</code>.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  sessionId: string
+  username?: string
+  rootLoginId: string
+  loginMethod: &quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;
+  autoLogoutSeconds: number
+  expiresAt: string | null
+  lastActivityAt: string
+  createdAt: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;sessionId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;username&quot;: &quot;string&quot;,
+  &quot;rootLoginId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;loginMethod&quot;: &quot;&lt;\&quot;password\&quot;&gt;&quot;,
+  &quot;autoLogoutSeconds&quot;: 1,
+  &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;lastActivityAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;createdAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>sessionId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.</td>
+</tr>
+<tr>
+  <td class="k"><code>username</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Absent for a light account, which has no username.</td>
+</tr>
+<tr>
+  <td class="k"><code>rootLoginId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The account root, stable across appIds. Two sessions sharing it are the same account.</td>
+</tr>
+<tr>
+  <td class="k"><code>loginMethod</code></td>
+  <td class="ty"><span class="t">&quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;</span></td>
+  <td class="doc">How this session was established.</td>
+</tr>
+<tr>
+  <td class="k"><code>autoLogoutSeconds</code></td>
+  <td class="ty"><span class="t">number</span></td>
+  <td class="doc">Idle time before the engine logs the account out. 0 disables it.</td>
+</tr>
+<tr>
+  <td class="k"><code>expiresAt</code></td>
+  <td class="ty"><span class="t">string | null</span></td>
+  <td class="doc">When auto-logout will fire, or null when it is disabled.</td>
+</tr>
+<tr>
+  <td class="k"><code>lastActivityAt</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Last call on this session, which is what auto-logout measures from.</td>
+</tr>
+<tr>
+  <td class="k"><code>createdAt</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">When the login completed.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-USERNAME_ERROR" class="err" title="Unknown username, or an invalid recovery key."><span class="st">400</span>USERNAME_ERROR</a> <a href="#err-CHALLENGE_REQUIRED" class="err" title="The login server wants a CAPTCHA. Retry with `challengeId`."><span class="st">403</span>CHALLENGE_REQUIRED</a> <a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>The command requires a username, password and PIN. Creating a light account is REST-only.</li></ul></div>
+  </section><section class="endpoint" id="engineSessions">
+    <header>
+      <h3><a href="#engineSessions">List active sessions.</a></h3>
+      <div class="ids"><code class="cmdname">engine-sessions</code><span class="src" title="Declared in">src/cli/engine/routes/login.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>The session registry is an engine construct; core has no multi-account session concept.</em></p>
+    
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>engine-sessions</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/engine/sessions</code></p>
+    
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/engine/sessions'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>A bare array, not wrapped in a key.</p>
+</div><pre class="ts"><code>{
+  sessionId: string;
+  username: string | undefined;
+  rootLoginId: string;
+  loginMethod: &quot;password&quot; | &quot;pin&quot; | &quot;key&quot; | &quot;recovery&quot; | &quot;edge&quot; | &quot;create&quot;;
+  autoLogoutSeconds: number;
+  expiresAt: string | null;
+  lastActivityAt: string;
+  createdAt: string
+}[]</code></pre>
+    
+  </div>
+    
+  </section><h2 id="account">Account</h2>
+      <div class="groupdoc"><p>Calls on a logged-in <code>EdgeAccount</code>, addressed by <code>sessionId</code>. All of these can also return <code>401 INVALID_SESSION</code> or <code>401 SESSION_EXPIRED</code>.</p>
+</div>
+      <h3 class="sub" id="account">Session</h3>
+          <div class="groupdoc"><p>Calls on a logged-in <code>EdgeAccount</code>, addressed by <code>sessionId</code>. All of these can also return <code>401 INVALID_SESSION</code> or <code>401 SESSION_EXPIRED</code>.</p>
+</div>
+          <section class="endpoint" id="logout">
+    <header>
+      <h3><a href="#logout">Log out.</a></h3>
+      <div class="ids"><code class="cmdname">logout</code><span class="src" title="Declared in">src/cli/engine/routes/account.ts</span></div>
+    </header>
+    <p class="core"><span class="lbl">core</span><code>account.logout</code></p>
+    <div class="desc"><p>Ends the session and drops it from the engine.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>logout</code></pre>
+    
+    <div class="note"><p>Also clears the stored id from <code>session.json</code>.</p>
+</div>
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-POST">POST</span><code>/account/{sessionId}/logout</code></p>
+    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>sessionId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">From a successful login. The CLI supplies this from <code>session.json</code>, <code>--session</code>, or <code>EDGE_CLI_SESSION</code>.</td></tr></tbody></table>
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  -X POST \
+  'http://localhost/account/$SESS/logout'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">204</span></h4>
+    <p class="lead dim">No body.</p>
+    
+  </div>
+    
+  </section><h2 id="objects">Object handles</h2>
+      <div class="groupdoc"><p>A core value with methods on it cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them.</p>
+</div>
+      <h3 class="sub" id="objects">Object handles</h3>
+          <div class="groupdoc"><p>A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them.</p>
+</div>
+          <section class="endpoint" id="getObject">
+    <header>
+      <h3><a href="#getObject">Inspect an object handle.</a></h3>
+      <div class="ids"><code class="cmdname">object-get</code><span class="src" title="Declared in">src/cli/engine/routes/objects.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Engine handle store; core identifies these values by object reference.</em></p>
+    <div class="desc"><p>Works for every kind: transactions, pending logins, swap quotes.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>object-get &lt;objectId&gt; &lt;objectId&gt;</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-GET">GET</span><code>/account/{sessionId}/object/{objectId}</code></p>
+    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>sessionId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">From a successful login. The CLI supplies this from <code>session.json</code>, <code>--session</code>, or <code>EDGE_CLI_SESSION</code>.</td></tr><tr><td class="k"><code>objectId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">An ephemeral object handle id.</td></tr></tbody></table>
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  'http://localhost/account/$SESS/object/$OBJECTID'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="note"><p>The handle fields, plus a <code>value</code> holding the live core object.</p>
+</div><div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  objectId: string
+  kind: string
+  expiresAt: string
+  sessionId?: string
+  walletId?: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;objectId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;kind&quot;: &quot;string&quot;,
+  &quot;expiresAt&quot;: &quot;2026-09-02T16:35:00.000Z&quot;,
+  &quot;sessionId&quot;: &quot;FS8xJ2kQ…&quot;,
+  &quot;walletId&quot;: &quot;FS8xJ2kQ…&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>objectId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">Handle for the value the engine is holding. Pass it to the calls that consume it.</td>
+</tr>
+<tr>
+  <td class="k"><code>kind</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">What the handle refers to, which decides the calls that accept it.</td>
+</tr>
+<tr>
+  <td class="k"><code>expiresAt</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">When the engine drops the handle. Handles live 5 minutes.</td>
+</tr>
+<tr>
+  <td class="k"><code>sessionId</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Session that created the handle; only that session may use it.</td>
+</tr>
+<tr>
+  <td class="k"><code>walletId</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Wallet the handle is bound to, when it belongs to one.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
+  </div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Reading does not extend the TTL. Only a step that updates the value does.</li></ul></div>
+  </section><section class="endpoint" id="deleteObject">
+    <header>
+      <h3><a href="#deleteObject">Release an object handle.</a></h3>
+      <div class="ids"><code class="cmdname">object-delete</code><span class="src" title="Declared in">src/cli/engine/routes/objects.ts</span></div>
+    </header>
+    <p class="core none"><span class="lbl">core</span><em>Engine handle store.</em></p>
+    <div class="desc"><p>Runs the handle&#39;s cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.</p>
+</div>
+    <div class="panes"><div class="pane cli">
+    <h4>Command line</h4>
+    <pre class="usage"><code>object-delete &lt;objectId&gt; &lt;objectId&gt;</code></pre>
+    
+    
+  </div><div class="pane rest">
+    <h4>REST</h4>
+    <p class="route"><span class="m m-POST">POST</span><code>/account/{sessionId}/object/delete/{objectId}</code></p>
+    <h5>Path</h5><table class="fields"><tbody><tr><td class="k"><code>sessionId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">From a successful login. The CLI supplies this from <code>session.json</code>, <code>--session</code>, or <code>EDGE_CLI_SESSION</code>.</td></tr><tr><td class="k"><code>objectId</code></td><td class="ty"><span class="t">string</span></td><td class="doc">An ephemeral object handle id.</td></tr></tbody></table>
+    
+    
+    
+    <h5>Example</h5>
+    <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
+  -X POST \
+  'http://localhost/account/$SESS/object/delete/$OBJECTID'</code></pre>
+  </div></div>
+    <div class="pane resp">
+    <h4>Response <span class="st ok">200</span></h4>
+    <div class="shape">
+    <div class="shape-h">Response body</div>
+    <pre class="ts"><code>{
+  ok: boolean
+  objectId: string
+}</code></pre>
+    <details><summary>Example</summary><pre class="json"><code>{
+  &quot;ok&quot;: true,
+  &quot;objectId&quot;: &quot;FS8xJ2kQ…&quot;
+}</code></pre></details>
+    <table class="fields"><tbody><tr>
+  <td class="k"><code>ok</code></td>
+  <td class="ty"><span class="t">boolean</span></td>
+  <td class="doc">Always true; a failure arrives as an error envelope.</td>
+</tr>
+<tr>
+  <td class="k"><code>objectId</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">The handle this call consumed. It is now expired.</td>
+</tr></tbody></table>
+  </div>
+    <h5>Errors</h5><p class="errs"><a href="#err-OBJECT_NOT_FOUND" class="err" title="No handle with that `objectId`."><span class="st">404</span>OBJECT_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle passed its 5 minute TTL and was released."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_SESSION_MISMATCH" class="err" title="The handle belongs to a different session."><span class="st">400</span>OBJECT_SESSION_MISMATCH</a></p>
+  </div>
+    
+  </section>
+<h2 id="errors">Error codes</h2>
+<table class="fields"><tbody><tr id="err-BAD_REQUEST"><td class="k"><code>BAD_REQUEST</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
+        <td class="doc">Malformed JSON, or a missing / wrongly typed field.</td></tr><tr id="err-MISSING_BITWAVE_ACCOUNT_ID"><td class="k"><code>MISSING_BITWAVE_ACCOUNT_ID</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
+        <td class="doc">Bitwave export requested with no account id in the query and none saved in the wallet’s <code>exportTxInfo.json</code>.</td></tr><tr id="err-OBJECT_KIND_MISMATCH"><td class="k"><code>OBJECT_KIND_MISMATCH</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
+        <td class="doc">The handle exists but is a different kind (e.g. a swap quote passed to <code>sign-tx</code>).</td></tr><tr id="err-OBJECT_SESSION_MISMATCH"><td class="k"><code>OBJECT_SESSION_MISMATCH</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
+        <td class="doc">The handle belongs to a different session.</td></tr><tr id="err-OBJECT_WALLET_MISMATCH"><td class="k"><code>OBJECT_WALLET_MISMATCH</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
+        <td class="doc">The transaction handle belongs to a different wallet.</td></tr><tr id="err-INVALID_SESSION"><td class="k"><code>INVALID_SESSION</code></td>
+        <td class="ty"><span class="st">401</span><span class="dim">engine</span></td>
+        <td class="doc">Unknown <code>sessionId</code>.</td></tr><tr id="err-SESSION_EXPIRED"><td class="k"><code>SESSION_EXPIRED</code></td>
+        <td class="ty"><span class="st">401</span><span class="dim">engine</span></td>
+        <td class="doc">Auto-logged-out, or explicitly logged out.</td></tr><tr id="err-NOT_FOUND"><td class="k"><code>NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">No route matched, or a generic missing resource.</td></tr><tr id="err-NO_LOGIN_REQUEST"><td class="k"><code>NO_LOGIN_REQUEST</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">The lobby exists but carries no pending login request.</td></tr><tr id="err-OBJECT_NOT_FOUND"><td class="k"><code>OBJECT_NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">No handle with that <code>objectId</code>.</td></tr><tr id="err-PENDING_LOGIN_NOT_FOUND"><td class="k"><code>PENDING_LOGIN_NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">No pending Edge login with that <code>pendingId</code>.</td></tr><tr id="err-TOKEN_NOT_ENABLED"><td class="k"><code>TOKEN_NOT_ENABLED</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">Tried to disable a token that was not enabled.</td></tr><tr id="err-TOKEN_NOT_FOUND"><td class="k"><code>TOKEN_NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">Unknown token id for this wallet.</td></tr><tr id="err-USER_NOT_FOUND"><td class="k"><code>USER_NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">No local user matches that username or login id.</td></tr><tr id="err-WALLET_NOT_FOUND"><td class="k"><code>WALLET_NOT_FOUND</code></td>
+        <td class="ty"><span class="st">404</span><span class="dim">engine</span></td>
+        <td class="doc">No wallet matches that id or prefix.</td></tr><tr id="err-METHOD_NOT_ALLOWED"><td class="k"><code>METHOD_NOT_ALLOWED</code></td>
+        <td class="ty"><span class="st">405</span><span class="dim">engine</span></td>
+        <td class="doc">The path exists but not for this HTTP method.</td></tr><tr id="err-AMBIGUOUS_WALLET_ID"><td class="k"><code>AMBIGUOUS_WALLET_ID</code></td>
+        <td class="ty"><span class="st">409</span><span class="dim">engine</span></td>
+        <td class="doc">A wallet id prefix matched more than one wallet. <span class="dim">details: <code>details.candidates</code></span></td></tr><tr id="err-OBJECT_EXPIRED"><td class="k"><code>OBJECT_EXPIRED</code></td>
+        <td class="ty"><span class="st">410</span><span class="dim">engine</span></td>
+        <td class="doc">The handle passed its 5 minute TTL and was released.</td></tr><tr id="err-PAYLOAD_TOO_LARGE"><td class="k"><code>PAYLOAD_TOO_LARGE</code></td>
+        <td class="ty"><span class="st">413</span><span class="dim">engine</span></td>
+        <td class="doc">Request body over 4 MiB.</td></tr><tr id="err-UNSUPPORTED_MEDIA_TYPE"><td class="k"><code>UNSUPPORTED_MEDIA_TYPE</code></td>
+        <td class="ty"><span class="st">415</span><span class="dim">engine</span></td>
+        <td class="doc">Body present but not <code>application/json</code>.</td></tr><tr id="err-INTERNAL_ERROR"><td class="k"><code>INTERNAL_ERROR</code></td>
+        <td class="ty"><span class="st">500</span><span class="dim">engine</span></td>
+        <td class="doc">Unmapped engine or plugin failure.</td></tr><tr id="err-ENGINE_SHUTTING_DOWN"><td class="k"><code>ENGINE_SHUTTING_DOWN</code></td>
+        <td class="ty"><span class="st">503</span><span class="dim">engine</span></td>
+        <td class="doc">Idle or explicit shutdown already in progress.</td></tr><tr id="err-USERNAME_ERROR"><td class="k"><code>USERNAME_ERROR</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">core</span></td>
+        <td class="doc">Unknown username, or an invalid recovery key.</td></tr><tr id="err-NO_AMOUNT_SPECIFIED"><td class="k"><code>NO_AMOUNT_SPECIFIED</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">core</span></td>
+        <td class="doc">Zero-amount spend.</td></tr><tr id="err-SAME_CURRENCY"><td class="k"><code>SAME_CURRENCY</code></td>
+        <td class="ty"><span class="st">400</span><span class="dim">core</span></td>
+        <td class="doc">Swap between identical currencies.</td></tr><tr id="err-PASSWORD_ERROR"><td class="k"><code>PASSWORD_ERROR</code></td>
+        <td class="ty"><span class="st">401</span><span class="dim">core</span></td>
+        <td class="doc">Wrong password, PIN, or recovery answers. <span class="dim">details: <code>details.wait</code> (seconds) when rate-limited</span></td></tr><tr id="err-OTP_REQUIRED"><td class="k"><code>OTP_REQUIRED</code></td>
+        <td class="ty"><span class="st">401</span><span class="dim">core</span></td>
+        <td class="doc">Missing or wrong 2FA token. <span class="dim">details: <code>reason</code> (<code>ip</code>|<code>otp</code>), <code>loginId</code>, <code>resetToken</code>, <code>resetDate</code>, <code>voucherId</code>, <code>voucherAuth</code>, <code>voucherActivates</code></span></td></tr><tr id="err-CHALLENGE_REQUIRED"><td class="k"><code>CHALLENGE_REQUIRED</code></td>
+        <td class="ty"><span class="st">403</span><span class="dim">core</span></td>
+        <td class="doc">The login server wants a CAPTCHA. Retry with <code>challengeId</code>. <span class="dim">details: <code>challengeId</code>, <code>challengeUri</code></span></td></tr><tr id="err-PIN_DISABLED"><td class="k"><code>PIN_DISABLED</code></td>
+        <td class="ty"><span class="st">403</span><span class="dim">core</span></td>
+        <td class="doc">PIN login is not enabled on this device.</td></tr><tr id="err-SWAP_PERMISSION"><td class="k"><code>SWAP_PERMISSION</code></td>
+        <td class="ty"><span class="st">403</span><span class="dim">core</span></td>
+        <td class="doc">The swap plugin refused the request. <span class="dim">details: <code>pluginId</code>, <code>reason</code>: <code>geoRestriction</code> | <code>noVerification</code> | <code>needsActivation</code></span></td></tr><tr id="err-INSUFFICIENT_FUNDS"><td class="k"><code>INSUFFICIENT_FUNDS</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Not enough balance to cover amount plus fee. <span class="dim">details: <code>tokenId</code>, <code>networkFee</code></span></td></tr><tr id="err-DUST_SPEND"><td class="k"><code>DUST_SPEND</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Amount below the network dust threshold.</td></tr><tr id="err-PENDING_FUNDS"><td class="k"><code>PENDING_FUNDS</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Balance exists but is unconfirmed.</td></tr><tr id="err-SPEND_TO_SELF"><td class="k"><code>SPEND_TO_SELF</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Destination address belongs to the source wallet.</td></tr><tr id="err-SWAP_ABOVE_LIMIT"><td class="k"><code>SWAP_ABOVE_LIMIT</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Amount exceeds the plugin maximum. <span class="dim">details: <code>swapPluginId</code>, <code>nativeMax</code>, <code>direction</code></span></td></tr><tr id="err-SWAP_BELOW_LIMIT"><td class="k"><code>SWAP_BELOW_LIMIT</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Amount below the plugin minimum. <span class="dim">details: <code>swapPluginId</code>, <code>nativeMin</code>, <code>direction</code></span></td></tr><tr id="err-SWAP_CURRENCY"><td class="k"><code>SWAP_CURRENCY</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">The plugin does not support that pair. <span class="dim">details: <code>pluginId</code>, <code>fromTokenId</code>, <code>toTokenId</code></span></td></tr><tr id="err-SWAP_ADDRESS"><td class="k"><code>SWAP_ADDRESS</code></td>
+        <td class="ty"><span class="st">422</span><span class="dim">core</span></td>
+        <td class="doc">Address unusable for this swap. <span class="dim">details: <code>swapPluginId</code>, <code>reason</code>: <code>mustMatch</code> | <code>mustBeActivated</code></span></td></tr><tr id="err-OBSOLETE_API"><td class="k"><code>OBSOLETE_API</code></td>
+        <td class="ty"><span class="st">426</span><span class="dim">core</span></td>
+        <td class="doc">The login server rejected this client version.</td></tr><tr id="err-NETWORK_ERROR"><td class="k"><code>NETWORK_ERROR</code></td>
+        <td class="ty"><span class="st">503</span><span class="dim">core</span></td>
+        <td class="doc">Could not reach an Edge server.</td></tr></tbody></table>
+<h2 id="exit-codes">CLI exit codes</h2>
+<table class="fields"><tbody><tr><td class="k"><code>0</code></td><td class="ty"><span class="dim">OK</span></td><td class="doc">Success.</td></tr><tr><td class="k"><code>1</code></td><td class="ty"><span class="dim">GENERIC</span></td><td class="doc">Any failure with no more specific mapping.</td></tr><tr><td class="k"><code>2</code></td><td class="ty"><span class="dim">USAGE</span></td><td class="doc">Bad argv: unknown flag, missing value, extra positional.</td></tr><tr><td class="k"><code>3</code></td><td class="ty"><span class="dim">AUTH</span></td><td class="doc"><code>INVALID_SESSION</code>, <code>SESSION_EXPIRED</code>, <code>PASSWORD_ERROR</code>, <code>OTP_REQUIRED</code>, <code>CHALLENGE_REQUIRED</code>, <code>PIN_DISABLED</code>.</td></tr><tr><td class="k"><code>4</code></td><td class="ty"><span class="dim">NOT_FOUND</span></td><td class="doc"><code>NOT_FOUND</code>, <code>WALLET_NOT_FOUND</code>, <code>TOKEN_NOT_FOUND</code>.</td></tr><tr><td class="k"><code>5</code></td><td class="ty"><span class="dim">VALIDATION</span></td><td class="doc"><code>BAD_REQUEST</code>, <code>INSUFFICIENT_FUNDS</code>, <code>DUST_SPEND</code>, <code>PENDING_FUNDS</code>, <code>SPEND_TO_SELF</code>, <code>NO_AMOUNT_SPECIFIED</code>, <code>AMBIGUOUS_WALLET_ID</code>, <code>USERNAME_ERROR</code>.</td></tr><tr><td class="k"><code>6</code></td><td class="ty"><span class="dim">NETWORK</span></td><td class="doc"><code>NETWORK_ERROR</code>, or any response with HTTP status <code>503</code>.</td></tr><tr><td class="k"><code>7</code></td><td class="ty"><span class="dim">ENGINE</span></td><td class="doc">Could not connect to or spawn the engine.</td></tr></tbody></table>
+</main>
+</div>
+<script>
+const q = document.getElementById('q')
+const links = [...document.querySelectorAll('nav a.e[data-s]')]
+q.addEventListener('input', () => {
+  const v = q.value.trim().toLowerCase()
+  for (const a of links) a.classList.toggle('hidden', v !== '' && !a.dataset.s.includes(v))
+  for (const g of document.querySelectorAll('nav .g')) {
+    let el = g.nextElementSibling, any = false
+    while (el != null && el.classList.contains('e')) {
+      if (!el.classList.contains('hidden')) any = true
+      el = el.nextElementSibling
+    }
+    g.classList.toggle('hidden', !any)
+  }
+  // A section heading outlives its groups unless it is hidden too.
+  for (const sec of document.querySelectorAll('nav .s')) {
+    let el = sec.nextElementSibling, any = false
+    while (el != null && !el.classList.contains('s')) {
+      if (el.classList.contains('e') && !el.classList.contains('hidden')) any = true
+      el = el.nextElementSibling
+    }
+    sec.classList.toggle('hidden', !any)
+  }
+})
+</script>
+</body></html>
