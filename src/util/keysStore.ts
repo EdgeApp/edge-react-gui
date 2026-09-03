@@ -30,8 +30,8 @@ import {
 import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
 import { debugLog } from './logger'
 import { fetchPublicRollup, infoServerData } from './network'
+import { getOsVersion } from './rnUtils'
 import { runOnce } from './runOnce'
-import { getOsVersion } from './utils'
 import { checkAppVersion } from './versionCheck'
 
 export type KeysTier = 'remote' | 'cache' | 'baked-in'
