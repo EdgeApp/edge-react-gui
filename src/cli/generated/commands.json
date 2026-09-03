@@ -2,6 +2,804 @@
   "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliCommands.ts from the route declarations in src/cli/engine/routes. Commands marked `custom: true` in a declaration are hand-written instead; see src/cli/commands/.",
   "commands": [
     {
+      "command": "accelerate",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/accelerate",
+      "usage": "accelerate --wallet-id=<walletId> [--object-id=<objectId>] [--transaction='<json>']",
+      "help": "Fee-bump a pending transaction.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "object-id",
+          "field": "objectId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "transaction",
+          "field": "transaction",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "account-info",
+      "method": "GET",
+      "path": "/account/{sessionId}",
+      "usage": "account-info",
+      "help": "Account and session summary.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "admin-auth-request",
+      "method": "POST",
+      "path": "/admin/auth-request",
+      "usage": "admin-auth-request --method=<method> --path=<path> [--body='<json>']",
+      "help": "Raw login-server request.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "method",
+          "field": "method",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "path",
+          "field": "path",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "body",
+          "field": "body",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "admin-fetch-lobby-request",
+      "method": "GET",
+      "path": "/admin/fetch-lobby-request/{lobbyId}",
+      "usage": "admin-fetch-lobby-request <lobbyId>",
+      "help": "Read a lobby's contents.",
+      "needsSession": false,
+      "pathPositional": "lobbyId",
+      "args": []
+    },
+    {
+      "command": "admin-hash-username",
+      "method": "GET",
+      "path": "/admin/hash-username",
+      "usage": "admin-hash-username --username=<username>",
+      "help": "Hash a username.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "admin-lobby-handle-delete",
+      "method": "POST",
+      "path": "/admin/lobby-handle/delete/{objectId}",
+      "usage": "admin-lobby-handle-delete <objectId>",
+      "help": "Close a parked lobby.",
+      "needsSession": false,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "admin-make-lobby",
+      "method": "POST",
+      "path": "/admin/make-lobby",
+      "usage": "admin-make-lobby [--lobby-request='<json>'] [--period-seconds='<json>']",
+      "help": "Create a lobby.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "lobby-request",
+          "field": "lobbyRequest",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "period-seconds",
+          "field": "period",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "admin-repo-delete",
+      "method": "POST",
+      "path": "/admin/repo-delete/{syncKey}",
+      "usage": "admin-repo-delete <syncKey> --path=<path> --data-key=<dataKey>",
+      "help": "Delete a repo file.",
+      "needsSession": false,
+      "pathPositional": "syncKey",
+      "args": [
+        {
+          "flag": "path",
+          "field": "path",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "data-key",
+          "field": "dataKey",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "admin-repo-get",
+      "method": "GET",
+      "path": "/admin/repo-get/{syncKey}",
+      "usage": "admin-repo-get <syncKey> --path=<path> --data-key=<dataKey>",
+      "help": "Read a repo file.",
+      "needsSession": false,
+      "pathPositional": "syncKey",
+      "args": [
+        {
+          "flag": "path",
+          "field": "path",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "data-key",
+          "field": "dataKey",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "admin-repo-list",
+      "method": "GET",
+      "path": "/admin/repo-list/{syncKey}",
+      "usage": "admin-repo-list <syncKey> [--path=<path>] --data-key=<dataKey>",
+      "help": "List repo contents.",
+      "needsSession": false,
+      "pathPositional": "syncKey",
+      "args": [
+        {
+          "flag": "path",
+          "field": "path",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "data-key",
+          "field": "dataKey",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "admin-repo-set",
+      "method": "POST",
+      "path": "/admin/repo-set/{syncKey}",
+      "usage": "admin-repo-set <syncKey> --path=<path> --text=<text> --data-key=<dataKey>",
+      "help": "Write a repo file.",
+      "needsSession": false,
+      "pathPositional": "syncKey",
+      "args": [
+        {
+          "flag": "path",
+          "field": "path",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "text",
+          "field": "text",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "data-key",
+          "field": "dataKey",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "admin-send-lobby-reply",
+      "method": "POST",
+      "path": "/admin/send-lobby-reply/{lobbyId}",
+      "usage": "admin-send-lobby-reply <lobbyId> --lobby-request='<json>' [--reply-data='<json>']",
+      "help": "Reply to a lobby.",
+      "needsSession": false,
+      "pathPositional": "lobbyId",
+      "args": [
+        {
+          "flag": "lobby-request",
+          "field": "lobbyRequest",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        },
+        {
+          "flag": "reply-data",
+          "field": "replyData",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "admin-sync-repo",
+      "method": "POST",
+      "path": "/admin/sync-repo/{syncKey}",
+      "usage": "admin-sync-repo <syncKey>",
+      "help": "Sync a repo.",
+      "needsSession": false,
+      "pathPositional": "syncKey",
+      "args": []
+    },
+    {
+      "command": "all-keys",
+      "method": "GET",
+      "path": "/account/{sessionId}/all-keys",
+      "usage": "all-keys",
+      "help": "List every key in the account.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "approve-login-request",
+      "method": "POST",
+      "path": "/account/{sessionId}/approve-login-request/{lobbyId}",
+      "usage": "approve-login-request <lobbyId>",
+      "help": "Approve a login request.",
+      "needsSession": true,
+      "pathPositional": "lobbyId",
+      "args": []
+    },
+    {
+      "command": "approve-swap-quote",
+      "method": "POST",
+      "path": "/account/{sessionId}/swap-quote/approve/{objectId}",
+      "usage": "approve-swap-quote <objectId>",
+      "help": "Execute a quote.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "approve-voucher",
+      "method": "POST",
+      "path": "/account/{sessionId}/approve-voucher",
+      "usage": "approve-voucher --voucher-id=<voucherId>",
+      "help": "Approve a voucher.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "voucher-id",
+          "field": "voucherId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "broadcast-tx",
+      "method": "POST",
+      "path": "/account/{sessionId}/broadcast-tx/{objectId}",
+      "usage": "broadcast-tx <objectId>",
+      "help": "Broadcast a signed transaction.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "cancel-otp-reset",
+      "method": "POST",
+      "path": "/account/{sessionId}/cancel-otp-reset",
+      "usage": "cancel-otp-reset",
+      "help": "Cancel a pending 2FA reset.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "cancel-request",
+      "method": "POST",
+      "path": "/pending-edge-login/cancel-request/{pendingId}",
+      "usage": "cancel-request <pendingId>",
+      "help": "Cancel a pending QR login.",
+      "needsSession": false,
+      "pathPositional": "pendingId",
+      "args": []
+    },
+    {
+      "command": "change-password",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-password",
+      "usage": "change-password --password=<password>",
+      "help": "Set or change the password.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "password",
+          "field": "password",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "change-paused",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/change-paused",
+      "usage": "change-paused --wallet-id=<walletId> --paused=<paused>",
+      "help": "Pause or resume a wallet engine.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "paused",
+          "field": "paused",
+          "target": "body",
+          "kind": "boolstr",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "change-pin",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-pin",
+      "usage": "change-pin --pin=<pin> [--enable-login] [--for-duress-account]",
+      "help": "Set or change the PIN.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "pin",
+          "field": "pin",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "enable-login",
+          "field": "enableLogin",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "for-duress-account",
+          "field": "forDuressAccount",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "change-recovery",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-recovery",
+      "usage": "change-recovery --question=<questions> --answer=<answers>",
+      "help": "Set recovery questions and answers.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "question",
+          "field": "questions",
+          "target": "body",
+          "kind": "repeat",
+          "required": true
+        },
+        {
+          "flag": "answer",
+          "field": "answers",
+          "target": "body",
+          "kind": "repeat",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "change-username",
+      "method": "POST",
+      "path": "/account/{sessionId}/change-username",
+      "usage": "change-username --username=<username> [--password=<password>]",
+      "help": "Change the username.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "password",
+          "field": "password",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "check-password",
+      "method": "POST",
+      "path": "/account/{sessionId}/check-password",
+      "usage": "check-password --password=<password>",
+      "help": "Verify a password.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "password",
+          "field": "password",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "check-password-rules",
+      "method": "GET",
+      "path": "/check-password-rules",
+      "usage": "check-password-rules --password=<password>",
+      "help": "Score a candidate password.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "password",
+          "field": "password",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "check-pin",
+      "method": "POST",
+      "path": "/account/{sessionId}/check-pin",
+      "usage": "check-pin --pin=<pin> [--for-duress-account]",
+      "help": "Verify a PIN.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "pin",
+          "field": "pin",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "for-duress-account",
+          "field": "forDuressAccount",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "close-swap-quote",
+      "method": "POST",
+      "path": "/account/{sessionId}/swap-quote/close/{objectId}",
+      "usage": "close-swap-quote <objectId>",
+      "help": "Discard a quote.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "create-currency-wallet",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallet",
+      "usage": "create-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]",
+      "help": "Create a currency wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-type",
+          "field": "walletType",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "name",
+          "field": "name",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "import-text",
+          "field": "importText",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "create-currency-wallets",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallets",
+      "usage": "create-currency-wallets --create-wallets='<json>'",
+      "help": "Create several wallets at once.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "create-wallets",
+          "field": "createWallets",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "create-wallet",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-wallet",
+      "usage": "create-wallet --type=<type> [--keys='<json>']",
+      "help": "Create a wallet from raw key JSON.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "type",
+          "field": "type",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "keys",
+          "field": "keys",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "currency-configs",
+      "method": "GET",
+      "path": "/currency-configs",
+      "usage": "currency-configs",
+      "help": "List plugin ids usable for wallet creation.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "currency-wallets",
+      "method": "GET",
+      "path": "/account/{sessionId}/currency-wallets",
+      "usage": "currency-wallets [--filter=<filter>]",
+      "help": "List the account's wallets.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "filter",
+          "field": "filter",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "delete-item",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-item",
+      "usage": "delete-item --store-id=<storeId> --item-id=<itemId>",
+      "help": "Delete an item.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "store-id",
+          "field": "storeId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "item-id",
+          "field": "itemId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "delete-password",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-password",
+      "usage": "delete-password",
+      "help": "Remove password login.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "delete-pin",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-pin",
+      "usage": "delete-pin",
+      "help": "Remove the PIN.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "delete-recovery",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-recovery",
+      "usage": "delete-recovery",
+      "help": "Disable recovery login.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "delete-store",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-store",
+      "usage": "delete-store --store-id=<storeId>",
+      "help": "Delete an entire store.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "store-id",
+          "field": "storeId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "disable-otp",
+      "method": "POST",
+      "path": "/account/{sessionId}/disable-otp",
+      "usage": "disable-otp",
+      "help": "Disable 2FA.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "dump-data",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet/dump-data",
+      "usage": "dump-data --wallet-id=<walletId>",
+      "help": "Dump wallet engine state.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "enable-otp",
+      "method": "POST",
+      "path": "/account/{sessionId}/enable-otp",
+      "usage": "enable-otp [--timeout=<timeout>]",
+      "help": "Enable 2FA.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "timeout",
+          "field": "timeout",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "encode-uri",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/encode-uri",
+      "usage": "encode-uri --wallet-id=<walletId> --public-address=<publicAddress> [--native-amount=<nativeAmount>] [--label=<label>] [--message=<message>] [--currency-code=<currencyCode>]",
+      "help": "Build a payment URI.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "public-address",
+          "field": "publicAddress",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "label",
+          "field": "label",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "message",
+          "field": "message",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "currency-code",
+          "field": "currencyCode",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
       "command": "engine-config",
       "method": "GET",
       "path": "/engine/config",
@@ -38,12 +836,456 @@
       "args": []
     },
     {
+      "command": "fetch-challenge",
+      "method": "POST",
+      "path": "/fetch-challenge",
+      "usage": "fetch-challenge",
+      "help": "Pre-fetch a CAPTCHA challenge.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-lobby",
+      "method": "GET",
+      "path": "/account/{sessionId}/fetch-lobby/{lobbyId}",
+      "usage": "fetch-lobby <lobbyId>",
+      "help": "Inspect a login request.",
+      "needsSession": true,
+      "pathPositional": "lobbyId",
+      "args": []
+    },
+    {
       "command": "fetch-login-messages",
       "method": "GET",
       "path": "/fetch-login-messages",
       "usage": "fetch-login-messages",
       "help": "Fetch login-server messages for every local user.",
       "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-recovery-questions",
+      "method": "GET",
+      "path": "/fetch-recovery-questions",
+      "usage": "fetch-recovery-questions --recovery-key=<recoveryKey> --username=<username>",
+      "help": "Fetch a user’s recovery questions.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "recovery-key",
+          "field": "recoveryKey",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "fetch-swap-quotes",
+      "method": "POST",
+      "path": "/account/{sessionId}/fetch-swap-quotes",
+      "usage": "fetch-swap-quotes --from-wallet-id=<fromWalletId> --to-wallet-id=<toWalletId> --native-amount=<nativeAmount> [--from-token-id=<fromTokenId>] [--to-token-id=<toTokenId>] [--quote-for=<quoteFor>] [--plugin-id=<preferPluginId>]",
+      "help": "Fetch swap quotes.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "from-wallet-id",
+          "field": "fromWalletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "to-wallet-id",
+          "field": "toWalletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "from-token-id",
+          "field": "fromTokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "to-token-id",
+          "field": "toTokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "quote-for",
+          "field": "quoteFor",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "plugin-id",
+          "field": "preferPluginId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "fix-username",
+      "method": "GET",
+      "path": "/fix-username",
+      "usage": "fix-username --username=<username>",
+      "help": "Normalize a username.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "forget-account",
+      "method": "POST",
+      "path": "/forget-account",
+      "usage": "forget-account --root-login-id=<rootLoginId>",
+      "help": "Forget an account on this device.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "root-login-id",
+          "field": "rootLoginId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-addresses",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet/get-addresses",
+      "usage": "get-addresses --wallet-id=<walletId> [--token-id=<tokenId>] [--force-index=<forceIndex>]",
+      "help": "Receive addresses.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "force-index",
+          "field": "forceIndex",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "get-display-private-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-display-private-key",
+      "usage": "get-display-private-key --wallet-id=<walletId>",
+      "help": "Export the private key for display.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-display-public-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-display-public-key",
+      "usage": "get-display-public-key --wallet-id=<walletId>",
+      "help": "Export the public key for display.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-item",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-item",
+      "usage": "get-item --store-id=<storeId> --item-id=<itemId>",
+      "help": "Read an item.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "store-id",
+          "field": "storeId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "item-id",
+          "field": "itemId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-login-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-login-key",
+      "usage": "get-login-key",
+      "help": "Read the account login key.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "get-max-spendable",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/get-max-spendable",
+      "usage": "get-max-spendable --wallet-id=<walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>']",
+      "help": "Largest sendable amount.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "spend-info",
+          "field": "spendInfo",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "to",
+          "field": "to",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "amount",
+          "field": "amount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "metadata",
+          "field": "metadata",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "get-num-transactions",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet/get-num-transactions",
+      "usage": "get-num-transactions --wallet-id=<walletId> [--token-id=<tokenId>]",
+      "help": "Count transactions in a wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "get-payment-protocol-info",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet/get-payment-protocol-info",
+      "usage": "get-payment-protocol-info --wallet-id=<walletId> --payment-protocol-url=<paymentProtocolUrl>",
+      "help": "Fetch a BIP70 payment request.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "payment-protocol-url",
+          "field": "paymentProtocolUrl",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-pin",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-pin",
+      "usage": "get-pin",
+      "help": "Read the account PIN.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "get-raw-private-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-raw-private-key",
+      "usage": "get-raw-private-key --wallet-id=<walletId>",
+      "help": "Read raw private key material.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-raw-public-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-raw-public-key",
+      "usage": "get-raw-public-key --wallet-id=<walletId>",
+      "help": "Read raw public key material.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-wallet-info",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-wallet-info",
+      "usage": "get-wallet-info --id=<id>",
+      "help": "Read one wallet's key info.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "id",
+          "field": "id",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "list-item-ids",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-item-ids",
+      "usage": "list-item-ids --store-id=<storeId>",
+      "help": "List item ids in a store.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "store-id",
+          "field": "storeId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "list-splittable-wallet-types",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-splittable-wallet-types",
+      "usage": "list-splittable-wallet-types --wallet-id=<walletId>",
+      "help": "List chains a wallet can split into.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "list-store-ids",
+      "method": "GET",
+      "path": "/account/{sessionId}/list-store-ids",
+      "usage": "list-store-ids",
+      "help": "List data-store ids.",
+      "needsSession": true,
       "args": []
     },
     {
@@ -54,6 +1296,65 @@
       "help": "List local users on this device.",
       "needsSession": false,
       "args": []
+    },
+    {
+      "command": "make-spend",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/make-spend",
+      "usage": "make-spend --wallet-id=<walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>']",
+      "help": "Build an unsigned transaction.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "spend-info",
+          "field": "spendInfo",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "to",
+          "field": "to",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "amount",
+          "field": "amount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "metadata",
+          "field": "metadata",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
     },
     {
       "command": "object-delete",
@@ -73,6 +1374,665 @@
       "help": "Inspect an object handle.",
       "needsSession": true,
       "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "otp-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/otp-key",
+      "usage": "otp-key",
+      "help": "Read the 2FA secret and reset state.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "parse-uri",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/parse-uri",
+      "usage": "parse-uri --wallet-id=<walletId> --uri=<uri> [--currency-code=<currencyCode>]",
+      "help": "Parse a payment URI or address.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "uri",
+          "field": "uri",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "currency-code",
+          "field": "currencyCode",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "pending-vouchers",
+      "method": "GET",
+      "path": "/account/{sessionId}/pending-vouchers",
+      "usage": "pending-vouchers",
+      "help": "List pending 2FA vouchers.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "rates-query",
+      "method": "POST",
+      "path": "/rates/query",
+      "usage": "rates-query [--crypto='<json>'] [--fiat='<json>']",
+      "help": "Batch crypto and fiat rate lookups.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "crypto",
+          "field": "crypto",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "fiat",
+          "field": "fiat",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "rates-usd-to-native",
+      "method": "POST",
+      "path": "/rates/usd-to-native",
+      "usage": "rates-usd-to-native --usd-amount=<usdAmount> --plugin-id=<pluginId> [--token-id=<tokenId>] [--multiplier=<multiplier>] [--date=<date>]",
+      "help": "Convert a USD amount into native units.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "usd-amount",
+          "field": "usdAmount",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "plugin-id",
+          "field": "pluginId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "multiplier",
+          "field": "multiplier",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "date",
+          "field": "date",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "reject-voucher",
+      "method": "POST",
+      "path": "/account/{sessionId}/reject-voucher",
+      "usage": "reject-voucher --voucher-id=<voucherId>",
+      "help": "Reject a voucher.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "voucher-id",
+          "field": "voucherId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "rename-wallet",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/rename-wallet",
+      "usage": "rename-wallet --wallet-id=<walletId> --name=<name>",
+      "help": "Rename a wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "name",
+          "field": "name",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "repair-otp",
+      "method": "POST",
+      "path": "/account/{sessionId}/repair-otp",
+      "usage": "repair-otp --otp-key=<otpKey>",
+      "help": "Re-point the account at a known 2FA secret.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "otp-key",
+          "field": "otpKey",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "request-otp-reset",
+      "method": "POST",
+      "path": "/request-otp-reset",
+      "usage": "request-otp-reset --username=<username> --otp-reset-token=<otpResetToken>",
+      "help": "Request a 2FA reset.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "otp-reset-token",
+          "field": "otpResetToken",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "resync-blockchain",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/resync-blockchain",
+      "usage": "resync-blockchain --wallet-id=<walletId>",
+      "help": "Rescan the blockchain from scratch.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "save-tx",
+      "method": "POST",
+      "path": "/account/{sessionId}/save-tx/{objectId}",
+      "usage": "save-tx <objectId>",
+      "help": "Record a transaction and release its handle.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "save-tx-action",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/save-tx-action",
+      "usage": "save-tx-action --wallet-id=<walletId> --txid=<txid> [--token-id=<tokenId>] --saved-action='<json>' [--asset-action='<json>']",
+      "help": "Save a transaction action.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "txid",
+          "field": "txid",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "saved-action",
+          "field": "savedAction",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        },
+        {
+          "flag": "asset-action",
+          "field": "assetAction",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "save-tx-metadata",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/save-tx-metadata",
+      "usage": "save-tx-metadata --wallet-id=<walletId> --txid=<txid> [--token-id=<tokenId>] --metadata='<json>'",
+      "help": "Save transaction metadata.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "txid",
+          "field": "txid",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "metadata",
+          "field": "metadata",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "set-fiat-currency-code",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/set-fiat-currency-code",
+      "usage": "set-fiat-currency-code --wallet-id=<walletId> --fiat-currency-code=<fiatCurrencyCode>",
+      "help": "Change a wallet's fiat currency.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "fiat-currency-code",
+          "field": "fiatCurrencyCode",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "set-item",
+      "method": "POST",
+      "path": "/account/{sessionId}/set-item",
+      "usage": "set-item --store-id=<storeId> --item-id=<itemId> --value=<value>",
+      "help": "Write an item.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "store-id",
+          "field": "storeId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "item-id",
+          "field": "itemId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "value",
+          "field": "value",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "sign-bytes",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/sign-bytes",
+      "usage": "sign-bytes --wallet-id=<walletId> [--bytes=<bytes>] [--other-params='<json>']",
+      "help": "Sign arbitrary bytes.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "bytes",
+          "field": "bytes",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "other-params",
+          "field": "otherParams",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "sign-tx",
+      "method": "POST",
+      "path": "/account/{sessionId}/sign-tx/{objectId}",
+      "usage": "sign-tx <objectId>",
+      "help": "Sign a staged transaction.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "spend",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/spend",
+      "usage": "spend --wallet-id=<walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>'] [--use-max] [--dry-run] [--broadcast] [--save]",
+      "help": "Send funds.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "spend-info",
+          "field": "spendInfo",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "to",
+          "field": "to",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "amount",
+          "field": "amount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "metadata",
+          "field": "metadata",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "use-max",
+          "field": "useMax",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "dry-run",
+          "field": "dryRun",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "broadcast",
+          "field": "broadcast",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "save",
+          "field": "save",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "spend-max",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/spend",
+      "usage": "spend-max --wallet-id=<walletId> [--spend-info='<json>'] [--to=<to>] [--native-amount=<nativeAmount>] [--amount=<amount>] [--token-id=<tokenId>] [--metadata='<json>'] [--use-max] [--dry-run] [--broadcast] [--save]",
+      "help": "Send funds.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "spend-info",
+          "field": "spendInfo",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "to",
+          "field": "to",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "native-amount",
+          "field": "nativeAmount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "amount",
+          "field": "amount",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "metadata",
+          "field": "metadata",
+          "target": "body",
+          "kind": "json",
+          "required": false
+        },
+        {
+          "flag": "use-max",
+          "field": "useMax",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "dry-run",
+          "field": "dryRun",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "broadcast",
+          "field": "broadcast",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "save",
+          "field": "save",
+          "target": "body",
+          "kind": "boolean",
+          "required": false
+        }
+      ],
+      "preset": {
+        "useMax": true
+      }
+    },
+    {
+      "command": "split",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/split",
+      "usage": "split --wallet-id=<walletId> --split-wallets='<json>'",
+      "help": "Split a wallet into another chain.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "split-wallets",
+          "field": "splitWallets",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "swap-quote-get",
+      "method": "GET",
+      "path": "/account/{sessionId}/swap-quote/{objectId}",
+      "usage": "swap-quote-get <objectId>",
+      "help": "Re-read a quote.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "sweep-private-keys",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/sweep-private-keys",
+      "usage": "sweep-private-keys --wallet-id=<walletId> --spend-info='<json>'",
+      "help": "Sweep private keys into this wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "spend-info",
+          "field": "spendInfo",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "sync",
+      "method": "POST",
+      "path": "/account/{sessionId}/sync",
+      "usage": "sync",
+      "help": "Force an account data sync.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "touch",
+      "method": "POST",
+      "path": "/account/{sessionId}/touch",
+      "usage": "touch",
+      "help": "Keepalive.",
+      "needsSession": true,
       "args": []
     },
     {
@@ -96,6 +2056,66 @@
           "target": "query",
           "kind": "string",
           "required": false
+        }
+      ]
+    },
+    {
+      "command": "wait-for-all-wallets",
+      "method": "POST",
+      "path": "/account/{sessionId}/wait-for-all-wallets",
+      "usage": "wait-for-all-wallets",
+      "help": "Wait for every wallet to finish loading.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "wallet-info",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet",
+      "usage": "wallet-info --wallet-id=<walletId>",
+      "help": "Wallet detail.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "wallet-sync",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/sync",
+      "usage": "wallet-sync --wallet-id=<walletId>",
+      "help": "Nudge one wallet to sync.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "wallet-tokens",
+      "method": "GET",
+      "path": "/account/{sessionId}/wallet/tokens",
+      "usage": "wallet-tokens --wallet-id=<walletId>",
+      "help": "List a wallet's tokens.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "query",
+          "kind": "string",
+          "required": true
         }
       ]
     }

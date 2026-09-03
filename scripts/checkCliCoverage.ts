@@ -18,7 +18,12 @@ const ROOT = path.resolve(__dirname, '..')
  * world does not intercept, so they cannot run in a pre-commit hook.
  * `npm run test:cli:network` is where they belong.
  */
-const NETWORK_ONLY: Record<string, string> = {}
+const NETWORK_ONLY: Record<string, string> = {
+  'rates-query': 'Fetches exchange rates from an external API.',
+  'rates-usd-to-native': 'Fetches exchange rates from an external API.',
+  'fetch-swap-quotes': 'Polls the swap providers.',
+  'get-payment-protocol-info': 'Fetches a BIP70 request from a merchant.'
+}
 
 const generated = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'src/cli/generated/commands.json'), 'utf8')
