@@ -11,15 +11,6 @@ For the full surface — every command, its REST call, and the `edge-core-js`
 call behind it — see the generated reference at
 [docs/api/dist/index.html](./api/dist/index.html), built from `docs/api/`.
 
-## Building this branch
-
-`src/util/edgeApiSigner.ts` and the engine's HMAC signer import `EdgeApiSigner`,
-which is not in any published `edge-core-js`. Until it ships, this branch needs
-a local pack of core in the worktree root — see the `npm pack` workflow — or
-`tsc` reports five missing-export errors and `npm run precommit` fails. Nothing
-else is required: `npm install` generates `src/plugins/contracts` and the API
-reference through `prepare`.
-
 ## Overview
 
 | Piece | Role |
@@ -65,6 +56,7 @@ npx edge-cli -t login-with-password --username=<user> --password=<pass>
 | Flag | Who | Description |
 |------|-----|-------------|
 | `-t, --test` | both | Use the six `-tester` servers (see below) |
+| `--fake` | both | Emulate the login, info and sync servers in-process; no network, no API key. Its own engine profile, so it never shares a socket with a real one |
 | `-d, --directory` | both | Working directory for local Edge data |
 | `-a, --app-id` | both | Application ID |
 | `-k, --api-key` | both | Override API key from `keys.json` |
@@ -201,9 +193,10 @@ from the account’s synced `Settings.json` (default `3600`, `0` = disabled) and
 logs the account out after that much idle time since the last REST call that
 touched the session. `edge-cli touch` is an explicit keepalive.
 
-**Engine idle shutdown:** after ~5 minutes with no sessions and no traffic, the
-engine closes the context, unlinks the socket / run file, and exits. Configure
-with `--idle-timeout` (`0` = never).
+**Engine idle shutdown:** after ~5 minutes with no sessions, no subscribers and
+no traffic, the engine closes the context, unlinks the socket / run file, and
+exits. Configure with `--idle-timeout` (`0` = never). A live `subscribe` holds
+it open — see [Subscribing to events](#subscribing-to-events).
 
 ```bash
 edge-cli -t login-with-password --username=alice --password='pass'  # stores sessionId
