@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { BackHandler, Dimensions, View } from 'react-native'
+import { BackHandler, Dimensions, Keyboard, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import {
   Gesture,
@@ -133,14 +133,21 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     }
   }, [handleCancel])
 
-  // Insets are not shared values, so track this on the JS thread:
-  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
-  useKeyboardHandler({
-    onStart(event) {
-      'worklet'
-      runOnJS(setIsKeyboardOpen)(event.progress === 1)
-    }
-  })
+  // Insets are not shared values, so track this on the JS thread. Seed from
+  // the live state, since a modal can mount while the keyboard is already
+  // open:
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(() =>
+    Keyboard.isVisible()
+  )
+  useKeyboardHandler(
+    {
+      onStart(event) {
+        'worklet'
+        runOnJS(setIsKeyboardOpen)(event.progress === 1)
+      }
+    },
+    []
+  )
 
   const gesture = Gesture.Pan()
     .onUpdate(e => {
