@@ -189,7 +189,9 @@ export const BalanceCard: React.FC<Props> = props => {
       >
         <View style={styles.titleContainer}>
           <EdgeText style={theme.cardTextShadow}>
-            {lstrings.fragment_wallets_balance_text}
+            {isBalanceVisible
+              ? lstrings.fragment_wallets_balance_text
+              : lstrings.fragment_wallets_unhide_balance_text}
           </EdgeText>
           <IonIcon
             name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}
