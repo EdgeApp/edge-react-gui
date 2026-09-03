@@ -11,6 +11,39 @@ index 4db980e..53bb319 100644
        }
      }
  
+diff --git a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
+index 66dc4a0..4816c39 100644
+--- a/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
++++ b/node_modules/expo-quick-actions/android/src/main/java/expo/modules.quickactions/ExpoQuickActionsModule.kt
+@@ -1,6 +1,7 @@
+ package expo.modules.quickactions
+ 
+ import android.app.Activity
++import android.content.ComponentName
+ import android.content.Context
+ import android.content.Intent
+ import android.content.pm.ShortcutInfo
+@@ -228,8 +229,19 @@ class ExpoQuickActionsModule : Module() {
+     private fun setShortcuts(items: List<ActionObject>) {
+         val shortcutManager = context.getSystemService(Context.SHORTCUT_SERVICE) as ShortcutManager
+ 
++        // Resolve the launcher activity from the package manager rather than from
++        // the current activity, which is null whenever no activity is resumed.
++        // Only the component is reused: the launch intent itself carries
++        // CATEGORY_LAUNCHER, a package and FLAG_ACTIVITY_NEW_TASK, none of which
++        // belong on a shortcut intent.
++        val launchComponent = context.packageManager
++                .getLaunchIntentForPackage(context.packageName)
++                ?.component
++                ?: currentActivity?.let { ComponentName(context, it::class.java) }
++                ?: throw IllegalStateException("No launcher activity found for ${context.packageName}")
++
+         val shortcuts = items.mapNotNull {
+-            val intent = Intent(context, currentActivity!!::class.java)
++            val intent = Intent().setComponent(launchComponent)
+             intent.action = UNIQ_ACTION_ID
+             intent.putExtra("shortcut_data", it.toBundle());
+             val builder = ShortcutInfo.Builder(context, it.id)
 diff --git a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift b/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift
 index 252da49..12a29e4 100644
 --- a/node_modules/expo-quick-actions/ios/ExpoQuickActionsModule.swift

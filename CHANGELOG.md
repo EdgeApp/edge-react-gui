@@ -29,6 +29,7 @@
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 - fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
 - fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
+- fixed: Android quick-action shortcuts no longer throw a startup error when the app launches without ever coming to the foreground. Registration now waits for the app to be foregrounded, the native shortcut intent targets the launcher component instead of the current activity, and a registration failure is reported to Sentry instead of shown as a blocking alert.
 
 ## 4.50.3 (2026-08-28)
 
