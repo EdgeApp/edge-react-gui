@@ -32,6 +32,7 @@ export const SCOPE_PARAMS: Record<string, string> = {
     'From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.',
   objectId: 'An ephemeral object handle id.',
   pendingId: 'The `pendingId` returned when the QR login was requested.',
+  shareId: 'The `shareId` returned when the wallet share was started.',
   lobbyId: 'The lobby to act on.',
   syncKey: 'Base58 sync key for the repo.'
 }

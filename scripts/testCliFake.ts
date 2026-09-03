@@ -290,6 +290,103 @@ function main(): void {
       '--create-wallets=[{"walletType":"wallet:bitcoin","name":"Batch"}]'
     )
     ok('split', 'split', w, '--split-wallets=[]')
+
+    // ---------------------------------------------------- wallet sharing
+    // Two accounts in one fake world: the lobby lives on the fake login
+    // server, so both sides have to be talking to the same one. The CLI
+    // persists a single session, so each command names the account it acts
+    // as with `--session`.
+    const sessionA: string = cli('account-info').json?.sessionId ?? ''
+    const shareUser = `${USER}share`
+    const madeB = ok(
+      'create-account (share recipient)',
+      'create-account',
+      `--username=${shareUser}`,
+      `--password=${PASS}`,
+      `--pin=${PIN}`
+    )
+    const sessionB: string = madeB.json?.sessionId ?? ''
+    const asA = `--session=${sessionA}`
+    const asB = `--session=${sessionB}`
+
+    // Flow 1: the recipient publishes a link, the sharer answers it.
+    const request = ok('request-wallet-share', asB, 'request-wallet-share')
+    const requestLobby: string = request.json?.lobbyId ?? ''
+    const requestShareId: string = request.json?.shareId ?? ''
+    if (!/^https:\/\/deep\.edge\.app\/request-wallets\//.test(
+      request.json?.uri ?? ''
+    )) {
+      failures++
+      console.error(
+        `FAIL request-wallet-share uri — expected a deep.edge.app link, got ${String(
+          request.json?.uri
+        )}`
+      )
+    } else {
+      passes++
+      console.log('OK   request-wallet-share uri is a deep.edge.app link')
+    }
+
+    ok(
+      'approve-wallet-share',
+      asA,
+      'approve-wallet-share',
+      requestLobby,
+      `--wallets=[{"walletId":"${walletId}","mode":"view-only"}]`
+    )
+    let polled = ok('poll-wallet-share', asB, 'poll-wallet-share', requestShareId)
+    for (let i = 0; i < 20 && polled.json?.state !== 'done'; i++) {
+      spawnSync('sleep', ['1'])
+      polled = cli(asB, 'poll-wallet-share', requestShareId)
+    }
+    if (polled.json?.state === 'done') {
+      passes++
+      console.log('OK   poll-wallet-share reached done')
+    } else {
+      failures++
+      console.error(
+        `FAIL poll-wallet-share — expected state done, got ${String(
+          polled.json?.state
+        )}`
+      )
+    }
+
+    // Flow 2: the sharer publishes a link, the recipient answers it. This is
+    // the two-lobby handshake, so it proves the second lobby round trips.
+    const offer = ok(
+      'offer-wallet-share',
+      asA,
+      'offer-wallet-share',
+      `--wallets=[{"walletId":"${walletId}","mode":"spend"}]`
+    )
+    ok(
+      'accept-wallet-share',
+      asB,
+      'accept-wallet-share',
+      offer.json?.lobbyId ?? ''
+    )
+
+    // Cancelling closes a lobby that was published by mistake.
+    const doomed = ok(
+      'request-wallet-share (to cancel)',
+      asB,
+      'request-wallet-share'
+    )
+    ok(
+      'cancel-wallet-share',
+      asB,
+      'cancel-wallet-share',
+      doomed.json?.shareId ?? ''
+    )
+
+    // Creating the recipient persisted its session. Everything after this
+    // acts on the sharer's wallet, so put that session back.
+    ok(
+      'login-with-password (back as the sharer)',
+      'login-with-password',
+      `--username=${USER}`,
+      '--password=Zq7WmT4rNs2xVb9d'
+    )
     ok('resync-blockchain', 'resync-blockchain', w)
     // No transaction exists to annotate, and saying so proves the path runs.
     refuses(

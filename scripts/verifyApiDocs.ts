@@ -140,6 +140,7 @@ const BASE58_PARAMS = new Set([
   'sessionId',
   'objectId',
   'pendingId',
+  'shareId',
   'lobbyId',
   'syncKey'
 ])

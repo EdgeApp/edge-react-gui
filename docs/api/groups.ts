@@ -132,6 +132,12 @@ export const groupOrder: GroupInfo[] = [
     doc: 'The other side of `request-edge-login`: a logged-in account inspecting and approving a login somebody scanned.'
   },
   {
+    id: 'walletShare',
+    title: 'Sharing wallets',
+    section: 'account',
+    doc: 'Hand wallets to another account over the login lobby. Each wallet carries its own mode, so one share can send a wallet watch-only and another with full spend authority. Keys cannot be recalled once delivered.'
+  },
+  {
     id: 'keys',
     title: 'Keys',
     section: 'account',

@@ -184,6 +184,11 @@ export const asWalletSummary = asObject({
     asOptional(asBoolean),
     'True when the keys came from an import rather than being generated here.'
   ),
+  canSign: doc(
+    asOptional(asBoolean),
+    'False when the wallet holds no private key, so it can watch and sync ' +
+      'but not spend. A wallet shared `view-only` arrives this way.'
+  ),
   created: doc(
     asEither(asString, asValue(null)),
     'When the wallet was created, null for wallets predating the field.'
@@ -395,6 +400,67 @@ export const asErrorEnvelope = asObject({
     'Stable `code` to branch on, human-readable `message`, the HTTP `status` ' +
       'repeated for clients that only see the body, and `details` when the ' +
       'code carries extra data.'
+  )
+})
+
+/** One wallet in a share, with the mode chosen for that wallet alone. */
+export const asWalletShareSpec = asObject({
+  walletId: doc(asString, 'The wallet to share. A full wallet id.'),
+  mode: doc(
+    asValue('view-only', 'spend'),
+    'What the recipient may do with this wallet. `view-only` sends the ' +
+      'storage and public keys, so the wallet syncs and shows balances but ' +
+      'cannot sign. `spend` sends the private keys as well. Chosen per ' +
+      'wallet, so one share can mix the two.'
+  )
+})
+
+/**
+ * A wallet share in progress.
+ *
+ * `receivedWalletIds` fills once `state` is `done`. The share is bound to the
+ * session that created it.
+ */
+export const asPendingWalletShare = asObject({
+  objectId: doc(
+    asString,
+    'Handle for the value the engine is holding. Pass it to the calls that consume it.'
+  ),
+  shareId: doc(
+    asString,
+    'Same value as `objectId`, under the name the poll command takes.'
+  ),
+  kind: doc(
+    asValue('pendingWalletShare'),
+    'What the handle refers to, which decides the calls that accept it.'
+  ),
+  expiresAt: doc(
+    asEither(asString, asValue(null)),
+    'When the lobby closes and the QR code stops working.'
+  ),
+  lobbyId: doc(asString, 'Lobby the other device connects to.'),
+  uri: doc(
+    asString,
+    'The `https://deep.edge.app` link to render as a QR code for the other ' +
+      'device to scan.'
+  ),
+  state: doc(
+    asValue('pending', 'started', 'done', 'error', 'closed'),
+    'How far the share has got: `pending` before the other device connects, ' +
+      '`started` once it has, and `done` when the keys have moved.'
+  ),
+  sharedWallets: doc(
+    asEither(asArray(asWalletShareSpec), asValue(null)),
+    'Each wallet in the share with the mode it was shared at, known once the ' +
+      'payload has been exchanged.'
+  ),
+  receivedWalletIds: doc(
+    asEither(asArray(asString), asValue(null)),
+    'Wallet ids now in this account, null until `state` is `done`.'
+  ),
+  error: doc(
+    asEither(asString, asValue(null)),
+    'Why the share failed, set only when `state` is `error`.'
   )
 })
 

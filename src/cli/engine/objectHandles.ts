@@ -19,7 +19,12 @@ import { engineError } from './errors'
 /** Default TTL for method-bearing core object handles. */
 export const OBJECT_HANDLE_TTL_MS = 5 * 60 * 1000
 
-export type ObjectHandleKind = 'transaction' | 'pendingLogin' | 'swap' | 'lobby'
+export type ObjectHandleKind =
+  | 'transaction'
+  | 'pendingLogin'
+  | 'pendingWalletShare'
+  | 'swap'
+  | 'lobby'
 
 export interface ObjectHandleInfo {
   objectId: string

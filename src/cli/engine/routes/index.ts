@@ -24,6 +24,7 @@ import './tokens'
 import './transactions'
 import './uri'
 import './vouchers'
+import './walletShare'
 import './wallets'
 
 import { allRoutes, registerRoute } from '../route'

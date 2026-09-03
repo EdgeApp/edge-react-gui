@@ -188,6 +188,7 @@ export function summarizeWallet(
         : undefined,
     paused: wallet.paused,
     imported: wallet.imported,
+    canSign: wallet.canSign,
     created: wallet.created?.toISOString() ?? null,
     enabledTokenIds: wallet.enabledTokenIds,
     detectedTokenIds: wallet.detectedTokenIds,

@@ -33,6 +33,24 @@
       ]
     },
     {
+      "command": "accept-wallet-share",
+      "method": "POST",
+      "path": "/account/{sessionId}/accept-wallet-share/{lobbyId}",
+      "usage": "accept-wallet-share <lobbyId> [--timeout=<timeout>]",
+      "help": "Take wallets from an account that offered them.",
+      "needsSession": true,
+      "pathPositional": "lobbyId",
+      "args": [
+        {
+          "flag": "timeout",
+          "field": "timeout",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
       "command": "account-info",
       "method": "GET",
       "path": "/account/{sessionId}",
@@ -322,6 +340,24 @@
       ]
     },
     {
+      "command": "approve-wallet-share",
+      "method": "POST",
+      "path": "/account/{sessionId}/approve-wallet-share/{lobbyId}",
+      "usage": "approve-wallet-share <lobbyId> --wallets='<json>'",
+      "help": "Send wallets to an account that asked for them.",
+      "needsSession": true,
+      "pathPositional": "lobbyId",
+      "args": [
+        {
+          "flag": "wallets",
+          "field": "wallets",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
       "command": "broadcast-tx",
       "method": "POST",
       "path": "/account/{sessionId}/broadcast-tx/{objectId}",
@@ -348,6 +384,16 @@
       "help": "Cancel a pending QR login.",
       "needsSession": false,
       "pathPositional": "pendingId",
+      "args": []
+    },
+    {
+      "command": "cancel-wallet-share",
+      "method": "POST",
+      "path": "/account/{sessionId}/cancel-wallet-share/{shareId}",
+      "usage": "cancel-wallet-share <shareId>",
+      "help": "Close a wallet share before it completes.",
+      "needsSession": true,
+      "pathPositional": "shareId",
       "args": []
     },
     {
@@ -1377,6 +1423,30 @@
       "args": []
     },
     {
+      "command": "offer-wallet-share",
+      "method": "POST",
+      "path": "/account/{sessionId}/offer-wallet-share",
+      "usage": "offer-wallet-share --wallets='<json>' [--timeout=<timeout>]",
+      "help": "Offer wallets to another account.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallets",
+          "field": "wallets",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        },
+        {
+          "flag": "timeout",
+          "field": "timeout",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
       "command": "otp-key",
       "method": "GET",
       "path": "/account/{sessionId}/otp-key",
@@ -1423,6 +1493,16 @@
       "usage": "pending-vouchers",
       "help": "List pending 2FA vouchers.",
       "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "poll-wallet-share",
+      "method": "GET",
+      "path": "/account/{sessionId}/pending-wallet-share/{shareId}",
+      "usage": "poll-wallet-share <shareId>",
+      "help": "Check how far a wallet share has got.",
+      "needsSession": true,
+      "pathPositional": "shareId",
       "args": []
     },
     {
@@ -1573,6 +1653,23 @@
           "target": "body",
           "kind": "string",
           "required": true
+        }
+      ]
+    },
+    {
+      "command": "request-wallet-share",
+      "method": "POST",
+      "path": "/account/{sessionId}/request-wallet-share",
+      "usage": "request-wallet-share [--timeout=<timeout>]",
+      "help": "Ask another account for wallets.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "timeout",
+          "field": "timeout",
+          "target": "body",
+          "kind": "string",
+          "required": false
         }
       ]
     },

@@ -53,6 +53,10 @@
       "description": "The other side of `request-edge-login`: a logged-in account inspecting and approving a login somebody scanned."
     },
     {
+      "name": "Sharing wallets",
+      "description": "Hand wallets to another account over the login lobby. Each wallet carries its own mode, so one share can send a wallet watch-only and another with full spend authority. Keys cannot be recalled once delivered."
+    },
+    {
       "name": "Keys",
       "description": "Raw key infrastructure beneath the wallet API. Several of these return private key material, and the engine has no transport auth — treat any process that can reach the socket as fully trusted."
     },
@@ -2719,6 +2723,9 @@
                             "description": "undefined; paused: boolean; imported: boolean"
                           },
                           {
+                            "description": "undefined; canSign: boolean"
+                          },
+                          {
                             "description": "undefined; created: string"
                           },
                           {
@@ -2838,6 +2845,10 @@
                     "imported": {
                       "type": "boolean",
                       "description": "True when the keys came from an import rather than being generated here."
+                    },
+                    "canSign": {
+                      "type": "boolean",
+                      "description": "False when the wallet holds no private key, so it can watch and sync but not spend. A wallet shared `view-only` arrives this way."
                     },
                     "created": {
                       "anyOf": [
@@ -4507,6 +4518,809 @@
           },
           "default": {
             "description": "NO_LOGIN_REQUEST, BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/request-wallet-share": {
+      "post": {
+        "operationId": "requestWalletShare",
+        "summary": "Ask another account for wallets.",
+        "description": "**Core call:** `account.requestWalletShare`\n\n**Command line**\n\n```\nrequest-wallet-share [--timeout=<timeout>]\n```\n\nPublishes a lobby and returns the link to show as a QR code. The other device scans it and picks which of its wallets to send, so this side chooses nothing — poll the handle until `state` is `done` to see what arrived.",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "request-wallet-share",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.requestWalletShare",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "shareId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the other device connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved."
+                    },
+                    "sharedWallets": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "description": "{ walletId: string; mode: string; }"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Each wallet in the share with the mode it was shared at, known once the payload has been exchanged."
+                    },
+                    "receivedWalletIds": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Wallet ids now in this account, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the share failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "shareId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "sharedWallets",
+                    "receivedWalletIds",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timeout": {
+                    "type": "number",
+                    "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/offer-wallet-share": {
+      "post": {
+        "operationId": "offerWalletShare",
+        "summary": "Offer wallets to another account.",
+        "description": "**Core call:** `account.offerWalletShare`\n\n**Command line**\n\n```\noffer-wallet-share --wallets='<json>' [--timeout=<timeout>]\n```\n\nThe mirror of `request-wallet-share`: this side picks the wallets and their modes up front, then publishes a link for the recipient to scan. The keys only move once they accept.",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "offer-wallet-share",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.offerWalletShare",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "shareId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the other device connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved."
+                    },
+                    "sharedWallets": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "description": "{ walletId: string; mode: string; }"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Each wallet in the share with the mode it was shared at, known once the payload has been exchanged."
+                    },
+                    "receivedWalletIds": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Wallet ids now in this account, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the share failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "shareId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "sharedWallets",
+                    "receivedWalletIds",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "wallets": {
+                    "type": "array",
+                    "items": {
+                      "description": "{ walletId: string; mode: string; }"
+                    },
+                    "description": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`."
+                  },
+                  "timeout": {
+                    "type": "number",
+                    "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
+                  }
+                },
+                "required": [
+                  "wallets"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/approve-wallet-share/{lobbyId}": {
+      "post": {
+        "operationId": "approveWalletShare",
+        "summary": "Send wallets to an account that asked for them.",
+        "description": "**Core call:** `account.approveWalletShare`\n\n**Command line**\n\n```\napprove-wallet-share <lobbyId> --wallets='<json>'\n```\n\nAnswers a `request-wallets` lobby. This is where the sharer decides both which wallets go and what the recipient may do with each one, so it is the point where spend authority is granted. It cannot be taken back.",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "approve-wallet-share",
+          "positional": "lobbyId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.approveWalletShare",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
+            "description": "From the QR code, or the last path segment of a `https://deep.edge.app/request-wallets/<lobbyId>` link.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "wallets": {
+                    "type": "array",
+                    "items": {
+                      "description": "{ walletId: string; mode: string; }"
+                    },
+                    "description": "The wallets to share, each with its own mode, as JSON: `[{\"walletId\":\"…\",\"mode\":\"spend\"}]`."
+                  }
+                },
+                "required": [
+                  "wallets"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/accept-wallet-share/{lobbyId}": {
+      "post": {
+        "operationId": "acceptWalletShare",
+        "summary": "Take wallets from an account that offered them.",
+        "description": "**Core call:** `account.acceptWalletShare`\n\n**Command line**\n\n```\naccept-wallet-share <lobbyId> [--timeout=<timeout>]\n```\n\nAnswers a `share-wallets` lobby. The offering side already chose the wallets and their modes, so there is nothing to pick here — poll the handle until `state` is `done`.",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "accept-wallet-share",
+          "positional": "lobbyId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.acceptWalletShare",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lobbyId",
+            "in": "path",
+            "required": true,
+            "description": "From the QR code, or the last path segment of a `https://deep.edge.app/share-wallets/<lobbyId>` link.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "shareId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the other device connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved."
+                    },
+                    "sharedWallets": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "description": "{ walletId: string; mode: string; }"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Each wallet in the share with the mode it was shared at, known once the payload has been exchanged."
+                    },
+                    "receivedWalletIds": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Wallet ids now in this account, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the share failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "shareId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "sharedWallets",
+                    "receivedWalletIds",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "timeout": {
+                    "type": "number",
+                    "description": "How long the lobby stays open, in seconds. Defaults to the core lobby default of 10 minutes."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/pending-wallet-share/{shareId}": {
+      "get": {
+        "operationId": "pollWalletShare",
+        "summary": "Check how far a wallet share has got.",
+        "description": "**Core call:** _none — Engine state for an in-flight share; core exposes it as an `EdgePendingWalletShare` object rather than a call._\n\n**Command line**\n\n```\npoll-wallet-share <shareId>\n```\n\n",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "poll-wallet-share",
+          "positional": "shareId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine state for an in-flight share; core exposes it as an `EdgePendingWalletShare` object rather than a call.",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "shareId",
+            "in": "path",
+            "required": true,
+            "description": "The `shareId` returned when the wallet share was started.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "shareId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the other device connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `https://deep.edge.app` link to render as a QR code for the other device to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the share has got: `pending` before the other device connects, `started` once it has, and `done` when the keys have moved."
+                    },
+                    "sharedWallets": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "description": "{ walletId: string; mode: string; }"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Each wallet in the share with the mode it was shared at, known once the payload has been exchanged."
+                    },
+                    "receivedWalletIds": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Wallet ids now in this account, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the share failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "shareId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "sharedWallets",
+                    "receivedWalletIds",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PENDING_SHARE_NOT_FOUND, OBJECT_SESSION_MISMATCH, OBJECT_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/cancel-wallet-share/{shareId}": {
+      "post": {
+        "operationId": "cancelWalletShare",
+        "summary": "Close a wallet share before it completes.",
+        "description": "**Core call:** `EdgePendingWalletShare.cancelRequest`\n\n**Command line**\n\n```\ncancel-wallet-share <shareId>\n```\n\nShuts the lobby so a link that was shown by mistake stops working. Keys already delivered are not recalled — nothing can do that.",
+        "tags": [
+          "Sharing wallets"
+        ],
+        "x-cli": {
+          "command": "cancel-wallet-share",
+          "positional": "shareId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "EdgePendingWalletShare.cancelRequest",
+        "x-source": "src/cli/engine/routes/walletShare.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "shareId",
+            "in": "path",
+            "required": true,
+            "description": "The `shareId` returned when the wallet share was started.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PENDING_SHARE_NOT_FOUND, OBJECT_SESSION_MISMATCH",
             "content": {
               "application/json": {
                 "schema": {

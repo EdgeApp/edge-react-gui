@@ -85,6 +85,12 @@ export const errorCodes: ErrorCode[] = [
     doc: 'No pending Edge login with that `pendingId`.'
   },
   {
+    code: 'PENDING_SHARE_NOT_FOUND',
+    status: 404,
+    origin: 'engine',
+    doc: 'No pending wallet share with that `shareId`.'
+  },
+  {
     code: 'TOKEN_NOT_ENABLED',
     status: 404,
     origin: 'engine',
