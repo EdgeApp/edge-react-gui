@@ -180,6 +180,8 @@
   "transaction_list_search_no_result": "A procura não encontrou resultados",
   "transaction_list_recent_transactions": "Recent Transactions",
   "fragment_wallets_balance_text": "Saldo Total",
+  "fragment_wallets_unhide_balance_text": "Unhide Balance",
+  "fragment_wallets_balance_hidden_toast": "Balances are hidden. Tap “Unhide Balance” to show them again.",
   "fragment_wallets_delete_wallet": "Arquivar Carteira",
   "fragment_wallets_delete_token": "Desativar o Token",
   "fragment_wallets_delete_token_prompt_2s": "Tem certeza que deseja desativar o token %1$s na sua carteira %2$s?",
