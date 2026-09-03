@@ -180,6 +180,8 @@
   "transaction_list_search_no_result": "La ricerca non ha restituito nessun risultato",
   "transaction_list_recent_transactions": "Transazioni recenti",
   "fragment_wallets_balance_text": "Bilancio totale",
+  "fragment_wallets_unhide_balance_text": "Unhide Balance",
+  "fragment_wallets_balance_hidden_toast": "Balances are hidden. Tap “Unhide Balance” to show them again.",
   "fragment_wallets_delete_wallet": "Archivia il portafoglio",
   "fragment_wallets_delete_token": "Disabilita Token",
   "fragment_wallets_delete_token_prompt_2s": "Sei sicuro di voler disabilitare il token %1$s nel tuo portafoglio %2$s?",
