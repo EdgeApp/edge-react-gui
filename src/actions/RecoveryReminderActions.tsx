@@ -1,4 +1,5 @@
 import { gte } from 'biggystring'
+import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 
 import { writePasswordRecoveryReminders } from '../actions/SettingsActions'
@@ -16,11 +17,19 @@ const levels = ['20', '200', '2000', '20000', '200000'] as const
 /**
  * How long to keep waiting for exchange rates before pricing the balance with
  * whatever rates have arrived. Rates land within a refresh cycle or two of
- * startup; anything still missing after this is an asset the rates server does
+ * login; anything still missing after this is an asset the rates server does
  * not price, which will never arrive.
  */
 const RATES_GRACE_MS = 5 * 60 * 1000
-const startupMs = Date.now()
+
+/**
+ * When each account started waiting for its rates. The window belongs to the
+ * login session, not the process: a user can sit on the login screen past the
+ * grace window (a restore, a 2FA prompt), or log into a second account later
+ * in the same session. Keying on the account object gives a re-login a fresh
+ * window and lets the entry clean itself up.
+ */
+const graceStartMs = new WeakMap<EdgeAccount, number>()
 
 /**
  * Show a modal if the user's balance is over one of the limits &
@@ -41,16 +50,24 @@ export function checkPasswordRecovery(
     if (account.recoveryKey != null) return
     if (isMaestro()) return
 
+    const { passwordRecoveryRemindersShown } = state.ui.settings
+
+    // This runs on every rates refresh for the life of the session, so stop
+    // before the wallet walks below once there is no reminder left to show:
+    if (levels.every(level => passwordRecoveryRemindersShown[level])) return
+
     // An incomplete rate set undercounts the balance, which would credit the
     // wrong milestone, so give the rates a chance to land. The wait is
     // bounded: a wallet the rates server never prices (a testnet coin, an
     // unlisted chain) has no rate coming, and must not suppress the reminder
-    // for the life of the account:
-    const ratesSettling = Date.now() - startupMs < RATES_GRACE_MS
+    // for the rest of the session:
+    const now = Date.now()
+    const graceStart = graceStartMs.get(account) ?? now
+    graceStartMs.set(account, graceStart)
+    const ratesSettling = now - graceStart < RATES_GRACE_MS
     if (ratesSettling && !hasRatesForFundedWallets(state)) return
 
     const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
-    const { passwordRecoveryRemindersShown } = state.ui.settings
 
     // Every level the balance has passed, whether or not it was passed just
     // now. A balance that jumps straight to $500 has crossed both $20 and

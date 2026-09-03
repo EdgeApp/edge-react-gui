@@ -237,17 +237,40 @@ describe('checkPasswordRecovery', () => {
   })
 
   it('stops waiting for a rate that is never coming', async () => {
-    // Five minutes on, a wallet with no rate is one the rates server does not
-    // price. Deferring past that would suppress the reminder forever:
+    // Five minutes into the login session, a wallet with no rate is one the
+    // rates server does not price. Deferring past that would suppress the
+    // reminder forever. The window starts at this account's first check, so
+    // run once to open it, then let the clock run out:
+    const state = makeState({ balance: '500000', unpricedBalance: '100000' })
+    const opening = await run(state)
+    expect(opening.levels).toEqual([])
+
     const nowSpy = jest
       .spyOn(Date, 'now')
       .mockReturnValue(Date.now() + 6 * 60 * 1000)
     try {
-      const { levels, modalShown } = await run(
-        makeState({ balance: '500000', unpricedBalance: '100000' })
-      )
+      const { levels, modalShown } = await run(state)
       expect(levels).toEqual(['20', '200'])
       expect(modalShown).toBe(true)
+    } finally {
+      nowSpy.mockRestore()
+    }
+  })
+
+  it('gives each account its own grace window', async () => {
+    // A second login later in the same session must not inherit an expired
+    // window from the first account:
+    const first = makeState({ balance: '500000', unpricedBalance: '100000' })
+    await run(first)
+
+    const nowSpy = jest
+      .spyOn(Date, 'now')
+      .mockReturnValue(Date.now() + 6 * 60 * 1000)
+    try {
+      const second = makeState({ balance: '500000', unpricedBalance: '100000' })
+      const { levels, modalShown } = await run(second)
+      expect(levels).toEqual([])
+      expect(modalShown).toBe(false)
     } finally {
       nowSpy.mockRestore()
     }
