@@ -16,8 +16,9 @@
 - changed: Long labels on Android now truncate with an ellipsis instead of shrinking to fit. The new renderer ignores the minimum text size, which could render labels illegibly small.
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
-- fixed: The amount field no longer clips its trailing digit or shifts sideways while typing.
+- fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
+- fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 
 ## 4.51.0 (staging)
 
