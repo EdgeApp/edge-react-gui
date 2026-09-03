@@ -26,6 +26,14 @@ interface Props {
   width?: number
   confirmText?: string
   disabledText?: string
+  /**
+   * When set, the slider is frozen in its completed position and shows this
+   * text instead of the spinner or the normal slide text. Use it to lock a
+   * slider after its action has run (for example, after a broadcast attempt)
+   * so it can never be slid again on this scene. Independent of `disabled`,
+   * which means "not ready yet" and shows `disabledText`.
+   */
+  lockedText?: string
   testID?: string
 
   onSlidingComplete: (reset: () => void) => Promise<void> | void
@@ -36,6 +44,7 @@ export const SafeSlider: React.FC<Props> = props => {
     confirmText,
     disabledText,
     disabled = false,
+    lockedText,
     onSlidingComplete,
     parentStyle,
     testID = 'confirmSliderThumb'
@@ -49,8 +58,11 @@ export const SafeSlider: React.FC<Props> = props => {
   const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
-  const sliderDisabled = disabled || completed
-  const sliderText = !sliderDisabled
+  const locked = lockedText != null
+  const sliderDisabled = disabled || completed || locked
+  const sliderText = locked
+    ? lockedText
+    : !sliderDisabled
     ? confirmText ?? lstrings.send_confirmation_slide_to_confirm
     : disabledText ?? lstrings.select_exchange_amount_short
 
@@ -136,7 +148,7 @@ export const SafeSlider: React.FC<Props> = props => {
             />
           </Animated.View>
         </GestureDetector>
-        {completed ? (
+        {completed && !locked ? (
           <ActivityIndicator
             color={theme.iconTappable}
             style={styles.activityIndicator}
