@@ -77,7 +77,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     'WcConnectScene'
   )
 
-  const handleConnect = async () => {
+  const handleConnect = async (): Promise<void> => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
@@ -87,7 +87,7 @@ export const WcConnectScene = withWallet((props: Props) => {
           message={lstrings.wc_confirm_return_to_browser}
           onPress={() => {}}
         />
-      )).catch(e => {
+      )).catch((e: unknown) => {
         showError(e)
       })
       navigation.navigate('wcConnections', {})
@@ -121,7 +121,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     }
   })
 
-  const renderWalletSelect = () => {
+  const renderWalletSelect = (): React.ReactElement => {
     const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
     const walletImage = (
       <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
