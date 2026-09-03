@@ -20,7 +20,8 @@ route or command edit — `npm run docs:api:verify` will fail otherwise.
 ## Naming
 
 Routes are named after the core call they front, kebab-cased, and the command
-matches: `context.localUsers` becomes `GET /local-users` and `local-users`. Parameters keep core's names.
+matches: `context.forgetAccount` becomes `POST /forget-account` and
+`forget-account`. Parameters keep core's names.
 
 A path parameter is a base58 identifier, and nothing else — `sessionId`,
 `objectId`, `pendingId`, `lobbyId`, `syncKey`. Base58 has no `/`, `?` or `#`,

@@ -79,7 +79,14 @@
     "test:cli:offline": "node -r sucrase/register scripts/testCliFake.ts && node -r sucrase/register scripts/testCliSubscribe.ts",
     "test:cli:fake": "node -r sucrase/register scripts/testCliFake.ts",
     "test:cli:subscribe": "node -r sucrase/register scripts/testCliSubscribe.ts",
-    "test:cli:node-safe": "node scripts/cliNodeSafeSmoke.js"
+    "test:cli:interactive": "node -r sucrase/register scripts/testCliInteractive.ts",
+    "test:cli:oneshot": "node -r sucrase/register scripts/testCli.ts",
+    "test:cli:captcha": "node -r sucrase/register scripts/testCliCaptcha.ts",
+    "test:cli:edge-login": "node -r sucrase/register scripts/testEdgeLogin.ts",
+    "test:cli:node-safe": "node scripts/cliNodeSafeSmoke.js",
+    "test:cli:node-hmac": "node -r sucrase/register scripts/testNodeApiSigner.ts",
+    "test:cli": "node -r sucrase/register scripts/testCli.ts && node -r sucrase/register scripts/testCliCaptcha.ts",
+    "test:cli:network": "npm run test:cli:oneshot && npm run test:cli:captcha && npm run test:cli:edge-login"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
