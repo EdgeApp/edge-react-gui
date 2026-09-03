@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Keep the QR scanner scam warning on screen until the user dismisses it, instead of letting the camera permission prompt replace it.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.

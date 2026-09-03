@@ -38,6 +38,12 @@ import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
 import { EdgeModal } from './EdgeModal'
 
+/**
+ * How long the scam warning is on screen before the system camera permission
+ * prompt is requested on top of it.
+ */
+const PERMISSION_PROMPT_DELAY_MS = 750
+
 interface Props {
   bridge: AirshipBridge<string | undefined>
 
@@ -79,6 +85,13 @@ export const ScanModal: React.FC<Props> = props => {
   const cameraPermission = useSelector(state => state.permissions.camera)
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
+  const [isPermissionResolved, setIsPermissionResolved] = React.useState(false)
+  const [isWarningAcknowledged, setIsWarningAcknowledged] =
+    React.useState(false)
+
+  const isCameraAllowed =
+    cameraPermission === RNPermissions.RESULTS.GRANTED ||
+    cameraPermission === RNPermissions.RESULTS.LIMITED
 
   const handleFlash = (): void => {
     triggerHaptic('impactLight')
@@ -88,10 +101,22 @@ export const ScanModal: React.FC<Props> = props => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    dispatch(checkAndRequestPermission('camera')).catch((error: unknown) => {
-      showError(error)
-    })
+
+    // Show the scam warning first and give it a beat to land, so the system
+    // permission prompt covers a modal the user has already seen and the
+    // warning is still there once the prompt is dismissed.
+    const timeoutId = setTimeout(() => {
+      dispatch(checkAndRequestPermission('camera'))
+        .catch((error: unknown) => {
+          showError(error)
+        })
+        .finally(() => {
+          setIsPermissionResolved(true)
+        })
+    }, PERMISSION_PROMPT_DELAY_MS)
+
     return () => {
+      clearTimeout(timeoutId)
       setScanEnabled(false)
     }
   }, [dispatch])
@@ -105,6 +130,11 @@ export const ScanModal: React.FC<Props> = props => {
   const handleSettings = async (): Promise<void> => {
     triggerHaptic('impactLight')
     await Linking.openSettings()
+  }
+
+  const handleAcknowledgeWarning = (): void => {
+    triggerHaptic('impactLight')
+    setIsWarningAcknowledged(true)
   }
 
   const handleTextInput = async (): Promise<void> => {
@@ -276,8 +306,18 @@ export const ScanModal: React.FC<Props> = props => {
     )
   }
 
-  return cameraPermission === RNPermissions.RESULTS.GRANTED ||
-    cameraPermission === RNPermissions.RESULTS.LIMITED ? (
+  // The scam warning gates the scanner: it stays up until the user dismisses
+  // it, whichever way the camera permission prompt was answered.
+  const primaryButton =
+    isPermissionResolved && !isCameraAllowed
+      ? { onPress: handleSettings, label: lstrings.open_settings }
+      : {
+          onPress: handleAcknowledgeWarning,
+          label: lstrings.string_got_it,
+          disabled: !isCameraAllowed
+        }
+
+  return isCameraAllowed && isWarningAcknowledged ? (
     <AirshipModal
       bridge={bridge}
       margin={[airshipMarginTop, 0, 0]}
@@ -293,7 +333,9 @@ export const ScanModal: React.FC<Props> = props => {
     </AirshipModal>
   ) : (
     <EdgeModal bridge={bridge} onCancel={handleClose}>
-      <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
+      {isPermissionResolved && !isCameraAllowed ? (
+        <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
+      ) : null}
       <AlertCardUi4
         title={lstrings.warning_scam_title}
         type="warning"
@@ -307,9 +349,7 @@ export const ScanModal: React.FC<Props> = props => {
         ]}
         footer={sprintf(lstrings.warning_scam_footer_s, config.supportEmail)}
       />
-      <ModalButtons
-        primary={{ onPress: handleSettings, label: lstrings.open_settings }}
-      />
+      <ModalButtons primary={primaryButton} />
     </EdgeModal>
   )
 }
