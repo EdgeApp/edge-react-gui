@@ -49,6 +49,11 @@ const pluginData: Record<string, TermsUri> = {
     kycUri:
       'https://help.sideshift.ai/en/articles/6230858-sideshift-ai-s-risk-management-policy'
   },
+  stealthex: {
+    termsUri: 'https://stealthex.io/terms/',
+    privacyUri: 'https://stealthex.io/privacy-policy/',
+    kycUri: 'https://stealthex.io/kyc-aml/'
+  },
   swapuz: {
     termsUri: 'https://swapuz.com/terms-of-use',
     privacyUri: 'https://swapuz.com/privacy-policy',

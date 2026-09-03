@@ -79,6 +79,10 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/simplex.png`
   },
   {
+    displayName: 'StealthEX',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/stealthex/icon.png`
+  },
+  {
     displayName: 'Swapuz',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/swapuz.png`
   },
