@@ -46,9 +46,15 @@ interface CommandHelp {
   errors?: string[]
 }
 
-/** True for a field the command takes as a bare switch rather than a value. */
-function isSwitch(type: string): boolean {
-  return type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
+/**
+ * True for a field the command takes as a bare switch rather than a value.
+ *
+ * Only an optional boolean qualifies: a required one needs `=true|false`,
+ * since a bare flag has no way to say false.
+ */
+function isSwitch(field: ExtractedField): boolean {
+  if (!field.optional) return false
+  return field.type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
 }
 
 /** How a request field is supplied on the command line, if at all. */
@@ -60,8 +66,10 @@ function passForm(cli: ExtractedCli, field: ExtractedField): string {
   const token =
     mapped?.repeat === true
       ? `--${name}=<value> …`
-      : isSwitch(field.type)
+      : isSwitch(field)
       ? `--${name}`
+      : field.type.replace(/ \| (null|undefined)/g, '').trim() === 'boolean'
+      ? `--${name}=true|false`
       : `--${name}=<value>`
   return field.optional ? `[${token}]` : token
 }

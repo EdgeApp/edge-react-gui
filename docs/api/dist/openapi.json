@@ -4788,7 +4788,7 @@
       "post": {
         "operationId": "changeWalletStates",
         "summary": "Archive, delete, hide, or reorder wallets.",
-        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states --wallet-id=<walletId> [--wallet-states=<walletStates>] [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
+        "description": "**Core call:** `account.changeWalletStates`\n\n**Command line**\n\n```\nchange-wallet-states [--wallet-states=<walletStates>] --wallet-id=<value> [--archived=<value>] [--deleted=<value>] [--hidden=<value>] [--sort-index=<value>]\n```\n\nThe canonical backend for every wallet flag; there are no separate archive, unarchive or undelete verbs.",
         "tags": [
           "Keys"
         ],
@@ -4796,6 +4796,12 @@
           "command": "change-wallet-states",
           "flags": [],
           "extra": [
+            {
+              "name": "wallet-id",
+              "kind": "string",
+              "required": true,
+              "doc": "The wallet to change. The command makes it the key of a single-entry `walletStates` map."
+            },
             {
               "name": "archived",
               "kind": "boolstr",
@@ -4860,10 +4866,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "walletId": {
-                    "type": "string",
-                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
-                  },
                   "walletStates": {
                     "anyOf": [
                       {
@@ -4884,10 +4886,7 @@
                     ],
                     "description": "`EdgeWalletStates`: wallet ids to the flags being changed."
                   }
-                },
-                "required": [
-                  "walletId"
-                ]
+                }
               }
             }
           }

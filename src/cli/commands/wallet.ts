@@ -60,7 +60,7 @@ const walletStateCmd = command(
     const sessionId = requireSession(ctx)
     await ctx.client.post(
       `/account/${encodeURIComponent(sessionId)}/change-wallet-states`,
-      { [args.requireString('wallet-id')]: state }
+      { walletStates: { [args.requireString('wallet-id')]: state } }
     )
     printJson({ ok: true })
   }

@@ -43,6 +43,7 @@ async function buildContext(options: {
   config?: string
   directory?: string
   test?: boolean
+  fake?: boolean
   session?: string
   'no-spawn'?: boolean
   tcp?: string
@@ -57,15 +58,21 @@ async function buildContext(options: {
   const testMode = options.test != null || fileConfig.testMode === true
   const apiKey = options['api-key'] ?? fileConfig.apiKey
 
+  const fake = options.fake != null
   const { profile, client } = await ensureEngine({
     appId,
     directory,
     testMode,
+    fake,
     apiKey,
     noSpawn: options['no-spawn'] != null,
     tcpPort:
       options.tcp != null && options.tcp !== '' ? Number(options.tcp) : null,
-    loginServer: testMode ? 'https://login-tester.edge.app' : undefined
+    loginServer: fake
+      ? 'fake://login'
+      : testMode
+      ? 'https://login-tester.edge.app'
+      : undefined
   })
 
   const envSession = process.env.EDGE_CLI_SESSION

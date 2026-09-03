@@ -7,6 +7,7 @@
  *
  * Options:
  *   -t, --test              Use tester servers
+ *   --fake                  Emulate login/info/sync in-process (no network)
  *   -d, --directory <path>  Working directory for core data
  *   -a, --app-id <id>       Application ID
  *   -k, --api-key <key>     Override API key
@@ -47,6 +48,7 @@ sourceMapSupport.install()
 
 interface EngineArgs {
   testMode: boolean
+  fake: boolean
   directory?: string
   appId?: string
   apiKey?: string
@@ -61,6 +63,7 @@ interface EngineArgs {
 function parseArgs(argv: string[]): EngineArgs {
   const args: EngineArgs = {
     testMode: false,
+    fake: false,
     tcpPort: null,
     tcpHost: '127.0.0.1',
     idleTimeoutSeconds: 300,
@@ -73,6 +76,8 @@ function parseArgs(argv: string[]): EngineArgs {
       args.help = true
     } else if (a === '-t' || a === '--test') {
       args.testMode = true
+    } else if (a === '--fake') {
+      args.fake = true
     } else if (a === '-d' || a === '--directory') {
       args.directory = argv[++i]
     } else if (a.startsWith('--directory=')) {
@@ -128,6 +133,7 @@ function printHelp(): void {
 
 Options:
   -t, --test                 Use tester servers (login/info/sync/change-tester)
+      --fake                 Emulate the login/info/sync servers in-process
   -d, --directory <path>     Working directory for core data
   -a, --app-id <id>          Application ID
   -k, --api-key <key>        Override API key from keys.json
@@ -161,11 +167,17 @@ async function main(): Promise<void> {
   const sessions = new SessionStore(events)
   const objects = new ObjectHandleStore()
 
+  // The fake world is its own profile, so a fake engine never answers on the
+  // socket a real one is using, or vice versa.
   const profile = profileHash({
     appId,
     directory,
     testMode,
-    loginServer: testMode ? TESTER_SERVERS.loginServer : undefined
+    loginServer: args.fake
+      ? 'fake://login'
+      : testMode
+      ? TESTER_SERVERS.loginServer
+      : undefined
   })
   const logger = new EngineLogger(profile)
   logger.info('Engine starting', {
@@ -181,6 +193,7 @@ async function main(): Promise<void> {
     appId,
     directory,
     testMode,
+    fake: args.fake,
     events,
     logger
   })

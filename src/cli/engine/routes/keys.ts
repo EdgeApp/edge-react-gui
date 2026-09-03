@@ -237,6 +237,11 @@ export const changeWalletStates = route({
     command: 'change-wallet-states',
     custom: true,
     extra: {
+      walletId: {
+        kind: 'string',
+        required: true,
+        doc: 'The wallet to change. The command makes it the key of a single-entry `walletStates` map.'
+      },
       archived: { kind: 'boolstr', doc: 'Hide from the active list.' },
       deleted: { kind: 'boolstr', doc: 'Mark deleted.' },
       hidden: { kind: 'boolstr', doc: 'Hide from the wallet picker.' },
@@ -246,7 +251,6 @@ export const changeWalletStates = route({
       'The command builds a single-wallet `walletStates` map from these flags, and needs at least one.'
   },
   body: asObject({
-    walletId: asWalletId,
     walletStates: doc(
       asObject(
         asObject({

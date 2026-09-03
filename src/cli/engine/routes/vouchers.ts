@@ -31,7 +31,9 @@ export const pendingVouchers = route({
   }),
 
   handler(ctx) {
-    return { pendingVouchers: getAccount(ctx).pendingVouchers }
+    // Core leaves this undefined until the login server has reported on it,
+    // and the documented type is an array either way.
+    return { pendingVouchers: getAccount(ctx).pendingVouchers ?? [] }
   }
 })
 

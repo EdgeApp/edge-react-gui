@@ -3,7 +3,8 @@ import {
   type EdgeContext,
   type EdgeCorePluginsInit,
   lockEdgeCorePlugins,
-  makeEdgeContext
+  makeEdgeContext,
+  makeFakeEdgeWorld
 } from 'edge-core-js'
 import accountbasedPluginsImport from 'edge-currency-accountbased'
 import currencyPluginsImport from 'edge-currency-plugins'
@@ -93,8 +94,59 @@ export interface MakeCoreContextOpts {
   appId?: string
   directory?: string
   testMode?: boolean
+  /**
+   * Serve a `makeFakeEdgeWorld` context instead of talking to a server.
+   *
+   * The login, info and sync servers are emulated in-process and currency
+   * plugins are cut off from the network, so the whole API can be exercised
+   * with no account, no key and no internet. That is what lets the CLI tests
+   * run in a pre-commit hook.
+   */
+  fake?: boolean
   events: EventHub
   logger?: EngineLogger
+}
+
+/**
+ * A context backed by the in-process fake world.
+ *
+ * No API key is needed and `fetchPluginKeys` is skipped, because there is no
+ * server to authenticate to. Only the currency plugins are registered: the
+ * swap and exchange-rate plugins exist to call other people's APIs, which is
+ * exactly what this mode forbids.
+ */
+async function makeFakeCoreContext(
+  opts: MakeCoreContextOpts
+): Promise<CoreContextBundle> {
+  const appId = opts.appId ?? ''
+  const directory = opts.directory ?? defaultDirectory()
+  const pluginsInit: EdgeCorePluginsInit = {}
+  for (const id of Object.keys(currencyPlugins)) pluginsInit[id] = true
+
+  const world = await makeFakeEdgeWorld([], {
+    onLog(event) {
+      opts.logger?.write(String(event.type ?? 'info'), event.message, {
+        source: event.source
+      })
+    }
+  })
+  const context = await world.makeEdgeContext({
+    appId,
+    apiKey: 'fake',
+    cleanDevice: true,
+    plugins: pluginsInit
+  })
+  opts.logger?.info('Using the fake world; no network, no server')
+
+  return {
+    context,
+    appId,
+    testMode: true,
+    directory,
+    servers: { loginServer: 'fake://login', syncServer: 'fake://sync' },
+    pluginsInit,
+    currencyPluginIds: Object.keys(currencyPlugins)
+  }
 }
 
 export interface CoreContextBundle {
@@ -117,6 +169,7 @@ export async function makeCoreContext(
   opts: MakeCoreContextOpts
 ): Promise<CoreContextBundle> {
   ensurePlugins()
+  if (opts.fake === true) return await makeFakeCoreContext(opts)
   const keysConfig = loadKeys()
   const appConfig = loadAppConfig()
   const pluginsInit: EdgeCorePluginsInit = {}

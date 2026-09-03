@@ -28,8 +28,8 @@ By default the client uses only the Unix socket at
 
 ```bash
 npm run cli -- help                              # One-shot via client (auto-spawns engine)
-npm run cli -- login-with-password u --password=p     # Login; sessionId is persisted
-npm run cli -- balance-map <walletId>                # Reuses the engine + session
+npm run cli -- login-with-password --username=u --password=p  # sessionId is persisted
+npm run cli -- balance-map --wallet-id=<id>           # Reuses the engine + session
 
 npm run engine                      # Start the engine alone
 npm run engine -- -t                # Engine against tester servers
@@ -48,7 +48,7 @@ node lib/edgeEngine.js -t --tcp=9008
 
 ```bash
 npx edge-cli help
-npx edge-cli -t login-with-password <user> --password=<pass>
+npx edge-cli -t login-with-password --username=<user> --password=<pass>
 ```
 
 ### Engine / client flags
@@ -104,7 +104,7 @@ names that resolve):
 
 ```bash
 npm run cli -- -t create-account alice --password='pass' --pin=1234
-npm run cli -- -t login-with-password alice --password='pass'
+npm run cli -- -t login-with-password --username=alice --password='pass'
 ```
 
 Confirm with `edge-cli engine-config` — `testMode` should be true and every
@@ -178,7 +178,7 @@ Successful login returns an opaque `sessionId` (`sess_` + base58 of 16 random
 bytes). Account-scoped REST paths look like:
 
 ```
-/account/{sessionId}/wallets/{walletId}/balance-map
+/account/{sessionId}/wallet/balance-map?walletId=<id>
 ```
 
 There is **no transport-level auth**. Core authenticates via password / PIN /
@@ -197,7 +197,7 @@ engine closes the context, unlinks the socket / run file, and exits. Configure
 with `--idle-timeout` (`0` = never).
 
 ```bash
-edge-cli -t login-with-password alice --password='pass'  # prints + stores sessionId
+edge-cli -t login-with-password --username=alice --password='pass'  # stores sessionId
 edge-cli currency-wallets                 # uses persisted session
 edge-cli engine-sessions
 edge-cli touch
@@ -225,7 +225,7 @@ login-server CAPTCHA. The engine does **not** solve it. It returns:
 
 Options:
 
-1. **CLI helper** — `edge-cli login-with-password ... --solve-captcha` headlessly
+1. **CLI helper** — `--solve-captcha` on any login command headlessly
    solves ALTCHA PoW at `challengeUri` and retries with `challengeId`.
 2. **Manual** — open the URI in a browser, then re-run the command with
    `--challenge-id <id>` (or pass `challengeId` in the REST body).
@@ -252,88 +252,45 @@ Approve from another logged-in Edge device (Scan QR), or paste `uri` /
 Poll with `GET /pending-edge-login/{pendingId}` until `state` is `done`
 (it then carries the session) or `error`.
 
-## Command arguments
+## Command shape
 
-Each command takes at most **one positional** resource id (wallet, user, lobby,
-object handle, or store), immediately after the command name. Everything else
-is a named `--kebab-case` flag.
+Commands are not listed here. The full reference — every command paired with
+the REST call it makes and the `edge-core-js` call behind it, with request and
+response types and an example — is generated from the route declarations:
 
-| Form | Example |
-|------|---------|
-| Preferred | `--name=value` |
-| Also accepted | `--name value` |
-| Booleans | `--dry-run`, `--no-wait` (presence = true) |
-| Repeatable | `--answer=`, `--question=` |
-| Lists | comma-separated, no spaces: `--export-format=csv,qbo,bitwave` |
-
-Native token: **omit** `--token-id`. Do not pass the literal `null` on the CLI.
-Empty `--name=` is a usage error. Unknown flags and extra positionals are usage
-errors. Commands about two wallets (swap) name both ids
-(`--from-wallet-id`, `--to-wallet-id`).
-
-ISO dates use the equals form so a timezone offset is not a new argv token:
-
-```bash
-edge-cli get-transactions <walletId> --start-date=2020-01-01T00:00:00-07:00
-```
-
-REST URL path/query params stay camelCase (`tokenId`, `searchString`,
-`startDate`). REST URLs may still use `tokenId=null` for the native asset.
-
-## Command reference
-
-The full reference — every command paired with the REST call it makes and the
-`edge-core-js` call behind it — is generated into
-**[docs/api/dist/index.html](./api/dist/index.html)**.
+**[docs/api/dist/index.html](./api/dist/index.html)**
 
 ```bash
 npm run docs:api          # rebuild it
-npm run docs:api:verify   # check it still matches src/cli
+npm run docs:api:gates    # check it still matches src/cli
 ```
 
-### Naming
+Every command follows one shape:
 
-Routes are named after the core call they front, kebab-cased, and the command
-matches:
+```
+edge-cli [global flags] <command> [--flag=value ...]
+```
 
-| Core | REST | CLI |
-|------|------|-----|
-| `context.forgetAccount` | `POST /forget-account` | `forget-account --root-login-id=<id>` |
-| `context.loginWithPassword` | `POST /login-with-password` | `login-with-password --username=<name>` |
-| `account.changePin` | `POST /account/{sessionId}/change-pin` | `change-pin` |
-| `wallet.getTransactions` | `GET /account/{sessionId}/wallet/get-transactions` | `get-transactions --wallet-id=<id>` |
-| `EdgeSwapQuote.approve` | `POST /account/{sessionId}/swap-quote/approve/{objectId}` | `approve-swap-quote <objectId>` |
+| Form | Example |
+|------|---------|
+| Preferred | `--wallet-id=7o7i6` |
+| Also accepted | `--wallet-id 7o7i6` |
+| Optional boolean | `--paused` (presence means true) |
+| Required boolean | `--paused=true` — a bare flag cannot say false |
+| Repeatable | `--answer=rex --answer=oak` |
+| Lists | comma-separated, no spaces: `--export-format=csv,qbo` |
+| JSON | single-quoted: `--spend-info='{"tokenId":null}'` |
 
-Parameters keep core's own names (`rootLoginId`, `otpResetToken`,
-`usernameOrLoginId`, `paymentProtocolUrl`).
+Arguments are named. A command takes a bare positional only where the value is
+a base58 identifier the engine issued — an object handle, a pending login —
+because only those are safe as a URL path segment. A wallet id is base64 and a
+username is free text, so both are flags. `edge-cli help <command>` prints the
+exact usage for any of them, and that text is generated from the same source
+as the reference.
 
-**A path parameter is a base58 identifier, and nothing else.** Base58 contains
-no `/`, `?` or `#`, so such a value survives a URL exactly as written:
-`sessionId`, `objectId`, `pendingId`, `lobbyId`, `syncKey`. A wallet id does
-not qualify — ids are base64, so `7o7i6/tlI+qi…=` is an ordinary one, and a
-caller who does not percent-encode it gets a 404 rather than an error naming
-the mistake. Neither does a username, which is free text. Those travel as
-named arguments: in the query for `GET`, the body for `POST`.
-
-Where a path parameter *is* allowed, it reads in the order the command does —
-scope, then command, then the argument, last:
-`POST /account/{sessionId}/swap-quote/approve/{objectId}` for
-`approve-swap-quote <objectId>`. Collection segments are singular (`wallet`,
-`object`, `swap-quote`), because each call acts on one.
-
-The positional is declared once, as an ordinary request field; the path is
-derived from it. That is why a declaration says `positional: 'objectId'` and
-its `path` does not mention `{objectId}` — writing both would let them
-disagree. Only those two verbs are used, since core has no
-HTTP verbs. There is no `/v1` prefix; `X-Edge-Api-Version` still reports the
-version.
-
-Calls with no core equivalent — engine lifecycle, and GUI code the CLI reuses —
-keep descriptive names (`engine-status`, `local-settings`, `rates-query`) and
-say so in the docs.
-
-Where a command name would collide across scopes it takes a prefix: `sync` is
-`account.sync`, and `wallet.sync` is reachable over REST only.
+For the native asset, omit `--token-id` rather than passing the literal
+`null`. An empty `--name=` is a usage error, as are unknown flags and extra
+positionals.
 
 ### Subscribing to events
 
@@ -347,7 +304,7 @@ terminal does:
 edge-cli subscribe --type=session.created --type=session.expired
 
 # terminal 2
-edge-cli -t login-with-password alice --password='pass'
+edge-cli -t login-with-password --username=alice --password='pass'
 edge-cli logout
 ```
 

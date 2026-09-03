@@ -54,7 +54,7 @@
     "split-env-json": "node -r sucrase/register scripts/splitEnvJson.ts",
     "split-baked-and-server-keys": "node -r sucrase/register scripts/splitBakedAndServerKeys.js",
     "start": "react-native start",
-    "test": "NODE_ENV=test TZ=America/Los_Angeles jest",
+    "test": "NODE_ENV=test TZ=America/Los_Angeles jest && npm run test:cli:offline",
     "typechain": "rm -rf './src/plugins/contracts/' && typechain --target ethers-v5 --out-dir ./src/plugins/contracts/ './src/plugins/abis/*.json'",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
@@ -75,6 +75,8 @@
     "docs:api:contracts": "node -r sucrase/register scripts/checkRouteContracts.ts",
     "docs:api:core": "node -r sucrase/register scripts/checkCoreAlignment.ts",
     "docs:api:gates": "npm run docs:api:check && npm run docs:api:verify && npm run docs:api:contracts && npm run docs:api:core",
+    "test:cli:offline": "node -r sucrase/register scripts/testCliFake.ts && node -r sucrase/register scripts/testCliSubscribe.ts",
+    "test:cli:fake": "node -r sucrase/register scripts/testCliFake.ts",
     "test:cli:subscribe": "node -r sucrase/register scripts/testCliSubscribe.ts",
     "test:cli:interactive": "node -r sucrase/register scripts/testCliInteractive.ts",
     "test:cli:oneshot": "node -r sucrase/register scripts/testCli.ts",
@@ -82,7 +84,8 @@
     "test:cli:edge-login": "node -r sucrase/register scripts/testEdgeLogin.ts",
     "test:cli:node-safe": "node scripts/cliNodeSafeSmoke.js",
     "test:cli:node-hmac": "node -r sucrase/register scripts/testNodeApiSigner.ts",
-    "test:cli": "node -r sucrase/register scripts/testCli.ts && node -r sucrase/register scripts/testCliCaptcha.ts"
+    "test:cli": "node -r sucrase/register scripts/testCli.ts && node -r sucrase/register scripts/testCliCaptcha.ts",
+    "test:cli:network": "npm run test:cli:oneshot && npm run test:cli:captcha && npm run test:cli:edge-login"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"

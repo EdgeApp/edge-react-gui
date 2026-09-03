@@ -18,7 +18,7 @@ interface ArgSpec {
   flag?: string
   field: string
   target: 'query' | 'body'
-  kind: 'string' | 'boolean' | 'repeat' | 'json'
+  kind: 'string' | 'boolean' | 'boolstr' | 'repeat' | 'json'
   required: boolean
 }
 
@@ -93,6 +93,16 @@ for (const spec of (table as { commands: CommandSpec[] }).commands) {
           if (a.flag == null) continue
           if (a.kind === 'boolean') {
             if (args.boolean(a.flag)) put(a, true)
+            continue
+          }
+          if (a.kind === 'boolstr') {
+            // `--flag=true|false`, for a field that must be sent either way.
+            const value = args.boolstr(a.flag)
+            if (value == null) {
+              if (a.required) throw new UsageError(cmd, `Missing --${a.flag}`)
+              continue
+            }
+            put(a, value)
             continue
           }
           if (a.kind === 'repeat') {

@@ -33,7 +33,7 @@ interface ArgSpec {
   field: string
   /** Where it goes. */
   target: 'query' | 'body'
-  kind: 'string' | 'boolean' | 'repeat' | 'json'
+  kind: 'string' | 'boolean' | 'boolstr' | 'repeat' | 'json'
   required: boolean
 }
 
@@ -59,9 +59,12 @@ interface CommandSpec {
 }
 
 /** A JSON blob is anything the caller cannot express as a scalar flag. */
-function kindOf(type: string): ArgSpec['kind'] {
+function kindOf(type: string, required: boolean): ArgSpec['kind'] {
   const t = type.replace(/ \| (null|undefined)/g, '').trim()
-  if (t === 'boolean') return 'boolean'
+  // A bare `--flag` can only ever mean true, so a field that must be sent
+  // takes an explicit `--flag=true|false`. `change-paused` could not be
+  // turned off until this distinction existed.
+  if (t === 'boolean') return required ? 'boolstr' : 'boolean'
   if (t.endsWith('[]') || t.startsWith('Array<') || t.startsWith('{')) {
     return 'json'
   }
@@ -87,7 +90,7 @@ function specFor(r: ExtractedRoute, cli: ExtractedCli): CommandSpec {
       flag: mapped?.name ?? kebab(f.name),
       field: f.name,
       target,
-      kind: mapped?.repeat === true ? 'repeat' : kindOf(f.type),
+      kind: mapped?.repeat === true ? 'repeat' : kindOf(f.type, !f.optional),
       required: !f.optional
     })
   }

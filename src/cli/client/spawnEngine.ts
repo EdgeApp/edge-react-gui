@@ -26,6 +26,8 @@ function readTail(path: string, maxBytes: number): string {
 }
 
 export interface EnsureEngineOpts extends ProfileKey {
+  /** Serve an in-process fake world instead of a login server. */
+  fake?: boolean
   apiKey?: string
   noSpawn?: boolean
   tcpPort?: number | null
@@ -120,6 +122,7 @@ export async function ensureEngine(
     ? [engineEntry]
     : ['-r', 'sucrase/register', engineEntry]
   if (opts.testMode) args.push('-t')
+  if (opts.fake === true) args.push('--fake')
   if (opts.directory !== '') args.push('-d', opts.directory)
   if (opts.appId !== '') args.push('-a', opts.appId)
   if (opts.apiKey != null && opts.apiKey !== '') args.push('-k', opts.apiKey)

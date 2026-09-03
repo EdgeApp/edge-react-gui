@@ -371,7 +371,7 @@
       "command": "change-paused",
       "method": "POST",
       "path": "/account/{sessionId}/wallet/change-paused",
-      "usage": "change-paused --wallet-id=<walletId> --paused",
+      "usage": "change-paused --wallet-id=<walletId> --paused=<paused>",
       "help": "Pause or resume a wallet engine.",
       "needsSession": true,
       "args": [
@@ -386,7 +386,7 @@
           "flag": "paused",
           "field": "paused",
           "target": "body",
-          "kind": "boolean",
+          "kind": "boolstr",
           "required": true
         }
       ]

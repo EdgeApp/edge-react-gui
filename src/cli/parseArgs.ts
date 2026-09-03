@@ -12,6 +12,7 @@ export interface CliOptions {
   username?: string
   password?: string
   test?: boolean
+  fake?: boolean
   session?: string
   'no-spawn'?: boolean
   'solve-captcha'?: boolean
@@ -36,6 +37,7 @@ Options:
   -t, --test              Use tester servers
       --session <id>      Override sessionId
       --locale <tag>      Language tag (BCP 47 or POSIX)
+      --fake              Emulate login/info/sync in-process (no network)
       --no-spawn          Do not auto-start the engine
       --solve-captcha     Auto-solve CAPTCHA challenges (ALTCHA PoW)
       --tcp=<port>        Also pass --tcp=<port> when spawning the engine
@@ -77,6 +79,10 @@ export function parseCliArgs(argv: string[]): ParsedArgs {
     }
     if (a === '-t' || a === '--test') {
       options.test = true
+      continue
+    }
+    if (a === '--fake') {
+      options.fake = true
       continue
     }
     if (a === '--no-spawn') {
