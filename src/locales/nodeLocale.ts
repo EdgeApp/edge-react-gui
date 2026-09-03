@@ -3,9 +3,18 @@
  */
 import type { LocaleSource } from './bootLocale'
 
+/**
+ * The environment variables this reads, and nothing else.
+ *
+ * `process.env` satisfies it, but so does `{ LANG: 'es_MX.UTF-8' }`. Typing
+ * this as `NodeJS.ProcessEnv` demanded `NODE_ENV` from every caller, which no
+ * locale test has any reason to set.
+ */
+export type LocaleEnv = Readonly<Record<string, string | undefined>>
+
 export interface DetectNodeLocaleOpts {
   argv?: string[]
-  env?: NodeJS.ProcessEnv
+  env?: LocaleEnv
   configLocale?: string
 }
 
@@ -60,7 +69,7 @@ function nonempty(value: string | undefined): string | undefined {
   return trimmed === '' ? undefined : trimmed
 }
 
-function posixLanguageTag(env: NodeJS.ProcessEnv): string | undefined {
+function posixLanguageTag(env: LocaleEnv): string | undefined {
   return nonempty(env.LC_ALL) ?? nonempty(env.LC_MESSAGES) ?? nonempty(env.LANG)
 }
 

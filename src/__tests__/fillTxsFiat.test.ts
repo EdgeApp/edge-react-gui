@@ -13,8 +13,9 @@ jest.mock('../util/exchangeRates', () => ({
 }))
 
 function makeWallet(): EdgeCurrencyWallet {
-  // Incomplete core wallet — fillTxsFiat only reads currencyInfo/currencyConfig.
-  const wallet: EdgeCurrencyWallet = {
+  // Incomplete core wallet — fillTxsFiat only reads currencyInfo and
+  // currencyConfig, so the cast says what the shape really is.
+  const wallet = {
     currencyInfo: { pluginId: 'bitcoin' },
     currencyConfig: {
       currencyInfo: {
@@ -24,7 +25,7 @@ function makeWallet(): EdgeCurrencyWallet {
       allTokens: {}
     }
   }
-  return wallet
+  return wallet as unknown as EdgeCurrencyWallet
 }
 
 function makeTx(overrides: Partial<EdgeTransaction> = {}): EdgeTransaction {
