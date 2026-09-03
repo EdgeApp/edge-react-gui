@@ -11,6 +11,15 @@ For the full surface — every command, its REST call, and the `edge-core-js`
 call behind it — see the generated reference at
 [docs/api/dist/index.html](./api/dist/index.html), built from `docs/api/`.
 
+## Building this branch
+
+`src/util/edgeApiSigner.ts` and the engine's HMAC signer import `EdgeApiSigner`,
+which is not in any published `edge-core-js`. Until it ships, this branch needs
+a local pack of core in the worktree root — see the `npm pack` workflow — or
+`tsc` reports five missing-export errors and `npm run precommit` fails. Nothing
+else is required: `npm install` generates `src/plugins/contracts` and the API
+reference through `prepare`.
+
 ## Overview
 
 | Piece | Role |

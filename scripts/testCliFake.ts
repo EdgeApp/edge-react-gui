@@ -52,7 +52,8 @@ function cli(...args: string[]): Run {
 /** Run a command and require it to succeed. */
 function ok(label: string, ...args: string[]): Run {
   const run = cli(...args)
-  const good = run.status === 0 && !run.out.includes('"error"')
+  // `"error": null` is an ordinary field on a pending login, not a failure.
+  const good = run.status === 0 && !/"error":\s*\{/.test(run.out)
   if (good) {
     passes++
     console.log(`OK   ${label}`)
@@ -131,6 +132,9 @@ function main(): void {
     ok('sync', 'sync')
     ok('wait-for-all-wallets', 'wait-for-all-wallets')
     ok('pending-vouchers', 'pending-vouchers')
+    ok('local-settings read', 'local-settings')
+    ok('local-settings write', 'local-settings', '--spam-filter-on=true')
+    ok('help', 'help', 'balance-map')
 
     // ------------------------------------------------------ credentials
     ok('check-password', 'check-password', `--password=${PASS}`)
@@ -138,9 +142,25 @@ function main(): void {
     ok('check-pin', 'check-pin', `--pin=${PIN}`)
     ok('change-pin', 'change-pin', '--pin=2222')
     ok('check-pin after change', 'check-pin', '--pin=2222')
+    // Every login method, each exercised while its credential still exists.
+    const key = ok('get-login-key for re-login', 'get-login-key')
+    ok('logout before login-with-key', 'logout')
+    ok(
+      'login-with-key',
+      'login-with-key',
+      `--username-or-login-id=${USER}`,
+      `--login-key=${String(key.json?.loginKey ?? '')}`
+    )
+    ok('logout before login-with-pin', 'logout')
+    ok(
+      'login-with-pin',
+      'login-with-pin',
+      `--username-or-login-id=${USER}`,
+      '--pin=2222'
+    )
     ok('delete-pin', 'delete-pin')
     ok('change-password', 'change-password', '--password=Zq7WmT4rNs2xVb9d')
-    ok(
+    const rec = ok(
       'change-recovery',
       'change-recovery',
       '--question=First pet?',
@@ -148,11 +168,32 @@ function main(): void {
       '--question=First street?',
       '--answer=oak'
     )
+    ok(
+      'fetch-recovery-questions',
+      'fetch-recovery-questions',
+      `--recovery-key=${String(rec.json?.recoveryKey ?? '')}`,
+      `--username=${USER}`
+    )
+    ok('logout before login-with-recovery', 'logout')
+    ok(
+      'login-with-recovery',
+      'login-with-recovery',
+      `--username=${USER}`,
+      `--recovery-key=${String(rec.json?.recoveryKey ?? '')}`,
+      '--answer=rex',
+      '--answer=oak'
+    )
     ok('delete-recovery', 'delete-recovery')
 
     // -------------------------------------------------------------- otp
-    ok('otp-key', 'otp-key')
+    ok('otp-key before enabling', 'otp-key')
     ok('enable-otp', 'enable-otp')
+    const otpKey = ok('otp-key', 'otp-key')
+    ok(
+      'repair-otp',
+      'repair-otp',
+      `--otp-key=${String(otpKey.json?.otpKey ?? '')}`
+    )
     ok('disable-otp', 'disable-otp')
 
     // -------------------------------------------------------- data store
@@ -205,6 +246,14 @@ function main(): void {
     ok('balance-map', 'balance-map', w)
     ok('get-addresses', 'get-addresses', w)
     ok('wallet-tokens', 'wallet-tokens', w)
+    // `--remove` of a token that is not enabled leaves the set as it is,
+    // which exercises the read-modify-write path without needing a token.
+    ok(
+      'change-enabled-token-ids',
+      'change-enabled-token-ids',
+      w,
+      '--remove=notatoken'
+    )
     ok('get-num-transactions', 'get-num-transactions', w)
     ok('get-transactions', 'get-transactions', w)
     ok(
@@ -231,15 +280,256 @@ function main(): void {
       '--native-amount=100000'
     )
 
+    // ------------------------------------------------- local / no server
+    ok('currency-configs', 'currency-configs')
+    ok('admin-hash-username', 'admin-hash-username', `--username=${USER}`)
+    ok('create-wallet', 'create-wallet', '--type=wallet:bitcoin')
+    ok(
+      'create-currency-wallets',
+      'create-currency-wallets',
+      '--create-wallets=[{"walletType":"wallet:bitcoin","name":"Batch"}]'
+    )
+    ok('split', 'split', w, '--split-wallets=[]')
+    ok('resync-blockchain', 'resync-blockchain', w)
+    // No transaction exists to annotate, and saying so proves the path runs.
+    refuses(
+      'save-tx-metadata for an unknown txid',
+      'missing tx',
+      'save-tx-metadata',
+      w,
+      '--txid=deadbeef',
+      '--token-id=null',
+      '--metadata={"name":"x"}'
+    )
+    refuses(
+      'save-tx-action for an unknown txid',
+      'missing tx',
+      'save-tx-action',
+      w,
+      '--txid=deadbeef',
+      '--token-id=null',
+      '--saved-action={"actionType":"swap"}'
+    )
+
+    // ------------------------------------------------------ login server
+    ok('fetch-login-messages', 'fetch-login-messages')
+    notInFakeWorld('fetch-challenge', 'Unknown API endpoint', 'fetch-challenge')
+    ok(
+      'change-username',
+      'change-username',
+      `--username=${USER}b`,
+      '--password=Zq7WmT4rNs2xVb9d'
+    )
+    // 2FA was disabled above, so refusing is the correct answer.
+    refuses('cancel-otp-reset with 2FA off', 'not enabled', 'cancel-otp-reset')
+
+    // ------------------------------------------------- object handles
+    const pending = ok('request-edge-login', 'request-edge-login', '--no-wait')
+    const pendingId: string = pending.json?.pendingId ?? ''
+    const lobbyId: string = pending.json?.lobbyId ?? ''
+    ok('poll-edge-login', 'poll-edge-login', pendingId)
+    ok('object-get', 'object-get', pendingId)
+    ok('fetch-lobby', 'fetch-lobby', lobbyId)
+    ok('approve-login-request', 'approve-login-request', lobbyId)
+    ok('cancel-request', 'cancel-request', pendingId)
+
+    // ------------------------------------------------------------ admin
+    const lobby = ok('admin-make-lobby', 'admin-make-lobby')
+    const handle: string = lobby.json?.objectId ?? ''
+    ok(
+      'admin-fetch-lobby-request',
+      'admin-fetch-lobby-request',
+      lobby.json?.lobbyId ?? ''
+    )
+    ok('admin-lobby-handle-delete', 'admin-lobby-handle-delete', handle)
+
+    // ------------------------------------------------- refusals that prove
+    // the path runs even though the fake world cannot fund a wallet
+    ok(
+      'get-max-spendable',
+      'get-max-spendable',
+      w,
+      '--to=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7'
+    )
+    refuses(
+      'sign-tx with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'sign-tx',
+      'tx_nosuchhandle'
+    )
+    refuses(
+      'broadcast-tx with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'broadcast-tx',
+      'tx_nosuchhandle'
+    )
+    refuses(
+      'save-tx with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'save-tx',
+      'tx_nosuchhandle'
+    )
+    refuses(
+      'object-delete with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'object-delete',
+      'tx_nosuchhandle'
+    )
+    refuses(
+      'swap-quote-get with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'swap-quote-get',
+      'swap_nosuchhandle'
+    )
+
+    // --------------------------------------------------- signing / admin
+    const addr = ok(
+      'get-addresses for signing',
+      'get-addresses',
+      w,
+      '--token-id=null'
+    )
+    const publicAddress: string = addr.json?.addresses?.[0]?.publicAddress ?? ''
+    ok(
+      'sign-bytes',
+      'sign-bytes',
+      w,
+      '--bytes=aGVsbG8=',
+      `--other-params={"publicAddress":"${publicAddress}"}`
+    )
+    ok(
+      'admin-auth-request',
+      'admin-auth-request',
+      '--method=POST',
+      '--path=/v2/messages',
+      '--body={"loginIds":[]}'
+    )
+
+    // These need state the fake world cannot produce, so the refusal is what
+    // proves the route runs at all.
+    // Core accepts any voucher id without complaint, so success here is the
+    // engine reporting core faithfully, not the voucher having existed.
+    ok('approve-voucher', 'approve-voucher', '--voucher-id=nosuchvoucher')
+    ok('reject-voucher', 'reject-voucher', '--voucher-id=nosuchvoucher')
+    refuses(
+      'request-otp-reset with a bad token',
+      'error',
+      'request-otp-reset',
+      `--username=${USER}b`,
+      '--otp-reset-token=nosuchtoken'
+    )
+    refuses(
+      'admin-repo-get with a bad key',
+      'error',
+      'admin-repo-get',
+      '--sync-key=11111111111111111111',
+      '--data-key=11111111111111111111',
+      '--path=x'
+    )
+    refuses(
+      'admin-repo-list with a bad key',
+      'error',
+      'admin-repo-list',
+      '--sync-key=11111111111111111111',
+      '--data-key=11111111111111111111'
+    )
+    refuses(
+      'admin-repo-set with a bad key',
+      'error',
+      'admin-repo-set',
+      '--sync-key=11111111111111111111',
+      '--data-key=11111111111111111111',
+      '--path=x',
+      '--text=y'
+    )
+    refuses(
+      'admin-repo-delete with a bad key',
+      'error',
+      'admin-repo-delete',
+      '--sync-key=11111111111111111111',
+      '--data-key=11111111111111111111',
+      '--path=x'
+    )
+    refuses(
+      'admin-sync-repo with a bad key',
+      'error',
+      'admin-sync-repo',
+      '--sync-key=11111111111111111111'
+    )
+    refuses(
+      'admin-send-lobby-reply to an unknown lobby',
+      'error',
+      'admin-send-lobby-reply',
+      '--lobby-id=nosuchlobby',
+      '--reply={}'
+    )
+    refuses(
+      'spend on an empty wallet',
+      'error',
+      'spend',
+      w,
+      '--to=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7',
+      '--native-amount=100000'
+    )
+    refuses(
+      'spend-max on an empty wallet',
+      'error',
+      'spend-max',
+      w,
+      '--to=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7'
+    )
+    refuses(
+      'sweep-private-keys with no funds',
+      'error',
+      'sweep-private-keys',
+      w,
+      '--spend-info={"tokenId":null,"privateKeys":["x"]}'
+    )
+    refuses(
+      'accelerate an unknown transaction',
+      'error',
+      'accelerate',
+      w,
+      '--object-id=tx_nosuchhandle'
+    )
+
+    // Rates, swap quotes and payment requests reach third-party APIs over the
+    // real internet, which the fake world does not intercept. They belong to
+    // `npm run test:cli:network`, not to a hook that must work offline.
+    refuses(
+      'approve-swap-quote with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'approve-swap-quote',
+      'swap_nosuchhandle'
+    )
+    refuses(
+      'close-swap-quote with an unknown handle',
+      'OBJECT_NOT_FOUND',
+      'close-swap-quote',
+      'swap_nosuchhandle'
+    )
+
     // ------------------------------------------------------------- login
     ok('logout', 'logout')
     ok(
       'login-with-password',
       'login-with-password',
-      `--username=${USER}`,
+      `--username=${USER}b`,
       '--password=Zq7WmT4rNs2xVb9d'
     )
     ok('username-available', 'username-available', `--username=${USER}nobody`)
+    // Core refuses while the account is open, which is the interesting half
+    // of the contract; forgetting it for real would end the session the rest
+    // of this suite still needs.
+    refuses(
+      'forget-account while logged in',
+      'Cannot remove logged-in user',
+      'forget-account',
+      `--root-login-id=${USER}b`
+    )
+
+    // Last, because it leaves the account with no password to log in with.
+    ok('delete-password', 'delete-password')
 
     // ---------------------------------------------------------- teardown
     // The fake login server implements no /api/v2/login/delete.
