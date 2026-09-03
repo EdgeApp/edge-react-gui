@@ -2,6 +2,8 @@ import type { EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { makeEvent } from 'yavent'
 
+import { showToast } from '../components/services/AirshipInstance'
+import { lstrings } from '../locales/strings'
 import { useSelector } from '../types/reactRedux'
 import type { ThunkAction } from '../types/reduxTypes'
 import {
@@ -16,6 +18,9 @@ import {
 import { logActivity } from '../util/logger'
 
 export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+
+// Long enough to read the instructions in the balance-hidden toast:
+const TOAST_HIDE_MS = 5000
 
 let localAccountSettings: LocalAccountSettings = asLocalAccountSettings({})
 const [watchAccountSettings, emitAccountSettings] =
@@ -97,14 +102,18 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
     const { account } = state.core
     const currentAccountBalanceVisibility =
       state.ui.settings.isAccountBalanceVisible
-    await writeAccountBalanceVisibility(
-      account,
-      !currentAccountBalanceVisibility
-    )
+    const isAccountBalanceVisible = !currentAccountBalanceVisibility
+    await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
     dispatch({
       type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
-      data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+      data: { isAccountBalanceVisible }
     })
+
+    // Users often hide their balances by accident and then contact support
+    // thinking their funds are gone, so explain how to get them back:
+    if (!isAccountBalanceVisible) {
+      showToast(lstrings.fragment_wallets_balance_hidden_toast, TOAST_HIDE_MS)
+    }
   }
 }
 
