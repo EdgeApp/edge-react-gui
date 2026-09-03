@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
