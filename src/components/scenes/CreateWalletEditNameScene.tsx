@@ -67,7 +67,8 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     const specialInfo = getSpecialCurrencyInfo(pluginId)
     const namespace = specialInfo.walletConnectV2ChainId?.namespace
     if (namespace === 'eip155') return lstrings.split_description_evm
-    if (namespace == null) return lstrings.split_description_utxo
+    if (namespace == null || namespace === 'bip122')
+      return lstrings.split_description_utxo
     return lstrings.split_description
   }, [splitSourceWalletId, currencyWallets])
 

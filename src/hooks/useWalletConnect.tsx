@@ -151,11 +151,14 @@ export function useWalletConnect(): WalletConnect {
         address.publicAddress
       )
 
-      // Check that we support all required methods
-      if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
-        const unsupportedMethods = proposal.params.requiredNamespaces[
-          chainId.namespace
-        ].methods.filter(method => {
+      // Check that we support all required methods. A dapp can require a
+      // namespace this wallet does not serve at all, in which case there is
+      // nothing to compare here and `buildApprovedNamespaces` below rejects
+      // the proposal on its own.
+      const requiredNamespace =
+        proposal.params.requiredNamespaces[chainId.namespace]
+      if (requiredNamespace != null) {
+        const unsupportedMethods = requiredNamespace.methods.filter(method => {
           return !supportedNamespaces[chainId.namespace].methods.includes(
             method
           )
@@ -292,6 +295,7 @@ const getSupportedNamespaces = (
   const { namespace, reference } = chainId
 
   let methods: string[]
+  let events: string[] = ['chainChanged', 'accountsChanged']
   switch (namespace) {
     case 'eip155':
       methods = [
@@ -308,6 +312,13 @@ const getSupportedNamespaces = (
     case 'algorand':
       methods = ['algo_signTxn']
       break
+    case 'bip122':
+      // Proof of ownership only. `sendTransfer` and `signPsbt` are left out
+      // deliberately: the UTXO plugin has no WalletConnect payload parser, so
+      // advertising them would accept spend requests Edge cannot serve.
+      methods = ['getAccountAddresses', 'signMessage']
+      events = ['bip122_addressesChanged']
+      break
     case 'cosmos':
       methods = ['cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino']
   }
@@ -316,7 +327,7 @@ const getSupportedNamespaces = (
     [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
-      events: ['chainChanged', 'accountsChanged'],
+      events,
       accounts: [`${namespace}:${reference}:${addr}`]
     }
   }
