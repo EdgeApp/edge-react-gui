@@ -139,7 +139,7 @@ export default [
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
-      'src/components/buttons/IconButton.tsx',
+
       'src/components/buttons/MinimalButton.tsx',
       'src/components/buttons/ModalButtons.tsx',
       'src/components/buttons/ReturnKeyTypeButton.tsx',
@@ -150,7 +150,7 @@ export default [
 
       'src/components/cards/FiatAmountInputCard.tsx',
       'src/components/cards/FiatExchangeDetailsCard.tsx',
-      'src/components/cards/HomeTileCard.tsx',
+
       'src/components/cards/IconMessageCard.tsx',
       'src/components/cards/LoanDetailsSummaryCard.tsx',
       'src/components/cards/LoanSummaryCard.tsx',
@@ -168,9 +168,8 @@ export default [
       'src/components/charts/SwipeChart.tsx',
 
       'src/components/common/AnimatedNumber.tsx',
-      'src/components/common/BlurBackground.tsx',
+
       'src/components/common/CrossFade.tsx',
-      'src/components/common/DotsBackground.tsx',
 
       'src/components/common/ExpandableList.tsx',
       'src/components/common/QrPeephole.tsx',
@@ -182,7 +181,7 @@ export default [
       'src/components/FioAddress/FioActionSubmit.tsx',
       'src/components/FioAddress/FioName.tsx',
       'src/components/hoc/maybeComponent.tsx',
-      'src/components/hoc/styled.tsx',
+
       'src/components/hoc/withExtendedTouchable.tsx',
 
       'src/components/icons/FiatIcon.tsx',
@@ -208,7 +207,6 @@ export default [
       'src/components/modals/FioExpiredModal.tsx',
 
       'src/components/modals/FundAccountModal.tsx',
-      'src/components/modals/GradientFadeout.tsx',
 
       'src/components/modals/InsufficientFeesModal.tsx',
       'src/components/modals/ListModal.tsx',
@@ -234,7 +232,7 @@ export default [
       'src/components/navigation/EdgeLogoHeader.tsx',
       'src/components/navigation/FlashNotification.tsx',
       'src/components/navigation/GuiPluginBackButton.tsx',
-      'src/components/navigation/HeaderBackground.tsx',
+
       'src/components/navigation/HeaderTextButton.tsx',
       'src/components/navigation/HeaderTitle.tsx',
       'src/components/navigation/NavigationButton.tsx',
@@ -247,8 +245,6 @@ export default [
       'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
 
-      'src/components/progress-indicators/StepProgressBar.tsx',
-
       'src/components/rows/CryptoFiatAmountRow.tsx',
 
       'src/components/rows/EdgeRow.tsx',
@@ -257,9 +253,6 @@ export default [
       'src/components/rows/SwapProviderRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
 
-      'src/components/scenes/ChangeMiningFeeScene.tsx',
-
-      'src/components/scenes/ConfirmScene.tsx',
       'src/components/scenes/CreateWalletAccountSelectScene.tsx',
       'src/components/scenes/CreateWalletAccountSetupScene.tsx',
 
@@ -284,15 +277,13 @@ export default [
       'src/components/scenes/Fio/FioRequestListScene.tsx',
       'src/components/scenes/Fio/FioSentRequestDetailsScene.tsx',
       'src/components/scenes/Fio/FioStakingOverviewScene.tsx',
-      'src/components/scenes/FormScene.tsx',
+
       'src/components/scenes/inputs/DigitInput.tsx',
       'src/components/scenes/inputs/DigitInput/PinDots.tsx',
       'src/components/scenes/LoadingScene.tsx',
-      'src/components/scenes/Loans/LoanCloseScene.tsx',
 
-      'src/components/scenes/Loans/LoanCreateScene.tsx',
       'src/components/scenes/Loans/LoanDashboardScene.tsx',
-      'src/components/scenes/Loans/LoanDetailsScene.tsx',
+
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
@@ -303,7 +294,6 @@ export default [
 
       'src/components/scenes/PromotionSettingsScene.tsx',
 
-      'src/components/scenes/SpendingLimitsScene.tsx',
       'src/components/scenes/Staking/EarnScene.tsx',
 
       'src/components/scenes/SwapSettingsScene.tsx',
@@ -327,7 +317,6 @@ export default [
       'src/components/services/NetworkActivity.ts',
       'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
-      'src/components/services/Providers.tsx',
 
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
@@ -347,18 +336,15 @@ export default [
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
-      'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
 
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
-      'src/components/themed/FioRequestRow.tsx',
-
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
       'src/components/themed/ManageTokensRow.tsx',
-      'src/components/themed/MenuTabs.tsx',
+
       'src/components/themed/ModalParts.tsx',
       'src/components/themed/PinDots.tsx',
 
@@ -374,7 +360,6 @@ export default [
       'src/components/themed/ThemedButtons.tsx',
       'src/components/themed/Thermostat.tsx',
       'src/components/themed/Title.tsx',
-      'src/components/themed/TransactionListComponents.tsx',
 
       'src/components/themed/VectorIcon.tsx',
       'src/components/themed/WalletList.tsx',
@@ -483,7 +468,7 @@ export default [
       'src/styles/common/textStyles.tsx',
       'src/styles/common/textStylesThemed.ts',
       'src/types/reactRedux.ts',
-      'src/util/borrowUtils.ts',
+
       'src/util/cleaners.ts',
 
       'src/util/crypto.ts',

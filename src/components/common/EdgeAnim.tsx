@@ -1,6 +1,7 @@
 import * as React from 'react'
 import type { ViewProps } from 'react-native'
 import Animated, {
+  type BaseAnimationBuilder,
   type ComplexAnimationBuilder,
   Easing,
   FadeIn,
@@ -59,7 +60,13 @@ export const fadeInRight: Anim = { type: 'fadeInRight' }
 
 export const fadeOut: Anim = { type: 'fadeOut' }
 
-type AnimBuilder = typeof ComplexAnimationBuilder
+// reanimated 4.5 made ComplexAnimationBuilder generic and each preset extends
+// it with its own value type, so the class sides no longer share a common
+// `typeof` — describe just the static entry point the builder chain uses,
+// matching reanimated's declared (widened) return type:
+interface AnimBuilder {
+  delay: (durationMs: number) => BaseAnimationBuilder
+}
 type AnimTypeFadeIns =
   | 'fadeIn'
   | 'fadeInDown'
@@ -98,7 +105,7 @@ interface Props {
    * TODO: Remove default once we have audited all instances of EdgeAnim
    * explicitly enabling the default LAYOUT_ANIMATION for those instances.
    */
-  layout?: ComplexAnimationBuilder
+  layout?: React.ComponentProps<typeof Animated.View>['layout']
 
   /** TODO: This is a temporary way to disable the `layout` default
    * LAYOUT_ANIMATION. Remove this once we have audited all instances of
@@ -138,8 +145,9 @@ const getAnimBuilder = (anim?: Anim): ComplexAnimationBuilder | undefined => {
   } = anim
   const animBuilder = builderMap[type]
 
-  let builder = animBuilder
-    .delay(delay)
+  // reanimated declares the preset statics as returning the base builder, but
+  // at runtime they return the preset instance with the full complex surface:
+  let builder = (animBuilder.delay(delay) as ComplexAnimationBuilder<any>)
     .duration(duration)
     .easing(Easing.inOut(Easing.quad))
 

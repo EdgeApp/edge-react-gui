@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextInputModal should render with a blank input field 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -438,7 +437,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               ]
             }
-            nativeID="3"
             scale={0}
             style={
               [
@@ -481,7 +479,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 },
               ]
             }
-            nativeID="4"
             style={
               [
                 {
@@ -546,7 +543,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 ]
               }
               multiline={false}
-              nativeID="5"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -641,7 +637,6 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                   },
                 ]
               }
-              nativeID="6"
               scale={0}
               style={
                 [
@@ -667,22 +662,21 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
-                      "fontSize": 0,
+                      "fontSize": 1,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="7"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
-                      "fontSize": 0,
+                      "fontSize": 1,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -774,21 +768,20 @@ exports[`TextInputModal should render with a blank input field 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  "#20312f",
+                  "#00604d",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0,
@@ -956,7 +949,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         },
       ]
     }
-    nativeID="9"
     style={
       [
         {
@@ -1292,7 +1284,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               ]
             }
-            nativeID="11"
             scale={0}
             style={
               [
@@ -1335,7 +1326,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 },
               ]
             }
-            nativeID="12"
             style={
               [
                 {
@@ -1400,7 +1390,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 ]
               }
               multiline={false}
-              nativeID="13"
               onBlur={[Function]}
               onChangeText={[Function]}
               onFocus={[Function]}
@@ -1495,7 +1484,6 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   },
                 ]
               }
-              nativeID="14"
               scale={22}
               style={
                 [
@@ -1521,7 +1509,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -1530,11 +1518,10 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
-                nativeID="15"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "color": "rgba(255, 255, 255, 0.502)",
                       "fontFamily": "anticon",
                       "fontSize": 22,
                       "fontStyle": "normal",
@@ -1628,21 +1615,20 @@ exports[`TextInputModal should render with a populated input field 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  "#20312f",
+                  "#00604d",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0,

@@ -1,9 +1,7 @@
+import { LinearGradient, type LinearGradientProps } from 'expo-linear-gradient'
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import LinearGradient, {
-  type LinearGradientProps
-} from 'react-native-linear-gradient'
 
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
@@ -196,7 +194,7 @@ export const EdgeCard: React.FC<Props> = props => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   backgroundFill: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.cardBorderRadius,
     backgroundColor: theme.cardBaseColor,
     overflow: 'hidden'
@@ -212,7 +210,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute'
   },
   overlayContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     backgroundColor: theme.cardOverlayDisabled,
     borderRadius: theme.cardBorderRadius,

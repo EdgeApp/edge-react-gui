@@ -1,6 +1,6 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 import type { ActionDisplayInfo } from '../../controllers/action-queue/types'
 import { lstrings } from '../../locales/strings'
@@ -24,7 +24,7 @@ const StepProgressRowComponent = ({
   isNodeCompleted: boolean
   nodeError?: Error | undefined
   stepText: { title: string; message: string }
-}) => {
+}): React.ReactElement => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -116,7 +116,7 @@ const StepProgressRow = React.memo(StepProgressRowComponent)
 // -----------------------------------------------------------------------------
 const StepProgressBarComponent = (props: {
   actionDisplayInfos: ActionDisplayInfo[]
-}) => {
+}): React.ReactElement => {
   // completedSteps of -1 will gray out all steps, while 0 will highlight the
   // first step
   const { actionDisplayInfos, ...containerProps } = props

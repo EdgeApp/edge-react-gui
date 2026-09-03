@@ -1,152 +1,69 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SwapCreateScene should render with loading props 1`] = `
 [
-  <BVLinearGradient
-    colors={
-      [
-        4279900698,
-        4279900698,
-      ]
-    }
-    endPoint={
+  <BlurTargetView
+    collapsable={false}
+    ref={
       {
-        "x": 1,
-        "y": 1,
-      }
-    }
-    locations={null}
-    onLayout={[Function]}
-    startPoint={
-      {
-        "x": 0,
-        "y": 0,
+        "current": null,
       }
     }
     style={
       {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
+        "flex": 1,
       }
     }
   >
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={0}
-      bbWidth={0}
-      focusable={false}
-      height={0}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      style={
+    <ExpoLinearGradient
+      colors={
+        [
+          "#1a1a1a",
+          "#1a1a1a",
+        ]
+      }
+      end={
         {
-          "backgroundColor": "transparent",
-          "borderWidth": 0,
+          "x": 1,
+          "y": 1,
         }
       }
-      vbHeight={0}
-      vbWidth={0}
-      width={0}
+      onLayout={[Function]}
+      start={
+        {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
     >
-      <RNSVGGroup
-        fill={
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={0}
+        bbWidth={0}
+        focusable={false}
+        height={0}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        style={
           {
-            "payload": 4278190080,
-            "type": 0,
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
           }
         }
+        vbHeight={0}
+        vbWidth={0}
+        width={0}
       >
-        <RNSVGDefs>
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -1,
-                0.125,
-                -167772161,
-                0.25,
-                -637534209,
-                0.75,
-                654311423,
-                0.875,
-                184549375,
-                1,
-                16777215,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad0"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -216279,
-                0.0588,
-                -216279,
-                0.1765,
-                -167988439,
-                0.29410000000000003,
-                -637750487,
-                0.7646999999999999,
-                654095145,
-                0.8824,
-                184333097,
-                1,
-                16560937,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            rx="50%"
-            ry="50%"
-          />
-          <RNSVGRadialGradient
-            cx="50%"
-            cy="50%"
-            fx="50%"
-            fy="50%"
-            gradient={
-              [
-                0,
-                -16719740,
-                0.4667,
-                -16719740,
-                0.5333,
-                -184491900,
-                0.6,
-                -654253948,
-                0.8667,
-                637591684,
-                0.9333,
-                167829636,
-                1,
-                57476,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad2"
-            rx="50%"
-            ry="50%"
-          />
-        </RNSVGDefs>
         <RNSVGGroup
           fill={
             {
@@ -154,699 +71,787 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "type": 0,
             }
           }
-          opacity={0.1}
         >
-          <RNSVGCircle
-            cx="10%"
-            cy="10%"
+          <RNSVGDefs>
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -1,
+                  0.125,
+                  -167772161,
+                  0.25,
+                  -637534209,
+                  0.75,
+                  654311423,
+                  0.875,
+                  184549375,
+                  1,
+                  16777215,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad0"
+              rx="50%"
+              ry="50%"
+            />
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -216279,
+                  0.0588,
+                  -216279,
+                  0.1765,
+                  -167988439,
+                  0.29410000000000003,
+                  -637750487,
+                  0.7646999999999999,
+                  654095145,
+                  0.8824,
+                  184333097,
+                  1,
+                  16560937,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad1"
+              rx="50%"
+              ry="50%"
+            />
+            <RNSVGRadialGradient
+              cx="50%"
+              cy="50%"
+              fx="50%"
+              fy="50%"
+              gradient={
+                [
+                  0,
+                  -16719740,
+                  0.4667,
+                  -16719740,
+                  0.5333,
+                  -184491900,
+                  0.6,
+                  -654253948,
+                  0.8667,
+                  637591684,
+                  0.9333,
+                  167829636,
+                  1,
+                  57476,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad2"
+              rx="50%"
+              ry="50%"
+            />
+          </RNSVGDefs>
+          <RNSVGGroup
             fill={
               {
-                "brushRef": "grad0",
-                "type": 1,
+                "payload": 4278190080,
+                "type": 0,
               }
             }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={224.73239436619718}
-          />
-          <RNSVGCircle
-            cx="95%"
-            cy="30%"
-            fill={
-              {
-                "brushRef": "grad1",
-                "type": 1,
+            opacity={0.1}
+          >
+            <RNSVGCircle
+              cx="10%"
+              cy="10%"
+              fill={
+                {
+                  "brushRef": "grad0",
+                  "type": 1,
+                }
               }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={238.7781690140845}
-          />
-          <RNSVGCircle
-            cx="-15%"
-            cy="100%"
-            fill={
-              {
-                "brushRef": "grad2",
-                "type": 1,
+              propList={
+                [
+                  "fill",
+                ]
               }
-            }
-            propList={
-              [
-                "fill",
-              ]
-            }
-            r={421.37323943661977}
-          />
+              r={224.73239436619718}
+            />
+            <RNSVGCircle
+              cx="95%"
+              cy="30%"
+              fill={
+                {
+                  "brushRef": "grad1",
+                  "type": 1,
+                }
+              }
+              propList={
+                [
+                  "fill",
+                ]
+              }
+              r={238.7781690140845}
+            />
+            <RNSVGCircle
+              cx="-15%"
+              cy="100%"
+              fill={
+                {
+                  "brushRef": "grad2",
+                  "type": 1,
+                }
+              }
+              propList={
+                [
+                  "fill",
+                ]
+              }
+              r={421.37323943661977}
+            />
+          </RNSVGGroup>
         </RNSVGGroup>
-      </RNSVGGroup>
-    </RNSVGSvgView>
-  </BVLinearGradient>,
-  <RCTScrollView
-    collapsable={false}
-    contentContainerStyle={
-      {
-        "paddingBottom": 74.85492957746479,
-        "paddingLeft": 0,
-        "paddingRight": 0,
-        "paddingTop": 64,
-      }
-    }
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "maxHeight": 1334,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
+      </RNSVGSvgView>
+    </ExpoLinearGradient>
+    <RCTScrollView
+      collapsable={false}
+      contentContainerStyle={
         {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "padding": 0,
-        },
-      ]
-    }
-    keyboardShouldPersistTaps="handled"
-    nativeID="0"
-    onMomentumScrollBegin={[Function]}
-    onMomentumScrollEnd={[Function]}
-    onScroll={[Function]}
-    onScrollBeginDrag={[Function]}
-    onScrollEndDrag={[Function]}
-    scrollEnabled={true}
-    scrollEventThrottle={1}
-    scrollIndicatorInsets={
-      {
-        "right": 1,
-      }
-    }
-    style={
-      [
-        {
-          "height": 1334,
-          "width": 750,
-        },
-        {
-          "maxHeight": 1334,
-        },
-        {
-          "padding": 0,
-        },
-      ]
-    }
-  >
-    <View>
-      <View
-        style={
-          {
-            "flex": 1,
-            "marginTop": 0,
-            "paddingBottom": 11,
-            "paddingHorizontal": 11,
-          }
+          "paddingBottom": 74.85492957746479,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 64,
         }
-      >
+      }
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {
+            "maxHeight": 1334,
+          },
+        }
+      }
+      jestInlineStyle={
+        [
+          {
+            "height": 1334,
+            "width": 750,
+          },
+          {
+            "padding": 0,
+          },
+        ]
+      }
+      keyboardShouldPersistTaps="handled"
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      scrollEnabled={true}
+      scrollEventThrottle={1}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
+        }
+      }
+      style={
+        [
+          {
+            "height": 1334,
+            "width": 750,
+          },
+          {
+            "maxHeight": 1334,
+          },
+          {
+            "padding": 0,
+          },
+        ]
+      }
+    >
+      <View>
         <View
-          collapsable={false}
-          entering={
-            FadeInUp {
-              "build": [Function],
-              "delayV": 0,
-              "durationV": 300,
-              "easingV": [Function],
-              "initialValues": {
-                "transform": [
-                  {
-                    "translateY": -60,
-                  },
-                ],
-              },
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          jestAnimatedProps={
+          style={
             {
-              "value": {},
+              "flex": 1,
+              "marginTop": 0,
+              "paddingBottom": 11,
+              "paddingHorizontal": 11,
             }
           }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="1"
         >
           <View
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
+            collapsable={false}
+            entering={
+              FadeInUp {
+                "build": [Function],
+                "delayV": 0,
+                "durationV": 300,
+                "easingV": [Function],
+                "initialValues": {
+                  "transform": [
+                    {
+                      "translateY": -60,
+                    },
+                  ],
                 },
-                {
-                  "marginBottom": 22,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 22,
-                },
-              ]
-            }
-          >
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
               }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                {
-                  "bottom": 11,
-                  "left": 10000,
-                  "right": 10000,
-                  "top": 11,
-                }
-              }
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "borderRadius": 34,
-                  "height": 67,
-                  "justifyContent": "center",
-                  "opacity": 1,
-                  "overflow": "visible",
-                  "paddingHorizontal": 34,
-                  "paddingVertical": 0,
-                  "position": "relative",
-                }
-              }
-            >
-              <BVLinearGradient
-                colors={
-                  [
-                    872415231,
-                    872415231,
-                  ]
-                }
-                endPoint={
-                  {
-                    "x": 1,
-                    "y": 1,
-                  }
-                }
-                locations={null}
-                startPoint={
-                  {
-                    "x": 0,
-                    "y": 0,
-                  }
-                }
-                style={
-                  {
-                    "borderRadius": 34,
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                    "opacity": 1,
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      [
-                        {
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                        },
-                        null,
-                      ],
-                      null,
-                    ]
-                  }
-                >
-                  Select Source Wallet
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          collapsable={false}
-          jestAnimatedProps={
-            {
-              "value": {},
             }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="2"
-        >
-          <View
-            style={
+            jestAnimatedProps={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "flexGrow": 1,
-                "justifyContent": "space-between",
-                "marginVertical": 11,
-                "paddingHorizontal": 11,
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "durationV": 300,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
               }
             }
           >
             <View
               style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "flex": 1,
-                }
-              }
-            />
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={false}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "marginBottom": 0,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 0,
-                  "opacity": 1,
-                  "paddingBottom": 0,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 0,
-                }
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  {
+                    "marginBottom": 22,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 22,
+                  },
+                ]
               }
             >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                selectable={false}
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 11,
+                    "left": 10000,
+                    "right": 10000,
+                    "top": 11,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
-                  [
-                    {
-                      "color": undefined,
-                      "fontSize": 12,
-                    },
-                    [
-                      {
-                        "color": "#00f1a2",
-                        "fontSize": 45,
-                      },
-                      undefined,
-                    ],
-                    {
-                      "fontFamily": "Ionicons",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "height": 67,
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "overflow": "visible",
+                    "paddingHorizontal": 34,
+                    "paddingVertical": 0,
+                    "position": "relative",
+                  }
                 }
               >
-                
-              </Text>
+                <ExpoLinearGradient
+                  colors={
+                    [
+                      "hsla(0, 0%, 100%, 0.20)",
+                      "hsla(0, 0%, 100%, 0.20)",
+                    ]
+                  }
+                  end={
+                    {
+                      "x": 1,
+                      "y": 1,
+                    }
+                  }
+                  start={
+                    {
+                      "x": 0,
+                      "y": 0,
+                    }
+                  }
+                  style={
+                    {
+                      "borderRadius": 34,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
+                        {
+                          "color": "#FFFFFF",
+                          "fontFamily": "Quicksand-Regular",
+                          "fontSize": 22,
+                          "includeFontPadding": false,
+                        },
+                        [
+                          {
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                          },
+                          null,
+                        ],
+                        null,
+                      ]
+                    }
+                  >
+                    Select Source Wallet
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View
-              style={
-                {
-                  "borderBottomColor": "rgba(255, 255, 255, .1)",
-                  "borderBottomWidth": 1,
-                  "flex": 1,
-                }
-              }
-            />
           </View>
-        </View>
-        <View
-          collapsable={false}
-          entering={
-            FadeInDown {
-              "build": [Function],
-              "delayV": 0,
-              "durationV": 300,
-              "easingV": [Function],
-              "initialValues": {
-                "transform": [
-                  {
-                    "translateY": 30,
-                  },
-                ],
-              },
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="3"
-        >
           <View
-            style={
-              [
-                {
-                  "alignItems": "center",
-                  "justifyContent": "center",
-                },
-                {
-                  "marginBottom": 22,
-                  "marginLeft": 0,
-                  "marginRight": 0,
-                  "marginTop": 22,
-                },
-              ]
+            collapsable={false}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "durationV": 300,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
             }
           >
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={
-                {
-                  "bottom": 11,
-                  "left": 10000,
-                  "right": 10000,
-                  "top": 11,
-                }
-              }
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
                 {
                   "alignItems": "center",
-                  "borderRadius": 34,
-                  "height": 67,
-                  "justifyContent": "center",
-                  "opacity": 1,
-                  "overflow": "visible",
-                  "paddingHorizontal": 34,
-                  "paddingVertical": 0,
-                  "position": "relative",
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "justifyContent": "space-between",
+                  "marginVertical": 11,
+                  "paddingHorizontal": 11,
                 }
               }
             >
-              <BVLinearGradient
-                colors={
-                  [
-                    872415231,
-                    872415231,
-                  ]
-                }
-                endPoint={
-                  {
-                    "x": 1,
-                    "y": 1,
-                  }
-                }
-                locations={null}
-                startPoint={
-                  {
-                    "x": 0,
-                    "y": 0,
-                  }
-                }
+              <View
                 style={
                   {
-                    "borderRadius": 34,
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "flex": 1,
                   }
                 }
               />
               <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
+                    "marginBottom": 0,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 0,
                     "opacity": 1,
+                    "paddingBottom": 0,
+                    "paddingLeft": 11,
+                    "paddingRight": 11,
+                    "paddingTop": 0,
                   }
                 }
               >
                 <Text
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
+                  selectable={false}
                   style={
                     [
                       {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
+                        "color": undefined,
+                        "fontSize": 12,
                       },
                       [
                         {
-                          "includeFontPadding": false,
+                          "color": "#00f1a2",
+                          "fontSize": 45,
                         },
+                        undefined,
+                      ],
+                      {
+                        "fontFamily": "Ionicons",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal",
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    "borderBottomColor": "rgba(255, 255, 255, .1)",
+                    "borderBottomWidth": 1,
+                    "flex": 1,
+                  }
+                }
+              />
+            </View>
+          </View>
+          <View
+            collapsable={false}
+            entering={
+              FadeInDown {
+                "build": [Function],
+                "delayV": 0,
+                "durationV": 300,
+                "easingV": [Function],
+                "initialValues": {
+                  "transform": [
+                    {
+                      "translateY": 30,
+                    },
+                  ],
+                },
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "durationV": 300,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  {
+                    "marginBottom": 22,
+                    "marginLeft": 0,
+                    "marginRight": 0,
+                    "marginTop": 22,
+                  },
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 11,
+                    "left": 10000,
+                    "right": 10000,
+                    "top": 11,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "borderRadius": 34,
+                    "height": 67,
+                    "justifyContent": "center",
+                    "opacity": 1,
+                    "overflow": "visible",
+                    "paddingHorizontal": 34,
+                    "paddingVertical": 0,
+                    "position": "relative",
+                  }
+                }
+              >
+                <ExpoLinearGradient
+                  colors={
+                    [
+                      "hsla(0, 0%, 100%, 0.20)",
+                      "hsla(0, 0%, 100%, 0.20)",
+                    ]
+                  }
+                  end={
+                    {
+                      "x": 1,
+                      "y": 1,
+                    }
+                  }
+                  start={
+                    {
+                      "x": 0,
+                      "y": 0,
+                    }
+                  }
+                  style={
+                    {
+                      "borderRadius": 34,
+                      "bottom": 0,
+                      "left": 0,
+                      "position": "absolute",
+                      "right": 0,
+                      "top": 0,
+                    }
+                  }
+                />
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "justifyContent": "center",
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <Text
+                    adjustsFontSizeToFit={true}
+                    allowFontScaling={false}
+                    minimumFontScale={0.65}
+                    numberOfLines={1}
+                    style={
+                      [
                         {
                           "color": "#FFFFFF",
                           "fontFamily": "Quicksand-Regular",
                           "fontSize": 22,
+                          "includeFontPadding": false,
                         },
+                        [
+                          {
+                            "includeFontPadding": false,
+                          },
+                          {
+                            "color": "#FFFFFF",
+                            "fontFamily": "Quicksand-Regular",
+                            "fontSize": 22,
+                          },
+                          null,
+                        ],
                         null,
-                      ],
-                      null,
-                    ]
-                  }
-                >
-                  Select Receiving Wallet
-                </Text>
+                      ]
+                    }
+                  >
+                    Select Receiving Wallet
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
+          <View
+            collapsable={false}
+            entering={
+              FadeInDown {
+                "build": [Function],
+                "delayV": 0,
+                "durationV": 300,
+                "easingV": [Function],
+                "initialValues": {
+                  "transform": [
+                    {
+                      "translateY": 60,
+                    },
+                  ],
+                },
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "durationV": 300,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+          />
+          <View
+            collapsable={false}
+            entering={
+              FadeInDown {
+                "build": [Function],
+                "delayV": 0,
+                "durationV": 300,
+                "easingV": [Function],
+                "initialValues": {
+                  "transform": [
+                    {
+                      "translateY": 90,
+                    },
+                  ],
+                },
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {},
+              }
+            }
+            layout={
+              LinearTransition {
+                "build": [Function],
+                "durationV": 300,
+                "randomizeDelay": false,
+                "reduceMotionV": "system",
+              }
+            }
+          />
         </View>
-        <View
-          collapsable={false}
-          entering={
-            FadeInDown {
-              "build": [Function],
-              "delayV": 0,
-              "durationV": 300,
-              "easingV": [Function],
-              "initialValues": {
-                "transform": [
-                  {
-                    "translateY": 60,
-                  },
-                ],
-              },
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="4"
-        />
-        <View
-          collapsable={false}
-          entering={
-            FadeInDown {
-              "build": [Function],
-              "delayV": 0,
-              "durationV": 300,
-              "easingV": [Function],
-              "initialValues": {
-                "transform": [
-                  {
-                    "translateY": 90,
-                  },
-                ],
-              },
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          layout={
-            LinearTransition {
-              "build": [Function],
-              "durationV": 300,
-              "randomizeDelay": false,
-              "reduceMotionV": "system",
-            }
-          }
-          nativeID="5"
-        />
       </View>
-    </View>
-  </RCTScrollView>,
+    </RCTScrollView>
+  </BlurTargetView>,
   <View
     collapsable={false}
     footerHeight={0}
@@ -881,7 +886,6 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="6"
     onLayout={[Function]}
     stackHeight={0}
     style={

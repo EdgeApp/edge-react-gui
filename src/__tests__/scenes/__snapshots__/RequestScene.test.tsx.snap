@@ -1,7 +1,13 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Request should render a blank scene with loaded props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -25,22 +31,21 @@ exports[`Request should render a blank scene with loaded props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -230,7 +235,7 @@ exports[`Request should render a blank scene with loaded props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <View
     style={
       [
@@ -280,21 +285,20 @@ exports[`Request should render a blank scene with loaded props 1`] = `
       </Text>
     </View>
   </View>
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        452984831,
-        452984831,
+        "rgba(255, 255, 255, .1)",
+        "rgba(255, 255, 255, .1)",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    locations={null}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0.5,
@@ -433,21 +437,20 @@ Never share your username and password, and store your credentials securely!
             }
           }
         >
-          <BVLinearGradient
+          <ExpoLinearGradient
             colors={
               [
-                4280299823,
-                4278214733,
+                "#20312f",
+                "#00604d",
               ]
             }
-            endPoint={
+            end={
               {
                 "x": 1,
                 "y": 0,
               }
             }
-            locations={null}
-            startPoint={
+            start={
               {
                 "x": 0,
                 "y": 0,
@@ -509,11 +512,17 @@ Never share your username and password, and store your credentials securely!
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`Request should render with loaded props 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -537,22 +546,21 @@ exports[`Request should render with loaded props 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -697,7 +705,7 @@ exports[`Request should render with loaded props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <View
     style={
       {
@@ -750,7 +758,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="0"
       style={
         [
           {
@@ -852,7 +859,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="1"
       style={
         [
           {
@@ -983,7 +989,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="2"
     >
       <View
         style={
@@ -1255,7 +1260,6 @@ exports[`Request should render with loaded props 1`] = `
                   },
                 ]
               }
-              nativeID="3"
               style={
                 [
                   {
@@ -1428,7 +1432,6 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
-                    nativeID="5"
                     pointerEvents="auto"
                     style={
                       [
@@ -1492,58 +1495,90 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                     >
-                      <TextInput
-                        allowFontScaling={false}
-                        autoCorrect={false}
-                        autoFocus={false}
-                        collapsable={false}
-                        editable={true}
-                        forwardedRef={[Function]}
-                        jestAnimatedProps={
-                          {
-                            "value": {},
+                      <View>
+                        <Text
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "opacity": 0,
+                              },
+                            ]
                           }
-                        }
-                        jestAnimatedStyle={
-                          {
-                            "value": {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
+                        >
+                          0
+                        </Text>
+                        <TextInput
+                          allowFontScaling={false}
+                          autoCorrect={false}
+                          autoFocus={false}
+                          collapsable={false}
+                          editable={true}
+                          forwardedRef={[Function]}
+                          jestAnimatedProps={
+                            {
+                              "value": {},
+                            }
                           }
-                        }
-                        jestInlineStyle={
-                          [
+                          jestAnimatedStyle={
                             {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                          ]
-                        }
-                        keyboardType="decimal-pad"
-                        nativeID="6"
-                        onBlur={[Function]}
-                        onChangeText={[Function]}
-                        onFocus={[Function]}
-                        returnKeyType="done"
-                        style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                            {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
-                          ]
-                        }
-                        value=""
-                      />
+                              "value": {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                            }
+                          }
+                          jestInlineStyle={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          keyboardType="decimal-pad"
+                          onBlur={[Function]}
+                          onChangeText={[Function]}
+                          onFocus={[Function]}
+                          returnKeyType="done"
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          value=""
+                        />
+                      </View>
                       <Text
                         allowFontScaling={false}
                         collapsable={false}
@@ -1568,7 +1603,6 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
-                        nativeID="7"
                         style={
                           [
                             {
@@ -1619,7 +1653,6 @@ exports[`Request should render with loaded props 1`] = `
                         },
                       ]
                     }
-                    nativeID="8"
                     pointerEvents="none"
                     style={
                       [
@@ -1688,58 +1721,90 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                     >
-                      <TextInput
-                        allowFontScaling={false}
-                        autoCorrect={false}
-                        autoFocus={false}
-                        collapsable={false}
-                        editable={true}
-                        forwardedRef={[Function]}
-                        jestAnimatedProps={
-                          {
-                            "value": {},
+                      <View>
+                        <Text
+                          allowFontScaling={false}
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "opacity": 0,
+                              },
+                            ]
                           }
-                        }
-                        jestAnimatedStyle={
-                          {
-                            "value": {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
+                        >
+                          0
+                        </Text>
+                        <TextInput
+                          allowFontScaling={false}
+                          autoCorrect={false}
+                          autoFocus={false}
+                          collapsable={false}
+                          editable={true}
+                          forwardedRef={[Function]}
+                          jestAnimatedProps={
+                            {
+                              "value": {},
+                            }
                           }
-                        }
-                        jestInlineStyle={
-                          [
+                          jestAnimatedStyle={
                             {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                          ]
-                        }
-                        keyboardType="decimal-pad"
-                        nativeID="9"
-                        onBlur={[Function]}
-                        onChangeText={[Function]}
-                        onFocus={[Function]}
-                        returnKeyType="done"
-                        style={
-                          [
-                            {
-                              "fontFamily": "Quicksand-Medium",
-                              "fontSize": 34,
-                              "includeFontPadding": false,
-                              "marginRight": 0,
-                              "padding": 0,
-                            },
-                            {
-                              "color": "rgba(255, 255, 255, 1)",
-                            },
-                          ]
-                        }
-                        value=""
-                      />
+                              "value": {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                            }
+                          }
+                          jestInlineStyle={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          keyboardType="decimal-pad"
+                          onBlur={[Function]}
+                          onChangeText={[Function]}
+                          onFocus={[Function]}
+                          returnKeyType="done"
+                          style={
+                            [
+                              {
+                                "fontFamily": "Quicksand-Medium",
+                                "fontSize": 34,
+                                "includeFontPadding": false,
+                                "padding": 0,
+                              },
+                              {
+                                "color": "rgba(255, 255, 255, 1)",
+                              },
+                              {
+                                "bottom": 0,
+                                "left": 0,
+                                "position": "absolute",
+                                "right": 0,
+                                "top": 0,
+                              },
+                            ]
+                          }
+                          value=""
+                        />
+                      </View>
                       <Text
                         allowFontScaling={false}
                         collapsable={false}
@@ -1764,7 +1829,6 @@ exports[`Request should render with loaded props 1`] = `
                             "top": 0,
                           }
                         }
-                        nativeID="10"
                         style={
                           [
                             {
@@ -1811,7 +1875,6 @@ exports[`Request should render with loaded props 1`] = `
                       },
                     ]
                   }
-                  nativeID="11"
                   style={
                     [
                       {
@@ -1874,7 +1937,7 @@ exports[`Request should render with loaded props 1`] = `
                       jestAnimatedStyle={
                         {
                           "value": {
-                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "color": "rgba(255, 255, 255, 0.502)",
                             "fontFamily": "anticon",
                             "fontSize": 22,
                             "fontStyle": "normal",
@@ -1883,11 +1946,10 @@ exports[`Request should render with loaded props 1`] = `
                         }
                       }
                       jestInlineStyle={{}}
-                      nativeID="12"
                       style={
                         [
                           {
-                            "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                            "color": "rgba(255, 255, 255, 0.502)",
                             "fontFamily": "anticon",
                             "fontSize": 22,
                             "fontStyle": "normal",
@@ -1965,7 +2027,6 @@ exports[`Request should render with loaded props 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="13"
     >
       <View
         accessibilityState={
@@ -2120,7 +2181,6 @@ exports[`Request should render with loaded props 1`] = `
         "reduceMotionV": "system",
       }
     }
-    nativeID="14"
   >
     <View
       style={
@@ -2387,7 +2447,7 @@ exports[`Request should render with loaded props 1`] = `
       </View>
     </View>
   </View>
-</View>
+</BlurTargetView>
 `;
 
 exports[`Request should render with loading props 1`] = `

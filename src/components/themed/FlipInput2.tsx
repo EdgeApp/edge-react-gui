@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { useMemo } from 'react'
 import {
-  Platform,
   type ReturnKeyType,
+  StyleSheet,
+  Text,
   TextInput,
   type TextInputProps,
   View
@@ -231,7 +232,7 @@ export const FlipInput2 = React.forwardRef<FlipInputRef, Props>(
               disableAnimation={disableAnimation}
               focusAnimation={focusAnimation}
             >
-              {' ' + currencyName}
+              {currencyName}
             </CurrencySymbolAnimatedText>
           ) : null}
         </BottomContainerView>
@@ -436,6 +437,8 @@ const TopAmountText = styled(UnscaledText)(theme => () => [
   }
 ])
 
+const sizerStyle = { opacity: 0 } as const
+
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 const AmountAnimatedNumericInput = React.forwardRef<
@@ -474,27 +477,38 @@ const AmountAnimatedNumericInput = React.forwardRef<
     includeFontPadding: false,
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
-    padding: 0,
-
-    // Android has more space added to the width of the input
-    // after the last character in the input. It seems to be
-    // setting a min-width to the input to roughly 2 characters in size.
-    // We can compensate for this with a negative margin when the character length
-    // is less then 2 characters.
-    marginRight:
-      Platform.OS === 'android'
-        ? -theme.rem(Math.max(0, 2 - numericProps.value.length) * 0.4)
-        : 0
+    padding: 0
   }
 
+  // The input's own width is measured one edit behind its contents, so a
+  // value that grows by more than one character at once - like 123 becoming
+  // 1,234, which also gains a separator - ends up wider than its box and the
+  // leading digits are clipped. Size the box with a matching Text instead,
+  // which measures in the same pass as the value it draws.
   return (
-    <AnimatedTextInput
-      allowFontScaling={false}
-      ref={ref}
-      style={[style, animatedStyle]}
-      {...rest}
-      {...numericProps}
-    />
+    <View>
+      <Text
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        allowFontScaling={false}
+        numberOfLines={1}
+        style={[style, sizerStyle]}
+      >
+        {/* One character of slack: the field echoes a keystroke a frame
+            before this text has re-measured, and without the slack the
+            text scrolls for that frame and the leading digits jump. It
+            also absorbs rejected keystrokes, which never widen the box. */}
+        {numericProps.value + '0'}
+      </Text>
+      <AnimatedTextInput
+        allowFontScaling={false}
+        ref={ref}
+        style={[style, animatedStyle, StyleSheet.absoluteFill]}
+        {...rest}
+        {...numericProps}
+      />
+    </View>
   )
 })
 

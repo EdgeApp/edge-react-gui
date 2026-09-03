@@ -189,7 +189,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.confirmationThumbDeactivated
   },
   progress: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: theme.confirmationSlider,
     borderRadius: theme.confirmationSliderThumbWidth / 2
   },

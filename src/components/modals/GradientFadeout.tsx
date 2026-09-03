@@ -1,24 +1,28 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
+import type { GradientColors } from '../../types/Theme'
 import { type Theme, useTheme } from '../services/ThemeContext'
 
-const MARKS: number[] = [0, 0.2, 0.75, 1]
+const MARKS = [0, 0.2, 0.75, 1] as const
 const START = { x: 0, y: 0 }
 const END = { x: 0, y: 1 }
 
 /*
  * Used for adding a gradient fadeout to the bottom of a list modal
  */
-export const GradientFadeOut = () => {
+export const GradientFadeOut = (): React.ReactElement => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const color = theme.modal
-  const colors: string[] = React.useMemo(() => {
-    return MARKS.map(
-      mark => color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2)
-    )
+  // Written out rather than mapped so the colors stay a fixed-length tuple:
+  // `LinearGradient` wants at least two stops, and as many colors as marks.
+  const colors = React.useMemo((): GradientColors => {
+    const fade = (mark: number): string =>
+      color + `0${Math.floor(255 * mark).toString(16)}`.slice(-2)
+    const [first, second, third, fourth] = MARKS
+    return [fade(first), fade(second), fade(third), fade(fourth)]
   }, [color])
   return (
     <LinearGradient

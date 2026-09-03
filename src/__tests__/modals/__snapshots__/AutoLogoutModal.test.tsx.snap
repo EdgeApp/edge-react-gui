@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
 [
@@ -102,7 +102,6 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -806,21 +805,20 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             }
           }
         >
-          <BVLinearGradient
+          <ExpoLinearGradient
             colors={
               [
-                4280299823,
-                4278214733,
+                "#20312f",
+                "#00604d",
               ]
             }
-            endPoint={
+            end={
               {
                 "x": 1,
                 "y": 0,
               }
             }
-            locations={null}
-            startPoint={
+            start={
               {
                 "x": 0,
                 "y": 0,

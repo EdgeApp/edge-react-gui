@@ -3,6 +3,7 @@
  * edge-login-ui-rn!
  */
 
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   ActivityIndicator,
@@ -12,7 +13,6 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
@@ -231,7 +231,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   const pillBackground: ViewStyle = {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.rem(theme.buttonBorderRadiusRem)
   }
 
@@ -282,7 +282,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontSize: theme.rem(theme.escapeButtonFontSizeRem)
     },
     spinnerOverlay: {
-      ...StyleSheet.absoluteFillObject,
+      ...StyleSheet.absoluteFill,
       alignItems: 'center',
       justifyContent: 'center'
     }

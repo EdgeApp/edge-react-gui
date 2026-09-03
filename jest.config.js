@@ -8,7 +8,10 @@ module.exports = {
     // We want the Node.js version of edge-core-js, not the RN one:
     'edge-core-js': require.resolve('edge-core-js')
   },
-  preset: 'react-native',
+  preset: '@react-native/jest-preset',
+  // Custom resolver: worklets -> non-native build (reanimated 4 jest crash), and
+  // msw -> node export conditions (the RN preset's react-native condition nulls them).
+  resolver: './scripts/jestResolver.js',
   setupFilesAfterEnv: ['./jestSetup.js'],
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|zcashname-sdk|@noble/ed25519))'

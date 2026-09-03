@@ -1,6 +1,6 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
   type SharedValue,
@@ -8,20 +8,23 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { useSceneScrollContext } from '../../state/SceneScrollState'
-import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import {
+  ChromeBlurBackground,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { DividerLine } from '../themed/DividerLine'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
 
-export const HeaderBackground = (props: any) => {
+export const HeaderBackground = (props: any): React.JSX.Element => {
   const theme = useTheme()
 
   const scrollY = useSceneScrollContext(state => state.scrollY)
 
   return (
     <HeaderBackgroundContainerView scrollY={scrollY}>
-      <BlurBackgroundNoRoundedCorners />
+      <ChromeBlurBackground />
       <HeaderLinearGradient
         colors={theme.headerBackground}
         start={theme.headerBackgroundStart}
@@ -34,11 +37,12 @@ export const HeaderBackground = (props: any) => {
 
 const HeaderBackgroundContainerView = styled(Animated.View)<{
   scrollY: SharedValue<number>
-}>(() => ({ scrollY }) => [
+}>(theme => ({ scrollY }) => [
   {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'stretch',
     justifyContent: 'flex-end',
+    ...getBlurFallbackStyle(theme),
     opacity: 0
   },
   useAnimatedStyle(() => ({
