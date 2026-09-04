@@ -456,6 +456,14 @@ exports[`TransactionListTop should render (with ENABLE_VISA_PROGRAM) 1`] = `
         $0.00 USD
       </Text>
     </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-end",
+          "marginTop": 6,
+        }
+      }
+    />
   </View>,
   <View
     style={
@@ -1384,6 +1392,14 @@ exports[`TransactionListTop should render 1`] = `
         $0.00 USD
       </Text>
     </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-end",
+          "marginTop": 6,
+        }
+      }
+    />
   </View>,
   <View
     style={

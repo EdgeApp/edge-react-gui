@@ -3,8 +3,10 @@ import { render } from '@testing-library/react-native'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
+import { WalletSharedPill } from '../../components/common/WalletSharedPill'
 import { WalletShareChooserModal } from '../../components/modals/WalletShareChooserModal'
 import { WalletShareConfirmModal } from '../../components/modals/WalletShareConfirmModal'
+import { WalletShareHistoryModal } from '../../components/modals/WalletShareHistoryModal'
 import { WalletShareModeModal } from '../../components/modals/WalletShareModeModal'
 import { WalletShareReceivedModal } from '../../components/modals/WalletShareReceivedModal'
 import { WalletShareSelectModal } from '../../components/modals/WalletShareSelectModal'
@@ -62,7 +64,11 @@ describe('Wallet sharing modals', () => {
   it('chooser renders both directions', () => {
     const rendered = render(
       <FakeProviders>
-        <WalletShareChooserModal bridge={fakeAirshipBridge} />
+        <WalletShareChooserModal
+          bridge={fakeAirshipBridge}
+          nickname="Alice"
+          onEditNickname={() => {}}
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -96,7 +102,10 @@ describe('Wallet sharing modals', () => {
   it('select modal lists mainnet wallets', () => {
     const rendered = render(
       <FakeProviders initialState={fakeState}>
-        <WalletShareSelectModal bridge={fakeAirshipBridge} />
+        <WalletShareSelectModal
+          bridge={fakeAirshipBridge}
+          counterpartyName="Bob"
+        />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
@@ -126,12 +135,78 @@ describe('Wallet sharing modals', () => {
             { walletId: walletA.id, mode: 'viewOnly' },
             { walletId: walletB.id, mode: 'spend' }
           ]}
+          counterpartyName="Bob"
           onConfirm={async () => {}}
         />
       </FakeProviders>
     )
     expect(rendered.toJSON()).toMatchSnapshot()
     rendered.unmount()
+  })
+
+  it('history modal interleaves both directions by date', () => {
+    const rendered = render(
+      <FakeProviders initialState={fakeState}>
+        <WalletShareHistoryModal
+          bridge={fakeAirshipBridge}
+          sharingState={{
+            sharedWith: [
+              {
+                name: 'Bob',
+                shareType: 'viewOnly',
+                sharingDate: '2026-09-02T10:00:00.000Z'
+              }
+            ],
+            sharedFrom: [
+              {
+                name: 'Carol',
+                shareType: 'spend',
+                sharingDate: '2026-09-01T10:00:00.000Z'
+              }
+            ]
+          }}
+        />
+      </FakeProviders>
+    )
+    const text = JSON.stringify(rendered.toJSON())
+    // Oldest first, whichever list it came from:
+    expect(text.indexOf('2026-09-01')).toBeLessThan(text.indexOf('2026-09-02'))
+    expect(text).toContain('Carol')
+    expect(text).toContain('Bob')
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
+  })
+
+  it('shared pill only renders for a shared wallet', () => {
+    const plain = render(
+      <FakeProviders initialState={fakeState}>
+        <WalletSharedPill wallet={walletA} />
+      </FakeProviders>
+    )
+    expect(plain.toJSON()).toEqual(null)
+    plain.unmount()
+
+    const shared = render(
+      <FakeProviders initialState={fakeState}>
+        <WalletSharedPill
+          wallet={makeWallet('wallet-e', 'Shared one', {
+            sharingState: {
+              sharedWith: [
+                {
+                  name: 'Bob',
+                  shareType: 'spend',
+                  sharingDate: '2026-09-01T10:00:00.000Z'
+                }
+              ],
+              sharedFrom: []
+            }
+          } as any)}
+        />
+      </FakeProviders>
+    )
+    expect(JSON.stringify(shared.toJSON())).toContain('Shared')
+    expect(shared.toJSON()).toMatchSnapshot()
+    shared.unmount()
   })
 
   it('received modal lists what arrived', () => {
@@ -143,6 +218,7 @@ describe('Wallet sharing modals', () => {
             { wallet: walletA, mode: 'viewOnly' },
             { wallet: walletB, mode: 'spend' }
           ]}
+          counterpartyName="Alice"
         />
       </FakeProviders>
     )

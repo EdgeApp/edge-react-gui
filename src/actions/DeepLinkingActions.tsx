@@ -191,11 +191,11 @@ async function handleLink(
       break
 
     case 'walletShareRequest':
-      await shareWalletsToLobby(account, link.lobbyId)
+      await shareWalletsToLobby(account, link.lobbyId, link.displayName)
       break
 
     case 'walletShareOffer':
-      await acceptOfferedWallets(account, link.lobbyId)
+      await acceptOfferedWallets(account, link.lobbyId, link.displayName)
       break
 
     case 'plugin': {

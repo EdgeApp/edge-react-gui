@@ -286,6 +286,75 @@ exports[`Wallet sharing modals chooser renders both directions 1`] = `
       </View>
     </View>
     <View
+      style={
+        {
+          "alignItems": "center",
+          "marginBottom": 11,
+        }
+      }
+    >
+      <View
+        accessibilityHint="Choose a nickname to use when sharing wallets"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "opacity": 1,
+          }
+        }
+        testID="walletShareNickname"
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "color": "#00f1a2",
+                "fontFamily": "Quicksand-Medium",
+              },
+              null,
+            ]
+          }
+        >
+          Alice
+        </Text>
+      </View>
+    </View>
+    <View
       accessibilityState={
         {
           "busy": undefined,
@@ -796,31 +865,47 @@ exports[`Wallet sharing modals confirm modal shows each mode 1`] = `
         }
       }
     >
-      <Text
-        adjustsFontSizeToFit={true}
-        allowFontScaling={false}
-        minimumFontScale={0.65}
-        numberOfLines={2}
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
-            },
-            null,
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "marginHorizontal": 11,
+          }
         }
       >
-        Confirm wallet sharing
-      </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+              {
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
+              },
+              null,
+            ]
+          }
+        >
+          Confirm wallet sharing with 
+          <Text
+            style={
+              {
+                "fontFamily": "Quicksand-Bold",
+              }
+            }
+          >
+            Bob
+          </Text>
+        </Text>
+      </View>
       <View
         accessibilityState={
           {
@@ -851,17 +936,17 @@ exports[`Wallet sharing modals confirm modal shows each mode 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignItems": "flex-end",
-            "alignSelf": "flex-start",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
             "marginBottom": -17,
             "marginRight": -22,
             "marginTop": -22,
             "opacity": 1,
             "paddingBottom": 17,
+            "paddingLeft": 22,
             "paddingRight": 28,
-            "paddingTop": 26,
+            "paddingTop": 22,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
           }
         }
         testID="modal-close-button"
@@ -1703,6 +1788,687 @@ exports[`Wallet sharing modals confirm modal shows each mode 1`] = `
                 Cancel
               </Text>
             </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>,
+]
+`;
+
+exports[`Wallet sharing modals history modal interleaves both directions by date 1`] = `
+[
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+        },
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+      ]
+    }
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      [
+        {
+          "backgroundColor": "#000000",
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "opacity": 0,
+        },
+      ]
+    }
+  />,
+  <View
+    collapsable={false}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+    nativeID="19"
+    style={
+      [
+        {
+          "alignSelf": "flex-end",
+          "backgroundColor": "rgba(255, 255, 255, .37)",
+          "borderTopLeftRadius": 22,
+          "borderTopRightRadius": 22,
+          "flexShrink": 1,
+          "overflow": "hidden",
+          "paddingLeft": 11,
+          "paddingRight": 11,
+          "width": 674,
+        },
+        {
+          "transform": [
+            {
+              "translateY": 1334,
+            },
+          ],
+        },
+        {
+          "borderColor": "rgba(255, 255, 255, 0)",
+          "borderWidth": 0,
+          "marginBottom": -86,
+          "paddingBottom": 97,
+          "paddingTop": 0,
+        },
+      ]
+    }
+  >
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
+      style={
+        [
+          {
+            "backgroundColor": undefined,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "borderRadius": 16,
+          },
+        ]
+      }
+    />
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "hsla(0, 0%, 53%, 0.3)",
+            "borderRadius": 3,
+            "height": 6,
+            "marginTop": 6,
+            "width": 67,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flexDirection": "row",
+          "marginBottom": 11,
+          "marginTop": 28,
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        allowFontScaling={false}
+        minimumFontScale={0.65}
+        numberOfLines={2}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 27,
+              "marginHorizontal": 11,
+            },
+            null,
+          ]
+        }
+      >
+        Wallet sharing history
+      </Text>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "flex-end",
+            "alignSelf": "flex-start",
+            "flexGrow": 1,
+            "justifyContent": "flex-start",
+            "marginBottom": -17,
+            "marginRight": -22,
+            "marginTop": -22,
+            "opacity": 1,
+            "paddingBottom": 17,
+            "paddingRight": 28,
+            "paddingTop": 26,
+          }
+        }
+        testID="modal-close-button"
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={false}
+          selectable={false}
+          style={
+            [
+              {
+                "color": undefined,
+                "fontSize": 12,
+              },
+              [
+                {
+                  "color": "#888888",
+                  "fontSize": 28,
+                },
+                undefined,
+              ],
+              {
+                "fontFamily": "anticon",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+    </View>
+    <RCTScrollView>
+      <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "rgba(255, 255, 255, .1)",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingVertical": 11,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "flexShrink": 1,
+                "marginRight": 11,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#3dd9f4",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
+              }
+            >
+              2026-09-01
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 20,
+                  },
+                  null,
+                ]
+              }
+            >
+              Shared by 
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "fontFamily": "Quicksand-Bold",
+                    },
+                    null,
+                  ]
+                }
+              >
+                Carol
+              </Text>
+            </Text>
+          </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            selectable={false}
+            style={
+              [
+                {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                [
+                  {
+                    "color": "#F1AA19",
+                    "fontSize": 28,
+                  },
+                  undefined,
+                ],
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomColor": "rgba(255, 255, 255, .1)",
+              "borderBottomWidth": 1,
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "paddingVertical": 11,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "flexShrink": 1,
+                "marginRight": 11,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#3dd9f4",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
+              }
+            >
+              2026-09-02
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={2}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "fontSize": 20,
+                  },
+                  null,
+                ]
+              }
+            >
+              Shared with 
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                numberOfLines={1}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "fontFamily": "Quicksand-Bold",
+                    },
+                    null,
+                  ]
+                }
+              >
+                Bob
+              </Text>
+            </Text>
+          </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            selectable={false}
+            style={
+              [
+                {
+                  "color": undefined,
+                  "fontSize": 12,
+                },
+                [
+                  {
+                    "color": "#3dd9f4",
+                    "fontSize": 28,
+                  },
+                  undefined,
+                ],
+                {
+                  "fontFamily": "Ionicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+    </RCTScrollView>
+    <View
+      absolute={false}
+      layout="column"
+      parentType="modal"
+      style={
+        {
+          "alignItems": "stretch",
+          "alignSelf": "center",
+          "flexDirection": "column",
+          "margin": 11,
+          "marginBottom": 22,
+          "marginTop": 45,
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "stretch",
+              "alignSelf": "stretch",
+              "flexBasis": "auto",
+              "flexGrow": 0,
+              "flexShrink": 0,
+              "padding": undefined,
+            },
+            {
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 0,
+            },
+          ]
+        }
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={11}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "alignSelf": "stretch",
+              "borderRadius": 34,
+              "height": 67,
+              "justifyContent": "center",
+              "opacity": 1,
+              "overflow": "visible",
+              "paddingHorizontal": 34,
+              "paddingVertical": 0,
+              "position": "relative",
+            }
+          }
+        >
+          <BVLinearGradient
+            colors={
+              [
+                4280299823,
+                4278214733,
+              ]
+            }
+            endPoint={
+              {
+                "x": 1,
+                "y": 0,
+              }
+            }
+            locations={null}
+            startPoint={
+              {
+                "x": 0,
+                "y": 0,
+              }
+            }
+            style={
+              {
+                "borderRadius": 34,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              }
+            }
+          />
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "opacity": 1,
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  [
+                    {
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Medium",
+                      "fontSize": 22,
+                    },
+                    null,
+                  ],
+                  null,
+                ]
+              }
+            >
+              OK
+            </Text>
           </View>
         </View>
       </View>
@@ -3320,7 +4086,7 @@ exports[`Wallet sharing modals received modal lists what arrived 1`] = `
         },
       ]
     }
-    nativeID="19"
+    nativeID="21"
     style={
       [
         {
@@ -3403,31 +4169,47 @@ exports[`Wallet sharing modals received modal lists what arrived 1`] = `
         }
       }
     >
-      <Text
-        adjustsFontSizeToFit={true}
-        allowFontScaling={false}
-        minimumFontScale={0.65}
-        numberOfLines={2}
+      <View
         style={
-          [
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Quicksand-Regular",
-              "fontSize": 22,
-              "includeFontPadding": false,
-            },
-            {
-              "flexShrink": 1,
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 27,
-              "marginHorizontal": 11,
-            },
-            null,
-          ]
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "marginHorizontal": 11,
+          }
         }
       >
-        You have received access to the following wallets
-      </Text>
+        <Text
+          allowFontScaling={false}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+              {
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
+              },
+              null,
+            ]
+          }
+        >
+          You have received access to the following wallets from 
+          <Text
+            style={
+              {
+                "fontFamily": "Quicksand-Bold",
+              }
+            }
+          >
+            Alice
+          </Text>
+        </Text>
+      </View>
       <View
         accessibilityState={
           {
@@ -3458,17 +4240,17 @@ exports[`Wallet sharing modals received modal lists what arrived 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           {
-            "alignItems": "flex-end",
-            "alignSelf": "flex-start",
-            "flexGrow": 1,
-            "justifyContent": "flex-start",
             "marginBottom": -17,
             "marginRight": -22,
             "marginTop": -22,
             "opacity": 1,
             "paddingBottom": 17,
+            "paddingLeft": 22,
             "paddingRight": 28,
-            "paddingTop": 26,
+            "paddingTop": 22,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
           }
         }
         testID="modal-close-button"
@@ -4211,7 +4993,16 @@ exports[`Wallet sharing modals select modal lists mainnet wallets 1`] = `
               ]
             }
           >
-            Select wallets to share
+            Select wallets to share with 
+            <Text
+              style={
+                {
+                  "fontFamily": "Quicksand-Bold",
+                }
+              }
+            >
+              Bob
+            </Text>
           </Text>
         </View>
         <View
@@ -6316,6 +7107,81 @@ exports[`Wallet sharing modals select row swaps the icon for a checkmark when se
         </Text>
       </View>
     </View>
+  </View>
+</View>
+`;
+
+exports[`Wallet sharing modals shared pill only renders for a shared wallet 1`] = `
+<View
+  accessibilityHint="Wallet sharing history"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "opacity": 1,
+    }
+  }
+  testID="walletSharedPill"
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#F1AA19",
+        "borderRadius": 11,
+        "paddingHorizontal": 11,
+        "paddingVertical": 3,
+      }
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      allowFontScaling={false}
+      minimumFontScale={0.65}
+      numberOfLines={1}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Medium",
+            "fontSize": 13,
+          },
+          null,
+        ]
+      }
+    >
+      Shared
+    </Text>
   </View>
 </View>
 `;

@@ -3053,7 +3053,7 @@
       "get": {
         "operationId": "localSettings",
         "summary": "Local settings.",
-        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings), reached through account.localDisklet._\n\n**Command line**\n\n```\nlocal-settings\n```\n\nDevice-local account settings, stored in `Settings.json` on `account.localDisklet`. They are not synced — a phone and a CLI keep separate copies unless they share an Edge data directory.",
+        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings), reached through account.localDisklet._\n\n**Command line**\n\n```\nlocal-settings\n```\n\nDevice-local account settings, stored in `Settings.json` on `account.localDisklet`. They are not synced — a phone and a CLI keep separate copies unless they share an Edge data directory.\n\nSettings differ in whether anything acts on them. `spamFilterOn` is read by `get-transactions`; `nickname` is inert, stored and returned and nothing more. In particular it is not wired to the wallet-share commands, which name themselves through `--display-name` on the call.",
         "tags": [
           "Local settings"
         ],
@@ -3089,10 +3089,15 @@
                     "spamFilterOn": {
                       "type": "boolean",
                       "description": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.\n\nNothing here reads it. The wallet-share commands take their name from `--display-name` on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior."
                     }
                   },
                   "required": [
-                    "spamFilterOn"
+                    "spamFilterOn",
+                    "nickname"
                   ]
                 }
               }
@@ -3115,7 +3120,7 @@
       "post": {
         "operationId": "changeLocalSettings",
         "summary": "Change local settings.",
-        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings)._\n\n**Command line**\n\n```\nlocal-settings --spam-filter-on=true|false\n```\n\nWrites device-local account settings. Every option is a field on the body; `spamFilterOn` is the only one today, and new options are added alongside it.",
+        "description": "**Core call:** _none — GUI code (src/util/localAccountSettings)._\n\n**Command line**\n\n```\nlocal-settings [--spam-filter-on] [--nickname=<nickname>]\n```\n\nWrites device-local account settings. Every option is a field on the body, and only the fields present are written.",
         "tags": [
           "Local settings"
         ],
@@ -3152,17 +3157,22 @@
                     "spamFilterOn": {
                       "type": "boolean",
                       "description": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+                    },
+                    "nickname": {
+                      "type": "string",
+                      "description": "A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.\n\nNothing here reads it. The wallet-share commands take their name from `--display-name` on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior."
                     }
                   },
                   "required": [
-                    "spamFilterOn"
+                    "spamFilterOn",
+                    "nickname"
                   ]
                 }
               }
             }
           },
           "default": {
-            "description": "Error.",
+            "description": "BAD_REQUEST",
             "content": {
               "application/json": {
                 "schema": {
@@ -3182,11 +3192,12 @@
                   "spamFilterOn": {
                     "type": "boolean",
                     "description": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+                  },
+                  "nickname": {
+                    "type": "string",
+                    "description": "A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.\n\nNothing here reads it. The wallet-share commands take their name from `--display-name` on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior."
                   }
-                },
-                "required": [
-                  "spamFilterOn"
-                ]
+                }
               }
             }
           }
@@ -4712,7 +4723,7 @@
                 "properties": {
                   "displayName": {
                     "type": "string",
-                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server."
+                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.\n\nSupply it on every call. It is never filled in from `local-settings`, whose `nickname` is a stored value this command does not read."
                   },
                   "timeout": {
                     "type": "number",
@@ -4891,7 +4902,7 @@
                   },
                   "displayName": {
                     "type": "string",
-                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server."
+                    "description": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.\n\nSupply it on every call. It is never filled in from `local-settings`, whose `nickname` is a stored value this command does not read."
                   },
                   "timeout": {
                     "type": "number",

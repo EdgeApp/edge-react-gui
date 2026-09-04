@@ -3778,7 +3778,9 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <table class="fields"><tbody><tr>
   <td class="k"><code>displayName</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.</td>
+  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.
+
+Supply it on every call. It is never filled in from <code>local-settings</code>, whose <code>nickname</code> is a stored value this command does not read.</td>
 </tr>
 <tr>
   <td class="k"><code>timeout</code></td>
@@ -3933,7 +3935,9 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>displayName</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.</td>
+  <td class="doc">A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the <code>name</code> parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.
+
+Supply it on every call. It is never filled in from <code>local-settings</code>, whose <code>nickname</code> is a stored value this command does not read.</td>
 </tr>
 <tr>
   <td class="k"><code>timeout</code></td>
@@ -7755,6 +7759,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     </header>
     <p class="core none"><span class="lbl">core</span><em>GUI code (src/util/localAccountSettings), reached through account.localDisklet.</em></p>
     <div class="desc"><p>Device-local account settings, stored in <code>Settings.json</code> on <code>account.localDisklet</code>. They are not synced — a phone and a CLI keep separate copies unless they share an Edge data directory.</p>
+<p>Settings differ in whether anything acts on them. <code>spamFilterOn</code> is read by <code>get-transactions</code>; <code>nickname</code> is inert, stored and returned and nothing more. In particular it is not wired to the wallet-share commands, which name themselves through <code>--display-name</code> on the call.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
@@ -7778,14 +7783,23 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{
   spamFilterOn: boolean
+  nickname: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
-  &quot;spamFilterOn&quot;: true
+  &quot;spamFilterOn&quot;: true,
+  &quot;nickname&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>spamFilterOn</code></td>
   <td class="ty"><span class="t">boolean</span></td>
   <td class="doc">Hide spam transactions in <code>get-transactions</code> results. Defaults to <code>true</code>, matching the GUI. The filter hides rows; it never changes stored metadata.</td>
+</tr>
+<tr>
+  <td class="k"><code>nickname</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.
+
+Nothing here reads it. The wallet-share commands take their name from <code>--display-name</code> on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior.</td>
 </tr></tbody></table>
   </div>
     
@@ -7797,11 +7811,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <div class="ids"><code class="cmdname">local-settings</code><span class="src" title="Declared in">src/cli/engine/routes/localSettings.ts</span></div>
     </header>
     <p class="core none"><span class="lbl">core</span><em>GUI code (src/util/localAccountSettings).</em></p>
-    <div class="desc"><p>Writes device-local account settings. Every option is a field on the body; <code>spamFilterOn</code> is the only one today, and new options are added alongside it.</p>
+    <div class="desc"><p>Writes device-local account settings. Every option is a field on the body, and only the fields present are written.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>local-settings --spam-filter-on=true|false</code></pre>
+    <pre class="usage"><code>local-settings [--spam-filter-on] [--nickname=&lt;nickname&gt;]</code></pre>
     
     <div class="note"><p>With no flag the command reads; with one it writes.</p>
 </div>
@@ -7814,22 +7828,31 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
-  spamFilterOn: boolean
+  spamFilterOn?: boolean
+  nickname?: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
-  &quot;spamFilterOn&quot;: true
+  &quot;spamFilterOn&quot;: true,
+  &quot;nickname&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>spamFilterOn</code></td>
-  <td class="ty"><span class="t">boolean</span></td>
+  <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
   <td class="doc">Hide spam transactions in <code>get-transactions</code> results. Defaults to <code>true</code>, matching the GUI. The filter hides rows; it never changes stored metadata.</td>
+</tr>
+<tr>
+  <td class="k"><code>nickname</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.
+
+Nothing here reads it. The wallet-share commands take their name from <code>--display-name</code> on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior.</td>
 </tr></tbody></table>
   </div>
     <h5>Example</h5>
     <pre class="ex"><code>curl --unix-socket &quot;$SOCK&quot; \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{&quot;spamFilterOn&quot;:true}' \
+  -d '{&quot;spamFilterOn&quot;:true,&quot;nickname&quot;:&quot;string&quot;}' \
   'http://localhost/account/$SESS/change-local-settings'</code></pre>
   </div></div>
     <div class="pane resp">
@@ -7838,19 +7861,28 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{
   spamFilterOn: boolean
+  nickname: string
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
-  &quot;spamFilterOn&quot;: true
+  &quot;spamFilterOn&quot;: true,
+  &quot;nickname&quot;: &quot;string&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>spamFilterOn</code></td>
   <td class="ty"><span class="t">boolean</span></td>
   <td class="doc">Hide spam transactions in <code>get-transactions</code> results. Defaults to <code>true</code>, matching the GUI. The filter hides rows; it never changes stored metadata.</td>
+</tr>
+<tr>
+  <td class="k"><code>nickname</code></td>
+  <td class="ty"><span class="t">string</span></td>
+  <td class="doc">A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.
+
+Nothing here reads it. The wallet-share commands take their name from <code>--display-name</code> on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior.</td>
 </tr></tbody></table>
   </div>
-    
+    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>Omitting a field is a <code>400</code>, not a no-op, so a caller cannot clear a setting by accident.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>A body naming no setting at all is a <code>400</code>, so a typo&#39;d flag fails loudly rather than reporting success while changing nothing.</li></ul></div>
   </section><h2 id="rates">Exchange rates</h2>
       <div class="groupdoc"><p>Fiat and crypto pricing, current and historical.</p>
 </div>

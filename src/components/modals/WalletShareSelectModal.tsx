@@ -13,6 +13,7 @@ import { SearchIconAnimated } from '../icons/ThemedIcons'
 import { WalletShareSelectRow } from '../rows/WalletShareSelectRow'
 import { searchWalletList } from '../services/SortedWalletList'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { SharePartyText } from '../text/SharePartyText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SimpleTextInput } from '../themed/SimpleTextInput'
 import { EdgeModal } from './EdgeModal'
@@ -20,6 +21,8 @@ import { EdgeModal } from './EdgeModal'
 interface Props {
   /** Resolves to the chosen wallets in list order, or undefined on cancel. */
   bridge: AirshipBridge<EdgeCurrencyWallet[] | undefined>
+  /** Who the wallets are going to, '' when they gave no name. */
+  counterpartyName: string
 }
 
 /**
@@ -27,7 +30,7 @@ interface Props {
  * rows are dropped and one row means one wallet.
  */
 export const WalletShareSelectModal: React.FC<Props> = props => {
-  const { bridge } = props
+  const { bridge, counterpartyName } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -87,7 +90,13 @@ export const WalletShareSelectModal: React.FC<Props> = props => {
       bridge={bridge}
       title={
         <View style={styles.header}>
-          <ModalTitle>{lstrings.wallet_share_select_title}</ModalTitle>
+          <ModalTitle>
+            <SharePartyText
+              template={lstrings.wallet_share_select_title_1s}
+              name={counterpartyName}
+              fallbackTemplate={lstrings.wallet_share_select_title}
+            />
+          </ModalTitle>
           <SimpleTextInput
             aroundRem={0.5}
             returnKeyType="search"

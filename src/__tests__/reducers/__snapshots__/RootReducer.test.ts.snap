@@ -121,6 +121,7 @@ exports[`initialState 1`] = `
       "isAccountBalanceVisible": true,
       "isNymWarningShown": false,
       "mostRecentWallets": [],
+      "nickname": "",
       "notifState": {},
       "passwordRecoveryRemindersShown": {
         "20": false,

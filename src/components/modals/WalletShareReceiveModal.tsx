@@ -6,21 +6,30 @@ import type { AirshipBridge } from 'react-native-airship'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { Paragraph } from '../themed/EdgeText'
+import { SharePartyText } from '../text/SharePartyText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { ModalTitle } from '../themed/ModalParts'
 import { QrCode } from '../themed/QrCode'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
-  /** Resolves to the received wallet ids, or undefined if nothing arrived. */
-  bridge: AirshipBridge<string[] | undefined>
+  /**
+   * Resolves to the received wallet ids, `editNickname` to rename and start
+   * over, or undefined if nothing arrived.
+   */
+  bridge: AirshipBridge<string[] | 'editNickname' | undefined>
   pending: EdgePendingWalletShare
   /**
    * Show the lobby link as a QR while waiting. False for the accept-offer
    * flow, where the other side already has the link and we only wait.
    */
   showQr?: boolean
+  /** The name this device is receiving under, shown so it can be fixed. */
+  nickname: string
+  onEditNickname: () => void
 }
 
 /**
@@ -28,7 +37,7 @@ interface Props {
  * sharer picks it up, then a spinner until the keys land.
  */
 export const WalletShareReceiveModal: React.FC<Props> = props => {
-  const { bridge, pending, showQr = true } = props
+  const { bridge, pending, showQr = true, nickname, onEditNickname } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -66,7 +75,15 @@ export const WalletShareReceiveModal: React.FC<Props> = props => {
   return (
     <EdgeModal
       bridge={bridge}
-      title={lstrings.wallet_share_receive_title}
+      title={
+        <ModalTitle>
+          <SharePartyText
+            template={lstrings.wallet_share_receive_title_1s}
+            name={nickname}
+            fallbackTemplate={lstrings.wallet_share_receive_title}
+          />
+        </ModalTitle>
+      }
       onCancel={handleCancel}
     >
       {waiting ? (
@@ -78,6 +95,15 @@ export const WalletShareReceiveModal: React.FC<Props> = props => {
         <>
           <View style={styles.qrContainer}>
             <QrCode data={pending.uri} marginRem={0.5} />
+          </View>
+          <View style={styles.nicknameContainer}>
+            <EdgeTouchableOpacity
+              accessibilityHint={lstrings.wallet_share_nickname_title}
+              onPress={onEditNickname}
+              testID="walletShareReceiveNickname"
+            >
+              <EdgeText style={styles.nickname}>{nickname}</EdgeText>
+            </EdgeTouchableOpacity>
           </View>
           <Paragraph center>
             {lstrings.wallet_share_receive_instructions}
@@ -99,5 +125,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(16),
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  nicknameContainer: {
+    alignItems: 'center',
+    marginBottom: theme.rem(0.5)
+  },
+  nickname: {
+    color: theme.textLink,
+    fontFamily: theme.fontFaceMedium
   }
 }))

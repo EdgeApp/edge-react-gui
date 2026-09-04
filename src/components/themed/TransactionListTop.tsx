@@ -72,6 +72,7 @@ import { VisaCardCard } from '../cards/VisaCardCard'
 import { ZcashMigrationCard } from '../cards/ZcashMigrationCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { WalletSharedPill } from '../common/WalletSharedPill'
 import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -572,6 +573,9 @@ export const TransactionListTop: React.FC<Props> = props => {
               defaultFiat}
           </EdgeText>
         </EdgeTouchableOpacity>
+        <View style={styles.sharedPillContainer}>
+          <WalletSharedPill wallet={wallet} />
+        </View>
       </>
     )
   }
@@ -972,6 +976,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     // Whitespace adjustments:
     marginRight: -theme.rem(0.75)
   },
+  sharedPillContainer: {
+    // Sits in the card's bottom-right corner, above the Receive/Send row:
+    alignItems: 'flex-end',
+    marginTop: theme.rem(0.25)
+  },
+
   // Send/Receive/Earn/Trade Buttons
   buttonsContainer: {
     flexShrink: 1,

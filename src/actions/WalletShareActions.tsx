@@ -29,23 +29,55 @@ import {
 } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
 import { parseDeepLink } from '../util/DeepLinkParser'
+import {
+  editWalletShareNickname,
+  ensureWalletShareNickname
+} from './WalletShareNickname'
 
 /**
- * Entry point from the wallet list header: pick a side, then run it.
+ * Entry point from the wallet list header: name this device, pick a side,
+ * then run it.
+ *
+ * The nickname is asked for once and remembered, so the chooser is the first
+ * thing a returning user sees.
  */
 export async function startWalletShare(account: EdgeAccount): Promise<void> {
-  const choice = await Airship.show<WalletShareChoice | undefined>(bridge => (
-    <WalletShareChooserModal bridge={bridge} />
-  ))
-  if (choice === 'share') await scanForWalletShare(account)
-  else if (choice === 'receive') await receiveSharedWallets(account)
+  let nickname: string | undefined = await ensureWalletShareNickname(account)
+  if (nickname == null) return
+
+  // The chooser doubles as the place to correct the name, so it loops until
+  // the user picks a direction or backs out:
+  while (true) {
+    const name: string = nickname
+    const choice = await Airship.show<
+      WalletShareChoice | 'editNickname' | undefined
+    >(bridge => (
+      <WalletShareChooserModal
+        bridge={bridge}
+        nickname={name}
+        onEditNickname={() => {
+          bridge.resolve('editNickname')
+        }}
+      />
+    ))
+    if (choice === 'editNickname') {
+      nickname = (await editWalletShareNickname(account, name)) ?? name
+      continue
+    }
+    if (choice === 'share') await scanForWalletShare(account, name)
+    else if (choice === 'receive') await receiveSharedWallets(account)
+    return
+  }
 }
 
 /**
  * The sharer scans the recipient's QR. Anything that parses as a share link
  * is routed the same way the side-menu scanner would route it.
  */
-async function scanForWalletShare(account: EdgeAccount): Promise<void> {
+async function scanForWalletShare(
+  account: EdgeAccount,
+  nickname: string
+): Promise<void> {
   const result = await Airship.show<string | undefined>(bridge => (
     <ScanModal
       bridge={bridge}
@@ -65,9 +97,9 @@ async function scanForWalletShare(account: EdgeAccount): Promise<void> {
     return
   }
   if (link.type === 'walletShareRequest') {
-    await shareWalletsToLobby(account, link.lobbyId)
+    await shareWalletsToLobby(account, link.lobbyId, link.displayName, nickname)
   } else if (link.type === 'walletShareOffer') {
-    await acceptOfferedWallets(account, link.lobbyId)
+    await acceptOfferedWallets(account, link.lobbyId, link.displayName)
   } else {
     showError(lstrings.wallet_share_invalid_link)
   }
@@ -79,10 +111,22 @@ async function scanForWalletShare(account: EdgeAccount): Promise<void> {
  */
 export async function shareWalletsToLobby(
   account: EdgeAccount,
-  lobbyId: string
+  lobbyId: string,
+  counterpartyName: string = '',
+  ownNickname?: string
 ): Promise<void> {
+  // A share link opened from outside the share flow still needs a name to
+  // send, so ask here when the caller had no chance to:
+  const nickname = ownNickname ?? (await ensureWalletShareNickname(account))
+  if (nickname == null) return
+
   const wallets = await Airship.show<EdgeCurrencyWallet[] | undefined>(
-    bridge => <WalletShareSelectModal bridge={bridge} />
+    bridge => (
+      <WalletShareSelectModal
+        bridge={bridge}
+        counterpartyName={counterpartyName}
+      />
+    )
   )
   if (wallets == null || wallets.length === 0) return
 
@@ -96,8 +140,12 @@ export async function shareWalletsToLobby(
       bridge={bridge}
       wallets={wallets}
       specs={specs}
+      counterpartyName={counterpartyName}
       onConfirm={async () => {
-        await account.approveWalletShare(lobbyId, specs)
+        await account.approveWalletShare(lobbyId, specs, {
+          displayName: nickname,
+          counterpartyName
+        })
       }}
     />
   ))
@@ -112,14 +160,26 @@ export async function shareWalletsToLobby(
 export async function receiveSharedWallets(
   account: EdgeAccount
 ): Promise<void> {
-  let pending: EdgePendingWalletShare
-  try {
-    pending = await account.requestWalletShare()
-  } catch (error: unknown) {
-    showError(error)
-    return
+  let nickname = await ensureWalletShareNickname(account)
+  if (nickname == null) return
+
+  // The name is baked into the QR, so renaming means a fresh lobby:
+  while (true) {
+    let pending: EdgePendingWalletShare
+    try {
+      pending = await account.requestWalletShare({ displayName: nickname })
+    } catch (error: unknown) {
+      showError(error)
+      return
+    }
+    const rename = await awaitPendingShare(account, pending, true, nickname)
+    if (rename == null) return
+
+    await pending.cancelRequest().catch(() => {
+      // The lobby expires on its own; nothing to do if closing it fails.
+    })
+    nickname = (await editWalletShareNickname(account, nickname)) ?? nickname
   }
-  await awaitPendingShare(account, pending, true)
 }
 
 /**
@@ -128,8 +188,12 @@ export async function receiveSharedWallets(
  */
 export async function acceptOfferedWallets(
   account: EdgeAccount,
-  lobbyId: string
+  lobbyId: string,
+  counterpartyName: string = ''
 ): Promise<void> {
+  const nickname = await ensureWalletShareNickname(account)
+  if (nickname == null) return
+
   const answer = await Airship.show<'accept' | undefined>(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -142,12 +206,15 @@ export async function acceptOfferedWallets(
 
   let pending: EdgePendingWalletShare
   try {
-    pending = await account.acceptWalletShare(lobbyId)
+    pending = await account.acceptWalletShare(lobbyId, {
+      displayName: nickname,
+      counterpartyName
+    })
   } catch (error: unknown) {
     showError(error)
     return
   }
-  await awaitPendingShare(account, pending, false)
+  await awaitPendingShare(account, pending, false, nickname)
 }
 
 /**
@@ -156,16 +223,24 @@ export async function acceptOfferedWallets(
 async function awaitPendingShare(
   account: EdgeAccount,
   pending: EdgePendingWalletShare,
-  showQr: boolean
-): Promise<void> {
-  const walletIds = await Airship.show<string[] | undefined>(bridge => (
-    <WalletShareReceiveModal
-      bridge={bridge}
-      pending={pending}
-      showQr={showQr}
-    />
-  ))
-  if (walletIds == null || walletIds.length === 0) return
+  showQr: boolean,
+  nickname: string
+): Promise<'editNickname' | undefined> {
+  const walletIds = await Airship.show<string[] | 'editNickname' | undefined>(
+    bridge => (
+      <WalletShareReceiveModal
+        bridge={bridge}
+        pending={pending}
+        showQr={showQr}
+        nickname={nickname}
+        onEditNickname={() => {
+          bridge.resolve('editNickname')
+        }}
+      />
+    )
+  )
+  if (walletIds === 'editNickname') return 'editNickname'
+  if (walletIds == null || walletIds.length === 0) return undefined
 
   // The keys are attached, but the wallets take a moment to boot. Wait for
   // them so the list can show real names rather than placeholders:
@@ -188,6 +263,11 @@ async function awaitPendingShare(
   )
 
   await Airship.show(bridge => (
-    <WalletShareReceivedModal bridge={bridge} entries={entries} />
+    <WalletShareReceivedModal
+      bridge={bridge}
+      entries={entries}
+      counterpartyName={pending.counterpartyName ?? ''}
+    />
   ))
+  return undefined
 }
