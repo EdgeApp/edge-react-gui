@@ -219,7 +219,10 @@ const asLocalAccountSettingsInner = asObject({
   ),
   isNymWarningShown: asMaybe(asBoolean, false),
   tokenWarningsShown: asMaybe(asTokenWarningsShown, []),
-  reviewTrigger: asMaybe(asReviewTriggerData)
+  reviewTrigger: asMaybe(asReviewTriggerData),
+  // The name shown to the other party when sharing wallets. Arbitrary, and
+  // device-local: another device signed into this account picks its own.
+  nickname: asMaybe(asString, '')
 })
 
 export const asDefaultScreen = asValue('home', 'assets')

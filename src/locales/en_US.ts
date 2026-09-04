@@ -2671,7 +2671,25 @@ const strings = {
     'Another account is offering to share wallets with you. The wallets will be added to this account.',
   wallet_share_accept_button: 'Accept',
   wallet_share_expired: 'The share link expired before it completed',
-  wallet_share_cancelled: 'Wallet sharing was cancelled'
+  wallet_share_cancelled: 'Wallet sharing was cancelled',
+
+  // Wallet sharing: nickname
+  wallet_share_nickname_title: 'Choose a nickname to use when sharing wallets',
+  wallet_share_nickname_hint: 'Nickname',
+  // %1$s is the other party's nickname:
+  wallet_share_select_title_1s: 'Select wallets to share with %1$s',
+  wallet_share_confirm_title_1s: 'Confirm wallet sharing with %1$s',
+  wallet_share_receive_title_1s: 'Receive wallets as %1$s',
+  wallet_share_received_title_1s:
+    'You have received access to the following wallets from %1$s',
+
+  // Wallet sharing: history
+  wallet_share_pill: 'Shared',
+  wallet_share_history_title: 'Wallet sharing history',
+  wallet_share_history_shared_with: 'Shared with',
+  wallet_share_history_shared_by: 'Shared by',
+  wallet_share_history_empty: 'This wallet has no sharing history',
+  wallet_share_history_anonymous: 'Someone'
 } as const
 
 export default strings

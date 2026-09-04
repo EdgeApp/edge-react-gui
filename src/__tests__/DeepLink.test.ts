@@ -179,6 +179,17 @@ describe('parseDeepLink', function () {
       'edge://share-wallets/1234567890a': {
         type: 'walletShareOffer',
         lobbyId: '1234567890a'
+      },
+      // The sharing nickname rides in the link, never in the lobby:
+      'https://deep.edge.app/request-wallets/1234567890a?name=Ada%20Lovelace': {
+        type: 'walletShareRequest',
+        lobbyId: '1234567890a',
+        displayName: 'Ada Lovelace'
+      },
+      'edge://share-wallets/1234567890a?name=Bob': {
+        type: 'walletShareOffer',
+        lobbyId: '1234567890a',
+        displayName: 'Bob'
       }
     })
 

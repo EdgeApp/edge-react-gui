@@ -1935,21 +1935,30 @@
       "summary": "Change local settings.",
       "method": "POST",
       "path": "/account/{sessionId}/change-local-settings",
-      "usage": "local-settings --spam-filter-on=true|false",
-      "description": "Writes device-local account settings. Every option is a field on the body; `spamFilterOn` is the only one today, and new options are added alongside it.",
+      "usage": "local-settings [--spam-filter-on] [--nickname=<nickname>]",
+      "description": "Writes device-local account settings. Every option is a field on the body, and only the fields present are written.",
       "params": {
         "spamFilterOn": {
-          "pass": "--spam-filter-on=true|false",
+          "pass": "[--spam-filter-on]",
           "doc": "Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.",
-          "optional": false
+          "optional": true
+        },
+        "nickname": {
+          "pass": "[--nickname=<nickname>]",
+          "doc": "A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.\n\nNothing here reads it. The wallet-share commands take their name from `--display-name` on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior.",
+          "optional": true
         }
       },
       "returns": {
-        "spamFilterOn": "boolean — Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata."
+        "spamFilterOn": "boolean — Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.",
+        "nickname": "string — A stored name for this account, for a caller that wants somewhere to keep one. Arbitrary — it need not be a real name. Empty until one is set.\n\nNothing here reads it. The wallet-share commands take their name from `--display-name` on the call itself, so a caller that wants this value sent must read it and pass it. Setting it changes no other behavior."
       },
       "notes": [
-        "Omitting a field is a `400`, not a no-op, so a caller cannot clear a setting by accident.",
+        "A body naming no setting at all is a `400`, so a typo'd flag fails loudly rather than reporting success while changing nothing.",
         "With no flag the command reads; with one it writes."
+      ],
+      "errors": [
+        "BAD_REQUEST"
       ]
     },
     "local-users": {
@@ -2312,7 +2321,7 @@
         },
         "displayName": {
           "pass": "[--display-name=<displayName>]",
-          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.",
+          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.\n\nSupply it on every call. It is never filled in from `local-settings`, whose `nickname` is a stored value this command does not read.",
           "optional": true
         },
         "timeout": {
@@ -2665,7 +2674,7 @@
       "params": {
         "displayName": {
           "pass": "[--display-name=<displayName>]",
-          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.",
+          "doc": "A human-readable identity for this account, shown to the other party so they know who they are dealing with. Arbitrary - it need not be a real name. It rides in the `name` parameter of the link this call publishes, so it reaches the person scanning the QR and never the login server.\n\nSupply it on every call. It is never filled in from `local-settings`, whose `nickname` is a stored value this command does not read.",
           "optional": true
         },
         "timeout": {

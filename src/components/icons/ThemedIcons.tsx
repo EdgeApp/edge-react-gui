@@ -181,3 +181,8 @@ export const ChatBubblesIcon = makeFontIcon(Ionicons, 'chatbubbles-outline')
 export const ShareIcon = makeFontIcon(Ionicons, 'share-outline')
 export const DownloadIcon = makeFontIcon(Ionicons, 'download-outline')
 export const CheckmarkCircleIcon = makeFontIcon(Ionicons, 'checkmark-circle')
+
+// Wallet sharing capability. An eye watches; a key unlocks. The pair reads at
+// a glance and needs no colour to tell them apart:
+export const EyeOutlineIcon = makeFontIcon(Ionicons, 'eye-outline')
+export const KeyOutlineIcon = makeFontIcon(Ionicons, 'key-outline')

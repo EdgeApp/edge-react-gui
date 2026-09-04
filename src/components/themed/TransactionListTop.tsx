@@ -72,6 +72,7 @@ import { VisaCardCard } from '../cards/VisaCardCard'
 import { ZcashMigrationCard } from '../cards/ZcashMigrationCard'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
+import { WalletSharedPill } from '../common/WalletSharedPill'
 import { WalletIcon } from '../icons/WalletIcon'
 import { EdgeModal } from '../modals/EdgeModal'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal'
@@ -563,14 +564,21 @@ export const TransactionListTop: React.FC<Props> = props => {
               size={theme.rem(1.15)}
             />
           </View>
-          <EdgeText accessible style={styles.balanceFiatBalance}>
-            {fiatSymbol +
-              (isAccountBalanceVisible
-                ? fiatBalanceFormat
-                : ' ' + lstrings.redacted_placeholder) +
-              ' ' +
-              defaultFiat}
-          </EdgeText>
+          <View style={styles.balanceFiatRow}>
+            <EdgeText
+              accessible
+              style={styles.balanceFiatBalance}
+              numberOfLines={1}
+            >
+              {fiatSymbol +
+                (isAccountBalanceVisible
+                  ? fiatBalanceFormat
+                  : ' ' + lstrings.redacted_placeholder) +
+                ' ' +
+                defaultFiat}
+            </EdgeText>
+            <WalletSharedPill wallet={wallet} />
+          </View>
         </EdgeTouchableOpacity>
       </>
     )
@@ -949,7 +957,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     flexShrink: 1
   },
+  balanceFiatRow: {
+    // The pill shares this line, so the amount gives up whatever width the
+    // pill needs rather than pushing the card taller:
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   balanceFiatBalance: {
+    // Takes the leftover width, so the pill measures at its natural size:
+    flex: 1,
     fontSize: theme.rem(1.25)
   },
   eyeIcon: {

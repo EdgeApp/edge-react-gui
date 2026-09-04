@@ -201,6 +201,22 @@ const writeSpamFilterSetting = async (
   })
 }
 
+/**
+ * The name shown to the other party when sharing wallets.
+ *
+ * Device-local on purpose: another device signed into the same account picks
+ * its own, the same way the spam filter is per-device.
+ */
+export const writeNickname = async (
+  account: EdgeAccount,
+  nickname: string
+): Promise<LocalAccountSettings> => {
+  return await getLocalAccountSettings(account).then(async settings => {
+    const updatedSettings = { ...settings, nickname }
+    return await writeLocalAccountSettings(account, updatedSettings)
+  })
+}
+
 export const writeContactsPermissionShown = async (
   account: EdgeAccount,
   contactsPermissionShown: boolean

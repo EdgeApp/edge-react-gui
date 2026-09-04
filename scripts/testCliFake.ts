@@ -147,6 +147,17 @@ function main(): void {
     ok('pending-vouchers', 'pending-vouchers')
     ok('local-settings read', 'local-settings')
     ok('local-settings write', 'local-settings', '--spam-filter-on=true')
+    // A write names only what it changes, so the spam filter survives:
+    const named = ok(
+      'local-settings write nickname',
+      'local-settings',
+      '--nickname=Ada'
+    )
+    check(
+      'nickname is stored without disturbing the spam filter',
+      named.json?.nickname === 'Ada' && named.json?.spamFilterOn === true,
+      JSON.stringify(named.json)
+    )
     ok('help', 'help', 'balance-map')
 
     // ------------------------------------------------------ credentials

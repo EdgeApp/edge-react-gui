@@ -54,6 +54,7 @@ const defaultReviewTrigger: ReviewTriggerData = {
 const defaultSettings: LocalAccountSettings = {
   contactsPermissionShown: false,
   developerModeOn: false,
+  nickname: '',
   isAccountBalanceVisible: true,
   notifState: {},
   passwordReminder: {

@@ -12,6 +12,8 @@ import { AlertCardUi4 } from '../cards/AlertCard'
 import { WalletShareSummaryRow } from '../rows/WalletShareSummaryRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import { SharePartyText } from '../text/SharePartyText'
+import { ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { EdgeModal } from './EdgeModal'
 
@@ -20,6 +22,8 @@ interface Props {
   bridge: AirshipBridge<true | undefined>
   wallets: EdgeCurrencyWallet[]
   specs: EdgeWalletShareSpec[]
+  /** Who the wallets are going to, '' when they gave no name. */
+  counterpartyName: string
   /**
    * Performs the share. The slider spins until this settles; a rejection is
    * shown and the slider resets so the user can retry or cancel.
@@ -32,7 +36,7 @@ interface Props {
  * nothing here can be mistaken for a control other than the slider.
  */
 export const WalletShareConfirmModal: React.FC<Props> = props => {
-  const { bridge, wallets, specs, onConfirm } = props
+  const { bridge, wallets, specs, counterpartyName, onConfirm } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -59,7 +63,15 @@ export const WalletShareConfirmModal: React.FC<Props> = props => {
   return (
     <EdgeModal
       bridge={bridge}
-      title={lstrings.wallet_share_confirm_title}
+      title={
+        <ModalTitle>
+          <SharePartyText
+            template={lstrings.wallet_share_confirm_title_1s}
+            name={counterpartyName}
+            fallbackTemplate={lstrings.wallet_share_confirm_title}
+          />
+        </ModalTitle>
+      }
       onCancel={handleCancel}
     >
       <ScrollView

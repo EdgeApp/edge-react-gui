@@ -199,14 +199,24 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       if (lobbyId == null || lobbyId === '') {
         throw new SyntaxError('No wallet share lobby id')
       }
-      return { type: 'walletShareRequest', lobbyId }
+      const { name } = parseQuery(url.query)
+      return {
+        type: 'walletShareRequest',
+        lobbyId,
+        displayName: name ?? undefined
+      }
     }
     case 'share-wallets': {
       const [lobbyId] = pathParts
       if (lobbyId == null || lobbyId === '') {
         throw new SyntaxError('No wallet share lobby id')
       }
-      return { type: 'walletShareOffer', lobbyId }
+      const { name } = parseQuery(url.query)
+      return {
+        type: 'walletShareOffer',
+        lobbyId,
+        displayName: name ?? undefined
+      }
     }
 
     case 'pay': {

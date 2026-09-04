@@ -92,6 +92,8 @@ export interface EdgeLoginLink {
 export interface WalletShareRequestLink {
   type: 'walletShareRequest'
   lobbyId: string
+  /** The asker's chosen nickname, from the link's `name` parameter. */
+  displayName?: string
 }
 
 /**
@@ -102,6 +104,8 @@ export interface WalletShareRequestLink {
 export interface WalletShareOfferLink {
   type: 'walletShareOffer'
   lobbyId: string
+  /** The offerer's chosen nickname, from the link's `name` parameter. */
+  displayName?: string
 }
 
 export interface PasswordRecoveryLink {
