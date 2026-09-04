@@ -18,6 +18,7 @@
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
 - changed: Use a custom chart icon for the side menu Markets row, so it matches the rest of the menu.
+- changed: The buy/sell crypto amount field now shows as many decimals as the asset itself supports, up to nine, instead of a fixed six. MoonPay raises its buy-flow precision to eight decimals for BTC and nine for ETH and SOL on September 1, 2026, which the old limit would have truncated.
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
