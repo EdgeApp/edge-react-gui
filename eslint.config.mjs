@@ -225,7 +225,6 @@ export default [
       'src/components/modals/TransferModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
-      'src/components/modals/WcSmartContractModal.tsx',
 
       'src/components/navigation/BackButton.tsx',
       'src/components/navigation/CurrencySettingsTitle.tsx',
