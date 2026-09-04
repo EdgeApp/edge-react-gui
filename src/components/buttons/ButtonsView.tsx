@@ -33,6 +33,10 @@ export interface ButtonsViewProps {
   // ButtonInfos
   primary?: ButtonInfo
   secondary?: ButtonInfo
+  /** True while the on-screen keyboard is open, which lets a `parentType`
+   * `'scene'` layout drop the clearance it keeps from the scene's bottom edge:
+   * the keyboard is that edge, and it supplies its own separation. */
+  keyboardOpen?: boolean
   /** @deprecated - Create a separate component instead for these weird one-off cases */
   secondary2?: ButtonInfo // A secondary-styled button in the primary position (right/top side)
   tertiary?: ButtonInfo
@@ -58,6 +62,7 @@ export interface ButtonsViewProps {
 export const ButtonsView = React.memo((props: ButtonsViewProps) => {
   const {
     absolute = false,
+    keyboardOpen = false,
     primary,
     secondary,
     secondary2,
@@ -75,7 +80,7 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
     type: EdgeButtonType,
     buttonProps?: ButtonInfo,
     index: number = 0
-  ) => {
+  ): React.ReactElement | null => {
     if (buttonProps == null) return null
     const { label, onPress, disabled, spinner, testID } = buttonProps
 
@@ -113,6 +118,7 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
   return (
     <StyledButtonContainer
       absolute={absolute}
+      keyboardOpen={keyboardOpen}
       layout={layout}
       parentType={parentType}
     >
@@ -156,10 +162,11 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
 /** @deprecated - Shouldn't use this export post-UI4 transition once all our layouts have been codified into button layout components. */
 export const StyledButtonContainer = styled(View)<{
   absolute?: boolean
+  keyboardOpen?: boolean
   layout: 'row' | 'column' | 'solo'
   parentType?: 'scene' | 'modal'
 }>(theme => props => {
-  const { absolute, layout, parentType } = props
+  const { absolute, keyboardOpen, layout, parentType } = props
 
   const marginSize = theme.rem(0.5)
 
@@ -167,14 +174,15 @@ export const StyledButtonContainer = styled(View)<{
     margin: marginSize
   }
 
-  const absoluteStyle: ViewStyle = absolute
-    ? {
-        position: 'absolute',
-        bottom: 0,
-        left: marginSize,
-        right: marginSize
-      }
-    : {}
+  const absoluteStyle: ViewStyle =
+    absolute === true
+      ? {
+          position: 'absolute',
+          bottom: 0,
+          left: marginSize,
+          right: marginSize
+        }
+      : {}
 
   /** @deprecated Instead of a soloStyle case here, create a separate `SoloButton` component */
   const soloStyle: ViewStyle =
@@ -217,7 +225,11 @@ export const StyledButtonContainer = styled(View)<{
           flexGrow: 1,
           flexShrink: 0,
           justifyContent: 'flex-end',
-          marginBottom: theme.rem(3),
+          // Clearance from the scene's bottom edge. An open keyboard becomes
+          // that edge and separates the button from the screen on its own, so
+          // this collapses the way `SceneWrapper` collapses the bottom
+          // safe-area inset, for the same reason:
+          marginBottom: keyboardOpen === true ? 0 : theme.rem(3),
           marginTop: theme.rem(1)
         }
       : {}

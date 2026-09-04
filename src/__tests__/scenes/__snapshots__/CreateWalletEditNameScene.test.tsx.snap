@@ -1004,6 +1004,7 @@ exports[`CreateWalletEditNameComponent should render with loading props 1`] = `
     </RCTScrollView>
     <View
       absolute={false}
+      keyboardOpen={false}
       layout="column"
       style={
         {
