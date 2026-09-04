@@ -134,7 +134,18 @@ export const fetchPush = async (
   )
 }
 
-export const infoServerData: { rollup?: InfoRollup } = {}
+export const infoServerData: {
+  rollup?: InfoRollup
+
+  /**
+   * The same payload before `asInfoRollup` ran. That cleaner drops every key it
+   * does not know, so a field the info server already serves is invisible to
+   * the app until the `edge-info-server` dependency defining it is published
+   * and bumped. Readers of such a field parse it from here with their own
+   * cleaner; everything else uses the typed `rollup`.
+   */
+  rollupRaw?: unknown
+} = {}
 
 export const initInfoServer = async (): Promise<void> => {
   // Start the background attestation engine at boot (best-effort, non-blocking)
@@ -160,6 +171,7 @@ export const initInfoServer = async (): Promise<void> => {
         )
       } else {
         const infoData = await response.json()
+        infoServerData.rollupRaw = infoData
         infoServerData.rollup = asInfoRollup(infoData)
         await runOnce('checkAppVersion', checkAppVersion)
       }

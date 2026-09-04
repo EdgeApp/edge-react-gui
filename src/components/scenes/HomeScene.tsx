@@ -6,8 +6,11 @@ import Animated from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 import { navigateToGiftCards } from '../../actions/GiftCardActions'
+import {
+  isGiftCardProviderDisabled,
+  PHAZE_PLUGIN_ID
+} from '../../actions/GiftCardInfoActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -87,6 +90,15 @@ export const HomeScene: React.FC<Props> = props => {
   const dispatch = useDispatch()
 
   const countryCode = useSelector(state => state.ui.countryCode)
+  const giftCardDisablePlugins = useSelector(
+    state => state.ui.giftCardInfo.disablePlugins
+  )
+
+  // The Phaze catalog is what makes this tile more than a Bitrefill shortcut,
+  // so the footer describes Bitrefill alone whenever Phaze is unavailable:
+  const isPhazeAvailable =
+    ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null &&
+    !isGiftCardProviderDisabled(giftCardDisablePlugins, PHAZE_PLUGIN_ID)
 
   const { width: screenWidth } = useSafeAreaFrame()
 
@@ -115,11 +127,7 @@ export const HomeScene: React.FC<Props> = props => {
     navigation.navigate('swapTab')
   })
   const handleSpendPress = useHandler(async () => {
-    // If Phaze API key is not configured, go directly to Bitrefill
-    if (ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null) {
-      navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
-      return
-    }
+    // navigateToGiftCards owns the Bitrefill fallback for an unavailable Phaze
     await dispatch(navigateToGiftCards(navigation as NavigationBase))
   })
   const handleViewAssetsPress = useHandler(() => {
@@ -281,9 +289,9 @@ export const HomeScene: React.FC<Props> = props => {
                   <HomeTileCard
                     title={lstrings.spend_crypto}
                     footer={
-                      ENV.PLUGIN_API_KEYS?.phaze?.apiKey == null
-                        ? lstrings.spend_crypto_footer
-                        : lstrings.spend_crypto_gift_cards_footer
+                      isPhazeAvailable
+                        ? lstrings.spend_crypto_gift_cards_footer
+                        : lstrings.spend_crypto_footer
                     }
                     gradientBackground={theme.spendCardGradient}
                     nodeBackground={
