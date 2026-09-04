@@ -129,7 +129,6 @@ export default [
       'src/actions/RecoveryReminderActions.tsx',
 
       'src/actions/ScamWarningActions.tsx',
-      'src/actions/ScanActions.tsx',
 
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
@@ -219,7 +218,7 @@ export default [
       'src/components/modals/RadioListModal.tsx',
       'src/components/modals/RawTextModal.tsx',
       'src/components/modals/ScamWarningModal.tsx',
-      'src/components/modals/ScanModal.tsx',
+
       'src/components/modals/StateProvinceListModal.tsx',
 
       'src/components/modals/TransferModal.tsx',
@@ -309,7 +308,7 @@ export default [
       'src/components/scenes/SwapSuccessScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
-      'src/components/scenes/WcConnectionsScene.tsx',
+
       'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',

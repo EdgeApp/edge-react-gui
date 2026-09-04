@@ -51,6 +51,7 @@ const defaultReviewTrigger: ReviewTriggerData = {
   daysSinceUpgrade: []
 }
 const defaultSettings: LocalAccountSettings = {
+  cameraScamWarningShown: false,
   contactsPermissionShown: false,
   developerModeOn: false,
   isAccountBalanceVisible: true,
