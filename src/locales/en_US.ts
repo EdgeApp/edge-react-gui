@@ -2030,6 +2030,8 @@ const strings = {
     'Unable to load gift cards. Please check your network connection.',
   gift_card_service_error:
     'Gift card service is temporarily unavailable. Please try again later.',
+  gift_card_providers_unavailable:
+    'Gift cards are temporarily unavailable. Please check back later.',
   gift_card_refresh_error:
     'Unable to refresh. Card information may not be up to date.',
   gift_card_refresh_service_error:

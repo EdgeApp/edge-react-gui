@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- fixed: The info server's `giftCardInfo` config now reaches the app. It was read from the rollup after `asInfoRollup` had already dropped the field, so remotely disabling a gift card provider did nothing at all.
+- fixed: Remotely disabling the Phaze gift card provider now drops the Spend flow straight to Bitrefill instead of into the Phaze scenes. The app no longer builds the Phaze provider, registers a Phaze identity, or fetches its catalog while the provider is disabled.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
