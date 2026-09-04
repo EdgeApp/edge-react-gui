@@ -46,7 +46,7 @@ interface Props extends WcSmartContractModalProps {
   wallet: EdgeCurrencyWallet
 }
 
-export const WcSmartContractModal = (props: Props) => {
+export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const {
     bridge,
     dApp,
@@ -97,7 +97,7 @@ export const WcSmartContractModal = (props: Props) => {
       ? gt(abs(totalNativeCrypto), feeCurrencyBalance)
       : gt(networkFee, feeCurrencyBalance)
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     wcRequestResponse(true)
       .then(() => {
         Airship.show(bridge => (
@@ -107,21 +107,21 @@ export const WcSmartContractModal = (props: Props) => {
           />
         )).catch(() => {})
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
       .finally(props.bridge.resolve)
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     wcRequestResponse(false)
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
       .finally(props.bridge.resolve)
   }
 
-  const renderWarning = () => {
+  const renderWarning = (): React.ReactElement => {
     return isInsufficientBal ? (
       <Alert
         title={lstrings.wc_smartcontract_warning_title}
