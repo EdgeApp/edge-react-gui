@@ -45,6 +45,9 @@
 - fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
 - fixed: Android quick-action shortcuts no longer throw a startup error when the app launches without ever coming to the foreground. Registration now waits for the app to be foregrounded, the native shortcut intent targets the launcher component instead of the current activity, and a registration failure is reported to Sentry instead of shown as a blocking alert.
 - fixed: Choose Wallets to Add search now matches multi-word chain names and words inside parentheses
+- fixed: Remote gift card provider disables from the info server now take effect
+- fixed: Spend Crypto opens Bitrefill directly when Phaze is remotely disabled
+- fixed: Purchased Phaze gift cards stay viewable while Phaze is remotely disabled
 
 ## 4.50.3 (2026-08-28)
 
