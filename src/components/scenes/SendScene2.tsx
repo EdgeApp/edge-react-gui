@@ -259,6 +259,14 @@ const SendComponent: React.FC<Props> = props => {
     AddressEntryMethod | undefined
   >(undefined)
   const [hasPendingTx, setHasPendingTx] = useState<boolean>(false)
+  // Once a broadcast has been attempted, the confirm slider never re-arms on
+  // this scene, whether the broadcast reported success or failure. A failure
+  // report does not prove the transaction is absent from the network, and a
+  // re-armed slider after a real broadcast is an invitation to pay twice.
+  // The ref is what the send handler reads (it survives the FIO retry
+  // recursion); the state is what drives the render.
+  const broadcastAttemptedRef = React.useRef<boolean>(false)
+  const [broadcastAttempted, setBroadcastAttempted] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -1308,10 +1316,14 @@ const SendComponent: React.FC<Props> = props => {
           'Error from before transaction route param hook: ',
           String(e)
         )
+        resetSlider()
         return
       }
 
       isSendingRef.current = true
+      // Set once broadcastTx resolves, so the catch below can tell a broadcast
+      // that reported failure apart from an error after a successful one.
+      let broadcastSucceeded = false
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1324,12 +1336,20 @@ const SendComponent: React.FC<Props> = props => {
         }
 
         const signedTx = await coreWallet.signTx(edgeTransaction)
+
+        // From this point on the transaction may reach the network, so lock
+        // the slider for the life of this scene no matter what happens next.
+        // The render-side flag is set in the finally block, so the slider
+        // keeps its spinner while the attempt is in flight.
+        broadcastAttemptedRef.current = true
+
         let broadcastedTx: EdgeTransaction
         if (alternateBroadcast != null) {
           broadcastedTx = await alternateBroadcast(signedTx)
         } else {
           broadcastedTx = await coreWallet.broadcastTx(signedTx)
         }
+        broadcastSucceeded = true
 
         // Figure out metadata (preserve Zano alias if provided)
         let payeeName: string | undefined
@@ -1507,6 +1527,33 @@ const SendComponent: React.FC<Props> = props => {
         const errorCasted = err instanceof Error ? err : new Error(String(err))
         let error = err
 
+        if (broadcastAttemptedRef.current) {
+          // No happy path and no generic "network error": the broadcast was
+          // attempted, so tell the user exactly what we know and point them
+          // at the explorer before they consider sending again.
+          logActivity(
+            `Error ${
+              broadcastSucceeded ? 'after' : 'during'
+            } broadcastTx (txid ${edgeTransaction.txid}): ${String(err)}`
+          )
+          setError(
+            new I18nError(
+              lstrings.send_broadcast_failure_title,
+              sprintf(
+                broadcastSucceeded
+                  ? lstrings.send_broadcast_post_error_message_s
+                  : lstrings.send_broadcast_failure_message_s,
+                errorCasted.message
+              )
+            )
+          )
+          // The locked-state card is longer than a normal error, and the
+          // slider floats over the bottom of the scroll view. Scroll it into
+          // view so the whole message is readable without scrolling by hand.
+          needsScrollToEnd.current = true
+          return
+        }
+
         if (errorCasted.name === 'ErrorAlgoRecipientNotActivated') {
           error = new I18nError(
             lstrings.send_confirmation_algo_recipient_not_activated_s,
@@ -1562,7 +1609,14 @@ const SendComponent: React.FC<Props> = props => {
         setError(error)
       } finally {
         isSendingRef.current = false
-        resetSlider()
+        // The slider is idempotent once a broadcast has been attempted. Only a
+        // failure before that boundary (PIN, hooks, FIO fee check, signing)
+        // leaves the slider re-armed, because nothing could have been sent.
+        if (broadcastAttemptedRef.current) {
+          setBroadcastAttempted(true)
+        } else {
+          resetSlider()
+        }
       }
     }
   )
@@ -1880,6 +1934,11 @@ const SendComponent: React.FC<Props> = props => {
                 <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                   <SafeSlider
                     disabledText={disabledText}
+                    lockedText={
+                      broadcastAttempted
+                        ? lstrings.send_confirmation_slider_locked
+                        : undefined
+                    }
                     onSlidingComplete={handleSliderComplete}
                     disabled={disableSlider}
                   />
