@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
