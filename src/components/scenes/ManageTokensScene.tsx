@@ -190,6 +190,18 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
     }
   }, [autoDetectedTokenIds, filteredTokenIds])
 
+  // A search that matches nothing otherwise renders a bare scene, which reads
+  // exactly like a broken search. Say which one it is:
+  const emptyComponent = React.useMemo(
+    () =>
+      searchValue === '' ? null : (
+        <EdgeText style={styles.emptyText} numberOfLines={3}>
+          {lstrings.managetokens_search_no_result}
+        </EdgeText>
+      ),
+    [searchValue, styles.emptyText]
+  )
+
   const handleItemLayout = useRowLayout()
 
   // Goes to the add token scene:
@@ -354,6 +366,7 @@ const ManageTokensSceneComponent: React.FC<Props> = props => {
           data={filteredTokenIds}
           extraData={extraData}
           keyExtractor={keyExtractor}
+          ListEmptyComponent={emptyComponent}
           renderItem={renderRow}
           style={styles.list}
         />
@@ -396,6 +409,13 @@ const keyExtractor = (tokenId: string): string => tokenId
 
 const getStyles = cacheStyles((theme: Theme) => ({
   buttonsContainer: { marginTop: theme.rem(1), marginBottom: theme.rem(1) },
+  emptyText: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.85),
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(1),
+    textAlign: 'center'
+  },
   list: {
     marginHorizontal: theme.rem(0.5)
   },
