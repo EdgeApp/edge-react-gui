@@ -153,12 +153,14 @@ export const WcSignMessageModal: React.FC<Props> = props => {
           primary={{
             label: lstrings.wc_sign_message_approve_button,
             onPress: handleApprove,
-            spinner: isSigning
+            spinner: isSigning,
+            testID: 'wcSignMessageSignButton'
           }}
           secondary={{
             label: lstrings.wc_sign_message_reject_button,
             onPress: handleReject,
-            disabled: isSigning
+            disabled: isSigning,
+            testID: 'wcSignMessageRejectButton'
           }}
         />
       </ScrollView>
