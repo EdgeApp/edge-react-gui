@@ -63,6 +63,7 @@
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - fixed: Native NYM wallet details now label the network as "Nyx Network" (the native chain) instead of "Nym Network", while asset labels remain Nym.
 - fixed: Exchange rate queries no longer request each chain's own asset twice, which had been inflating every rate query with duplicate pairs.
+- fixed: EVM wallets no longer stall at 50% sync on a build whose env.json configures `evmScanApiKey` without the deprecated `etherscanApiKey`.
 
 ## 4.50.1 (2026-08-03)
 
