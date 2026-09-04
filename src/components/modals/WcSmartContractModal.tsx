@@ -30,11 +30,11 @@ import { asEdgeTokenId } from '../../types/types'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { Alert } from '../themed/Alert'
 import { ModalFooter, ModalTitle } from '../themed/ModalParts'
 import { SafeSlider } from '../themed/SafeSlider'
 import { CryptoFiatAmountTile } from '../tiles/CryptoFiatAmountTile'
@@ -123,20 +123,24 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
 
   const renderWarning = (): React.ReactElement => {
     return isInsufficientBal ? (
-      <Alert
+      <AlertCardUi4
         title={lstrings.wc_smartcontract_warning_title}
-        message={sprintf(
+        body={sprintf(
           lstrings.wc_smartcontract_insufficient_text,
           feeCurrencyStr
         )}
         type="warning"
+        marginRem={0.5}
       />
     ) : (
-      <Alert
-        numberOfLines={0}
+      <AlertCardUi4
         title={lstrings.wc_smartcontract_warning_title}
-        message={lstrings.wc_smartcontract_warning_text}
+        body={[
+          lstrings.wc_smartcontract_warning_point_funds,
+          lstrings.wc_smartcontract_warning_point_trust
+        ]}
         type="warning"
+        marginRem={0.5}
       />
     )
   }

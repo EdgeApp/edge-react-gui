@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
+- changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
