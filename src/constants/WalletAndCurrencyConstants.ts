@@ -314,7 +314,13 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    unstoppableDomainsTicker: 'BTC'
+    unstoppableDomainsTicker: 'BTC',
+    walletConnectV2ChainId: {
+      namespace: 'bip122',
+      // CAIP-2 identifies a bip122 chain by the first 32 characters of its
+      // genesis block hash:
+      reference: '000000000019d6689c085ae165831e93'
+    }
   },
   bitcointestnet: {
     hasSegwit: true,

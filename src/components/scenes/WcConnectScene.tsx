@@ -10,7 +10,10 @@ import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstan
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useUnmount } from '../../hooks/useUnmount'
-import { useWalletConnect } from '../../hooks/useWalletConnect'
+import {
+  getWalletConnectAddress,
+  useWalletConnect
+} from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
@@ -70,14 +73,14 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   useAsyncEffect(
     async () => {
-      const r = await wallet.getReceiveAddress({ tokenId: null })
-      setWalletAddress(r.publicAddress)
+      const address = await getWalletConnectAddress(wallet)
+      if (address != null) setWalletAddress(address)
     },
     [wallet],
     'WcConnectScene'
   )
 
-  const handleConnect = async () => {
+  const handleConnect = async (): Promise<void> => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
@@ -87,7 +90,7 @@ export const WcConnectScene = withWallet((props: Props) => {
           message={lstrings.wc_confirm_return_to_browser}
           onPress={() => {}}
         />
-      )).catch(e => {
+      )).catch((e: unknown) => {
         showError(e)
       })
       navigation.navigate('wcConnections', {})
@@ -121,7 +124,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     }
   })
 
-  const renderWalletSelect = () => {
+  const renderWalletSelect = (): React.ReactElement => {
     const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
     const walletImage = (
       <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
