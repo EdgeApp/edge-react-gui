@@ -115,6 +115,21 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     )
   )
 
+  // Tapping a row opens the wallet settings modal, which only shows a name
+  // field unless the asset declares its own settings (Monero's backend picker).
+  // Promise settings in the instructions only when a listed wallet has some,
+  // otherwise the tap does nothing but rename. Splits never qualify, since no
+  // splittable asset declares wallet settings.
+  const hasWalletSettings = React.useMemo(
+    () =>
+      createWalletList.some(item => {
+        if (item.walletType == null) return false
+        const settings = SPECIAL_CURRENCY_INFO[item.pluginId]?.walletSettings
+        return settings != null && settings.length > 0
+      }),
+    [createWalletList]
+  )
+
   const handleEditWalletName = useHandler(
     async (key: string, currentName: string, pluginId: string) => {
       const result = await Airship.show<WalletSettingsResult | undefined>(
@@ -427,7 +442,9 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
           </Paragraph>
         )}
         <EdgeText style={styles.instructionalText} numberOfLines={1}>
-          {lstrings.fragment_create_wallet_edit_settings_instructions}
+          {hasWalletSettings
+            ? lstrings.fragment_create_wallet_edit_settings_instructions
+            : lstrings.fragment_create_wallet_instructions}
         </EdgeText>
         <FlatList
           automaticallyAdjustContentInsets={false}
