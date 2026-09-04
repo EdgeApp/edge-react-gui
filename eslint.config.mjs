@@ -126,7 +126,6 @@ export default [
       'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
-      'src/actions/RecoveryReminderActions.tsx',
 
       'src/actions/ScamWarningActions.tsx',
       'src/actions/ScanActions.tsx',
@@ -313,7 +312,7 @@ export default [
       'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
-      'src/components/services/AccountCallbackManager.tsx',
+
       'src/components/services/ActionQueueService.ts',
       'src/components/services/AirshipInstance.tsx',
       'src/components/services/AutoLogout.ts',
