@@ -36,9 +36,7 @@ tags:
 - tapOn: "Ripple USD"
 - tapOn: "MAX"
 - extendedWaitUntil:
-    visible: "Exchange"
+    visible: "Tap to Change Provider"
     timeout: 15000
-- assertVisible:
-    text: "Tap to Change Provider"
 
 - stopApp
