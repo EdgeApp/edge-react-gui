@@ -1700,13 +1700,15 @@ const strings = {
   wc_confirm_subtitle: '%s wants to connect your wallet.',
   wc_confirm_body_title: 'Allow %s to:',
   wc_confirm_body:
-    'Request approval for transactions\nView your wallet and balance activity',
+    'View your wallet address\nRequest approval for transactions',
   wc_confirm_select_wallet: 'Select wallet to connect with',
   wc_confirm_return_to_browser: 'You may now return to browser',
   wc_smartcontract_title: 'Smart Contract Call',
   wc_smartcontract_warning_title: 'Warning',
-  wc_smartcontract_warning_text:
-    'Make sure this is an application you can trust. Executing this transaction gives the application access to your funds.',
+  wc_smartcontract_warning_point_funds:
+    'Approving this request may move funds or grant permissions',
+  wc_smartcontract_warning_point_trust:
+    'Only continue if you trust this application and expected this request',
   wc_smartcontract_insufficient_text:
     "You don't have enough %s to cover network fees.",
   wc_smartcontract_wallet: 'Wallet',

@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Distinguish the WalletConnect connection and request risks in the Confirm Connection and Smart Contract Call copy, and show the request warning in the solid UI4 warning card.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
