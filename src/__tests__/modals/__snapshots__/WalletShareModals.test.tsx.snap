@@ -208,7 +208,7 @@ exports[`Wallet sharing modals chooser renders both directions 1`] = `
           ]
         }
       >
-        Share Wallets
+        Share wallets as
       </Text>
       <View
         accessibilityState={
@@ -2685,7 +2685,7 @@ exports[`Wallet sharing modals mode modal pins spend-only and view-only-source w
           ]
         }
       >
-        Select which wallets to share with spending ability
+        Select which wallets to share with Spending Ability
       </Text>
       <View
         accessibilityState={
@@ -2762,6 +2762,31 @@ exports[`Wallet sharing modals mode modal pins spend-only and view-only-source w
         </Text>
       </View>
     </View>
+    <Text
+      adjustsFontSizeToFit={false}
+      allowFontScaling={false}
+      numberOfLines={0}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "marginBottom": 11,
+            "marginLeft": 11,
+            "marginRight": 11,
+            "marginTop": 11,
+          },
+          false,
+          null,
+        ]
+      }
+    >
+      Wallets shared with spending toggled off will still allow recipient to view all transactions and edit transaction metadata.
+    </Text>
     <RCTScrollView
       collapsable={false}
       data={

@@ -2634,7 +2634,7 @@ const strings = {
 
   // Wallet sharing
   wallet_share_button_hint: 'Share Wallets',
-  wallet_share_chooser_title: 'Share Wallets',
+  wallet_share_chooser_title: 'Share wallets as',
   wallet_share_chooser_share_title: 'Share your wallets',
   wallet_share_chooser_share_subtitle: 'Share your wallets with another device',
   wallet_share_chooser_receive_title: 'Receive shared wallets',
@@ -2646,7 +2646,9 @@ const strings = {
   wallet_share_invalid_link: 'That is not a wallet sharing link',
   wallet_share_select_title: 'Select wallets to share',
   wallet_share_mode_title:
-    'Select which wallets to share with spending ability',
+    'Select which wallets to share with Spending Ability',
+  wallet_share_mode_subtitle:
+    'Wallets shared with spending toggled off will still allow recipient to view all transactions and edit transaction metadata.',
   wallet_share_mode_spend_only_1s: '%1$s can only be shared with spend access',
   wallet_share_mode_view_only_source_1s:
     '%1$s was received view-only and cannot grant spend access',

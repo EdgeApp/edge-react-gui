@@ -12,7 +12,7 @@ import { ModalButtons } from '../buttons/ModalButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
@@ -88,6 +88,7 @@ export const WalletShareModeModal: React.FC<Props> = props => {
       title={lstrings.wallet_share_mode_title}
       onCancel={handleCancel}
     >
+      <Paragraph>{lstrings.wallet_share_mode_subtitle}</Paragraph>
       <FlatList
         data={wallets}
         extraData={spendIds}
