@@ -177,6 +177,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
   return (
     <View
       accessible
+      accessibilityRole="button"
       testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
     >
       <EdgeCard
@@ -197,7 +198,6 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
           start: { x: 0, y: 0 },
           end: { x: 1, y: 0 }
         }}
-        testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
       >
         <View style={styles.textContentContainer}>
           {firstRow}
