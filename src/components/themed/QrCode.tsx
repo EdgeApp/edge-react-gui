@@ -27,8 +27,8 @@ interface Props {
   /** Display the asset icon in the center of the QR */
   tokenId?: EdgeTokenId
 
-  /** Display the asset icon in the center of the QR */
-  pluginId: string
+  /** Display the asset icon in the center of the QR. Omit for no icon. */
+  pluginId?: string
   onPress?: () => void
 }
 
@@ -91,11 +91,16 @@ export const QrCode: React.FC<Props> = props => {
   // 80% of parent container to add some padding
   const iconSizeRem = (iconContainerSize * 0.8) / theme.rem(1)
 
-  const icon = (
-    <View style={iconContainerStyle}>
-      <CryptoIcon pluginId={pluginId} tokenId={tokenId} sizeRem={iconSizeRem} />
-    </View>
-  )
+  const icon =
+    pluginId == null ? null : (
+      <View style={iconContainerStyle}>
+        <CryptoIcon
+          pluginId={pluginId}
+          tokenId={tokenId}
+          sizeRem={iconSizeRem}
+        />
+      </View>
+    )
 
   return (
     <EdgeTouchableWithoutFeedback onPress={onPress}>
