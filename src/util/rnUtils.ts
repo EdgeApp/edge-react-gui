@@ -1,3 +1,4 @@
+import DeviceInfo from 'react-native-device-info'
 import { generateSecureRandom } from 'react-native-securerandom'
 import { v4 } from 'uuid'
 
@@ -14,4 +15,15 @@ export const makeUuid = async (): Promise<string> => {
   const bytes = await generateSecureRandom(256)
   const uuid = v4({ random: bytes })
   return uuid
+}
+
+/**
+ * Reads and normalizes the OS version.
+ */
+export function getOsVersion(): string {
+  const osVersionRaw = DeviceInfo.getSystemVersion()
+  return Array.from({ length: 3 }, (_, i) => {
+    const part = osVersionRaw.split('.')[i]
+    return part != null && part !== '' ? part : '0'
+  }).join('.')
 }

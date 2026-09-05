@@ -28,53 +28,47 @@ import {
   pluginUri as exchangeUri
 } from 'edge-exchange-plugins'
 import * as React from 'react'
-import { Platform } from 'react-native'
+import { Platform, Text, View } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
 
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
-import { lstrings } from '../../locales/strings'
+import { KEYS } from '../../keys'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
+import {
+  hasNativeApiSigner,
+  isUsableApiKey,
+  makeNativeApiSigner,
+  warmNativeApiKey
+} from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
+import { initializeKeys } from '../../util/keysStore'
 import {
   INFO_TEST_SERVER,
   LOGIN_TEST_SERVER,
   shouldUseTestServers,
   SYNC_TEST_SERVER
 } from '../../util/maestro'
-import { getOsVersion } from '../../util/utils'
-import { ButtonsModal } from '../modals/ButtonsModal'
+import { getOsVersion } from '../../util/rnUtils'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
-import { Airship, showError } from './AirshipInstance'
+import { showError } from './AirshipInstance'
 import { Providers } from './Providers'
+
+// Start the disk read and signed infoRollup fetch during bundle evaluation so they
+// overlap the rest of startup. The WebView is gated behind keys and does not
+// overlap. The effect below awaits the same single-flighted promise, which by
+// then has usually already resolved.
+initializeKeys().catch((error: unknown) => {
+  console.warn('EdgeCoreManager: keys warm-up failed', String(error))
+})
 
 interface Props {}
 
-const contextOptions: EdgeContextOptions = {
-  apiKey: ENV.EDGE_API_KEY,
-  apiSecret: ENV.EDGE_API_SECRET,
-  appId: '',
-  appVersion: getVersion(),
-  deviceDescription: `${getBrand()} ${getDeviceId()}`,
-  osType: Platform.OS,
-  osVersion: getOsVersion(),
-
-  // Use this to adjust logging verbosity on a plugin-by-plugin basis:
-  logSettings: {
-    defaultLogLevel: 'warn',
-    sources: {
-      'edge-core': 'warn'
-    }
-  },
-
-  plugins: allPlugins,
-  skipBlockHeight: true
-}
 const nativeIo: EdgeNativeIo = detectBundler.isReactNative
   ? {
       'edge-currency-accountbased': makeAccountbasedIo(),
@@ -125,12 +119,63 @@ const crashReporter: EdgeCrashReporter = {
   }
 }
 
+async function buildContextOptions(): Promise<EdgeContextOptions> {
+  const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
+  const nativeKey = hasNativeApiSigner() ? await warmNativeApiKey() : ''
+  const nativeApiSigner = nativeKey !== '' ? makeNativeApiSigner() : undefined
+  const jsPair =
+    isUsableApiKey(apiKey) && apiSecret != null && apiSecret.byteLength > 0
+      ? { apiKey, apiSecret }
+      : undefined
+  console.log(
+    `[apiSigner] native=${nativeApiSigner != null} keysFallback=${
+      jsPair != null
+    }`
+  )
+  if (nativeApiSigner == null && jsPair == null) {
+    // A context with no credentials still boots, then fails every login-server
+    // call with an opaque error, so say plainly what is missing.
+    console.error(
+      'EdgeCoreManager: no usable native EdgeApiSigner and no KEYS.EDGE_API_KEY / EDGE_API_SECRET; login-server requests will fail'
+    )
+  }
+  return {
+    ...(nativeApiSigner != null
+      ? { apiSigner: nativeApiSigner }
+      : jsPair ?? {}),
+    appId: '',
+    appVersion: getVersion(),
+    deviceDescription: `${getBrand()} ${getDeviceId()}`,
+    osType: Platform.OS,
+    osVersion: getOsVersion(),
+
+    // Use this to adjust logging verbosity on a plugin-by-plugin basis:
+    logSettings: {
+      defaultLogLevel: 'warn',
+      sources: {
+        'edge-core': 'warn'
+      }
+    },
+
+    plugins: allPlugins,
+    skipBlockHeight: true
+  }
+}
+
 /**
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
 export const EdgeCoreManager: React.FC<Props> = props => {
+  // Null until the keys store has resolved. `buildContextOptions` reads secrets
+  // and plugin inits out of KEYS / pluginMaps, which the keys store mutates in
+  // place, so the options can only be built once that has settled.
+  const [contextOptions, setContextOptions] =
+    React.useState<EdgeContextOptions | null>(null)
   const [context, setContext] = React.useState<EdgeContext | null>(null)
+  const [bootFatalError, setBootFatalError] = React.useState<string | null>(
+    null
+  )
 
   // Scratchpad values that should not trigger re-renders:
   const counter = React.useRef<number>(0)
@@ -138,6 +183,51 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()
+
+  function hideSplash(): void {
+    if (!splashHidden.current) {
+      setTimeout(() => {
+        BootSplash.hide({ fade: true }).catch((err: unknown) => {
+          showError(err)
+        })
+      }, 200)
+      splashHidden.current = true
+    }
+  }
+
+  useAsyncEffect(
+    async () => {
+      try {
+        await initializeKeys()
+        setContextOptions(await buildContextOptions())
+      } catch (error: unknown) {
+        // initializeKeys itself never rejects, but buildContextOptions can.
+        // Without a fallback, contextOptions stays null, Providers/Airship never
+        // mount, and native BootSplash never hides.
+        console.warn(
+          'EdgeCoreManager: keys boot failed; using baked-in plugins',
+          String(error)
+        )
+        try {
+          setContextOptions(await buildContextOptions())
+        } catch (fallbackError: unknown) {
+          hideSplash()
+          setBootFatalError(String(fallbackError))
+        }
+      }
+    },
+    [],
+    'EdgeCoreManager'
+  )
+
+  // Cache the public API key from native for push / notification callers:
+  useAsyncEffect(
+    async () => {
+      if (hasNativeApiSigner()) await warmNativeApiKey()
+    },
+    [],
+    'EdgeCoreManager.warmNativeApiKey'
+  )
 
   // Keep the core in sync with the application state:
   useAsyncEffect(
@@ -150,17 +240,6 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     [context, isAppForeground],
     'EdgeCoreManager'
   )
-
-  function hideSplash(): void {
-    if (!splashHidden.current) {
-      setTimeout(() => {
-        BootSplash.hide({ fade: true }).catch((err: unknown) => {
-          showError(err)
-        })
-      }, 200)
-      splashHidden.current = true
-    }
-  }
 
   const handleContext = useHandler((context: EdgeContext) => {
     console.log('EdgeContext opened')
@@ -188,26 +267,28 @@ export const EdgeCoreManager: React.FC<Props> = props => {
   const handleError = useHandler((error: Error) => {
     console.log('EdgeContext failed', error)
     hideSplash()
-    Airship.show<'ok' | undefined>(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        buttons={{ ok: { label: lstrings.string_ok_cap } }}
-        title="Edge core failed to load"
-        message={String(error)}
-      />
-    )).catch(() => {})
+    // Providers (Airship host) mounts only after context is set. A core load
+    // failure must use the same pre-Providers surface as buildContextOptions.
+    setBootFatalError(String(error))
   })
 
   const handleFakeEdgeWorld = useHandler((world: EdgeFakeWorld) => {
-    world
-      .makeEdgeContext({ ...contextOptions })
-      .then(handleContext, handleError)
+    if (contextOptions == null) return
+    // `world` is already a yaob proxy, so anything passed through it is packed
+    // as plain data. `MakeEdgeContext` bridgifies `apiSigner` on the real path,
+    // but here `signMessage` would be packed as a bare function and blow up
+    // inside the WebView with "Unsupported value of type function". The fake
+    // core never reaches the login server, so it does not need a signer.
+    const { apiSigner, ...fakeOptions } = contextOptions
+    world.makeEdgeContext({ ...fakeOptions }).then(handleContext, handleError)
   })
 
   const pluginUris = [
-    ENV.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
-    ENV.DEBUG_CURRENCY_PLUGINS ? currencyPluginsDebugUri : currencyPluginsUri,
-    ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
+    CONFIG.DEBUG_ACCOUNTBASED ? accountbasedDebugUri : accountbasedUri,
+    CONFIG.DEBUG_CURRENCY_PLUGINS
+      ? currencyPluginsDebugUri
+      : currencyPluginsUri,
+    CONFIG.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
   ]
 
   let infoServer: string | string[] | undefined
@@ -221,19 +302,31 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     syncServer = SYNC_TEST_SERVER
   }
 
-  if (ENV.LOGIN_SERVER != null && ENV.LOGIN_SERVER.length > 0) {
-    loginServer = ENV.LOGIN_SERVER
+  if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
+    loginServer = CONFIG.LOGIN_SERVER
   }
-  if (ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0) {
-    infoServer = ENV.INFO_SERVER
+  if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
+    infoServer = CONFIG.INFO_SERVER
+  }
+
+  if (bootFatalError != null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
+        <Text>Edge failed to start: {bootFatalError}</Text>
+      </View>
+    )
+  }
+
+  if (contextOptions == null) {
+    return <LoadingSplashScreen />
   }
 
   return (
     <>
-      {ENV.USE_FAKE_CORE ? (
+      {CONFIG.USE_FAKE_CORE ? (
         <MakeFakeEdgeWorld
           crashReporter={crashReporter}
-          debug={ENV.DEBUG_CORE}
+          debug={CONFIG.DEBUG_CORE}
           nativeIo={nativeIo}
           pluginUris={pluginUris}
           users={[fakeUser]}
@@ -244,11 +337,11 @@ export const EdgeCoreManager: React.FC<Props> = props => {
         <MakeEdgeContext
           {...contextOptions}
           crashReporter={crashReporter}
-          debug={ENV.DEBUG_CORE}
+          debug={CONFIG.DEBUG_CORE}
           allowDebugging={
-            ENV.DEBUG_ACCOUNTBASED ||
-            ENV.DEBUG_CORE ||
-            ENV.DEBUG_CURRENCY_PLUGINS
+            CONFIG.DEBUG_ACCOUNTBASED ||
+            CONFIG.DEBUG_CORE ||
+            CONFIG.DEBUG_CURRENCY_PLUGINS
           }
           nativeIo={nativeIo}
           pluginUris={pluginUris}

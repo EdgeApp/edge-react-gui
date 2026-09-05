@@ -5,28 +5,41 @@ import type {
   EdgeFetchResponse
 } from 'edge-core-js'
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
-import { Platform } from 'react-native'
-import { getVersion } from 'react-native-device-info'
 
-import { ENV } from '../env'
-import { config } from '../theme/appConfig'
-import { initAttestation } from './attestation'
-import { INFO_TEST_SERVER, shouldUseTestServers } from './maestro'
-import { runOnce } from './runOnce'
-import { asyncWaterfall, getOsVersion, shuffleArray } from './utils'
-import { checkAppVersion } from './versionCheck'
-// `ENV.INFO_SERVER` (from env.json) overrides the production info servers, e.g.
-// to point a debug build at a local info server. Absent in production builds.
-const INFO_SERVERS =
-  ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0
-    ? ENV.INFO_SERVER
-    : shouldUseTestServers()
-    ? [INFO_TEST_SERVER]
-    : ['https://info1.edge.app', 'https://info2.edge.app']
+import { asyncWaterfall, shuffleArray } from './utils'
+
+const DEFAULT_INFO_SERVERS = [
+  'https://info1.edge.app',
+  'https://info2.edge.app'
+]
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 
 const INFO_FETCH_INTERVAL = 5 * 60 * 1000 // 5 minutes
+
+let infoServers: string[] = DEFAULT_INFO_SERVERS
+let referralServers: string[] = []
+let notificationServers: string[] = []
+let infoServerPollStarted = false
+
+/**
+ * GUI wires referral/push/info server lists from appConfig/ENV at startup.
+ * Until configured, referral/push fetches use an empty list; info defaults
+ * to production hosts.
+ */
+export function configureNetwork(opts: {
+  infoServers?: string[]
+  referralServers?: string[]
+  notificationServers?: string[]
+}): void {
+  if (opts.infoServers != null && opts.infoServers.length > 0) {
+    infoServers = opts.infoServers
+  }
+  if (opts.referralServers != null) referralServers = opts.referralServers
+  if (opts.notificationServers != null) {
+    notificationServers = opts.notificationServers
+  }
+}
 
 export async function fetchWaterfall(
   servers: string[],
@@ -94,7 +107,7 @@ export const fetchInfo = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(INFO_SERVERS, path, options, timeout, doFetch)
+  return await multiFetch(infoServers, path, options, timeout, doFetch)
 }
 export const fetchRates = async (
   path: string,
@@ -111,13 +124,7 @@ export const fetchReferral = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(
-    config.referralServers ?? [],
-    path,
-    options,
-    timeout,
-    doFetch
-  )
+  return await multiFetch(referralServers, path, options, timeout, doFetch)
 }
 export const fetchPush = async (
   path: string,
@@ -125,50 +132,87 @@ export const fetchPush = async (
   timeout?: number,
   doFetch?: EdgeFetchFunction
 ): Promise<EdgeFetchResponse> => {
-  return await multiFetch(
-    config.notificationServers,
-    path,
-    options,
-    timeout,
-    doFetch
-  )
+  return await multiFetch(notificationServers, path, options, timeout, doFetch)
 }
 
 export const infoServerData: { rollup?: InfoRollup } = {}
 
-export const initInfoServer = async (): Promise<void> => {
-  // Start the background attestation engine at boot (best-effort, non-blocking)
-  // so a token is usually cached before any attestation-gated request is made.
-  // This is intentionally not inside fetchInfo: the fetch wrapper carries no
-  // attestation logic; gated plugins attach the token via getAttestationToken().
-  initAttestation()
+export interface InitInfoServerParams {
+  osType: string
+  osVersion: string
+  appVersion: string
+  appId: string
+  /** Called once after a successful rollup fetch (e.g. version check). */
+  onRollup?: () => Promise<void>
+  /**
+   * When true, skip the launch unsigned fetch (HMAC signed fetch will fill
+   * rollup + appKeys). Unsigned is enough when this build has no HMAC
+   * credentials.
+   */
+  skipUnsignedLaunchFetch?: boolean
+}
 
-  const osType = Platform.OS.toLowerCase()
-  const osVersion = getOsVersion()
-  const version = getVersion()
+let infoServerParams: InitInfoServerParams | undefined
 
-  const queryInfo = async (): Promise<void> => {
-    try {
-      const response = await fetchInfo(
-        `v1/inforollup/${
-          config.appId ?? 'edge'
-        }?os=${osType}&osVersion=${osVersion}&appVersion=${version}`
+/**
+ * Fetch the unsigned public info rollup. Exported so `keysStore` can fall back
+ * to it when the signed infoRollup fetch fails to populate `infoServerData`:
+ * that failure is only observable once the signed fetch settles, which is long
+ * after `initInfoServer` has already run. Uses the parameters captured by
+ * `initInfoServer`, so this module stays Node-safe.
+ */
+export const fetchPublicRollup = async (): Promise<void> => {
+  const params = infoServerParams
+  if (params == null) {
+    console.warn('fetchPublicRollup: initInfoServer has not run yet')
+    return
+  }
+  const { osType, osVersion, appVersion, appId, onRollup } = params
+  try {
+    const response = await fetchInfo(
+      `v1/infoRollup/${appId}?os=${osType}&osVersion=${osVersion}&appVersion=${appVersion}`
+    )
+    if (!response.ok) {
+      console.warn(
+        `initInfoServer error ${response.status}: ${await response.text()}`
       )
-      if (!response.ok) {
-        console.warn(
-          `initInfoServer error ${response.status}: ${await response.text()}`
-        )
-      } else {
-        const infoData = await response.json()
-        infoServerData.rollup = asInfoRollup(infoData)
-        await runOnce('checkAppVersion', checkAppVersion)
-      }
-    } catch (e) {
-      console.warn('initInfoServer: Failed to ping info server')
+    } else {
+      const infoData = await response.json()
+      infoServerData.rollup = asInfoRollup(infoData)
+      if (onRollup != null) await onRollup()
     }
+  } catch (e) {
+    console.warn('initInfoServer: Failed to ping info server')
+  }
+}
+
+export const initInfoServer = async (
+  params: InitInfoServerParams
+): Promise<void> => {
+  infoServerParams = params
+  const { skipUnsignedLaunchFetch } = params
+
+  const queryInfo = fetchPublicRollup
+
+  if (infoServerPollStarted) {
+    // NetInfo reconnect: live-update public rollup fields only (never KEYS).
+    await queryInfo()
+    return
+  }
+  // Claim the poll before the first await. Two NetInfo transitions racing
+  // through the awaits below would otherwise each install an interval.
+  infoServerPollStarted = true
+
+  // Launch: skip a parallel unsigned fetch when keys boot will sign one (that
+  // response fills in-memory rollup + appKeys). Unsigned is enough when this
+  // build has no HMAC credentials. When the signed path is taken but fails to
+  // populate the rollup, `keysStore` calls `fetchPublicRollup` directly — the
+  // decision cannot be made here, because at this point the signed fetch is
+  // usually still in flight rather than failed.
+  if (infoServerData.rollup == null && skipUnsignedLaunchFetch !== true) {
+    await queryInfo()
   }
 
-  await queryInfo()
   setInterval(() => {
     queryInfo().catch(() => {
       // Already caught in `queryInfo`

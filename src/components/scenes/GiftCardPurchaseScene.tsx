@@ -17,7 +17,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { displayFiatAmount } from '../../hooks/useFiatText'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
@@ -35,6 +34,7 @@ import type { EdgeAsset } from '../../types/types'
 import { caip19ToEdgeAsset } from '../../util/caip19Utils'
 import { debugLog } from '../../util/logger'
 import { parseLinkedText } from '../../util/parseLinkedText'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { KavButtons } from '../buttons/KavButtons'
@@ -94,8 +94,7 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
   const isConnected = useSelector(state => state.network.isConnected)
 
   // Provider (requires API key configured)
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
+  const phazeConfig = getPhazeConfig()
   const {
     provider,
     isReady,

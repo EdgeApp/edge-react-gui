@@ -1,7 +1,6 @@
 import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
-import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
 import { asBiggystring } from '../util/cleaners'
@@ -35,11 +34,6 @@ export const SHORT_DATE_FMT: string = 'PP' // Apr 29, 1453
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
 export const locale: IntlLocaleType = { ...EN_US_LOCALE }
-
-// Set the locale at boot:
-const [firstLocale = { languageTag: 'en_US' }] = getLocales()
-const numberFormat = getNumberFormatSettings()
-setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
 
 /**
  * Formats number input according to user locale
@@ -402,8 +396,7 @@ export const pickLanguage = (
 export const getLocaleOrDefaultString = (
   localizedStrings: Record<string, string>
 ): string | undefined => {
-  const [firstLocale = { languageTag: DEFAULT_LOCALE_ID }] = getLocales()
-  const { languageTag } = firstLocale
+  const languageTag = locale.localeIdentifier
   const localizedStringKeys = Object.keys(localizedStrings)
 
   let localeId = pickLanguage(languageTag, localizedStringKeys)

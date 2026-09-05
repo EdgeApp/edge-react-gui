@@ -35,7 +35,8 @@ export const parseQuery = (query?: string): UriQueryMap => {
   if (query == null) return {}
   const dummyUrl = new URL('https://dummyurl.com?' + query, true)
   const test = dummyUrl.query
-  // @ts-expect-error
+  // @ts-expect-error url-parse types `query` as string | Record<string, string>
+  // depending on its `parseQuery` flag, which it cannot narrow from `true` here.
   return test
 }
 

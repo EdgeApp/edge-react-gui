@@ -11,7 +11,7 @@ import {
 } from '../actions/LocalSettingsActions'
 import { getLocaleOrDefaultString } from '../locales/intl'
 import { type DisplayInfoCard, filterInfoCards } from './infoUtils'
-import { getOsVersion } from './utils'
+import { getOsVersion } from './rnUtils'
 
 /**
  * Generate a unique notification key for a promo card
