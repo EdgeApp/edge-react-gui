@@ -123,10 +123,12 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
   const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
   const nativeKey = hasNativeApiSigner() ? await warmNativeApiKey() : ''
   const nativeApiSigner = nativeKey !== '' ? makeNativeApiSigner() : undefined
-  const jsPair =
-    isUsableApiKey(apiKey) && apiSecret != null && apiSecret.byteLength > 0
+  // Token-only keys are valid: core uses `Authorization: Token {apiKey}`.
+  const jsPair = isUsableApiKey(apiKey)
+    ? apiSecret != null && apiSecret.byteLength > 0
       ? { apiKey, apiSecret }
-      : undefined
+      : { apiKey }
+    : undefined
   console.log(
     `[apiSigner] native=${nativeApiSigner != null} keysFallback=${
       jsPair != null
