@@ -180,6 +180,8 @@
   "transaction_list_search_no_result": "検索結果はみつかりませんでした",
   "transaction_list_recent_transactions": "Recent Transactions",
   "fragment_wallets_balance_text": "合計残高",
+  "fragment_wallets_unhide_balance_text": "Unhide Balance",
+  "fragment_wallets_balance_hidden_toast": "Balances are hidden. Tap “Unhide Balance” to show them again.",
   "fragment_wallets_delete_wallet": "ウォレットをアーカイブ",
   "fragment_wallets_delete_token": "Disable Token",
   "fragment_wallets_delete_token_prompt_2s": "Are you sure you want to disable token %1$s in your %2$s wallet?",
