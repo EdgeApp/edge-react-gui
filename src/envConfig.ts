@@ -155,6 +155,7 @@ export const asEnvConfig = asObject({
       ),
       ionia: asOptional(
         asObject({
+          authTokenUrl: asString,
           clientId: asString,
           clientSecret: asString,
           ioniaBaseUrl: asString,
@@ -203,14 +204,6 @@ export const asEnvConfig = asObject({
       paybis: undefined,
       revolut: undefined,
       simplex: undefined
-    })
-  ),
-  WYRE_CLIENT_INIT: asOptional(
-    asObject({
-      baseUri: asString
-    }),
-    () => ({
-      baseUri: 'https://api.sendwyre.com'
     })
   ),
   AZTECO_API_KEY: asNullable(asString),

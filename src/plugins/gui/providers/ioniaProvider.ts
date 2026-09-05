@@ -53,6 +53,7 @@ const ioniaBaseRequestOptions = {
 }
 
 const asIoniaPluginApiKeys = asObject({
+  authTokenUrl: asString,
   clientId: asString,
   clientSecret: asString,
   ioniaBaseUrl: asString,
@@ -145,7 +146,7 @@ export const makeIoniaProvider: FiatProviderFactory<IoniaMethods> = {
 
     // OAuth Access Token Request:
     const fetchAccessToken = cleanFetch({
-      resource: new URL(`https://auth.craypay.com/connect/token`),
+      resource: new URL(pluginKeys.authTokenUrl),
       options: {
         method: 'POST',
         headers: {

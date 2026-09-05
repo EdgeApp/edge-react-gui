@@ -11,8 +11,6 @@ export const edgeConfig: AppConfig = {
   backupAccountSite: 'https://edge.app/light-account-creation/',
   configName: 'edge',
   darkTheme: edgeDark,
-  pendingTxLearnMoreUrl:
-    'https://support.edge.app/hc/en-us/articles/43465958781723',
   zcashMigrationLearnMoreUrl: 'https://support.edge.app/articles/16111542',
   defaultWallets: [
     { pluginId: 'bitcoin', tokenId: null },
