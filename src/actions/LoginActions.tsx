@@ -28,6 +28,7 @@ import type {
   NavigationBase,
   RootSceneProps
 } from '../types/routerTypes'
+import { allPlugins } from '../util/corePlugins'
 import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { clearReverseLookupCache } from '../util/nameServices'
@@ -55,6 +56,40 @@ import {
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
 
+// Plugin loading happens once per core context, so a plugin that is missing at
+// the first login stays missing for every later one. Report it a single time.
+let missingPluginsReported = false
+
+/**
+ * Reports plugins that we asked the core to load but never got back, which
+ * happens when a plugin's API keys are absent or malformed. The core leaves
+ * such a plugin out of `currencyConfig` / `swapConfig` rather than failing the
+ * login, so the app still works without whatever that plugin provides.
+ */
+function reportMissingPlugins(account: EdgeAccount): void {
+  if (missingPluginsReported) return
+  missingPluginsReported = true
+
+  const missingPluginIds = Object.keys(allPlugins).filter(pluginId => {
+    const init = allPlugins[pluginId]
+    if (init === false || init == null) return false
+    return (
+      account.currencyConfig[pluginId] == null &&
+      account.swapConfig[pluginId] == null
+    )
+  })
+  if (missingPluginIds.length === 0) return
+
+  showError(
+    new Error(
+      sprintf(
+        lstrings.plugins_unavailable_message_s,
+        missingPluginIds.join(', ')
+      )
+    )
+  )
+}
+
 export function initializeAccount(
   navigation: RootSceneProps<'login'>['navigation'],
   account: EdgeAccount
@@ -77,6 +112,8 @@ export function initializeAccount(
         localSettings
       }
     })
+
+    reportMissingPlugins(account)
 
     const referralPromise = dispatch(loadAccountReferral(account))
 

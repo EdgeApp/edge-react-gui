@@ -9,6 +9,7 @@ import {
   asObject,
   asOptional,
   asString,
+  asUnknown,
   asValue
 } from 'cleaners'
 import type {
@@ -230,7 +231,16 @@ const asDeviceSettingsInner = asObject({
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
   themeMode: asMaybe(asThemeMode, 'dark'),
-  isSurveyDiscoverShown: asMaybe(asBoolean, false)
+  isSurveyDiscoverShown: asMaybe(asBoolean, false),
+  keysCache: asMaybe(
+    asObject({
+      keys: asUnknown,
+      // When the cache was last written. Diagnostic only — the warm path does
+      // not expire; a new signed infoRollup refresh replaces the blob for the next launch.
+      fetchedAt: asMaybe(asNumber, 0),
+      assuranceLevel: asMaybe(asString)
+    })
+  )
 })
 
 export const asLocalAccountSettings = asMaybe(asLocalAccountSettingsInner, () =>

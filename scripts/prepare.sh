@@ -7,7 +7,7 @@
 set -e
 cd "$(dirname "$0")/.."
 
-# Assemble the env.json config file:
+# Assemble the config.json config file:
 node -r sucrase/register ./scripts/configure.ts
 
 ## Fix broken packages:
@@ -18,7 +18,13 @@ npx patch-package
 # that were later renamed by Google.
 npx jetify
 
-# Copy the API key to native code:
+# Generate XOR-split API secret C sources for native HMAC signing, then copy
+# the public apiKey into EdgeApiKey.swift/java. Order matters: makeApiSigner
+# may force a stub placeholder when apiSecret is missing, and makeNativeHeaders
+# must write the same public key EdgeApiSigner will advertise.
+# Stub allowed here so `npm ci` / prepare can run before secretFiles lands edgeKey.json;
+# Android/iOS generate tasks re-run without this flag once the real secret is present.
+EDGE_API_SIGNER_ALLOW_STUB=1 node -r sucrase/register ./scripts/makeApiSigner.ts
 node -r sucrase/register ./scripts/makeNativeHeaders.ts
 
 # Copy Firebase configs
