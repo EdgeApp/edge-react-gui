@@ -5,7 +5,6 @@ import type {
   EdgeWalletShareSpec
 } from 'edge-core-js'
 import * as React from 'react'
-import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ScanModal } from '../components/modals/ScanModal'
@@ -24,7 +23,6 @@ import { WalletShareSelectModal } from '../components/modals/WalletShareSelectMo
 import {
   Airship,
   showError,
-  showToast,
   showToastSpinner
 } from '../components/services/AirshipInstance'
 import { lstrings } from '../locales/strings'
@@ -151,7 +149,18 @@ export async function shareWalletsToLobby(
   ))
   if (confirmed !== true) return
 
-  showToast(sprintf(lstrings.wallet_share_shared_toast_1s, specs.length))
+  const modeById = new Map(specs.map(spec => [spec.walletId, spec.mode]))
+  await Airship.show(bridge => (
+    <WalletShareReceivedModal
+      bridge={bridge}
+      variant="shared"
+      entries={wallets.map(wallet => ({
+        wallet,
+        mode: modeById.get(wallet.id) ?? 'viewOnly'
+      }))}
+      counterpartyName={counterpartyName}
+    />
+  ))
 }
 
 /**

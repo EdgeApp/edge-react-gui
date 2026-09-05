@@ -2649,11 +2649,15 @@ const strings = {
     'Select which wallets to share with Spending Ability',
   wallet_share_mode_subtitle:
     'Wallets shared with spending toggled off will still allow recipient to view all transactions and edit transaction metadata.',
-  wallet_share_mode_spend_only_1s: '%1$s can only be shared with spend access',
+  wallet_share_mode_spend_only_title: 'Spend access required',
+  wallet_share_mode_spend_only_message:
+    'This asset cannot be shared as a view-only wallet to the recipient. Granting full access to spend is required to share this wallet.',
   wallet_share_mode_view_only_source_1s:
     '%1$s was received view-only and cannot grant spend access',
   wallet_share_confirm_title: 'Confirm wallet sharing',
   wallet_share_mode_view_only: 'View only',
+  // %1$s is a count of tokens not listed:
+  wallet_share_tokens_more_1s: '+%1$s more',
   wallet_share_mode_spend: 'Spend',
   wallet_share_confirm_warning_title: 'Sharing cannot be undone',
   wallet_share_confirm_warning_body:
@@ -2661,13 +2665,13 @@ const strings = {
   wallet_share_confirm_warning_body_view_only:
     'The recipient account will be able to see balances and transaction history of the shared wallets. Access to shared wallets cannot be revoked.',
   wallet_share_confirm_slide: 'Slide to share',
-  wallet_share_shared_toast_1s: 'Shared %1$s wallet(s)',
   wallet_share_receive_title: 'Receive Wallets',
   wallet_share_receive_instructions:
     'Have the sharing device scan this QR code',
   wallet_share_receive_waiting: 'Receiving shared wallets…',
   wallet_share_received_title:
     'You have received access to the following wallets',
+  wallet_share_shared_title: 'You have shared access to the following wallets',
   wallet_share_accept_title: 'Accept shared wallets',
   wallet_share_accept_body:
     'Another account is offering to share wallets with you. The wallets will be added to this account.',
@@ -2684,6 +2688,8 @@ const strings = {
   wallet_share_receive_title_1s: 'Receive wallets as %1$s',
   wallet_share_received_title_1s:
     'You have received access to the following wallets from %1$s',
+  wallet_share_shared_title_1s:
+    'You have shared access to the following wallets with %1$s',
 
   // Wallet sharing: history
   wallet_share_pill: 'Shared',

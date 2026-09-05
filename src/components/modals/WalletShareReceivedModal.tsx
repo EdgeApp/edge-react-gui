@@ -21,19 +21,23 @@ export interface ReceivedWalletEntry {
 interface Props {
   bridge: AirshipBridge<void>
   entries: ReceivedWalletEntry[]
-  /** Who sent them, '' when they gave no name. */
+  /** The other party, '' when they gave no name. */
   counterpartyName: string
+  /** Which side of the exchange is looking at the list. */
+  variant?: 'received' | 'shared'
 }
 
 /**
- * Tells the receiver what just landed in their account and with what access.
- * Balances are left out on purpose: the wallets have not synced yet, and a
- * row of zeros would read as "empty" rather than "loading".
+ * Tells either party what just moved and with what access, so both end the
+ * exchange looking at the same summary. Balances are left out on purpose: a
+ * freshly received wallet has not synced yet, and a row of zeros would read
+ * as "empty" rather than "loading".
  */
 export const WalletShareReceivedModal: React.FC<Props> = props => {
-  const { bridge, entries, counterpartyName } = props
+  const { bridge, entries, counterpartyName, variant = 'received' } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+  const shared = variant === 'shared'
 
   const handleClose = useHandler(() => {
     bridge.resolve()
@@ -45,9 +49,17 @@ export const WalletShareReceivedModal: React.FC<Props> = props => {
       title={
         <ModalTitle>
           <SharePartyText
-            template={lstrings.wallet_share_received_title_1s}
+            template={
+              shared
+                ? lstrings.wallet_share_shared_title_1s
+                : lstrings.wallet_share_received_title_1s
+            }
             name={counterpartyName}
-            fallbackTemplate={lstrings.wallet_share_received_title}
+            fallbackTemplate={
+              shared
+                ? lstrings.wallet_share_shared_title
+                : lstrings.wallet_share_received_title
+            }
           />
         </ModalTitle>
       }

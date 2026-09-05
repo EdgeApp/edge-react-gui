@@ -7,6 +7,7 @@ import { lstrings } from '../../locales/strings'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { WalletShareTokenRows } from './WalletShareTokenRows'
 
 interface Props {
   wallet: EdgeCurrencyWallet
@@ -16,9 +17,10 @@ interface Props {
 }
 
 /**
- * A flat, non-interactive wallet row with its share mode on the right.
- * "Spend" is called out in the warning color because it is the irreversible
- * grant; "View only" stays quiet.
+ * A flat, non-interactive wallet row with its share mode on the right, and
+ * the wallet's tokens indented beneath it. "Spend" is called out in the
+ * warning color because it is the irreversible grant; "View only" stays
+ * quiet.
  */
 const WalletShareSummaryRowComponent: React.FC<Props> = props => {
   const { wallet, mode, isLast = false } = props
@@ -28,33 +30,38 @@ const WalletShareSummaryRowComponent: React.FC<Props> = props => {
   const { currencyCode, pluginId } = wallet.currencyInfo
 
   return (
-    <View style={isLast ? styles.rowLast : styles.row}>
-      <CryptoIcon pluginId={pluginId} tokenId={null} sizeRem={2} />
-      <View style={styles.textColumn}>
-        <EdgeText style={styles.currencyCode}>{currencyCode}</EdgeText>
-        <EdgeText style={styles.walletName}>{walletName}</EdgeText>
+    <View style={isLast ? styles.containerLast : styles.container}>
+      <View style={styles.row}>
+        <CryptoIcon pluginId={pluginId} tokenId={null} sizeRem={2} />
+        <View style={styles.textColumn}>
+          <EdgeText style={styles.currencyCode}>{currencyCode}</EdgeText>
+          <EdgeText style={styles.walletName}>{walletName}</EdgeText>
+        </View>
+        <EdgeText style={mode === 'spend' ? styles.modeSpend : styles.modeView}>
+          {mode === 'spend'
+            ? lstrings.wallet_share_mode_spend
+            : lstrings.wallet_share_mode_view_only}
+        </EdgeText>
       </View>
-      <EdgeText style={mode === 'spend' ? styles.modeSpend : styles.modeView}>
-        {mode === 'spend'
-          ? lstrings.wallet_share_mode_spend
-          : lstrings.wallet_share_mode_view_only}
-      </EdgeText>
+      <WalletShareTokenRows wallet={wallet} />
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const row = {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
+  const container = {
     paddingVertical: theme.rem(0.75),
     marginHorizontal: theme.rem(0.5),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
   }
   return {
-    row,
-    rowLast: { ...row, borderBottomWidth: 0 },
+    container,
+    containerLast: { ...container, borderBottomWidth: 0 },
+    row: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const
+    },
     textColumn: {
       flexGrow: 1,
       flexShrink: 1,

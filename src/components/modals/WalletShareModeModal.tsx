@@ -11,8 +11,11 @@ import { lstrings } from '../../locales/strings'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { WalletShareTokenRows } from '../rows/WalletShareTokenRows'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { ButtonsModal } from './ButtonsModal'
 import { EdgeModal } from './EdgeModal'
 
 interface Props {
@@ -118,17 +121,30 @@ const ModeRowComponent: React.FC<ModeRowProps> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const walletName = useWalletName(wallet)
-  const { currencyCode, displayName, pluginId } = wallet.currencyInfo
+  const { currencyCode, pluginId } = wallet.currencyInfo
   const pin = pinFor(wallet)
 
   const handleValueChange = useHandler((value: boolean) => {
+    // A spend-only wallet's toggle stays on, but answering the tap explains
+    // the constraint instead of leaving a control that does nothing:
+    if (pin === 'spendOnly') {
+      Airship.show<'ok' | undefined>(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={lstrings.wallet_share_mode_spend_only_title}
+          message={lstrings.wallet_share_mode_spend_only_message}
+          buttons={{ ok: { label: lstrings.string_ok } }}
+        />
+      )).catch((error: unknown) => {
+        showError(error)
+      })
+      return
+    }
     onToggle(wallet.id, value)
   })
 
   const footnote =
-    pin === 'spendOnly'
-      ? sprintf(lstrings.wallet_share_mode_spend_only_1s, displayName)
-      : pin === 'viewOnlySource'
+    pin === 'viewOnlySource'
       ? sprintf(lstrings.wallet_share_mode_view_only_source_1s, walletName)
       : null
 
@@ -141,7 +157,7 @@ const ModeRowComponent: React.FC<ModeRowProps> = props => {
           <EdgeText style={styles.walletName}>{walletName}</EdgeText>
         </View>
         <Switch
-          disabled={pin != null}
+          disabled={pin === 'viewOnlySource'}
           ios_backgroundColor={theme.toggleButtonOff}
           trackColor={{
             false: theme.toggleButtonOff,
@@ -151,6 +167,7 @@ const ModeRowComponent: React.FC<ModeRowProps> = props => {
           onValueChange={handleValueChange}
         />
       </View>
+      <WalletShareTokenRows wallet={wallet} />
       {footnote == null ? null : (
         <EdgeText style={styles.footnote} numberOfLines={2}>
           {footnote}

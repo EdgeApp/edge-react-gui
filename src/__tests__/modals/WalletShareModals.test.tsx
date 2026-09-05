@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { render } from '@testing-library/react-native'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
+import { Switch } from 'react-native'
 
 import { WalletSharedPill } from '../../components/common/WalletSharedPill'
 import { WalletShareChooserModal } from '../../components/modals/WalletShareChooserModal'
@@ -42,6 +43,23 @@ const walletA = makeWallet('wallet-a', 'Spending')
 const walletB = makeWallet('wallet-b', 'Savings')
 const viewOnlyWallet = makeWallet('wallet-c', 'Shared to me', {
   canSign: false
+})
+const tokenWallet = makeWallet('wallet-f', 'Has tokens', {
+  currencyConfig: makeFakeCurrencyConfig(btcCurrencyInfo, {
+    'token-one': {
+      currencyCode: 'USDC',
+      displayName: 'USD Coin',
+      denominations: [{ multiplier: '1000000', name: 'USDC' }],
+      networkLocation: {}
+    },
+    'token-two': {
+      currencyCode: 'WBTC',
+      displayName: 'Wrapped Bitcoin',
+      denominations: [{ multiplier: '100000000', name: 'WBTC' }],
+      networkLocation: {}
+    }
+  }),
+  enabledTokenIds: ['token-one', 'token-two']
 })
 const moneroWallet = makeWallet('wallet-d', 'My Monero', {
   currencyInfo: {
@@ -121,6 +139,33 @@ describe('Wallet sharing modals', () => {
         />
       </FakeProviders>
     )
+    // A spend-only wallet keeps a live toggle, so tapping it can explain
+    // itself; a view-only source has nothing to explain and stays dead:
+    const [plain, spendOnly, viewOnlySource] =
+      rendered.UNSAFE_getAllByType(Switch)
+    expect(plain.props.disabled).toBe(false)
+    expect(plain.props.value).toBe(false)
+    expect(spendOnly.props.disabled).toBe(false)
+    expect(spendOnly.props.value).toBe(true)
+    expect(viewOnlySource.props.disabled).toBe(true)
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
+  })
+
+  it("mode modal lists a wallet's tokens beneath it", () => {
+    const rendered = render(
+      <FakeProviders initialState={fakeState}>
+        <WalletShareModeModal
+          bridge={fakeAirshipBridge}
+          wallets={[tokenWallet]}
+        />
+      </FakeProviders>
+    )
+    const text = JSON.stringify(rendered.toJSON())
+    expect(text).toContain('USD Coin')
+    expect(text).toContain('Wrapped Bitcoin')
+    // Tokens ride on the parent's keys, so they get no toggle of their own:
+    expect(rendered.UNSAFE_getAllByType(Switch)).toHaveLength(1)
     expect(rendered.toJSON()).toMatchSnapshot()
     rendered.unmount()
   })
@@ -130,10 +175,10 @@ describe('Wallet sharing modals', () => {
       <FakeProviders initialState={fakeState}>
         <WalletShareConfirmModal
           bridge={fakeAirshipBridge}
-          wallets={[walletA, walletB]}
+          wallets={[walletA, tokenWallet]}
           specs={[
             { walletId: walletA.id, mode: 'viewOnly' },
-            { walletId: walletB.id, mode: 'spend' }
+            { walletId: tokenWallet.id, mode: 'spend' }
           ]}
           counterpartyName="Bob"
           onConfirm={async () => {}}
@@ -222,6 +267,27 @@ describe('Wallet sharing modals', () => {
         />
       </FakeProviders>
     )
+    expect(rendered.toJSON()).toMatchSnapshot()
+    rendered.unmount()
+  })
+
+  it('the sharer sees the same list, titled for their side', () => {
+    const rendered = render(
+      <FakeProviders initialState={fakeState}>
+        <WalletShareReceivedModal
+          bridge={fakeAirshipBridge}
+          variant="shared"
+          entries={[
+            { wallet: walletA, mode: 'viewOnly' },
+            { wallet: walletB, mode: 'spend' }
+          ]}
+          counterpartyName="Bob"
+        />
+      </FakeProviders>
+    )
+    const text = JSON.stringify(rendered.toJSON())
+    expect(text).toContain('You have shared access to the following wallets')
+    expect(text).not.toContain('You have received')
     expect(rendered.toJSON()).toMatchSnapshot()
     rendered.unmount()
   })
