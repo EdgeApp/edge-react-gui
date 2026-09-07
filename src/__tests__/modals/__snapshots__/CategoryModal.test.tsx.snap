@@ -132,9 +132,8 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       ]
     }
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -150,6 +149,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           },
         ]
       }
+      tint="dark"
     />
     <View
       style={
@@ -1843,9 +1843,8 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       ]
     }
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -1861,6 +1860,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           },
         ]
       }
+      tint="dark"
     />
     <View
       style={
