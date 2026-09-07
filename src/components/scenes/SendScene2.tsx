@@ -554,7 +554,8 @@ const SendComponent: React.FC<Props> = props => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
     spendTarget.memo = spendTarget.uniqueIdentifier = undefined
-    setError(undefined)
+    // Keep the locked-state card if a broadcast has been attempted:
+    if (!broadcastAttemptedRef.current) setError(undefined)
     setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
@@ -797,6 +798,11 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
+    // The quote's expiry is moot once a broadcast has been attempted with it.
+    // Firing it now would either overwrite the locked-state card with an
+    // expiry error or, for launchers whose onExpired navigates back, pop the
+    // scene and hide the card entirely.
+    if (broadcastAttemptedRef.current) return
     if (onExpired != null) {
       // Caller provided custom expiry handler - call it without showing error
       onExpired()
@@ -1624,18 +1630,11 @@ const SendComponent: React.FC<Props> = props => {
           // view so the whole message is readable without scrolling by hand.
           needsScrollToEnd.current = true
 
-          // Flows that launched this scene (ramp sells, gift cards) wait on
-          // onDone to finish. The locked slider means they can never reach
-          // the success callback by retrying, so hand them the error now and
-          // let them wind down on their own terms while this scene keeps its
-          // message. The scene already shows the error, so a rejection from
-          // the callback is only logged.
-          if (onDone != null) {
-            const p = onDone(errorCasted)
-            p?.catch((e: unknown) => {
-              console.log(e)
-            })
-          }
+          // Deliberately no onDone(error) here. The ramp launchers pop this
+          // scene when their onDone promise rejects and show a generic
+          // failure, which would hide this card and put the user back in a
+          // flow that can start another real payment. They still terminate
+          // through onBack when the user leaves, as on develop.
           return
         }
 
@@ -1675,6 +1674,11 @@ const SendComponent: React.FC<Props> = props => {
   // Calculate the transaction
   useAsyncEffect(
     async () => {
+      // Once a broadcast has been attempted the transaction may already be on
+      // the network. Re-quoting would be meaningless, and the success path
+      // below clears `error`, which is the only explanation the user has for
+      // the locked slider. Freeze the quote instead.
+      if (broadcastAttemptedRef.current) return
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
