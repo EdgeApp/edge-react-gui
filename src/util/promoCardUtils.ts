@@ -34,7 +34,7 @@ export const addPromoCardToNotifications = async (
   account: EdgeAccount,
   promoCard: DisplayInfoCard
 ): Promise<void> => {
-  const { ctaButton, messageId, localeMessages } = promoCard
+  const { ctaButton, messageId, localeMessages, promoId } = promoCard
 
   if (ctaButton == null) return
   const title = getLocaleOrDefaultString(ctaButton.localeLabels)
@@ -61,7 +61,8 @@ export const addPromoCardToNotifications = async (
         messageId,
         title,
         body,
-        ctaUrl
+        ctaUrl,
+        promoId
       }
     }
   })

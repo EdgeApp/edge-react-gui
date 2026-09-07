@@ -1,5 +1,5 @@
 import { mul } from 'biggystring'
-import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,7 +7,10 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FundAccountModal } from '../components/modals/FundAccountModal'
-import { pickWallet } from '../components/modals/WalletListModal'
+import {
+  pickWallet,
+  type WalletListWalletResult
+} from '../components/modals/WalletListModal'
 import {
   Airship,
   showError,
@@ -124,14 +127,21 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
     case 'plugin':
       return 'wallets'
 
+    // An `exchange` link that names an asset opens the wallet picker, so it
+    // belongs with the group above; without one it only navigates:
+    case 'rampCreate':
+      return link.asset == null ? 'account' : 'wallets'
+    case 'swap':
+      return link.buyAsset == null && link.sellAsset == null
+        ? 'account'
+        : 'wallets'
+
     // Everything else just navigates, or hands off to an already-open scene:
     case 'edgeLogin':
     case 'fiatProvider':
     case 'price-change':
     case 'ramp':
-    case 'rampCreate':
     case 'scene':
-    case 'swap':
       return 'account'
   }
 }
@@ -145,24 +155,25 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
 export function launchDeepLink(
   navigation: NavigationBase,
   link: DeepLink
-): ThunkAction<Promise<void>> {
+): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
     const state = getState()
-    await handleLink(navigation, dispatch, state, link)
+    return await handleLink(navigation, dispatch, state, link)
   }
 }
 
 /**
- * Launches a link if it app is able to do so.
- * @returns true if the link is handled,
- * or false if the app is in the wrong state to handle this link.
+ * Follow a link.
+ * @returns false when the user backed out of a prompt the link raised (a
+ * wallet picker they dismissed), so callers can leave whatever surface sent
+ * them here untouched. True otherwise.
  */
 async function handleLink(
   navigation: NavigationBase,
   dispatch: Dispatch,
   state: RootState,
   link: DeepLink
-): Promise<void> {
+): Promise<boolean> {
   const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
   const { currencyWallets } = account
@@ -277,16 +288,38 @@ async function handleLink(
 
     case 'affiliate':
       await dispatch(activatePromotion(link.installerId))
-      await handleLink(navigation, dispatch, state, link.link)
-      break
+      return await handleLink(navigation, dispatch, state, link.link)
 
     case 'requestAddress':
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       break
 
-    case 'swap':
-      navigation.navigate('swapTab', { screen: 'swapCreate' })
+    case 'swap': {
+      const { buyAsset, sellAsset, promoId } = link
+
+      const toResult = await pickLinkedWallet(account, navigation, buyAsset)
+      if (toResult === null) return false
+      const fromResult = await pickLinkedWallet(account, navigation, sellAsset)
+      if (fromResult === null) return false
+      dispatch({ type: 'LINK_PROMO_ID/SET', data: { promoId } })
+
+      // Navigate with no params at all when the link named no asset: passing
+      // undefined wallet ids would blank a selection the user already made on
+      // the swap scene, which is what a bare `edge://swap` used to preserve.
+      navigation.navigate('swapTab', {
+        screen: 'swapCreate',
+        params:
+          fromResult == null && toResult == null
+            ? undefined
+            : {
+                fromWalletId: fromResult?.walletId,
+                fromTokenId: fromResult?.tokenId,
+                toWalletId: toResult?.walletId,
+                toTokenId: toResult?.tokenId
+              }
+      })
       break
+    }
 
     case 'azteco': {
       const result = await pickWallet({
@@ -471,7 +504,7 @@ async function handleLink(
       // Optional navigation: delegate to the shared handler, mirroring the
       // affiliate link. Unsupported targets fall through its existing guards.
       if (link.link != null) {
-        await handleLink(navigation, dispatch, state, link.link)
+        return await handleLink(navigation, dispatch, state, link.link)
       }
       break
     }
@@ -529,7 +562,7 @@ async function handleLink(
           />
         ))
         if (!approved) {
-          return
+          return false
         }
       }
 
@@ -601,16 +634,29 @@ async function handleLink(
       // type to the top of the quote results. The pin lives in the navigation
       // params only: nothing is written to the account referral state, and a
       // pin that matches no quote degrades to the normal ordering.
-      const { direction, providerId, paymentType } = link
+      const { direction, providerId, paymentType, asset, promoId } = link
+
+      // A null result means the user backed out of the wallet picker, so do
+      // not push them into the flow anyway. Resolve before stashing the promo
+      // id, so a dismissed picker leaves no id behind to mis-attribute a later
+      // conversion.
+      const forcedWalletResult = await pickLinkedWallet(
+        account,
+        navigation,
+        asset
+      )
+      if (forcedWalletResult === null) return false
+      dispatch({ type: 'LINK_PROMO_ID/SET', data: { promoId } })
+
       if (direction === 'buy') {
         navigation.navigate('buyTab', {
           screen: 'pluginListBuy',
-          params: { providerId, paymentType }
+          params: { providerId, paymentType, forcedWalletResult }
         })
       } else {
         navigation.navigate('sellTab', {
           screen: 'pluginListSell',
-          params: { providerId, paymentType }
+          params: { providerId, paymentType, forcedWalletResult }
         })
       }
       break
@@ -654,4 +700,29 @@ async function handleLink(
     default:
       break
   }
+  return true
+}
+
+/**
+ * Resolve a deep link's asset to one of the account's wallets, offering to
+ * create one when the account holds none for that asset. Returns undefined
+ * when the link named no asset (nothing to pre-select) and null when the user
+ * dismissed the picker, which callers treat as "do not navigate".
+ */
+async function pickLinkedWallet(
+  account: EdgeAccount,
+  // Taken from `pickWallet` rather than named directly, so this follows the
+  // v7 navigation migration instead of pinning the deprecated flat type.
+  navigation: Parameters<typeof pickWallet>[0]['navigation'],
+  asset: EdgeAsset | undefined
+): Promise<WalletListWalletResult | undefined | null> {
+  if (asset == null) return undefined
+
+  const result = await pickWallet({
+    account,
+    assets: [asset],
+    navigation,
+    showCreateWallet: true
+  })
+  return result?.type === 'wallet' ? result : null
 }

@@ -227,6 +227,17 @@ export function trackError(
 }
 
 /**
+ * The events that consume a link-scoped promo id. Reaching any of them means
+ * the deep link or promo card that opened the flow has been credited, so the
+ * id is retired.
+ */
+const CONVERSION_EVENTS: TrackingEventName[] = [
+  'Buy_Success',
+  'Sell_Success',
+  'Exchange_Shift_Success'
+]
+
+/**
  * Send a raw event to all backends.
  */
 export function logEvent(
@@ -262,7 +273,11 @@ export function logEvent(
         const { accountReferral } = account
         params.refDeviceInstallerId = deviceReferral.installerId
         params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
-        params.promoIds = accountReferral.activePromotions
+        // A deep link or promo card that opened this flow attributes its own
+        // conversion, overriding the account's promo ids for this one entry.
+        const { linkPromoId } = state
+        params.promoIds =
+          linkPromoId == null ? accountReferral.activePromotions : [linkPromoId]
 
         const { creationDate, installerId, accountAppleAdsAttribution } =
           accountReferral
@@ -403,6 +418,13 @@ export function logEvent(
         ]).catch((error: unknown) => {
           console.warn(error)
         })
+
+        // The link-scoped promo id attributes exactly one conversion. Retiring
+        // it here keeps a later, unrelated buy or swap on the account's own
+        // promo ids.
+        if (linkPromoId != null && CONVERSION_EVENTS.includes(event)) {
+          dispatch({ type: 'LINK_PROMO_ID/SET', data: { promoId: undefined } })
+        }
       })
       .catch((e: unknown) => {
         console.error(e)

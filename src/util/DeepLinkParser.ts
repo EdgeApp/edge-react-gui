@@ -15,6 +15,7 @@ import {
   type PromotionLink
 } from '../types/DeepLinkTypes'
 import type { AppParamList } from '../types/routerTypes'
+import type { EdgeAsset } from '../types/types'
 import type { UriQueryMap } from '../types/WebTypes'
 import { parseQuery, stringifyQuery } from './WebUtils'
 
@@ -192,6 +193,35 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       return { type: 'edgeLogin', lobbyId }
     }
 
+    case 'exchange': {
+      // edge://exchange/<buy|sell|swap>?buyAsset=&sellAsset=&promoId=
+      const [directionString] = pathParts
+      const query = parseQuery(url.query)
+      const buyAsset = parseOptionalAsset(query.buyAsset)
+      const sellAsset = parseOptionalAsset(query.sellAsset)
+      const promoId =
+        query.promoId == null || query.promoId === ''
+          ? undefined
+          : query.promoId
+
+      if (directionString === 'swap') {
+        return { type: 'swap', buyAsset, sellAsset, promoId }
+      }
+
+      // Buy and sell each name a single asset, on the side that matches the
+      // direction. The opposite side is the user's fiat, so a `sellAsset` on a
+      // buy link (or the reverse) has nothing to select and is ignored.
+      const direction = asFiatDirection(directionString)
+      return {
+        type: 'rampCreate',
+        direction,
+        providerId: undefined,
+        paymentType: undefined,
+        asset: direction === 'buy' ? buyAsset : sellAsset,
+        promoId
+      }
+    }
+
     case 'pay': {
       const [protocol = '', ...deepPath] = pathParts
       const path = deepPath.join('/')
@@ -354,6 +384,49 @@ function parseOptionalPaymentType(
     console.warn(`Ignoring unknown deep link payment type: ${paymentType}`)
     return undefined
   }
+}
+
+/**
+ * Resolve an `exchange` link's asset from its `<pluginId>[_<tokenId>]` spec:
+ *
+ *   bitcoin
+ *   ethereum_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+ *
+ * The split is on the FIRST underscore so a plugin id containing one still
+ * parses; no underscore means the chain's mainnet asset. Like the payment-type
+ * pin above, these links are authored by partners and marketing, so an empty
+ * or malformed spec degrades to no pre-selection rather than dead-ending the
+ * whole link.
+ */
+function parseOptionalAsset(spec: string | null): EdgeAsset | undefined {
+  if (spec == null || spec === '') return undefined
+
+  const separatorIndex = spec.indexOf('_')
+  if (separatorIndex < 0) return { pluginId: spec, tokenId: null }
+
+  const pluginId = spec.slice(0, separatorIndex)
+  const rawTokenId = spec.slice(separatorIndex + 1)
+  if (pluginId === '' || rawTokenId === '') {
+    console.warn(`Ignoring malformed deep link asset: ${spec}`)
+    return undefined
+  }
+  return { pluginId, tokenId: normalizeTokenId(rawTokenId) }
+}
+
+/**
+ * Bring a link's token id into the form the core uses, so it matches a
+ * wallet's `enabledTokenIds`.
+ *
+ * Ethereum-family token ids are the contract address lowercased with the `0x`
+ * dropped, but the contract addresses people paste into links are checksummed
+ * and prefixed. Only that prefixed form is rewritten: token ids on other
+ * chains (Solana mints, Cardano policy ids) are case-sensitive base58, so
+ * anything without the prefix is passed through untouched.
+ */
+function normalizeTokenId(tokenId: string): string {
+  return /^0x[0-9a-fA-F]+$/.test(tokenId)
+    ? tokenId.slice(2).toLowerCase()
+    : tokenId
 }
 
 function stringifyPath(path: string[]): string {
