@@ -132,9 +132,8 @@ exports[`CountryListModal should render with a country list 1`] = `
       ]
     }
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -150,6 +149,7 @@ exports[`CountryListModal should render with a country list 1`] = `
           },
         ]
       }
+      tint="dark"
     />
     <View
       style={
