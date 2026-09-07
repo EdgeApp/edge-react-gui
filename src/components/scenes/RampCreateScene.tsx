@@ -22,6 +22,7 @@ import {
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
 import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampPreferredProviders } from '../../hooks/useRampPreferredProviders'
@@ -608,21 +609,40 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // The pins are read through a ref so the guard below can see them without
   // entering the dep array, which is what the `navigation`-only subscription
   // above depends on.
-  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
-  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
+  const pinsRef = React.useRef({
+    pinnedProviderId,
+    pinnedPaymentType,
+    forcedWalletResult
+  })
+  pinsRef.current = { pinnedProviderId, pinnedPaymentType, forcedWalletResult }
+
+  // Leaving the tab also ends the link promo's entry into this flow, which is
+  // tracked separately: the promo survives a link that pinned nothing, so it
+  // cannot ride the params guard below.
+  useLinkPromoRelease(navigation, direction === 'buy' ? 'buyTab' : 'sellTab')
 
   React.useEffect(() => {
     const tabNavigation = navigation.getParent()
     if (tabNavigation == null) return
     return tabNavigation.addListener('blur', () => {
-      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
+      const { pinnedProviderId, pinnedPaymentType, forcedWalletResult } =
+        pinsRef.current
       // Nothing to drop: tab switching is the app's most-travelled path, and a
       // user who never tapped a deep link would otherwise pay a params update
       // plus a re-render every time they leave the tab.
-      if (pinnedProviderId == null && pinnedPaymentType == null) return
+      if (
+        pinnedProviderId == null &&
+        pinnedPaymentType == null &&
+        forcedWalletResult == null
+      )
+        return
+      // The forced wallet is link-scoped like the pins: leaving it set would
+      // keep overriding the user's own wallet choice for the rest of the
+      // session, since it always wins over the last-selection setting.
       navigation.setParams({
         providerId: undefined,
-        paymentType: undefined
+        paymentType: undefined,
+        forcedWalletResult: undefined
       })
     })
   }, [navigation])
@@ -690,11 +710,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       />
     ))
     if (result?.type === 'wallet') {
+      // Compare against the wallet on screen, not the persisted last
+      // selection: a link's forced wallet outranks that setting, so the two
+      // disagree for the whole visit a deep link opened.
       if (
-        rampLastCryptoSelection?.walletId === result.walletId &&
-        rampLastCryptoSelection?.tokenId === result.tokenId
+        selectedCrypto?.walletId === result.walletId &&
+        selectedCrypto?.tokenId === result.tokenId
       ) {
         return
+      }
+
+      // An explicit pick ends the link's pre-selection. The forced wallet wins
+      // over the last-selection setting, so leaving it in the params would
+      // keep showing it and make this pick do nothing.
+      if (forcedWalletResult != null) {
+        navigation.setParams({ forcedWalletResult: undefined })
       }
 
       // Clear amount and max state when switching crypto assets in sell mode

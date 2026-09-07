@@ -317,8 +317,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         // Dispatch the success action and callback
         onApprove()
 
-        await dispatch(updateSwapCount())
-
+        // Log the conversion before updating the swap count: that update can
+        // wait on a review prompt, and the link promo this swap earns is
+        // released if the user leaves the swap tab in the meantime.
         dispatch(
           logEvent('Exchange_Shift_Success', {
             conversionValues: {
@@ -343,6 +344,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             }
           })
         )
+
+        await dispatch(updateSwapCount())
       } catch (error: any) {
         dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
         setTimeout(() => {

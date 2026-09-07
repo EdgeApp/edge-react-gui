@@ -552,6 +552,173 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('exchange', () => {
+    makeLinkTests({
+      // Every example from the link spec:
+      'https://deep.edge.app/exchange/buy?buyAsset=bitcoin': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: { pluginId: 'bitcoin', tokenId: null },
+        promoId: undefined
+      },
+      'https://deep.edge.app/exchange/sell?sellAsset=ethereum': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: { pluginId: 'ethereum', tokenId: null },
+        promoId: undefined
+      },
+      'https://deep.edge.app/exchange/sell?sellAsset=arbitrum': {
+        type: 'rampCreate',
+        direction: 'sell',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: { pluginId: 'arbitrum', tokenId: null },
+        promoId: undefined
+      },
+      'https://deep.edge.app/exchange/swap?buyAsset=bitcoin&sellAsset=ethereum_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48':
+        {
+          type: 'swap',
+          buyAsset: { pluginId: 'bitcoin', tokenId: null },
+          sellAsset: {
+            pluginId: 'ethereum',
+            tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+          },
+          promoId: undefined
+        },
+      'https://deep.edge.app/exchange/swap?sellAsset=ethereum_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&promoId=bob':
+        {
+          type: 'swap',
+          buyAsset: undefined,
+          sellAsset: {
+            pluginId: 'ethereum',
+            tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+          },
+          promoId: 'bob'
+        },
+
+      // The `edge://` form is equivalent:
+      'edge://exchange/buy?buyAsset=bitcoin': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: { pluginId: 'bitcoin', tokenId: null },
+        promoId: undefined
+      },
+
+      // No asset leaves the flow open for the user to fill in:
+      'edge://exchange/swap': {
+        type: 'swap',
+        buyAsset: undefined,
+        sellAsset: undefined,
+        promoId: undefined
+      },
+      'edge://exchange/buy?promoId=bob': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: undefined,
+        promoId: 'bob'
+      },
+
+      // A buy names its asset with `buyAsset`, so a `sellAsset` on the same
+      // link has no side to select and is ignored:
+      'edge://exchange/buy?sellAsset=ethereum': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: undefined,
+        promoId: undefined
+      },
+
+      // Partner-authored links degrade instead of dead-ending:
+      'edge://exchange/buy?buyAsset=&promoId=': {
+        type: 'rampCreate',
+        direction: 'buy',
+        providerId: undefined,
+        paymentType: undefined,
+        asset: undefined,
+        promoId: undefined
+      },
+      'edge://exchange/swap?sellAsset=_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48':
+        {
+          type: 'swap',
+          buyAsset: undefined,
+          sellAsset: undefined,
+          promoId: undefined
+        },
+      'edge://exchange/swap?sellAsset=ethereum_': {
+        type: 'swap',
+        buyAsset: undefined,
+        sellAsset: undefined,
+        promoId: undefined
+      }
+    })
+
+    it('normalizes a checksummed 0x token id to the core form', () => {
+      // Edge token ids are the contract address lowercased with `0x` dropped,
+      // but the links people author paste the checksummed address.
+      expect(
+        parseDeepLink(
+          'edge://exchange/swap?buyAsset=ethereum_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+        )
+      ).toEqual({
+        type: 'swap',
+        buyAsset: {
+          pluginId: 'ethereum',
+          tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+        },
+        sellAsset: undefined,
+        promoId: undefined
+      })
+    })
+
+    it('leaves a non-hex token id untouched', () => {
+      // Solana mints and Cardano policy ids are case-sensitive base58, so only
+      // the `0x` form is rewritten.
+      const mint = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+      expect(
+        parseDeepLink(`edge://exchange/swap?buyAsset=solana_${mint}`)
+      ).toEqual({
+        type: 'swap',
+        buyAsset: { pluginId: 'solana', tokenId: mint },
+        sellAsset: undefined,
+        promoId: undefined
+      })
+    })
+
+    it('rejects an unknown direction', () => {
+      expect(() =>
+        parseDeepLink('edge://exchange/lend?buyAsset=bitcoin')
+      ).toThrow()
+    })
+
+    it('keeps the affiliate wrapper around an exchange link', () => {
+      expect(
+        parseDeepLink(
+          'https://deep.edge.app/exchange/buy?buyAsset=bitcoin&af=bob'
+        )
+      ).toEqual({
+        type: 'affiliate',
+        installerId: 'bob',
+        link: {
+          type: 'rampCreate',
+          direction: 'buy',
+          providerId: undefined,
+          paymentType: undefined,
+          asset: { pluginId: 'bitcoin', tokenId: null },
+          promoId: undefined
+        }
+      })
+    })
+  })
+
   describe('walletConnect', () => {
     const fullExample =
       'wc:57827c96-ba26-437a-8e7e-2c11112c9663@1?bridge=https%3A%2F%2Fx.bridge.walletconnect.org&key=252a4350e8381e6a935df363bc4132454f573528aed9b0270659752e0f977f2c'
@@ -709,7 +876,26 @@ describe('getDeepLinkReadiness', function () {
       'wallets'
     ],
     [{ type: 'rewards', pluginId: 'bitcoin', tokenId: null }, 'wallets'],
-    [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets']
+    [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets'],
+
+    // An `exchange` link that names an asset opens the wallet picker, so it
+    // has to wait for the wallets the picker lists:
+    [
+      {
+        type: 'rampCreate',
+        direction: 'buy',
+        asset: { pluginId: 'bitcoin', tokenId: null }
+      },
+      'wallets'
+    ],
+    [
+      {
+        type: 'swap',
+        sellAsset: { pluginId: 'ethereum', tokenId: null }
+      },
+      'wallets'
+    ],
+    [{ type: 'swap', promoId: 'bob' }, 'account']
   ]
 
   for (const [link, expected] of cases) {
