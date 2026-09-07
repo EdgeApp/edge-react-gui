@@ -24,7 +24,7 @@ export function updateWalletsSort(walletsSort: SortOption): ThunkAction<void> {
       type: 'UI/SETTINGS/SET_WALLETS_SORT',
       data: { walletsSort }
     })
-    writeWalletsSort(account, walletsSort).catch(error => {
+    writeWalletsSort(account, walletsSort).catch((error: unknown) => {
       showError(error)
     })
   }
