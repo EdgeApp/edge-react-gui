@@ -1677,8 +1677,13 @@ const SendComponent: React.FC<Props> = props => {
       // Once a broadcast has been attempted the transaction may already be on
       // the network. Re-quoting would be meaningless, and the success path
       // below clears `error`, which is the only explanation the user has for
-      // the locked slider. Freeze the quote instead.
-      if (broadcastAttemptedRef.current) return
+      // the locked slider. Freeze the quote instead. The amount handler has
+      // already flagged "calculating" by the time we get here, so clear it
+      // or the fee tile spins forever.
+      if (broadcastAttemptedRef.current) {
+        setProcessingAmountChanged(false)
+        return
+      }
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
