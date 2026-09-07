@@ -8,6 +8,8 @@
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 - added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
 - added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
+- added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.

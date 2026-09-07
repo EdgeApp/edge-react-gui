@@ -52,8 +52,12 @@ export const fakeNavigation: NavigationProp<any> = {
       stale: false
     }
   },
-  getParent() {
-    throw new Error('not implemented')
+  getParent<T>(): T {
+    // A scene rendered on its own has no parent navigator, which is a value
+    // react-navigation returns for real. Throwing here fails any scene that
+    // subscribes to its tab, and every caller already handles undefined. The
+    // cast is only to satisfy the generic return the real signature declares.
+    return undefined as unknown as T
   },
   setOptions() {}
 }
