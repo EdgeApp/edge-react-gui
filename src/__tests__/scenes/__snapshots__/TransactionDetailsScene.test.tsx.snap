@@ -2765,6 +2765,7 @@ exports[`TransactionDetailsScene should render 1`] = `
         >
           <View
             absolute={false}
+            keyboardOpen={false}
             layout="solo"
             parentType="scene"
             style={
@@ -5750,6 +5751,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
         >
           <View
             absolute={false}
+            keyboardOpen={false}
             layout="solo"
             parentType="scene"
             style={

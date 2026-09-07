@@ -903,6 +903,7 @@ exports[`FioAddressRegister should render with loading props 1`] = `
         >
           <View
             absolute={false}
+            keyboardOpen={false}
             layout="solo"
             style={
               {
