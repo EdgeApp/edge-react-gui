@@ -45,9 +45,9 @@ tags:
       
       # Option 2
       # Wallet nickname often excludes extra words (e.g. "Pirate Chain" -> "My Pirate")
-      - evalScript: ${output.nickName = "My " + output.walletNames[output.index].split(" ")[0] + ".*"}
+      - evalScript: ${output.nickName = ".*My " + output.walletNames[output.index].split(" ")[0] + ".*"}
       # Hack to address inconsistent wallet name for XRP
-      - evalScript: ${if (output.walletNames[output.index] === "XRPL") { output.nickName = "My XRP"}}
+      - evalScript: ${if (output.walletNames[output.index] === "XRPL") { output.nickName = ".*My XRP"}}
       - retry:
           maxRetries: 2
           commands:

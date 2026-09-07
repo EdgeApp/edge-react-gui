@@ -67,7 +67,7 @@ tags:
       - tapOn:
           id: ${"manageTokensRow." + TOKEN_NAME + "." + TOKEN_DISPLAY_NAME}
       - tapOn: Save
-      - assertNotVisible: ${TOKEN_NAME}
+      - assertNotVisible: ${TOKEN_NAME + ".*"}
 
 # # Skip testing resync behavior until changed - expected NOT to rediscover tokens from a resync
 # - runFlow:
@@ -133,7 +133,7 @@ tags:
       - tapOn:
           id: "chevronBack"
       - scrollUntilVisible:
-          element: ${TOKEN_NAME}
+          element: ${TOKEN_NAME + ".*"}
           direction: DOWN
           centerElement: true
           timeout: 10000
@@ -142,11 +142,11 @@ tags:
 - runFlow:
     commands:
       # Hide token from "Disable Token" button in token wallet options menu
-      - longPressOn: ${TOKEN_NAME}
+      - longPressOn: ${TOKEN_NAME + ".*"}
       - tapOn: ".*Disable Token"
       # Modal
       - assertVisible: Disable Token
       - assertVisible: ${"Are you sure you want to disable token " + TOKEN_NAME + " in your " + WALLET_NAME + " wallet?"}
       - assertVisible: Cancel
       - tapOn: Archive
-      - assertNotVisible: ${TOKEN_NAME}
+      - assertNotVisible: ${TOKEN_NAME + ".*"}

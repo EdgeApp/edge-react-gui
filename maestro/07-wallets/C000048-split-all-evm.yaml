@@ -23,12 +23,12 @@ tags:
 # Navigate to Ethereum wallet
 - tapOn: Assets
 - scrollUntilVisible:
-    element: "My Ether"
+    element: ".*My Ether"
     direction: DOWN
     timeout: 10000
 
 # Open wallet options menu
-- longPressOn: "My Ether"
+- longPressOn: ".*My Ether"
 
 # Verify split option is available and tap it
 - tapOn: ".*Split Wallet"

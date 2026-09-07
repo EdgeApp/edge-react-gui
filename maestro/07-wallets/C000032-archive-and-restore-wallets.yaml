@@ -28,7 +28,7 @@ tags:
 - repeat:
     times: ${output.walletNames.length - 1}
     commands:
-      - tapOn: ${output.walletNames[output.index]}
+      - tapOn: ${".*" + output.walletNames[output.index]}
       - tapOn: 
           id: gearIcon
       - tapOn: ".*Archive Wallet"
@@ -45,7 +45,7 @@ tags:
           label: "Extra message for Ether wallets"
       # Archive
       - tapOn: Archive
-      - assertNotVisible: ${output.walletNames[output.index]}
+      - assertNotVisible: ${".*" + output.walletNames[output.index]}
       
       - evalScript: ${output.index++}
     label: "Archive all wallets except last"
@@ -53,7 +53,7 @@ tags:
 # Unable to archive last wallet
 - runFlow:
     commands: 
-      - longPressOn: ${output.walletNames[output.index]}
+      - longPressOn: ${".*" + output.walletNames[output.index]}
       - tapOn: ".*Archive Wallet"
       - assertVisible: "Cannot Archive Wallet"
       - assertVisible: "At least one wallet required in this account."
@@ -102,7 +102,7 @@ tags:
     times: ${output.walletNames.length}
     commands:
       - scrollUntilVisible:
-          element: ${output.walletNames[output.index]}
+          element: ${".*" + output.walletNames[output.index]}
           direction: DOWN
       - evalScript: ${output.index++}
 

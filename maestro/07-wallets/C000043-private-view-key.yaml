@@ -48,7 +48,7 @@ tags:
     times: ${output.walletNames.length}
     commands:
       # Wallet nickname often excludes extra words (e.g. "Pirate Chain" -> "Pirate")
-      - evalScript: ${output.nickName = "My " + output.walletNames[output.index].split(" ")[0]}
+      - evalScript: ${output.nickName = ".*My " + output.walletNames[output.index].split(" ")[0]}
       - scrollUntilVisible:
           element: ${output.nickName}
           direction: DOWN

@@ -99,12 +99,12 @@ tags:
     times: ${output.tokens.length}
     commands:
       - scrollUntilVisible:
-          element: ${output.tokens[output.index]}
+          element: ${output.tokens[output.index] + ".*"}
           direction: UP
           timeout: 20000
           optional: true
       - scrollUntilVisible:
-          element: ${output.tokens[output.index]}
+          element: ${output.tokens[output.index] + ".*"}
           direction: DOWN
           timeout: 90000
       - scrollUntilVisible:

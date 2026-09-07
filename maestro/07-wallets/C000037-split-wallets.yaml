@@ -36,12 +36,12 @@ tags:
 # Navigate to Base wallet
 - tapOn: Assets
 - scrollUntilVisible:
-    element: "My Base"
+    element: ".*My Base"
     direction: DOWN
     timeout: 10000
 
 # Open wallet options menu
-- longPressOn: "My Base"
+- longPressOn: ".*My Base"
 
 # Verify split option is available and tap it
 - tapOn:

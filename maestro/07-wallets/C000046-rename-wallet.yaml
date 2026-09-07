@@ -19,7 +19,7 @@ tags:
     file: ../common/dismiss-modals.yaml
 
 - tapOn: Assets
-- longPressOn: ${WALLET_NAME}
+- longPressOn: ${".*" + WALLET_NAME}
 - tapOn:
     id: "walletListMenu_walletSettings"
 # Wallet Settings modal
@@ -36,7 +36,7 @@ tags:
 - tapOn:
     id: "walletSettingsDoneButton"
 
-- assertVisible: ${output.newWalletName}
+- assertVisible: ${".*" + output.newWalletName}
 # Arbitrary wait to ensure wallet state is saved to sync server (~30 seconds)
 - extendedWaitUntil:
     visible: ${WALLET_NAME}
@@ -56,4 +56,4 @@ tags:
     file: ../common/dismiss-modals.yaml
 
 - tapOn: Assets
-- assertVisible: ${output.newWalletName}
+- assertVisible: ${".*" + output.newWalletName}

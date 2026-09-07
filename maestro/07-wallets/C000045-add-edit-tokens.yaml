@@ -38,10 +38,10 @@ tags:
 # Navigate to scene
 - tapOn: Assets
 - scrollUntilVisible:
-    element: ETH
+    element: "ETH.*"
     direction: DOWN
     centerElement: true
-- longPressOn: ETH
+- longPressOn: "ETH.*"
 - tapOn: ".*Add / Edit Tokens"
 
 # Test search
@@ -122,7 +122,7 @@ tags:
 
 # Ensure tokens are visible
 - scrollUntilVisible:
-    element: 1INCH
+    element: "1INCH.*"
     direction: DOWN
     timeout: 10000
 - scrollUntilVisible:

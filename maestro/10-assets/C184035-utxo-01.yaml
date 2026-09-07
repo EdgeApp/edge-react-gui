@@ -26,49 +26,49 @@ tags:
 - tapOn: "Assets"
 
 - extendedWaitUntil:
-    visible: FIRO
+    visible: "FIRO.*"
     timeout: 15000
-- tapOn: FIRO
+- tapOn: "FIRO.*"
 - extendedWaitUntil:
     visible: 0.369074 FIRO
     timeout: 50000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: DGB
+    element: "DGB.*"
     direction: DOWN
-- tapOn: DGB
+- tapOn: "DGB.*"
 - extendedWaitUntil:
     visible: 18.79649375 DGB
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: DOGE
+    element: "DOGE.*"
     direction: DOWN
-- tapOn: DOGE
+- tapOn: "DOGE.*"
 - extendedWaitUntil:
     visible: 25.81052584 DOGE
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: RVN
+    element: "RVN.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: RVN
+- tapOn: "RVN.*"
 - extendedWaitUntil:
     visible: 22.85548 RVN
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: BCH
+    element: "BCH.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: BCH
+- tapOn: "BCH.*"
 - extendedWaitUntil:
     visible: 0.00588867 BCH
     timeout: 15000
@@ -76,77 +76,77 @@ tags:
 
 
 - scrollUntilVisible:
-    element: DASH
+    element: "DASH.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: DASH
+- tapOn: "DASH.*"
 - extendedWaitUntil:
     visible: 0.03081175 DASH
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: QTUM
+    element: "QTUM.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: QTUM
+- tapOn: "QTUM.*"
 - extendedWaitUntil:
     visible: 0.17765112 QTUM
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: BTG
+    element: "BTG.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: BTG
+- tapOn: "BTG.*"
 - extendedWaitUntil:
     visible: 0 BTG
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: LTC
+    element: "LTC.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: LTC
+- tapOn: "LTC.*"
 - extendedWaitUntil:
     visible: 0.00921812 LTC
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: BTC
+    element: "BTC.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: BTC
+- tapOn: "BTC.*"
 - extendedWaitUntil:
     visible: 0.00013643 BTC
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: VTC
+    element: "VTC.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: VTC
+- tapOn: "VTC.*"
 - extendedWaitUntil:
     visible: 0.1430639 VTC
     timeout: 15000
 - tapOn: Assets
 
 - scrollUntilVisible:
-    element: PIVX
+    element: "PIVX.*"
     direction: DOWN
     centerElement: true
     timeout: 50000
-- tapOn: PIVX
+- tapOn: "PIVX.*"
 - extendedWaitUntil:
     visible: 0.611 PIVX
     timeout: 15000
