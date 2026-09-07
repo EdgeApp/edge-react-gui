@@ -68,10 +68,24 @@ export default [
               ],
               message:
                 'Avoid importing react-native-vector-icons directly. Use a shared icon from src/components/icons/ThemedIcons or the VectorIcon component so color and size stay theme-driven, and add a new definition there if one is missing.'
+            },
+            {
+              group: ['**/ScanModal', './ScanModal'],
+              message:
+                'Do not mount ScanModal directly. Use `showScanModal` from src/actions/ScanActions, which requests the camera permission and shows the first-use scam warning before the scanner opens. Mounting it directly skips both.'
             }
           ]
         }
       ]
+    }
+  },
+
+  // `showScanModal` is the sanctioned entry point, so it is the one place
+  // allowed to import ScanModal:
+  {
+    files: ['src/actions/ScanActions.tsx'],
+    rules: {
+      'no-restricted-imports': 'off'
     }
   },
 

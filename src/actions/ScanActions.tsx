@@ -580,7 +580,15 @@ export function checkAndShowGetCryptoModal(
 }
 
 /**
- * Resolves once the app is in the foreground.
+ * How long to wait for the app to return to the foreground before giving up
+ * and carrying on regardless. Without a bound, an app that never comes back
+ * would leave the caller awaiting a promise that never settles.
+ */
+const FOREGROUND_TIMEOUT_MS = 5000
+
+/**
+ * Resolves once the app is in the foreground, or after
+ * `FOREGROUND_TIMEOUT_MS`, whichever comes first.
  *
  * The OS permission prompt backgrounds the app, and its callback fires while
  * the app is still inactive behind the system alert. Presenting a modal in
@@ -588,14 +596,21 @@ export function checkAndShowGetCryptoModal(
  */
 const waitForForeground = async (): Promise<void> => {
   if (AppState.currentState === 'active') return
-  await new Promise<void>(resolve => {
-    const subscription = AppState.addEventListener('change', state => {
-      if (state === 'active') {
-        subscription.remove()
-        resolve()
-      }
+
+  let subscription: ReturnType<typeof AppState.addEventListener> | undefined
+  let timeout: ReturnType<typeof setTimeout> | undefined
+  try {
+    // Whichever settles first wins; resolving twice is a no-op:
+    await new Promise<void>(resolve => {
+      subscription = AppState.addEventListener('change', state => {
+        if (state === 'active') resolve()
+      })
+      timeout = setTimeout(resolve, FOREGROUND_TIMEOUT_MS)
     })
-  })
+  } finally {
+    if (timeout != null) clearTimeout(timeout)
+    if (subscription != null) subscription.remove()
+  }
 }
 
 /**
@@ -615,6 +630,12 @@ export const showScanModal =
   (props: ScanModalProps): ThunkAction<Promise<string | undefined>> =>
   async (dispatch, getState) => {
     const status = await dispatch(checkAndRequestPermission('camera'))
+
+    // Answering the prompt returns the app to the foreground. Wait for that
+    // before presenting anything of our own, on either branch -- the recovery
+    // modal is just as capable of flashing past as the warning is:
+    await waitForForeground()
+
     if (
       status !== RNPermissions.RESULTS.GRANTED &&
       status !== RNPermissions.RESULTS.LIMITED
@@ -625,8 +646,6 @@ export const showScanModal =
       return undefined
     }
 
-    await waitForForeground()
-
     const account = getState().core.account
     const { cameraScamWarningShown } = await getLocalAccountSettings(account)
     if (!cameraScamWarningShown) {
@@ -636,7 +655,9 @@ export const showScanModal =
       // The warning is only dismissable by acknowledging it, so anything else
       // means we were torn down (a logout, say). Don't record it as shown:
       if (!acknowledged) return undefined
-      await writeCameraScamWarningShown(account)
+      // Best-effort: a logout between the acknowledgement and the write would
+      // reject, and re-showing the warning next time beats an error banner:
+      await writeCameraScamWarningShown(account).catch(() => {})
     }
 
     return await Airship.show<string | undefined>(bridge => (
