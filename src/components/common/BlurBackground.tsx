@@ -1,7 +1,6 @@
 import { BlurTargetView, BlurView as ExpoBlurView } from 'expo-blur'
 import React from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
@@ -166,10 +165,10 @@ export const BlurBackground: React.FC = () => {
     return <View style={[stylesLocal.blurView, stylesLocal.roundCorner]} />
   }
   return (
-    <BlurView
-      blurType={theme.isDark ? 'dark' : 'light'}
+    <ExpoBlurView
+      tint={theme.isDark ? 'dark' : 'light'}
+      intensity={100}
       style={[stylesLocal.blurView, stylesLocal.roundCorner]}
-      overlayColor="rgba(0, 0, 0, 0)"
     />
   )
 }
@@ -206,10 +205,10 @@ export const ChromeBlurBackground: React.FC<{ rounded?: boolean }> = props => {
     return <AndroidBlur rounded={rounded} targetRef={sceneTarget} />
   }
   return (
-    <BlurView
-      blurType={theme.isDark ? 'dark' : 'light'}
+    <ExpoBlurView
+      tint={theme.isDark ? 'dark' : 'light'}
+      intensity={100}
       style={[stylesLocal.blurView, rounded ? stylesLocal.roundCorner : null]}
-      overlayColor="rgba(0, 0, 0, 0)"
     />
   )
 }
@@ -223,10 +222,10 @@ export const ModalBlurBackground: React.FC = () => {
   if (isBlurDisabled) return null
   if (isAndroid) return <AndroidBlur rounded />
   return (
-    <BlurView
-      blurType={theme.isDark ? 'dark' : 'light'}
+    <ExpoBlurView
+      tint={theme.isDark ? 'dark' : 'light'}
+      intensity={100}
       style={[stylesLocal.blurView, stylesLocal.roundCorner]}
-      overlayColor="rgba(0, 0, 0, 0)"
     />
   )
 }
@@ -239,8 +238,9 @@ export const BlurUnderlayReversed: React.FC = () => {
   if (isBlurDisabled) return null
   if (isAndroid) return <AndroidBlur reverseTint />
   return (
-    <BlurView
-      blurType={theme.isDark ? 'light' : 'dark'}
+    <ExpoBlurView
+      tint={theme.isDark ? 'light' : 'dark'}
+      intensity={100}
       style={StyleSheet.absoluteFill}
     />
   )

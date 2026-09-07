@@ -132,9 +132,8 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
       ]
     }
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -150,6 +149,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
           },
         ]
       }
+      tint="dark"
     />
     <View
       style={

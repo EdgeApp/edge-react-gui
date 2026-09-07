@@ -2182,8 +2182,6 @@ PODS:
     - ReactNativeDependencies
     - Yoga
     - ZIPFoundation
-  - rn-id-blurview (1.2.1):
-    - React
   - RNBootSplash (6.3.12):
     - hermes-engine
     - RCTRequired
@@ -3062,7 +3060,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
-  - rn-id-blurview (from `../node_modules/rn-id-blurview`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
@@ -3369,8 +3366,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   ReactNativeFileAccess:
     :path: "../node_modules/react-native-file-access"
-  rn-id-blurview:
-    :path: "../node_modules/rn-id-blurview"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
@@ -3565,7 +3560,6 @@ SPEC CHECKSUMS:
   ReactCommon: 8b52be35b7f65eb8c56c7ce5993c93e50f710cc9
   ReactNativeDependencies: fa0a54b3f5319ae0e3b9aff32bfee7a424b88e66
   ReactNativeFileAccess: 90b3cca6540a6eb135533d6295e3eacf38cf3d1e
-  rn-id-blurview: 35bf4f960b8b108d12ed8a8ff14cbc22ed908081
   RNBootSplash: 6707708e83082515da71df02aa88821e5a336193
   RNCAsyncStorage: a455ed0edb854f0c8471b3049935680d5868796a
   RNCClipboard: d73fd4b2ac59e792596e7cd615b6321d577c1a2b
@@ -3615,6 +3609,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 7104ec3e3ac4815ca6c359e22f9de82e6bcb2880
+PODFILE CHECKSUM: 365a18a922b38c76e66709be6b33864f794d6f54
 
 COCOAPODS: 1.16.2

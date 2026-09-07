@@ -105,9 +105,8 @@ exports[`MenuTabs should render with loading props 1`] = `
     }
     tabLabelHeight={25}
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -121,6 +120,7 @@ exports[`MenuTabs should render with loading props 1`] = `
           null,
         ]
       }
+      tint="dark"
     />
     <ExpoLinearGradient
       colors={

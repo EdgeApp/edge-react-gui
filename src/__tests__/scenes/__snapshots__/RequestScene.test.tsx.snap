@@ -1506,7 +1506,10 @@ exports[`Request should render with loaded props 1`] = `
                     >
                       <View>
                         <Text
+                          accessibilityElementsHidden={true}
+                          accessible={false}
                           allowFontScaling={false}
+                          importantForAccessibility="no-hide-descendants"
                           numberOfLines={1}
                           style={
                             [
@@ -1733,7 +1736,10 @@ exports[`Request should render with loaded props 1`] = `
                     >
                       <View>
                         <Text
+                          accessibilityElementsHidden={true}
+                          accessible={false}
                           allowFontScaling={false}
+                          importantForAccessibility="no-hide-descendants"
                           numberOfLines={1}
                           style={
                             [
