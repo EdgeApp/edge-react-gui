@@ -168,6 +168,12 @@ export interface NotifInfo {
 
       /** URL to open when the notification is tapped */
       ctaUrl: string
+
+      /**
+       * The card's promo id, so a conversion started from the notification is
+       * attributed to the same card as one started from the carousel.
+       */
+      promoId?: string
     }
   }
 }
@@ -185,7 +191,8 @@ export const asNotifInfo = asObject<NotifInfo>({
           messageId: asString,
           title: asString,
           body: asString,
-          ctaUrl: asString
+          ctaUrl: asString,
+          promoId: asMaybe(asString)
         })
       )
     })

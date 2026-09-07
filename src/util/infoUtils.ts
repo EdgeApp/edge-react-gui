@@ -14,6 +14,11 @@ export interface DisplayInfoCard {
   localeMessages: InfoCard['localeMessages']
   pluginPromotions: InfoCard['pluginPromotions']
   messageId: string
+
+  // The card's own promo id, carried so that a conversion started from its CTA
+  // is attributed to the card. `filterInfoCards` uses it to gate the card to
+  // affiliated accounts; this copy is what the deep link launch reads.
+  promoId: InfoCard['promoId']
 }
 
 interface InfoFilterProps {
@@ -157,7 +162,8 @@ export const getDisplayInfoCards = (
       ctaButton,
       dismissable,
       localeMessages,
-      pluginPromotions
+      pluginPromotions,
+      promoId
     } = card
 
     // Ignore any cards with no display data
@@ -170,7 +176,8 @@ export const getDisplayInfoCards = (
       dismissable,
       localeMessages,
       pluginPromotions,
-      messageId
+      messageId,
+      promoId
     })
   }
 

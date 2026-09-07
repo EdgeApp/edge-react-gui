@@ -608,21 +608,35 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   // The pins are read through a ref so the guard below can see them without
   // entering the dep array, which is what the `navigation`-only subscription
   // above depends on.
-  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
-  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
+  const pinsRef = React.useRef({
+    pinnedProviderId,
+    pinnedPaymentType,
+    forcedWalletResult
+  })
+  pinsRef.current = { pinnedProviderId, pinnedPaymentType, forcedWalletResult }
 
   React.useEffect(() => {
     const tabNavigation = navigation.getParent()
     if (tabNavigation == null) return
     return tabNavigation.addListener('blur', () => {
-      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
+      const { pinnedProviderId, pinnedPaymentType, forcedWalletResult } =
+        pinsRef.current
       // Nothing to drop: tab switching is the app's most-travelled path, and a
       // user who never tapped a deep link would otherwise pay a params update
       // plus a re-render every time they leave the tab.
-      if (pinnedProviderId == null && pinnedPaymentType == null) return
+      if (
+        pinnedProviderId == null &&
+        pinnedPaymentType == null &&
+        forcedWalletResult == null
+      )
+        return
+      // The forced wallet is link-scoped like the pins: leaving it set would
+      // keep overriding the user's own wallet choice for the rest of the
+      // session, since it always wins over the last-selection setting.
       navigation.setParams({
         providerId: undefined,
-        paymentType: undefined
+        paymentType: undefined,
+        forcedWalletResult: undefined
       })
     })
   }, [navigation])
