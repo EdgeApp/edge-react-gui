@@ -28,7 +28,7 @@ import { EdgeText } from '../themed/EdgeText.tsx'
 
 type Props = EdgeAppSceneProps<'notificationCenter'>
 
-export const NotificationCenterScene = (props: Props) => {
+export const NotificationCenterScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -204,7 +204,7 @@ export const NotificationCenterScene = (props: Props) => {
             }
             const { name, currencyInfo } = wallets[walletId]
 
-            const handleCloseNewToken = async () => {
+            const handleCloseNewToken = async (): Promise<void> => {
               // Since this isn't a priority notification, we can just fully
               // complete it here
               await completeNotif(key)()
@@ -213,7 +213,7 @@ export const NotificationCenterScene = (props: Props) => {
                 data: { walletId }
               })
             }
-            const handlePressNewToken = async () => {
+            const handlePressNewToken = async (): Promise<void> => {
               await handleCloseNewToken()
               navigation.navigate('manageTokens', {
                 walletId,
@@ -257,7 +257,7 @@ export const NotificationCenterScene = (props: Props) => {
             )
               return null
 
-            const handlePromoPress = async () => {
+            const handlePromoPress = async (): Promise<void> => {
               try {
                 // If it's already marked as expired or if validation fails, just open the URL
                 // The URL could be a download link, a web page, etc.
