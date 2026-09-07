@@ -1,18 +1,39 @@
 diff --git a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
-index 11c6f1e..7cba2e9 100644
+index 11c6f1e..fa70bb8 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/buttons/EdgeButton.js
-@@ -2,9 +2,9 @@
+@@ -2,11 +2,12 @@
   * IMPORTANT: Changes in this file MUST be synced between edge-react-gui and
   * edge-login-ui-rn!
   */
 +import { LinearGradient } from 'expo-linear-gradient';
  import * as React from 'react';
- import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
+-import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 -import LinearGradient from 'react-native-linear-gradient';
++import { ActivityIndicator, Platform, View } from 'react-native';
  import { cacheStyles } from 'react-native-patina';
  import { usePendingPress } from '../../hooks/usePendingPress';
++import { absoluteFill } from '../../util/absoluteFill';
  import { fixSides, mapSides, sidesToMargin } from '../../util/sides';
+ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity';
+ import { useTheme } from '../services/ThemeContext';
+@@ -118,7 +119,7 @@ const getStyles = cacheStyles((theme) => {
+         alignItems: 'center',
+         justifyContent: 'center'
+     };
+-    const pillBackground = Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { borderRadius: theme.rem(theme.buttonBorderRadiusRem) });
++    const pillBackground = Object.assign(Object.assign({}, absoluteFill), { borderRadius: theme.rem(theme.buttonBorderRadiusRem) });
+     const labelBase = {
+         includeFontPadding: false
+         // Defaults will be overridden per type below
+@@ -169,6 +170,6 @@ const getStyles = cacheStyles((theme) => {
+             fontFamily: theme.escapeButtonFont,
+             fontSize: theme.rem(theme.escapeButtonFontSizeRem)
+         },
+-        spinnerOverlay: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { alignItems: 'center', justifyContent: 'center' })
++        spinnerOverlay: Object.assign(Object.assign({}, absoluteFill), { alignItems: 'center', justifyContent: 'center' })
+     };
+ });
 diff --git a/node_modules/edge-login-ui-rn/lib/components/common/AlertDropdown.js b/node_modules/edge-login-ui-rn/lib/components/common/AlertDropdown.js
 index be4835b..cbf5719 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/common/AlertDropdown.js
@@ -43,49 +64,60 @@ index be4835b..cbf5719 100644
              React.createElement(EntypoIcon, { name: "warning", size: theme.rem(1.25), style: styles.icon }),
              React.createElement(UnscaledText, { style: styles.text },
 diff --git a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
-index 4fdfab4..adfeca7 100644
+deleted file mode 100644
+index 4fdfab4..0000000
 --- a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
-+++ b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.d.ts
-@@ -1,5 +1,6 @@
- /// <reference types="react" />
-+export declare const isBlurDisabled: boolean;
- /** A blur background WITH rounded corners, used for most components */
++++ /dev/null
+@@ -1,5 +0,0 @@
+-/// <reference types="react" />
+-/** A blur background WITH rounded corners, used for most components */
 -export declare const BlurBackground: () => JSX.Element;
-+export declare const BlurBackground: () => JSX.Element | null;
- /** A blur background WITHOUT rounded corners. For the scene header/footer */
+-/** A blur background WITHOUT rounded corners. For the scene header/footer */
 -export declare const BlurBackgroundNoRoundedCorners: () => JSX.Element;
-+export declare const BlurBackgroundNoRoundedCorners: () => JSX.Element | null;
 diff --git a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
-index 296ed73..cbb46aa 100644
+deleted file mode 100644
+index 296ed73..0000000
 --- a/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
-+++ b/node_modules/edge-login-ui-rn/lib/components/common/BlurBackground.js
-@@ -4,16 +4,26 @@ import { cacheStyles } from 'react-native-patina';
- import { BlurView } from 'rn-id-blurview';
- import { useTheme } from '../services/ThemeContext';
- const isAndroid = Platform.OS === 'android';
-+// Android below 12 (API 31) blurs via RenderScript, which cannot snapshot
-+// content rendered by the new architecture - BlurView paints a light gray
-+// wash instead of blurred content. Worse, plain sibling Views also fail to
-+// paint inside modals on those devices, so hosts must provide their own
-+// solid background color and this component renders nothing.
-+export const isBlurDisabled = isAndroid && Number(Platform.Version) < 31;
- /** A blur background WITH rounded corners, used for most components */
- export const BlurBackground = () => {
-     const theme = useTheme();
-     const styles = getStyles(theme);
-+    if (isBlurDisabled)
-+        return null;
-     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: [styles.blurView, styles.roundCorner], overlayColor: "rgba(0, 0, 0, 0)" }));
- };
- /** A blur background WITHOUT rounded corners. For the scene header/footer */
- export const BlurBackgroundNoRoundedCorners = () => {
-     const theme = useTheme();
-     const styles = getStyles(theme);
-+    if (isBlurDisabled)
-+        return null;
-     return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
- };
- const getStyles = cacheStyles((theme) => ({
++++ /dev/null
+@@ -1,38 +0,0 @@
+-import React from 'react';
+-import { Platform, StyleSheet } from 'react-native';
+-import { cacheStyles } from 'react-native-patina';
+-import { BlurView } from 'rn-id-blurview';
+-import { useTheme } from '../services/ThemeContext';
+-const isAndroid = Platform.OS === 'android';
+-/** A blur background WITH rounded corners, used for most components */
+-export const BlurBackground = () => {
+-    const theme = useTheme();
+-    const styles = getStyles(theme);
+-    return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: [styles.blurView, styles.roundCorner], overlayColor: "rgba(0, 0, 0, 0)" }));
+-};
+-/** A blur background WITHOUT rounded corners. For the scene header/footer */
+-export const BlurBackgroundNoRoundedCorners = () => {
+-    const theme = useTheme();
+-    const styles = getStyles(theme);
+-    return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: styles.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
+-};
+-const getStyles = cacheStyles((theme) => ({
+-    blurView: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { 
+-        // We need this backgroundColor because Android applies an overlay to the
+-        // entire screen for the BlurView by default. We change this default
+-        // behavior with the transparent overlayColor, so we add this background
+-        // color to compensate and to match iOS colors/shades.
+-        backgroundColor: isAndroid
+-            ? theme.isDark
+-                ? '#161616aa'
+-                : '#ffffff55'
+-            : undefined }),
+-    roundCorner: {
+-        // Weird quirk: iOS needs rounding at this component level to properly round
+-        // corners, even if the parent has round corners. Parents can't hide
+-        // overflows for this component.
+-        // Android behaves as expected when a parent with rounded corners holds
+-        // `BlurBackground,` properly hiding overflows.
+-        borderRadius: theme.cardBorderRadius
+-    }
+-}));
 diff --git a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts b/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts
 index cff6869..da58b8a 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/common/DividerLineUi4.d.ts
@@ -143,6 +175,33 @@ index 462a84a..3e65f32 100644
              fontStyle: 'normal',
              fontWeight: 'normal'
          });
+diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/ChallengeModal.js b/node_modules/edge-login-ui-rn/lib/components/modals/ChallengeModal.js
+index 760322f..7c53729 100644
+--- a/node_modules/edge-login-ui-rn/lib/components/modals/ChallengeModal.js
++++ b/node_modules/edge-login-ui-rn/lib/components/modals/ChallengeModal.js
+@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ };
+ import { asMaybeChallengeError } from 'edge-core-js';
+ import * as React from 'react';
+-import { ActivityIndicator, StyleSheet, View } from 'react-native';
++import { ActivityIndicator, View } from 'react-native';
+ import { AirshipModal } from 'react-native-airship';
+ import { WebView } from 'react-native-webview';
+ import { lstrings } from '../../common/locales/strings';
+ import { useHandler } from '../../hooks/useHandler';
++import { absoluteFill } from '../../util/absoluteFill';
+ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity';
+ import { CloseIcon } from '../icons/ThemedIcons';
+ import { Airship } from '../services/AirshipInstance';
+@@ -91,7 +92,7 @@ const getStyles = cacheStyles((theme) => ({
+         fontFamily: theme.fontFaceMedium,
+         fontSize: theme.rem(1.2)
+     },
+-    overlay: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { alignItems: 'center', justifyContent: 'center' }),
++    overlay: Object.assign(Object.assign({}, absoluteFill), { alignItems: 'center', justifyContent: 'center' }),
+     // eslint-disable-next-line react-native/no-color-literals
+     webview: {
+         alignSelf: 'stretch',
 diff --git a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js b/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
 index e70234c..d14a3b2 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/modals/EdgeModal.js
@@ -502,19 +561,20 @@ index 1ce7388..d6101c1 100644
 +}) => React.ReactElement;
 +export declare const BlurBackground: () => React.ReactElement | null;
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
-index 9c77bc0..3ff7ba5 100644
+index 9c77bc0..958662a 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/ui4/BlurBackground.js
-@@ -1,16 +1,62 @@
+@@ -1,25 +1,68 @@
  /**
   * IMPORTANT: Changes in this file MUST be synced with edge-react-gui!
   */
 +import { BlurTargetView, BlurView as ExpoBlurView } from 'expo-blur';
  import React from 'react';
  import { Platform, StyleSheet } from 'react-native';
-+import { cacheStyles } from 'react-native-patina';
- import { BlurView } from 'rn-id-blurview';
+-import { BlurView } from 'rn-id-blurview';
 -import { cacheStyles, useTheme } from '../services/ThemeContext';
++import { cacheStyles } from 'react-native-patina';
++import { absoluteFill } from '../../util/absoluteFill';
 +import { useTheme } from '../services/ThemeContext';
  const isAndroid = Platform.OS === 'android';
 +// Android below 12 (API 31) has no working blur under the new architecture:
@@ -563,20 +623,23 @@ index 9c77bc0..3ff7ba5 100644
 +        return null;
 +    if (isAndroid)
 +        return React.createElement(AndroidBlur, { rounded: true });
-+    return (React.createElement(BlurView, { blurType: theme.isDark ? 'dark' : 'light', style: stylesLocal.blurView, overlayColor: "rgba(0, 0, 0, 0)" }));
++    return (React.createElement(ExpoBlurView, { tint: theme.isDark ? 'dark' : 'light', intensity: 100, style: stylesLocal.blurView }));
  };
 +const styles = StyleSheet.create({
 +    blurTarget: { flex: 1 }
 +});
  const getStyles = cacheStyles((theme) => ({
-     blurView: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { 
-         // We need this backgroundColor because Android applies an overlay to the
-@@ -21,5 +67,11 @@ const getStyles = cacheStyles((theme) => ({
-             ? theme.isDark
-                 ? '#161616aa'
-                 : '#ffffff55'
+-    blurView: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { 
+-        // We need this backgroundColor because Android applies an overlay to the
+-        // entire screen for the BlurView by default. We change this default
+-        // behavior with the transparent overlayColor, so we add this background
+-        // color to compensate and to match iOS colors/shades.
+-        backgroundColor: isAndroid
+-            ? theme.isDark
+-                ? '#161616aa'
+-                : '#ffffff55'
 -            : undefined })
-+            : undefined }),
++    blurView: Object.assign({}, absoluteFill),
 +    clip: {
 +        overflow: 'hidden'
 +    },
@@ -596,10 +659,10 @@ index 1fc2957..8ce3c4b 100644
      overlay?: React.ReactNode;
      children: React.ReactNode | React.ReactNode[];
 diff --git a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
-index 9e5b49d..a4d9930 100644
+index 9e5b49d..b5bebd4 100644
 --- a/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
 +++ b/node_modules/edge-login-ui-rn/lib/components/ui4/EdgeCard.js
-@@ -7,9 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+@@ -7,11 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
          step((generator = generator.apply(thisArg, _arguments || [])).next());
      });
  };
@@ -609,7 +672,28 @@ index 9e5b49d..a4d9930 100644
 -import LinearGradient from 'react-native-linear-gradient';
  import { cacheStyles } from 'react-native-patina';
  import { useHandler } from '../../hooks/useHandler';
++import { absoluteFill } from '../../util/absoluteFill';
  import { triggerHaptic } from '../../util/haptic';
+ import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides';
+ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity';
+@@ -78,7 +79,7 @@ export const EdgeCard = (props) => {
+     return isPressable ? (React.createElement(EdgeTouchableOpacity, { accessible: false, testID: testID, style: viewStyle, onPress: handlePress, onLongPress: handleLongPress }, allContent)) : (React.createElement(View, { style: viewStyle }, allContent));
+ };
+ const getStyles = cacheStyles((theme) => ({
+-    backgroundFill: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { borderRadius: theme.cardBorderRadius, backgroundColor: theme.cardBaseColor, overflow: 'hidden' }),
++    backgroundFill: Object.assign(Object.assign({}, absoluteFill), { borderRadius: theme.cardBorderRadius, backgroundColor: theme.cardBaseColor, overflow: 'hidden' }),
+     cardContainer: {
+         borderRadius: theme.cardBorderRadius,
+         alignSelf: 'stretch'
+@@ -89,7 +90,7 @@ const getStyles = cacheStyles((theme) => ({
+         right: 0,
+         position: 'absolute'
+     },
+-    overlayContainer: Object.assign(Object.assign({}, StyleSheet.absoluteFillObject), { alignItems: 'center', backgroundColor: theme.cardOverlayDisabled, borderRadius: theme.cardBorderRadius, justifyContent: 'center', margin: 2, pointerEvents: 'none' }),
++    overlayContainer: Object.assign(Object.assign({}, absoluteFill), { alignItems: 'center', backgroundColor: theme.cardOverlayDisabled, borderRadius: theme.cardBorderRadius, justifyContent: 'center', margin: 2, pointerEvents: 'none' }),
+     fill: {
+         flex: 1
+     }
 diff --git a/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts b/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts
 index b98562b..b407833 100644
 --- a/node_modules/edge-login-ui-rn/lib/types/Theme.d.ts
@@ -750,3 +834,42 @@ index f5c8d89..4f2d0ef 100644
      pinUsernameButtonColorStart: asOptional(asGradientCoords),
      pinUsernameButtonColorEnd: asOptional(asGradientCoords),
      pinUsernameButtonText: asOptional(asString),
+diff --git a/node_modules/edge-login-ui-rn/lib/util/absoluteFill.d.ts b/node_modules/edge-login-ui-rn/lib/util/absoluteFill.d.ts
+new file mode 100644
+index 0000000..689a15f
+--- /dev/null
++++ b/node_modules/edge-login-ui-rn/lib/util/absoluteFill.d.ts
+@@ -0,0 +1,11 @@
++import type { ViewStyle } from 'react-native';
++/**
++ * A spreadable absolute-fill style that works on every host React Native.
++ *
++ * React Native 0.86 removed `StyleSheet.absoluteFillObject`, so spreading it
++ * silently yields `{}` and any absolutely positioned background collapses to
++ * nothing - blur sheets, button gradients, card backgrounds. Older React
++ * Native type definitions declare `StyleSheet.absoluteFill` as a registered
++ * style that cannot be spread, so neither export is safe across versions.
++ */
++export declare const absoluteFill: ViewStyle;
+diff --git a/node_modules/edge-login-ui-rn/lib/util/absoluteFill.js b/node_modules/edge-login-ui-rn/lib/util/absoluteFill.js
+new file mode 100644
+index 0000000..d99c653
+--- /dev/null
++++ b/node_modules/edge-login-ui-rn/lib/util/absoluteFill.js
+@@ -0,0 +1,16 @@
++/**
++ * A spreadable absolute-fill style that works on every host React Native.
++ *
++ * React Native 0.86 removed `StyleSheet.absoluteFillObject`, so spreading it
++ * silently yields `{}` and any absolutely positioned background collapses to
++ * nothing - blur sheets, button gradients, card backgrounds. Older React
++ * Native type definitions declare `StyleSheet.absoluteFill` as a registered
++ * style that cannot be spread, so neither export is safe across versions.
++ */
++export const absoluteFill = {
++    position: 'absolute',
++    top: 0,
++    left: 0,
++    right: 0,
++    bottom: 0
++};
