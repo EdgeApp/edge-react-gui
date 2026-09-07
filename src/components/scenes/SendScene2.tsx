@@ -116,6 +116,17 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 
 const SCROLL_TO_END_DELAY_MS = 150
 
+// Error names an engine assigns when the node explicitly refused the
+// transaction. Nothing was accepted, so the existing copy for these can name
+// the real fix (stake more CPU, activate the recipient) instead of the
+// ambiguous "status unknown" card.
+const DETERMINISTIC_REJECTIONS = new Set([
+  'ErrorAlgoRecipientNotActivated',
+  'ErrorEosInsufficientCpu',
+  'ErrorEosInsufficientNet',
+  'ErrorEosInsufficientRam'
+])
+
 type Props = EdgeAppSceneProps<'send2'>
 
 export interface SendScene2Params {
@@ -1324,6 +1335,9 @@ const SendComponent: React.FC<Props> = props => {
       // Set once broadcastTx resolves, so the catch below can tell a broadcast
       // that reported failure apart from an error after a successful one.
       let broadcastSucceeded = false
+      // Hoisted so the catch can log the real txid. For UTXO coins makeSpend
+      // returns an empty txid and the engine only assigns it during signTx.
+      let signedTx: EdgeTransaction | undefined
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1335,7 +1349,7 @@ const SendComponent: React.FC<Props> = props => {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
         }
 
-        const signedTx = await coreWallet.signTx(edgeTransaction)
+        signedTx = await coreWallet.signTx(edgeTransaction)
 
         // From this point on the transaction may reach the network, so lock
         // the slider for the life of this scene no matter what happens next.
@@ -1527,33 +1541,6 @@ const SendComponent: React.FC<Props> = props => {
         const errorCasted = err instanceof Error ? err : new Error(String(err))
         let error = err
 
-        if (broadcastAttemptedRef.current) {
-          // No happy path and no generic "network error": the broadcast was
-          // attempted, so tell the user exactly what we know and point them
-          // at the explorer before they consider sending again.
-          logActivity(
-            `Error ${
-              broadcastSucceeded ? 'after' : 'during'
-            } broadcastTx (txid ${edgeTransaction.txid}): ${String(err)}`
-          )
-          setError(
-            new I18nError(
-              lstrings.send_broadcast_failure_title,
-              sprintf(
-                broadcastSucceeded
-                  ? lstrings.send_broadcast_post_error_message_s
-                  : lstrings.send_broadcast_failure_message_s,
-                errorCasted.message
-              )
-            )
-          )
-          // The locked-state card is longer than a normal error, and the
-          // slider floats over the bottom of the scroll view. Scroll it into
-          // view so the whole message is readable without scrolling by hand.
-          needsScrollToEnd.current = true
-          return
-        }
-
         if (errorCasted.name === 'ErrorAlgoRecipientNotActivated') {
           error = new I18nError(
             lstrings.send_confirmation_algo_recipient_not_activated_s,
@@ -1604,6 +1591,52 @@ const SendComponent: React.FC<Props> = props => {
             lstrings.transaction_failure,
             lstrings.transaction_failure_504_message
           )
+        }
+
+        if (broadcastAttemptedRef.current) {
+          // The broadcast was attempted, so the slider stays locked whatever
+          // the cause. The copy is a separate decision: when the engine has
+          // named a deterministic rejection above, the node refused the
+          // transaction and that specific message stands, so the user learns
+          // the real fix. Anything else at or after the boundary is ambiguous
+          // and gets the honest "status unknown" card. That includes a 504,
+          // which during a broadcast proves nothing either way.
+          const txid = signedTx?.txid ?? edgeTransaction.txid
+          logActivity(
+            `Error ${
+              broadcastSucceeded ? 'after' : 'during'
+            } broadcastTx (txid ${txid}): ${String(err)}`
+          )
+          if (!DETERMINISTIC_REJECTIONS.has(errorCasted.name)) {
+            error = new I18nError(
+              lstrings.send_broadcast_failure_title,
+              sprintf(
+                broadcastSucceeded
+                  ? lstrings.send_broadcast_post_error_message_s
+                  : lstrings.send_broadcast_failure_message_s,
+                errorCasted.message
+              )
+            )
+          }
+          setError(error)
+          // The locked-state card is longer than a normal error, and the
+          // slider floats over the bottom of the scroll view. Scroll it into
+          // view so the whole message is readable without scrolling by hand.
+          needsScrollToEnd.current = true
+
+          // Flows that launched this scene (ramp sells, gift cards) wait on
+          // onDone to finish. The locked slider means they can never reach
+          // the success callback by retrying, so hand them the error now and
+          // let them wind down on their own terms while this scene keeps its
+          // message. The scene already shows the error, so a rejection from
+          // the callback is only logged.
+          if (onDone != null) {
+            const p = onDone(errorCasted)
+            p?.catch((e: unknown) => {
+              console.log(e)
+            })
+          }
+          return
         }
 
         setError(error)
