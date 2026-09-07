@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Turn on the iOS 26 design system by dropping the `UIDesignRequiresCompatibility` opt-out, so the app renders with Liquid Glass materials on iOS 26 instead of the legacy appearance.
+
 ## 4.51.0 (staging)
 
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.

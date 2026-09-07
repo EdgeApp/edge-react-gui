@@ -198,7 +198,5 @@
 	<array>
 		<string>applinks:edge.app</string>
 	</array>
-	<key>UIDesignRequiresCompatibility</key>
-	<true/>
 </dict>
 </plist>
