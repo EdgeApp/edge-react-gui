@@ -11,15 +11,15 @@ PODS:
   - CNIOWindows (2.40.0)
   - disklet (0.6.0):
     - React
-  - edge-core-js (2.48.1):
+  - edge-core-js (2.53.0):
     - React-Core
-  - edge-currency-accountbased (4.93.0):
+  - edge-currency-accountbased (4.102.1):
     - React-Core
-  - edge-currency-plugins (3.13.0):
+  - edge-currency-plugins (3.16.0):
     - React-Core
-  - edge-exchange-plugins (2.55.0):
+  - edge-exchange-plugins (2.60.0):
     - React-Core
-  - edge-login-ui-rn (3.37.2):
+  - edge-login-ui-rn (3.37.3):
     - React-Core
   - EXConstants (57.0.6):
     - ExpoModulesCore
@@ -1645,7 +1645,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-monero (0.5.0):
+  - react-native-monero (0.5.1):
     - React-Core
   - react-native-netinfo (12.0.1):
     - hermes-engine
@@ -1689,11 +1689,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-piratechain (0.6.3):
-    - gRPC-Swift (~> 1.8)
-    - MnemonicSwift (~> 2.2)
+  - react-native-pirate-wallet (0.3.9):
     - React-Core
-    - SQLite.swift/standalone (~> 0.14)
   - react-native-render-html (6.3.4):
     - React-Core
   - react-native-safari-view (1.0.0):
@@ -1785,10 +1782,10 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-zano (0.5.1):
+  - react-native-zano (0.6.0):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.13.4):
+  - react-native-zcash (0.13.5):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -2182,8 +2179,6 @@ PODS:
     - ReactNativeDependencies
     - Yoga
     - ZIPFoundation
-  - rn-id-blurview (1.2.1):
-    - React
   - RNBootSplash (6.3.12):
     - hermes-engine
     - RCTRequired
@@ -3019,7 +3014,7 @@ DEPENDENCIES:
   - react-native-monero (from `../node_modules/react-native-monero`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-performance (from `../node_modules/react-native-performance`)
-  - react-native-piratechain (from `../node_modules/react-native-piratechain`)
+  - react-native-pirate-wallet (from `../node_modules/react-native-pirate-wallet`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -3062,7 +3057,6 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeDependencies (from `../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec`)
   - ReactNativeFileAccess (from `../node_modules/react-native-file-access`)
-  - rn-id-blurview (from `../node_modules/rn-id-blurview`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
@@ -3283,8 +3277,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-performance:
     :path: "../node_modules/react-native-performance"
-  react-native-piratechain:
-    :path: "../node_modules/react-native-piratechain"
+  react-native-pirate-wallet:
+    :path: "../node_modules/react-native-pirate-wallet"
   react-native-render-html:
     :path: "../node_modules/react-native-render-html"
   react-native-safari-view:
@@ -3369,8 +3363,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/ReactNativeDependencies.podspec"
   ReactNativeFileAccess:
     :path: "../node_modules/react-native-file-access"
-  rn-id-blurview:
-    :path: "../node_modules/rn-id-blurview"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
@@ -3437,11 +3429,11 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
-  edge-core-js: 3685f5569441d36e98b148eae44baca1849d1874
-  edge-currency-accountbased: c71dea6eaedc4318234ef81360d1beaa4bd86215
-  edge-currency-plugins: a20658369218ee073470c5dd982d85efc28fa8cb
-  edge-exchange-plugins: 32e52c9a778176e985069a820325abf1b1a18801
-  edge-login-ui-rn: 80979efda996608d927563cd770f69f7bfce80a9
+  edge-core-js: 2fec6c80cfbe2fdeb0d51e631e250a8f56c4ff27
+  edge-currency-accountbased: 28c967d496d5fe7001e9747c2a399c3a3c6d5658
+  edge-currency-plugins: 0042425374909a6ae28f0da67552749b6f88395f
+  edge-exchange-plugins: 968043c256b89f3291116d757d674c5ba1305a3e
+  edge-login-ui-rn: 56c881c2acd97b3745a4f0a8c2204ccb1cc0613b
   EXConstants: 8641fb5fcb789b2bfc9d01c9206a6826ca9d49e6
   Expo: 9dca8652db31f31b9a6b748dfbca5818c044d61d
   ExpoAsset: c270900c121a250ceabbf692dfecc2f1564ec82f
@@ -3467,7 +3459,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
-  hermes-engine: 5b65c58cfd9a3cd3e0c02b408a0583df2d121180
+  hermes-engine: 5b6bda00bfffd8902370167215f2acfe38974e03
   ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
@@ -3519,16 +3511,16 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: d85461d7782c025cde04ee265f48846843b2e99d
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-monero: d2b0167fd79d8eeda80ad357f12e8fee8edf63a7
+  react-native-monero: 24392b9b4d510579f5b924735fd64875ea33cacf
   react-native-netinfo: adec161a2fc40d327f2c1bab7d8c57a91943ab74
   react-native-performance: c2cf9c69321cd5eacfdba07ced92409a185140a8
-  react-native-piratechain: b8a42336b1f8e6ccfc3ee054d18ed79d68d42fa1
+  react-native-pirate-wallet: 83d6c97e1a90e1ad7203f41f38606a0846dda84d
   react-native-render-html: 5afc4751f1a98621b3009432ef84c47019dcb2bd
   react-native-safari-view: 07dc856a2663fef31eaca6beb79b111b8f6cf1f2
   react-native-safe-area-context: 45435943d06e262f946fcc3f4c4de6bfd0c9cbe1
   react-native-webview: cac57e5c9caaac09627c910efb968bac54d5b4dd
-  react-native-zano: d31c7ba542d1f407dd870ff431886e68d545239d
-  react-native-zcash: e05fe0d56656702ae14c979736964e174775eb03
+  react-native-zano: d96cf740633195af3cbfcb4210f1598e64e179b6
+  react-native-zcash: 75e6680a0aa3a3b2c5e703870df74ad3964fa349
   React-NativeModulesApple: 6f8a4b47b7561c796094a6b03ab570c63fb98548
   React-networking: 2fbe0ada4dd67c2c65656d5429f71a96df5eaa02
   React-oscompat: e3c95718adca6d0e7ca9e5b01a04d057f4aa8f72
@@ -3565,7 +3557,6 @@ SPEC CHECKSUMS:
   ReactCommon: 8b52be35b7f65eb8c56c7ce5993c93e50f710cc9
   ReactNativeDependencies: fa0a54b3f5319ae0e3b9aff32bfee7a424b88e66
   ReactNativeFileAccess: 90b3cca6540a6eb135533d6295e3eacf38cf3d1e
-  rn-id-blurview: 35bf4f960b8b108d12ed8a8ff14cbc22ed908081
   RNBootSplash: 6707708e83082515da71df02aa88821e5a336193
   RNCAsyncStorage: a455ed0edb854f0c8471b3049935680d5868796a
   RNCClipboard: d73fd4b2ac59e792596e7cd615b6321d577c1a2b
@@ -3615,6 +3606,6 @@ SPEC CHECKSUMS:
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 7104ec3e3ac4815ca6c359e22f9de82e6bcb2880
+PODFILE CHECKSUM: 365a18a922b38c76e66709be6b33864f794d6f54
 
 COCOAPODS: 1.16.2

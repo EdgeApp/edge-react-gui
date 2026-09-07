@@ -2,13 +2,8 @@
 
 ## Unreleased (develop)
 
-- fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
-- fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
-- fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
-- fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
-- fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
-
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
 - changed: The feedback survey now uses the same keyboard offset on both platforms, replacing a per-platform workaround the old scroll library required.
@@ -16,6 +11,11 @@
 - changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
 - changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
+- fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
+- fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
+- fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
+- fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
+- fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
