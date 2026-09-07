@@ -12,6 +12,19 @@ index 94770c4..9e091d3 100644
  }: Props) {
    // Reanimated v3 dropped legacy v1 syntax
    const legacyImplemenationNotAvailable =
+diff --git a/node_modules/@react-navigation/drawer/src/views/legacy/Overlay.tsx b/node_modules/@react-navigation/drawer/src/views/legacy/Overlay.tsx
+index a4dec47..a1e8ed6 100644
+--- a/node_modules/@react-navigation/drawer/src/views/legacy/Overlay.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/legacy/Overlay.tsx
+@@ -76,7 +76,7 @@ const overlayStyle = Platform.select<Record<string, string>>({
+ 
+ const styles = StyleSheet.create({
+   overlay: {
+-    ...StyleSheet.absoluteFillObject,
++    ...StyleSheet.absoluteFill,
+     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+   },
+   pressable: {
 diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
 index 57af20c..e5d3d9a 100644
 --- a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
@@ -164,7 +177,7 @@ index 57af20c..e5d3d9a 100644
    );
  }
 diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
-index a77a7fb..1a26cec 100644
+index a77a7fb..21f1892 100644
 --- a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
 +++ b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
 @@ -1,5 +1,5 @@
@@ -264,3 +277,12 @@ index a77a7fb..1a26cec 100644
      </Animated.View>
    );
  });
+@@ -70,7 +118,7 @@ const overlayStyle = Platform.select<Record<string, string>>({
+ 
+ const styles = StyleSheet.create({
+   overlay: {
+-    ...StyleSheet.absoluteFillObject,
++    ...StyleSheet.absoluteFill,
+     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+   },
+   pressable: {
