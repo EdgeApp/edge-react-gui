@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets
