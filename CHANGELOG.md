@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets

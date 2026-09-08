@@ -620,6 +620,11 @@ const SendComponent: React.FC<Props> = props => {
   const handleFlipInputModal =
     (index: number, spendTarget: EdgeSpendTarget) => (): void => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
+      // A max spend only has a defined meaning for a single recipient: it
+      // consumes the entire spendable balance. Once the send has more than one
+      // target there is nothing left over for the others, so the button is
+      // hidden rather than allowed to produce an insufficient-funds spend.
+      const isMultipleTargets = spendInfo.spendTargets.length > 1
       Airship.show<FlipInputModalResult>(bridge => (
         <FlipInputModal2
           ref={flipInputModalRef}
@@ -627,6 +632,7 @@ const SendComponent: React.FC<Props> = props => {
           startNativeAmount={spendTarget.nativeAmount}
           feeTokenId={null}
           forceField={fieldChanged}
+          hideMaxButton={isMultipleTargets}
           onAmountsChanged={handleAmountsChanged(spendTarget)}
           onMaxSet={() => {
             setMaxSpendSetter(index)
@@ -753,7 +759,11 @@ const SendComponent: React.FC<Props> = props => {
       hiddenFeaturesMap.address === true ||
       hiddenFeaturesMap.amount === true ||
       lockTilesMap.address === true ||
-      lockTilesMap.amount === true
+      lockTilesMap.amount === true ||
+      // The existing target already claims the whole spendable balance, so a
+      // second recipient could only ever be funded by shrinking it. Withhold
+      // the entry point instead of silently discarding the max amount.
+      maxSpendSetter >= 0
     ) {
       return null
     }
