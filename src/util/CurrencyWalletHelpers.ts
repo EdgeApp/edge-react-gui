@@ -47,7 +47,10 @@ export const getAvailableBalance = (
   const { pluginId } = wallet.currencyInfo
 
   let balance = wallet.balanceMap.get(tokenId) ?? '0'
-  if (SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported && tokenId == null) {
+  if (
+    SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true &&
+    tokenId == null
+  ) {
     // Special case for FIO mainnet (no token)
     const { locked } = getFioStakingBalances(wallet.stakingStatus)
     balance = sub(balance, locked)
@@ -64,7 +67,7 @@ export const getAvailableBalance = (
 export const enableTokens = async (
   newTokenIds: EdgeTokenId[],
   wallet: EdgeCurrencyWallet
-) => {
+): Promise<void> => {
   const { enabledTokenIds, currencyConfig } = wallet
   const { allTokens } = currencyConfig
 

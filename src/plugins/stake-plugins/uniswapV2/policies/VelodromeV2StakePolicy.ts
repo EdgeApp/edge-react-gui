@@ -61,7 +61,7 @@ export const makeVelodromeV2StakePolicy = (
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: StakeAssetInfo) =>
+  const serializeAssetId = (assetId: StakeAssetInfo): string =>
     `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
@@ -326,10 +326,11 @@ export const makeVelodromeV2StakePolicy = (
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
-                  const allowanceResult = await tokenContract.allowance(
-                    signer.address,
-                    spenderAddress
-                  )
+                  const allowanceResult: BigNumber =
+                    await tokenContract.allowance(
+                      signer.address,
+                      spenderAddress
+                    )
                   if (allowanceResult.gte(allocation.nativeAmount)) return
 
                   const result = await tokenContract
@@ -485,7 +486,8 @@ export const makeVelodromeV2StakePolicy = (
                 'Transfer(address,address,uint256)'
               )
               const transferTopics = receipt.logs.filter(
-                // @ts-expect-error
+                // @ts-expect-error - ethers types the receipt as any, so the
+                // callback parameter has no inferred type
                 log => log.topics[0] === transferTopicHash
               )
               // The last token transfer log is the LP-token transfer
@@ -513,7 +515,7 @@ export const makeVelodromeV2StakePolicy = (
           VELODROME_V2_VOTER,
           signer
         )
-        const isAlive = await voterContract
+        const isAlive: boolean = await voterContract
           .connect(signer)
           .isAlive(voterAddress)
 
@@ -523,10 +525,11 @@ export const makeVelodromeV2StakePolicy = (
             (gasLimit =>
               async function approveStakingPool({ signer, liquidity }) {
                 const spenderAddress = stakingContract.address
-                const allowanceResult = await lpTokenContract.allowance(
-                  signer.address,
-                  spenderAddress
-                )
+                const allowanceResult: BigNumber =
+                  await lpTokenContract.allowance(
+                    signer.address,
+                    spenderAddress
+                  )
                 if (allowanceResult.gte(liquidity)) return
 
                 const approveResult = await lpTokenContract
@@ -692,10 +695,8 @@ export const makeVelodromeV2StakePolicy = (
         txs.build(
           (gasLimit =>
             async function approveSwapRouter({ signer }) {
-              const allowanceResult = await lpTokenContract.allowance(
-                signer.address,
-                spenderAddress
-              )
+              const allowanceResult: BigNumber =
+                await lpTokenContract.allowance(signer.address, spenderAddress)
               if (allowanceResult.gte(expectedLiquidityAmount)) return
 
               const result = await lpTokenContract
