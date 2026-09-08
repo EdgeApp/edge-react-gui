@@ -639,6 +639,7 @@
   "string_first_sepolia_wallet_name": "I miei Sepolia",
   "string_first_sonic_wallet_name": "I miei Sonic",
   "string_first_opbnb_wallet_name": "I miei opBNB",
+  "string_first_robinhood_wallet_name": "My Robinhood Chain",
   "my_crypto_wallet_name": "I miei %s",
   "string_help": "Aiuto",
   "string_exit": "Esci",
