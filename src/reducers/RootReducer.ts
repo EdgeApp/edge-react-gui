@@ -31,6 +31,13 @@ export interface RootState {
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
 
+  // Promo id carried by the deep link or promo card that opened the current
+  // buy / sell / swap flow. It attributes the next conversion and is cleared
+  // once that conversion is logged, so it never leaks into a later one. This
+  // is deliberately NOT part of `accountReferral`: the id is scoped to one
+  // entry into the flow and is never persisted to the account.
+  readonly linkPromoId: string | null
+
   // Notification settings for price change/marketing/etc
   readonly notificationSettings: NotificationSettings
 
@@ -80,6 +87,17 @@ export const rootReducer = combineReducers<RootState, Action>({
     switch (action.type) {
       case 'IS_NOTIFICATION_VIEW_ACTIVE':
         return action.data.isNotificationViewActive
+      default:
+        return state
+    }
+  },
+
+  linkPromoId: (state: string | null = null, action: Action): string | null => {
+    switch (action.type) {
+      case 'LINK_PROMO_ID/SET':
+        return action.data.promoId ?? null
+      case 'LOGOUT':
+        return null
       default:
         return state
     }

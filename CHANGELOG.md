@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- added: `edge://exchange/[buy|sell|swap]` deep links (and their `https://deep.edge.app` equivalents) that open the buy, sell or swap flow with the asset(s) pre-selected, and an optional `promoId` that attributes the resulting conversion for that visit.
+- added: Promo cards carry their own `promoId` into the buy, sell or swap flow their call-to-action opens, from the home carousel and from the notification center.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets

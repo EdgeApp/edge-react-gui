@@ -87,6 +87,7 @@ export type Action =
       type: 'IS_NOTIFICATION_VIEW_ACTIVE'
       data: { isNotificationViewActive: boolean }
     }
+  | { type: 'LINK_PROMO_ID/SET'; data: { promoId: string | undefined } }
   | { type: 'LOGIN'; data: LoginPayload }
   | {
       type: 'MESSAGE_TWEAK_HIDDEN'

@@ -134,8 +134,6 @@ export default [
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
 
-      'src/actions/WalletListActions.tsx',
-
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
@@ -295,7 +293,6 @@ export default [
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
 
       'src/components/scenes/OtpSettingsScene.tsx',
@@ -497,7 +494,6 @@ export default [
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
-      'src/util/infoUtils.ts',
 
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
