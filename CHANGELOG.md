@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets
