@@ -394,6 +394,11 @@ export interface AppConfig {
    */
   zcashMigrationLearnMoreUrl?: string
   /**
+   * Support article for the large-UTXO-wallet card's "Learn More" link,
+   * covering stale balances and how to resync a wallet.
+   */
+  largeUtxoWalletLearnMoreUrl?: string
+  /**
    * Home screen long-press quick action shortcuts.
    * Omit to disable the shortcuts for a build.
    */
