@@ -45,7 +45,7 @@ tags:
 
 # Verify split option is available and tap it
 - tapOn:
-    id: walletListMenu_split
+    id: walletListMenu.split
 
 # Select Ethereum as target
 - assertVisible: Split Wallet
