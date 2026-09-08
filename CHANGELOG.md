@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Keep the QR scanner scam warning on screen until the user dismisses it, instead of letting the camera permission prompt replace it.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets
