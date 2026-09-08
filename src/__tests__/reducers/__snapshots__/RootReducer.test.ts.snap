@@ -110,6 +110,7 @@ exports[`initialState 1`] = `
         "ip2FaNotifShown": false,
       },
       "autoLogoutTimeInSeconds": 3600,
+      "cameraScamWarningShown": false,
       "changesLocked": true,
       "contactsPermissionShown": false,
       "countryCode": "",

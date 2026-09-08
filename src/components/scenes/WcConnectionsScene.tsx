@@ -8,6 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
+import { showScanModal } from '../../actions/ScanActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -18,12 +19,11 @@ import {
   walletConnectClient
 } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { ScanModal } from '../modals/ScanModal'
 import {
   WalletListModal,
   type WalletListResult
@@ -41,7 +41,7 @@ export interface WcConnectionsParams {
   uri?: string
 }
 
-export const WcConnectionsScene = (props: Props) => {
+export const WcConnectionsScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { uri } = route.params ?? {}
   const theme = useTheme()
@@ -53,11 +53,12 @@ export const WcConnectionsScene = (props: Props) => {
   >(new Map())
 
   const account = useSelector(state => state.core.account)
+  const dispatch = useDispatch()
   const walletConnect = useWalletConnect()
 
   useMount(() => {
     if (uri != null)
-      onScanSuccess(uri).catch(err => {
+      onScanSuccess(uri).catch((err: unknown) => {
         showError(err)
       })
   })
@@ -72,7 +73,7 @@ export const WcConnectionsScene = (props: Props) => {
     'WcConnectionsScene'
   )
 
-  const onScanSuccess = async (qrResult: string) => {
+  const onScanSuccess = async (qrResult: string): Promise<void> => {
     setConnecting(true)
     try {
       let proposal = sessionProposal.get(qrResult)
@@ -119,22 +120,23 @@ export const WcConnectionsScene = (props: Props) => {
     setConnecting(false)
   }
 
-  const handleActiveConnectionPress = (wcConnectionInfo: WcConnectionInfo) => {
+  const handleActiveConnectionPress = (
+    wcConnectionInfo: WcConnectionInfo
+  ): void => {
     navigation.navigate('wcDisconnect', { wcConnectionInfo })
   }
 
-  const handleNewConnectionPress = async () => {
+  const handleNewConnectionPress = async (): Promise<void> => {
     if (checkAndShowLightBackupModal(account, navigation as NavigationBase)) {
       await Promise.resolve()
     } else {
-      const result = await Airship.show<string | undefined>(bridge => (
-        <ScanModal
-          bridge={bridge}
-          scanModalTitle={lstrings.scan_qr_label}
-          textModalHint={lstrings.wc_scan_modal_text_modal_hint}
-          textModalTitle={lstrings.wc_scan_modal_text_modal_title}
-        />
-      ))
+      const result = await dispatch(
+        showScanModal({
+          scanModalTitle: lstrings.scan_qr_label,
+          textModalHint: lstrings.wc_scan_modal_text_modal_hint,
+          textModalTitle: lstrings.wc_scan_modal_text_modal_title
+        })
+      )
       if (result != null) {
         await onScanSuccess(result)
       }

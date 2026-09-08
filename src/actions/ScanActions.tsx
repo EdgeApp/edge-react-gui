@@ -8,11 +8,16 @@ import {
   type EdgeTokenId
 } from 'edge-core-js'
 import * as React from 'react'
+import { AppState } from 'react-native'
+import RNPermissions from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal'
+import { CameraPermissionDeniedModal } from '../components/modals/CameraPermissionDeniedModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
+import { ScanModal, type ScanModalProps } from '../components/modals/ScanModal'
+import { ScanScamWarningModal } from '../components/modals/ScanScamWarningModal'
 import {
   WalletListModal,
   type WalletListResult
@@ -23,6 +28,7 @@ import {
   showError,
   showWarning
 } from '../components/services/AirshipInstance'
+import { checkAndRequestPermission } from '../components/services/PermissionsManager'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getExchangeDenom } from '../selectors/DenominationSelectors'
@@ -42,6 +48,10 @@ import {
 import { toListString, zeroString } from '../util/utils'
 import { cleanQueryFlags, openBrowserUri } from '../util/WebUtils'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
+import {
+  getLocalAccountSettings,
+  writeCameraScamWarningShown
+} from './LocalSettingsActions'
 
 const RUNONCE_KEY_PREFIX = 'shownWalletGetCryptoModal:'
 
@@ -568,3 +578,89 @@ export function checkAndShowGetCryptoModal(
     }
   }
 }
+
+/**
+ * How long to wait for the app to return to the foreground before giving up
+ * and carrying on regardless. Without a bound, an app that never comes back
+ * would leave the caller awaiting a promise that never settles.
+ */
+const FOREGROUND_TIMEOUT_MS = 5000
+
+/**
+ * Resolves once the app is in the foreground, or after
+ * `FOREGROUND_TIMEOUT_MS`, whichever comes first.
+ *
+ * The OS permission prompt backgrounds the app, and its callback fires while
+ * the app is still inactive behind the system alert. Presenting a modal in
+ * that window is what makes it flash past during the return transition.
+ */
+const waitForForeground = async (): Promise<void> => {
+  if (AppState.currentState === 'active') return
+
+  let subscription: ReturnType<typeof AppState.addEventListener> | undefined
+  let timeout: ReturnType<typeof setTimeout> | undefined
+  try {
+    // Whichever settles first wins; resolving twice is a no-op:
+    await new Promise<void>(resolve => {
+      subscription = AppState.addEventListener('change', state => {
+        if (state === 'active') resolve()
+      })
+      timeout = setTimeout(resolve, FOREGROUND_TIMEOUT_MS)
+    })
+  } finally {
+    if (timeout != null) clearTimeout(timeout)
+    if (subscription != null) subscription.remove()
+  }
+}
+
+/**
+ * Opens the QR scanner, sequencing the camera permission, the first-use scam
+ * warning, and the scanner itself so that none of them can overlap:
+ *
+ * 1. Request the OS camera permission, with no Edge modal on screen behind it.
+ * 2. If it is denied or blocked, show the Settings recovery guidance and stop.
+ * 3. On the first camera use only, show the scam warning and wait for the user
+ *    to explicitly acknowledge it.
+ * 4. Only then mount the scanner.
+ *
+ * Resolves to the scanned string, or `undefined` if the user backed out at any
+ * point.
+ */
+export const showScanModal =
+  (props: ScanModalProps): ThunkAction<Promise<string | undefined>> =>
+  async (dispatch, getState) => {
+    const status = await dispatch(checkAndRequestPermission('camera'))
+
+    // Answering the prompt returns the app to the foreground. Wait for that
+    // before presenting anything of our own, on either branch -- the recovery
+    // modal is just as capable of flashing past as the warning is:
+    await waitForForeground()
+
+    if (
+      status !== RNPermissions.RESULTS.GRANTED &&
+      status !== RNPermissions.RESULTS.LIMITED
+    ) {
+      await Airship.show(bridge => (
+        <CameraPermissionDeniedModal bridge={bridge} />
+      ))
+      return undefined
+    }
+
+    const account = getState().core.account
+    const { cameraScamWarningShown } = await getLocalAccountSettings(account)
+    if (!cameraScamWarningShown) {
+      const acknowledged = await Airship.show<boolean>(bridge => (
+        <ScanScamWarningModal bridge={bridge} />
+      ))
+      // The warning is only dismissable by acknowledging it, so anything else
+      // means we were torn down (a logout, say). Don't record it as shown:
+      if (!acknowledged) return undefined
+      // Best-effort: a logout between the acknowledgement and the write would
+      // reject, and re-showing the warning next time beats an error banner:
+      await writeCameraScamWarningShown(account).catch(() => {})
+    }
+
+    return await Airship.show<string | undefined>(bridge => (
+      <ScanModal bridge={bridge} {...props} />
+    ))
+  }
