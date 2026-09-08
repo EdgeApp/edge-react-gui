@@ -11,6 +11,13 @@ interface UseGiftCardProviderOptions {
   apiKey: string
   baseUrl: string
   publicKey?: string
+
+  /**
+   * Set false to keep the provider from being created at all. Building it
+   * registers a Phaze identity, so callers that know Phaze is unavailable use
+   * this to stay off the network entirely.
+   */
+  enabled?: boolean
 }
 
 export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
@@ -19,7 +26,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
   isError: boolean
   error: Error | null
 } {
-  const { account, apiKey, baseUrl, publicKey } = options
+  const { account, apiKey, baseUrl, publicKey, enabled = true } = options
 
   const {
     data: provider = null,
@@ -38,7 +45,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
       await instance.ensureUser(account)
       return instance
     },
-    enabled: account != null && apiKey !== '' && baseUrl !== '',
+    enabled: enabled && account != null && apiKey !== '' && baseUrl !== '',
     staleTime: Infinity, // Provider instance doesn't need to be refetched
     gcTime: 300000
   })

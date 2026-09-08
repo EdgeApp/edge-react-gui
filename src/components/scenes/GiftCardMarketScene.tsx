@@ -7,8 +7,10 @@ import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import {
+  BITREFILL_PLUGIN_ID,
   isGiftCardBrandDisabled,
-  isGiftCardProviderDisabled
+  isGiftCardProviderDisabled,
+  PHAZE_PLUGIN_ID
 } from '../../actions/GiftCardInfoActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
@@ -46,12 +48,6 @@ type ViewMode = 'grid' | 'list'
 
 // Internal constant for "All" category comparison - display uses lstrings.string_all
 const CATEGORY_ALL = 'All'
-
-// Provider IDs used as keys in the info-server giftCardInfo.disablePlugins map.
-// Phaze supports per-brand granularity (keyed by productId); Bitrefill is a
-// webview, so only whole-provider disabling applies.
-const PHAZE_PLUGIN_ID = 'phaze'
-const BITREFILL_PLUGIN_ID = 'bitrefill'
 
 /**
  * Formats a normalized category for display:
@@ -125,12 +121,27 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     state => state.ui.giftCardInfo.disablePlugins
   )
 
-  // Provider (requires API key configured)
+  // Provider config (the Phaze scenes need an API key to do anything)
   const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
+
+  // Phaze is the catalog behind this scene. While it is off the scene is a
+  // Bitrefill shortcut, so skip the provider (which would register a Phaze
+  // identity) and every query that feeds off it. This matches the condition
+  // pickGiftCardDestination routes on, so a build with no key lands here in the
+  // same state a remote disable produces rather than on a permanent loader.
+  const isPhazeOff =
+    phazeConfig?.apiKey == null ||
+    isGiftCardProviderDisabled(giftCardDisablePlugins, PHAZE_PLUGIN_ID)
+  const isBitrefillDisabled = isGiftCardProviderDisabled(
+    giftCardDisablePlugins,
+    BITREFILL_PLUGIN_ID
+  )
+
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
-    baseUrl: phazeConfig?.baseUrl ?? ''
+    baseUrl: phazeConfig?.baseUrl ?? '',
+    enabled: !isPhazeOff
   })
 
   // Cache for gift card brands (accessed via provider)
@@ -269,7 +280,12 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
 
       return allBrands
     },
-    enabled: isConnected && isReady && provider != null && countryCode !== '',
+    enabled:
+      isConnected &&
+      isReady &&
+      provider != null &&
+      countryCode !== '' &&
+      !isPhazeOff,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000,
     retry: 1
@@ -282,11 +298,18 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
     }
   }, [apiBrands, updateFromBrands])
 
+  // A disabled Phaze is never queried, so its half of the market is a settled
+  // empty list rather than one that is still loading or failed:
+  const phazeItems = React.useMemo(
+    () => (isPhazeOff ? [] : items),
+    [isPhazeOff, items]
+  )
+
   // Remove phaze brands disabled by the info server, either because the whole
   // phaze provider is disabled or because the brand's productId is listed.
   const enabledItems = React.useMemo(() => {
-    if (items == null) return null
-    return items.filter(
+    if (phazeItems == null) return null
+    return phazeItems.filter(
       item =>
         !isGiftCardBrandDisabled(
           giftCardDisablePlugins,
@@ -294,7 +317,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           String(item.productId)
         )
     )
-  }, [items, giftCardDisablePlugins])
+  }, [phazeItems, giftCardDisablePlugins])
 
   // Build the category list from the enabled items only, so a category whose
   // brands are all disabled by the info server does not show a chip that leads
@@ -498,13 +521,14 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   // Bitrefill provider is remotely disabled)
   const listData = React.useMemo(() => {
     const base = filteredItems ?? []
-    if (
-      isGiftCardProviderDisabled(giftCardDisablePlugins, BITREFILL_PLUGIN_ID)
-    ) {
-      return base
-    }
+    if (isBitrefillDisabled) return base
     return [...base, BITREFILL_ITEM]
-  }, [filteredItems, giftCardDisablePlugins])
+  }, [filteredItems, isBitrefillDisabled])
+
+  // Both providers off leaves nothing to browse, which is a different state
+  // from a search that matched nothing:
+  const hasNoProviders =
+    isBitrefillDisabled && enabledItems != null && enabledItems.length === 0
 
   return (
     <SceneWrapper
@@ -518,7 +542,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
           headerTitle={lstrings.title_gift_card_market}
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
         >
-          {items == null && isBrandsError ? (
+          {phazeItems == null && isBrandsError ? (
             <AlertCardUi4
               type="warning"
               title={
@@ -527,8 +551,13 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
                   : lstrings.gift_card_network_error
               }
             />
-          ) : items == null ? (
+          ) : phazeItems == null ? (
             <FillLoader />
+          ) : hasNoProviders ? (
+            <AlertCardUi4
+              type="warning"
+              title={lstrings.gift_card_providers_unavailable}
+            />
           ) : (
             <>
               <View style={styles.categoryRow}>
