@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets

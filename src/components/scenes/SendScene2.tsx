@@ -116,6 +116,17 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 
 const SCROLL_TO_END_DELAY_MS = 150
 
+// Error names an engine assigns when the node explicitly refused the
+// transaction. Nothing was accepted, so the existing copy for these can name
+// the real fix (stake more CPU, activate the recipient) instead of the
+// ambiguous "status unknown" card.
+const DETERMINISTIC_REJECTIONS = new Set([
+  'ErrorAlgoRecipientNotActivated',
+  'ErrorEosInsufficientCpu',
+  'ErrorEosInsufficientNet',
+  'ErrorEosInsufficientRam'
+])
+
 type Props = EdgeAppSceneProps<'send2'>
 
 export interface SendScene2Params {
@@ -259,6 +270,14 @@ const SendComponent: React.FC<Props> = props => {
     AddressEntryMethod | undefined
   >(undefined)
   const [hasPendingTx, setHasPendingTx] = useState<boolean>(false)
+  // Once a broadcast has been attempted, the confirm slider never re-arms on
+  // this scene, whether the broadcast reported success or failure. A failure
+  // report does not prove the transaction is absent from the network, and a
+  // re-armed slider after a real broadcast is an invitation to pay twice.
+  // The ref is what the send handler reads (it survives the FIO retry
+  // recursion); the state is what drives the render.
+  const broadcastAttemptedRef = React.useRef<boolean>(false)
+  const [broadcastAttempted, setBroadcastAttempted] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -535,7 +554,8 @@ const SendComponent: React.FC<Props> = props => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
     spendTarget.memo = spendTarget.uniqueIdentifier = undefined
-    setError(undefined)
+    // Keep the locked-state card if a broadcast has been attempted:
+    if (!broadcastAttemptedRef.current) setError(undefined)
     setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
@@ -778,6 +798,11 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
+    // The quote's expiry is moot once a broadcast has been attempted with it.
+    // Firing it now would either overwrite the locked-state card with an
+    // expiry error or, for launchers whose onExpired navigates back, pop the
+    // scene and hide the card entirely.
+    if (broadcastAttemptedRef.current) return
     if (onExpired != null) {
       // Caller provided custom expiry handler - call it without showing error
       onExpired()
@@ -1308,10 +1333,17 @@ const SendComponent: React.FC<Props> = props => {
           'Error from before transaction route param hook: ',
           String(e)
         )
+        resetSlider()
         return
       }
 
       isSendingRef.current = true
+      // Set once broadcastTx resolves, so the catch below can tell a broadcast
+      // that reported failure apart from an error after a successful one.
+      let broadcastSucceeded = false
+      // Hoisted so the catch can log the real txid. For UTXO coins makeSpend
+      // returns an empty txid and the engine only assigns it during signTx.
+      let signedTx: EdgeTransaction | undefined
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1323,13 +1355,21 @@ const SendComponent: React.FC<Props> = props => {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
         }
 
-        const signedTx = await coreWallet.signTx(edgeTransaction)
+        signedTx = await coreWallet.signTx(edgeTransaction)
+
+        // From this point on the transaction may reach the network, so lock
+        // the slider for the life of this scene no matter what happens next.
+        // The render-side flag is set in the finally block, so the slider
+        // keeps its spinner while the attempt is in flight.
+        broadcastAttemptedRef.current = true
+
         let broadcastedTx: EdgeTransaction
         if (alternateBroadcast != null) {
           broadcastedTx = await alternateBroadcast(signedTx)
         } else {
           broadcastedTx = await coreWallet.broadcastTx(signedTx)
         }
+        broadcastSucceeded = true
 
         // Figure out metadata (preserve Zano alias if provided)
         let payeeName: string | undefined
@@ -1559,10 +1599,56 @@ const SendComponent: React.FC<Props> = props => {
           )
         }
 
+        if (broadcastAttemptedRef.current) {
+          // The broadcast was attempted, so the slider stays locked whatever
+          // the cause. The copy is a separate decision: when the engine has
+          // named a deterministic rejection above, the node refused the
+          // transaction and that specific message stands, so the user learns
+          // the real fix. Anything else at or after the boundary is ambiguous
+          // and gets the honest "status unknown" card. That includes a 504,
+          // which during a broadcast proves nothing either way.
+          const txid = signedTx?.txid ?? edgeTransaction.txid
+          logActivity(
+            `Error ${
+              broadcastSucceeded ? 'after' : 'during'
+            } broadcastTx (txid ${txid}): ${String(err)}`
+          )
+          if (!DETERMINISTIC_REJECTIONS.has(errorCasted.name)) {
+            error = new I18nError(
+              lstrings.send_broadcast_failure_title,
+              sprintf(
+                broadcastSucceeded
+                  ? lstrings.send_broadcast_post_error_message_s
+                  : lstrings.send_broadcast_failure_message_s,
+                errorCasted.message
+              )
+            )
+          }
+          setError(error)
+          // The locked-state card is longer than a normal error, and the
+          // slider floats over the bottom of the scroll view. Scroll it into
+          // view so the whole message is readable without scrolling by hand.
+          needsScrollToEnd.current = true
+
+          // Deliberately no onDone(error) here. The ramp launchers pop this
+          // scene when their onDone promise rejects and show a generic
+          // failure, which would hide this card and put the user back in a
+          // flow that can start another real payment. They still terminate
+          // through onBack when the user leaves, as on develop.
+          return
+        }
+
         setError(error)
       } finally {
         isSendingRef.current = false
-        resetSlider()
+        // The slider is idempotent once a broadcast has been attempted. Only a
+        // failure before that boundary (PIN, hooks, FIO fee check, signing)
+        // leaves the slider re-armed, because nothing could have been sent.
+        if (broadcastAttemptedRef.current) {
+          setBroadcastAttempted(true)
+        } else {
+          resetSlider()
+        }
       }
     }
   )
@@ -1588,6 +1674,16 @@ const SendComponent: React.FC<Props> = props => {
   // Calculate the transaction
   useAsyncEffect(
     async () => {
+      // Once a broadcast has been attempted the transaction may already be on
+      // the network. Re-quoting would be meaningless, and the success path
+      // below clears `error`, which is the only explanation the user has for
+      // the locked slider. Freeze the quote instead. The amount handler has
+      // already flagged "calculating" by the time we get here, so clear it
+      // or the fee tile spins forever.
+      if (broadcastAttemptedRef.current) {
+        setProcessingAmountChanged(false)
+        return
+      }
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
@@ -1880,6 +1976,11 @@ const SendComponent: React.FC<Props> = props => {
                 <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                   <SafeSlider
                     disabledText={disabledText}
+                    lockedText={
+                      broadcastAttempted
+                        ? lstrings.send_confirmation_slider_locked
+                        : undefined
+                    }
                     onSlidingComplete={handleSliderComplete}
                     disabled={disableSlider}
                   />
