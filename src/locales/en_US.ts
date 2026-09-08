@@ -475,6 +475,9 @@ const strings = {
   percent_complete_1s: '%1$s Complete',
   sync_status_title: 'Sync in Progress',
   sync_status_blocks: 'Syncing blocks %1$s/%2$s',
+  large_utxo_wallet_title: 'Large Wallet',
+  large_utxo_wallet_body:
+    'This wallet has a long transaction history, so syncing it takes a while. Keep it open until the sync finishes. Until then the balance can read higher than the amount you are able to spend, and a send may come back as insufficient funds.',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',
   mining_fee_custom_label_choice: 'Custom',

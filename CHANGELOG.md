@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
 - changed: Standardize wallet list automation test IDs to use period separators.
 
 ## 4.51.0 (staging)
