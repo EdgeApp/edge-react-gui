@@ -83,7 +83,7 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/swapsxyz/icon.png`
   },
   {
-    displayName: 'swaps.xyz (Solana)',
+    displayName: 'MoonPay Trade (DeFi)',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/swapsxyz/icon.png`
   },
   {
