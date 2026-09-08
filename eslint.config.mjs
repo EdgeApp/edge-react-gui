@@ -474,7 +474,6 @@ export default [
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
 
-      'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
