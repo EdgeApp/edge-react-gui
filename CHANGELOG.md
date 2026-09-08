@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Show the hex private key alongside the seed phrase under Master Private Key
 - changed: Standardize wallet list automation test IDs to use period separators.
 
 ## 4.51.0 (staging)

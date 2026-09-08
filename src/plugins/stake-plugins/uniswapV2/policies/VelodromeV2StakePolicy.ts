@@ -22,6 +22,7 @@ import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
+import { getSignerSeed } from '../../util/signer'
 import { pluginInfo } from '../pluginInfo'
 import { optimismEcosystem as eco } from '../policyInfo/optimism'
 import type { StakePolicyInfo } from '../stakePolicy'
@@ -175,7 +176,7 @@ export const makeVelodromeV2StakePolicy = (
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       // Get the signer for the wallet
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
       const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
@@ -856,7 +857,7 @@ export const makeVelodromeV2StakePolicy = (
       request: StakePositionRequest
     ): Promise<StakePosition> {
       const { stakePolicyId, wallet, account } = request
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(
         p => p.stakePolicyId === stakePolicyId

@@ -1,5 +1,5 @@
 import { sub } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpinner'
@@ -82,4 +82,32 @@ export const enableTokens = async (
       lstrings.wallet_list_modal_enabling_token,
       wallet.changeEnabledTokenIds([...enabledTokenIds, ...tokensToEnable])
     )
+}
+
+const HEX_PRIVATE_KEY_REGEX = /^(0x)?[0-9a-fA-F]{64}$/
+
+/**
+ * Reads the 32-byte hex private key a wallet has stored, if it keeps one.
+ *
+ * The account-based EVM plugins name this key `${pluginId}Key`
+ * (`ethereumKey`, `fantomKey` and so on) and store it next to an optional
+ * `${pluginId}Mnemonic`. That field name is a shared convention rather than an
+ * EVM one, and other plugin families put unrelated material there: the UTXO
+ * plugins keep a base64 or WIF seed under it. So the value has to look like a
+ * hex private key before we offer it as one, and anything else yields
+ * undefined.
+ *
+ * This is not the same as `EdgeAccount.getDisplayPrivateKey`, which asks the
+ * plugin to pick what a user should see and returns the seed phrase whenever
+ * the wallet has one.
+ */
+export const getWalletHexPrivateKey = async (
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet
+): Promise<string | undefined> => {
+  const { pluginId } = wallet.currencyInfo
+  const rawKeys = await account.getRawPrivateKey(wallet.id)
+  const privateKey = rawKeys[`${pluginId}Key`]
+  if (typeof privateKey !== 'string') return undefined
+  return HEX_PRIVATE_KEY_REGEX.test(privateKey) ? privateKey : undefined
 }

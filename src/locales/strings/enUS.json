@@ -666,6 +666,7 @@
   "exchange_rates_loading": "Exchange Rates Loading...",
   "exchange_rate_loading_singular": "Exchange Rate Loading...",
   "string_master_private_key": "Master Private Key",
+  "string_master_private_seed": "Master Private Seed",
   "string_add_edit_tokens": "Add / Edit Tokens",
   "string_get_raw_keys": "Get Raw Keys",
   "string_raw_keys": "Raw Keys",
