@@ -336,7 +336,7 @@ export interface WcConnectionInfo {
   icon: string
 }
 export interface WalletConnectChainId {
-  namespace: 'algorand' | 'cosmos' | 'eip155'
+  namespace: 'algorand' | 'bip122' | 'cosmos' | 'eip155'
   reference: string
 }
 export interface wcGetConnection {
