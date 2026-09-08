@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: Standardize wallet list automation test IDs to use period separators.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets
