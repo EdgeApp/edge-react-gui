@@ -268,6 +268,24 @@ describe('filterWalletCreateItemListBySearchText', () => {
       pluginId: 'bitcoin',
       walletType: 'wallet:bitcoin'
     }),
+    // Multi-word display name whose second word is absent from the pluginId:
+    makeTestCreateWalletItem({
+      key: 'create-robinhood',
+      currencyCode: 'ETH',
+      displayName: 'Robinhood Chain',
+      assetDisplayName: 'Ethereum',
+      pluginId: 'robinhood',
+      walletType: 'wallet:robinhood'
+    }),
+    // Multi-word display name whose second word IS in the pluginId:
+    makeTestCreateWalletItem({
+      key: 'create-bitcoincash',
+      currencyCode: 'BCH',
+      displayName: 'Bitcoin Cash',
+      assetDisplayName: 'Bitcoin Cash',
+      pluginId: 'bitcoincash',
+      walletType: 'wallet:bitcoincash'
+    }),
     makeTestCreateWalletItem({
       key: 'create-usdt',
       currencyCode: 'USDT',
@@ -293,7 +311,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
   describe('empty search', () => {
     test('returns all items when search is empty', () => {
       const result = filterWalletCreateItemListBySearchText(testCreateList, '')
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(7)
     })
 
     test('returns all items when search is only whitespace', () => {
@@ -301,7 +319,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         '   '
       )
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(7)
     })
   })
 
@@ -322,18 +340,29 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'bit'
       )
-      expect(result).toHaveLength(1)
-      expect(result[0].currencyCode).toBe('BTC')
+      const codes = result.map(r => r.currencyCode)
+      expect(codes).toEqual(['BTC', 'BCH'])
     })
 
-    test('does NOT match in middle (startsWith for currencyCode)', () => {
+    test('does NOT match in the middle of a word', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'ether'
+      )
+      // "ether" is inside "Tether" but does not start any of its words
+      const codes = result.map(r => r.currencyCode)
+      expect(codes).not.toContain('USDT')
+    })
+
+    test('matches a later word of a display name by prefix', () => {
       const result = filterWalletCreateItemListBySearchText(
         testCreateList,
         'steth'
       )
-      // "steth" should not match "WSTETH" as currencyCode doesn't start with it
-      // nor "Wrapped stETH" as displayName doesn't start with it
-      expect(result).toHaveLength(0)
+      // "steth" is the second word of "Wrapped stETH", so it matches there,
+      // but it is still a prefix match rather than a substring of "WSTETH"
+      expect(result).toHaveLength(1)
+      expect(result[0].currencyCode).toBe('WSTETH')
     })
 
     test('matches assetDisplayName from beginning', () => {
@@ -341,8 +370,9 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'ethereum'
       )
-      // Ethereum mainnet and Base both have assetDisplayName "Ethereum"
-      expect(result).toHaveLength(2)
+      // Ethereum mainnet, Base and Robinhood Chain all have the assetDisplayName
+      // "Ethereum"
+      expect(result).toHaveLength(3)
     })
   })
 
@@ -362,8 +392,9 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'ethereum'
       )
-      // Should match Ethereum mainnet (pluginId and displayName), Base (assetDisplayName)
-      // But NOT tokens even though they have pluginId: 'ethereum'
+      // Should match Ethereum mainnet (pluginId and displayName), Base and
+      // Robinhood Chain (assetDisplayName), but NOT tokens even though they
+      // have pluginId: 'ethereum'
       expect(result.every(r => r.walletType != null)).toBe(true)
     })
   })
@@ -404,6 +435,52 @@ describe('filterWalletCreateItemListBySearchText', () => {
         'base   eth'
       )
       expect(result).toHaveLength(1)
+    })
+  })
+
+  describe('multi-word display names', () => {
+    test('matches the full name of a multi-word chain', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood Chain'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('matches the first word of a multi-word chain', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('matches a multi-word chain typed without the space', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'robinhoodchain'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('still matches a multi-word chain named by its pluginId', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Bitcoin Cash'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('bitcoincash')
+    })
+
+    test('returns nothing when the second word matches nothing', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood Bitcoin'
+      )
+      expect(result).toHaveLength(0)
     })
   })
 
