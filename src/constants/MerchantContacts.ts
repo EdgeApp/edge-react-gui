@@ -79,7 +79,7 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/simplex.png`
   },
   {
-    displayName: 'swaps.xyz',
+    displayName: 'MoonPay Trade (Centralized)',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/swapsxyz/icon.png`
   },
   {
