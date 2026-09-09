@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Warning modal when a send or swap drains the gas a wallet's tokens need
 - changed: Standardize wallet list automation test IDs to use period separators.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit

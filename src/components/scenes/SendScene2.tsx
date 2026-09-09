@@ -68,6 +68,10 @@ import {
   getMemoTitle
 } from '../../util/memoUtils'
 import {
+  getGasFeeNativeAmount,
+  getStuckFundsWarning
+} from '../../util/stuckFundsWarning'
+import {
   convertTransactionFeeToDisplayFee,
   darkenHexColor,
   DECIMAL_PRECISION,
@@ -86,6 +90,7 @@ import {
   type FlipInputModalResult
 } from '../modals/FlipInputModal2'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
+import { showStuckFundsWarningModal } from '../modals/StuckFundsWarningModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import {
   WalletListModal,
@@ -1297,6 +1302,30 @@ const SendComponent: React.FC<Props> = props => {
           resetSlider()
           setPinValue('')
           showToast(lstrings.incorrect_pin)
+          return
+        }
+      }
+
+      const spentNativeAmount = spendInfo.spendTargets.reduce(
+        (prev, target) => add(target.nativeAmount ?? '0', prev),
+        '0'
+      )
+      const stuckFundsWarning = getStuckFundsWarning({
+        balanceMap: coreWallet.balanceMap,
+        gasFeeNativeAmount: getGasFeeNativeAmount(edgeTransaction.networkFees),
+        gasSpentNativeAmount: tokenId == null ? spentNativeAmount : '0',
+        spentTokenAmount:
+          tokenId == null
+            ? undefined
+            : { tokenId, nativeAmount: spentNativeAmount }
+      })
+      if (stuckFundsWarning != null) {
+        const goAhead = await showStuckFundsWarningModal(
+          stuckFundsWarning,
+          coreWallet.currencyInfo.currencyCode
+        )
+        if (!goAhead) {
+          resetSlider()
           return
         }
       }
