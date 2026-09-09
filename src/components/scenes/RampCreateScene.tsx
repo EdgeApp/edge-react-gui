@@ -85,6 +85,13 @@ import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { RampRegionSelect } from './RampCreateScene/RampRegionSelect'
 
+/**
+ * Upper bound on the decimals the crypto amount field renders, for assets whose
+ * own precision goes beyond what a ramp quote can express. See
+ * `cryptoMaxDecimals`.
+ */
+const MAX_CRYPTO_ENTRY_DECIMALS = 9
+
 export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
   regionCode?: string
@@ -592,6 +599,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     denomination
   ])
 
+  // How many decimals the crypto field renders. Providers quote each asset at
+  // its own precision and change it over time (Moonpay moves BTC 5 -> 8 and
+  // ETH/SOL to 9 decimals on the buy flow in September 2026), so this follows
+  // the asset instead of assuming a count. The 9-decimal ceiling keeps the
+  // field readable for high-precision assets such as ETH, whose 18 decimals
+  // would expose the rounding noise of the float exchange rate that
+  // `displayCryptoAmount` divides by while the user types a fiat amount.
+  const cryptoMaxDecimals = React.useMemo(() => {
+    if (denomination == null) return MAX_CRYPTO_ENTRY_DECIMALS
+    return Math.min(
+      mulToPrecision(denomination.multiplier),
+      MAX_CRYPTO_ENTRY_DECIMALS
+    )
+  }, [denomination])
+
   // Log the quote event only when the scene is focused
   useFocusEffect(() => {
     dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
@@ -1091,7 +1113,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                 placeholder={cryptoAmountPlaceholder}
                 keyboardType="decimal-pad"
                 numeric
-                maxDecimals={6}
+                maxDecimals={cryptoMaxDecimals}
                 returnKeyType="done"
                 showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
                 disabled={cryptoInputDisabled}
