@@ -39,6 +39,10 @@ const asEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
+  // Blockscout's hosted API at `api.blockscout.com` bills per key. It has no
+  // default, because the currency plugin drops that server when the option is
+  // absent and an empty string would read as a key that is merely broken.
+  blockscoutApiKey: asOptional(asEither(asString, asArray(asString))),
   drpcApiKey: asOptional(asString, ''),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
