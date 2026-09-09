@@ -16,6 +16,7 @@ import {
   type PhazeApi,
   type PhazeApiConfig
 } from './phazeApi'
+import { PHAZE_SANDBOX_ENABLED } from './phazeConfig'
 import {
   makePhazeGiftCardCache,
   type PhazeGiftCardCache
@@ -35,7 +36,9 @@ import {
 } from './phazeGiftCardTypes'
 
 // dataStore keys - encrypted storage for privacy
-const STORE_ID = 'phaze-prod'
+// Sandbox identities live in their own store so a live userApiKey is never
+// sent to the sandbox environment (and vice versa):
+const STORE_ID = PHAZE_SANDBOX_ENABLED ? 'phaze-sandbox' : 'phaze-prod'
 // Each identity is stored as a separate item keyed by uniqueId to prevent
 // race conditions when multiple devices create identities simultaneously.
 const IDENTITY_KEY_PREFIX = 'identity-'

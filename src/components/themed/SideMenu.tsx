@@ -38,6 +38,7 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import { getPhazeConfig } from '../../plugins/gift-cards/phazeConfig'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
 import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -316,7 +317,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       title: lstrings.title_markets
     },
     // Only show gift card menu option if Phaze API key is configured
-    ...(ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null
+    ...(getPhazeConfig() != null
       ? [
           {
             handlePress: async () => {

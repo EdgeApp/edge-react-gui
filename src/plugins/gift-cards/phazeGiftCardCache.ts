@@ -3,6 +3,7 @@ import type { Disklet } from 'disklet'
 import { makeReactNativeDisklet, navigateDisklet } from 'disklet'
 
 import { debugLog } from '../../util/logger'
+import { PHAZE_SANDBOX_ENABLED } from './phazeConfig'
 import {
   asPhazeGiftCardBrand,
   type PhazeGiftCardBrand
@@ -96,7 +97,10 @@ export interface PhazeGiftCardCache {
 // ---------------------------------------------------------------------------
 
 const CACHE_VERSION = 2 // Bumped for new structure
-const CACHE_DISKLET_DIR = 'phazeGiftCards'
+// Sandbox and live catalogs differ, so they are cached separately:
+const CACHE_DISKLET_DIR = PHAZE_SANDBOX_ENABLED
+  ? 'phazeGiftCardsSandbox'
+  : 'phazeGiftCards'
 
 /**
  * In-memory cache TTL (1 hour).

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { makeEvent } from 'yavent'
 
 import { useSelector } from '../../types/reactRedux'
+import { PHAZE_SANDBOX_ENABLED } from './phazeConfig'
 import {
   asPhazeOrderAugments,
   type PhazeDisplayOrder,
@@ -13,7 +14,7 @@ import {
 } from './phazeGiftCardTypes'
 
 // dataStore keys - uses encrypted storage to protect privacy
-const STORE_ID = 'phaze'
+const STORE_ID = PHAZE_SANDBOX_ENABLED ? 'phaze-sandbox-orders' : 'phaze'
 const AUGMENTS_KEY = 'order-augments'
 
 // ---------------------------------------------------------------------------
