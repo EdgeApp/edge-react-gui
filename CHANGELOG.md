@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Show the hex private key alongside the seed phrase under Master Private Key
 - changed: Standardize wallet list automation test IDs to use period separators.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit

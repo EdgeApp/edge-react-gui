@@ -466,7 +466,6 @@ export default [
 
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
-      'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
       'src/plugins/stake-plugins/util/builder.ts',
@@ -488,7 +487,6 @@ export default [
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
       'src/util/CurrencyInfoHelpers.ts',
-      'src/util/CurrencyWalletHelpers.ts',
 
       'src/util/exchangeRates.ts',
 
