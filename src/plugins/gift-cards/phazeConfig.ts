@@ -13,7 +13,7 @@ export interface PhazeConfig {
  * serves every build. Flip it to `true` on a test branch only; it must
  * never land as `true`.
  */
-export const PHAZE_SANDBOX_ENABLED: boolean = false
+export const PHAZE_SANDBOX_ENABLED: boolean = true
 
 /**
  * Resolve the Phaze credentials for the environment this build targets.
