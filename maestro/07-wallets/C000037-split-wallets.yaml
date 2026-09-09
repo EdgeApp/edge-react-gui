@@ -58,7 +58,7 @@ tags:
 # Next scene
 - assertVisible: Split Wallet
 - assertVisible: EVM-compatible networks share the.*existing address.
-- assertVisible: Tap on wallet to edit settings
+- assertVisible: Tap on wallet to edit name
 - evalScript: ${output.newETHName = ".*My Ether \\(Split from My Base\\).*"}
 - assertVisible: ${output.newETHName}
 
@@ -100,7 +100,7 @@ tags:
 
 # - assertVisible: Split Wallet
 # - assertVisible: This action creates wallets from pre-existing wallets.
-# - assertVisible: Tap on wallet to edit settings
+# - assertVisible: Tap on wallet to edit name
 # - evalScript: ${var newBTCName = ".*My Bitcoin \\(Split from My Litecoin\\).*"}
 # - assertVisible: ${newBTCName}
 # - tapOn: 
