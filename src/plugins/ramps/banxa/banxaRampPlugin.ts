@@ -280,8 +280,9 @@ const ensureIsoPrefix = (currencyCode: string): string => {
   return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
 }
 
-interface BanxaPaymentIdLimit {
+export interface BanxaPaymentIdLimit {
   id: number
+  paymentType: BanxaPaymentType
   type: FiatPaymentType
   min: string
   max: string
@@ -357,6 +358,19 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   WORLDPAYGOOGLE: 'googlepay',
   ZHACHSELL: 'ach'
 }
+
+/**
+ * Banxa PSPs that have been superseded by a newer PSP serving the same
+ * `FiatPaymentType`. They remain mapped because they still cover fiats and coins
+ * the replacement PSP does not, but they are only selected when no current PSP
+ * is available for the requested fiat/coin pair.
+ */
+const deprecatedPaymentTypes = new Set<BanxaPaymentType>([
+  // Superseded by PRIMERGP
+  'WORLDPAYGOOGLE',
+  // Superseded by BRDGACHSELL
+  'ZHACHSELL'
+])
 
 // Provider configuration cache
 interface ProviderConfigCache {
@@ -530,6 +544,7 @@ const buildPaymentsMap = (
           } else {
             const newMap: BanxaPaymentIdLimit = {
               id: pm.id,
+              paymentType,
               min: limit.min,
               max: limit.max,
               type: pt
@@ -562,9 +577,26 @@ const getPaymentIdLimit = (
 ): BanxaPaymentIdLimit | undefined => {
   try {
     const payments = banxaPaymentsMap[direction][fiat][banxaCoin]
-    const paymentId = Object.values(payments).find(p => p.type === type)
-    return paymentId
+    return pickPreferredPayment(Object.values(payments), type)
   } catch (e) {}
+}
+
+/**
+ * Banxa often exposes several payment methods for the same `FiatPaymentType`,
+ * because a replacement PSP runs alongside the PSP it supersedes until the old
+ * one is switched off. Always pick a current PSP, and only fall back to a
+ * deprecated one when it is the sole option for the fiat/coin pair.
+ */
+export const pickPreferredPayment = (
+  payments: BanxaPaymentIdLimit[],
+  type: FiatPaymentType
+): BanxaPaymentIdLimit | undefined => {
+  const candidates = payments.filter(payment => payment.type === type)
+  return (
+    candidates.find(
+      payment => !deprecatedPaymentTypes.has(payment.paymentType)
+    ) ?? candidates[0]
+  )
 }
 
 // Takes an EdgeAsset and returns the corresponding Banxa chain code and coin code
