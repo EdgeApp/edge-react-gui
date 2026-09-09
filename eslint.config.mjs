@@ -309,7 +309,7 @@ export default [
 
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
-      'src/components/scenes/WcConnectScene.tsx',
+
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
       'src/components/services/AccountCallbackManager.tsx',
