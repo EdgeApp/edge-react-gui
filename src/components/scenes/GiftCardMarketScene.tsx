@@ -18,7 +18,10 @@ import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { getPhazeConfig } from '../../plugins/gift-cards/phazeConfig'
+import {
+  getPhazeConfig,
+  PHAZE_SANDBOX_ENABLED
+} from '../../plugins/gift-cards/phazeConfig'
 import { getCachedBrandsSync } from '../../plugins/gift-cards/phazeGiftCardCache'
 import type { PhazeGiftCardBrand } from '../../plugins/gift-cards/phazeGiftCardTypes'
 import type { FooterRender } from '../../state/SceneFooterState'
@@ -515,7 +518,11 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
       {({ insetStyle, undoInsetStyle }) => (
         <SceneContainer
           undoInsetStyle={undoInsetStyle}
-          headerTitle={lstrings.title_gift_card_market}
+          headerTitle={
+            PHAZE_SANDBOX_ENABLED
+              ? lstrings.title_gift_card_market_sandbox
+              : lstrings.title_gift_card_market
+          }
           headerTitleChildren={<CountryButton onPress={handleRegionSelect} />}
         >
           {items == null && isBrandsError ? (

@@ -1994,6 +1994,7 @@ const strings = {
   gift_card_list_no_cards: 'No Gift Cards',
   gift_card_list_purchase_new_button: 'Purchase New',
   title_gift_card_market: 'Gift Card Marketplace',
+  title_gift_card_market_sandbox: 'Gift Card Marketplace (Sandbox)',
   title_gift_card_select: 'Select Gift Cards',
   title_gift_card_purchase: 'Purchase Gift Card',
   search_gift_cards: 'Search Gift Cards',
