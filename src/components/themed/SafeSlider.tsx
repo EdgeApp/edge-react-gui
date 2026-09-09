@@ -125,6 +125,7 @@ export const SafeSlider: React.FC<Props> = props => {
               sliderDisabled ? styles.disabledThumb : null,
               scrollTranslationStyle
             ]}
+            testID="confirmSliderThumb"
           >
             <ChevronLeftIcon
               style={styles.thumbIcon}
