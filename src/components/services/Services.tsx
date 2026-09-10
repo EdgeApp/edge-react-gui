@@ -110,6 +110,12 @@ export const Services: React.FC<Props> = props => {
       // so the refreshes below never run against the next session:
       if (!account.loggedIn) return
 
+      // The refreshes below read `ui.fio.fioWallets`, which FioService
+      // writes from a watch-driven effect. On a warm login the waits
+      // above resolve before that effect has run, so publish the list
+      // here first (FioService's own dispatch is idempotent with it):
+      dispatch({ type: 'UPDATE_FIO_WALLETS', data: { fioWallets } })
+
       await dispatch(refreshConnectedWallets).catch((error: unknown) => {
         console.warn(error)
       })
