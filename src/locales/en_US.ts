@@ -1670,6 +1670,14 @@ const strings = {
   send_address_expire_title: 'Payment Address Expiration Time',
   send_address_expired_error_message: 'Payment Address Expired',
 
+  // Stuck funds warning
+  stuck_funds_warning_title: 'Tokens Could Get Stuck',
+  stuck_funds_warning_tokens_remain_1s:
+    'This transaction leaves too little %1$s to pay another network fee. The tokens still held in this wallet cannot be sent or swapped until you add more %1$s.',
+  stuck_funds_warning_swap_into_token_2s:
+    'This swap leaves too little %1$s to pay another network fee. The %2$s you receive lands in this same wallet and cannot be sent or swapped until you add more %1$s.',
+  stuck_funds_warning_continue: 'Continue Anyway',
+
   // Request Scene
   request_balance: 'You have %s',
 
