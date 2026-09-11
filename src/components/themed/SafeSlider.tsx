@@ -70,6 +70,11 @@ export const SafeSlider: React.FC<Props> = props => {
       wasReset = true
       resetSlider()
     })?.catch((err: unknown) => {
+      // Re-arm the slider before surfacing the error. `completed` drives both
+      // the spinner and `sliderDisabled`, so a rejection that never resets
+      // leaves the spinner up and the control permanently dead, with no way to
+      // retry the action.
+      resetSlider()
       showError(err)
     })
     // Only show spinner if reset wasn't called synchronously:
