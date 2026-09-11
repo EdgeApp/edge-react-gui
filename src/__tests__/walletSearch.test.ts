@@ -484,6 +484,60 @@ describe('filterWalletCreateItemListBySearchText', () => {
     })
   })
 
+  describe('punctuation in display names', () => {
+    const segwitCreateList = [
+      makeTestCreateWalletItem({
+        key: 'create-wallet:bitcoin-bip49-bitcoin',
+        currencyCode: 'BTC',
+        displayName: 'Bitcoin (Segwit)',
+        assetDisplayName: 'Bitcoin',
+        pluginId: 'bitcoin',
+        walletType: 'wallet:bitcoin'
+      }),
+      makeTestCreateWalletItem({
+        key: 'create-wallet:bitcoin-bip44-bitcoin',
+        currencyCode: 'BTC',
+        displayName: 'Bitcoin (no Segwit)',
+        assetDisplayName: 'Bitcoin',
+        pluginId: 'bitcoin',
+        walletType: 'wallet:bitcoin'
+      })
+    ]
+
+    test('matches a word wrapped in parentheses', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'segwit'
+      )
+      expect(result.map(r => r.displayName)).toEqual([
+        'Bitcoin (Segwit)',
+        'Bitcoin (no Segwit)'
+      ])
+    })
+
+    test('matches a word that follows an opening parenthesis', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'bitcoin no'
+      )
+      expect(result.map(r => r.displayName)).toEqual(['Bitcoin (no Segwit)'])
+    })
+
+    test('matches each visible label typed exactly', () => {
+      const segwit = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'Bitcoin (Segwit)'
+      )
+      expect(segwit.map(r => r.displayName)).toEqual(['Bitcoin (Segwit)'])
+
+      const noSegwit = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'Bitcoin (no Segwit)'
+      )
+      expect(noSegwit.map(r => r.displayName)).toEqual(['Bitcoin (no Segwit)'])
+    })
+  })
+
   describe('case insensitivity', () => {
     test('matches regardless of case', () => {
       const resultLower = filterWalletCreateItemListBySearchText(
