@@ -106,15 +106,15 @@ export const getCreateWalletList = (
   const excludedAssetsMap = createAssetMap(excludeAssets)
   const allowedAssetsMap = createAssetMap(allowedAssets)
 
-  const isAllowed = (pluginId: string, tokenId: EdgeTokenId) =>
+  const isAllowed = (pluginId: string, tokenId: EdgeTokenId): boolean =>
     // if the wallet already exists, then it is not allowed
-    !existingWalletsMap.get(pluginId)?.has(tokenId) &&
+    existingWalletsMap.get(pluginId)?.has(tokenId) !== true &&
     // if allowedAssets is empty, then all assets are allowed
     (allowedAssetsMap.size === 0 ||
-      allowedAssetsMap.get(pluginId)?.has(tokenId)) &&
+      allowedAssetsMap.get(pluginId)?.has(tokenId) === true) &&
     // if excludedAssets is not empty, then the asset must not be in the excluded list
     (excludedAssetsMap.size === 0 ||
-      !excludedAssetsMap.get(pluginId)?.has(tokenId))
+      excludedAssetsMap.get(pluginId)?.has(tokenId) !== true)
 
   // Add top-level wallet types:
   const newWallets: MainWalletCreateItem[] = []
@@ -125,7 +125,7 @@ export const getCreateWalletList = (
     // Prevent plugins that are "watch only" from being allowed to create new wallets
     if (isKeysOnlyPlugin(pluginId)) continue
     // Prevent currencies that needs activation from being created from a modal
-    if (filterActivation && requiresActivation(pluginId)) continue
+    if (filterActivation === true && requiresActivation(pluginId)) continue
 
     const currencyConfig = account.currencyConfig[pluginId]
     const { assetDisplayName, currencyCode, displayName, walletType } =
@@ -220,6 +220,19 @@ export const getCreateWalletList = (
 }
 
 /**
+ * Breaks a display name into the forms a search term may match by prefix: each
+ * of its whitespace-separated words, plus, for a multi-word name, the whole
+ * name with its whitespace squashed out. The words let a later word of a name
+ * match on its own ("chain" finds "Robinhood Chain"), while the squashed form
+ * keeps a spaceless query ("bitcoincash") working.
+ */
+const getSearchableNameParts = (name: string): string[] => {
+  const words = name.split(/\s+/).filter(word => word !== '')
+  const parts = words.length > 1 ? [...words, words.join('')] : words
+  return parts.map(part => normalizeForSearch(part))
+}
+
+/**
  * Filters a wallet create item list using a search string.
  * Supports multi-word search where each word must match at least one field.
  */
@@ -246,38 +259,40 @@ export const filterWalletCreateItemListBySearchText = (
       walletType
     } = item
 
+    // Normalize each field once per item, rather than once per search term:
+    const isMainnetItem = walletType != null
+    const normalizedCurrencyCode = normalizeForSearch(currencyCode)
+    const normalizedPluginId = normalizeForSearch(pluginId)
+    const displayNameParts = getSearchableNameParts(displayName)
+    const assetDisplayNameParts =
+      assetDisplayName == null ? [] : getSearchableNameParts(assetDisplayName)
+    const normalizedLocations = Object.values(networkLocation)
+      .filter((value): value is string => typeof value === 'string')
+      .map(value => normalizeForSearch(value))
+
     // Check if all search terms match at least one field (AND logic)
     const allTermsMatch = searchTerms.every(term => {
       // Asset identification fields use startsWith to avoid partial matches
       // (e.g., "eth" matches "Ethereum" but not "Tether")
       if (
-        normalizeForSearch(currencyCode).startsWith(term) ||
-        normalizeForSearch(displayName).startsWith(term)
+        normalizedCurrencyCode.startsWith(term) ||
+        displayNameParts.some(part => part.startsWith(term))
       ) {
         return true
       }
       // Search assetDisplayName for mainnet create items (also uses startsWith)
       if (
-        walletType != null &&
-        assetDisplayName != null &&
-        normalizeForSearch(assetDisplayName).startsWith(term)
+        isMainnetItem &&
+        assetDisplayNameParts.some(part => part.startsWith(term))
       ) {
         return true
       }
       // Search pluginId for mainnet create items (uses includes for discovery)
-      if (walletType != null && normalizeForSearch(pluginId).includes(term)) {
+      if (isMainnetItem && normalizedPluginId.includes(term)) {
         return true
       }
       // Search networkLocation values ie. contractAddress (uses includes)
-      for (const value of Object.values(networkLocation)) {
-        if (
-          typeof value === 'string' &&
-          normalizeForSearch(value).includes(term)
-        ) {
-          return true
-        }
-      }
-      return false
+      return normalizedLocations.some(location => location.includes(term))
     })
 
     if (allTermsMatch) {
@@ -287,7 +302,7 @@ export const filterWalletCreateItemListBySearchText = (
   return out
 }
 
-function requiresActivation(pluginId: string) {
+function requiresActivation(pluginId: string): boolean {
   const { isAccountActivationRequired = false } =
     SPECIAL_CURRENCY_INFO[pluginId] ?? {}
   return isAccountActivationRequired
