@@ -44,6 +44,7 @@ exports[`TransactionListRow should render with loading props 1`] = `
       "paddingTop": 11,
     }
   }
+  testID="txListRow_Sent Bitcoin"
 >
   <View
     style={

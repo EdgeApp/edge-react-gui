@@ -2,6 +2,11 @@
 
 ## Unreleased (develop)
 
+- added: Stealth Send, sending privately to an address on any chain the Houdini provider serves
+- added: Stealth Swap, routing a swap through the Houdini privacy provider
+- added: A pasted address from another chain sets up the cross-chain send
+- added: Swap-sends and stealth sends get their own titles in the transaction list and details
+- added: The send scene notes when a swap provider pays the recipient
 - changed: Standardize wallet list automation test IDs to use period separators.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit

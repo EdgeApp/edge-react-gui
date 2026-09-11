@@ -46,24 +46,36 @@ export const getExchangeRate = (
   return foundRate
 }
 
-export const getFiatExchangeRate = (
-  state: RootState,
+/**
+ * Fiat-to-fiat rate off a rates snapshot, for callers that already hold
+ * `GuiExchangeRates` and have no reason to reach for the whole store. Returns
+ * `0` when neither a direct rate nor a USD pivot is known, which callers must
+ * treat as "no rate" rather than as a real conversion.
+ */
+export const getFiatRate = (
+  exchangeRates: GuiExchangeRates,
   fromIsoCode: string,
   toIsoCode: string
 ): number => {
   // Use the direct rate if we have it:
-  const rate = state.exchangeRates.fiat[fromIsoCode]?.[toIsoCode]
+  const rate = exchangeRates.fiat[fromIsoCode]?.[toIsoCode]
   if (rate?.current != null) return rate.current
 
   // Convert via USD as a fallback:
-  const fromUSD = state.exchangeRates.fiat?.[fromIsoCode]?.['iso:USD']?.current
-  const toUSD = state.exchangeRates.fiat?.[toIsoCode]?.['iso:USD']?.current
+  const fromUSD = exchangeRates.fiat?.[fromIsoCode]?.['iso:USD']?.current
+  const toUSD = exchangeRates.fiat?.[toIsoCode]?.['iso:USD']?.current
   if (fromUSD == null) return 0
   if (toUSD == null || toUSD === 0) return 0
 
   const foundRate = fromUSD / toUSD
   return foundRate
 }
+
+export const getFiatExchangeRate = (
+  state: RootState,
+  fromIsoCode: string,
+  toIsoCode: string
+): number => getFiatRate(state.exchangeRates, fromIsoCode, toIsoCode)
 
 export const convertCurrency = (
   exchangeRates: GuiExchangeRates,
