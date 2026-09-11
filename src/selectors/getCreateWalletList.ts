@@ -220,16 +220,20 @@ export const getCreateWalletList = (
 }
 
 /**
- * Breaks a display name into the forms a search term may match by prefix: each
- * of its whitespace-separated words, plus, for a multi-word name, the whole
- * name with its whitespace squashed out. The words let a later word of a name
- * match on its own ("chain" finds "Robinhood Chain"), while the squashed form
- * keeps a spaceless query ("bitcoincash") working.
+ * Breaks a display name into the forms a search term may match by prefix: the
+ * whole name with its whitespace squashed out, plus each of its words in two
+ * forms. Words split on whitespace keep their punctuation, so a query that
+ * copies the visible label ("Bitcoin (Segwit)") still matches. Words split on
+ * any run of characters that are not letters or numbers drop it, so a bare
+ * "segwit" matches the word inside the parentheses. The words let a later word
+ * of a name match on its own ("chain" finds "Robinhood Chain"), while the
+ * whole-name form keeps a spaceless query ("bitcoincash") working.
  */
 const getSearchableNameParts = (name: string): string[] => {
-  const words = name.split(/\s+/).filter(word => word !== '')
-  const parts = words.length > 1 ? [...words, words.join('')] : words
-  return parts.map(part => normalizeForSearch(part))
+  const words = [...name.split(/\s+/), ...name.split(/[^\p{L}\p{N}]+/u)]
+    .map(word => normalizeForSearch(word))
+    .filter(word => word !== '')
+  return [...new Set([normalizeForSearch(name), ...words])]
 }
 
 /**
