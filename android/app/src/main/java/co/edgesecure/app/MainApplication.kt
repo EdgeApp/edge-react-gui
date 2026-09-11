@@ -8,6 +8,9 @@ import com.facebook.react.ReactHost
 import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlags
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android
+import com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsProvider
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.modules.i18nmanager.I18nUtil
@@ -15,7 +18,6 @@ import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher.onApplicationCreate
 import expo.modules.ApplicationLifecycleDispatcher.onConfigurationChanged
-import expo.modules.ReactNativeHostWrapper
 import io.sentry.Hint
 import io.sentry.SentryEvent
 import io.sentry.SentryLevel
@@ -27,26 +29,23 @@ class MainApplication :
   Application(),
   ReactApplication {
   override val reactNativeHost: ReactNativeHost =
-    ReactNativeHostWrapper(
-      this,
-      object : DefaultReactNativeHost(this) {
-        override fun getPackages(): List<ReactPackage> {
-          // Packages that cannot be autolinked yet can be added manually here, for
-          // example:
-          // packages.add(new MyReactNativePackage());
-          val packages = PackageList(this).packages
-          packages.add(EdgeAttestationPackage())
-          return packages
-        }
+    object : DefaultReactNativeHost(this) {
+      override fun getPackages(): List<ReactPackage> {
+        // Packages that cannot be autolinked yet can be added manually here, for
+        // example:
+        // packages.add(new MyReactNativePackage());
+        val packages = PackageList(this).packages
+        packages.add(EdgeAttestationPackage())
+        return packages
+      }
 
-        override fun getJSMainModuleName(): String = "index"
+      override fun getJSMainModuleName(): String = "index"
 
-        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+      override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 
-        override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
-        override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
-      },
-    )
+      override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
+      override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
+    }
 
   override val reactHost: ReactHost
     get() = getDefaultReactHost(applicationContext, reactNativeHost)
@@ -109,6 +108,37 @@ class MainApplication :
       // If you opted-in for the New Architecture, we load the native entry point for this
       // app.
       load()
+
+      // load() consumed the process's single feature-flag override with React
+      // Native's stable defaults. Replace it with those same defaults plus the
+      // ShadowTree commit-exhaustion protection, which React Native ships
+      // default-off: without it, a runaway commit loop aborts the app in
+      // native code (ShadowTree.cpp: "assertion failed (attempts < 1024)").
+      // Android loads the RN core prebuilt, so the default cannot be patched
+      // in source like on iOS. Resetting here is safe because no React
+      // runtime exists yet.
+      ReactNativeFeatureFlags.dangerouslyReset()
+      ReactNativeFeatureFlags.override(
+        object :
+          ReactNativeFeatureFlagsProvider by ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android() {
+          override fun preventShadowTreeCommitExhaustion(): Boolean = true
+
+          // View recycling only runs under the new architecture, so enabling
+          // it turned these on for the first time. Recycled views arrive
+          // carrying visual properties from their previous use: buttons stay
+          // dimmed after becoming enabled, and labels render at a stale font
+          // size. Keep them off, matching how the app rendered before the
+          // architecture switch.
+          // The master recycling switch defaults off in 0.86.0, but pin it so
+          // a future point release cannot flip it on and silently activate
+          // the image recycler (which defaults on under the master switch):
+          override fun enableViewRecycling(): Boolean = false
+
+          override fun enableViewRecyclingForText(): Boolean = false
+
+          override fun enableViewRecyclingForView(): Boolean = false
+        }
+      )
     }
     onApplicationCreate(this)
   }

@@ -22,7 +22,8 @@ import {
   type TextInput,
   View
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import type { KeyboardAwareScrollViewRef } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
@@ -48,6 +49,7 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { GradientColors } from '../../types/Theme'
 import type { FioRequest } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -209,7 +211,7 @@ const SendComponent: React.FC<Props> = props => {
 
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
-  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollViewRef>(null)
   const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
@@ -1784,14 +1786,15 @@ const SendComponent: React.FC<Props> = props => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null && theme.isDark) {
-    const scaledColor = darkenHexColor(
-      iconColor,
-      theme.assetBackgroundColorScale
-    )
-    backgroundColors[0] = scaledColor
-  }
+  // Destructured rather than mutated so the gradient keeps its tuple type:
+  // `LinearGradient` needs a compile-time guarantee of two or more stops.
+  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
+  const backgroundColors: GradientColors = [
+    iconColor != null && theme.isDark
+      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      : firstColor,
+    ...restColors
+  ]
 
   React.useEffect(() => {
     // Hack: While you would think to use InteractionManager.runAfterInteractions,
@@ -1799,7 +1802,7 @@ const SendComponent: React.FC<Props> = props => {
     // determined and the scrollToEnd call would be effective.
     const timeout = setTimeout(() => {
       if (needsScrollToEnd.current) {
-        scrollViewRef.current?.scrollToEnd(true)
+        scrollViewRef.current?.scrollToEnd({ animated: true })
         needsScrollToEnd.current = false
       }
     }, SCROLL_TO_END_DELAY_MS)
@@ -1830,17 +1833,13 @@ const SendComponent: React.FC<Props> = props => {
           <>
             <KeyboardAwareScrollView
               style={styles.keyboardAwareScrollView}
-              innerRef={ref => {
-                const kbRef: KeyboardAwareScrollView | null = ref as any
-                scrollViewRef.current = kbRef
-              }}
+              ref={scrollViewRef}
               contentContainerStyle={{
                 ...insetStyle,
                 paddingTop: 0,
                 paddingBottom: theme.rem(5)
               }}
-              extraScrollHeight={theme.rem(2.75)}
-              enableOnAndroid
+              bottomOffset={theme.rem(2.75)}
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
