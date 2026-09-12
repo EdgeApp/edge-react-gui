@@ -1426,6 +1426,135 @@
       "args": []
     },
     {
+      "command": "query-transactions",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "help": "Query transactions across every wallet in the account at once.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "sort",
+          "field": "sort",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "sort-direction",
+          "field": "sortDirection",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "limit",
+          "field": "limit",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "offset",
+          "field": "offset",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "after",
+          "field": "after",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "wallet-id",
+          "field": "walletIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "plugin-id",
+          "field": "pluginIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "currency-code",
+          "field": "currencyCodes",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "txid",
+          "field": "txids",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "direction",
+          "field": "direction",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "start-date",
+          "field": "startDate",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "end-date",
+          "field": "endDate",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-amount",
+          "field": "minAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-amount",
+          "field": "maxAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "has-metadata",
+          "field": "hasMetadata",
+          "target": "query",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "include-orphans",
+          "field": "includeOrphans",
+          "target": "query",
+          "kind": "boolean",
+          "required": false
+        }
+      ]
+    },
+    {
       "command": "rates-query",
       "method": "POST",
       "path": "/rates/query",
@@ -1980,6 +2109,100 @@
           "target": "body",
           "kind": "json",
           "required": true
+        }
+      ]
+    },
+    {
+      "command": "summarize-transactions",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions/summary",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "help": "Count and summarize transactions across every wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "plugin-id",
+          "field": "pluginIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "currency-code",
+          "field": "currencyCodes",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenIds",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "txid",
+          "field": "txids",
+          "target": "query",
+          "kind": "repeat",
+          "required": false
+        },
+        {
+          "flag": "direction",
+          "field": "direction",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "start-date",
+          "field": "startDate",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "end-date",
+          "field": "endDate",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-amount",
+          "field": "minAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-amount",
+          "field": "maxAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "has-metadata",
+          "field": "hasMetadata",
+          "target": "query",
+          "kind": "boolean",
+          "required": false
+        },
+        {
+          "flag": "include-orphans",
+          "field": "includeOrphans",
+          "target": "query",
+          "kind": "boolean",
+          "required": false
         }
       ]
     },

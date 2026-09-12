@@ -25,6 +25,12 @@ export const errorCodes: ErrorCode[] = [
     doc: 'Malformed JSON, or a missing / wrongly typed field.'
   },
   {
+    code: 'TRANSACTION_DATABASE_OFF',
+    status: 409,
+    origin: 'engine',
+    doc: 'The account-wide transaction database is not running for this session, so there is nothing to query.'
+  },
+  {
     code: 'MISSING_BITWAVE_ACCOUNT_ID',
     status: 400,
     origin: 'engine',
