@@ -5,6 +5,7 @@
  * importing the module is all the registration a route needs.
  */
 import './account'
+import './accountTransactions'
 import './admin'
 import './context'
 import './credentials'
