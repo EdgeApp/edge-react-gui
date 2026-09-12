@@ -69,6 +69,10 @@
       "description": "Reading transaction history, exporting it, and editing its metadata."
     },
     {
+      "name": "Account transactions",
+      "description": "Reading transactions across every wallet at once, out of the core's account-wide transaction database. Each row is one asset of one transaction, so a swap that moved two assets appears twice."
+    },
+    {
       "name": "Object handles",
       "description": "A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them."
     },
@@ -6506,6 +6510,477 @@
                   "txid",
                   "savedAction"
                 ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/transactions": {
+      "get": {
+        "operationId": "queryAccountTransactions",
+        "summary": "Query transactions across every wallet in the account at once.",
+        "description": "**Core call:** `account.transactions.queryTransactions`\n\n**Command line**\n\n```\nquery-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]\n```\n\nUnlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "query-transactions",
+          "flags": [
+            {
+              "name": "wallet-id",
+              "maps": "walletIds",
+              "repeat": true
+            },
+            {
+              "name": "plugin-id",
+              "maps": "pluginIds",
+              "repeat": true
+            },
+            {
+              "name": "currency-code",
+              "maps": "currencyCodes",
+              "repeat": true
+            },
+            {
+              "name": "token-id",
+              "maps": "tokenIds",
+              "repeat": true
+            },
+            {
+              "name": "txid",
+              "maps": "txids",
+              "repeat": true
+            }
+          ],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.queryTransactions",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to date.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to desc, newest first.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to 50, capped at 500.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Prefer `after` for deep paging.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor from a previous page, as `effectiveDate:txid:tokenId`. Only valid with the date sort.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Defaults to every wallet.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pluginIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "currencyCodes",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Use `null` for the chain asset.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "description": "(string"
+                  },
+                  {
+                    "description": "null)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "txids",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "description": "Which way funds moved.",
+            "schema": {
+              "anyOf": [
+                {
+                  "description": "\"send\""
+                },
+                {
+                  "description": "\"receive\""
+                }
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "description": "Date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "description": "Date"
+            }
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "required": false,
+            "description": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minAmount.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "hasMetadata",
+            "in": "query",
+            "required": false,
+            "description": "Only transactions that do, or do not, carry saved metadata.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "includeOrphans",
+            "in": "query",
+            "required": false,
+            "description": "Include transactions whose chain data a resync removed but whose metadata survives.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`{ transactions, cursor }`",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/transactions/summary": {
+      "get": {
+        "operationId": "summarizeAccountTransactions",
+        "summary": "Count and summarize transactions across every wallet.",
+        "description": "**Core call:** `account.transactions.summarize`\n\n**Command line**\n\n```\nsummarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]\n```\n\nComputed in SQL over the matching set, so it does not page through results. Takes the same filters as `query-transactions`.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "summarize-transactions",
+          "flags": [
+            {
+              "name": "wallet-id",
+              "maps": "walletIds",
+              "repeat": true
+            },
+            {
+              "name": "plugin-id",
+              "maps": "pluginIds",
+              "repeat": true
+            },
+            {
+              "name": "currency-code",
+              "maps": "currencyCodes",
+              "repeat": true
+            },
+            {
+              "name": "token-id",
+              "maps": "tokenIds",
+              "repeat": true
+            },
+            {
+              "name": "txid",
+              "maps": "txids",
+              "repeat": true
+            }
+          ],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.summarize",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Defaults to every wallet.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pluginIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "currencyCodes",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Use `null` for the chain asset.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "description": "(string"
+                  },
+                  {
+                    "description": "null)"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "txids",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "description": "Which way funds moved.",
+            "schema": {
+              "anyOf": [
+                {
+                  "description": "\"send\""
+                },
+                {
+                  "description": "\"receive\""
+                }
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "description": "Date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "description": "Date"
+            }
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "required": false,
+            "description": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minAmount.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "hasMetadata",
+            "in": "query",
+            "required": false,
+            "description": "Only transactions that do, or do not, carry saved metadata.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "includeOrphans",
+            "in": "query",
+            "required": false,
+            "description": "Include transactions whose chain data a resync removed but whose metadata survives.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Counts and the date range of the matching set.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
               }
             }
           }

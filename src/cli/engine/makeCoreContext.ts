@@ -134,7 +134,8 @@ async function makeFakeCoreContext(
     appId,
     apiKey: 'fake',
     cleanDevice: true,
-    plugins: pluginsInit
+    plugins: pluginsInit,
+    transactionDatabase: true
   })
   opts.logger?.info('Using the fake world; no network, no server')
 
@@ -312,6 +313,9 @@ export async function makeCoreContext(
     appId,
     path: directory,
     plugins: pluginsInit,
+    // The account-wide transaction endpoints read this database, and the CLI
+    // is where we want it exercised first:
+    transactionDatabase: true,
     ...servers,
     onLog(event) {
       opts.logger?.write(String(event.type ?? 'info'), event.message, {

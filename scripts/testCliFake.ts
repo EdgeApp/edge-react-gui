@@ -256,6 +256,18 @@ function main(): void {
     )
     ok('get-num-transactions', 'get-num-transactions', w)
     ok('get-transactions', 'get-transactions', w)
+
+    // Account-wide, so these take no wallet. A fresh fake account has no
+    // transactions, which still exercises the query and the database behind
+    // it — an empty result is a result.
+    ok('summarize-transactions', 'summarize-transactions')
+    ok('query-transactions', 'query-transactions', '--limit=5')
+    ok(
+      'query-transactions filtered',
+      'query-transactions',
+      '--plugin-id=bitcoin',
+      '--direction=receive'
+    )
     ok(
       'encode-uri',
       'encode-uri',
