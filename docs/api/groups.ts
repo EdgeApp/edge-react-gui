@@ -156,6 +156,12 @@ export const groupOrder: GroupInfo[] = [
     doc: 'Reading transaction history, exporting it, and editing its metadata.'
   },
   {
+    id: 'accountTransactions',
+    title: 'Account transactions',
+    section: 'account',
+    doc: "Reading transactions across every wallet at once, out of the core's account-wide transaction database. Each row is one asset of one transaction, so a swap that moved two assets appears twice."
+  },
+  {
     id: 'objects',
     title: 'Object handles',
     section: 'objects',

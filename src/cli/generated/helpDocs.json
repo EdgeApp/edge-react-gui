@@ -2275,6 +2275,110 @@
         "OBJECT_EXPIRED"
       ]
     },
+    "query-transactions": {
+      "summary": "Query transactions across every wallet in the account at once.",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "description": "Unlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
+      "core": "account.transactions.queryTransactions",
+      "params": {
+        "sort": {
+          "pass": "[--sort=<sort>]",
+          "doc": "Defaults to date.",
+          "optional": true
+        },
+        "sortDirection": {
+          "pass": "[--sort-direction=<sortDirection>]",
+          "doc": "Defaults to desc, newest first.",
+          "optional": true
+        },
+        "limit": {
+          "pass": "[--limit=<limit>]",
+          "doc": "Defaults to 50, capped at 500.",
+          "optional": true
+        },
+        "offset": {
+          "pass": "[--offset=<offset>]",
+          "doc": "Prefer `after` for deep paging.",
+          "optional": true
+        },
+        "after": {
+          "pass": "[--after=<after>]",
+          "doc": "Cursor from a previous page, as `effectiveDate:txid:tokenId`. Only valid with the date sort.",
+          "optional": true
+        },
+        "walletIds": {
+          "pass": "[--wallet-id=<walletIds> …]",
+          "doc": "Repeatable. Defaults to every wallet.",
+          "optional": true
+        },
+        "pluginIds": {
+          "pass": "[--plugin-id=<pluginIds> …]",
+          "doc": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+          "optional": true
+        },
+        "currencyCodes": {
+          "pass": "[--currency-code=<currencyCodes> …]",
+          "doc": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
+          "optional": true
+        },
+        "tokenIds": {
+          "pass": "[--token-id=<tokenIds> …]",
+          "doc": "Repeatable. Use `null` for the chain asset.",
+          "optional": true
+        },
+        "txids": {
+          "pass": "[--txid=<txids> …]",
+          "doc": "Repeatable.",
+          "optional": true
+        },
+        "direction": {
+          "pass": "[--direction=send|receive]",
+          "doc": "Which way funds moved.",
+          "optional": true
+        },
+        "startDate": {
+          "pass": "[--start-date=<startDate>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "endDate": {
+          "pass": "[--end-date=<endDate>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "minAmount": {
+          "pass": "[--min-amount=<minAmount>]",
+          "doc": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+          "optional": true
+        },
+        "maxAmount": {
+          "pass": "[--max-amount=<maxAmount>]",
+          "doc": "Upper bound, same units as minAmount.",
+          "optional": true
+        },
+        "hasMetadata": {
+          "pass": "[--has-metadata]",
+          "doc": "Only transactions that do, or do not, carry saved metadata.",
+          "optional": true
+        },
+        "includeOrphans": {
+          "pass": "[--include-orphans]",
+          "doc": "Include transactions whose chain data a resync removed but whose metadata survives.",
+          "optional": true
+        }
+      },
+      "returnsDoc": "`{ transactions, cursor }`",
+      "notes": [
+        "Results are one row per asset a transaction touched, so a swap that moved two assets appears twice, once per asset.",
+        "`minAmount` / `maxAmount` are exchange-denomination amounts, never native units, because native units are not comparable across chains."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "TRANSACTION_DATABASE_OFF"
+      ]
+    },
     "rates-query": {
       "summary": "Batch crypto and fiat rate lookups.",
       "method": "POST",
@@ -2923,6 +3027,81 @@
         "A client more than 1 MiB behind is disconnected rather than buffered.",
         "Served directly by the HTTP handler rather than through the router, because the response never ends.",
         "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT, 3 when a session ended the stream, 7 when the engine went away."
+      ]
+    },
+    "summarize-transactions": {
+      "summary": "Count and summarize transactions across every wallet.",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions/summary",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "description": "Computed in SQL over the matching set, so it does not page through results. Takes the same filters as `query-transactions`.",
+      "core": "account.transactions.summarize",
+      "params": {
+        "walletIds": {
+          "pass": "[--wallet-id=<walletIds> …]",
+          "doc": "Repeatable. Defaults to every wallet.",
+          "optional": true
+        },
+        "pluginIds": {
+          "pass": "[--plugin-id=<pluginIds> …]",
+          "doc": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+          "optional": true
+        },
+        "currencyCodes": {
+          "pass": "[--currency-code=<currencyCodes> …]",
+          "doc": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
+          "optional": true
+        },
+        "tokenIds": {
+          "pass": "[--token-id=<tokenIds> …]",
+          "doc": "Repeatable. Use `null` for the chain asset.",
+          "optional": true
+        },
+        "txids": {
+          "pass": "[--txid=<txids> …]",
+          "doc": "Repeatable.",
+          "optional": true
+        },
+        "direction": {
+          "pass": "[--direction=send|receive]",
+          "doc": "Which way funds moved.",
+          "optional": true
+        },
+        "startDate": {
+          "pass": "[--start-date=<startDate>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "endDate": {
+          "pass": "[--end-date=<endDate>]",
+          "doc": "ISO-8601, or epoch milliseconds.",
+          "optional": true
+        },
+        "minAmount": {
+          "pass": "[--min-amount=<minAmount>]",
+          "doc": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+          "optional": true
+        },
+        "maxAmount": {
+          "pass": "[--max-amount=<maxAmount>]",
+          "doc": "Upper bound, same units as minAmount.",
+          "optional": true
+        },
+        "hasMetadata": {
+          "pass": "[--has-metadata]",
+          "doc": "Only transactions that do, or do not, carry saved metadata.",
+          "optional": true
+        },
+        "includeOrphans": {
+          "pass": "[--include-orphans]",
+          "doc": "Include transactions whose chain data a resync removed but whose metadata survives.",
+          "optional": true
+        }
+      },
+      "returnsDoc": "Counts and the date range of the matching set.",
+      "errors": [
+        "BAD_REQUEST",
+        "TRANSACTION_DATABASE_OFF"
       ]
     },
     "swap-quote-get": {
