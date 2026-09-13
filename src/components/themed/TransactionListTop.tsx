@@ -20,6 +20,8 @@ import { updateStakingState } from '../../actions/scene/StakingActions'
 import {
   DONE_THRESHOLD,
   getFiatSymbol,
+  isUtxoPluginId,
+  LARGE_UTXO_WALLET_TX_COUNT,
   SPECIAL_CURRENCY_INFO
 } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -68,6 +70,7 @@ import {
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { LargeUtxoWalletCard } from '../cards/LargeUtxoWalletCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
 import { ZcashMigrationCard } from '../cards/ZcashMigrationCard'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -165,6 +168,31 @@ export const TransactionListTop: React.FC<Props> = props => {
   const balanceMap = useWatch(wallet, 'balanceMap')
   const syncStatus = useWatch(wallet, 'syncStatus')
   const migrationStatus = useZcashMigrationStatus(wallet)
+
+  // A UTXO wallet with a long history syncs slowly and can display a stale
+  // balance, so count its transactions to decide whether to explain that. Only
+  // the mainnet view: tokens do not exist on these chains. `balanceMap` is a
+  // dependency rather than a value used here, because a moving balance is how
+  // an in-progress sync reports newly discovered history.
+  const isUtxoWallet =
+    tokenId == null && isUtxoPluginId(wallet.currencyInfo.pluginId)
+  const [txCount] = useAsyncValue(
+    async () => ({
+      walletId: wallet.id,
+      numTransactions: isUtxoWallet
+        ? await wallet.getNumTransactions({ tokenId })
+        : 0
+    }),
+    [balanceMap, isUtxoWallet, tokenId, wallet]
+  )
+  // The scene swaps wallets in place, and `useAsyncValue` keeps the previous
+  // result until the next count resolves, so the count carries the wallet it
+  // was taken from rather than being trusted on arrival.
+  const isLargeUtxoWallet =
+    isUtxoWallet &&
+    txCount != null &&
+    txCount.walletId === wallet.id &&
+    txCount.numTransactions >= LARGE_UTXO_WALLET_TX_COUNT
 
   // Track sync card visibility with 1-second delay after sync completes:
   const isSyncing = syncStatus.totalRatio < DONE_THRESHOLD
@@ -894,6 +922,7 @@ export const TransactionListTop: React.FC<Props> = props => {
             {!isStakingAvailable ? null : renderStakedBalance()}
           </EdgeCard>
           {renderSyncStatus()}
+          {isLargeUtxoWallet ? <LargeUtxoWalletCard /> : null}
           {renderZcashMigrationCard()}
           {renderButtons()}
         </>

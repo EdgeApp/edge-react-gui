@@ -24,6 +24,50 @@ export const MAX_RATIO = 0.95
 export const RESYNC_THRESHOLD = 0.05
 export const DONE_THRESHOLD = 0.999
 
+/**
+ * Plugin ids served by `edge-currency-plugins`, whose engines all scan an xpub
+ * for UTXOs. Mirrors that repo's `src/common/utxobased/info` directory, which
+ * is the authoritative list; keep the two in sync when a chain is added.
+ */
+export const UTXO_PLUGIN_IDS = [
+  'badcoin',
+  'bitcoin',
+  'bitcoincash',
+  'bitcoincashtestnet',
+  'bitcoingold',
+  'bitcoingoldtestnet',
+  'bitcoinsv',
+  'bitcointestnet',
+  'bitcointestnet4',
+  'dash',
+  'digibyte',
+  'dogecoin',
+  'eboost',
+  'ecash',
+  'feathercoin',
+  'groestlcoin',
+  'litecoin',
+  'pivx',
+  'qtum',
+  'ravencoin',
+  'smartcash',
+  'ufo',
+  'vertcoin',
+  'zcoin'
+]
+
+export const isUtxoPluginId = (pluginId: string): boolean =>
+  UTXO_PLUGIN_IDS.includes(pluginId)
+
+/**
+ * Transaction count past which a UTXO wallet counts as "large" and earns the
+ * slow-sync explainer card. Support's sampling of the wallets that generated
+ * stale-balance tickets found 164 and 310 transactions against 162 and 293 used
+ * xpub addresses, so the two measures track each other closely and the cheaper
+ * transaction count stands in for both.
+ */
+export const LARGE_UTXO_WALLET_TX_COUNT = 100
+
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
   gasLimit: lstrings.gasLimit,

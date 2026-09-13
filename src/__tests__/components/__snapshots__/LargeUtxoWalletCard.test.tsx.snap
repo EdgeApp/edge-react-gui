@@ -1,0 +1,194 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`LargeUtxoWalletCard should render 1`] = `
+<View
+  style={
+    [
+      {
+        "alignSelf": "stretch",
+        "borderRadius": 16,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      {
+        "paddingBottom": 11,
+        "paddingLeft": 11,
+        "paddingRight": 11,
+        "paddingTop": 11,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "rgba(255, 255, 255, .1)",
+        "borderRadius": 16,
+        "bottom": 0,
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <BVLinearGradient
+      colors={
+        [
+          1879111067,
+          1879069020,
+          1879059251,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0,
+        }
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 1,
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "margin": 11,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Text
+        adjustsFontSizeToFit={true}
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": undefined,
+              "fontSize": 12,
+            },
+            [
+              {
+                "color": "#FFFFFF",
+                "fontSize": 28,
+              },
+              {
+                "marginRight": 4,
+              },
+            ],
+            {
+              "fontFamily": "Ionicons",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+      <Text
+        adjustsFontSizeToFit={true}
+        allowFontScaling={false}
+        minimumFontScale={0.65}
+        numberOfLines={0}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "flexShrink": 1,
+              "fontFamily": "Quicksand-Medium",
+              "marginLeft": 4,
+            },
+            null,
+          ]
+        }
+      >
+        Large Wallet
+      </Text>
+    </View>
+    <Text
+      adjustsFontSizeToFit={true}
+      allowFontScaling={false}
+      minimumFontScale={0.65}
+      numberOfLines={10}
+      style={
+        [
+          {
+            "color": "#FFFFFF",
+            "fontFamily": "Quicksand-Regular",
+            "fontSize": 22,
+            "includeFontPadding": false,
+          },
+          {
+            "fontSize": 17,
+            "marginHorizontal": 6,
+            "marginTop": 11,
+          },
+          null,
+        ]
+      }
+    >
+      This wallet has a long transaction history, so syncing it takes a while. Keep it open until the sync finishes. Until then the balance can read higher than the amount you are able to spend, and a send may come back as insufficient funds.
+       
+      <Text
+        adjustsFontSizeToFit={true}
+        allowFontScaling={false}
+        minimumFontScale={0.65}
+        numberOfLines={1}
+        onPress={[Function]}
+        style={
+          [
+            {
+              "color": "#FFFFFF",
+              "fontFamily": "Quicksand-Regular",
+              "fontSize": 22,
+              "includeFontPadding": false,
+            },
+            {
+              "color": "#00f1a2",
+              "fontSize": 17,
+            },
+            null,
+          ]
+        }
+      >
+        Learn More
+      </Text>
+    </Text>
+  </View>
+</View>
+`;
