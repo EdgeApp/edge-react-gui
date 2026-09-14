@@ -344,6 +344,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -369,6 +370,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -592,6 +594,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -657,6 +660,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -864,6 +868,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -888,6 +893,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -913,6 +919,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -1134,6 +1141,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -1358,6 +1366,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -1382,6 +1391,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -1738,6 +1748,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -2117,6 +2128,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -2142,6 +2154,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -2365,6 +2378,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -2430,6 +2444,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -2637,6 +2652,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -2661,6 +2677,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -2686,6 +2703,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -2907,6 +2925,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -3131,6 +3150,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -3155,6 +3175,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -3317,6 +3338,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -3342,6 +3364,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -3432,6 +3455,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -3457,6 +3481,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -3741,6 +3766,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -4120,6 +4146,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -4145,6 +4172,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -4409,6 +4437,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -4434,6 +4463,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -4598,6 +4628,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -4663,6 +4694,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -4870,6 +4902,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -4894,6 +4927,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -4919,6 +4953,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -5140,6 +5175,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -5364,6 +5400,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -5388,6 +5425,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -5744,6 +5782,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -6123,6 +6162,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -6148,6 +6188,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -6412,6 +6453,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -6437,6 +6479,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -6642,6 +6685,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -6666,6 +6710,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -6691,6 +6736,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -6950,6 +6996,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -6974,6 +7021,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -7330,6 +7378,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -7709,6 +7758,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -7734,6 +7784,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -7998,6 +8049,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -8023,6 +8075,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -8187,6 +8240,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -8252,6 +8306,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -8516,6 +8571,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -8540,6 +8596,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -8896,6 +8953,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -9275,6 +9333,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -9300,6 +9359,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -9564,6 +9624,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -9589,6 +9650,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -9851,6 +9913,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -9875,6 +9938,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -10231,6 +10295,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -10610,6 +10675,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -10635,6 +10701,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -10899,6 +10966,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -10924,6 +10992,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -11088,6 +11157,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -11153,6 +11223,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -11287,6 +11358,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -11311,6 +11383,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -11336,6 +11409,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -11595,6 +11669,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -11619,6 +11694,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -11975,6 +12051,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -12354,6 +12431,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -12379,6 +12457,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -12667,6 +12746,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -12692,6 +12772,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -12783,6 +12864,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -12848,6 +12930,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -13055,6 +13138,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -13079,6 +13163,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -13104,6 +13189,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -13290,6 +13376,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -13314,6 +13401,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -13670,6 +13758,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -14049,6 +14138,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -14074,6 +14164,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -14362,6 +14453,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -14387,6 +14479,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -14478,6 +14571,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -14543,6 +14637,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={true}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={6}
                   style={
                     [
@@ -14677,6 +14772,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -14701,6 +14797,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.3}
+                  minimumFontSize={13.5}
                   numberOfLines={1}
                   style={
                     [
@@ -14726,6 +14823,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={1}
                   style={
                     [
@@ -14912,6 +15010,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -14936,6 +15035,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -15292,6 +15392,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -15671,6 +15772,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -15696,6 +15798,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={3}
                 style={
                   [
@@ -15919,6 +16022,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 allowFontScaling={false}
                 ellipsizeMode="tail"
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -16064,6 +16168,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -16152,6 +16257,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -16240,6 +16346,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -16493,6 +16600,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
               minimumFontScale={0.65}
+              minimumFontSize={14.3}
               numberOfLines={0}
               style={
                 [
@@ -16532,6 +16640,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -16555,6 +16664,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={0}
                 style={
                   [
@@ -16586,6 +16696,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -16609,6 +16720,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={0}
                 style={
                   [
@@ -16640,6 +16752,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={1}
                 style={
                   [
@@ -16663,6 +16776,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={0}
                 style={
                   [
@@ -16688,6 +16802,7 @@ exports[`SendScene2 Render SendScene 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={11.05}
             numberOfLines={10}
             style={
               [

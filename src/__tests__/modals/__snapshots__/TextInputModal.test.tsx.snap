@@ -188,6 +188,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -812,6 +813,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -1035,6 +1037,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -1659,6 +1662,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [

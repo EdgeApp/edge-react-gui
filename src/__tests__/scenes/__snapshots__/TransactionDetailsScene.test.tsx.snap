@@ -392,6 +392,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -424,6 +425,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -682,6 +684,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -707,6 +710,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -797,6 +801,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -829,6 +834,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -849,6 +855,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -1010,6 +1017,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1042,6 +1050,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -1062,6 +1071,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -1082,6 +1092,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -1172,6 +1183,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1197,6 +1209,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -1287,6 +1300,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1312,6 +1326,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -1462,6 +1477,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1487,6 +1503,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -1650,6 +1667,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1675,6 +1693,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -1974,6 +1993,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1999,6 +2019,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -2222,6 +2243,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -2247,6 +2269,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -2410,6 +2433,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -2435,6 +2459,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -2598,6 +2623,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -2623,6 +2649,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={2}
                       style={
                         [
@@ -2885,6 +2912,7 @@ exports[`TransactionDetailsScene should render 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -3371,6 +3399,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -3403,6 +3432,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -3661,6 +3691,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3686,6 +3717,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -3776,6 +3808,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3808,6 +3841,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -3828,6 +3862,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -3989,6 +4024,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4021,6 +4057,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -4041,6 +4078,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -4061,6 +4099,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -4151,6 +4190,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4176,6 +4216,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -4266,6 +4307,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4291,6 +4333,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -4441,6 +4484,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4466,6 +4510,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -4629,6 +4674,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4654,6 +4700,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -4953,6 +5000,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4978,6 +5026,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -5201,6 +5250,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5226,6 +5276,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -5389,6 +5440,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5414,6 +5466,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -5577,6 +5630,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5602,6 +5656,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={2}
                       style={
                         [
@@ -5864,6 +5919,7 @@ exports[`TransactionDetailsScene should render with negative nativeAmount and fi
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [

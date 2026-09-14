@@ -15,7 +15,7 @@
 - changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
 - changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
 - changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
-- changed: Long labels on Android now truncate with an ellipsis instead of shrinking to fit. The new renderer ignores the minimum text size, which could render labels illegibly small.
+- fixed: Labels that shrink to fit stop at their minimum size again. The new architecture ignores `minimumFontScale` on both platforms and shrank long labels as far as 4 points; the app now also passes the absolute floor the renderers do honor, via a small `react-native` patch, so labels shrink no further than before.
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.

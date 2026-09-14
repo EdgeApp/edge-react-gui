@@ -308,6 +308,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={17.55}
             numberOfLines={1}
             style={
               [
@@ -461,6 +462,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -486,6 +488,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
+                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -598,6 +601,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={11.05}
                 numberOfLines={4}
                 style={
                   [

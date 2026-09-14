@@ -305,6 +305,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
               minimumFontScale={0.65}
+              minimumFontSize={17.55}
               numberOfLines={1}
               style={
                 [
@@ -518,6 +519,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={0}
                     style={
                       [
@@ -543,6 +545,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   adjustsFontSizeToFit={true}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={10}
                   style={
                     [
@@ -834,6 +837,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -858,6 +862,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -890,6 +895,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -921,6 +927,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -980,6 +987,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1012,6 +1020,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1057,6 +1066,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1089,6 +1099,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1159,6 +1170,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -1464,6 +1476,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -1488,6 +1501,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -1520,6 +1534,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -1551,6 +1566,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1574,6 +1590,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1764,6 +1781,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -1787,6 +1805,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -1816,6 +1835,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -2072,6 +2092,7 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   adjustsFontSizeToFit={false}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
+                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [

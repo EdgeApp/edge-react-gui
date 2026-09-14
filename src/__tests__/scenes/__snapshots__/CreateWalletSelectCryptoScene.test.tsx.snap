@@ -320,6 +320,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
               minimumFontScale={0.65}
+              minimumFontSize={17.55}
               numberOfLines={1}
               style={
                 [
@@ -1048,6 +1049,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -1072,6 +1074,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -1285,6 +1288,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -1309,6 +1313,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -1522,6 +1527,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -1546,6 +1552,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -1759,6 +1766,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -1783,6 +1791,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -1996,6 +2005,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={1}
                     style={
                       [
@@ -2020,6 +2030,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -2232,6 +2243,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [

@@ -188,6 +188,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -344,6 +345,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -407,6 +409,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -470,6 +473,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -533,6 +537,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -1165,6 +1170,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1195,6 +1201,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1316,6 +1323,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1346,6 +1354,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1467,6 +1476,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1497,6 +1507,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1618,6 +1629,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1648,6 +1660,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1899,6 +1912,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -2055,6 +2069,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2118,6 +2133,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2181,6 +2197,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2244,6 +2261,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
+          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2876,6 +2894,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -2997,6 +3016,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -3118,6 +3138,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -3239,6 +3260,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
+                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [

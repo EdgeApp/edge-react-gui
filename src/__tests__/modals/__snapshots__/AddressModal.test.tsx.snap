@@ -188,6 +188,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -891,6 +892,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
