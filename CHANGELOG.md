@@ -16,6 +16,7 @@
 - changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
