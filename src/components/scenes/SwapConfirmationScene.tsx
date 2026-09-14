@@ -1,6 +1,10 @@
 import { useIsFocused } from '@react-navigation/native'
-import { add, div, gt, gte, lte, sub, toFixed } from 'biggystring'
-import type { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
+import { add, div, gt, gte, toFixed } from 'biggystring'
+import {
+  asMaybeSwapCurrencyError,
+  type EdgeSwapQuote,
+  type EdgeSwapResult
+} from 'edge-core-js'
 import React, { useState } from 'react'
 import { SectionList, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +29,10 @@ import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { logActivity } from '../../util/logger'
+import {
+  makeStealthSwapRequestOptions,
+  requireDestinationWallet
+} from '../../util/stealthSwap'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -46,20 +54,29 @@ import { EdgeModal } from '../modals/EdgeModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { SwapProviderRow } from '../rows/SwapProviderRow'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter } from '../themed/ModalParts'
+import {
+  calculateQuotePriceImpact,
+  PRICE_IMPACT_WARNING_THRESHOLD
+} from '../themed/PriceImpactText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-
-const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
+
+  /**
+   * A Stealth Swap routes through the Houdini privacy provider as a fixed
+   * provider: the powered-by card is not tappable and a re-quote keeps the
+   * provider restriction.
+   */
+  stealth?: boolean
 }
 
 interface Props extends SwapTabSceneProps<'swapConfirmation'> {}
@@ -71,7 +88,7 @@ interface Section {
 
 export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { quotes, onApprove } = route.params
+  const { quotes, onApprove, stealth = false } = route.params
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -93,6 +110,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   )
 
   const [pending, setPending] = useState(false)
+  /** The quote's timer ran out; nothing on screen may be approved any more. */
+  const [expired, setExpired] = useState(false)
 
   const swapRequestOptions = useSwapRequestOptions()
 
@@ -126,44 +145,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { request } = selectedQuote
   const { quoteFor } = request
 
-  const priceImpact = React.useMemo(() => {
-    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
-
-    const fromExchangeDenom = getExchangeDenom(
-      fromWallet.currencyConfig,
-      fromTokenId
-    )
-    const toExchangeDenom = getExchangeDenom(toWallet.currencyConfig, toTokenId)
-
-    const fromExchangeAmount = convertNativeToExchange(
-      fromExchangeDenom.multiplier
-    )(selectedQuote.fromNativeAmount)
-    const toExchangeAmount = convertNativeToExchange(
-      toExchangeDenom.multiplier
-    )(selectedQuote.toNativeAmount)
-
-    const fromFiatValue = convertCurrency(
-      exchangeRates,
-      fromWallet.currencyInfo.pluginId,
-      fromTokenId,
-      defaultIsoFiat,
-      fromExchangeAmount
-    )
-    const toFiatValue = convertCurrency(
-      exchangeRates,
-      toWallet.currencyInfo.pluginId,
-      toTokenId,
-      defaultIsoFiat,
-      toExchangeAmount
-    )
-
-    if (lte(fromFiatValue, '0')) return undefined
-
-    const impact = parseFloat(
-      div(sub(fromFiatValue, toFiatValue), fromFiatValue, 8)
-    )
-    return impact > 0 ? impact : undefined
-  }, [selectedQuote, exchangeRates, defaultIsoFiat, request])
+  const priceImpact = React.useMemo(
+    () =>
+      calculateQuotePriceImpact(selectedQuote, exchangeRates, defaultIsoFiat),
+    [selectedQuote, exchangeRates, defaultIsoFiat]
+  )
 
   const showPriceImpact =
     priceImpact != null && priceImpact >= PRICE_IMPACT_WARNING_THRESHOLD
@@ -209,14 +195,25 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const handleExchangeTimerExpired = useHandler(() => {
     if (!isFocused) return
+    // The quote is dead whether or not we can leave this scene yet. Recording
+    // it disables the slider immediately, which matters in the terms-check
+    // case below, where the navigation away is deferred until the modal
+    // resolves and the scene stays on screen in the meantime.
+    setExpired(true)
     if (termsCheckPending.current) {
       timerExpiredDuringTerms.current = true
       return
     }
 
     navigation.replace('swapProcessing', {
-      swapRequest: selectedQuote.request,
-      swapRequestOptions,
+      // The re-quote carries the same privacy demand the original did, so an
+      // expired stealth quote cannot be replaced by a transparent route.
+      swapRequest: stealth
+        ? { ...selectedQuote.request, privacy: 'required' }
+        : selectedQuote.request,
+      swapRequestOptions: stealth
+        ? makeStealthSwapRequestOptions(account, swapRequestOptions)
+        : swapRequestOptions,
       onCancel: () => {
         navigation.navigate('swapTab', { screen: 'swapCreate' })
       },
@@ -224,8 +221,31 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove
+          onApprove,
+          stealth
         })
+      },
+      onError: error => {
+        // Same degrade SwapCreateScene applies when a stealth quote finds no
+        // private route: without it an expiring stealth quote on a pair that
+        // lost its route dead-ends on the generic error instead of offering
+        // the standard swap.
+        const { fromWallet, fromTokenId, toWallet, toTokenId } =
+          selectedQuote.request
+        if (!stealth || toWallet == null) return false
+        if (asMaybeSwapCurrencyError(error) == null) return false
+        showToast(lstrings.stealth_swap_route_unavailable_toast)
+        navigation.navigate('swapTab', {
+          screen: 'swapCreate',
+          params: {
+            fromWalletId: fromWallet.id,
+            fromTokenId,
+            toWalletId: toWallet.id,
+            toTokenId,
+            disableStealth: true
+          }
+        })
+        return true
       }
     })
   })
@@ -282,7 +302,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         request
       } = selectedQuote
       // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
-      const { toWallet, toTokenId, fromWallet, fromTokenId } = request
+      const { toTokenId, fromWallet, fromTokenId } = request
+      const toWallet = requireDestinationWallet(request)
 
       try {
         dispatch(logEvent('Exchange_Shift_Start'))
@@ -488,11 +509,20 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           />
         </EdgeAnim>
         <EdgeAnim enter={fadeInDown60}>
-          <PoweredByCard
-            iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
-            poweredByText={exchangeName}
-            onPress={handlePoweredByTap}
-          />
+          {stealth ? (
+            // A stealth swap's provider is fixed, so the card is not
+            // tappable (no chevron, no "tap to change provider"):
+            <PoweredByCard
+              iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
+              poweredByText={exchangeName}
+            />
+          ) : (
+            <PoweredByCard
+              iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
+              poweredByText={exchangeName}
+              onPress={handlePoweredByTap}
+            />
+          )}
         </EdgeAnim>
         {selectedQuote.isEstimate && !showPriceImpact ? (
           <EdgeAnim enter={fadeInDown90}>
@@ -521,7 +551,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
-            disabled={pending}
+            disabled={pending || expired}
           />
         </EdgeAnim>
         {renderTimer()}
@@ -556,7 +586,8 @@ const getSwapInfo = (
     // Currency conversion tools:
     // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
     const { request } = quote
-    const { fromWallet, toWallet, fromTokenId, toTokenId } = request
+    const { fromWallet, fromTokenId, toTokenId } = request
+    const toWallet = requireDestinationWallet(request)
 
     // Format from amount:
     const fromDisplayDenomination = selectDisplayDenom(

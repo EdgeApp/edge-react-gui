@@ -33,6 +33,15 @@ interface Props {
   excludeWalletIds?: string[]
   filterActivation?: boolean
 
+  /**
+   * Opt-in grouping: assets matching this filter render first, under
+   * `pinnedTitle`, and everything else follows under `otherTitle`. Callers that
+   * omit it keep the default recent/all ordering untouched.
+   */
+  pinnedAssets?: EdgeAsset[]
+  pinnedTitle?: string
+  otherTitle?: string
+
   // Visuals:
   searchText: string
   showCreateWallet?: boolean
@@ -58,6 +67,9 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     excludeAssets,
     excludeWalletIds,
     filterActivation,
+    pinnedAssets,
+    pinnedTitle,
+    otherTitle,
 
     // Visuals:
     searchText,
@@ -208,6 +220,35 @@ export const WalletList: React.FC<Props> = (props: Props) => {
     // Show the create-wallet list, filtered by the search term:
     walletItems.push(...createWalletList)
 
+    // Opt-in pinned grouping wins over the recent/all split: a caller that
+    // asks for it wants its own assets first, not the most-recently-used ones.
+    // Searching stays flat, as it does for every other caller.
+    if (pinnedAssets != null && searchText.length === 0) {
+      const pinned: Array<WalletListItem | WalletCreateItem> = []
+      const rest: Array<WalletListItem | WalletCreateItem> = []
+      for (const item of walletItems) {
+        const isPinned =
+          item.type === 'asset' &&
+          checkAssetFilter(
+            {
+              pluginId: item.wallet.currencyInfo.pluginId,
+              tokenId: item.tokenId
+            },
+            pinnedAssets,
+            undefined
+          )
+        if (isPinned) pinned.push(item)
+        else rest.push(item)
+      }
+      if (pinned.length === 0 || rest.length === 0) return walletItems
+      return [
+        ...(pinnedTitle == null ? [] : [pinnedTitle]),
+        ...pinned,
+        ...(otherTitle == null ? [] : [otherTitle]),
+        ...rest
+      ]
+    }
+
     // Show a flat list if we are searching, or have no recent wallets:
     if (searchText.length > 0 || recentWalletList.length === 0) {
       return walletItems
@@ -238,7 +279,10 @@ export const WalletList: React.FC<Props> = (props: Props) => {
   }, [
     createWalletList,
     filteredWalletList,
+    otherTitle,
     parentWalletSection,
+    pinnedAssets,
+    pinnedTitle,
     recentWalletList,
     searchText
   ])
@@ -258,6 +302,9 @@ export const WalletList: React.FC<Props> = (props: Props) => {
               token={token}
               tokenId={tokenId}
               wallet={wallet}
+              // This list only ever renders inside the picker modal, which
+              // floats over a scene whose rows carry the same names.
+              testIdPrefix="walletPickerRow"
               onPress={handlePress}
             />
           )
