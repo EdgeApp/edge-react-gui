@@ -175,20 +175,6 @@ export const BlurBackground: React.FC = () => {
 
 /** A blur background WITHOUT rounded corners. For the scene header/footer,
  * which also live inside the blur target - see BlurBackground. */
-export const BlurBackgroundNoRoundedCorners: React.FC = () => {
-  const theme = useTheme()
-  const stylesLocal = getStyles(theme)
-
-  if (isBlurDisabled) return null
-  if (isAndroid) return <View style={stylesLocal.blurView} />
-  return (
-    <ExpoBlurView
-      tint={theme.isDark ? 'dark' : 'light'}
-      intensity={100}
-      style={stylesLocal.blurView}
-    />
-  )
-}
 
 /** The blur behind chrome overlaying the focused scene: the header, scene
  * footer, tab bar, and notification cards. These live inside the app-level
