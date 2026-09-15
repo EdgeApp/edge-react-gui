@@ -25,9 +25,25 @@ tags:
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
+# Enable Developer Mode so Get Raw Keys is available
+- tapOn:
+    id: "sideMenuButton"
+- tapOn: "Settings"
+- scrollUntilVisible:
+    element: "Developer Mode"
+    direction: DOWN
+    visibilityPercentage: 100
+- tapOn: "Developer Mode"
+- scrollUntilVisible:
+    element: "Force Light Account Creation"
+    direction: DOWN
+    visibilityPercentage: 50
+- tapOn:
+    id: "chevronBack"
+
 # View master private key for new wallet
 - tapOn: Assets
-- longPressOn: My Bitcoin
+- longPressOn: ".*My Bitcoin"
 - tapOn: ".*Get Raw Keys"
 - tapOn: Enter your password
 - inputText: ${output.newAccountPassword}
@@ -53,10 +69,10 @@ tags:
 
 # Locate new wallet and check seed phrase
 - scrollUntilVisible:
-    element: ETH
+    element: "ETH.*"
     direction: DOWN
     centerElement: true
-- longPressOn: ETH
+- longPressOn: "ETH.*"
 - tapOn: ".*Get Raw Keys"
 
 # Password Modal

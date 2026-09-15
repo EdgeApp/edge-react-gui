@@ -131,30 +131,29 @@ env:
       true: ${NEW_WALLETS}
     commands:
       # Remove default wallets
-      - evalScript: ${var wallets = JSON.parse(NEW_WALLETS)}
-      - evalScript: ${var defaults = JSON.parse(DEFAULT_WALLETS)}
-      - evalScript: ${var filteredDefaults = defaults.filter(d => !wallets.includes(d))}
-      - evalScript: ${var filteredWallets = wallets.filter(w => !defaults.includes(w))}
-      - evalScript: ${var defIndex = 0}
+      - evalScript: ${output.wallets = JSON.parse(NEW_WALLETS)}
+      - evalScript: ${output.defaults = JSON.parse(DEFAULT_WALLETS)}
+      - evalScript: ${output.filteredDefaults = output.defaults.filter(d => !output.wallets.includes(d))}
+      - evalScript: ${output.filteredWallets = output.wallets.filter(w => !output.defaults.includes(w))}
+      - evalScript: ${output.defIndex = 0}
       - repeat:
-          times: ${filteredDefaults.length}
+          times: ${output.filteredDefaults.length}
           commands:
-            - tapOn: ${".*" + filteredDefaults[defIndex]}
-            - evalScript: ${defIndex++}
+            - tapOn: ${".*" + output.filteredDefaults[output.defIndex]}
+            - evalScript: ${output.defIndex++}
       # Add new wallets
-      - evalScript: ${var newIndex = 0}
+      - evalScript: ${output.newIndex = 0}
       - repeat:
-          times: ${filteredWallets.length}
+          times: ${output.filteredWallets.length}
           commands:
             - tapOn: Search Wallets
             - tapOn:
                 id: "undefined.clearIcon"
-            - inputText: ${filteredWallets[newIndex]}
+            - inputText: ${output.filteredWallets[output.newIndex]}
             - tapOn:
-                text: ${".*" + filteredWallets[newIndex]}
+                text: ${".*" + output.filteredWallets[output.newIndex]}
                 index: 1
-            - evalScript: ${newIndex++}
+            - evalScript: ${output.newIndex++}
 
 - tapOn:
     id: "nextButton"
-
