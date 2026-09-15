@@ -425,6 +425,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               },
             ]
           }
+          testID="createWalletSearch"
         >
           <View
             collapsable={false}
@@ -541,7 +542,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "opacity": 1,
               }
             }
-            testID="undefined.doneButton"
+            testID="createWalletSearch.doneButton"
           >
             <View
               collapsable={false}
@@ -687,7 +688,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
               ]
             }
             submitBehavior="submit"
-            testID="undefined.textInput"
+            testID="createWalletSearch.textInput"
             textAlignVertical="top"
           />
           <View
@@ -724,7 +725,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
                 "opacity": 1,
               }
             }
-            testID="undefined.clearIcon"
+            testID="createWalletSearch.clearIcon"
           >
             <View
               collapsable={false}
