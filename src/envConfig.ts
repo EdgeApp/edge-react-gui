@@ -430,6 +430,11 @@ export const asEnvConfig = asObject({
       quiknodeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  SWAPSXYZ_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   SWAPTER_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

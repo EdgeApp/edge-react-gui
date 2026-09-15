@@ -100,6 +100,7 @@ export const swapPlugins = {
   letsexchange: ENV.LETSEXCHANGE_INIT,
   nexchange: ENV.NEXCHANGE_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
+  swapsxyz: ENV.SWAPSXYZ_INIT,
   swapter: ENV.SWAPTER_INIT,
   swapuz: ENV.SWAPUZ_INIT,
   xgram: ENV.XGRAM_INIT,
@@ -113,6 +114,9 @@ export const swapPlugins = {
   thorchain: ENV.THORCHAIN_INIT,
   swapkit: ENV.SWAPKIT_INIT,
   swapkitv3: ENV.SWAPKITV3_INIT,
+  // Same provider and credentials as `swapsxyz`; this registration is the
+  // DEX-classified half, whose route set is Solana-to-Solana today.
+  swapsxyzdefi: ENV.SWAPSXYZ_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
   unizen: false,
   velodrome: true,
