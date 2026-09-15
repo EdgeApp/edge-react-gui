@@ -24,7 +24,9 @@ import type { SwapTabSceneProps } from '../../types/routerTypes'
 import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { logActivity } from '../../util/logger'
+import { getStuckFundsWarning } from '../../util/stuckFundsWarning'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -43,6 +45,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { SceneContainer } from '../layout/SceneContainer'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { EdgeModal } from '../modals/EdgeModal'
+import { showStuckFundsWarningModal } from '../modals/StuckFundsWarningModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { SwapProviderRow } from '../rows/SwapProviderRow'
@@ -98,8 +101,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const isFocused = useIsFocused()
 
-  const termsCheckPending = React.useRef(false)
-  const timerExpiredDuringTerms = React.useRef(false)
+  // A blocking modal owns the screen (the terms sheet, or the stuck-funds
+  // warning). Quote expiry defers until it closes, otherwise the scene is
+  // replaced and the quote closed while the modal is still up.
+  const blockingModalPending = React.useRef(false)
+  const timerExpiredDuringModal = React.useRef(false)
 
   const pickBestQuoteWithPreference = (
     allQuotes: EdgeSwapQuote[]
@@ -209,8 +215,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
   const handleExchangeTimerExpired = useHandler(() => {
     if (!isFocused) return
-    if (termsCheckPending.current) {
-      timerExpiredDuringTerms.current = true
+    if (blockingModalPending.current) {
+      timerExpiredDuringModal.current = true
       return
     }
 
@@ -234,18 +240,18 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     const swapConfig = account.swapConfig[pluginId]
 
     dispatch(logEvent('Exchange_Shift_Quote'))
-    termsCheckPending.current = true
+    blockingModalPending.current = true
     swapVerifyTerms(swapConfig)
       .then(async result => {
-        termsCheckPending.current = false
-        if (!result || timerExpiredDuringTerms.current) {
+        blockingModalPending.current = false
+        if (!result || timerExpiredDuringModal.current) {
           handleExchangeTimerExpired()
         }
       })
       .catch((err: unknown) => {
-        termsCheckPending.current = false
+        blockingModalPending.current = false
         showError(err)
-        if (timerExpiredDuringTerms.current) {
+        if (timerExpiredDuringModal.current) {
           handleExchangeTimerExpired()
         }
       })
@@ -260,6 +266,56 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleSlideComplete = async (reset: () => void): Promise<void> => {
+    const {
+      fromTokenId: sourceTokenId,
+      fromWallet: sourceWallet,
+      toTokenId: destTokenId,
+      toWallet: destWallet
+    } = selectedQuote.request
+    const { networkFee } = selectedQuote
+    const isSameWallet = destWallet.id === sourceWallet.id
+    const stuckFundsWarning = getStuckFundsWarning({
+      balanceMap: sourceWallet.balanceMap,
+      gasFeeNativeAmount:
+        networkFee.tokenId == null ? networkFee.nativeAmount : '0',
+      // A same-wallet payout in the gas asset is the "buy gas" path, so it
+      // refills the very balance this check is about:
+      gasReceivedNativeAmount:
+        isSameWallet && destTokenId == null
+          ? selectedQuote.toNativeAmount
+          : '0',
+      gasSpentNativeAmount:
+        sourceTokenId == null ? selectedQuote.fromNativeAmount : '0',
+      receivesTokenInSameWallet: isSameWallet && destTokenId != null,
+      spentTokenAmount:
+        sourceTokenId == null
+          ? undefined
+          : {
+              tokenId: sourceTokenId,
+              nativeAmount: selectedQuote.fromNativeAmount
+            }
+    })
+    if (stuckFundsWarning != null) {
+      blockingModalPending.current = true
+      let goAhead: boolean
+      try {
+        goAhead = await showStuckFundsWarningModal(
+          stuckFundsWarning,
+          sourceWallet.currencyInfo.currencyCode,
+          getCurrencyCode(destWallet, destTokenId)
+        )
+      } finally {
+        blockingModalPending.current = false
+      }
+      // The quote may have expired behind the modal, so re-quote instead of
+      // approving a closed one:
+      if (!goAhead || timerExpiredDuringModal.current) {
+        reset()
+        if (timerExpiredDuringModal.current) handleExchangeTimerExpired()
+        return
+      }
+    }
+
     setCalledApprove(true)
     setPending(true)
 
