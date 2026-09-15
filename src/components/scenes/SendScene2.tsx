@@ -1315,9 +1315,22 @@ const SendComponent: React.FC<Props> = props => {
 
   const handleSliderComplete = useHandler(
     async (resetSlider: () => void): Promise<void> => {
-      if (edgeTransaction == null) return
+      // Every exit below has to re-arm the slider. SafeSlider holds its spinner
+      // and stays disabled until it is reset, so returning without one strands
+      // the user on a spinner that never clears.
+      if (edgeTransaction == null) {
+        resetSlider()
+        return
+      }
       if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
-        const isAuthorized = await account.checkPin(pinValue ?? '')
+        let isAuthorized = false
+        try {
+          isAuthorized = await account.checkPin(pinValue ?? '')
+        } catch (error: unknown) {
+          resetSlider()
+          showError(error)
+          return
+        }
         if (!isAuthorized) {
           resetSlider()
           setPinValue('')

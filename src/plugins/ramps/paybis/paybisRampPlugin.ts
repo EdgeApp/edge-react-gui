@@ -1,4 +1,4 @@
-import { eq, lte, mul, round } from 'biggystring'
+import { eq, floor, lte, mul, round } from 'biggystring'
 import {
   asArray,
   asBoolean,
@@ -860,17 +860,18 @@ export const paybisRampPlugin: RampPluginFactory = (
           let amount
 
           if (isMaxAmount) {
-            // Use default max amounts
-            amount = amountType === 'fiat' ? '10000' : '10'
-
             if (maxAmountLimit != null) {
-              const maxCapNumber = parseFloat(maxAmountLimit)
-              const amountNumber = parseFloat(amount)
-              if (!Number.isNaN(maxCapNumber) && !Number.isNaN(amountNumber)) {
-                if (amountNumber > maxCapNumber) {
-                  amount = maxAmountLimit
-                }
-              }
+              // A sell max carries the user's actual maximum, so quote exactly
+              // that. Round DOWN: rounding up asks to sell more than the wallet
+              // can spend, which fails at the send step with the amount locked.
+              amount = floor(
+                maxAmountLimit,
+                amountType === 'fiat' ? FIAT_DECIMALS : CRYPTO_DECIMALS
+              )
+            } else {
+              // A buy max has no known ceiling, so probe with a large default
+              // and let the provider clamp it to its own limit.
+              amount = amountType === 'fiat' ? '10000' : '10'
             }
           } else {
             amount = exchangeAmount
@@ -896,16 +897,6 @@ export const paybisRampPlugin: RampPluginFactory = (
               amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
               directionChange = 'from'
             }
-          }
-
-          const bodyParams = {
-            currencyCodeFrom,
-            amount,
-            currencyCodeTo,
-            directionChange,
-            isReceivedAmount: directionChange === 'to',
-            paymentMethod: direction === 'buy' ? paymentMethod : undefined,
-            payoutMethod: direction === 'sell' ? paymentMethod : undefined
           }
 
           let promoCode: string | undefined
@@ -941,26 +932,47 @@ export const paybisRampPlugin: RampPluginFactory = (
             }
           }
 
-          const response = await paybisFetch({
-            method: 'POST',
-            url: state.apiUrl,
-            path: 'v2/public/quote',
-            apiKey: state.apiKey,
-            bodyParams,
-            promoCode
-          })
+          // Paybis reports its per-order ceiling only when a request exceeds it.
+          // A max request above that ceiling would otherwise be dropped, leaving
+          // Max with no quote at all, so re-quote once at the reported ceiling.
+          // Any other request surfaces the limit error unchanged.
+          const amountDecimals =
+            amountType === 'fiat' ? FIAT_DECIMALS : CRYPTO_DECIMALS
+          const requestedCurrencyCode =
+            directionChange === 'from' ? currencyCodeFrom : currencyCodeTo
+          let quoteAmount = amount
+          let quoteResult: ReturnType<typeof asQuote> | undefined
 
-          const {
-            id: quoteId,
-            paymentMethods,
-            paymentMethodErrors,
-            payoutMethods,
-            payoutMethodErrors
-          } = asQuote(response)
+          for (let attempt = 0; attempt < 2; attempt++) {
+            const bodyParams = {
+              currencyCodeFrom,
+              amount: quoteAmount,
+              currencyCodeTo,
+              directionChange,
+              isReceivedAmount: directionChange === 'to',
+              paymentMethod: direction === 'buy' ? paymentMethod : undefined,
+              payoutMethod: direction === 'sell' ? paymentMethod : undefined
+            }
 
-          const pmErrors = paymentMethodErrors ?? payoutMethodErrors
-          if (pmErrors != null) {
+            const response = await paybisFetch({
+              method: 'POST',
+              url: state.apiUrl,
+              path: 'v2/public/quote',
+              apiKey: state.apiKey,
+              bodyParams,
+              promoCode
+            })
+
+            const candidate = asQuote(response)
+            const pmErrors =
+              candidate.paymentMethodErrors ?? candidate.payoutMethodErrors
+            if (pmErrors == null) {
+              quoteResult = candidate
+              break
+            }
+
             let lastError
+            let ceilingAmount: string | undefined
             for (const e of pmErrors) {
               lastError = e
               // New error message observed from paybis API
@@ -982,40 +994,49 @@ export const paybisRampPlugin: RampPluginFactory = (
                 /^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
                   e.error.message
                 )
-              if (maxMatch != null) {
+              const overLimit = maxMatch ?? maxMatchLegacy
+              const underLimit = minMatch ?? minMatchLegacy
+              if (overLimit != null) {
+                // The ceiling is the largest sellable amount, so a max request
+                // takes it and retries. Only when it is quoted in the same
+                // currency the amount was requested in.
+                if (
+                  isMaxAmount &&
+                  attempt === 0 &&
+                  overLimit[2] === requestedCurrencyCode
+                ) {
+                  ceilingAmount = floor(overLimit[1], amountDecimals)
+                  break
+                }
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'overLimit',
-                  errorAmount: Number(maxMatch[1]),
-                  displayCurrencyCode: maxMatch[2]
+                  errorAmount: Number(overLimit[1]),
+                  displayCurrencyCode: overLimit[2]
                 })
-              } else if (minMatch != null) {
+              } else if (underLimit != null) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'underLimit',
-                  errorAmount: Number(minMatch[1]),
-                  displayCurrencyCode: minMatch[2]
-                })
-              } else if (maxMatchLegacy != null) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'overLimit',
-                  errorAmount: Number(maxMatchLegacy[1]),
-                  displayCurrencyCode: maxMatchLegacy[2]
-                })
-              } else if (minMatchLegacy != null) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'underLimit',
-                  errorAmount: Number(minMatchLegacy[1]),
-                  displayCurrencyCode: minMatchLegacy[2]
+                  errorAmount: Number(underLimit[1]),
+                  displayCurrencyCode: underLimit[2]
                 })
               }
+            }
+
+            if (ceilingAmount != null) {
+              quoteAmount = ceilingAmount
+              continue
             }
             throw new Error(
               lastError?.error.message ?? 'Paybis Unknown paymentMethodError'
             )
           }
+
+          if (quoteResult == null) {
+            throw new Error('Paybis quote unavailable')
+          }
+          const { id: quoteId, paymentMethods, payoutMethods } = quoteResult
 
           let pmQuote
           if (direction === 'buy' && paymentMethods?.length === 1) {
@@ -1034,14 +1055,17 @@ export const paybisRampPlugin: RampPluginFactory = (
           let cryptoAmount: string
           let fiatAmount: string
 
+          // Compare against the amount actually sent: a max request that hit the
+          // provider ceiling was re-quoted at that ceiling, so the originally
+          // requested amount no longer matches what the quote answers.
           if (directionChange === 'from') {
             assert(
-              eq(amount, amountFrom.amount),
+              eq(quoteAmount, amountFrom.amount),
               'Quote not equal to requested from amount'
             )
           } else {
             assert(
-              eq(amount, amountTo.amount),
+              eq(quoteAmount, amountTo.amount),
               'Quote not equal to requested to amount'
             )
           }
