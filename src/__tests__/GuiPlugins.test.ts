@@ -22,6 +22,13 @@ describe('Production plugin data', () => {
     }
   })
 
+  it('Does not surface the retired Xanpool plugin', () => {
+    expect(guiPlugins.xanpool).toBeUndefined()
+    expect([...buyPluginJson, ...sellPluginJson]).not.toContainEqual(
+      expect.objectContaining({ pluginId: 'xanpool' })
+    )
+  })
+
   it('Buy plugins match snapshot on iOS + US', () => {
     expect(
       filterGuiPluginJson(buyPluginJson, 'ios', 'US', {})

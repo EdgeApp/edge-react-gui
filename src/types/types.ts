@@ -385,10 +385,6 @@ export interface AppConfig {
   disableSwaps?: boolean
   disableSurveyModal?: boolean
   /**
-   * Support article for pending transactions "Learn more" link.
-   */
-  pendingTxLearnMoreUrl?: string
-  /**
    * Support article for the Zcash Orchard -> Ironwood migration card's
    * "Learn more" link.
    */
