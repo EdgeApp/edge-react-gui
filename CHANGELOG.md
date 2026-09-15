@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Show the hex private key alongside the seed phrase under Master Private Key
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
