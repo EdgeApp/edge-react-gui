@@ -68,10 +68,24 @@ export default [
               ],
               message:
                 'Avoid importing react-native-vector-icons directly. Use a shared icon from src/components/icons/ThemedIcons or the VectorIcon component so color and size stay theme-driven, and add a new definition there if one is missing.'
+            },
+            {
+              group: ['**/ScanModal', './ScanModal'],
+              message:
+                'Do not mount ScanModal directly. Use `showScanModal` from src/actions/ScanActions, which requests the camera permission and shows the first-use scam warning before the scanner opens. Mounting it directly skips both.'
             }
           ]
         }
       ]
+    }
+  },
+
+  // `showScanModal` is the sanctioned entry point, so it is the one place
+  // allowed to import ScanModal:
+  {
+    files: ['src/actions/ScanActions.tsx'],
+    rules: {
+      'no-restricted-imports': 'off'
     }
   },
 
@@ -129,7 +143,6 @@ export default [
       'src/actions/RecoveryReminderActions.tsx',
 
       'src/actions/ScamWarningActions.tsx',
-      'src/actions/ScanActions.tsx',
 
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
@@ -219,7 +232,7 @@ export default [
       'src/components/modals/RadioListModal.tsx',
       'src/components/modals/RawTextModal.tsx',
       'src/components/modals/ScamWarningModal.tsx',
-      'src/components/modals/ScanModal.tsx',
+
       'src/components/modals/StateProvinceListModal.tsx',
 
       'src/components/modals/TransferModal.tsx',
@@ -309,7 +322,7 @@ export default [
       'src/components/scenes/SwapSuccessScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
-      'src/components/scenes/WcConnectionsScene.tsx',
+
       'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',

@@ -6,6 +6,7 @@
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
+- fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
 
 ## 4.51.0 (staging)
 

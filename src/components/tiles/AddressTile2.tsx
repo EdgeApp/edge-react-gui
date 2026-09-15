@@ -14,12 +14,12 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
-import { addressWarnings } from '../../actions/ScanActions'
+import { addressWarnings, showScanModal } from '../../actions/ScanActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
@@ -33,7 +33,6 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
-import { ScanModal } from '../modals/ScanModal'
 import {
   WalletListModal,
   type WalletListResult
@@ -148,6 +147,7 @@ export const AddressTile2 = React.forwardRef(
 
     // Selectors:
     const account = useSelector(state => state.core.account)
+    const dispatch = useDispatch()
     const fioPlugin = account.currencyConfig.fio
 
     const currencyCode = getCurrencyCode(coreWallet, tokenId)
@@ -392,15 +392,14 @@ export const AddressTile2 = React.forwardRef(
         lstrings.send_scan_modal_text_modal_message_s,
         currencyCode
       )
-      Airship.show<string | undefined>(bridge => (
-        <ScanModal
-          bridge={bridge}
-          scanModalTitle={lstrings.scan_qr_label}
-          textModalHint={lstrings.send_scan_modal_text_modal_hint}
-          textModalBody={message}
-          textModalTitle={title}
-        />
-      ))
+      dispatch(
+        showScanModal({
+          scanModalTitle: lstrings.scan_qr_label,
+          textModalHint: lstrings.send_scan_modal_text_modal_hint,
+          textModalBody: message,
+          textModalTitle: title
+        })
+      )
         .then(async (result: string | undefined) => {
           if (result == null) return
           await changeAddress(result, 'scan')
