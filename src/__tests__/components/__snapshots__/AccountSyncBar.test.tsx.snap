@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProgressBar should render with loading props 1`] = `
 <View
@@ -40,7 +40,6 @@ exports[`ProgressBar should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     style={
       [
         {

@@ -56,7 +56,7 @@ export const BestRateBadge: React.FC = () => {
         height={svgHeight}
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         style={[
-          StyleSheet.absoluteFillObject,
+          StyleSheet.absoluteFill,
           {
             top: -theme.rem(0.75),
             left: -theme.rem(0.75),

@@ -3,12 +3,12 @@ import type {
   BottomTabNavigationEventMap
 } from '@react-navigation/bottom-tabs'
 import type { NavigationHelpers, ParamListBase } from '@react-navigation/native'
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { useMemo } from 'react'
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   interpolate,
   type SharedValue,
@@ -32,7 +32,10 @@ import {
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
-import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import {
+  ChromeBlurBackground,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { styled } from '../hoc/styled'
 import { useTheme } from '../services/ThemeContext'
 import { VectorIcon } from './VectorIcon'
@@ -66,7 +69,7 @@ const title: Readonly<Record<string, string>> = {
   devTab: lstrings.title_dev_tab
 }
 
-export const MenuTabs = (props: BottomTabBarProps) => {
+export const MenuTabs = (props: BottomTabBarProps): React.JSX.Element => {
   const { navigation, state } = props
   const theme = useTheme()
   const activeTabFullIndex = state.index
@@ -123,7 +126,7 @@ export const MenuTabs = (props: BottomTabBarProps) => {
         tabLabelHeight={tabLabelHeight}
         pointerEvents="none"
       >
-        <BlurBackgroundNoRoundedCorners />
+        <ChromeBlurBackground />
         <BackgroundLinearGradient
           colors={theme.tabBarBackground}
           start={theme.tabBarBackgroundStart}
@@ -173,10 +176,11 @@ const Background = styled(Animated.View)<{
   footerHeight: SharedValue<number>
   openRatio: SharedValue<number>
   tabLabelHeight: number
-}>(() => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
+}>(theme => ({ footerHeight: footerHeightRef, openRatio, tabLabelHeight }) => {
   return [
     {
-      ...StyleSheet.absoluteFillObject
+      ...StyleSheet.absoluteFill,
+      ...getBlurFallbackStyle(theme)
     },
     useAnimatedStyle(() => {
       const openRatioInverted = interpolate(openRatio.value, [0, 1], [1, 0])
@@ -230,7 +234,7 @@ const Tab = ({
   route: BottomTabBarProps['state']['routes'][number]
   footerOpenRatio: SharedValue<number>
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
-}) => {
+}): React.JSX.Element => {
   const theme = useTheme()
   const insets = useSafeAreaInsets()
   const color = isActive ? theme.tabBarIconHighlighted : theme.tabBarIcon
@@ -262,7 +266,7 @@ const Tab = ({
     switch (route.name) {
       case 'home':
         setTimeout(() => {
-          writeDefaultScreen('home').catch(e => {
+          writeDefaultScreen('home').catch(() => {
             console.error('Failed to write defaultScreen setting: home')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)
@@ -270,7 +274,7 @@ const Tab = ({
         return
       case 'walletsTab':
         setTimeout(() => {
-          writeDefaultScreen('assets').catch(e => {
+          writeDefaultScreen('assets').catch(() => {
             console.error('Failed to write defaultScreen setting: assets')
           })
         }, SAVE_DEFAULT_SCREEN_DELAY)

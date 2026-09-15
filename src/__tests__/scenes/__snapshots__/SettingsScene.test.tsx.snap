@@ -1,23 +1,34 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SettingsScene should render SettingsScene 1`] = `
-[
-  <BVLinearGradient
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -207,7 +218,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>,
+  </ExpoLinearGradient>
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -241,7 +252,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -329,6 +339,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -486,7 +497,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="1"
                   pending={false}
                   style={
                     [
@@ -527,7 +537,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="2"
                   pending={false}
                   style={
                     [
@@ -565,21 +574,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -680,7 +688,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="3"
                   pending={false}
                   style={
                     [
@@ -721,7 +728,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="4"
                   pending={false}
                   style={
                     [
@@ -766,21 +772,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -881,7 +886,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="5"
                   pending={false}
                   style={
                     [
@@ -922,7 +926,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="6"
                   pending={false}
                   style={
                     [
@@ -967,21 +970,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1082,7 +1084,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="7"
                   pending={false}
                   style={
                     [
@@ -1123,7 +1124,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="8"
                   pending={false}
                   style={
                     [
@@ -1168,21 +1168,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1283,7 +1282,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="9"
                   pending={false}
                   style={
                     [
@@ -1324,7 +1322,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="10"
                   pending={false}
                   style={
                     [
@@ -1369,21 +1366,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1484,7 +1480,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="11"
                   pending={false}
                   style={
                     [
@@ -1525,7 +1520,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="12"
                   pending={false}
                   style={
                     [
@@ -1570,21 +1564,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1685,7 +1678,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="13"
                   pending={false}
                   style={
                     [
@@ -1726,7 +1718,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="14"
                   pending={false}
                   style={
                     [
@@ -1771,21 +1762,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -1886,7 +1876,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="15"
                   pending={false}
                   style={
                     [
@@ -1927,7 +1916,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="16"
                   pending={false}
                   style={
                     [
@@ -1972,21 +1960,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -2087,7 +2074,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="17"
                   pending={false}
                   style={
                     [
@@ -2128,7 +2114,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="18"
                   pending={false}
                   style={
                     [
@@ -2175,21 +2160,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             </View>
           </View>
         </View>
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              452984831,
-              452984831,
+              "rgba(255, 255, 255, .1)",
+              "rgba(255, 255, 255, .1)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0.5,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0.5,
@@ -2251,6 +2235,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -2408,7 +2393,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="19"
                   pending={false}
                   style={
                     [
@@ -2449,7 +2433,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="20"
                   pending={false}
                   style={
                     [
@@ -2494,21 +2477,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -2609,7 +2591,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="21"
                   pending={false}
                   style={
                     [
@@ -2650,7 +2631,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="22"
                   pending={false}
                   style={
                     [
@@ -2676,21 +2656,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -2791,7 +2770,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="23"
                   pending={false}
                   style={
                     [
@@ -2832,7 +2810,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="24"
                   pending={false}
                   style={
                     [
@@ -2858,21 +2835,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -2973,7 +2949,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="25"
                   pending={false}
                   style={
                     [
@@ -3014,7 +2989,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="26"
                   pending={false}
                   style={
                     [
@@ -3042,8 +3016,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -3058,21 +3031,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3173,7 +3145,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="27"
                   pending={false}
                   style={
                     [
@@ -3214,7 +3185,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="28"
                   pending={false}
                   style={
                     [
@@ -3242,8 +3212,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -3258,21 +3227,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3373,7 +3341,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="29"
                   pending={false}
                   style={
                     [
@@ -3414,7 +3381,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="30"
                   pending={false}
                   style={
                     [
@@ -3442,8 +3408,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -3458,21 +3423,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3573,7 +3537,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="31"
                   pending={false}
                   style={
                     [
@@ -3614,7 +3577,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="32"
                   pending={false}
                   style={
                     [
@@ -3659,21 +3621,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3774,7 +3735,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="33"
                   pending={false}
                   style={
                     [
@@ -3815,7 +3775,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="34"
                   pending={false}
                   style={
                     [
@@ -3860,21 +3819,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -3975,7 +3933,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="35"
                   pending={false}
                   style={
                     [
@@ -4016,7 +3973,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="36"
                   pending={false}
                   style={
                     [
@@ -4061,21 +4017,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4176,7 +4131,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="37"
                   pending={false}
                   style={
                     [
@@ -4217,7 +4171,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="38"
                   pending={false}
                   style={
                     [
@@ -4245,8 +4198,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -4261,21 +4213,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4376,7 +4327,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="39"
                   pending={false}
                   style={
                     [
@@ -4417,7 +4367,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="40"
                   pending={false}
                   style={
                     [
@@ -4462,21 +4411,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4577,7 +4525,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="41"
                   pending={false}
                   style={
                     [
@@ -4618,7 +4565,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="42"
                   pending={false}
                   style={
                     [
@@ -4663,21 +4609,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4778,7 +4723,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="43"
                   pending={false}
                   style={
                     [
@@ -4819,7 +4763,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="44"
                   pending={false}
                   style={
                     [
@@ -4864,21 +4807,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 </View>
               </View>
             </View>
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  452984831,
-                  452984831,
+                  "rgba(255, 255, 255, .1)",
+                  "rgba(255, 255, 255, .1)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0.5,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0.5,
@@ -4979,7 +4921,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="45"
                   pending={false}
                   style={
                     [
@@ -5020,7 +4961,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="46"
                   pending={false}
                   style={
                     [
@@ -5048,8 +4988,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -5066,21 +5005,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             </View>
           </View>
         </View>
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              452984831,
-              452984831,
+              "rgba(255, 255, 255, .1)",
+              "rgba(255, 255, 255, .1)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0.5,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0.5,
@@ -5233,7 +5171,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       },
                     ]
                   }
-                  nativeID="47"
                   pending={false}
                   style={
                     [
@@ -5274,7 +5211,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                     }
                   }
                   jestInlineStyle={{}}
-                  nativeID="48"
                   pending={false}
                   style={
                     [
@@ -5302,8 +5238,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                       style={
                         [
                           {
-                            "height": 31,
-                            "width": 51,
+                            "alignSelf": "flex-start",
                           },
                           {
                             "backgroundColor": "#888888",
@@ -5397,21 +5332,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  4280299823,
-                  4278214733,
+                  "#20312f",
+                  "#00604d",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 0,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0,
@@ -5442,6 +5376,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -5550,21 +5485,20 @@ exports[`SettingsScene should render SettingsScene 1`] = `
               }
             }
           >
-            <BVLinearGradient
+            <ExpoLinearGradient
               colors={
                 [
-                  872415231,
-                  872415231,
+                  "hsla(0, 0%, 100%, 0.20)",
+                  "hsla(0, 0%, 100%, 0.20)",
                 ]
               }
-              endPoint={
+              end={
                 {
                   "x": 1,
                   "y": 1,
                 }
               }
-              locations={null}
-              startPoint={
+              start={
                 {
                   "x": 0,
                   "y": 0,
@@ -5595,6 +5529,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
+                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -5626,6 +5561,6 @@ exports[`SettingsScene should render SettingsScene 1`] = `
         </View>
       </View>
     </View>
-  </RCTScrollView>,
-]
+  </RCTScrollView>
+</BlurTargetView>
 `;

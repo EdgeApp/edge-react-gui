@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AdvancedDetailsCard should render with loading props 1`] = `
 <View
@@ -89,6 +89,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
           allowFontScaling={false}
           ellipsizeMode="tail"
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [
@@ -114,6 +115,7 @@ exports[`AdvancedDetailsCard should render with loading props 1`] = `
           allowFontScaling={false}
           ellipsizeMode="tail"
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={3}
           style={
             [

@@ -610,7 +610,6 @@ export async function migrateDenominationSettings(
         savedDenom.multiplier !== defaultDenom.multiplier ||
         savedDenom.name !== defaultDenom.name
       ) {
-        // @ts-expect-error - DenominationSettings type allows undefined
         cleanedSettings[pluginId][currencyCode] = savedDenom
       } else {
         needsCleanup = true

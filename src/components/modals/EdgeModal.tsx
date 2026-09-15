@@ -4,13 +4,14 @@
  */
 
 import * as React from 'react'
-import { BackHandler, Dimensions, View } from 'react-native'
+import { BackHandler, Dimensions, Keyboard, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import {
   Gesture,
   GestureDetector,
   ScrollView
 } from 'react-native-gesture-handler'
+import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import { cacheStyles } from 'react-native-patina'
 import Animated, {
   useAnimatedStyle,
@@ -21,7 +22,7 @@ import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
-import { BlurBackground } from '../common/BlurBackground'
+import { isBlurDisabled, ModalBlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { CloseIcon } from '../icons/ThemedIcons'
@@ -132,6 +133,22 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     }
   }, [handleCancel])
 
+  // Insets are not shared values, so track this on the JS thread. Seed from
+  // the live state, since a modal can mount while the keyboard is already
+  // open:
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(() =>
+    Keyboard.isVisible()
+  )
+  useKeyboardHandler(
+    {
+      onStart(event) {
+        'worklet'
+        runOnJS(setIsKeyboardOpen)(event.progress === 1)
+      }
+    },
+    []
+  )
+
   const gesture = Gesture.Pan()
     .onUpdate(e => {
       offset.value = e.translationY
@@ -156,7 +173,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     transform: [{ translateY: Math.max(-dragSlop, offset.value) }]
   }))
 
-  const bottomGap = safeAreaGap + dragSlop
+  // The gap that lets the modal bleed past the bottom of the screen is
+  // rendered behind the keyboard, so drop it while the keyboard is open or
+  // it pushes the modal's own content underneath:
+  const bottomGap = (isKeyboardOpen ? 0 : safeAreaGap) + dragSlop
   const isHeaderless = title == null && onCancel == null
   const isCustomTitle = title != null && typeof title !== 'string'
 
@@ -175,7 +195,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
       </EdgeTouchableWithoutFeedback>
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.modal, modalStyle, modalLayout]}>
-          <BlurBackground />
+          <ModalBlurBackground />
 
           <View style={styles.dragBarContainer}>
             <View style={styles.dragBar} />
@@ -238,7 +258,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   modal: {
     alignSelf: 'flex-end',
-    backgroundColor: theme.modalBackground,
+    // Devices that cannot render the blur background (Android below 12) get
+    // a solid color approximating the blurred glass look:
+    backgroundColor: isBlurDisabled
+      ? theme.isDark
+        ? '#2b2b2b'
+        : '#f2f2f2'
+      : theme.modalBackground,
     borderTopLeftRadius: theme.rem(1),
     borderTopRightRadius: theme.rem(1),
     flexShrink: 1,

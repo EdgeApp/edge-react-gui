@@ -1,7 +1,10 @@
 import * as React from 'react'
 
 import { useHandler } from '../../hooks/useHandler'
-import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
+import {
+  ChromeBlurBackground,
+  getBlurFallbackStyle
+} from '../common/BlurBackground'
 import { EdgeAnim, fadeInDown10 } from '../common/EdgeAnim'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import type { ButtonInfo } from './ButtonsView'
@@ -45,7 +48,7 @@ export const KavButtons: React.FC<Props> = props => {
 
   return (
     <EdgeAnim enter={fadeInDown10} style={styles.container}>
-      <BlurBackgroundNoRoundedCorners />
+      <ChromeBlurBackground />
       <EdgeButton
         type="tertiary"
         mini
@@ -81,7 +84,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.rem(0.5)
+    padding: theme.rem(0.5),
+    ...getBlurFallbackStyle(theme)
   },
   tertiary: {
     marginTop: theme.rem(0.25)
