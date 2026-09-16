@@ -536,6 +536,7 @@ export const asEnvConfig = asObject({
   ),
 
   YOLO_DEEP_LINK: asNullable(asString),
+  YOLO_OTP_KEY: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
   YOLO_PIN: asNullable(asString),
   YOLO_USERNAME: asNullable(asString),
