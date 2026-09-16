@@ -22,6 +22,7 @@ import { config } from '../../theme/appConfig'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, RootSceneProps } from '../../types/routerTypes'
 import { logEvent } from '../../util/tracking'
+import { makeYoloOtpOptions, type YoloOtpOptions } from '../../util/yoloLogin'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
 import { showDevError, showError } from '../services/AirshipInstance'
@@ -67,50 +68,64 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
-    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (
-      YOLO_USERNAME != null &&
-      (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))
-    ) {
+    const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN, YOLO_OTP_KEY } = ENV
+
+    const yoloLogin = (login: () => Promise<EdgeAccount>): void => {
       firstRun = false
-      if (YOLO_PIN != null) {
-        context
-          .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
-          .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
-          })
-          .catch((error: unknown) => {
-            showError(error)
-          })
-      }
-      if (YOLO_PASSWORD != null) {
-        context
-          .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
-          .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
-          })
-          .catch((error: unknown) => {
-            showError(error)
-          })
-      }
-    } else if (
-      YOLO_USERNAME == null &&
-      account.username == null &&
-      context.localUsers[0]?.loginId != null &&
-      typeof YOLO_PIN === 'string'
-    ) {
-      // Allow YOLO_PIN with light accounts
-      firstRun = false
-      context
-        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, {
-          useLoginId: true
-        })
+      login()
         .then(async account => {
           await dispatch(initializeAccount(navigation, account))
         })
         .catch((error: unknown) => {
           showError(error)
         })
+    }
+
+    const hasPassword = YOLO_PASSWORD != null && YOLO_PASSWORD !== ''
+    const hasPin = YOLO_PIN != null && YOLO_PIN !== ''
+
+    if (YOLO_USERNAME != null && hasPassword) {
+      // Password login is the only method that works without a login stash, so
+      // it wins when both it and a PIN are configured. Running both would start
+      // two separate accounts and race their navigations:
+      //
+      // It is also the only method the OTP key is any use to. PIN login needs
+      // a stash, and a stash that can do PIN login already carries the account
+      // `otpKey` for `getStashOtp` to find, so passing one here would only
+      // override that with whatever the setting happens to hold. Resolve the
+      // key up front so a malformed one reports itself instead of failing
+      // later as an `OtpError`:
+      let otpOptions: YoloOtpOptions
+      try {
+        otpOptions = makeYoloOtpOptions(YOLO_OTP_KEY)
+      } catch (error: unknown) {
+        firstRun = false
+        showError(error)
+        return
+      }
+      yoloLogin(
+        async () =>
+          await context.loginWithPassword(
+            YOLO_USERNAME,
+            YOLO_PASSWORD,
+            otpOptions
+          )
+      )
+    } else if (YOLO_USERNAME != null && hasPin) {
+      yoloLogin(async () => await context.loginWithPIN(YOLO_USERNAME, YOLO_PIN))
+    } else if (
+      YOLO_USERNAME == null &&
+      hasPin &&
+      account.username == null &&
+      context.localUsers[0]?.loginId != null
+    ) {
+      // Allow YOLO_PIN with light accounts
+      yoloLogin(
+        async () =>
+          await context.loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, {
+            useLoginId: true
+          })
+      )
     }
   }, [account, context, dispatch, navigation])
 
