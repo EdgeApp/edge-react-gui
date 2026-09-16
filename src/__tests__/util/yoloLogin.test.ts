@@ -1,4 +1,4 @@
-import { makeYoloOtpOptions } from '../../util/yoloLogin'
+import { hasYoloAccountLogin, makeYoloOtpOptions } from '../../util/yoloLogin'
 
 describe('makeYoloOtpOptions', () => {
   it('should ignore a missing key', () => {
@@ -44,5 +44,51 @@ describe('makeYoloOtpOptions', () => {
 
   it('should throw on a truncated key', () => {
     expect(() => makeYoloOtpOptions('JBSWY3DPEHPK3PX')).toThrow(/YOLO_OTP_KEY/)
+  })
+})
+
+describe('hasYoloAccountLogin', () => {
+  const env = (
+    YOLO_USERNAME: string | null,
+    YOLO_PASSWORD: string | null,
+    YOLO_PIN: string | null
+  ): {
+    YOLO_USERNAME: string | null
+    YOLO_PASSWORD: string | null
+    YOLO_PIN: string | null
+  } => ({
+    YOLO_USERNAME,
+    YOLO_PASSWORD,
+    YOLO_PIN
+  })
+
+  it('should be false with nothing configured', () => {
+    expect(hasYoloAccountLogin(env(null, null, null))).toBe(false)
+  })
+
+  it('should be true for a PIN alone, for light accounts', () => {
+    expect(hasYoloAccountLogin(env(null, null, '1234'))).toBe(true)
+    expect(hasYoloAccountLogin(env(null, 'pw', '1234'))).toBe(true)
+  })
+
+  it('should be false for a password with no username to go with it', () => {
+    expect(hasYoloAccountLogin(env(null, 'pw', null))).toBe(false)
+  })
+
+  it('should be false with a username but no credential', () => {
+    expect(hasYoloAccountLogin(env('bob', null, null))).toBe(false)
+  })
+
+  it('should treat blank credentials as absent', () => {
+    expect(hasYoloAccountLogin(env('bob', '', ''))).toBe(false)
+    expect(hasYoloAccountLogin(env(null, null, ''))).toBe(false)
+  })
+
+  it('should be true for a username plus a password', () => {
+    expect(hasYoloAccountLogin(env('bob', 'pw', null))).toBe(true)
+  })
+
+  it('should be true for a username plus a PIN', () => {
+    expect(hasYoloAccountLogin(env('bob', null, '1234'))).toBe(true)
   })
 })

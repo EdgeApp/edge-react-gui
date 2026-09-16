@@ -6,6 +6,7 @@
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
+- fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
 - fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
 - fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.

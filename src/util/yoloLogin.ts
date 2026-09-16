@@ -39,3 +39,28 @@ export function makeYoloOtpOptions(
 
   return { otpKey }
 }
+
+/**
+ * True when the YOLO settings would start an auto-login.
+ *
+ * The login scene owns the auto-login, so the router has to send us there
+ * instead of the welcome carousel. A device with no login stash is exactly
+ * the case `YOLO_OTP_KEY` exists for, and that is the case the carousel
+ * would otherwise swallow.
+ *
+ * Without a username a PIN still logs into the device's first local user,
+ * which is how light accounts sign in.
+ */
+export function hasYoloAccountLogin(env: {
+  YOLO_USERNAME: string | null
+  YOLO_PASSWORD: string | null
+  YOLO_PIN: string | null
+}): boolean {
+  const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = env
+  const hasPassword = YOLO_PASSWORD != null && YOLO_PASSWORD !== ''
+  const hasPin = YOLO_PIN != null && YOLO_PIN !== ''
+
+  // A password needs the username that goes with it:
+  if (YOLO_USERNAME == null) return hasPin
+  return hasPassword || hasPin
+}
