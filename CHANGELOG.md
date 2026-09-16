@@ -48,6 +48,7 @@
 - fixed: Remote gift card provider disables from the info server now take effect
 - fixed: Spend Crypto opens Bitrefill directly when Phaze is remotely disabled
 - fixed: Purchased Phaze gift cards stay viewable while Phaze is remotely disabled
+- fixed: Phaze gift card purchases no longer fail when the quote has no expiry
 
 ## 4.50.3 (2026-08-28)
 
