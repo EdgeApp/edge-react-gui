@@ -28,6 +28,7 @@ export const CURRENCY_INIT_MAP: Record<string, string> = {
   ALGORAND_INIT: 'algorand',
   AMOY_INIT: 'amoy',
   ARBITRUM_INIT: 'arbitrum',
+  ARC_INIT: 'arc',
   AVALANCHE_INIT: 'avalanche',
   AXELAR_INIT: 'axelar',
   BASE_INIT: 'base',
