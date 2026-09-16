@@ -270,7 +270,7 @@ export const asPhazeCreateOrderResponse = asObject({
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
-  quoteExpiry: asNumberOrNumericString,
+  quoteExpiry: asOptional(asNumberOrNumericString),
   receivedQuantity: asNumber,
   cart: asArray(asPhazeCartItem)
 })
@@ -338,7 +338,7 @@ export const asPhazeOrderStatusItem = asObject({
   tokenIdentifier: asString,
   quantity: asNumber,
   amountInUSD: asNumber,
-  quoteExpiry: asNumberOrNumericString,
+  quoteExpiry: asOptional(asNumberOrNumericString),
   receivedQuantity: asNumber,
   cart: asArray(asPhazeCompletedCartItem)
 })
