@@ -16,6 +16,7 @@ function buildAccountbasedPlugins(): EdgeCorePluginsInit {
     algorand: coreInit('algorand', true),
     amoy: coreInit('amoy'),
     arbitrum: coreInit('arbitrum'),
+    arc: coreInit('arc'),
     avalanche: coreInit('avalanche'),
     axelar: coreInit('axelar', true),
     base: coreInit('base'),
