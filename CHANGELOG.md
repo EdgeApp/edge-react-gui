@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-- added: WalletConnect support for Bitcoin (bip122), so proof-of-ownership signature requests from on-ramp partners work with existing BTC wallets
+- added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
 
 ## 4.51.0 (staging)
 

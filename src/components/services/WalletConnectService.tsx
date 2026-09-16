@@ -71,9 +71,14 @@ export const WalletConnectService: React.FC<Props> = props => {
       case 'signMessage': {
         const { account: requestedAccount, message } =
           asBip122SignMessageParams(payload.params)
-        // A dapp may name the account it wants signed for. Edge holds one
+        // A dapp may name the account it wants signed for, as the bare address
+        // or as the CAIP-10 account the session gave it. Edge holds one
         // address per session, so anything else is unservable.
-        if (requestedAccount != null && requestedAccount !== publicAddress) {
+        if (
+          requestedAccount != null &&
+          requestedAccount !== publicAddress &&
+          requestedAccount !== sessionAccount
+        ) {
           await walletConnect.rejectRequest(topic, requestId)
           return
         }
@@ -112,9 +117,8 @@ export const WalletConnectService: React.FC<Props> = props => {
     const session = sessions[request.topic]
     if (session == null) return
     const { currencyWallets } = account
-    const sessionWallets = await readActiveSessionWallets(
-      account,
-      Object.keys(sessions)
+    const sessionWallets = await readActiveSessionWallets(account, () =>
+      Object.keys(client.getActiveSessions())
     )
     const walletId = await resolveSessionWalletId(
       session,

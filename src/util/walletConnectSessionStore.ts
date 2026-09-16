@@ -31,48 +31,71 @@ export const rememberSessionWallet = async (
   topic: string,
   walletId: string
 ): Promise<void> => {
-  const sessionWallets = await readSessionWallets(account)
-  await writeSessionWallets(account, { ...sessionWallets, [topic]: walletId })
+  await queueStoreUpdate(async () => {
+    const sessionWallets = await readSessionWallets(account)
+    await writeSessionWallets(account, { ...sessionWallets, [topic]: walletId })
+  })
 }
 
 /**
  * The stored map, pruned to the topics the local sign client still holds. The
  * client drops expired sessions and dapp disconnects from that list on its own,
  * so pruning against it is the only expiry this store needs.
+ *
+ * `getActiveTopics` runs inside the store's update queue rather than before
+ * it: a topic list captured before a concurrent approval finishes writing would
+ * not contain the new session, and the prune would delete its entry.
  */
 export const readActiveSessionWallets = async (
   account: EdgeAccount,
-  activeTopics: string[]
+  getActiveTopics: () => string[]
 ): Promise<SessionWallets> => {
-  const sessionWallets = await readSessionWallets(account)
+  return await queueStoreUpdate(async () => {
+    const sessionWallets = await readSessionWallets(account)
 
-  const activeWallets: SessionWallets = {}
-  for (const topic of activeTopics) {
-    const walletId = sessionWallets[topic]
-    if (walletId != null) activeWallets[topic] = walletId
-  }
+    const activeWallets: SessionWallets = {}
+    for (const topic of getActiveTopics()) {
+      const walletId = sessionWallets[topic]
+      if (walletId != null) activeWallets[topic] = walletId
+    }
 
-  // Only rewrite the file when something actually fell out of it.
-  const storedCount = Object.keys(sessionWallets).length
-  if (Object.keys(activeWallets).length !== storedCount) {
-    await writeSessionWallets(account, activeWallets)
-  }
-  return activeWallets
+    // Only rewrite the file when something actually fell out of it.
+    const storedCount = Object.keys(sessionWallets).length
+    if (Object.keys(activeWallets).length !== storedCount) {
+      await writeSessionWallets(account, activeWallets)
+    }
+    return activeWallets
+  })
 }
 
 export const forgetSessionWallet = async (
   account: EdgeAccount,
   topic: string
 ): Promise<void> => {
-  const sessionWallets = await readSessionWallets(account)
-  if (sessionWallets[topic] == null) return
+  await queueStoreUpdate(async () => {
+    const sessionWallets = await readSessionWallets(account)
+    if (sessionWallets[topic] == null) return
 
-  const remaining: SessionWallets = {}
-  for (const storedTopic of Object.keys(sessionWallets)) {
-    if (storedTopic !== topic)
-      remaining[storedTopic] = sessionWallets[storedTopic]
-  }
-  await writeSessionWallets(account, remaining)
+    const remaining: SessionWallets = {}
+    for (const storedTopic of Object.keys(sessionWallets)) {
+      if (storedTopic !== topic) {
+        remaining[storedTopic] = sessionWallets[storedTopic]
+      }
+    }
+    await writeSessionWallets(account, remaining)
+  })
+}
+
+/**
+ * Runs read-modify-write cycles on the map one at a time. The whole map is one
+ * file, so two interleaved cycles would each write back a copy missing the
+ * other's change.
+ */
+let storeQueue: Promise<unknown> = Promise.resolve()
+const queueStoreUpdate = async <T>(update: () => Promise<T>): Promise<T> => {
+  const result = storeQueue.then(update, update)
+  storeQueue = result.catch(() => undefined)
+  return await result
 }
 
 const readSessionWallets = async (

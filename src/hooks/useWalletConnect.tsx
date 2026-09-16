@@ -94,17 +94,16 @@ export function useWalletConnect(): WalletConnect {
     const client = await getClient()
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
-    const sessionWallets = await readActiveSessionWallets(
-      account,
-      Object.keys(sessions)
+    const sessionWallets = await readActiveSessionWallets(account, () =>
+      Object.keys(client.getActiveSessions())
     )
-    const getAccountsOnce = makeAccountsLookup(currencyWallets)
+    const accountsLookup = makeAccountsLookup(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
       const walletId = await resolveSessionWalletId(
         session,
         sessionWallets,
-        getAccountsOnce
+        accountsLookup
       )
       if (walletId == null || currencyWallets[walletId] == null) continue
 
@@ -156,8 +155,12 @@ export function useWalletConnect(): WalletConnect {
           .walletConnectV2ChainId
       if (chainId == null) return
 
+      // Returning here would let the caller report a connection that never
+      // happened and leave the dapp waiting on an unanswered proposal.
       const address = await getWalletConnectAddress(wallet)
-      if (address == null) return
+      if (address == null) {
+        throw new Error('Wallet has no address to connect')
+      }
 
       const supportedNamespaces = getSupportedNamespaces(chainId, address)
 
@@ -190,7 +193,18 @@ export function useWalletConnect(): WalletConnect {
         }),
         20000
       )
-      await rememberSessionWallet(account, session.topic, walletId)
+      // The session is live from here on, so a failed write must not surface
+      // as a failed connection: the caller would reject a proposal the dapp
+      // already holds. Without the stored mapping, requests still resolve by
+      // the session's address.
+      await rememberSessionWallet(account, session.topic, walletId).catch(
+        (error: unknown) => {
+          console.log(
+            'walletConnect rememberSessionWallet error',
+            String(error)
+          )
+        }
+      )
     }
   )
 
@@ -223,7 +237,11 @@ export function useWalletConnect(): WalletConnect {
       }),
       10000
     )
-    await forgetSessionWallet(account, topic)
+    // The session is already gone, so a failed write must not surface as a
+    // failed disconnect. A leftover entry is pruned on the next read.
+    await forgetSessionWallet(account, topic).catch((error: unknown) => {
+      console.log('walletConnect forgetSessionWallet error', String(error))
+    })
     Airship.show(bridge => (
       <FlashNotification
         bridge={bridge}
@@ -393,28 +411,45 @@ export const getWalletConnectAddress = async (
  */
 export const makeAccountsLookup = (
   currencyWallets: Record<string, EdgeCurrencyWallet>
-): (() => Promise<Map<string, string>>) => {
+): AccountsLookup => {
   let accounts: Promise<Map<string, string>> | undefined
-  return async () => {
-    accounts ??= getAccounts(currencyWallets)
-    return await accounts
+  return {
+    currencyWallets,
+    getAccounts: async () => {
+      accounts ??= getAccounts(currencyWallets)
+      return await accounts
+    }
   }
+}
+
+export interface AccountsLookup {
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+  /** The account-to-wallet map, built on first use. */
+  getAccounts: () => Promise<Map<string, string>>
 }
 
 /**
  * The wallet that approved a session: the remembered mapping first, since it
  * survives receive-address rotation, then the address carried on the session.
+ * A remembered wallet the account no longer holds (deleted, or restored from
+ * the same keys under a new id) falls through to the address, which still
+ * matches the restored wallet.
  */
 export const resolveSessionWalletId = async (
   session: SessionTypes.Struct,
   sessionWallets: SessionWallets,
-  getAccountsOnce: () => Promise<Map<string, string>>
+  accountsLookup: AccountsLookup
 ): Promise<string | undefined> => {
   const remembered = sessionWallets[session.topic]
-  if (remembered != null) return remembered
+  if (
+    remembered != null &&
+    accountsLookup.currencyWallets[remembered] != null
+  ) {
+    return remembered
+  }
   return getWalletIdFromSessionNamespace(
     session.namespaces,
-    await getAccountsOnce()
+    await accountsLookup.getAccounts()
   )
 }
 
