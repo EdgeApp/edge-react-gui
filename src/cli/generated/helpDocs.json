@@ -2279,13 +2279,13 @@
       "summary": "Query transactions across every wallet in the account at once.",
       "method": "GET",
       "path": "/account/{sessionId}/transactions",
-      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata] [--include-orphans]",
       "description": "Unlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
-      "core": "account.transactions.queryTransactions",
+      "core": "account.transactions.queryTxs",
       "params": {
         "sort": {
           "pass": "[--sort=<sort>]",
-          "doc": "Defaults to date.",
+          "doc": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.",
           "optional": true
         },
         "sortDirection": {
@@ -2305,7 +2305,7 @@
         },
         "after": {
           "pass": "[--after=<after>]",
-          "doc": "Cursor from a previous page, as `effectiveDate:txid:tokenId`. Only valid with the date sort.",
+          "doc": "Cursor from a previous page. Opaque: pass it back unmodified, and only with the sort that produced it.",
           "optional": true
         },
         "walletIds": {
@@ -2316,11 +2316,6 @@
         "pluginIds": {
           "pass": "[--plugin-id=<pluginIds> …]",
           "doc": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
-          "optional": true
-        },
-        "currencyCodes": {
-          "pass": "[--currency-code=<currencyCodes> …]",
-          "doc": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
           "optional": true
         },
         "tokenIds": {
@@ -2350,12 +2345,37 @@
         },
         "minAmount": {
           "pass": "[--min-amount=<minAmount>]",
-          "doc": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+          "doc": "The chain's smallest unit, as an integer string: 150000000, not 1.5.",
           "optional": true
         },
         "maxAmount": {
           "pass": "[--max-amount=<maxAmount>]",
           "doc": "Upper bound, same units as minAmount.",
+          "optional": true
+        },
+        "minFee": {
+          "pass": "[--min-fee=<minFee>]",
+          "doc": "This asset's network fee, same units as minAmount.",
+          "optional": true
+        },
+        "maxFee": {
+          "pass": "[--max-fee=<maxFee>]",
+          "doc": "Upper bound, same units as minFee.",
+          "optional": true
+        },
+        "minBlockHeight": {
+          "pass": "[--min-block-height=<minBlockHeight>]",
+          "doc": "Inclusive. Zero matches unconfirmed transactions.",
+          "optional": true
+        },
+        "maxBlockHeight": {
+          "pass": "[--max-block-height=<maxBlockHeight>]",
+          "doc": "Inclusive.",
+          "optional": true
+        },
+        "searchString": {
+          "pass": "[--search-string=<searchString>]",
+          "doc": "Free text over the name, notes and category the user wrote. Matches anywhere inside a word.",
           "optional": true
         },
         "hasMetadata": {
@@ -2365,14 +2385,15 @@
         },
         "includeOrphans": {
           "pass": "[--include-orphans]",
-          "doc": "Include transactions whose chain data a resync removed but whose metadata survives.",
+          "doc": "Include transactions the user annotated on another device that this one has not seen.",
           "optional": true
         }
       },
       "returnsDoc": "`{ transactions, cursor }`",
       "notes": [
-        "Results are one row per asset a transaction touched, so a swap that moved two assets appears twice, once per asset.",
-        "`minAmount` / `maxAmount` are exchange-denomination amounts, never native units, because native units are not comparable across chains."
+        "One result per transaction, whatever it touched. A swap that moved two assets is one `EdgeTx` with two entries in `nativeAmounts`, not two results.",
+        "Amount and fee filters take the chain's smallest unit as an integer string, because a 256-bit amount does not fit a number and converting from a display figure needs a denomination this query does not have.",
+        "A page can hold fewer than `limit` transactions: the limit counts index rows, and a transaction touching two assets has two. Use `cursor` to tell whether there is more, never the length of the array."
       ],
       "errors": [
         "BAD_REQUEST",
@@ -3033,9 +3054,9 @@
       "summary": "Count and summarize transactions across every wallet.",
       "method": "GET",
       "path": "/account/{sessionId}/transactions/summary",
-      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
-      "description": "Computed in SQL over the matching set, so it does not page through results. Takes the same filters as `query-transactions`.",
-      "core": "account.transactions.summarize",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata] [--include-orphans]",
+      "description": "Computed over the whole matching set rather than by paging through it, so it does not take a `limit`. Takes the same filters as `query-transactions`.",
+      "core": "account.transactions.queryTxs",
       "params": {
         "walletIds": {
           "pass": "[--wallet-id=<walletIds> …]",
@@ -3045,11 +3066,6 @@
         "pluginIds": {
           "pass": "[--plugin-id=<pluginIds> …]",
           "doc": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
-          "optional": true
-        },
-        "currencyCodes": {
-          "pass": "[--currency-code=<currencyCodes> …]",
-          "doc": "Repeatable, such as `--currency-code=BTC --currency-code=USDC`.",
           "optional": true
         },
         "tokenIds": {
@@ -3079,12 +3095,37 @@
         },
         "minAmount": {
           "pass": "[--min-amount=<minAmount>]",
-          "doc": "Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.",
+          "doc": "The chain's smallest unit, as an integer string: 150000000, not 1.5.",
           "optional": true
         },
         "maxAmount": {
           "pass": "[--max-amount=<maxAmount>]",
           "doc": "Upper bound, same units as minAmount.",
+          "optional": true
+        },
+        "minFee": {
+          "pass": "[--min-fee=<minFee>]",
+          "doc": "This asset's network fee, same units as minAmount.",
+          "optional": true
+        },
+        "maxFee": {
+          "pass": "[--max-fee=<maxFee>]",
+          "doc": "Upper bound, same units as minFee.",
+          "optional": true
+        },
+        "minBlockHeight": {
+          "pass": "[--min-block-height=<minBlockHeight>]",
+          "doc": "Inclusive. Zero matches unconfirmed transactions.",
+          "optional": true
+        },
+        "maxBlockHeight": {
+          "pass": "[--max-block-height=<maxBlockHeight>]",
+          "doc": "Inclusive.",
+          "optional": true
+        },
+        "searchString": {
+          "pass": "[--search-string=<searchString>]",
+          "doc": "Free text over the name, notes and category the user wrote. Matches anywhere inside a word.",
           "optional": true
         },
         "hasMetadata": {
@@ -3094,11 +3135,14 @@
         },
         "includeOrphans": {
           "pass": "[--include-orphans]",
-          "doc": "Include transactions whose chain data a resync removed but whose metadata survives.",
+          "doc": "Include transactions the user annotated on another device that this one has not seen.",
           "optional": true
         }
       },
       "returnsDoc": "Counts and the date range of the matching set.",
+      "notes": [
+        "No amount total. Summing would mean arithmetic on amounts inside the database, which it does not do -- a caller wanting one reads the transactions and adds the exact `nativeAmounts` strings with `BigInt`."
+      ],
       "errors": [
         "BAD_REQUEST",
         "TRANSACTION_DATABASE_OFF"

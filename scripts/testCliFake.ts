@@ -66,6 +66,17 @@ function ok(label: string, ...args: string[]): Run {
   return run
 }
 
+/** Assert something about what a command printed. */
+function expect(label: string, good: boolean, why: string): void {
+  if (good) {
+    passes++
+    console.log(`OK   ${label}`)
+  } else {
+    failures++
+    console.error(`FAIL ${label} — ${why}`)
+  }
+}
+
 /** Run a command that is expected to fail, and say why that is correct. */
 function refuses(label: string, code: string, ...args: string[]): void {
   const run = cli(...args)
@@ -260,13 +271,52 @@ function main(): void {
     // Account-wide, so these take no wallet. A fresh fake account has no
     // transactions, which still exercises the query and the database behind
     // it — an empty result is a result.
-    ok('summarize-transactions', 'summarize-transactions')
+    const summary = ok('summarize-transactions', 'summarize-transactions')
+    expect(
+      'summarize-transactions counts',
+      /"count":\s*0/.test(summary.out),
+      'expected a count field'
+    )
+    // No amount total, ever: summing would mean arithmetic on amounts inside
+    // the database, which it does not do.
+    expect(
+      'summarize-transactions has no total',
+      !/nativeAmount|total/i.test(summary.out),
+      'expected no amount total'
+    )
+
     ok('query-transactions', 'query-transactions', '--limit=5')
     ok(
       'query-transactions filtered',
       'query-transactions',
       '--plugin-id=bitcoin',
       '--direction=receive'
+    )
+    // Native units, as an integer string. The previous shape of this API took
+    // an exchange-denomination number, so a query that passes here could not
+    // have been written against it.
+    ok(
+      'query-transactions by native amount',
+      'query-transactions',
+      '--min-amount=150000000',
+      '--wallet-id=' + w
+    )
+    ok(
+      'query-transactions by search',
+      'query-transactions',
+      '--search-string=groceries'
+    )
+    refuses(
+      'query-transactions refuses a display amount',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--min-amount=1.5'
+    )
+    refuses(
+      'query-transactions refuses an unsortable field',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--sort=nativeAmount'
     )
     ok(
       'encode-uri',
