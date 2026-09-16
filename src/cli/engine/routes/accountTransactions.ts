@@ -26,14 +26,19 @@ const asCommaList = (raw: unknown): string[] => {
 const asTokenIdList = (raw: unknown): Array<string | null> =>
   asCommaList(raw).map(part => (part === 'null' ? null : part))
 
-const asQueryNumber = (raw: unknown): number => {
-  if (typeof raw === 'number') return raw
-  if (typeof raw !== 'string' || raw === '') {
-    throw new TypeError('Expected a number')
+/**
+ * Amounts are the chain's smallest unit, as an integer string.
+ *
+ * Not a number: a 256-bit amount does not fit one, and parsing it would drop
+ * digits without failing. Not an exchange-denomination figure either --
+ * converting one needs the asset's denomination, which is the caller's to
+ * apply and not something a cross-asset query can assume.
+ */
+const asNativeAmount: (raw: unknown) => string = raw => {
+  if (typeof raw !== 'string' || !/^-?\d+$/.test(raw)) {
+    throw new TypeError('Expected an integer amount in the smallest unit')
   }
-  const n = Number(raw)
-  if (!Number.isFinite(n)) throw new TypeError('Expected a number')
-  return n
+  return raw
 }
 
 /** Reads the account-wide store, or explains why it is not there. */
@@ -54,14 +59,18 @@ function getStore(
 function buildQuery(valid: {
   walletIds?: string[]
   pluginIds?: string[]
-  currencyCodes?: string[]
   tokenIds?: Array<string | null>
   txids?: string[]
   direction?: string
   startDate?: Date
   endDate?: Date
-  minAmount?: number
-  maxAmount?: number
+  minAmount?: string
+  maxAmount?: string
+  minFee?: string
+  maxFee?: string
+  minBlockHeight?: number
+  maxBlockHeight?: number
+  searchString?: string
   hasMetadata?: boolean
   includeOrphans?: boolean
   sort?: string
@@ -75,14 +84,18 @@ function buildQuery(valid: {
   return {
     walletIds: valid.walletIds,
     pluginIds: valid.pluginIds,
-    currencyCodes: valid.currencyCodes,
     tokenIds: valid.tokenIds,
     txids: valid.txids,
     direction: valid.direction as 'send' | 'receive' | undefined,
     afterDate: valid.startDate,
     beforeDate: valid.endDate,
-    minCryptoExchangeAmount: valid.minAmount,
-    maxCryptoExchangeAmount: valid.maxAmount,
+    minNativeAmount: valid.minAmount,
+    maxNativeAmount: valid.maxAmount,
+    minNetworkFee: valid.minFee,
+    maxNetworkFee: valid.maxFee,
+    minBlockHeight: valid.minBlockHeight,
+    maxBlockHeight: valid.maxBlockHeight,
+    searchString: valid.searchString,
     hasMetadata: valid.hasMetadata,
     includeOrphans: valid.includeOrphans,
     sort:
@@ -104,12 +117,6 @@ const FILTER_QUERY = {
       'Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.'
     )
   ),
-  currencyCodes: asOptional(
-    doc(
-      asCommaList,
-      'Repeatable, such as `--currency-code=BTC --currency-code=USDC`.'
-    )
-  ),
   tokenIds: asOptional(
     doc(asTokenIdList, 'Repeatable. Use `null` for the chain asset.')
   ),
@@ -121,12 +128,26 @@ const FILTER_QUERY = {
   endDate: asOptional(doc(asQueryDate, 'ISO-8601, or epoch milliseconds.')),
   minAmount: asOptional(
     doc(
-      asQueryNumber,
-      'Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.'
+      asNativeAmount,
+      "The chain's smallest unit, as an integer string: 150000000, not 1.5."
     )
   ),
   maxAmount: asOptional(
-    doc(asQueryNumber, 'Upper bound, same units as minAmount.')
+    doc(asNativeAmount, 'Upper bound, same units as minAmount.')
+  ),
+  minFee: asOptional(
+    doc(asNativeAmount, "This asset's network fee, same units as minAmount.")
+  ),
+  maxFee: asOptional(doc(asNativeAmount, 'Upper bound, same units as minFee.')),
+  minBlockHeight: asOptional(
+    doc(asQueryInteger, 'Inclusive. Zero matches unconfirmed transactions.')
+  ),
+  maxBlockHeight: asOptional(doc(asQueryInteger, 'Inclusive.')),
+  searchString: asOptional(
+    doc(
+      asString,
+      'Free text over the name, notes and category the user wrote. Matches anywhere inside a word.'
+    )
   ),
   hasMetadata: asOptional(
     doc(
@@ -137,7 +158,7 @@ const FILTER_QUERY = {
   includeOrphans: asOptional(
     doc(
       asBoolean,
-      'Include transactions whose chain data a resync removed but whose metadata survives.'
+      'Include transactions the user annotated on another device that this one has not seen.'
     )
   )
 }
@@ -149,15 +170,20 @@ const FILTER_QUERY = {
  * rather than one wallet's history, so a single call spans every plugin. It
  * requires the engine to be running with the transaction database enabled.
  *
- * @note Results are one row per asset a transaction touched, so a swap that
- *   moved two assets appears twice, once per asset.
- * @note `minAmount` / `maxAmount` are exchange-denomination amounts, never
- *   native units, because native units are not comparable across chains.
+ * @note One result per transaction, whatever it touched. A swap that moved
+ *   two assets is one `EdgeTx` with two entries in `nativeAmounts`, not two
+ *   results.
+ * @note Amount and fee filters take the chain's smallest unit as an integer
+ *   string, because a 256-bit amount does not fit a number and converting
+ *   from a display figure needs a denomination this query does not have.
+ * @note A page can hold fewer than `limit` transactions: the limit counts
+ *   index rows, and a transaction touching two assets has two. Use `cursor`
+ *   to tell whether there is more, never the length of the array.
  * @returns `{ transactions, cursor }`. `cursor` is absent once the result set
  *   is exhausted; pass it back as `after` to read the next page.
  */
 export const queryAccountTransactions = route({
-  core: 'account.transactions.queryTransactions',
+  core: 'account.transactions.queryTxs',
   method: 'GET',
   path: '/account/{sessionId}/transactions',
   cli: {
@@ -165,7 +191,6 @@ export const queryAccountTransactions = route({
     flags: {
       walletId: { maps: 'walletIds', repeat: true },
       pluginId: { maps: 'pluginIds', repeat: true },
-      currencyCode: { maps: 'currencyCodes', repeat: true },
       tokenId: { maps: 'tokenIds', repeat: true },
       txid: { maps: 'txids', repeat: true }
     }
@@ -174,8 +199,8 @@ export const queryAccountTransactions = route({
     ...FILTER_QUERY,
     sort: asOptional(
       doc(
-        asValue('date', 'cryptoExchangeAmount', 'blockHeight'),
-        'Defaults to date.'
+        asValue('date', 'nativeAmount', 'networkFee', 'blockHeight'),
+        'Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.'
       )
     ),
     sortDirection: asOptional(
@@ -186,7 +211,7 @@ export const queryAccountTransactions = route({
     after: asOptional(
       doc(
         asString,
-        'Cursor from a previous page, as `effectiveDate:txid:tokenId`. Only valid with the date sort.'
+        'Cursor from a previous page. Opaque: pass it back unmodified, and only with the sort that produced it.'
       )
     )
   }).withRest,
@@ -199,43 +224,51 @@ export const queryAccountTransactions = route({
     const query = buildQuery(ctx.query.valid)
 
     const { after } = ctx.query.valid
-    if (after != null && after !== '') {
-      const parts = after.split(':')
-      if (parts.length < 2) {
-        throw engineError(
-          'BAD_REQUEST',
-          'Query "after" must look like effectiveDate:txid:tokenId',
-          400
-        )
-      }
-      query.after = {
-        effectiveDate: Number(parts[0]),
-        txid: parts[1],
-        tokenId: parts.slice(2).join(':')
-      }
+    if (after != null && after !== '') query.after = after
+
+    /*
+     * Sorting by anything but a date needs the query narrowed first.
+     *
+     * The core's indexes lead with a date, a wallet or an asset, so nothing
+     * orders the whole account by amount without reading all of it -- and the
+     * core refuses that rather than taking seconds over it. Catching it here
+     * means the caller is told they asked for something impossible, rather
+     * than being handed an internal error for a mistake of their own.
+     */
+    if (
+      query.sort != null &&
+      query.sort.field !== 'date' &&
+      query.walletIds == null &&
+      query.pluginIds == null &&
+      query.tokenIds == null &&
+      query.afterDate == null &&
+      query.beforeDate == null
+    ) {
+      throw engineError(
+        'BAD_REQUEST',
+        `Sorting by ${query.sort.field} needs the query narrowed by a wallet, plugin, asset or date range. No index orders the whole account by it.`,
+        400
+      )
     }
 
-    const page = await store.queryTransactions(query)
-    return {
-      transactions: page.transactions,
-      cursor:
-        page.cursor == null
-          ? undefined
-          : `${page.cursor.effectiveDate}:${page.cursor.txid}:${page.cursor.tokenId}`
-    }
+    const page = await store.queryTxs(query)
+    return { transactions: page.transactions, cursor: page.cursor }
   }
 })
 
 /**
  * Count and summarize transactions across every wallet.
  *
- * Computed in SQL over the matching set, so it does not page through results.
- * Takes the same filters as `query-transactions`.
+ * Computed over the whole matching set rather than by paging through it, so
+ * it does not take a `limit`. Takes the same filters as `query-transactions`.
  *
- * @returns `{ count, walletCount, orphanCount, earliestDate, latestDate }`.
+ * @note No amount total. Summing would mean arithmetic on amounts inside the
+ *   database, which it does not do -- a caller wanting one reads the
+ *   transactions and adds the exact `nativeAmounts` strings with `BigInt`.
+ * @returns `{ count, earliestDate, latestDate }`.
  */
 export const summarizeAccountTransactions = route({
-  core: 'account.transactions.summarize',
+  core: 'account.transactions.queryTxs',
   method: 'GET',
   path: '/account/{sessionId}/transactions/summary',
   cli: {
@@ -243,7 +276,6 @@ export const summarizeAccountTransactions = route({
     flags: {
       walletId: { maps: 'walletIds', repeat: true },
       pluginId: { maps: 'pluginIds', repeat: true },
-      currencyCode: { maps: 'currencyCodes', repeat: true },
       tokenId: { maps: 'tokenIds', repeat: true },
       txid: { maps: 'txids', repeat: true }
     }
@@ -255,6 +287,13 @@ export const summarizeAccountTransactions = route({
   async handler(ctx) {
     const account = getAccount(ctx)
     const store = getStore(account)
-    return await store.summarize(buildQuery(ctx.query.valid))
+
+    // One call, not two: a summary and a page answer the same predicate, and
+    // `details` is what lets the core compile it once.
+    const page = await store.queryTxs({
+      ...buildQuery(ctx.query.valid),
+      details: 'summary'
+    })
+    return page.summary
   }
 })

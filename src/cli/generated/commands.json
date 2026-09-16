@@ -1429,7 +1429,7 @@
       "command": "query-transactions",
       "method": "GET",
       "path": "/account/{sessionId}/transactions",
-      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata] [--include-orphans]",
       "help": "Query transactions across every wallet in the account at once.",
       "needsSession": true,
       "args": [
@@ -1483,13 +1483,6 @@
           "required": false
         },
         {
-          "flag": "currency-code",
-          "field": "currencyCodes",
-          "target": "query",
-          "kind": "repeat",
-          "required": false
-        },
-        {
           "flag": "token-id",
           "field": "tokenIds",
           "target": "query",
@@ -1534,6 +1527,41 @@
         {
           "flag": "max-amount",
           "field": "maxAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-fee",
+          "field": "minFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-fee",
+          "field": "maxFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-block-height",
+          "field": "minBlockHeight",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-block-height",
+          "field": "maxBlockHeight",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "search-string",
+          "field": "searchString",
           "target": "query",
           "kind": "string",
           "required": false
@@ -2116,7 +2144,7 @@
       "command": "summarize-transactions",
       "method": "GET",
       "path": "/account/{sessionId}/transactions/summary",
-      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--currency-code=<currencyCodes> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--has-metadata] [--include-orphans]",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=send|receive] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata] [--include-orphans]",
       "help": "Count and summarize transactions across every wallet.",
       "needsSession": true,
       "args": [
@@ -2130,13 +2158,6 @@
         {
           "flag": "plugin-id",
           "field": "pluginIds",
-          "target": "query",
-          "kind": "repeat",
-          "required": false
-        },
-        {
-          "flag": "currency-code",
-          "field": "currencyCodes",
           "target": "query",
           "kind": "repeat",
           "required": false
@@ -2186,6 +2207,41 @@
         {
           "flag": "max-amount",
           "field": "maxAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-fee",
+          "field": "minFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-fee",
+          "field": "maxFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-block-height",
+          "field": "minBlockHeight",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-block-height",
+          "field": "maxBlockHeight",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "search-string",
+          "field": "searchString",
           "target": "query",
           "kind": "string",
           "required": false

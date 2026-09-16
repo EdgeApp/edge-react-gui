@@ -4173,12 +4173,12 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#queryAccountTransactions">Query transactions across every wallet in the account at once.</a></h3>
       <div class="ids"><code class="cmdname">query-transactions</code><span class="src" title="Declared in">src/cli/engine/routes/accountTransactions.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>account.transactions.queryTransactions</code></p>
+    <p class="core"><span class="lbl">core</span><code>account.transactions.queryTxs</code></p>
     <div class="desc"><p>Unlike <code>get-transactions</code>, this reads the account-wide transaction database rather than one wallet&#39;s history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>query-transactions [--sort=&lt;sort&gt;] [--sort-direction=&lt;sortDirection&gt;] [--limit=&lt;limit&gt;] [--offset=&lt;offset&gt;] [--after=&lt;after&gt;] [--wallet-id=&lt;walletIds&gt; …] [--plugin-id=&lt;pluginIds&gt; …] [--currency-code=&lt;currencyCodes&gt; …] [--token-id=&lt;tokenIds&gt; …] [--txid=&lt;txids&gt; …] [--direction=send|receive] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--min-amount=&lt;minAmount&gt;] [--max-amount=&lt;maxAmount&gt;] [--has-metadata] [--include-orphans]</code></pre>
+    <pre class="usage"><code>query-transactions [--sort=&lt;sort&gt;] [--sort-direction=&lt;sortDirection&gt;] [--limit=&lt;limit&gt;] [--offset=&lt;offset&gt;] [--after=&lt;after&gt;] [--wallet-id=&lt;walletIds&gt; …] [--plugin-id=&lt;pluginIds&gt; …] [--token-id=&lt;tokenIds&gt; …] [--txid=&lt;txids&gt; …] [--direction=send|receive] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--min-amount=&lt;minAmount&gt;] [--max-amount=&lt;maxAmount&gt;] [--min-fee=&lt;minFee&gt;] [--max-fee=&lt;maxFee&gt;] [--min-block-height=&lt;minBlockHeight&gt;] [--max-block-height=&lt;maxBlockHeight&gt;] [--search-string=&lt;searchString&gt;] [--has-metadata] [--include-orphans]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4195,14 +4195,18 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   after?: string
   walletIds?: string[]
   pluginIds?: string[]
-  currencyCodes?: string[]
   tokenIds?: (string | null)[]
   txids?: string[]
   direction?: &quot;send&quot; | &quot;receive&quot;
   startDate?: Date
   endDate?: Date
-  minAmount?: number
-  maxAmount?: number
+  minAmount?: string
+  maxAmount?: string
+  minFee?: string
+  maxFee?: string
+  minBlockHeight?: number
+  maxBlockHeight?: number
+  searchString?: string
   hasMetadata?: boolean
   includeOrphans?: boolean
 }</code></pre>
@@ -4218,9 +4222,6 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;pluginIds&quot;: [
     &quot;string&quot;
   ],
-  &quot;currencyCodes&quot;: [
-    &quot;string&quot;
-  ],
   &quot;tokenIds&quot;: [
     &quot;&lt;(string&gt;&quot;
   ],
@@ -4230,15 +4231,20 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;direction&quot;: &quot;&lt;\&quot;send\&quot;&gt;&quot;,
   &quot;startDate&quot;: &quot;&lt;Date&gt;&quot;,
   &quot;endDate&quot;: &quot;&lt;Date&gt;&quot;,
-  &quot;minAmount&quot;: 0,
-  &quot;maxAmount&quot;: 0,
+  &quot;minAmount&quot;: &quot;12345&quot;,
+  &quot;maxAmount&quot;: &quot;12345&quot;,
+  &quot;minFee&quot;: &quot;12345&quot;,
+  &quot;maxFee&quot;: &quot;12345&quot;,
+  &quot;minBlockHeight&quot;: 1,
+  &quot;maxBlockHeight&quot;: 1,
+  &quot;searchString&quot;: &quot;string&quot;,
   &quot;hasMetadata&quot;: true,
   &quot;includeOrphans&quot;: true
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>sort</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Defaults to date.</td>
+  <td class="doc">Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.</td>
 </tr>
 <tr>
   <td class="k"><code>sortDirection</code></td>
@@ -4258,7 +4264,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>after</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Cursor from a previous page, as <code>effectiveDate:txid:tokenId</code>. Only valid with the date sort.</td>
+  <td class="doc">Cursor from a previous page. Opaque: pass it back unmodified, and only with the sort that produced it.</td>
 </tr>
 <tr>
   <td class="k"><code>walletIds</code></td>
@@ -4269,11 +4275,6 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>pluginIds</code></td>
   <td class="ty"><span class="t">string[]</span> <span class="flag opt">optional</span></td>
   <td class="doc">Repeatable, such as <code>--plugin-id=bitcoin --plugin-id=ethereum</code>.</td>
-</tr>
-<tr>
-  <td class="k"><code>currencyCodes</code></td>
-  <td class="ty"><span class="t">string[]</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Repeatable, such as <code>--currency-code=BTC --currency-code=USDC</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>tokenIds</code></td>
@@ -4302,13 +4303,38 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </tr>
 <tr>
   <td class="k"><code>minAmount</code></td>
-  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.</td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The chain&#39;s smallest unit, as an integer string: 150000000, not 1.5.</td>
 </tr>
 <tr>
   <td class="k"><code>maxAmount</code></td>
-  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
   <td class="doc">Upper bound, same units as minAmount.</td>
+</tr>
+<tr>
+  <td class="k"><code>minFee</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">This asset&#39;s network fee, same units as minAmount.</td>
+</tr>
+<tr>
+  <td class="k"><code>maxFee</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Upper bound, same units as minFee.</td>
+</tr>
+<tr>
+  <td class="k"><code>minBlockHeight</code></td>
+  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Inclusive. Zero matches unconfirmed transactions.</td>
+</tr>
+<tr>
+  <td class="k"><code>maxBlockHeight</code></td>
+  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Inclusive.</td>
+</tr>
+<tr>
+  <td class="k"><code>searchString</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Free text over the name, notes and category the user wrote. Matches anywhere inside a word.</td>
 </tr>
 <tr>
   <td class="k"><code>hasMetadata</code></td>
@@ -4318,7 +4344,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>includeOrphans</code></td>
   <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Include transactions whose chain data a resync removed but whose metadata survives.</td>
+  <td class="doc">Include transactions the user annotated on another device that this one has not seen.</td>
 </tr></tbody></table>
   </div>
     
@@ -4333,18 +4359,18 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div><pre class="ts"><code>unknown</code></pre>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>Results are one row per asset a transaction touched, so a swap that moved two assets appears twice, once per asset.</li><li><code>minAmount</code> / <code>maxAmount</code> are exchange-denomination amounts, never native units, because native units are not comparable across chains.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>One result per transaction, whatever it touched. A swap that moved two assets is one <code>EdgeTx</code> with two entries in <code>nativeAmounts</code>, not two results.</li><li>Amount and fee filters take the chain&#39;s smallest unit as an integer string, because a 256-bit amount does not fit a number and converting from a display figure needs a denomination this query does not have.</li><li>A page can hold fewer than <code>limit</code> transactions: the limit counts index rows, and a transaction touching two assets has two. Use <code>cursor</code> to tell whether there is more, never the length of the array.</li></ul></div>
   </section><section class="endpoint" id="summarizeAccountTransactions">
     <header>
       <h3><a href="#summarizeAccountTransactions">Count and summarize transactions across every wallet.</a></h3>
       <div class="ids"><code class="cmdname">summarize-transactions</code><span class="src" title="Declared in">src/cli/engine/routes/accountTransactions.ts</span></div>
     </header>
-    <p class="core"><span class="lbl">core</span><code>account.transactions.summarize</code></p>
-    <div class="desc"><p>Computed in SQL over the matching set, so it does not page through results. Takes the same filters as <code>query-transactions</code>.</p>
+    <p class="core"><span class="lbl">core</span><code>account.transactions.queryTxs</code></p>
+    <div class="desc"><p>Computed over the whole matching set rather than by paging through it, so it does not take a <code>limit</code>. Takes the same filters as <code>query-transactions</code>.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>summarize-transactions [--wallet-id=&lt;walletIds&gt; …] [--plugin-id=&lt;pluginIds&gt; …] [--currency-code=&lt;currencyCodes&gt; …] [--token-id=&lt;tokenIds&gt; …] [--txid=&lt;txids&gt; …] [--direction=send|receive] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--min-amount=&lt;minAmount&gt;] [--max-amount=&lt;maxAmount&gt;] [--has-metadata] [--include-orphans]</code></pre>
+    <pre class="usage"><code>summarize-transactions [--wallet-id=&lt;walletIds&gt; …] [--plugin-id=&lt;pluginIds&gt; …] [--token-id=&lt;tokenIds&gt; …] [--txid=&lt;txids&gt; …] [--direction=send|receive] [--start-date=&lt;startDate&gt;] [--end-date=&lt;endDate&gt;] [--min-amount=&lt;minAmount&gt;] [--max-amount=&lt;maxAmount&gt;] [--min-fee=&lt;minFee&gt;] [--max-fee=&lt;maxFee&gt;] [--min-block-height=&lt;minBlockHeight&gt;] [--max-block-height=&lt;maxBlockHeight&gt;] [--search-string=&lt;searchString&gt;] [--has-metadata] [--include-orphans]</code></pre>
     
     
   </div><div class="pane rest">
@@ -4356,14 +4382,18 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <pre class="ts"><code>{
   walletIds?: string[]
   pluginIds?: string[]
-  currencyCodes?: string[]
   tokenIds?: (string | null)[]
   txids?: string[]
   direction?: &quot;send&quot; | &quot;receive&quot;
   startDate?: Date
   endDate?: Date
-  minAmount?: number
-  maxAmount?: number
+  minAmount?: string
+  maxAmount?: string
+  minFee?: string
+  maxFee?: string
+  minBlockHeight?: number
+  maxBlockHeight?: number
+  searchString?: string
   hasMetadata?: boolean
   includeOrphans?: boolean
 }</code></pre>
@@ -4372,9 +4402,6 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     &quot;string&quot;
   ],
   &quot;pluginIds&quot;: [
-    &quot;string&quot;
-  ],
-  &quot;currencyCodes&quot;: [
     &quot;string&quot;
   ],
   &quot;tokenIds&quot;: [
@@ -4386,8 +4413,13 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   &quot;direction&quot;: &quot;&lt;\&quot;send\&quot;&gt;&quot;,
   &quot;startDate&quot;: &quot;&lt;Date&gt;&quot;,
   &quot;endDate&quot;: &quot;&lt;Date&gt;&quot;,
-  &quot;minAmount&quot;: 0,
-  &quot;maxAmount&quot;: 0,
+  &quot;minAmount&quot;: &quot;12345&quot;,
+  &quot;maxAmount&quot;: &quot;12345&quot;,
+  &quot;minFee&quot;: &quot;12345&quot;,
+  &quot;maxFee&quot;: &quot;12345&quot;,
+  &quot;minBlockHeight&quot;: 1,
+  &quot;maxBlockHeight&quot;: 1,
+  &quot;searchString&quot;: &quot;string&quot;,
   &quot;hasMetadata&quot;: true,
   &quot;includeOrphans&quot;: true
 }</code></pre></details>
@@ -4400,11 +4432,6 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   <td class="k"><code>pluginIds</code></td>
   <td class="ty"><span class="t">string[]</span> <span class="flag opt">optional</span></td>
   <td class="doc">Repeatable, such as <code>--plugin-id=bitcoin --plugin-id=ethereum</code>.</td>
-</tr>
-<tr>
-  <td class="k"><code>currencyCodes</code></td>
-  <td class="ty"><span class="t">string[]</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Repeatable, such as <code>--currency-code=BTC --currency-code=USDC</code>.</td>
 </tr>
 <tr>
   <td class="k"><code>tokenIds</code></td>
@@ -4433,13 +4460,38 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </tr>
 <tr>
   <td class="k"><code>minAmount</code></td>
-  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Crypto amount in the exchange denomination (1.5, not 150000000), compared absolutely.</td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">The chain&#39;s smallest unit, as an integer string: 150000000, not 1.5.</td>
 </tr>
 <tr>
   <td class="k"><code>maxAmount</code></td>
-  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
   <td class="doc">Upper bound, same units as minAmount.</td>
+</tr>
+<tr>
+  <td class="k"><code>minFee</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">This asset&#39;s network fee, same units as minAmount.</td>
+</tr>
+<tr>
+  <td class="k"><code>maxFee</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Upper bound, same units as minFee.</td>
+</tr>
+<tr>
+  <td class="k"><code>minBlockHeight</code></td>
+  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Inclusive. Zero matches unconfirmed transactions.</td>
+</tr>
+<tr>
+  <td class="k"><code>maxBlockHeight</code></td>
+  <td class="ty"><span class="t">number</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Inclusive.</td>
+</tr>
+<tr>
+  <td class="k"><code>searchString</code></td>
+  <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
+  <td class="doc">Free text over the name, notes and category the user wrote. Matches anywhere inside a word.</td>
 </tr>
 <tr>
   <td class="k"><code>hasMetadata</code></td>
@@ -4449,7 +4501,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>includeOrphans</code></td>
   <td class="ty"><span class="t">boolean</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Include transactions whose chain data a resync removed but whose metadata survives.</td>
+  <td class="doc">Include transactions the user annotated on another device that this one has not seen.</td>
 </tr></tbody></table>
   </div>
     
@@ -4464,7 +4516,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 </div><pre class="ts"><code>unknown</code></pre>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
   </div>
-    
+    <div class="pane notes"><h4>Notes</h4><ul><li>No amount total. Summing would mean arithmetic on amounts inside the database, which it does not do -- a caller wanting one reads the transactions and adds the exact <code>nativeAmounts</code> strings with <code>BigInt</code>.</li></ul></div>
   </section><h3 class="sub" id="swap">Swap quotes</h3>
           <div class="groupdoc"><p>Cross-asset exchange. Quotes are live objects held server-side under a <code>swap_</code> handle, so approving one means naming its <code>objectId</code> rather than re-uploading the quote.</p>
 </div>
