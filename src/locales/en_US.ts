@@ -1721,8 +1721,6 @@ const strings = {
   wc_sign_message_title: 'Signature Request',
   wc_sign_message_warning_text:
     'Signing proves you control this address. It moves no funds, but only approve it for an application you trust.',
-  wc_sign_message_dapp: 'DApp',
-  wc_sign_message_wallet: 'Wallet',
   wc_sign_message_address: 'Address',
   wc_sign_message_message: 'Message',
   wc_sign_message_approve_button: 'Sign',

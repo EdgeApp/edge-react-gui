@@ -8,7 +8,7 @@ import {
 } from '@walletconnect/utils'
 import type { Web3WalletTypes } from '@walletconnect/web3wallet'
 import type { Web3Wallet } from '@walletconnect/web3wallet/dist/types/client'
-import type { EdgeAccount, EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
+import type { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
@@ -22,8 +22,9 @@ import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
 import {
   forgetSessionWallet,
-  lookupSessionWallet,
-  rememberSessionWallet
+  readActiveSessionWallets,
+  rememberSessionWallet,
+  type SessionWallets
 } from '../util/walletConnectSessionStore'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
@@ -93,10 +94,18 @@ export function useWalletConnect(): WalletConnect {
     const client = await getClient()
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
-    const accounts = await getAccounts(currencyWallets)
+    const sessionWallets = await readActiveSessionWallets(
+      account,
+      Object.keys(sessions)
+    )
+    const getAccountsOnce = makeAccountsLookup(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = await resolveSessionWalletId(account, session, accounts)
+      const walletId = await resolveSessionWalletId(
+        session,
+        sessionWallets,
+        getAccountsOnce
+      )
       if (walletId == null || currencyWallets[walletId] == null) continue
 
       const connection = parseConnection(session, walletId)
@@ -336,7 +345,7 @@ const getSupportedNamespaces = (
   }
 }
 
-export const getAccounts = async (
+const getAccounts = async (
   currencyWallets: Record<string, EdgeCurrencyWallet>
 ): Promise<Map<string, string>> => {
   const map = new Map<string, string>()
@@ -377,17 +386,36 @@ export const getWalletConnectAddress = async (
 }
 
 /**
+ * Defers the account map until a session fails to resolve from the stored
+ * mapping, and builds it at most once however many sessions miss. `getAccounts`
+ * makes a `getAddresses` bridge call for every WalletConnect-capable wallet, so
+ * building it per session costs one round trip per wallet per session.
+ */
+export const makeAccountsLookup = (
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+): (() => Promise<Map<string, string>>) => {
+  let accounts: Promise<Map<string, string>> | undefined
+  return async () => {
+    accounts ??= getAccounts(currencyWallets)
+    return await accounts
+  }
+}
+
+/**
  * The wallet that approved a session: the remembered mapping first, since it
  * survives receive-address rotation, then the address carried on the session.
  */
 export const resolveSessionWalletId = async (
-  account: EdgeAccount,
   session: SessionTypes.Struct,
-  accounts: Map<string, string>
+  sessionWallets: SessionWallets,
+  getAccountsOnce: () => Promise<Map<string, string>>
 ): Promise<string | undefined> => {
-  const remembered = await lookupSessionWallet(account, session.topic)
+  const remembered = sessionWallets[session.topic]
   if (remembered != null) return remembered
-  return getWalletIdFromSessionNamespace(session.namespaces, accounts)
+  return getWalletIdFromSessionNamespace(
+    session.namespaces,
+    await getAccountsOnce()
+  )
 }
 
 export const getWalletIdFromSessionNamespace = (

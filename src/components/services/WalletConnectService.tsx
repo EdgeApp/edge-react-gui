@@ -10,8 +10,8 @@ import * as React from 'react'
 import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import {
-  getAccounts,
   getClient,
+  makeAccountsLookup,
   resolveSessionWalletId,
   useWalletConnect,
   waitingClients,
@@ -19,6 +19,7 @@ import {
 } from '../../hooks/useWalletConnect'
 import { asLegacyTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
+import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -111,8 +112,15 @@ export const WalletConnectService: React.FC<Props> = props => {
     const session = sessions[request.topic]
     if (session == null) return
     const { currencyWallets } = account
-    const accounts = await getAccounts(currencyWallets)
-    const walletId = await resolveSessionWalletId(account, session, accounts)
+    const sessionWallets = await readActiveSessionWallets(
+      account,
+      Object.keys(sessions)
+    )
+    const walletId = await resolveSessionWalletId(
+      session,
+      sessionWallets,
+      makeAccountsLookup(currencyWallets)
+    )
     const wallet = walletId == null ? undefined : currencyWallets[walletId]
     if (wallet == null) {
       // Leaving the request unanswered would hang the dapp until its own

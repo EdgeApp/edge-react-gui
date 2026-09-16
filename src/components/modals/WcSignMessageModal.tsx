@@ -2,6 +2,7 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
+import { base16, base64 } from 'rfc4648'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -73,12 +74,15 @@ export const WcSignMessageModal: React.FC<Props> = props => {
       // byte, which SegWit verifiers require and which collapses to the legacy
       // encoding for non-SegWit addresses.
       // eslint-disable-next-line @typescript-eslint/no-deprecated
-      const signature = await wallet.signMessage(message, {
+      const signatureBase64 = await wallet.signMessage(message, {
         otherParams: { publicAddress, signatureFormat: 'bip137' }
       })
       await walletConnect.approveRequest(topic, requestId, {
         address: publicAddress,
-        signature
+        // The bip122 spec carries the signature as hex without a `0x` prefix,
+        // while the UTXO plugin signs to base64. A spec-following dapp hex-
+        // decodes whatever it gets, and base64 decodes to nothing.
+        signature: base16.stringify(base64.parse(signatureBase64)).toLowerCase()
       })
       Airship.show(bridge => (
         <FlashNotification
@@ -128,10 +132,10 @@ export const WcSignMessageModal: React.FC<Props> = props => {
           type="warning"
         />
         <EdgeCard icon={dAppIcon}>
-          <EdgeRow title={lstrings.wc_sign_message_dapp} body={dAppName} />
+          <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </EdgeCard>
         <EdgeCard icon={walletImageUri}>
-          <EdgeRow title={lstrings.wc_sign_message_wallet} body={walletName} />
+          <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} />
         </EdgeCard>
         <EdgeCard>
           <EdgeRow
