@@ -228,6 +228,7 @@ export const asEnvConfig = asObject({
   // Core plugin options:
   ABSTRACT_INIT: asCorePluginInit(asEvmApiKeys),
   ARBITRUM_INIT: asCorePluginInit(asEvmApiKeys),
+  ARC_INIT: asCorePluginInit(asEvmApiKeys),
   AMOY_INIT: asCorePluginInit(asEvmApiKeys),
   ALGORAND_INIT: asOptional(asBoolean, true),
   AVALANCHE_INIT: asCorePluginInit(asEvmApiKeys),
