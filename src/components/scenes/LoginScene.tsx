@@ -68,49 +68,44 @@ export const LoginScene: React.FC<Props> = props => {
   React.useEffect(() => {
     if (!firstRun) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN } = ENV
-    if (
-      YOLO_USERNAME != null &&
-      (Boolean(YOLO_PASSWORD) || Boolean(YOLO_PIN))
-    ) {
+
+    const yoloLogin = (login: () => Promise<EdgeAccount>): void => {
       firstRun = false
-      if (YOLO_PIN != null) {
-        context
-          .loginWithPIN(YOLO_USERNAME, YOLO_PIN)
-          .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
-          })
-          .catch((error: unknown) => {
-            showError(error)
-          })
-      }
-      if (YOLO_PASSWORD != null) {
-        context
-          .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
-          .then(async account => {
-            await dispatch(initializeAccount(navigation, account))
-          })
-          .catch((error: unknown) => {
-            showError(error)
-          })
-      }
-    } else if (
-      YOLO_USERNAME == null &&
-      account.username == null &&
-      context.localUsers[0]?.loginId != null &&
-      typeof YOLO_PIN === 'string'
-    ) {
-      // Allow YOLO_PIN with light accounts
-      firstRun = false
-      context
-        .loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, {
-          useLoginId: true
-        })
+      login()
         .then(async account => {
           await dispatch(initializeAccount(navigation, account))
         })
         .catch((error: unknown) => {
           showError(error)
         })
+    }
+
+    const hasPassword = YOLO_PASSWORD != null && YOLO_PASSWORD !== ''
+    const hasPin = YOLO_PIN != null && YOLO_PIN !== ''
+
+    if (YOLO_USERNAME != null && hasPassword) {
+      // Password login is the only method that works without a login stash, so
+      // it wins when both it and a PIN are configured. Running both would start
+      // two separate accounts and race their navigations:
+      yoloLogin(
+        async () =>
+          await context.loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
+      )
+    } else if (YOLO_USERNAME != null && hasPin) {
+      yoloLogin(async () => await context.loginWithPIN(YOLO_USERNAME, YOLO_PIN))
+    } else if (
+      YOLO_USERNAME == null &&
+      hasPin &&
+      account.username == null &&
+      context.localUsers[0]?.loginId != null
+    ) {
+      // Allow YOLO_PIN with light accounts
+      yoloLogin(
+        async () =>
+          await context.loginWithPIN(context.localUsers[0].loginId, YOLO_PIN, {
+            useLoginId: true
+          })
+      )
     }
   }, [account, context, dispatch, navigation])
 
