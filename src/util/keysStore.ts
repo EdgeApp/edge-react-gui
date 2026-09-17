@@ -181,8 +181,8 @@ function applyPublicRollup(raw: unknown): void {
 }
 
 /**
- * Wraps `fetchKeysInner` so every signed attempt — cold-start gate or the warm
- * `cacheForNextLaunch` refresh — falls back to the unsigned public rollup when
+ * Wraps `fetchKeysInner` so every signed attempt (cold-start gate or the warm
+ * `cacheForNextLaunch` refresh) falls back to the unsigned public rollup when
  * nothing populated `infoServerData`.
  *
  * `initInfoServer` cannot make this call itself: at the point it runs, the
@@ -301,7 +301,7 @@ async function doInitializeKeys(): Promise<void> {
   // An unmergeable cache is treated as no warm cache, so the fetch below still
   // runs. Reporting `cache` for a payload that never reached KEYS would claim a
   // tier the app is not actually on. After a settings timeout the in-memory
-  // copy may still be empty even though a valid cache is on disk — we still
+  // copy may still be empty even though a valid cache is on disk, so we still
   // race the network, then await `settingsLoad` before accepting baked-in so a
   // late disk read can still win.
   let cache = getKeysCache()
@@ -451,7 +451,7 @@ function cacheForNextLaunch(pending?: Promise<FetchedKeys | null>): void {
         console.warn(
           `initializeKeys: background refresh timed out after ${BACKGROUND_CACHE_TIMEOUT_MS}ms`
         )
-        // Timeout only stops waiting — still cache a late success for next launch.
+        // Timeout only stops waiting: still cache a late success for next launch.
         promise
           .then(async late => {
             if (late != null) await cacheKeys(late)
