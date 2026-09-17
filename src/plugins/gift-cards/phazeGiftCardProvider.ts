@@ -40,17 +40,6 @@ const STORE_ID = 'phaze-prod'
 // race conditions when multiple devices create identities simultaneously.
 const IDENTITY_KEY_PREFIX = 'identity-'
 
-export const hasStoredPhazeIdentity = async (
-  account: EdgeAccount
-): Promise<boolean> => {
-  try {
-    const itemIds = await account.dataStore.listItemIds(STORE_ID)
-    return itemIds.some(id => id.startsWith(IDENTITY_KEY_PREFIX))
-  } catch {
-    return false
-  }
-}
-
 // Cleaner for individual identity storage (PhazeUser fields + uniqueId)
 interface StoredIdentity extends PhazeUser {
   uniqueId: string
@@ -161,6 +150,7 @@ export interface PhazeGiftCardProvider {
   /**
    * Fetch orders from ALL identities stored for this account.
    * Used in GiftCardListScene to aggregate orders across multi-device scenarios.
+   * Throws when every identity's query fails.
    */
   getAllOrdersFromAllIdentities: (
     account: EdgeAccount
@@ -494,12 +484,16 @@ export const makePhazeGiftCardProvider = (
 
       // Save current userApiKey to restore later
       const currentKey = api.getUserApiKey()
+      let lastError: unknown
+      let queriedCount = 0
+      let failedCount = 0
 
       for (const identity of identities) {
         if (identity.userApiKey == null) {
           continue
         }
 
+        queriedCount++
         try {
           // Temporarily set the API key for this identity
           api.setUserApiKey(identity.userApiKey)
@@ -515,11 +509,18 @@ export const makePhazeGiftCardProvider = (
         } catch (err: unknown) {
           // Log error but continue with other identities
           debugLog('phaze', 'Error fetching orders for identity:', err)
+          lastError = err
+          failedCount++
         }
       }
 
       // Restore original userApiKey
       api.setUserApiKey(currentKey)
+
+      // One identity failing still leaves a useful partial list, but every
+      // identity failing is an outage the caller needs to show, not an empty
+      // order history:
+      if (queriedCount > 0 && failedCount === queriedCount) throw lastError
 
       return allOrders
     },

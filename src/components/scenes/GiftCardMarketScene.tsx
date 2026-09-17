@@ -7,8 +7,10 @@ import Animated from 'react-native-reanimated'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
 import {
+  BITREFILL_PLUGIN_ID,
   isGiftCardBrandDisabled,
-  isGiftCardProviderDisabled
+  isGiftCardProviderDisabled,
+  PHAZE_PLUGIN_ID
 } from '../../actions/GiftCardInfoActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
@@ -46,12 +48,6 @@ type ViewMode = 'grid' | 'list'
 
 // Internal constant for "All" category comparison - display uses lstrings.string_all
 const CATEGORY_ALL = 'All'
-
-// Provider IDs used as keys in the info-server giftCardInfo.disablePlugins map.
-// Phaze supports per-brand granularity (keyed by productId); Bitrefill is a
-// webview, so only whole-provider disabling applies.
-const PHAZE_PLUGIN_ID = 'phaze'
-const BITREFILL_PLUGIN_ID = 'bitrefill'
 
 /**
  * Formats a normalized category for display:
@@ -127,6 +123,12 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
 
   // Provider (requires API key configured)
   const phazeConfig = ENV.PLUGIN_API_KEYS?.phaze
+
+  const isBitrefillDisabled = isGiftCardProviderDisabled(
+    giftCardDisablePlugins,
+    BITREFILL_PLUGIN_ID
+  )
+
   const { provider, isReady } = useGiftCardProvider({
     account,
     apiKey: phazeConfig?.apiKey ?? '',
@@ -359,9 +361,7 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   })
 
   const handleBitrefillPress = useHandler(() => {
-    navigation.navigate('pluginView', {
-      plugin: guiPlugins.bitrefill
-    } as any)
+    navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
   })
 
   const handleCategoryPress = useHandler((category: string) => {
@@ -498,13 +498,9 @@ export const GiftCardMarketScene: React.FC<Props> = props => {
   // Bitrefill provider is remotely disabled)
   const listData = React.useMemo(() => {
     const base = filteredItems ?? []
-    if (
-      isGiftCardProviderDisabled(giftCardDisablePlugins, BITREFILL_PLUGIN_ID)
-    ) {
-      return base
-    }
+    if (isBitrefillDisabled) return base
     return [...base, BITREFILL_ITEM]
-  }, [filteredItems, giftCardDisablePlugins])
+  }, [filteredItems, isBitrefillDisabled])
 
   return (
     <SceneWrapper

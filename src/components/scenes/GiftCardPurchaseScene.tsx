@@ -68,6 +68,9 @@ const assetKey = (asset: EdgeAsset): string =>
 // Zoom factor to crop out edge artifacts from source images
 const ZOOM_FACTOR = 1.03
 
+// Quote lifetime to assume when Phaze omits quoteExpiry
+const DEFAULT_QUOTE_EXPIRY_MS = 9 * 60 * 1000
+
 // Style for the zoomed image container
 const zoomedContainerStyle: ViewStyle = {
   position: 'absolute',
@@ -506,8 +509,11 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       )
       const nativeAmount = String(ceil(mul(quantity, multiplier), 0))
 
-      // Calculate expiry time (quoteExpiry is Unix timestamp in milliseconds)
-      const expiryDate = new Date(orderResponse.quoteExpiry)
+      // Calculate expiry time (quoteExpiry is Unix timestamp in milliseconds).
+      // Phaze sometimes omits it, so assume the quote lasts the default window:
+      const expiryDate = new Date(
+        orderResponse.quoteExpiry ?? Date.now() + DEFAULT_QUOTE_EXPIRY_MS
+      )
       const isoExpireDate = expiryDate.toISOString()
 
       // Navigate to SendScene2
