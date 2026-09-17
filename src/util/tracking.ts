@@ -175,7 +175,7 @@ export interface TrackingValues extends LoginTrackingValues {
 //
 // Host lives in config.json (`POSTHOG_API_HOST`); the api key lives in
 // keys.json as top-level `POSTHOG_API_KEY` (KEYS.POSTHOG_API_KEY). Either half
-// missing skips PostHog entirely — a realistic misconfiguration after the split.
+// missing skips PostHog entirely, a realistic misconfiguration after the split.
 const posthogApiKey =
   typeof KEYS.POSTHOG_API_KEY === 'string' && KEYS.POSTHOG_API_KEY !== ''
     ? KEYS.POSTHOG_API_KEY
