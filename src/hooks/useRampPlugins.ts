@@ -53,8 +53,13 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
             // Create a minimal config for the plugin
             const initOptions = pluginMaps.rampPlugins[pluginId]
 
-            // If there is no init option defined for the plugin, simply skip over it
-            if (initOptions == null) {
+            // Skip a plugin with no init options, and equally one whose
+            // entry is still a bare `true`: that means "enabled, but the keys
+            // side has not landed yet", and every ramp plugin runs its
+            // `asInitOptions` object cleaner over this value, so passing the
+            // sentinel through throws and empties buy/sell for the session.
+            // `initializeProviders.ts` carries the same guard.
+            if (initOptions == null || typeof initOptions === 'boolean') {
               continue
             }
 
