@@ -13,7 +13,13 @@ export function jsonReplacer(_key: string, value: unknown): unknown {
   if (value instanceof Map) {
     const obj: Record<string, unknown> = {}
     for (const [k, v] of value.entries()) {
-      obj[String(k)] = v
+      /*
+       * The core's token-keyed maps use `null` for a chain's own asset, and
+       * spell that `''` in JSON. `String(null)` would write `"null"` --
+       * indistinguishable from a token actually called that, which is the
+       * exact confusion those maps exist to avoid.
+       */
+      obj[k == null ? '' : String(k)] = v
     }
     return obj
   }
