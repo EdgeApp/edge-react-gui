@@ -23,6 +23,7 @@ import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
 import { getNativeApiSigner, isUsableApiKey } from './edgeApiSigner'
 import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
+import { debugLog } from './logger'
 import { fetchPublicRollup, infoServerData } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
 import { runOnce } from './runOnce'
@@ -390,8 +391,9 @@ async function doInitializeKeys(): Promise<void> {
 function logTier(assuranceLevel?: string): void {
   const marker = (value: unknown): string =>
     typeof value === 'string' && value.startsWith('LAYER-') ? value : '(none)'
-  console.log(
-    `[keys] tier=${keysTier} assurance=${assuranceLevel ?? 'none'} ` +
+  debugLog(
+    'keys',
+    `tier=${keysTier} assurance=${assuranceLevel ?? 'none'} ` +
       `markers=COINGECKO:${marker(globalKeys.COINGECKO_API_KEY)},` +
       `UNSTOPPABLE:${marker(globalKeys.UNSTOPPABLE_DOMAINS_API_KEY)},` +
       `IP:${marker(globalKeys.IP_API_KEY)},` +

@@ -103,6 +103,20 @@ wrote down.
 | `src/__tests__/configKeysMerge.test.ts` | Golden-equivalence + deep-merge + redaction unit tests.                                                                                                                                          |
 | `scripts/configure.ts`                  | Runs `makeConfig(asConfigJson.withRest, 'config.json')` and `makeConfig(asKeysJson.withRest, 'keys.json')` so `prepare` can bootstrap both files without writing secrets into `config.json`.     |
 
+## Debug logging
+
+Which tier of keys won, and whether the native signer was used, is reported
+through `debugLog('keys', ...)` rather than a bare `console.log`, so nothing is
+printed in a normal build. Turn it on in `config.json`:
+
+```json
+"LOG_CONFIG": { "enabledCategories": ["keys"] }
+```
+
+That covers `logTier` in `src/util/keysStore.ts` (tier, assurance level, and
+the `LAYER-*` sentinels of a matched overlay) and the signer summary in
+`src/components/services/EdgeCoreManager.tsx`. Neither prints key material.
+
 ## The CONFIG / KEYS / pluginMaps schema
 
 `asConfigJson` and `asKeysJson` (`src/configKeysSchema.ts`) define the two
