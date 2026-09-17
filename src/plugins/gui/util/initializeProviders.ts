@@ -41,7 +41,7 @@ export async function initializeProviders<T>(
 
     const apiKeys = pluginMaps.guiApiKeys[providerFactory.providerId]
     // A bare boolean means "enabled in config.json, but no credentials on the
-    // keys side yet" — the shipped state whenever slimKeysJson has stripped
+    // keys side yet", the shipped state whenever slimKeysJson has stripped
     // the plugin maps and the signed appKeys fetch has not landed. Passing it
     // through reaches the provider's `asApiKeys` cleaner and throws.
     //
