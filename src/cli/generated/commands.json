@@ -1229,6 +1229,15 @@
       ]
     },
     {
+      "command": "get-transaction-settings",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions/settings",
+      "usage": "get-transaction-settings",
+      "help": "Read this device's transaction settings.",
+      "needsSession": true,
+      "args": []
+    },
+    {
       "command": "get-wallet-info",
       "method": "GET",
       "path": "/account/{sessionId}/get-wallet-info",
@@ -1839,6 +1848,23 @@
           "field": "metadata",
           "target": "body",
           "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "set-default-fiat",
+      "method": "POST",
+      "path": "/account/{sessionId}/transactions/settings",
+      "usage": "set-default-fiat --default-iso-fiat=<defaultIsoFiat>",
+      "help": "Change the currency every stored fiat amount is in.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "default-iso-fiat",
+          "field": "defaultIsoFiat",
+          "target": "body",
+          "kind": "string",
           "required": true
         }
       ]
