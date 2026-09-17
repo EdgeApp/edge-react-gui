@@ -72,7 +72,7 @@ export function makeNativeApiSigner(): EdgeApiSigner {
     async signMessage(message: string) {
       const signed = asSignedMessage(await module.signMessage(message))
       // Stub builds embed a placeholder that is not a valid Authorization value.
-      if (!isUsableApiKey(signed.apiKey) || signed.signature === '') {
+      if (!isUsableApiKey(signed.apiKey) || !isUsableApiKey(signed.signature)) {
         throw new Error(
           'EdgeApiSigner returned an unusable apiKey or signature'
         )
