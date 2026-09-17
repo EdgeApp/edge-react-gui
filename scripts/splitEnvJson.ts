@@ -2,7 +2,7 @@
  * Split a legacy `env.json` into `config.json` (non-secret), `keys.json`
  * (secret) and `edgeKey.json` (`EDGE_API_KEY` / `EDGE_API_SECRET`, rewritten as
  * `{apiKey, apiSecret}` for the native HMAC codegen). Classification lives
- * here with the CLI — it is migration-only and is not part of the app runtime.
+ * here with the CLI: it is migration-only and is not part of the app runtime.
  *
  * Usage:
  *   socket npm run split-env-json
@@ -515,7 +515,7 @@ function main(): void {
     rampPlugins: Object.keys(keys.rampPlugins).length
   }
 
-  // Counts only — never dump field values (keys.json / edgeKey.json are secret).
+  // Counts only: never dump field values (keys.json / edgeKey.json are secret).
   console.log(`Wrote ${configPath}`)
   console.log(`  plugin map sizes: ${JSON.stringify(configPluginCounts)}`)
   console.log(`Wrote ${keysPath}`)
@@ -530,7 +530,7 @@ function main(): void {
     console.log(`Wrote ${edgeKeyPath}`)
     if (edgeKey.apiKey == null || edgeKey.apiSecret == null) {
       console.log(
-        '  warning: incomplete — apiKey and apiSecret are both required'
+        '  warning: incomplete, apiKey and apiSecret are both required'
       )
     }
   }

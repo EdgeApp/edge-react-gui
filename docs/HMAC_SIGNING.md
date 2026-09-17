@@ -32,7 +32,7 @@ Native modules (`ios/edge/EdgeApiSigner.m`,
 `android/.../EdgeApiSignerModule.kt`) expose `signMessage` and `getApiKey`.
 `src/util/edgeApiSigner.ts` wraps that module as an `EdgeApiSigner` whose
 `signMessage(message)` returns `{ apiKey, signature }` (base64 HMAC-SHA256).
-Every native build — debug, beta, or release — needs a real `edgeKey.json`:
+Every native build (debug, beta, or release) needs a real `edgeKey.json`:
 the Xcode and Gradle generate tasks clear `EDGE_API_SIGNER_ALLOW_STUB` and fail
 when the secret is missing. The stub (`EDGE_API_SIGNER_ALLOW_STUB=1`) exists
 only so `npm run prepare` can complete on a checkout without secrets, e.g. for
@@ -109,7 +109,7 @@ x-attestation-token: {ES256 JWT}   # optional
 
 A valid HMAC is not enough to receive hardware-gated keys. The info server
 walks an ordered `layers` array; see the info-server INFO_ROLLUP doc. A
-present-but-invalid attestation token is **HTTP 401** — the GUI must not treat
+present-but-invalid attestation token is **HTTP 401**: the GUI must not treat
 that as the unattested floor.
 
 Native `apiSigner.signMessage` is preferred when `EdgeApiSigner` is linked
