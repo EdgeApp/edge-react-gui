@@ -194,7 +194,7 @@ export const initInfoServer = async (): Promise<void> => {
   // Launch: skip a parallel unsigned fetch when keys boot will sign one (that
   // response fills in-memory rollup + appKeys). Unsigned is enough when this
   // build has no HMAC credentials. When the signed path is taken but fails to
-  // populate the rollup, `keysStore` calls `fetchPublicRollup` directly — the
+  // populate the rollup, `keysStore` calls `fetchPublicRollup` directly: the
   // decision cannot be made here, because at this point the signed fetch is
   // usually still in flight rather than failed.
   if (infoServerData.rollup == null) {

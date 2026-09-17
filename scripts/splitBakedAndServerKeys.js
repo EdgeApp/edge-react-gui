@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * After `split-env-json`, split a full `keys.json` into:
- *   - baked `keys.json` — local-only secrets (same keep-list as slimKeysJson)
- *   - `appKeys.json` — Couch / infoRollup payload (plugin maps + globalKeys)
+ *   - baked `keys.json`: local-only secrets (same keep-list as slimKeysJson)
+ *   - `appKeys.json`: Couch / infoRollup payload (plugin maps + globalKeys)
  *
  * Usage:
  *   node -r sucrase/register scripts/splitBakedAndServerKeys.js [dir]

@@ -150,7 +150,7 @@ The four plugin maps, each `Record<pluginId, init>`, live on `pluginMaps` after
   Each value is the same `object | true | false` union as before.
 - **`swapPlugins`**: swap plugin inits keyed by real swap plugin ID
   (`changehero`, `thorchain`, `0xgasless`, ...).
-- **`guiApiKeys`** — GUI fiat / gift-card provider credentials (formerly
+- **`guiApiKeys`**: GUI fiat / gift-card provider credentials (formerly
   `PLUGIN_API_KEYS`: banxa, paybis, phaze, revolut, simplex, …). WalletConnect
   is **not** in this map; its `projectId` is `globalKeys.WALLETCONNECT_PROJECT_ID`.
 - **`rampPlugins`**: ramp plugin inits (formerly `RAMP_PLUGIN_INITS`). Kept
@@ -201,7 +201,7 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
    `globalKeys` section are normalized by `nestGlobalKeys`. Consumers read
    `globalKeys.COINGECKO_API_KEY` (or `KEYS.globalKeys.…`); there is no
    top-level `KEYS.COINGECKO_API_KEY` after nesting.
-4. **Currency & swap plugins** — for each ID present in config or keys
+4. **Currency & swap plugins**: for each ID present in config or keys
    `corePlugins` / `swapPlugins` (union), the non-secret config value is
    combined with the matching secret from `KEYS.corePlugins[id]` /
    `KEYS.swapPlugins[id]` via `mergePluginInit`:
@@ -212,8 +212,8 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
      object (an object always wins over a bare boolean enablement flag);
    - otherwise the two are deep-merged with the keys side winning.
    Extra remote IDs on `pluginMaps.corePlugins` do **not** register a new
-   engine — `corePlugins.ts` is a hardcoded table.
-5. **GUI provider keys (`guiApiKeys`)** — union of config and keys IDs, merged
+   engine: `corePlugins.ts` is a hardcoded table.
+5. **GUI provider keys (`guiApiKeys`)**: union of config and keys IDs, merged
    per ID. Currency/swap secrets do not live here.
 6. **Ramp plugins (`rampPlugins`)**: `CONFIG.rampPlugins[id]` deep-merged with
    `KEYS.rampPlugins[id]` per ID.
@@ -263,7 +263,7 @@ Every reader was re-pointed from the old flat `ENV` / `*_INIT` /
     `thorchainrunestagenet` both read `corePlugins.thorchainrune`.
   - `src/hooks/useRampPlugins.ts`: `pluginMaps.rampPlugins[pluginId]`.
   - `src/plugins/gui/util/initializeProviders.ts`, `fetchRevolut.ts`, and the
-    gift-card paths — `pluginMaps.guiApiKeys.*`.
+    gift-card paths: `pluginMaps.guiApiKeys.*`.
   - Inner-field readers: `FioAddressUtils.ts` (`pluginMaps.corePlugins.fio`),
     `thorchainYield.ts` + `stakePlugins.ts` (`pluginMaps.swapPlugins.thorchain`),
     `fantomEcosystem.ts` (`pluginMaps.corePlugins.fantom`),
