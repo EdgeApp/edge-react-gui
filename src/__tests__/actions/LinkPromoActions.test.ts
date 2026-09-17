@@ -276,7 +276,7 @@ describe('launchDeepLink wallet wait', () => {
     })
   })
 
-  it('drops a link that arrives while an earlier one is showing its picker', async () => {
+  it('drops an exchange link that arrives while a picker is open', async () => {
     let pick: (result: any) => void = () => {}
     mockPickWallet.mockImplementationOnce(
       async () =>
@@ -325,6 +325,45 @@ describe('launchDeepLink wallet wait', () => {
       type: 'LINK_PROMO/SET',
       data: { linkPromo: { promoId: 'card1', tab: 'buyTab' } }
     })
+  })
+
+  it('follows a walletConnect link that arrives while a picker is open', async () => {
+    mockPickWallet.mockImplementationOnce(
+      async () => await new Promise(() => {})
+    )
+    const account: any = {
+      loggedIn: true,
+      activeWalletIds: ['a'],
+      currencyWallets: { a: {} },
+      currencyWalletErrors: {},
+      currencyConfig: { bitcoin: { allTokens: {} } },
+      watch: () => () => {}
+    }
+    const state: any = {
+      core: { account, context: { clientId: '1111111111111111' } },
+      ui: { settings: { defaultIsoFiat: 'iso:USD' } }
+    }
+    const dispatch: any = jest.fn()
+    const navigation: any = { navigate: jest.fn(), push: jest.fn() }
+
+    // The exchange link's picker is up and never settles:
+    launchDeepLink(navigation, buyLink)(dispatch, () => state).catch(() => {})
+    for (let i = 0; i < 20; i++) await Promise.resolve()
+    const picksWhileOpen = mockPickWallet.mock.calls.length
+
+    // A link arriving from another app raises no picker of its own, and
+    // `DeepLinkingManager` has already cleared its pending slot, so dropping
+    // it would lose it:
+    const followed = await launchDeepLink(navigation, {
+      type: 'walletConnect',
+      uri: 'wc:1@2?relay-protocol=irn'
+    })(dispatch, () => state)
+
+    expect(followed).toBe(true)
+    expect(navigation.push).toHaveBeenCalledWith('wcConnections', {
+      uri: 'wc:1@2?relay-protocol=irn'
+    })
+    expect(mockPickWallet.mock.calls.length).toBe(picksWhileOpen)
   })
 
   it('does not let a picker left open by one account block the next', async () => {

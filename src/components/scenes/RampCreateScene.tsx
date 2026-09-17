@@ -31,6 +31,7 @@ import {
   type SupportedPluginResult,
   useSupportedPlugins
 } from '../../hooks/useSupportedPlugins'
+import { useTabBlur } from '../../hooks/useTabBlur'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
@@ -598,54 +599,38 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
+  const tab = direction === 'buy' ? 'buyTab' : 'sellTab'
+
+  // Leaving the tab ends the link promo's entry into this flow, which is
+  // tracked separately: the promo survives a link that pinned nothing, so it
+  // cannot ride the params guard below.
+  useLinkPromoRelease(navigation, tab)
+
   // Drop the deep link pin when the user leaves the buy/sell tab. React
   // Navigation keeps route params on the tab's route for the whole app
   // session, so leaving them in place would pin every later visit to the tab,
-  // not just the flow the link opened. The listener is on the TAB, so stepping
-  // forward to the option list and back keeps the pin: only leaving the tab
-  // ends it. Subscribing on `navigation` alone (never on the params) also
-  // keeps a warm deep link that arrives while the tab is focused from being
-  // cleared by a re-subscription.
-  // The pins are read through a ref so the guard below can see them without
-  // entering the dep array, which is what the `navigation`-only subscription
-  // above depends on.
-  const pinsRef = React.useRef({
-    pinnedProviderId,
-    pinnedPaymentType,
-    forcedWalletResult
-  })
-  pinsRef.current = { pinnedProviderId, pinnedPaymentType, forcedWalletResult }
-
-  // Leaving the tab also ends the link promo's entry into this flow, which is
-  // tracked separately: the promo survives a link that pinned nothing, so it
-  // cannot ride the params guard below.
-  useLinkPromoRelease(navigation, direction === 'buy' ? 'buyTab' : 'sellTab')
-
-  React.useEffect(() => {
-    const tabNavigation = navigation.getParent()
-    if (tabNavigation == null) return
-    return tabNavigation.addListener('blur', () => {
-      const { pinnedProviderId, pinnedPaymentType, forcedWalletResult } =
-        pinsRef.current
-      // Nothing to drop: tab switching is the app's most-travelled path, and a
-      // user who never tapped a deep link would otherwise pay a params update
-      // plus a re-render every time they leave the tab.
-      if (
-        pinnedProviderId == null &&
-        pinnedPaymentType == null &&
-        forcedWalletResult == null
-      )
-        return
-      // The forced wallet is link-scoped like the pins: leaving it set would
-      // keep overriding the user's own wallet choice for the rest of the
-      // session, since it always wins over the last-selection setting.
-      navigation.setParams({
-        providerId: undefined,
-        paymentType: undefined,
-        forcedWalletResult: undefined
-      })
+  // not just the flow the link opened. `useTabBlur` fires on a tab switch
+  // alone, so stepping forward to the option list, or out to the `send2`
+  // deposit a sell pushes above the tabs, keeps the pin.
+  useTabBlur(navigation, tab, () => {
+    // Nothing to drop: tab switching is the app's most-travelled path, and a
+    // user who never tapped a deep link would otherwise pay a params update
+    // plus a re-render every time they leave the tab.
+    if (
+      pinnedProviderId == null &&
+      pinnedPaymentType == null &&
+      forcedWalletResult == null
+    )
+      return
+    // The forced wallet is link-scoped like the pins: leaving it set would
+    // keep overriding the user's own wallet choice for the rest of the
+    // session, since it always wins over the last-selection setting.
+    navigation.setParams({
+      providerId: undefined,
+      paymentType: undefined,
+      forcedWalletResult: undefined
     })
-  }, [navigation])
+  })
 
   //
   // Handlers

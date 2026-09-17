@@ -164,10 +164,17 @@ export function launchDeepLink(
     if (getDeepLinkReadiness(link) === 'wallets') {
       const { account } = getState().core
 
-      // Once a link is being followed its picker may already be on screen, so
-      // a newer one is dropped rather than stacking a second picker and then
-      // overwriting the first link's promo and navigation.
-      if (walletLinkAccount === account) return false
+      // Only the exchange links raise the back-to-back pickers the drop below
+      // protects. Dropping every `wallets` link would lose a WalletConnect or
+      // payment link that arrives from another app while one is up, since
+      // `DeepLinkingManager` clears its pending slot before launching and
+      // ignores the result, and those were handled before this guard existed.
+      const isExchangeLink = link.type === 'rampCreate' || link.type === 'swap'
+
+      // Once an exchange link is being followed its picker may already be on
+      // screen, so a newer one is dropped rather than stacking a second picker
+      // and then overwriting the first link's promo and navigation.
+      if (isExchangeLink && walletLinkAccount === account) return false
 
       // While wallets load nothing is on screen yet, so the latest link to
       // start waiting is the one followed, like the manager's single pending
@@ -175,13 +182,15 @@ export function launchDeepLink(
       const thisLink = ++latestWalletLink
       const loggedIn = await waitForWallets(account)
       if (!loggedIn || thisLink !== latestWalletLink) return false
-      if (walletLinkAccount === account) return false
+      if (isExchangeLink && walletLinkAccount === account) return false
 
-      walletLinkAccount = account
+      if (isExchangeLink) walletLinkAccount = account
       try {
         return await handleLink(navigation, dispatch, getState(), link)
       } finally {
-        if (walletLinkAccount === account) walletLinkAccount = undefined
+        if (isExchangeLink && walletLinkAccount === account) {
+          walletLinkAccount = undefined
+        }
       }
     }
     const state = getState()
@@ -412,20 +421,18 @@ async function handleLink(
         }
       })
 
-      // Navigate with no params at all when the link named no asset: passing
-      // undefined wallet ids would blank a selection the user already made on
-      // the swap scene, which is what a bare `edge://swap` used to preserve.
+      // A link that named no asset leaves every id undefined, which clears the
+      // scene's selection the same way a bare `edge://swap` does on develop: a
+      // nested navigate rebuilds the child action from its params alone, and
+      // `swapCreate` declares no `initialParams` for the router to merge.
       navigation.navigate('swapTab', {
         screen: 'swapCreate',
-        params:
-          fromResult == null && toResult == null
-            ? undefined
-            : {
-                fromWalletId: fromResult?.walletId,
-                fromTokenId: fromResult?.tokenId,
-                toWalletId: toResult?.walletId,
-                toTokenId: toResult?.tokenId
-              }
+        params: {
+          fromWalletId: fromResult?.walletId,
+          fromTokenId: fromResult?.tokenId,
+          toWalletId: toResult?.walletId,
+          toTokenId: toResult?.tokenId
+        }
       })
       break
     }
