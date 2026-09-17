@@ -205,15 +205,6 @@ export function resolvePluginMaps(
 }
 
 /**
- * Truncate a single secret to its first 8 characters so it can be shown for
- * debugging without leaking the full value. Non-strings are returned as-is.
- */
-export function redactKey(value: unknown): unknown {
-  if (typeof value === 'string') return value.slice(0, 8)
-  return value
-}
-
-/**
  * Recursively redact every string within a value to at most 8 characters.
  */
 export function redactValue(value: unknown): unknown {
