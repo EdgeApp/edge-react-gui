@@ -72,6 +72,9 @@ const strings = {
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
 
+  // Shown instead of the app when the core fails to start at all:
+  boot_failed_message_1s: 'Edge failed to start: %1$s',
+
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
   share_message:
