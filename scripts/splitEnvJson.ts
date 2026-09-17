@@ -199,7 +199,7 @@ export interface SplitResult {
 
 /**
  * Legacy XOR mask used by `asObfuscatedString` (not a secret). A handful of
- * env.json fields — notably Changelly's apiKey — were stored as char-code
+ * env.json fields (notably Changelly's apiKey) were stored as char-code
  * arrays XOR'd with this constant. Decode them to plain strings at split time
  * so keys.json never carries the array form the plugins cannot consume.
  */

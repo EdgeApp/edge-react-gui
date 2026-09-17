@@ -43,7 +43,7 @@ export const asConfigJson = asObject({
   // PostHog host (the api key is KEYS.POSTHOG_API_KEY):
   POSTHOG_API_HOST: asOptional(asString),
 
-  // Per-developer login shortcuts — temporary, never served remotely:
+  // Per-developer login shortcuts (temporary, never served remotely):
   YOLO_DEEP_LINK: asNullable(asString),
   YOLO_OTP_KEY: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
