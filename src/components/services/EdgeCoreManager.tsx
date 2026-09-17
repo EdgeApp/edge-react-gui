@@ -31,6 +31,7 @@ import * as React from 'react'
 import { Platform, Text, View } from 'react-native'
 import BootSplash from 'react-native-bootsplash'
 import { getBrand, getDeviceId, getVersion } from 'react-native-device-info'
+import { sprintf } from 'sprintf-js'
 
 import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -54,6 +55,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { LoadingSplashScreen } from '../progress-indicators/LoadingSplashScreen'
 import { Airship, showError } from './AirshipInstance'
 import { Providers } from './Providers'
+import { cacheStyles, type Theme, useTheme } from './ThemeContext'
 
 // Start the disk read and signed infoRollup fetch during bundle evaluation so they
 // overlap the rest of startup. The WebView is gated behind keys and does not
@@ -159,6 +161,8 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   // Get the application state:
   const isAppForeground = useIsAppForeground()
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   function hideSplash(): void {
     if (!splashHidden.current) {
@@ -272,8 +276,10 @@ export const EdgeCoreManager: React.FC<Props> = props => {
 
   if (bootFatalError != null) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', padding: 24 }}>
-        <Text>Edge failed to start: {bootFatalError}</Text>
+      <View style={styles.bootErrorContainer}>
+        <Text style={styles.bootErrorText}>
+          {sprintf(lstrings.boot_failed_message_1s, bootFatalError)}
+        </Text>
       </View>
     )
   }
@@ -321,3 +327,21 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     </>
   )
 }
+
+// This screen renders before the rest of the app exists, so it takes its
+// colors straight from the theme rather than the usual scene wrappers.
+// Without an explicit background it flashes white on a dark device.
+const getStyles = cacheStyles((theme: Theme) => ({
+  bootErrorContainer: {
+    backgroundColor: theme.modal,
+    flex: 1,
+    justifyContent: 'center',
+    padding: theme.rem(1.5)
+  },
+  bootErrorText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'center'
+  }
+}))
