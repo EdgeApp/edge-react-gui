@@ -50,6 +50,7 @@ import {
 } from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
+import { debugLog } from '../../util/logger'
 import {
   INFO_TEST_SERVER,
   LOGIN_TEST_SERVER,
@@ -136,10 +137,9 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
     : hasSecret
     ? { apiKey, apiSecret }
     : { apiKey }
-  console.log(
-    `[apiSigner] native=${nativeApiSigner != null} keysFallback=${
-      jsPair != null
-    }`
+  debugLog(
+    'keys',
+    `apiSigner native=${nativeApiSigner != null} keysFallback=${jsPair != null}`
   )
   if (nativeApiSigner == null && jsPair == null) {
     // A context with no credentials still boots: core substitutes its own
