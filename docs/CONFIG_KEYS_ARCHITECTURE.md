@@ -13,9 +13,9 @@ the schema so that plugin configuration is keyed by real plugin ID:
 - **`config.json`**: non-secret app/debug settings and the non-secret halves of
   each plugin's init options. Safe to commit to a private build-config repo.
 - **`keys.json`**: every secret (API keys, tokens, credentials), including the
-  secret halves of plugin init options — **except** the Edge login HMAC
+  secret halves of plugin init options, **except** the Edge login HMAC
   credentials when using the native signer.
-- **`edgeKey.json`** — `{ apiKey, apiSecret }` for Edge login HMAC. Build-time
+- **`edgeKey.json`**: `{ apiKey, apiSecret }` for Edge login HMAC. Build-time
   only: `scripts/makeApiSigner.ts` embeds XOR-split native shards from it and
   `scripts/makeNativeHeaders.ts` reads the public `apiKey`. The Metro bundle
   never loads it, so `KEYS.EDGE_API_KEY` / `KEYS.EDGE_API_SECRET` are absent in
@@ -493,7 +493,7 @@ deep-merges every row that independently matches:
    non-wildcard bundle list.
 
 Unknown bundles are not a 403; they receive only wildcard/`default` rows.
-A present-but-invalid attestation token is HTTP 401 — the GUI must not treat
+A present-but-invalid attestation token is HTTP 401: the GUI must not treat
 that as “unattested floor.”
 
 **Invariant:** anything on a `"bundleIds": "*"` / `minAssurance: default` row is
