@@ -1581,6 +1581,7 @@
   "gift_card_no_payment_address": "Ordine creato ma nessun indirizzo di pagamento è stato restituito. Per favore riprova.",
   "gift_card_network_error": "Caricamento fallito. Si prega di verificare la connessione di rete.",
   "gift_card_service_error": "Il servizio gift card è temporaneamente non disponibile. Riprova più tardi.",
+  "gift_card_providers_unavailable": "Gift cards are temporarily unavailable. Please check back later.",
   "gift_card_refresh_error": "Impossibile aggiornare. Le informazioni sulla carta potrebbero non essere aggiornate.",
   "gift_card_refresh_service_error": "Servizio gift card non disponibile. Le informazioni sulla carta potrebbero non essere aggiornate.",
   "gift_card_minimum_warning_title": "Sotto il minimo",
