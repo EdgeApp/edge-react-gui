@@ -51,7 +51,7 @@ export function hasNativeApiSigner(): boolean {
 /**
  * True when this build can HMAC-sign an infoRollup request: the native module
  * holds a usable key, or a usable JS apiKey/secret pair is in KEYS. A linked
- * native module alone is not enough — a stub build embeds a placeholder key
+ * native module alone is not enough: a stub build embeds a placeholder key
  * and must take the same unsigned startup path as a build with no signer.
  */
 export async function willSignInfoRollup(): Promise<boolean> {
@@ -115,9 +115,9 @@ export async function warmNativeApiKey(): Promise<string> {
     })
   warmPromise = pending
   const apiKey = await pending
-  // Only clear the slot we just awaited — a later warm must not be orphaned.
+  // Only clear the slot we just awaited: a later warm must not be orphaned.
   if (warmPromise === pending && apiKey === '') warmPromise = undefined
-  // Do not cache empty — that would block the KEYS.EDGE_API_KEY fallback forever.
+  // Do not cache empty: that would block the KEYS.EDGE_API_KEY fallback forever.
   if (apiKey !== '') cachedApiKey = apiKey
   return apiKey
 }
