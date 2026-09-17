@@ -164,7 +164,7 @@ An unknown direction is rejected by `asFiatDirection`, which throws and leaves t
 
 ### 4.2 Wallet resolution and navigation
 
-`getDeepLinkReadiness` decides how much account state a link needs before it can run. An `exchange` link that names an asset opens the wallet picker, so it waits for `'wallets'`; one that names none only navigates, so `'account'` is enough. Getting this wrong would fire the picker against a half-loaded wallet list right after login, where it offers to create a wallet the account already has. `DeepLinkingManager` holds a link until its readiness is met, but a promo card tap calls `launchDeepLink` directly, so `launchDeepLink` itself waits through `waitForWallets` for every active wallet to load or fail before following a `'wallets'` link. For the manager's own calls that wait returns at once. Links that arrive during a wait share it, only the latest of them is followed (the others return `false`, like the manager's single pending slot), and a logout ends the wait with `false`. Once a link is being followed its picker may already be on screen, so a `'wallets'` link that arrives then is dropped instead of stacking a second picker. That guard is keyed to the account, so a picker a logout leaves unsettled cannot block the next account's links. A wallet that never settles holds that one wait until logout, which is also how long it holds the manager's own queue.
+`getDeepLinkReadiness` decides how much account state a link needs before it can run. An `exchange` link that names an asset opens the wallet picker, so it waits for `'wallets'`; one that names none only navigates, so `'account'` is enough. Getting this wrong would fire the picker against a half-loaded wallet list right after login, where it offers to create a wallet the account already has. `DeepLinkingManager` holds a link until its readiness is met, but a promo card tap calls `launchDeepLink` directly, so `launchDeepLink` itself waits through `waitForWallets` for every active wallet to load or fail before following a `'wallets'` link. For the manager's own calls that wait returns at once. Links that arrive during a wait share it, only the latest of them is followed (the others return `false`, like the manager's single pending slot), and a logout ends the wait with `false`. Once an `exchange` link is being followed its picker may already be on screen, so another `exchange` link that arrives then is dropped instead of stacking a second picker. Only those two link types take the drop: `walletConnect` and `paymentRedirect` also read `'wallets'`, they raise no picker of their own, and `DeepLinkingManager` clears its pending slot before it launches and ignores the result, so dropping one loses it outright. That guard is keyed to the account, so a picker a logout leaves unsettled cannot block the next account's links. A wallet that never settles holds that one wait until logout, which is also how long it holds the manager's own queue.
 
 One helper covers every asset a link can name, on both link types:
 
@@ -211,9 +211,9 @@ For `rampCreate`, the resolved wallet rides into the scene as the `forcedWalletR
 const selectedCrypto = forcedWalletResult ?? rampLastCryptoSelection
 ```
 
-Because it wins over the last selection, leaving it set would override the user's own wallet choice for the rest of the session, so two things end it. The scene's tab-blur listener already cleared the provider and payment-type pins and `forcedWalletResult` joins them, with the listener's early-return guard grown a third condition so a user who never tapped a deep link still pays no params update on tab switches. And `handleCryptDropdown` clears the param when the user picks a wallet, because otherwise the forced wallet keeps winning and the pick appears to do nothing; that handler's early return now compares against the wallet on screen rather than the persisted last selection, which the forced wallet outranks for the whole visit.
+Because it wins over the last selection, leaving it set would override the user's own wallet choice for the rest of the session, so two things end it. The scene's tab-blur listener already cleared the provider and payment-type pins and `forcedWalletResult` joins them, with the listener's early-return guard grown a third condition so a user who never tapped a deep link still pays no params update on tab switches. That listener is the shared `useTabBlur` hook from [4.3](#43-the-link-scoped-promo-id), so it waits for a real tab switch rather than any blur: a sell pushes its `send2` deposit above the tabs, and dropping the forced wallet there would put the sell asset back to the last selection behind the user. And `handleCryptDropdown` clears the param when the user picks a wallet, because otherwise the forced wallet keeps winning and the pick appears to do nothing; that handler's early return now compares against the wallet on screen rather than the persisted last selection, which the forced wallet outranks for the whole visit.
 
-For `swap`, both sides are resolved before either is used, sell side first, and each picker carries `select_src_wallet` or `select_recv_wallet` as its title: a link naming both assets raises two modals back to back, and an unlabelled pair is indistinguishable. The navigation params are omitted entirely when the link named no asset, since passing `undefined` wallet ids would blank a selection the user had already made on the swap scene, which a bare `edge://swap` used to preserve.
+For `swap`, both sides are resolved before either is used, sell side first, and each picker carries `select_src_wallet` or `select_recv_wallet` as its title: a link naming both assets raises two modals back to back, and an unlabelled pair is indistinguishable. Both sides ride in the navigation params every time, so a link that named no asset clears whatever the scene had selected, which is what a bare `edge://swap` already did before this change. A nested `navigate` rebuilds the child's action from its params alone, with no merge, and `swapCreate` declares no `initialParams` for `StackRouter` to fall back on, so there is no form of this navigate that preserves a selection.
 
 ### 4.3 The link-scoped promo id
 
@@ -238,7 +238,7 @@ linkPromo: (
 
 `LINK_PROMO/SET` carries the whole `LinkPromo` or `null`, so one action both sets and clears. Every `exchange` navigation dispatches it, which means a link with no promo id actively clears whatever a previous link left behind. `LOGOUT` clears it too, so an attribution cannot cross an account switch.
 
-The `tab` field is what gives the attribution a lifetime. A promo credits one entry into a flow, so the entry has to end whether or not it converts: `useLinkPromoRelease` subscribes to the tab's blur event on both [ramp](#ramp) scenes and the swap scene, and leaving the tab releases the promo. Without that, a user who backs out of the quote keeps the promo for the rest of the login session, and the next conversion they reach by any route is billed to the campaign.
+The `tab` field is what gives the attribution a lifetime. A promo credits one entry into a flow, so the entry has to end whether or not it converts: `useLinkPromoRelease` subscribes to the tab's blur event on both [ramp](#ramp) scenes and the swap scene, and switching away from the tab releases the promo. Without that, a user who backs out of the quote keeps the promo for the rest of the login session, and the next conversion they reach by any route is billed to the campaign.
 
 [`src/actions/DeepLinkingActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/jon/deeplink-new-format/src/actions/DeepLinkingActions.tsx)
 ```typescript
@@ -252,16 +252,31 @@ export function releaseLinkPromo(tab: LinkPromoTab): ThunkAction<void> {
 
 Comparing `tab` against the live slice is what makes the release safe. A link dispatches before it navigates, so the tab it navigates away from blurs with the new promo already in the slice; an unconditional release there would throw away the attribution that link just set. The listener sits on the tab rather than the scene, so stepping forward to a provider's webview or a bank form, both registered inside these stacks, keeps the attribution.
 
+A tab blurs for a second reason, though, and the event alone cannot tell the two apart: react-navigation re-emits a navigator's blur to its focused child, so every `AppStack` scene that opens above the tabs blurs the tab as well. A sell's deposit step is one of those. The ramp providers push `send2` to collect the crypto, and `Sell_Success` is logged only once that send completes, so a listener that trusted the raw event would release the promo on the way into the deposit and never attribute a link-driven sell. `useTabBlur` reads the tab navigator's own state inside the listener and filters that case out:
+
+[`src/hooks/useTabBlur.ts`](https://github.com/EdgeApp/edge-react-gui/blob/jon/deeplink-new-format/src/hooks/useTabBlur.ts)
+```typescript
+return tabNavigation.addListener('blur', () => {
+  const { index, routes } = tabNavigation.getState()
+  if (routes[index].name === tab) return
+
+  handleLeave()
+})
+```
+
+A real tab switch moves the tab navigator off `tab` before the blur is delivered, so the guard sees the new tab and releases. A scene opening above the tabs leaves the tab navigator exactly where it was, so the guard sees `tab` and does nothing. `RampCreateScene` drops its link-scoped params through the same hook, since those params have the same two lifetimes.
+
 ```mermaid
 stateDiagram-v2
     [*] --> Empty: initial state
     Empty --> Held: LINK_PROMO/SET with a promo<br/>(exchange link or promo card)
     Held --> Held: quote and other non-conversion events<br/>log promoIds [id]
     Held --> Empty: Buy_Success / Sell_Success / Exchange_Shift_Success
-    Held --> Empty: the promo's own tab blurs<br/>(the entry was abandoned)
+    Held --> Empty: the user switches away from<br/>the promo's own tab (abandoned)
     Held --> Empty: exchange link with no promoId
     Held --> Empty: LOGOUT
-    Held --> Held: another tab blurs<br/>(a newer link already claimed the promo)
+    Held --> Held: the user switches away from another tab<br/>(a newer link already claimed the promo)
+    Held --> Held: a scene opens above the tabs<br/>(send2, swapSuccess: still inside the flow)
 ```
 
 Reading the slice inside `logEvent` is what makes one write cover every conversion path. Seven ramp providers plus `SwapConfirmationScene` call `onLogEvent` directly, and all of them funnel through `logEvent`, so the override and the retirement each need exactly one edit:
@@ -280,7 +295,7 @@ return (dispatch, getState) => {
           : [linkPromo.promoId]
 ```
 
-The promo is read synchronously when the event is dispatched, not when its params are finally assembled. The params are built across several awaits, and leaving the flow's tab releases the promo, so a later read would drop the credit from a conversion the user completed and then navigated away from. The swap flow hits this on every conversion: `swapSuccess` is registered in the root stack, outside the swap tab, so pushing it blurs the tab and releases the promo in the same moment the success event is dispatched. `SwapConfirmationScene` also logs `Exchange_Shift_Success` before `updateSwapCount`, which can wait on a review prompt.
+The promo is read synchronously when the event is dispatched, not when its params are finally assembled. The params are built across several awaits, and leaving the flow's tab releases the promo, so a later read would drop the credit from a conversion the user completed and then navigated away from. The swap flow hit this on every conversion: `swapSuccess` is registered in the root stack, outside the swap tab, so pushing it blurred the tab in the same moment the success event was dispatched, and the dispatch-time read is what kept the credit. The above-the-tabs filter now skips that release outright, and the dispatch-time read still covers the user who switches tabs while the params are being built. `SwapConfirmationScene` also logs `Exchange_Shift_Success` before `updateSwapCount`, which can wait on a review prompt.
 
 Retirement happens after the event is dispatched to the backends, gated on the event being one of the three that mean the campaign has been credited:
 
@@ -347,7 +362,7 @@ Reachable entry configurations and what each produces. Rows follow from [4.1](#4
 | `exchange/buy?sellAsset=ethereum` | none | buy flow, no wallet forced | `null` | account promotions |
 | `exchange/swap?buyAsset=X&sellAsset=Y` | one per side, sell first, each titled | swap scene, both sides set | `null` | account promotions |
 | `exchange/swap?sellAsset=Y` | sell side only | swap scene, buy side cleared | `null` | account promotions |
-| `exchange/swap` (no assets) | none | swap scene, selection preserved | `null` | account promotions |
+| `exchange/swap` (no assets) | none | swap scene, selection cleared | `null` | account promotions |
 | `exchange/buy?buyAsset=<unknown plugin or token>` | none | buy flow, no pre-selection | `null` | account promotions |
 | Card call-to-action `exchange/buy?buyAsset=X`, card `promoId=card1` | as above | buy flow, wallet forced | `{ card1, buyTab }` | `["card1"]` |
 | Card call-to-action `exchange/buy?...&promoId=url1`, card `promoId=card1` | as above | buy flow, wallet forced | `{ url1, buyTab }` | `["url1"]` |
@@ -360,7 +375,7 @@ Reachable entry configurations and what each produces. Rows follow from [4.1](#4
 
 ## 5. Testing
 
-Automated coverage is 128 cases in `src/__tests__/DeepLink.test.ts` (17 of them new for `exchange`), 5 `linkPromo` cases in `src/__tests__/reducers/RootReducer.test.ts`, 18 in `src/__tests__/actions/LinkPromoActions.test.ts`, and 7 in `src/__tests__/util/trackingLinkPromo.test.ts`.
+Automated coverage is 128 cases in `src/__tests__/DeepLink.test.ts` (17 of them new for `exchange`), 5 `linkPromo` cases in `src/__tests__/reducers/RootReducer.test.ts`, 19 in `src/__tests__/actions/LinkPromoActions.test.ts`, 7 in `src/__tests__/util/trackingLinkPromo.test.ts`, and 5 in `src/__tests__/hooks/useTabBlur.test.tsx`.
 
 1. Both URL forms parse to the same link. `https://deep.edge.app/exchange/buy?buyAsset=bitcoin` and `edge://exchange/buy?buyAsset=bitcoin` each produce `rampCreate` with `asset: { pluginId: 'bitcoin', tokenId: null }`.
 2. Mainnet assets on token chains. `exchange/sell?sellAsset=ethereum` and `?sellAsset=arbitrum` give [`tokenId`](#tokenid)`: null` on their own plugin id.
@@ -374,7 +389,7 @@ Automated coverage is 128 cases in `src/__tests__/DeepLink.test.ts` (17 of them 
 10. The affiliate wrapper survives. `https://deep.edge.app/exchange/buy?buyAsset=bitcoin&af=bob` parses as `affiliate` wrapping the `rampCreate`, so `?af=` attribution and asset pre-selection compose.
 11. `linkPromo` starts `null`, holds the promo a link supplied, clears on `{ linkPromo: null }`, is replaced wholesale by a newer link's promo and tab, and clears on `LOGOUT`.
 12. `withCardPromoId` stamps a card's id onto a [ramp](#ramp) or swap link that carries none, leaves a URL promo id alone, reaches through the `affiliate` and `marketing` wrappers, leaves a wrapper with no inner link alone, ignores link types with nothing to attribute, and is a no-op for an empty or missing card id.
-13. `releaseLinkPromo` clears the promo when its own tab blurs, leaves a promo a newer link has claimed for another tab, and does nothing when none is held. `waitForWallets` resolves at once when every wallet has loaded, otherwise waits for the last one (counting a wallet that failed to load as done), resolves `false` and unsubscribes on logout, and shares one set of watchers across concurrent waits; `launchDeepLink` follows only the latest of several links that arrive during a wait, drops a link that arrives while an earlier one is showing its picker, and does not let an unsettled picker from one account block the next.
+13. `useTabBlur` runs its callback when the tab navigator has moved off the tab, ignores a blur that leaves it on the tab (the `send2` case), calls the latest callback without resubscribing, unsubscribes on unmount, and tolerates a scene with no parent navigator. `releaseLinkPromo` clears the promo when its own tab is left, leaves a promo a newer link has claimed for another tab, and does nothing when none is held. `waitForWallets` resolves at once when every wallet has loaded, otherwise waits for the last one (counting a wallet that failed to load as done), resolves `false` and unsubscribes on logout, and shares one set of watchers across concurrent waits; `launchDeepLink` follows only the latest of several links that arrive during a wait, drops an `exchange` link that arrives while an earlier one is showing its picker, follows a `walletConnect` or `paymentRedirect` link that arrives then, and does not let an unsettled picker from one account block the next.
 14. `logEvent` reports the link promo instead of the account promotions, falls back to the account promotions with none held, keeps the promo through a `Buy_Quote`, retires it on `Buy_Success`, still credits a conversion whose tab was left before its params were built, and leaves a newer promo that landed while `checkNotifications` was awaited, including one for the same campaign and tab. Those last cases fail if the promo is read late, if the retirement clears unconditionally, or if it compares [`promoId`](#promoid) instead of identity.
 
 Device verification on the iOS simulator, recorded in the run reports on the task:
@@ -391,7 +406,7 @@ Device verification on the iOS simulator, recorded in the run reports on the tas
 
 Cases 20 and 22 were read by posting from `logEvent` and the release to a local capture server; that instrumentation was temporary and is not on the branch.
 24. After the dispatch-time read, `edge://exchange/swap?sellAsset=bitcoin&buyAsset=ethereum&promoId=bob` resolved both sides, leaving the swap tab released `{ bob, swapTab }`, and the next `Buy_Quote` logged `promoIds: []`.
-25. A funded swap through `edge://exchange/swap?sellAsset=ethereum&buyAsset=bitcoin&promoId=bob` executed to the success scene: 0.0049995 ETH (11.99 dollars) to 0.00014972 BTC through Rango. `Exchange_Shift_Quote`, `Exchange_Shift_Start` and `Exchange_Shift_Success` each logged `promoIds: ["bob"]`, and pushing the success scene then released the promo.
+25. A funded swap through `edge://exchange/swap?sellAsset=ethereum&buyAsset=bitcoin&promoId=bob` executed to the success scene: 0.0049995 ETH (11.99 dollars) to 0.00014972 BTC through Rango. `Exchange_Shift_Quote`, `Exchange_Shift_Start` and `Exchange_Shift_Success` each logged `promoIds: ["bob"]`, and pushing the success scene then released the promo, which the dispatch-time read had already made harmless. Under [7.10](#710-only-a-tab-switch-ends-the-entry-not-any-blur) that push no longer releases anything.
 
 Not covered by a device drive: a funded buy or sell, which needs a provider account with KYC, so the ramp conversion path rests on case 14 and on its success scenes living inside the buy and sell stacks; and the tab-blur release of `forcedWalletResult`, which has no distinct visual state when the forced wallet and the last-selection wallet are the same.
 
@@ -428,7 +443,7 @@ The two CHANGELOG entries were reshaped to the one-line, one-clause convention, 
 | The promo ends only at a conversion | It ends at a conversion, or when its own tab blurs, via `useLinkPromoRelease` |
 | Retirement clears the slice unconditionally | It re-reads the slice and clears only the entry it captured, compared by identity |
 | `logEvent` reads the promo after building its params | It reads the promo when the event is dispatched, and the swap success event logs before the swap-count update |
-| Promo card taps follow a link as soon as they are tapped | `launchDeepLink` waits for every wallet before a link that opens a picker, sharing the wait, following only the latest link, and dropping one that arrives while a picker is open |
+| Promo card taps follow a link as soon as they are tapped | `launchDeepLink` waits for every wallet before a link that opens a picker, sharing the wait, following only the latest link, and dropping an `exchange` link that arrives while a picker is open |
 | Only the `exchange` branches abort on a dismissed picker | `azteco`, `paymentRedirect`, `rewards` and `other` abort too |
 | One untitled picker per swap side, receive first | Sell first, each titled with the side it asks for |
 | An unresolvable asset reaches `pickWallet` | It degrades to no pre-selection before the picker opens |
@@ -437,6 +452,16 @@ The two CHANGELOG entries were reshaped to the one-line, one-clause convention, 
 | `withCardPromoId`, the release path and `logEvent`'s promo handling untested | 18 cases in `LinkPromoActions.test.ts`, 7 in `trackingLinkPromo.test.ts` |
 
 The review found that nothing released the promo for a flow the user abandoned, which made every drop-off inflate the campaign's volume. That is the defect the `tab` field exists to fix. Adding that release exposed a second race, caught in the next review round: `logEvent` read the promo only after its awaits, so leaving the tab right after converting could release the promo before the conversion read it; and the retirement compared `promoId`, which could not tell a newer link for the same campaign from the entry that converted. The scene-render fake also threw from `getParent`, so any scene subscribing to its tab failed to render in tests.
+
+### Phase 5: second review round
+
+| Found | Shipped |
+|---|---|
+| The release fired on any tab blur, so a sell lost its promo the moment the provider pushed `send2` | `useTabBlur` filters blurs that leave the tab navigator in place; `RampCreateScene` drops its link params through the same hook |
+| Every `'wallets'` link was dropped while a picker was open, losing `walletConnect` and `paymentRedirect` links that were handled before | The drop is scoped to `rampCreate` and `swap` |
+| The swap navigate carried a "preserve the selection" branch that preserved nothing, and three places in this document described it as working | The branch is gone and the document says what the code does |
+
+The first two are the same mistake in two places: a guard written for the case in front of it, applied to a category wider than the case. The third is the cost of a design document that outlives its first draft, and the reason [10.2](#102-where-this-document-was-wrong-or-silent) exists.
 
 ## 7. Decisions
 
@@ -494,7 +519,7 @@ Reopen if: a chain outside the [EVM](#evm) family adopts a `0x`-prefixed hex tok
 
 Chosen: navigate with both `fromWalletId` and `toWalletId`, leaving the unnamed side `undefined`.
 
-Rejected: merging into whatever the user had selected on the swap scene. React-navigation's nested `navigate` offers no merge here, and a link reading `?sellAsset=litecoin` reads as "open a litecoin swap", so keeping a stale destination is the more surprising outcome. A bare `edge://exchange/swap` with no assets passes no params at all and does preserve the selection.
+Rejected: merging into whatever the user had selected on the swap scene. React-navigation's nested `navigate` offers no merge here, and a link reading `?sellAsset=litecoin` reads as "open a litecoin swap", so keeping a stale destination is the more surprising outcome. A bare `edge://exchange/swap` with no assets passes both sides as `undefined`, which clears the selection the same way, and is what that link already did before this change.
 
 Reopen if: a campaign wants one-sided links that top up a swap already in progress.
 
@@ -520,9 +545,31 @@ Reopen if: callers need to distinguish more outcomes than "followed" and "backed
 
 Chosen: `rampCreate` navigates with `{ providerId, paymentType, forcedWalletResult }` every time, so a link that names no asset leaves `forcedWalletResult` unset and the scene falls back to the user's last selection.
 
-Rejected: keeping a forced wallet that an earlier entry (Coin Ranking, a previous exchange link) left on the scene. That navigate replaces the route's params, which is how `edge://buy` and `edge://sell` already behaved before this design, so keeping the old wallet would need merge semantics, and merging would also keep the earlier link's provider and payment-type pins. The swap path keeps a bare link's selection only because its params are the live selection; the ramp scene's own selection lives in `rampLastCryptoSelection`, which a bare link does not touch.
+Rejected: keeping a forced wallet that an earlier entry (Coin Ranking, a previous exchange link) left on the scene. That navigate replaces the route's params, which is how `edge://buy` and `edge://sell` already behaved before this design, so keeping the old wallet would need merge semantics, and merging would also keep the earlier link's provider and payment-type pins. The swap path clears a bare link's selection for the same reason ([7.6](#76-a-swap-link-with-one-asset-clears-the-other-side)); the ramp scene's own selection lives in `rampLastCryptoSelection`, which a bare link does not touch.
 
 Reopen if: a campaign needs a bare buy or sell link to open on top of a pre-selection another entry made.
+
+### 7.10 Only a tab switch ends the entry, not any blur
+
+Chosen: the release listener reads the tab navigator's state and returns when the tab is still the focused one.
+
+Rejected: subscribing to the scene's own blur instead of the tab's. That is the version [4.3](#43-the-link-scoped-promo-id) rules out for the opposite reason: the flows step forward into scenes registered inside their own stack, and a scene-level listener would release the promo on the first of those.
+
+Rejected: listening on `state` or `tabPress` rather than filtering `blur`. Both move the decision to a different event without answering the question the guard asks, and `tabPress` misses a programmatic tab change.
+
+Rejected: leaving the release on a raw blur and marking the sell flow as an accepted gap. The gap is the whole sell side: `send2` is the only way a sell delivers the crypto, so every link-driven sell would lose its attribution before the conversion event, which is the same defect the `tab` field was added to fix.
+
+Reopen if: a flow gains a step that leaves the tab navigator and still belongs to the entry, such as a success scene the tabs cannot host.
+
+### 7.11 Only exchange links are dropped while a picker is open
+
+Chosen: the in-progress guard in `launchDeepLink` applies to `rampCreate` and `swap` links only.
+
+Rejected: dropping every `'wallets'` link. `walletConnect` and `paymentRedirect` share that readiness, raise no picker of their own, and arrive from another app while the user is mid-flow, which is exactly when the guard is armed. `DeepLinkingManager` clears its pending slot before it launches and ignores the return value, so a dropped link is gone, and both types were handled before this guard existed.
+
+Rejected: queueing the newer link until the picker settles. The user tapped the newer link, so making them finish an abandoned picker first inverts the intent, and a picker that never settles holds the queue until logout.
+
+Reopen if: a third link type starts raising its own wallet picker, which would want the same drop.
 
 ## 8. Glossary
 
@@ -593,7 +640,7 @@ The identifier of a token within a chain, or `null` for the chain's mainnet asse
 1. The plan scoped task item 3 as already working. `getDisplayInfoCards` dropped the card's [`promoId`](#promoid), and the notification center sent every call-to-action to a browser, so neither card surface could attribute a conversion. [Section 4.4](#44-promo-cards-as-link-sources) is the corrected design, and it is roughly a third of the diff.
 2. The asset spec grammar is silent on currency codes. A campaign author needs a [pluginId](#pluginid) and a contract address rather than "USDC", so a wrong id names nothing. That no longer opens an empty picker, since [4.2](#42-wallet-resolution-and-navigation) degrades an unresolvable asset, but the link still silently loses its pre-selection. Either accept a currency-code form resolved against `allTokens`, or publish an internal reference of the ids campaigns will use. This is a product call, not a defect.
 3. Nothing anticipated token-id normalization. The first design took the link's token id as written, which fails on exactly the form a campaign author would paste. [Decision 7.5](#75-token-id-normalization-is-limited-to-0x-prefixed-hex) covers the fix.
-4. The design assumed every flow's success scene stays on the flow's tab. `swapSuccess` does not: it is in the root stack, so reaching it releases the promo immediately, which would have dropped the swap's own attribution under a late read. Case 25 is the funded swap that confirmed it; [section 4.3](#43-the-link-scoped-promo-id) reads the promo at dispatch for that reason. A funded buy or sell was not driven.
+4. The design assumed every flow's success scene stays on the flow's tab. `swapSuccess` does not: it is in the root stack, so reaching it releases the promo immediately, which would have dropped the swap's own attribution under a late read. Case 25 is the funded swap that confirmed it; [section 4.3](#43-the-link-scoped-promo-id) reads the promo at dispatch for that reason. The same assumption broke the other way for sells, which the second review round caught: their deposit step also sits above the tabs and their success event fires only after it, so a blur there is not the end of the flow at all. [Decision 7.10](#710-only-a-tab-switch-ends-the-entry-not-any-blur) is the general fix. A funded buy or sell was still not driven.
 5. The design gave the promo no lifetime beyond a conversion, which the first implementation shipped and the review caught. Every abandoned flow kept crediting the campaign until the next conversion by any route, so the campaign's measured volume was inflated by exactly the drop-offs it was meant to exclude. [Section 4.3](#43-the-link-scoped-promo-id) is the corrected design; [decision 7.2](#72-the-promo-lives-in-a-redux-slice-stamped-with-its-tab) records why the tab stamp is what makes a release safe.
 6. Aborting a link on a dismissed picker was applied only to the `exchange` branches, while the notification center was changed to route EVERY recognized call-to-action through the same function. A `rewards`, `azteco` or `paymentRedirect` promo card therefore retired itself when its picker was cancelled. [Section 4.2](#42-wallet-resolution-and-navigation) now covers every branch.
 
