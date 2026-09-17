@@ -4,7 +4,7 @@ import { asKeysJson, type RuntimeKeys } from './configKeysSchema'
 
 /**
  * Baked-in keys.json after nesting partner secrets under `globalKeys`. Used as
- * the merge base when a remote/cache overlay arrives — never mutated.
+ * the merge base when a remote/cache overlay arrives, never mutated.
  */
 export const bakedKeys: RuntimeKeys = nestGlobalKeys(
   asKeysJson.withRest(KEYS_JSON) as unknown as Record<string, unknown>
@@ -20,7 +20,7 @@ export const KEYS: RuntimeKeys = {
 }
 
 /**
- * Live alias of `KEYS.globalKeys`. Same object reference — overlays mutate this
+ * Live alias of `KEYS.globalKeys`. Same object reference: overlays mutate this
  * map in place so `import { globalKeys }` stays current after initializeKeys.
  */
 export const globalKeys = KEYS.globalKeys

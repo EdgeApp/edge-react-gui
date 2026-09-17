@@ -236,7 +236,7 @@ const asDeviceSettingsInner = asObject({
   keysCache: asMaybe(
     asObject({
       keys: asUnknown,
-      // When the cache was last written. Diagnostic only — the warm path does
+      // When the cache was last written. Diagnostic only: the warm path does
       // not expire; a new getKeys refresh replaces the blob for the next launch.
       fetchedAt: asMaybe(asNumber, 0),
       assuranceLevel: asMaybe(asString)
