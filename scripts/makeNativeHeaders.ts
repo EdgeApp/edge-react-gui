@@ -85,7 +85,7 @@ function makeNativeHeaders(): void {
     '../android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java'
   )
   // When the signer kept a complete tree, sync EdgeApiKey from the embedded
-  // C apiKey whenever either header is missing — never invent the placeholder
+  // C apiKey whenever either header is missing: never invent the placeholder
   // while native login still exposes a real edge_api_key().
   if (!hasSecret && signerOutputsExist()) {
     const iosExists = fs.existsSync(iosPath)
