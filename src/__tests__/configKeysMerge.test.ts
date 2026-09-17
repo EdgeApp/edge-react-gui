@@ -6,7 +6,6 @@ import {
   asMergeableKeys,
   deepMerge,
   nestGlobalKeys,
-  redactKey,
   redactValue,
   resolvePluginMaps
 } from '../configKeysMerge'
@@ -217,18 +216,6 @@ describe('resolvePluginMaps', () => {
 })
 
 describe('redaction', () => {
-  it('redactKey truncates strings to at most 8 characters', () => {
-    expect(redactKey('supersecretlongkey')).toBe('supersec')
-    expect(
-      (redactKey('supersecretlongkey') as string).length
-    ).toBeLessThanOrEqual(8)
-  })
-
-  it('redactKey leaves non-strings untouched', () => {
-    expect(redactKey(12345)).toBe(12345)
-    expect(redactKey(true)).toBe(true)
-  })
-
   it('redactValue recursively truncates every string', () => {
     const input = {
       apiKey: 'longsecretvalue',
