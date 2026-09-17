@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging'
-import { asMaybe } from 'cleaners'
+import { asBoolean, asMaybe, asObject, asOptional, asUnknown } from 'cleaners'
 import type { EdgeContext, EdgeCurrencyInfo } from 'edge-core-js'
 import { getUniqueId } from 'react-native-device-info'
 import { base64 } from 'rfc4648'
@@ -126,7 +126,9 @@ export function registerNotificationsV2(
         }
 
         try {
-          v1Settings = await legacyGet(`/user?userId=${encodedUserId}`)
+          v1Settings = asV1Settings(
+            await legacyGet(`/user?userId=${encodedUserId}`)
+          )
         } catch (e: any) {
           // Failure is ok we'll just create new settings
         }
@@ -343,6 +345,23 @@ export const newPriceChangeEvent = (
   return event
 }
 
+/**
+ * The legacy push server is not versioned and has no shared types, so clean
+ * what comes back rather than asserting it. `legacyGet` returns `unknown`:
+ * every caller has to say what it expects.
+ */
+const asV1Settings = asObject({
+  notifications: asObject({
+    currencyCodes: asObject(asUnknown)
+  })
+})
+
+const asLegacySettings = asObject({
+  '1': asBoolean,
+  '24': asBoolean,
+  fallbackSettings: asOptional(asBoolean)
+})
+
 export const fetchLegacySettings = async (
   userId: string,
   currencyCode: string
@@ -354,12 +373,14 @@ export const fetchLegacySettings = async (
   const deviceId = await getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
-  return await legacyGet(
-    `user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`
+  return asLegacySettings(
+    await legacyGet(
+      `user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`
+    )
   )
 }
 
-async function legacyGet(path: string): Promise<any> {
+async function legacyGet(path: string): Promise<unknown> {
   const response = await fetchPush(`v1/${path}`, {
     method: 'GET',
     headers: {
