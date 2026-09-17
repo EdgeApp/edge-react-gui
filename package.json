@@ -127,7 +127,7 @@
     "react-native": "0.79.2",
     "react-native-airship": "^0.3.0",
     "react-native-battery-optimization-check": "^1.0.8",
-    "react-native-bootsplash": "^6.3.8",
+    "react-native-bootsplash": "^7.3.2",
     "react-native-confetti-cannon": "^1.5.2",
     "react-native-contacts": "^8.0.10",
     "react-native-custom-tabs": "https://github.com/adminphoeniixx/react-native-custom-tabs#develop",
