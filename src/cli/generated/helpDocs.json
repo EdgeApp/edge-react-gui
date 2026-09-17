@@ -1672,6 +1672,18 @@
         "AMBIGUOUS_WALLET_ID"
       ]
     },
+    "get-transaction-settings": {
+      "summary": "Read this device's transaction settings.",
+      "method": "GET",
+      "path": "/account/{sessionId}/transactions/settings",
+      "usage": "get-transaction-settings",
+      "description": "`defaultIsoFiat` is undefined until something sets it, which is a real state rather than a missing default: an account with no currency chosen has no correct amount to show.",
+      "core": "account.transactions.localSettings",
+      "returnsDoc": "This device transaction settings.",
+      "errors": [
+        "TRANSACTION_DATABASE_OFF"
+      ]
+    },
     "get-transactions": {
       "summary": "List or export a wallet's transactions.",
       "method": "GET",
@@ -2725,6 +2737,30 @@
         "BAD_REQUEST",
         "WALLET_NOT_FOUND",
         "AMBIGUOUS_WALLET_ID"
+      ]
+    },
+    "set-default-fiat": {
+      "summary": "Change the currency every stored fiat amount is in.",
+      "method": "POST",
+      "path": "/account/{sessionId}/transactions/settings",
+      "usage": "set-default-fiat --default-iso-fiat=<defaultIsoFiat>",
+      "description": "A real change empties every stored fiat amount at once, instantly and locally, and the backfill refills them in the background. Queries carry on returning blanks in the meantime, which mean \"not yet known\" and never zero.",
+      "core": "account.transactions.changeLocalSettings",
+      "params": {
+        "defaultIsoFiat": {
+          "pass": "--default-iso-fiat=<defaultIsoFiat>",
+          "doc": "An ISO code, such as `iso:USD`.",
+          "optional": false
+        }
+      },
+      "returnsDoc": "`{ ok: true }`",
+      "notes": [
+        "Setting it to its current value does nothing at all. A setter that is not a no-op would re-rate the whole account on every boot.",
+        "It takes the user's own figures with it. `exchangeAmount` is keyed by fiat code, so a figure typed in dollars is not a figure in euros."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "TRANSACTION_DATABASE_OFF"
       ]
     },
     "set-fiat-currency-code": {

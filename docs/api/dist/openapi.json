@@ -7043,6 +7043,123 @@
         }
       }
     },
+    "/account/{sessionId}/transactions/settings": {
+      "get": {
+        "operationId": "getTransactionSettings",
+        "summary": "Read this device's transaction settings.",
+        "description": "**Core call:** `account.transactions.localSettings`\n\n**Command line**\n\n```\nget-transaction-settings\n```\n\n`defaultIsoFiat` is undefined until something sets it, which is a real state rather than a missing default: an account with no currency chosen has no correct amount to show.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "get-transaction-settings",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.localSettings",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This device transaction settings.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "TRANSACTION_DATABASE_OFF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "setDefaultIsoFiat",
+        "summary": "Change the currency every stored fiat amount is in.",
+        "description": "**Core call:** `account.transactions.changeLocalSettings`\n\n**Command line**\n\n```\nset-default-fiat --default-iso-fiat=<defaultIsoFiat>\n```\n\nA real change empties every stored fiat amount at once, instantly and locally, and the backfill refills them in the background. Queries carry on returning blanks in the meantime, which mean \"not yet known\" and never zero.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "set-default-fiat",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.changeLocalSettings",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`{ ok: true }`",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "defaultIsoFiat": {
+                    "type": "string",
+                    "description": "An ISO code, such as `iso:USD`."
+                  }
+                },
+                "required": [
+                  "defaultIsoFiat"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/account/{sessionId}/object/{objectId}": {
       "get": {
         "operationId": "getObject",
