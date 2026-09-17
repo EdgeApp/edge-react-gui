@@ -175,7 +175,7 @@ function mergePluginMap(
 /**
  * Resolve the four plugin maps from immutable CONFIG and the current KEYS.
  * Each map unions IDs from both sides and merges per ID. Extra remote IDs on
- * corePlugins do not register a new engine — `corePlugins.ts` is a table.
+ * corePlugins do not register a new engine: `corePlugins.ts` is a table.
  */
 export function resolvePluginMaps(
   configJson: ConfigJson | Record<string, unknown>,
