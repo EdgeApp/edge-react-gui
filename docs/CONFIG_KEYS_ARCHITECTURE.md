@@ -10,20 +10,20 @@ one flat, `ALLCAPS_*_INIT`-keyed blob.
 This refactor splits that single file into two gitignored inputs and reshapes
 the schema so that plugin configuration is keyed by real plugin ID:
 
-- **`config.json`** — non-secret app/debug settings and the non-secret halves of
+- **`config.json`**: non-secret app/debug settings and the non-secret halves of
   each plugin's init options. Safe to commit to a private build-config repo.
-- **`keys.json`** — every secret (API keys, tokens, credentials), including the
+- **`keys.json`**: every secret (API keys, tokens, credentials), including the
   secret halves of plugin init options.
 
 At runtime the two files stay separate accessors rather than flattening into one
 `ENV` singleton:
 
-- **`CONFIG`** (`src/config.ts`) — immutable cleaned `config.json`. Never updated
+- **`CONFIG`** (`src/config.ts`): immutable cleaned `config.json`. Never updated
   by remote getKeys overlays.
-- **`KEYS`** / **`globalKeys`** (`src/keys.ts`) — mutable cleaned keys. Partner
+- **`KEYS`** / **`globalKeys`** (`src/keys.ts`): mutable cleaned keys. Partner
   secrets live only under `KEYS.globalKeys`; `globalKeys` is a live alias of that
   same object (no top-level flatten onto `KEYS`).
-- **`pluginMaps`** (`src/pluginMaps.ts`) — the four resolved plugin init maps,
+- **`pluginMaps`** (`src/pluginMaps.ts`): the four resolved plugin init maps,
   produced by `resolvePluginMaps(CONFIG, KEYS)` and rebuilt in place when keys
   overlays apply.
 
@@ -62,7 +62,7 @@ time and fail. Runtime types are `ConfigJson`, `KeysJson`, and `RuntimeKeys`
 
 The plugin maps hold each plugin's init options as-is. The legacy flat cleaner
 declared a cleaner per `*_INIT` field, which also meant it supplied defaults for
-fields a config file left out — `thorname: 'ej'`, `affiliateFeeBasis: '50'`,
+fields a config file left out: `thorname: 'ej'`, `affiliateFeeBasis: '50'`,
 `appId: 'edge'`, FIO's `tpid`, and so on.
 
 Those defaults were duplicates: every plugin cleans its own init options and
@@ -98,11 +98,11 @@ wrote down.
 on-disk shapes. Only plugin-owned data was re-keyed; everything else keeps its
 historical name and shape (`ACTION_QUEUE`, `LOG_CONFIG`, `LOG_SERVER`,
 `THEME_SERVER`, `DEBUG_*`, `APP_CONFIG`, `EDGE_API_KEY`, `SENTRY_*`, `KILN_*`,
-`YOLO_*`, etc.) — but consumers now import the accessor that owns the field.
+`YOLO_*`, etc.), but consumers now import the accessor that owns the field.
 
 **Schema is not the same as a data file.** Each cleaner validates one file.
 A secret field such as `EDGE_API_KEY` or `SENTRY_DSN_URL` appearing in
-`asKeysJson` does **not** mean its value lives in `config.json` — the value comes
+`asKeysJson` does **not** mean its value lives in `config.json`: the value comes
 from `keys.json`; the cleaner only types that file.
 
 There is no runtime union cleaner that splat-merges both shapes into one object.
@@ -141,15 +141,15 @@ Both per-file cleaners are actually used:
 The four plugin maps, each `Record<pluginId, init>`, live on `pluginMaps` after
 `resolvePluginMaps`:
 
-- **`corePlugins`** — edge-core currency plugin inits keyed by real edge-core
+- **`corePlugins`**: edge-core currency plugin inits keyed by real edge-core
   plugin ID (`bitcoin`, `ethereum`, `binancesmartchain`, `thorchainrune`, ...).
   Each value is the same `object | true | false` union as before.
-- **`swapPlugins`** — swap plugin inits keyed by real swap plugin ID
+- **`swapPlugins`**: swap plugin inits keyed by real swap plugin ID
   (`changehero`, `thorchain`, `0xgasless`, ...).
 - **`pluginApiKeys`** — GUI provider keys (formerly `PLUGIN_API_KEYS`), plus the
   migrated `walletconnect` (`projectId`) and `posthog` (`apiKey`, `apiHost`)
   entries where those still appear as plugin-shaped maps.
-- **`rampPlugins`** — ramp plugin inits (formerly `RAMP_PLUGIN_INITS`). Kept
+- **`rampPlugins`**: ramp plugin inits (formerly `RAMP_PLUGIN_INITS`). Kept
   distinct from `pluginApiKeys` on purpose: `banxa` exists in both maps with
   different shapes, so merging them would collide.
 
@@ -168,7 +168,7 @@ There are **no `*_INIT` fields** left in the schema or in any consumer. The dead
   `alchemyApiKey`, `blockfrostProjectId`, `glifApiKey`, `subscanApiKey`,
   `tonCenterApiKeys`, `projectId` (walletconnect), auth/telemetry top-level
   fields (`EDGE_API_KEY`/`EDGE_API_SECRET`, `SENTRY_*`, `BUGSNAG_API_KEY`,
-  `POSTHOG_API_KEY`), and the partner secrets — the "global keys". On disk those
+  `POSTHOG_API_KEY`), and the partner secrets, the "global keys". On disk those
   partner secrets may still appear **flat** at the top level for legacy files;
   load and overlay paths run `nestGlobalKeys` so the runtime `KEYS` object keeps
   them only under `KEYS.globalKeys` (`AZTECO_API_KEY`, `COINGECKO_API_KEY`,
@@ -192,7 +192,7 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
 2. **`KEYS` top-level secret fields** (`EDGE_API_*`, `SENTRY_*`, `POSTHOG_API_KEY`,
    plugin maps, …) live on `KEYS`. Remote/cache overlays deep-merge onto
    `bakedKeys` with keys winning on collision.
-3. **Partner `globalKeys`** — flat on-disk partner fields and any nested
+3. **Partner `globalKeys`**: flat on-disk partner fields and any nested
    `globalKeys` section are normalized by `nestGlobalKeys`. Consumers read
    `globalKeys.COINGECKO_API_KEY` (or `KEYS.globalKeys.…`); there is no
    top-level `KEYS.COINGECKO_API_KEY` after nesting.
@@ -201,7 +201,7 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
    combined with the matching secret from `KEYS.pluginApiKeys[id]` via
    `mergePluginInit`:
    - a `false` config value keeps the plugin disabled (secrets ignored);
-   - a `false` keys value is ignored — keys carry secrets, never kill
+   - a `false` keys value is ignored: keys carry secrets, never kill
      switches, so a remote/cache overlay cannot turn a plugin off;
    - a `true`/absent config value with an object secret becomes the secret
      object (an object always wins over a bare boolean enablement flag);
@@ -210,7 +210,7 @@ resolved `pluginMaps`, and normalizes partner secrets under `globalKeys`:
    _not_ a currency or swap plugin (those secrets live inside
    `corePlugins`/`swapPlugins` after resolve). Config and keys are deep-merged
    per ID.
-6. **Ramp plugins (`rampPlugins`)** — `CONFIG.rampPlugins[id]` deep-merged with
+6. **Ramp plugins (`rampPlugins`)**: `CONFIG.rampPlugins[id]` deep-merged with
    `KEYS.rampPlugins[id]` per ID.
 
 Objects are merged field-by-field; arrays and primitives replace wholesale;
@@ -237,7 +237,7 @@ Objects are merged field-by-field; arrays and primitives replace wholesale;
 This same function is what the golden test uses to synthesize `config`/`keys`
 in memory from the historical `env.json`, and what
 `scripts/splitEnvJson.ts` (`npm run split-env-json`) uses to write the real
-files on disk — guaranteeing the split is value-preserving.
+files on disk, guaranteeing the split is value-preserving.
 
 ## Consumers
 
@@ -251,11 +251,11 @@ Every reader was re-pointed from the old flat `ENV` / `*_INIT` /
 - Import **`globalKeys`** for partner secrets (`COINGECKO_API_KEY`, `KILN_*`,
   `STAKEKIT_API_KEY`, …).
 - Import **`pluginMaps`** for resolved plugin inits:
-  - `src/util/corePlugins.ts` — maps each edge-core plugin ID to
+  - `src/util/corePlugins.ts`: maps each edge-core plugin ID to
     `pluginMaps.corePlugins[id]` / `pluginMaps.swapPlugins[id]`, preserving the
     existing `true`/`false` hardcodes. Note `thorchainrune` and
     `thorchainrunestagenet` both read `corePlugins.thorchainrune`.
-  - `src/hooks/useRampPlugins.ts` — `pluginMaps.rampPlugins[pluginId]`.
+  - `src/hooks/useRampPlugins.ts`: `pluginMaps.rampPlugins[pluginId]`.
   - `src/plugins/gui/util/initializeProviders.ts`, `fetchRevolut.ts`, and the
     gift-card / WalletConnect paths — `pluginMaps.pluginApiKeys.*`.
   - Inner-field readers: `FioAddressUtils.ts` (`pluginMaps.corePlugins.fio`),
@@ -271,7 +271,7 @@ All build/deploy scripts were retargeted from `env.json` to the new files:
 `makeNativeHeaders.ts` (reads `{apiKey, apiSecret}` from `edgeKey.json`),
 `patchFiles.ts` (`SENTRY_*` from `keys.json`), `loggingServer.ts` + `themeServer.ts` (point at `config.json`),
 `configure.ts` (config- and keys-scoped cleaners), and `deploy.ts` + `cleaners.ts`
-(`configJson` / `keysJson` branch-override fields — already shaped like the
+(`configJson` / `keysJson` branch-override fields, already shaped like the
 files they patch).
 
 ---
@@ -281,7 +281,7 @@ files they patch).
 The following pieces still reference the old configuration world. Each is
 listed with why it remains.
 
-### 1. `env.json` on disk — retained intentionally
+### 1. `env.json` on disk: retained intentionally
 
 `env.json` is still present in the worktree and still gitignored
 (`.gitignore` and `.cursorignore`). **No active runtime code reads it.** It is
@@ -289,7 +289,7 @@ kept as the migration source and a historical copy, per the plan's locked
 decision. The golden-equivalence test reads it opportunistically (guarded by an
 existence check) to prove parity, but the app itself does not depend on it.
 
-### 2. `scripts/splitEnvJson.ts` — committed legacy bridge
+### 2. `scripts/splitEnvJson.ts`: committed legacy bridge
 
 The CLI deliberately contains the legacy `*_INIT` maps and the `splitEnv`
 classifier. It remains because it is the bridge that:
@@ -303,7 +303,7 @@ It references legacy names by design; it is the one place that is _supposed_ to
 know about the old shape. If `env.json` is ever fully retired, this module, the
 CLI script, and the golden test can be removed together.
 
-### 3. Temporary `[pipe]` runtime-verification logging — removed
+### 3. Temporary `[pipe]` runtime-verification logging: removed
 
 The temporary `[pipe]` harness (`logPipe` and its call sites) has been removed.
 `redactKey` / `redactValue` remain in `src/configKeysMerge.ts` for unit tests
@@ -324,9 +324,9 @@ refactor scope.
   `tsc --noEmit` and lint are clean across the edited files. Local
   `config.json` / `keys.json` golden checks in `configKeysMerge.test.ts` are
   skipped when those files are absent (typical CI), so they do not substitute
-  for a built-in fixture — run them on a developer machine that has real local
+  for a built-in fixture: run them on a developer machine that has real local
   files when validating a split.
-- **Cross-repo:** the HMAC signing vector is asserted from both sides —
+- **Cross-repo:** the HMAC signing vector is asserted from both sides,
   `src/__tests__/util/hmacAuth.test.ts` here and `src/__tests__/hmacAuth.test.ts`
   in edge-info-server assert the same base64 digest, so the canonical signed
   string cannot drift on one side unnoticed.
@@ -353,7 +353,7 @@ notes below remain the source of truth for layering and fallbacks.
 
 The goal is to move the secrets in `keys.json` onto the Edge info server, which
 serves them from a new authenticated endpoint. `config.json` / `CONFIG` are
-unaffected — they hold no secrets and stay local, synchronous, and immutable.
+unaffected: they hold no secrets and stay local, synchronous, and immutable.
 
 ### Resolution order
 
@@ -373,8 +373,8 @@ stall on the network, so it serves the cache and refreshes in the background for
 the _next_ launch. Only a cold start with no cache has anything to wait for.
 
 A cache whose payload will not merge counts as no cache at all, so that launch
-takes the cold-start path and pays its budget. The alternative — keeping the
-cache's fast launch and skipping the fetch — would strand the app on baked-in
+takes the cold-start path and pays its budget. The alternative (keeping the
+cache's fast launch and skipping the fetch) would strand the app on baked-in
 keys for as long as the bad payload sits on disk, since only a successful fetch
 overwrites it. Paying the budget once repairs it.
 
@@ -521,8 +521,8 @@ given Edge API key.
 
 The endpoint strips these even if an operator pastes them into a document:
 
-- `EDGE_API_KEY` and `EDGE_API_SECRET` — they _are_ the credentials.
-- All telemetry keys — `SENTRY_*`, `BUGSNAG_API_KEY`, and `POSTHOG_API_KEY`
+- `EDGE_API_KEY` and `EDGE_API_SECRET`: they _are_ the credentials.
+- All telemetry keys: `SENTRY_*`, `BUGSNAG_API_KEY`, and `POSTHOG_API_KEY`
   (stripped from the payload's top-level and any `globalKeys` section; legacy
   `pluginApiKeys.posthog` is also stripped). These stay permanently local
   because `Sentry.init`
@@ -555,7 +555,7 @@ populated before `EdgeCoreManager` builds `allPlugins`.
 function** picks up the remote value, while one that copies it into a
 module-scope constant does not. Metro evaluates the whole static import graph
 synchronously during bundle load, which is strictly before any network fetch can
-resolve, so a module-scope copy is always the baked-in value — permanently, and
+resolve, so a module-scope copy is always the baked-in value, permanently, and
 silently.
 
 This is a real constraint, not a theoretical one: `stakeKitUtils.ts`,
@@ -609,8 +609,8 @@ whatever is left of the 13 s once attestation settles is what the fetch gets.
 The network call uses `FETCH_TIMEOUT_MS` (5 s) in `keysServer.ts` as the
 `asyncWaterfall` per-server stagger (same as the helper's default), not as a
 hard ceiling on the whole getKeys call. With more than one server configured the
-waterfall can outlast the 8 s share, which is why the 13 s gate — not the
-stagger — is what bounds the launch.
+waterfall can outlast the 8 s share, which is why the 13 s gate (not the
+stagger) is what bounds the launch.
 
 These are ceilings on a first install with no network, not typical cost. The
 cache write is deliberately left outside the race and not awaited: a slow disk
@@ -661,7 +661,7 @@ corrupt file already resets user preferences today. Since the payload is now lar
 and rewritten more often, `keysCache` is cleaned with `asMaybe` so a malformed
 cache degrades to a miss instead of wiping preferences, and a malformed preference
 does not discard the cache. Losing the cache is recoverable by refetching or
-falling back to the baked-in file — which is precisely why this file is a safe host
+falling back to the baked-in file, which is precisely why this file is a safe host
 and the sticky files are not.
 
 Migration is additive: an existing `DeviceSettings.json` simply lacks `keysCache`,
