@@ -125,15 +125,23 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
   const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
   const nativeKey = hasNativeApiSigner() ? await warmNativeApiKey() : ''
   const nativeApiSigner = nativeKey !== '' ? makeNativeApiSigner() : undefined
-  const jsPair =
-    isUsableApiKey(apiKey) && apiSecret != null && apiSecret.byteLength > 0
-      ? { apiKey, apiSecret }
-      : undefined
+  // A key with no secret is still worth sending: core falls back to the legacy
+  // `Token {apiKey}` header, which the login server accepts for `type: token`
+  // rows. Dropping it would silently downgrade that partner to core's built-in
+  // public key instead.
+  const hasSecret = apiSecret != null && apiSecret.byteLength > 0
+  const jsPair = !isUsableApiKey(apiKey)
+    ? undefined
+    : hasSecret
+    ? { apiKey, apiSecret }
+    : { apiKey }
   if (nativeApiSigner == null && jsPair == null) {
-    // A context with no credentials still boots, then fails every login-server
-    // call with an opaque error, so say plainly what is missing.
+    // A context with no credentials still boots: core substitutes its own
+    // built-in public API key, which is shared and rate limited. Requests do
+    // not fail outright, they just stop being attributable to this app, so say
+    // plainly what is missing.
     console.error(
-      'EdgeCoreManager: no usable native EdgeApiSigner and no KEYS.EDGE_API_KEY / EDGE_API_SECRET; login-server requests will fail'
+      'EdgeCoreManager: no usable native EdgeApiSigner and no KEYS.EDGE_API_KEY; falling back to the built-in public API key, which is rate limited'
     )
   }
   return {
