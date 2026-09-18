@@ -5,6 +5,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import { utxoPlugins } from '../util/corePlugins'
 import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
 import { removeIsoPrefix } from '../util/utils'
 
@@ -23,6 +24,25 @@ export const MIN_RATIO = 0.02
 export const MAX_RATIO = 0.95
 export const RESYNC_THRESHOLD = 0.05
 export const DONE_THRESHOLD = 0.999
+
+/**
+ * Plugin ids served by `edge-currency-plugins`, derived from the plugin
+ * registry in `util/corePlugins.ts` so the list can't drift from what the
+ * app actually runs: a plugin not registered there can't produce a wallet.
+ */
+export const UTXO_PLUGIN_IDS = Object.keys(utxoPlugins)
+
+export const isUtxoPluginId = (pluginId: string): boolean =>
+  UTXO_PLUGIN_IDS.includes(pluginId)
+
+/**
+ * Transaction count past which a UTXO wallet counts as "large" and earns the
+ * slow-sync explainer card. Support's sampling of the wallets that generated
+ * stale-balance tickets found 164 and 310 transactions against 162 and 293 used
+ * xpub addresses, so the two measures track each other closely and the cheaper
+ * transaction count stands in for both.
+ */
+export const LARGE_UTXO_WALLET_TX_COUNT = 100
 
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
