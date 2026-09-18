@@ -1,0 +1,74 @@
+{
+  "exchangeInfo2": {
+    "buy": {
+      "providerPriority": {
+        "credit": {
+          "banxa": 1,
+          "moonpay": 2
+        }
+      }
+    },
+    "sell": {
+      "providerPriority": {
+        "applepay": {
+          "paybis": 1,
+          "moonpay": 2
+        }
+      },
+      "disableAssets": {
+        "monero": true,
+        "ethereum": ["7ef59387f0c04eb8a6d8495af829387f0c04eb8a"]
+      },
+      "disableProviders": {
+        "paybis": true,
+        "moonpay": {
+          "bitcoin": true,
+          "ethereum": [null, "af829387f0c04eb8a6d8495af829387f0c04eb8a"]
+        }
+      },
+      "disableRegions": [
+        {
+          "countryCode": "UK"
+        },
+        {
+          "countryCode": "US",
+          "stateProvinces": ["NY", "HI"]
+        },
+        {
+          "countryCode": "CA",
+          "stateProvinces": ["AL"],
+          "disableProviders": {
+            "paybis": true,
+            "moonpay": {
+              "bitcoin": true,
+              "ethereum": [null, "af829387f0c04eb8a6d8495af829387f0c04eb8a"]
+            }
+          }
+        }
+      ]
+    },
+    "swap": {
+      "providerInfo": {
+        "thorchain": {
+          "midgardServers": ["https://midgard.thorchain.info", "https://midgard.thorchain.org"]
+        }
+      },
+      "providerPriority": {
+        "swapuz": 1,
+        "changenow": 2,
+        "godex": 0
+      },
+      "disableProviders": {
+        "swapuz": true,
+        "changenow": {
+          "bitcoin": true,
+          "ethereum": [null, "af829387f0c04eb8a6d8495af829387f0c04eb8a"]
+        }
+      },
+      "disableAssets": {
+        "monero": true,
+        "ethereum": ["7ef59387f0c04eb8a6d8495af829387f0c04eb8a"]
+      }
+    }
+  }
+}
