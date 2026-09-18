@@ -19,12 +19,14 @@ import { checkAppVersion } from './versionCheck'
 // `CONFIG.INFO_SERVER` (from config.json) overrides the production info servers,
 // e.g. to point a debug build at a local info server. Absent in production
 // builds.
-const INFO_SERVERS =
-  CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
-    ? CONFIG.INFO_SERVER
-    : shouldUseTestServers()
-    ? [INFO_TEST_SERVER]
-    : ['https://info1.edge.app', 'https://info2.edge.app']
+// TEST BUILD ONLY: the tester host is checked first so a generated config.json
+// cannot point this build back at production. Restore the original ordering
+// with the hardcoded `shouldUseTestServers` in src/util/maestro.ts.
+const INFO_SERVERS = shouldUseTestServers()
+  ? [INFO_TEST_SERVER]
+  : CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
+  ? CONFIG.INFO_SERVER
+  : ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 

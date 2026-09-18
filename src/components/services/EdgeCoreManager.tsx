@@ -308,11 +308,16 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     syncServer = SYNC_TEST_SERVER
   }
 
-  if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
-    loginServer = CONFIG.LOGIN_SERVER
-  }
-  if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
-    infoServer = CONFIG.INFO_SERVER
+  // TEST BUILD ONLY: never let a generated config.json override the tester
+  // fleet back to production. Drop this guard along with the hardcoded
+  // `shouldUseTestServers` in src/util/maestro.ts.
+  if (!shouldUseTestServers()) {
+    if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
+      loginServer = CONFIG.LOGIN_SERVER
+    }
+    if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
+      infoServer = CONFIG.INFO_SERVER
+    }
   }
 
   if (bootFatalError != null) {
