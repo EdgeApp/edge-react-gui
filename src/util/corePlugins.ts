@@ -94,6 +94,7 @@ export const swapPlugins = {
   changehero: ENV.CHANGEHERO_INIT,
   changenow: ENV.CHANGE_NOW_INIT,
   changelly: ENV.CHANGELLY_INIT,
+  cyphergoat: ENV.CYPHERGOAT_INIT,
   exolix: ENV.EXOLIX_INIT,
   godex: ENV.GODEX_INIT,
   lifi: ENV.LIFI_INIT,
