@@ -38,10 +38,10 @@ tags:
 # Navigate to scene
 - tapOn: Assets
 - scrollUntilVisible:
-    element: ETH
+    element: "ETH.*"
     direction: DOWN
     centerElement: true
-- longPressOn: ETH
+- longPressOn: "ETH.*"
 - tapOn: ".*Add / Edit Tokens"
 
 # Test search
@@ -50,9 +50,8 @@ tags:
 - pressKey: Enter
 
 # First time token warning modal
-- tapOn: 
-    text: "1INCH.*"
-    index: 2
+- tapOn:
+    id: manageTokensRow.1INCH.1inch
 - assertVisible: "ETH Needed to Send Tokens"
 - tapOn: "ETH is required to pay the mining fees when sending tokens. The associated ETH wallet must contain a sufficient.*"
 - tapOn: "Please confirm your understanding below:"
@@ -117,19 +116,17 @@ tags:
                 timeout: 15000
       # Save token
       - tapOn: Save
-      - assertVisible: ".*MOG.*"
-      
-    
+
 # Confirm
-- tapOn: Done
+- tapOn: Save
 
 # Ensure tokens are visible
 - scrollUntilVisible:
-    element: 1INCH
+    element: "1INCH.*"
     direction: DOWN
     timeout: 10000
 - scrollUntilVisible:
-    element: Mog
+    element: "MOG.*"
     direction: DOWN
     centerElement: true
     timeout: 10000
@@ -158,11 +155,11 @@ tags:
 
 - tapOn: Assets
 - scrollUntilVisible: 
-    element: "Mog"
+    element: "MOG.*"
     direction: DOWN
     centerElement: true
     timeout: 10000
-- tapOn: Mog
+- tapOn: "MOG.*"
 
 - extendedWaitUntil:
     visible: ".*348,083.*"

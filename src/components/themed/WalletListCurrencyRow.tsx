@@ -178,7 +178,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
     <View
       accessible
       accessibilityRole="button"
-      testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
+      testID={`walletListRow.${walletName}.${displayCurrencyCode}`}
     >
       <EdgeCard
         icon={iconNode}
