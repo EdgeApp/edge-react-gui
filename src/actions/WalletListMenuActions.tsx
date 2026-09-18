@@ -25,10 +25,7 @@ import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { WalletsTabSceneProps } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
-import {
-  getWalletHexPrivateKey,
-  getWalletName
-} from '../util/CurrencyWalletHelpers'
+import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
@@ -318,27 +315,19 @@ export function walletListMenuAction(
               copy: { label: lstrings.fragment_wallets_copy_seed }
             }
 
-          // `getDisplayPrivateKey` returns the seed phrase when the wallet has
-          // one. Show the hex private key alongside it, since importing into
-          // another wallet app often asks for that form instead:
-          const displayKey = await account.getDisplayPrivateKey(wallet.id)
-          const privateKeyHex = await getWalletHexPrivateKey(account, wallet)
-          const message =
-            privateKeyHex == null || privateKeyHex === displayKey
-              ? displayKey
-              : `${lstrings.string_master_private_seed}\n${displayKey}\n\n${lstrings.string_master_private_key}\n${privateKeyHex}`
+          const privateKey = await account.getDisplayPrivateKey(wallet.id)
 
           await Airship.show<'copy' | 'ok' | undefined>(bridge => (
             <ButtonsModal
               title={lstrings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={message}
+              message={privateKey}
               buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
             />
           )).then(buttonPressed => {
             // @ts-expect-error -- global.__DEV__ is set by React Native
             if (global.__DEV__ === true && buttonPressed === 'copy') {
-              Clipboard.setString(message)
+              Clipboard.setString(privateKey)
               showToast(lstrings.fragment_wallets_copied_seed)
             }
           })
