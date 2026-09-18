@@ -169,6 +169,29 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
 
   const selectedCrypto = forcedWalletResult ?? rampLastCryptoSelection
 
+  // A sell amount is entered in the selected asset, so it cannot carry over to
+  // another one. The dropdown clears it on a pick, but the asset also changes
+  // without one: a deep link sets a forced wallet on a scene that is already
+  // mounted, and leaving the tab drops it again. Key the reset off the
+  // selection itself so every one of those paths clears it.
+  const selectedAssetKey =
+    selectedCrypto == null
+      ? undefined
+      : `${selectedCrypto.walletId}:${selectedCrypto.tokenId ?? ''}`
+  const lastAssetKeyRef = React.useRef(selectedAssetKey)
+  const handleAssetChange = useHandler(() => {
+    cancelPendingMax()
+    if (direction === 'sell') {
+      setAmountQuery({ empty: true })
+      setLastUsedInput(null)
+    }
+  })
+  React.useEffect(() => {
+    if (lastAssetKeyRef.current === selectedAssetKey) return
+    lastAssetKeyRef.current = selectedAssetKey
+    handleAssetChange()
+  }, [handleAssetChange, selectedAssetKey])
+
   const [selectedWallet, selectedCryptoCurrencyCode] =
     selectedCrypto != null
       ? [

@@ -411,4 +411,135 @@ describe('launchDeepLink wallet wait', () => {
     expect(followed).toBe(true)
     expect(navigation.navigate).toHaveBeenCalledTimes(1)
   })
+  it('drops an exchange link a marketing wrapper carries while a picker is open', async () => {
+    mockPickWallet.mockImplementationOnce(
+      async () => await new Promise(() => {})
+    )
+    const account: any = {
+      loggedIn: true,
+      activeWalletIds: ['a'],
+      currencyWallets: { a: {} },
+      currencyWalletErrors: {},
+      currencyConfig: { bitcoin: { allTokens: {} } },
+      watch: () => () => {}
+    }
+    const state: any = {
+      core: { account, context: { clientId: '1111111111111111' } },
+      ui: { settings: { defaultIsoFiat: 'iso:USD' } }
+    }
+    const dispatch: any = jest.fn()
+    const navigation: any = { navigate: jest.fn() }
+    const btcLink = (promoId: string): DeepLink => ({
+      type: 'rampCreate',
+      direction: 'buy',
+      asset: { pluginId: 'bitcoin', tokenId: null },
+      promoId
+    })
+
+    // The first link's picker is up and never settles:
+    launchDeepLink(navigation, btcLink('card1'))(dispatch, () => state).catch(
+      () => {}
+    )
+    for (let i = 0; i < 20; i++) await Promise.resolve()
+    const picksWhileOpen = mockPickWallet.mock.calls.length
+
+    // The wrapper hands the same exchange link to the same handler, so it has
+    // to be dropped for the same reason a bare one is:
+    const followed = await launchDeepLink(navigation, {
+      type: 'marketing',
+      campaignId: 'summer',
+      link: btcLink('card2')
+    })(dispatch, () => state)
+
+    expect(followed).toBe(false)
+    expect(mockPickWallet.mock.calls.length).toBe(picksWhileOpen)
+    expect(navigation.navigate).not.toHaveBeenCalled()
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  it('drops an exchange link that names no asset while a picker is open', async () => {
+    mockPickWallet.mockImplementationOnce(
+      async () => await new Promise(() => {})
+    )
+    const account: any = {
+      loggedIn: true,
+      activeWalletIds: ['a'],
+      currencyWallets: { a: {} },
+      currencyWalletErrors: {},
+      currencyConfig: { bitcoin: { allTokens: {} } },
+      watch: () => () => {}
+    }
+    const state: any = {
+      core: { account, context: { clientId: '1111111111111111' } },
+      ui: { settings: { defaultIsoFiat: 'iso:USD' } }
+    }
+    const dispatch: any = jest.fn()
+    const navigation: any = { navigate: jest.fn() }
+
+    launchDeepLink(navigation, {
+      type: 'rampCreate',
+      direction: 'buy',
+      asset: { pluginId: 'bitcoin', tokenId: null },
+      promoId: 'card1'
+    })(dispatch, () => state).catch(() => {})
+    for (let i = 0; i < 20; i++) await Promise.resolve()
+
+    // It raises no picker of its own, so it never waits for wallets, but it
+    // would still overwrite the promo and the ramp params under the open one:
+    const followed = await launchDeepLink(navigation, {
+      type: 'rampCreate',
+      direction: 'buy',
+      promoId: 'card2'
+    })(dispatch, () => state)
+
+    expect(followed).toBe(false)
+    expect(navigation.navigate).not.toHaveBeenCalled()
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  it('lets an exchange link that names no asset supersede one still waiting', async () => {
+    const watchers: Array<() => void> = []
+    const account: any = {
+      loggedIn: true,
+      activeWalletIds: ['a'],
+      currencyWallets: {},
+      currencyWalletErrors: {},
+      currencyConfig: {},
+      watch: (_prop: string, callback: () => void) => {
+        watchers.push(callback)
+        return () => {}
+      }
+    }
+    const state: any = {
+      core: { account, context: { clientId: '1111111111111111' } },
+      ui: { settings: { defaultIsoFiat: 'iso:USD' } }
+    }
+    const dispatch: any = jest.fn()
+    const navigation: any = { navigate: jest.fn() }
+
+    const waiting = launchDeepLink(navigation, {
+      type: 'rampCreate',
+      direction: 'buy',
+      asset: { pluginId: 'nochain', tokenId: null },
+      promoId: 'card1'
+    })(dispatch, () => state)
+
+    // It needs no wallets, so it navigates while the first is still waiting:
+    const direct = await launchDeepLink(navigation, {
+      type: 'rampCreate',
+      direction: 'buy',
+      promoId: 'card2'
+    })(dispatch, () => state)
+
+    account.currencyWallets = { a: {} }
+    for (const callback of [...watchers]) callback()
+
+    expect(direct).toBe(true)
+    expect(await waiting).toBe(false)
+    expect(navigation.navigate).toHaveBeenCalledTimes(1)
+    expect(dispatch).not.toHaveBeenCalledWith({
+      type: 'LINK_PROMO/SET',
+      data: { linkPromo: { promoId: 'card1', tab: 'buyTab' } }
+    })
+  })
 })

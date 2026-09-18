@@ -147,6 +147,23 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
 }
 
 /**
+ * Digs the navigating link out of the wrappers that carry one. An `affiliate`
+ * or `marketing` link activates a promotion or logs an open and then hands its
+ * inner link to the same `handleLink`, so the checks that key off a link's
+ * type have to read the inner one, exactly as `getDeepLinkReadiness` does.
+ */
+export function unwrapDeepLink(link: DeepLink): DeepLink {
+  switch (link.type) {
+    case 'affiliate':
+      return unwrapDeepLink(link.link)
+    case 'marketing':
+      return link.link == null ? link : unwrapDeepLink(link.link)
+    default:
+      return link
+  }
+}
+
+/**
  * The app has just received some of link,
  * so try to follow it if possible, or save it for later if not.
  */
@@ -157,19 +174,22 @@ export function launchDeepLink(
   link: DeepLink
 ): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
+    // Only the exchange links raise the back-to-back pickers the drops below
+    // protect, and they raise them from inside an `affiliate` or `marketing`
+    // wrapper too, since that hands its inner link to the same `handleLink`.
+    // Dropping every link would lose a WalletConnect or payment link that
+    // arrives from another app while one is up, since `DeepLinkingManager`
+    // clears its pending slot before launching and ignores the result, and
+    // those were handled before this guard existed.
+    const innerType = unwrapDeepLink(link).type
+    const isExchangeLink = innerType === 'rampCreate' || innerType === 'swap'
+
     // DeepLinkingManager only launches a link once the app has the state it
     // needs, but promo card taps call in directly. A link that opens a wallet
     // picker must see the full wallet list, so wait for it here too; for the
     // manager's own calls this returns at once.
     if (getDeepLinkReadiness(link) === 'wallets') {
       const { account } = getState().core
-
-      // Only the exchange links raise the back-to-back pickers the drop below
-      // protects. Dropping every `wallets` link would lose a WalletConnect or
-      // payment link that arrives from another app while one is up, since
-      // `DeepLinkingManager` clears its pending slot before launching and
-      // ignores the result, and those were handled before this guard existed.
-      const isExchangeLink = link.type === 'rampCreate' || link.type === 'swap'
 
       // Once an exchange link is being followed its picker may already be on
       // screen, so a newer one is dropped rather than stacking a second picker
@@ -194,11 +214,26 @@ export function launchDeepLink(
       }
     }
     const state = getState()
+
+    // An exchange link that names no asset opens no picker of its own, so it
+    // never claims the slot above, but it does set the promo and the ramp
+    // params that a picker already on screen is about to write. Drop it while
+    // one is up, for the same reason the waiting path drops its own.
+    if (isExchangeLink && walletLinkAccount === state.core.account) return false
+
+    // It also supersedes an exchange link still waiting for wallets. This one
+    // navigates now, and the waiting one would otherwise open its picker once
+    // the wallets load and overwrite this link's promo and params.
+    if (isExchangeLink) ++latestWalletLink
+
     return await handleLink(navigation, dispatch, state, link)
   }
 }
 
-/** Counts links that waited for wallets; the latest one is the one followed. */
+/**
+ * Counts links that waited for wallets, plus the exchange links that did not
+ * need to. A waiting link is followed only if it is still the latest.
+ */
 let latestWalletLink = 0
 
 /**
