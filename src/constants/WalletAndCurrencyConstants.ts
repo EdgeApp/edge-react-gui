@@ -5,6 +5,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import { utxoPlugins } from '../util/corePlugins'
 import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
 import { removeIsoPrefix } from '../util/utils'
 
@@ -25,36 +26,11 @@ export const RESYNC_THRESHOLD = 0.05
 export const DONE_THRESHOLD = 0.999
 
 /**
- * Plugin ids served by `edge-currency-plugins`, whose engines all scan an xpub
- * for UTXOs. Mirrors that repo's `src/common/utxobased/info` directory, which
- * is the authoritative list; keep the two in sync when a chain is added.
+ * Plugin ids served by `edge-currency-plugins`, derived from the plugin
+ * registry in `util/corePlugins.ts` so the list can't drift from what the
+ * app actually runs: a plugin not registered there can't produce a wallet.
  */
-export const UTXO_PLUGIN_IDS = [
-  'badcoin',
-  'bitcoin',
-  'bitcoincash',
-  'bitcoincashtestnet',
-  'bitcoingold',
-  'bitcoingoldtestnet',
-  'bitcoinsv',
-  'bitcointestnet',
-  'bitcointestnet4',
-  'dash',
-  'digibyte',
-  'dogecoin',
-  'eboost',
-  'ecash',
-  'feathercoin',
-  'groestlcoin',
-  'litecoin',
-  'pivx',
-  'qtum',
-  'ravencoin',
-  'smartcash',
-  'ufo',
-  'vertcoin',
-  'zcoin'
-]
+export const UTXO_PLUGIN_IDS = Object.keys(utxoPlugins)
 
 export const isUtxoPluginId = (pluginId: string): boolean =>
   UTXO_PLUGIN_IDS.includes(pluginId)

@@ -37,6 +37,7 @@ export const LargeUtxoWalletCard: React.FC = () => {
       type="warning"
       body={lstrings.large_utxo_wallet_body}
       button={{ label: lstrings.learn_more, onPress: handleLearnMore }}
+      marginRem={[0.5, 0.5, 0, 0.5]}
     />
   )
 }

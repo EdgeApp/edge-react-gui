@@ -9,7 +9,7 @@ exports[`LargeUtxoWalletCard should render 1`] = `
         "borderRadius": 16,
       },
       {
-        "marginBottom": 11,
+        "marginBottom": 0,
         "marginLeft": 11,
         "marginRight": 11,
         "marginTop": 11,
@@ -156,7 +156,7 @@ exports[`LargeUtxoWalletCard should render 1`] = `
         ]
       }
     >
-      This wallet has a long transaction history, so syncing it takes a while. Keep it open until the sync finishes. Until then the balance can read higher than the amount you are able to spend, and a send may come back as insufficient funds.
+      This wallet has a long transaction history, so syncing can take a while. While it syncs, the balance will be inaccurate until the sync is complete, so keep the wallet open until it finishes.
     </Text>
   </View>
   <View
