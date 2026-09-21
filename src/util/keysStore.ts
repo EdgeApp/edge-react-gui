@@ -12,7 +12,8 @@ import {
   asMergeableKeys,
   deepMerge,
   isPlainObject,
-  nestGlobalKeys
+  nestGlobalKeys,
+  omitFalsePluginEntries
 } from '../configKeysMerge'
 import { asKeysJson, type RuntimeKeys } from '../configKeysSchema'
 import { applyRuntimeKeys, bakedKeys, globalKeys, KEYS } from '../keys'
@@ -154,7 +155,7 @@ function applyKeys(keys: unknown): boolean {
   }
 
   const nestedOverlay = nestGlobalKeys(
-    stripLocalOnlyFields(keepKeysFields(mergeable))
+    omitFalsePluginEntries(stripLocalOnlyFields(keepKeysFields(mergeable)))
   )
   const mergedKeys = deepMerge(bakedKeys, nestedOverlay) as RuntimeKeys
   applyRuntimeKeys(
@@ -265,7 +266,9 @@ async function cacheKeys(result: FetchedKeys): Promise<void> {
   let overlay: Record<string, unknown>
   try {
     overlay = nestGlobalKeys(
-      stripLocalOnlyFields(keepKeysFields(asMergeableKeys(result.keys)))
+      omitFalsePluginEntries(
+        stripLocalOnlyFields(keepKeysFields(asMergeableKeys(result.keys)))
+      )
     )
   } catch (error: unknown) {
     console.warn(

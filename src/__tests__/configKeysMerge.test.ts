@@ -6,6 +6,7 @@ import {
   asMergeableKeys,
   deepMerge,
   nestGlobalKeys,
+  omitFalsePluginEntries,
   redactValue,
   resolvePluginMaps
 } from '../configKeysMerge'
@@ -129,6 +130,32 @@ describe('nestGlobalKeys', () => {
       globalKeys: { IP_API_KEY: null }
     })
     expect(nested.globalKeys.IP_API_KEY).toBe('ip-real')
+  })
+})
+
+describe('omitFalsePluginEntries', () => {
+  it('drops per-plugin false so deepMerge cannot wipe baked-in secrets', () => {
+    expect(
+      omitFalsePluginEntries({
+        guiApiKeys: { moonpay: false, banxa: { apiKey: 'k' } },
+        swapPlugins: { thorchain: false },
+        corePlugins: { bitcoin: { nowNodesApiKey: 'abc' } },
+        rampPlugins: { infinite: false },
+        globalKeys: { COINGECKO_API_KEY: 'cg' }
+      })
+    ).toEqual({
+      guiApiKeys: { banxa: { apiKey: 'k' } },
+      swapPlugins: {},
+      corePlugins: { bitcoin: { nowNodesApiKey: 'abc' } },
+      rampPlugins: {},
+      globalKeys: { COINGECKO_API_KEY: 'cg' }
+    })
+  })
+
+  it('leaves maps without false entries untouched', () => {
+    const keys = { guiApiKeys: { moonpay: 'm' } }
+    expect(omitFalsePluginEntries(keys)).toEqual(keys)
+    expect(omitFalsePluginEntries(keys).guiApiKeys).toBe(keys.guiApiKeys)
   })
 })
 

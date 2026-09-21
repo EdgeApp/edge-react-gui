@@ -310,6 +310,36 @@ describe('initializeKeys', () => {
     )
   })
 
+  it('does not let a false plugin overlay wipe baked-in secrets', async () => {
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: {
+        guiApiKeys: { moonpay: false },
+        globalKeys: { AZTECO_API_KEY: 'from-remote' }
+      },
+      assuranceLevel: 'unattested'
+    })
+
+    const { keysStore, keys, pluginMaps } = freshModules()
+    await keysStore.initializeKeys()
+
+    expect(keysStore.getKeysTier()).toBe('remote')
+    expect(keys.globalKeys.AZTECO_API_KEY).toBe('from-remote')
+    expect((keys.KEYS.guiApiKeys as { moonpay?: unknown }).moonpay).toBe(
+      'baked-moonpay'
+    )
+    expect(
+      (pluginMaps.pluginMaps.guiApiKeys as { moonpay?: unknown }).moonpay
+    ).toBe('baked-moonpay')
+    expect(mockWriteKeysCache).toHaveBeenCalledWith(
+      expect.objectContaining({
+        keys: {
+          globalKeys: { AZTECO_API_KEY: 'from-remote' },
+          guiApiKeys: {}
+        }
+      })
+    )
+  })
+
   it('keeps unrelated baked-in secrets when the remote payload is partial', async () => {
     mockFetchRemoteKeys.mockResolvedValue({
       keys: { globalKeys: { AZTECO_API_KEY: 'from-remote' } },

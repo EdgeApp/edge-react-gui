@@ -82,6 +82,35 @@ export function deepMerge(a: unknown, b: unknown): unknown {
 }
 
 /**
+ * Drop per-plugin `false` from a keys overlay. Keys carry secrets, never kill
+ * switches: `mergePluginInit` already ignores `false`, but `applyKeys`
+ * deep-merges the overlay into KEYS first, and `deepMerge` replaces on type
+ * mismatch. Leaving `false` in would wipe a baked-in object or string and
+ * leave providers with the `true` sentinel they skip.
+ */
+export function omitFalsePluginEntries(
+  keys: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...keys }
+  for (const field of KEYS_PAYLOAD_MAP_FIELDS) {
+    if (field === 'globalKeys') continue
+    const value = out[field]
+    if (!isPlainObject(value)) continue
+    const filtered: Record<string, unknown> = {}
+    let dropped = false
+    for (const [id, entry] of Object.entries(value)) {
+      if (entry === false) {
+        dropped = true
+        continue
+      }
+      filtered[id] = entry
+    }
+    if (dropped) out[field] = filtered
+  }
+  return out
+}
+
+/**
  * Combine the config-side enablement flag with the keys-side value for one
  * plugin ID across corePlugins, swapPlugins, guiApiKeys, and rampPlugins.
  */
