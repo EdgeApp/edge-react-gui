@@ -177,6 +177,7 @@ function applyPublicRollup(raw: unknown): void {
     console.warn('initializeKeys: signed infoRollup failed to clean')
     return
   }
+  infoServerData.rollupRaw = raw
   infoServerData.rollup = cleaned
   // `queryInfo` runs this on the unsigned path. Without it here, builds that
   // take the signed path would defer the force-upgrade check by up to one
