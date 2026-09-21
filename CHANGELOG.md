@@ -29,6 +29,7 @@
 - fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
 - fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
 - fixed: (iOS) Debug builds crashing on text-input measurement when entering an amount on the Buy scene
+- fixed: Unstake showing a bare "Insufficient funds" instead of naming the balance needed for the network fee
 
 ## 4.51.1 (2026-09-23)
 
