@@ -56,6 +56,19 @@ export function asMergeableKeys(raw: unknown): Record<string, unknown> {
         if (FORBIDDEN_MERGE_KEYS.has(key)) {
           throw new TypeError(`keys payload contains forbidden key ${key}`)
         }
+        // deepMerge replaces on type mismatch, so a primitive (`false`,
+        // `null`, …) would wipe a baked-in init object. Overlays carry
+        // secrets (objects or bare strings), never enablement flags.
+        const pluginValue = value[key]
+        if (
+          pluginValue !== undefined &&
+          !isPlainObject(pluginValue) &&
+          typeof pluginValue !== 'string'
+        ) {
+          throw new TypeError(
+            `keys payload field ${field}.${key} is not mergeable`
+          )
+        }
       }
     }
   }
@@ -91,11 +104,11 @@ export function mergePluginInit(
 ): unknown {
   if (configValue === false) return false
   // Keys are never an off switch: only config.json can disable a plugin. A
-  // remote/cache overlay that says `false` (or a hostile payload trying to)
-  // leaves the config-side enablement untouched.
-  if (keysValue === false) return configValue
+  // remote/cache overlay that says `false`/`null` (or a hostile payload
+  // trying to) leaves the config-side enablement untouched.
+  if (keysValue === false || keysValue === null) return configValue
   if (configValue === true) {
-    return keysValue !== undefined ? keysValue : true
+    return keysValue ?? true
   }
   if (configValue === undefined) {
     return keysValue

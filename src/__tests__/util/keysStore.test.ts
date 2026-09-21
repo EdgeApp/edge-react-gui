@@ -288,6 +288,24 @@ describe('initializeKeys', () => {
     expect(mockWriteKeysCache).toHaveBeenCalled()
   })
 
+  it('falls through a cache whose plugin entry would wipe baked secrets', async () => {
+    mockGetKeysCache.mockReturnValue({
+      keys: { corePlugins: { ethereum: false } },
+      fetchedAt: 1,
+      assuranceLevel: 'default'
+    })
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'from-remote' } },
+      assuranceLevel: 'unattested'
+    })
+
+    const { keysStore, keys } = freshModules()
+    await keysStore.initializeKeys()
+
+    expect(keysStore.getKeysTier()).toBe('remote')
+    expect(keys.globalKeys.AZTECO_API_KEY).toBe('from-remote')
+  })
+
   it('uses the remote tier on a successful cold fetch', async () => {
     mockFetchRemoteKeys.mockResolvedValue({
       keys: { globalKeys: { AZTECO_API_KEY: 'from-remote' } },

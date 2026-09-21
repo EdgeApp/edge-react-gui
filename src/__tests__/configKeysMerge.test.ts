@@ -32,6 +32,29 @@ describe('asMergeableKeys', () => {
     expect(() => asMergeableKeys({ rampPlugins: [] })).toThrow('rampPlugins')
   })
 
+  it('rejects a plugin entry that would replace a baked-in init object', () => {
+    // Same type-mismatch rule, per plugin: `false`/`null` would wipe API keys
+    // and node credentials already shipped in keys.json.
+    expect(() => asMergeableKeys({ corePlugins: { ethereum: false } })).toThrow(
+      'ethereum'
+    )
+    expect(() => asMergeableKeys({ corePlugins: { ethereum: null } })).toThrow(
+      'ethereum'
+    )
+    expect(() => asMergeableKeys({ swapPlugins: { thorchain: true } })).toThrow(
+      'thorchain'
+    )
+    expect(
+      asMergeableKeys({
+        corePlugins: { ethereum: { infuraProjectId: 'k' } },
+        guiApiKeys: { moonpay: 'k' }
+      })
+    ).toEqual({
+      corePlugins: { ethereum: { infuraProjectId: 'k' } },
+      guiApiKeys: { moonpay: 'k' }
+    })
+  })
+
   it('rejects __proto__ on the overlay and nested maps', () => {
     expect(() => asMergeableKeys(JSON.parse('{"__proto__":{"x":1}}'))).toThrow(
       'forbidden key'
@@ -153,7 +176,7 @@ describe('resolvePluginMaps', () => {
     expect(maps.corePlugins.bitcoin).toBe(false)
   })
 
-  it('never lets a false keys value disable a plugin', () => {
+  it('never lets a false or null keys value disable a plugin', () => {
     // Keys (remote appKeys, cache, or keys.json) carry secrets, not kill
     // switches. Only config.json can turn a plugin off.
     const config = {
@@ -163,9 +186,9 @@ describe('resolvePluginMaps', () => {
     }
     const keys = {
       corePlugins: { bitcoin: false },
-      swapPlugins: { thorchain: false },
+      swapPlugins: { thorchain: null },
       guiApiKeys: { banxa: false },
-      rampPlugins: { infinite: false }
+      rampPlugins: { infinite: null }
     }
     const maps = resolvePluginMaps(config as any, keys)
     expect(maps.corePlugins.bitcoin).toBe(true)
