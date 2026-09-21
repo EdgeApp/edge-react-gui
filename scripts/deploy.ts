@@ -3,7 +3,7 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
-import { deepMerge } from '../src/configKeysMerge'
+import { deepMerge, deepMergeOverrides } from '../src/configKeysMerge'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6
@@ -174,17 +174,21 @@ function makeProject(buildObj: BuildObj): void {
 /**
  * Deep-merge a branch's override object into the file contents, or return the
  * file unchanged when this branch has nothing to say.
+ *
+ * Config uses `deepMergeOverrides` so `false` can disable a plugin or flag.
+ * Keys keep `deepMerge` so a `false` / `{}` overlay cannot wipe credentials.
  */
 function applyBranchOverrides(
   file: Record<string, unknown> | undefined,
   overridesByBranch: Record<string, object> | undefined,
   branch: string,
-  fileLabel: string
+  fileLabel: string,
+  merge: (a: unknown, b: unknown) => unknown
 ): Record<string, unknown> | undefined {
   const overrides = overridesByBranch?.[branch]
   if (overrides == null) return file
   if (file == null) throw new Error(`${fileLabel} file is missing`)
-  return deepMerge(file, overrides) as Record<string, unknown>
+  return merge(file, overrides) as Record<string, unknown>
 }
 
 function makeCommonPost(buildObj: BuildObj): void {
@@ -228,13 +232,15 @@ function makeCommonPost(buildObj: BuildObj): void {
     configJson,
     buildObj.configJson,
     buildObj.repoBranch,
-    'config.json'
+    'config.json',
+    deepMergeOverrides
   )
   keysJson = applyBranchOverrides(
     keysJson,
     buildObj.keysJson,
     buildObj.repoBranch,
-    'keys.json'
+    'keys.json',
+    deepMerge
   )
   if (buildObj.maestroBuild) {
     if (configJson == null) throw new Error('config.json file is missing')

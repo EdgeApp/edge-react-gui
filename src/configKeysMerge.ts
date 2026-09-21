@@ -98,6 +98,28 @@ export function deepMerge(a: unknown, b: unknown): unknown {
 }
 
 /**
+ * Recursively merge two values for deploy-config branch overrides. `b` wins
+ * on conflict, including `false`: that is how a branch disables a plugin or
+ * flag. Unlike `deepMerge`, `false` is a real override, not "no opinion".
+ *
+ * Plain objects are merged field-by-field; arrays and other primitives are
+ * replaced wholesale.
+ */
+export function deepMergeOverrides(a: unknown, b: unknown): unknown {
+  if (b === undefined) return a
+  if (a === undefined) return b
+  if (isPlainObject(a) && isPlainObject(b)) {
+    const out: Record<string, unknown> = { ...a }
+    for (const key of Object.keys(b)) {
+      if (FORBIDDEN_MERGE_KEYS.has(key)) continue
+      out[key] = deepMergeOverrides(a[key], b[key])
+    }
+    return out
+  }
+  return b
+}
+
+/**
  * Combine the config-side enablement flag with the keys-side value for one
  * plugin ID across corePlugins, swapPlugins, guiApiKeys, and rampPlugins.
  */

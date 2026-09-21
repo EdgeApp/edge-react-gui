@@ -5,6 +5,7 @@ import path from 'path'
 import {
   asMergeableKeys,
   deepMerge,
+  deepMergeOverrides,
   mergePluginInit,
   nestGlobalKeys,
   redactValue,
@@ -70,6 +71,32 @@ describe('deepMerge', () => {
     expect(merged.a).toBe(1)
     expect(Object.prototype.hasOwnProperty.call(merged, 'polluted')).toBe(false)
     expect((merged as { polluted?: boolean }).polluted).toBeUndefined()
+  })
+})
+
+describe('deepMergeOverrides', () => {
+  // Deploy configJson branch blocks use false to disable a plugin or flag.
+  // That must win even when the copied config.json still has true.
+  it('lets a false override disable an enabled flag', () => {
+    expect(deepMergeOverrides(true, false)).toBe(false)
+    expect(
+      deepMergeOverrides(
+        { guiApiKeys: { banxa: true, phaze: true } },
+        { guiApiKeys: { phaze: false } }
+      )
+    ).toEqual({ guiApiKeys: { banxa: true, phaze: false } })
+  })
+
+  it('still merges nested objects field-by-field', () => {
+    expect(
+      deepMergeOverrides(
+        { swapPlugins: { changelly: true }, BETA_FEATURES: false },
+        { swapPlugins: { thorchain: true }, BETA_FEATURES: true }
+      )
+    ).toEqual({
+      swapPlugins: { changelly: true, thorchain: true },
+      BETA_FEATURES: true
+    })
   })
 })
 
