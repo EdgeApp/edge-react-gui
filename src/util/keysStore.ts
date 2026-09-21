@@ -172,6 +172,11 @@ function applyPublicRollup(raw: unknown): void {
     return
   }
   infoServerData.rollup = cleaned
+  // Consumers that read fields `asInfoRollup` does not model (giftCardInfo,
+  // for one) take them off `rollupRaw`. The unsigned path sets it in
+  // `fetchPublicRollup`; a signed launch skips that call, so set it here too
+  // or those fields stay missing until the next unsigned poll.
+  infoServerData.rollupRaw = raw
   // `queryInfo` runs this on the unsigned path. Without it here, builds that
   // take the signed path would defer the force-upgrade check by up to one
   // INFO_FETCH_INTERVAL on every launch.
