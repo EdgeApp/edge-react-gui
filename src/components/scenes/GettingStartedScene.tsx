@@ -533,7 +533,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   tertiaryText: {
-    color: theme.textInputTextColorDisabled
+    color: theme.iconTappable
   },
   tappableText: {
     color: theme.iconTappable

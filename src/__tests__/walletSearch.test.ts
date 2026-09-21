@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import type { EdgeToken } from 'edge-core-js'
+import type { EdgeToken, EdgeTokenMap } from 'edge-core-js'
 
 import { searchWalletList } from '../components/services/SortedWalletList'
 import { filterWalletCreateItemListBySearchText } from '../selectors/getCreateWalletList'
@@ -14,6 +14,7 @@ import {
   testTetherToken,
   testWstethToken
 } from '../util/fake/fakeSearchTestData'
+import { searchTokenIds } from '../util/tokenSearch'
 
 // -----------------------------------------------------------------------------
 // searchWalletList Tests
@@ -267,6 +268,24 @@ describe('filterWalletCreateItemListBySearchText', () => {
       pluginId: 'bitcoin',
       walletType: 'wallet:bitcoin'
     }),
+    // Multi-word display name whose second word is absent from the pluginId:
+    makeTestCreateWalletItem({
+      key: 'create-robinhood',
+      currencyCode: 'ETH',
+      displayName: 'Robinhood Chain',
+      assetDisplayName: 'Ethereum',
+      pluginId: 'robinhood',
+      walletType: 'wallet:robinhood'
+    }),
+    // Multi-word display name whose second word IS in the pluginId:
+    makeTestCreateWalletItem({
+      key: 'create-bitcoincash',
+      currencyCode: 'BCH',
+      displayName: 'Bitcoin Cash',
+      assetDisplayName: 'Bitcoin Cash',
+      pluginId: 'bitcoincash',
+      walletType: 'wallet:bitcoincash'
+    }),
     makeTestCreateWalletItem({
       key: 'create-usdt',
       currencyCode: 'USDT',
@@ -292,7 +311,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
   describe('empty search', () => {
     test('returns all items when search is empty', () => {
       const result = filterWalletCreateItemListBySearchText(testCreateList, '')
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(7)
     })
 
     test('returns all items when search is only whitespace', () => {
@@ -300,7 +319,7 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         '   '
       )
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(7)
     })
   })
 
@@ -321,18 +340,29 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'bit'
       )
-      expect(result).toHaveLength(1)
-      expect(result[0].currencyCode).toBe('BTC')
+      const codes = result.map(r => r.currencyCode)
+      expect(codes).toEqual(['BTC', 'BCH'])
     })
 
-    test('does NOT match in middle (startsWith for currencyCode)', () => {
+    test('does NOT match in the middle of a word', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'ether'
+      )
+      // "ether" is inside "Tether" but does not start any of its words
+      const codes = result.map(r => r.currencyCode)
+      expect(codes).not.toContain('USDT')
+    })
+
+    test('matches a later word of a display name by prefix', () => {
       const result = filterWalletCreateItemListBySearchText(
         testCreateList,
         'steth'
       )
-      // "steth" should not match "WSTETH" as currencyCode doesn't start with it
-      // nor "Wrapped stETH" as displayName doesn't start with it
-      expect(result).toHaveLength(0)
+      // "steth" is the second word of "Wrapped stETH", so it matches there,
+      // but it is still a prefix match rather than a substring of "WSTETH"
+      expect(result).toHaveLength(1)
+      expect(result[0].currencyCode).toBe('WSTETH')
     })
 
     test('matches assetDisplayName from beginning', () => {
@@ -340,8 +370,9 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'ethereum'
       )
-      // Ethereum mainnet and Base both have assetDisplayName "Ethereum"
-      expect(result).toHaveLength(2)
+      // Ethereum mainnet, Base and Robinhood Chain all have the assetDisplayName
+      // "Ethereum"
+      expect(result).toHaveLength(3)
     })
   })
 
@@ -361,8 +392,9 @@ describe('filterWalletCreateItemListBySearchText', () => {
         testCreateList,
         'ethereum'
       )
-      // Should match Ethereum mainnet (pluginId and displayName), Base (assetDisplayName)
-      // But NOT tokens even though they have pluginId: 'ethereum'
+      // Should match Ethereum mainnet (pluginId and displayName), Base and
+      // Robinhood Chain (assetDisplayName), but NOT tokens even though they
+      // have pluginId: 'ethereum'
       expect(result.every(r => r.walletType != null)).toBe(true)
     })
   })
@@ -403,6 +435,106 @@ describe('filterWalletCreateItemListBySearchText', () => {
         'base   eth'
       )
       expect(result).toHaveLength(1)
+    })
+  })
+
+  describe('multi-word display names', () => {
+    test('matches the full name of a multi-word chain', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood Chain'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('matches the first word of a multi-word chain', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('matches a multi-word chain typed without the space', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'robinhoodchain'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('robinhood')
+    })
+
+    test('still matches a multi-word chain named by its pluginId', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Bitcoin Cash'
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].pluginId).toBe('bitcoincash')
+    })
+
+    test('returns nothing when the second word matches nothing', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        testCreateList,
+        'Robinhood Bitcoin'
+      )
+      expect(result).toHaveLength(0)
+    })
+  })
+
+  describe('punctuation in display names', () => {
+    const segwitCreateList = [
+      makeTestCreateWalletItem({
+        key: 'create-wallet:bitcoin-bip49-bitcoin',
+        currencyCode: 'BTC',
+        displayName: 'Bitcoin (Segwit)',
+        assetDisplayName: 'Bitcoin',
+        pluginId: 'bitcoin',
+        walletType: 'wallet:bitcoin'
+      }),
+      makeTestCreateWalletItem({
+        key: 'create-wallet:bitcoin-bip44-bitcoin',
+        currencyCode: 'BTC',
+        displayName: 'Bitcoin (no Segwit)',
+        assetDisplayName: 'Bitcoin',
+        pluginId: 'bitcoin',
+        walletType: 'wallet:bitcoin'
+      })
+    ]
+
+    test('matches a word wrapped in parentheses', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'segwit'
+      )
+      expect(result.map(r => r.displayName)).toEqual([
+        'Bitcoin (Segwit)',
+        'Bitcoin (no Segwit)'
+      ])
+    })
+
+    test('matches a word that follows an opening parenthesis', () => {
+      const result = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'bitcoin no'
+      )
+      expect(result.map(r => r.displayName)).toEqual(['Bitcoin (no Segwit)'])
+    })
+
+    test('matches each visible label typed exactly', () => {
+      const segwit = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'Bitcoin (Segwit)'
+      )
+      expect(segwit.map(r => r.displayName)).toEqual(['Bitcoin (Segwit)'])
+
+      const noSegwit = filterWalletCreateItemListBySearchText(
+        segwitCreateList,
+        'Bitcoin (no Segwit)'
+      )
+      expect(noSegwit.map(r => r.displayName)).toEqual(['Bitcoin (no Segwit)'])
     })
   })
 
@@ -501,5 +633,85 @@ describe('Regression: Original search issues', () => {
         result[0].type === 'asset' && result[0].token?.currencyCode === 'USDT'
       ).toBe(true)
     })
+  })
+})
+
+// -----------------------------------------------------------------------------
+// searchTokenIds Tests
+// -----------------------------------------------------------------------------
+
+describe('searchTokenIds', () => {
+  // MOG uses a checksummed contract address, as the token lists do:
+  const mogToken: EdgeToken = {
+    currencyCode: 'MOG',
+    displayName: 'Mog Coin',
+    denominations: [{ name: 'MOG', multiplier: '100000000000000000' }],
+    networkLocation: {
+      contractAddress: '0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a'
+    }
+  }
+  const mogTokenId = 'aaee1a9723aadb7afa2810263653a34ba2c21c7a'
+  const tetherTokenId = 'dac17f958d2ee523a2206206994597c13d831ec7'
+  const wstethTokenId = '7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0'
+
+  const allTokens: EdgeTokenMap = {
+    [mogTokenId]: mogToken,
+    [tetherTokenId]: testTetherToken,
+    [wstethTokenId]: testWstethToken
+  }
+  const tokenIds = [mogTokenId, tetherTokenId, wstethTokenId]
+
+  test('returns all tokenIds when search is empty', () => {
+    expect(searchTokenIds(allTokens, tokenIds, '')).toEqual(tokenIds)
+  })
+
+  test('matches currency code', () => {
+    expect(searchTokenIds(allTokens, tokenIds, 'MOG')).toEqual([mogTokenId])
+  })
+
+  test('matches display name', () => {
+    expect(searchTokenIds(allTokens, tokenIds, 'Tether')).toEqual([
+      tetherTokenId
+    ])
+  })
+
+  test('matches a full contract address', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a'
+      )
+    ).toEqual([mogTokenId])
+  })
+
+  test('matches a full contract address in any case', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0xaaee1a9723aadb7afa2810263653a34ba2c21c7a'
+      )
+    ).toEqual([mogTokenId])
+  })
+
+  test('matches a partial contract address', () => {
+    expect(searchTokenIds(allTokens, tokenIds, '0xdac17f')).toEqual([
+      tetherTokenId
+    ])
+  })
+
+  test('returns nothing for an unknown contract address', () => {
+    expect(
+      searchTokenIds(
+        allTokens,
+        tokenIds,
+        '0x0000000000000000000000000000000000000000'
+      )
+    ).toEqual([])
+  })
+
+  test('skips tokenIds missing from the token map', () => {
+    expect(searchTokenIds(allTokens, ['missing-token-id'], 'mog')).toEqual([])
   })
 })

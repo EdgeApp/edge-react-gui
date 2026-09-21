@@ -56,7 +56,7 @@ import { signMoonpayUrl } from './moonpaySign'
 const providerId = 'moonpay'
 const storeId = 'com.moonpay'
 const partnerIcon = 'moonpay_symbol_prp.png'
-const pluginDisplayName = 'Moonpay'
+const pluginDisplayName = 'MoonPay'
 const supportEmail = 'support@moonpay.com'
 
 const allowedCurrencyCodes: Record<

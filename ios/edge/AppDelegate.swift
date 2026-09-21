@@ -1,4 +1,3 @@
-import ExpoQuickActions
 import Firebase
 import FirebaseMessaging
 import RNBootSplash
@@ -10,41 +9,28 @@ import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+  /// The scene owns the window, but third-party code still reaches for it here.
+  /// `@react-native-firebase/messaging` reads `application.delegate.window` on
+  /// `UIApplicationDidFinishLaunchingNotification`, which raises
+  /// `doesNotRecognizeSelector` if the delegate has no `window` property at all,
+  /// so `SceneDelegate` mirrors its window into this.
   var window: UIWindow?
-  var securityView: UIView?
+
+  /// The root view controller React Native was started into.
+  /// iOS can disconnect a scene without killing the process, and the later
+  /// reconnect runs `scene(_:willConnectTo:)` again, so `SceneDelegate`
+  /// reattaches this instead of mounting a second copy of the app.
+  var rootViewController: UIViewController?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
 
   /**
-   * Handles deep links.
-   * From https://reactnative.dev/docs/0.79/linking?ios-language=swift#enabling-deep-links
-   */
-  func application(
-    _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-  ) -> Bool {
-    return RCTLinkingManager.application(app, open: url, options: options)
-  }
-
-  /**
-   * Handles deep links.
-   * From https://reactnative.dev/docs/0.79/linking?ios-language=swift#enabling-deep-links
-   */
-  func application(
-    _ application: UIApplication,
-    continue userActivity: NSUserActivity,
-    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
-  ) -> Bool {
-    return RCTLinkingManager.application(
-      application,
-      continue: userActivity,
-      restorationHandler: restorationHandler
-    )
-  }
-
-  /**
    * Handles app start-up.
    * React Native template code.
+   *
+   * The window and everything tied to its lifecycle lives in `SceneDelegate`,
+   * since this app adopts the `UIScene` lifecycle.
    */
   func application(
     _ application: UIApplication,
@@ -57,14 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Client-side background fetch interval:
     application.setMinimumBackgroundFetchInterval(60 * 60 * 12)
 
-    // Capture a home-screen quick action on a cold launch so
-    // expo-quick-actions can report it as the initial action once JS loads.
-    // This delegate is not an ExpoAppDelegate, so the library's own
-    // subscriber never runs. Edge addition.
-    if let shortcutItem = launchOptions?[.shortcutItem] as? UIApplicationShortcutItem {
-      ExpoQuickActions.initialAction = shortcutItem
-    }
-
     // React Native template code:
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
@@ -73,30 +51,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "edge",
-      in: window,
-      launchOptions: launchOptions
-    )
-
     return true
   }
 
   /**
-   * Handles home-screen quick action taps while the app is running.
-   * Mirrors ExpoQuickActionsAppDelegate, which never runs because this
-   * delegate is not an ExpoAppDelegate. Edge addition.
+   * Points every new scene at our `SceneDelegate`.
+   * The scene manifest in Info.plist names the same configuration.
    */
   func application(
     _ application: UIApplication,
-    performActionFor shortcutItem: UIApplicationShortcutItem,
-    completionHandler: @escaping (Bool) -> Void
-  ) {
-    NotificationCenter.default.post(
-      name: Notification.Name("onQuickAction"), object: shortcutItem)
-    completionHandler(true)
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    return UISceneConfiguration(
+      name: "Default Configuration",
+      sessionRole: connectingSceneSession.role
+    )
   }
 
   /**
@@ -130,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       print("Background notification: \(message)")
 
       DispatchQueue.main.async {
-        application.applicationIconBadgeNumber = problemUsers.count
+        setBadgeCount(problemUsers.count)
 
         let content = UNMutableNotificationContent()
         content.title = "Urgent Security Issue"
@@ -147,36 +117,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
   }
+}
 
-  /**
-   * Hides the app when we go into the background.
-   * Edge addition.
-   */
-  func applicationDidEnterBackground(_ application: UIApplication) {
-    guard
-      let storyboard = UIStoryboard(name: "LaunchScreen", bundle: nil) as UIStoryboard?,
-      let launchScreen = storyboard.instantiateInitialViewController(),
-      let launchView = launchScreen.view,
-      let window = self.window
-    else {
-      return
-    }
-
-    launchView.frame = window.bounds
-    window.addSubview(launchView)
-    window.makeKeyAndVisible()
-    self.securityView = launchView
-  }
-
-  /**
-   * Shows the app when we come into the foreground.
-   * Edge addition.
-   */
-  func applicationWillEnterForeground(_ application: UIApplication) {
-    if let view = securityView {
-      view.removeFromSuperview()
-      securityView = nil
-    }
+/// Sets the home-screen badge.
+/// `UIApplication.applicationIconBadgeNumber` is deprecated since iOS 17,
+/// but our deployment target still includes iOS 15.
+private func setBadgeCount(_ count: Int) {
+  if #available(iOS 16.0, *) {
+    UNUserNotificationCenter.current().setBadgeCount(count)
+  } else {
+    UIApplication.shared.applicationIconBadgeNumber = count
   }
 }
 

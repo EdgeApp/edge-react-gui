@@ -44,7 +44,7 @@ interface Props {
 /**
  * Card that displays balance, deposit/send buttons, and a link to view assets
  */
-export const BalanceCard = (props: Props) => {
+export const BalanceCard: React.FC<Props> = props => {
   const { navigation, onViewAssetsPress } = props
 
   const dispatch = useDispatch()
@@ -72,7 +72,7 @@ export const BalanceCard = (props: Props) => {
     () =>
       activeWalletIds.every(walletId => {
         // Ignore wallets that have crashed:
-        if (currencyWalletErrors[walletId]) return true
+        if (currencyWalletErrors[walletId] != null) return true
 
         // Both the wallet and its rate need to be loaded:
         const wallet = currencyWallets[walletId]
@@ -96,7 +96,7 @@ export const BalanceCard = (props: Props) => {
   )
   const [digitHeight, setDigitHeight] = React.useState(0)
 
-  const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
+  const fiatSymbol = defaultIsoFiat === '' ? '' : getFiatSymbol(defaultIsoFiat)
   const fiatCurrencyCode = removeIsoPrefix(defaultIsoFiat)
   const formattedFiat = isBalanceVisible
     ? formatNumber(fiatAmount, { toFixed: 2 })
@@ -185,11 +185,14 @@ export const BalanceCard = (props: Props) => {
       </UnscaledText>
       <EdgeTouchableOpacity
         style={styles.balanceContainer}
+        testID="balanceCardToggle"
         onPress={handleToggleAccountBalanceVisibility}
       >
         <View style={styles.titleContainer}>
-          <EdgeText style={theme.cardTextShadow}>
-            {lstrings.fragment_wallets_balance_text}
+          <EdgeText style={theme.cardTextShadow} testID="balanceCardTitle">
+            {isBalanceVisible
+              ? lstrings.fragment_wallets_balance_text
+              : lstrings.fragment_wallets_unhide_balance_text}
           </EdgeText>
           <IonIcon
             name={isBalanceVisible ? 'eye-off-outline' : 'eye-outline'}

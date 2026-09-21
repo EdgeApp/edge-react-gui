@@ -11,6 +11,7 @@ import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { isMaestro } from '../../util/maestro'
 import { openBrowserUri } from '../../util/WebUtils'
 import { ChatBubblesIcon } from '../icons/ThemedIcons'
 import { Airship } from '../services/AirshipInstance'
@@ -60,7 +61,9 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
   }, [])
 
   const styles = getStyles(theme)
-  const versionText = `${lstrings.help_version} ${versionNumber}`
+  const versionText = `${lstrings.help_version} ${versionNumber}${
+    isMaestro() ? '-m' : ''
+  }`
   const buildText = `${lstrings.help_build} ${buildNumber}`
   const helpModalTitle = sprintf(
     lstrings.help_modal_title_thanks,

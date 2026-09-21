@@ -4,10 +4,14 @@
 
 ## 4.51.0 (staging)
 
+- added: Robinhood Chain wallets
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
 - added: App/device attestation for gated info-server requests
 - added: Swapter swap provider
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
+- added: `blockscoutApiKey` env config for EVM core plugins
+- changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
@@ -15,6 +19,8 @@
 - changed: Use the UI4 warning card for the Reveal Raw Keys and Reveal Master Private Key password confirmation warnings.
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
+- changed: The balance card title now reads "Unhide Balance" while balances are hidden, and hiding balances shows a toast explaining how to bring them back.
+- fixed: Wallet list rows now announce as a button to screen readers, instead of as an inert group that reads out but does not present itself as something to activate.
 - fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
 - fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.
@@ -29,6 +35,12 @@
 - fixed: Tapping Max on the Sell scene no longer briefly shows the entered fiat amount in the crypto field while the max is being calculated.
 - fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
 - fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
+- fixed: Android quick-action shortcuts no longer throw a startup error when the app launches without ever coming to the foreground. Registration now waits for the app to be foregrounded, the native shortcut intent targets the launcher component instead of the current activity, and a registration failure is reported to Sentry instead of shown as a blocking alert.
+- fixed: Choose Wallets to Add search now matches multi-word chain names and words inside parentheses
+- fixed: Remote gift card provider disables from the info server now take effect
+- fixed: Spend Crypto opens Bitrefill directly when Phaze is remotely disabled
+- fixed: Purchased Phaze gift cards stay viewable while Phaze is remotely disabled
+- fixed: Phaze gift card purchases no longer fail when the quote has no expiry
 
 ## 4.50.3 (2026-08-28)
 

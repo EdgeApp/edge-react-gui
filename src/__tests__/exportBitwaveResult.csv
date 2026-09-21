@@ -1,0 +1,8 @@
+"id","remoteContactId","amount","amountTicker","cost","costTicker","fee","feeTicker","time","blockchainId","memo","transactionType","accountId","contactId","categoryId","taxExempt","tradeId","description","fromAddress","toAddress","groupId","metadata:myCustomMetadata1","metadata:myCustomMetadata2"
+"1ff0fd8529f4c5bc","","1230000","BTC","","","","","2018-04-23T09:49:40Z","txid1","Hell yeah! Thanks for the fish <<&&>>","deposit","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Crazy Person","","receiveaddress1","","Income:Mo Money","Crazy Person"
+"a1734d2a42db4f78","","3210000","BTC","","","","","2018-04-24T13:36:20Z","txid2","Hell yeah! Here's a fish""","withdrawal","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Crazy Person 2","","","","Expense:Less Money","Crazy Person 2"
+"4152a38fd1753fb1","","3210000","BTC","","","","","2018-04-25T17:23:00Z","txid3","","deposit","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Transfer","","receiveaddress3","","Transfer:Edge","Transfer"
+"bd0499aac742810c","","3210000","BTC","","","","","2018-04-26T21:09:40Z","txid4","","withdrawal","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Transfer but actually income","","","","Transfer:Edge","Transfer but actually income"
+"28b9c7c71f2f3725","","3210000","BTC","","","","","2018-04-28T00:56:20Z","txid4","","withdrawal","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Transfer but no fee","","","","Transfer:Edge","Transfer but no fee"
+"a7604f215aa3ebd8","","3210000","BTC","","","","","2018-04-29T04:43:00Z","txid5","","withdrawal","pgM8cDt7bySnWTzs2MyI","","","FALSE","","Transfer but no fiat amount","","","","Transfer:Edge","Transfer but no fiat amount"
+"9a1aed86663a096c","","3210000","BTC","","","","","2018-04-30T08:29:40Z","txid6","","withdrawal","pgM8cDt7bySnWTzs2MyI","","","FALSE","","","","","","",""

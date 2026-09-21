@@ -1,7 +1,8 @@
 branches:
   only:
-  - develop
-  - staging
+    - develop
+    - staging
+if: head_branch !~ ^dependabot/
 dist: jammy
 language: node_js
 node_js:

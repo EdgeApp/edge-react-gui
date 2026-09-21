@@ -2,7 +2,7 @@
 -----
 Short description: Buy BTC, AVAX, Monero & more
 -----
-我们易于使用的区块链钱包为您提供全面的隐私和安全。 我们易于使用的区块链钱包为您提供全面的隐私和安全。 The Edge app has open-source code to ensure the highest level of security and privacy.
+在 Edge 中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle. 我们易于使用的区块链钱包为您提供全面的隐私和安全。 我们易于使用的区块链钱包为您提供全面的隐私和安全。 The Edge app has open-source code to ensure the highest level of security and privacy.
 
 Managing your cryptocurrency assets has never been easier. 管理您的加密货币资产从未如此简单。 Edge 钱包为您提供最大的安全性，同时保持简洁，允许所有类型的用户轻松管理，转移和交换他们的货币。
 
@@ -10,7 +10,7 @@ Edge Crypto Wallet currently supports: Bitcoin, Bitcoin Cash, Litecoin, Dash, Et
 
 Edge 是一个功能强大且易于使用的加密货币钱包, 它允许用户利用便利的手机银行模式，轻松地控制自己的私钥。 
 
-控制您的资金! With Edge, only YOU have access to your funds or transaction data. 在 Edge 中，唯有您能够掌握您的资金或交易信息。 Edge 或 任何第三方都无法获取您的资金或数据。 您将得到专为比特币设计的财务隐私权和自主权，它极为简易，就连老人家都能应付自如。 You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
+控制您的资金! With Edge, only YOU have access to your funds or transaction data. 任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 Neither Edge nor any 3rd party can access the information requested by the application. You get the financial privacy and autonomy that blockchain was designed for, with the ease of use even grandma could handle.
 
 Edge还提供加密货币交易服务。 只需轻点几下, 即可轻松交易加密货币。 Easily swap your currencies for others with a few taps. Easily swap your currencies for others with a few taps. 
 

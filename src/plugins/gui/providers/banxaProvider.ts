@@ -17,6 +17,7 @@ import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import type { FiatProviderLink } from '../../../types/DeepLinkTypes'
 import type { StringMap } from '../../../types/types'
+import { attestedJsonHeaders } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { consify, removeIsoPrefix } from '../../../util/utils'
@@ -1019,11 +1020,14 @@ const generateHmac = async (
     `v1/createHmac/${hmacUser}`,
     {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: await attestedJsonHeaders(),
       body
     },
     3000
   )
+  // A missing/rejected attestation token returns 403 here; fail loudly rather
+  // than parsing an error body as a signature.
+  if (!response.ok) throw new Error('Banxa failed to create HMAC signature')
   const reply = await response.json()
   const { signature } = asInfoCreateHmacResponse(reply)
 

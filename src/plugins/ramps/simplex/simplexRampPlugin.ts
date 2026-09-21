@@ -4,6 +4,7 @@ import { Platform } from 'react-native'
 import { showToast } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
+import { attestedJsonHeaders } from '../../../util/attestation'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { fetchInfo } from '../../../util/network'
 import { makeUuid } from '../../../util/rnUtils'
@@ -295,7 +296,7 @@ export const simplexRampPlugin: RampPluginFactory = (
       `v1/jwtSign/${endpoint}`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: await attestedJsonHeaders(),
         body: JSON.stringify({ data })
       },
       3000

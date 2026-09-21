@@ -11,6 +11,13 @@ interface UseGiftCardProviderOptions {
   apiKey: string
   baseUrl: string
   publicKey?: string
+
+  /**
+   * Set true to build the provider without `ensureUser`, so it never registers
+   * a Phaze identity. Only the identities already stored on the account can be
+   * queried, which is all a read-only view of past orders needs.
+   */
+  readOnly?: boolean
 }
 
 export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
@@ -19,7 +26,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
   isError: boolean
   error: Error | null
 } {
-  const { account, apiKey, baseUrl, publicKey } = options
+  const { account, apiKey, baseUrl, publicKey, readOnly = false } = options
 
   const {
     data: provider = null,
@@ -27,7 +34,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
     isError,
     error
   } = useQuery({
-    queryKey: ['phazeProvider', account?.id, apiKey, baseUrl],
+    queryKey: ['phazeProvider', account?.id, apiKey, baseUrl, readOnly],
     queryFn: async () => {
       const instance = makePhazeGiftCardProvider({
         baseUrl,
@@ -35,7 +42,7 @@ export function useGiftCardProvider(options: UseGiftCardProviderOptions): {
         publicKey
       })
       // Attach persisted userApiKey if present:
-      await instance.ensureUser(account)
+      if (!readOnly) await instance.ensureUser(account)
       return instance
     },
     enabled: account != null && apiKey !== '' && baseUrl !== '',

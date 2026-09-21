@@ -109,6 +109,10 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       ? { stakeAssetUris: [], rewardAssetUris: [] }
       : getPolicyIconUris(account.currencyConfig, stakePolicy)
 
+  // A policy may replace the default reward wording of the claim action
+  const claimLabel =
+    stakePolicy?.claimLanguage?.actionLabel ?? lstrings.stake_claim_rewards
+
   // Hooks
 
   const [stakeAllocations, setStakeAllocations] = React.useState<
@@ -177,7 +181,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       if (stakePolicy == null) return
       const sceneTitleMap = {
         stake: getPolicyTitleName(stakePolicy, countryCode),
-        claim: lstrings.stake_claim_rewards,
+        claim: claimLabel,
         unstake: lstrings.stake_unstake,
         unstakeAndClaim: lstrings.stake_unstake_claim,
         unstakeExact: '' // Only for internal use
@@ -211,16 +215,14 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
   }): React.ReactElement => {
     const { allocationType, currencyCode, nativeAmount, pluginId, tokenId } =
       item
+    const claimablePolicyLabel = stakePolicy?.claimLanguage?.positionLabel
     const titleBase =
       allocationType === 'staked'
-        ? lstrings.stake_s_staked
+        ? sprintf(lstrings.stake_s_staked, currencyCode)
         : allocationType === 'earned'
-        ? lstrings.stake_s_earned
-        : lstrings.stake_s_unstaked
-    const title = `${sprintf(
-      titleBase,
-      currencyCode
-    )}${getAllocationLocktimeMessage(item)}`
+        ? claimablePolicyLabel ?? sprintf(lstrings.stake_s_earned, currencyCode)
+        : sprintf(lstrings.stake_s_unstaked, currencyCode)
+    const title = `${titleBase}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 
     // This is not the wallet we are staking from, but the asset being staked.
@@ -312,7 +314,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
               stakePolicy.hideClaimAction === true
                 ? undefined
                 : {
-                    label: lstrings.stake_claim_rewards,
+                    label: claimLabel,
                     disabled: !canClaim,
                     onPress: handleModifyPress('claim')
                   }

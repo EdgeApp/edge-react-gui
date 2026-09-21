@@ -22,10 +22,8 @@ import {
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
-import { isMaestro } from '../../util/maestro'
 import { logEvent } from '../../util/tracking'
 import { EdgeButton } from '../buttons/EdgeButton'
-import { SceneButtons } from '../buttons/SceneButtons'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SearchIconAnimated } from '../icons/ThemedIcons'
@@ -137,7 +135,6 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
     }
     return out
   })
-
   const findMainnetItem = (pluginId: string): MainWalletCreateItem => {
     const newItem = createWalletList.find(item => item.pluginId === pluginId)
     return newItem as MainWalletCreateItem
@@ -423,13 +420,12 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             exit={{ type: 'fadeOut', duration: 300 }}
             accessible={false}
           >
-            <SceneButtons
-              primary={{
-                label: lstrings.string_next_capitalized,
-                onPress: handleNextPress,
-                testID: 'nextButton'
-              }}
-              absolute={!isMaestro()}
+            <EdgeButton
+              type="primary"
+              layout="solo"
+              label={lstrings.string_next_capitalized}
+              onPress={handleNextPress}
+              testID="nextButton"
             />
           </EdgeAnim>
         )
@@ -465,7 +461,6 @@ const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
-              paddingBottom: insetStyle.paddingBottom + theme.rem(5),
               marginHorizontal: theme.rem(0.5)
             }}
             data={filteredCreateWalletList}

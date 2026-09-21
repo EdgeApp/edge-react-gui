@@ -36,7 +36,7 @@ interface Props {
   onPress?: () => void | Promise<void>
 }
 
-export function AlertDropdown(props: Props) {
+export const AlertDropdown: React.FC<Props> = props => {
   const {
     bridge,
     error,
@@ -95,7 +95,7 @@ export function AlertDropdown(props: Props) {
             {message}
           </UnscaledText>
         </EdgeTouchableOpacity>
-        <EdgeTouchableOpacity onPress={handleClose}>
+        <EdgeTouchableOpacity onPress={handleClose} testID="alertDropdownClose">
           <AntDesignIcon
             name="closecircle"
             size={theme.rem(1)}

@@ -80,7 +80,7 @@ import {
 
 const pluginId = 'moonpay'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
-const pluginDisplayName = 'Moonpay'
+const pluginDisplayName = 'MoonPay'
 const supportEmail = 'support@moonpay.com'
 
 // Local asset map type

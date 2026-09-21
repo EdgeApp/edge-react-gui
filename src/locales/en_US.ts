@@ -229,7 +229,7 @@ const strings = {
   fragment_error_report_id_copied: 'Error report ID copied',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body_1xrp:
-    'Ripple (XRP) wallets require a 1 XRP minimum balance. You must deposit at least 1 XRP to this address before this wallet will show a balance or transactions. 1 XRP will be unspendable for the lifetime of this wallet address.',
+    'A minimum balance of 1 XRP is required for an address on the XRP Ledger to be active. The 1 XRP is an unspendable reserve on the network. The reserve is met as soon as the address balance reaches 1 XRP or more. Any amount above this reserve is available for transactions.',
   request_xrp_minimum_notification_alert_body_1xrp:
     'This wallet will always require a 1 XRP minimum',
   request_xlm_minimum_notification_body:
@@ -277,6 +277,9 @@ const strings = {
   transaction_list_search_no_result: 'Search returned no results',
   transaction_list_recent_transactions: 'Recent Transactions',
   fragment_wallets_balance_text: 'Total Balance',
+  fragment_wallets_unhide_balance_text: 'Unhide Balance',
+  fragment_wallets_balance_hidden_toast:
+    'Balances are hidden. Tap “Unhide Balance” to show them again.',
   fragment_wallets_delete_wallet: 'Archive Wallet',
   fragment_wallets_delete_token: 'Disable Token',
   fragment_wallets_delete_token_prompt_2s:
@@ -528,6 +531,12 @@ const strings = {
   transaction_failure_504_message: '504 Server Timeout - Retry Transaction',
   transaction_success: 'Transaction Success',
   transaction_success_message: 'Your transaction has been successfully sent.',
+  send_broadcast_failure_title: 'Transaction Status Unknown',
+  send_broadcast_failure_message_s:
+    'The network returned an error while broadcasting this transaction, but it may still have gone through. Before trying again, check the transaction in a block explorer or wait for a confirmation email from the recipient or service. Sending again could result in a duplicate payment.\n\nError: %s',
+  send_broadcast_post_error_message_s:
+    'This transaction was broadcast to the network, but an error occurred afterwards. Check a block explorer to confirm its status. Sending again could result in a duplicate payment.\n\nError: %s',
+  send_confirmation_slider_locked: 'Send Attempted',
   incorrect_pin: 'Incorrect PIN',
   invalid_spend_request: 'Invalid Spend Request',
   invalid_custom_fee: 'Minimum custom fee is',
@@ -714,6 +723,9 @@ const strings = {
   string_close_cap: 'Close',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
+  clock_skew_title: 'Device clock is wrong',
+  clock_skew_message:
+    'Your device time differs from our servers by more than two minutes. Turn on automatic date & time in your system settings so one-time codes and other time-based features keep working.',
   string_forget: 'Forget',
   string_delete: 'Delete',
   string_keep: 'Keep',
@@ -821,6 +833,7 @@ const strings = {
   string_first_sepolia_wallet_name: 'My Sepolia',
   string_first_sonic_wallet_name: 'My Sonic',
   string_first_opbnb_wallet_name: 'My opBNB',
+  string_first_robinhood_wallet_name: 'My Robinhood Chain',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -1771,6 +1784,10 @@ const strings = {
   stake_change_stake_success: 'Funds successfully staked',
   stake_change_unstake_success: 'Funds successfully unstaked',
   stake_change_claim_success: 'Claim transactions sent successfully',
+  stake_reclaim_1s: 'Reclaim %1$s',
+  stake_amount_reclaim_1s: 'Amount of %1$s to Reclaim',
+  stake_reclaimable_1s: '%1$s Pending Reclaim',
+  stake_change_reclaim_success: 'Reclaim transaction sent successfully',
   stake_disabled_slider: 'Enter Amount',
   stake_warning_multiple_transactions:
     'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',
@@ -1783,6 +1800,8 @@ const strings = {
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
+  stake_error_insufficient_funds_unstake_s:
+    'This wallet needs a %s balance to cover the network fee for unstaking.',
   stake_error_stake_below_minimum: 'Stake amount below minimum',
   stake_error_unstake_below_minimum: 'Unstake amount below minimum',
   state_error_pool_full_s:
@@ -2018,6 +2037,8 @@ const strings = {
     'Unable to load gift cards. Please check your network connection.',
   gift_card_service_error:
     'Gift card service is temporarily unavailable. Please try again later.',
+  gift_card_providers_unavailable:
+    'Gift cards are temporarily unavailable. Please check back later.',
   gift_card_refresh_error:
     'Unable to refresh. Card information may not be up to date.',
   gift_card_refresh_service_error:

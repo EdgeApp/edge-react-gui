@@ -34,7 +34,9 @@ class MainApplication :
           // Packages that cannot be autolinked yet can be added manually here, for
           // example:
           // packages.add(new MyReactNativePackage());
-          return PackageList(this).packages
+          val packages = PackageList(this).packages
+          packages.add(EdgeAttestationPackage())
+          return packages
         }
 
         override fun getJSMainModuleName(): String = "index"

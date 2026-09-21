@@ -60,7 +60,7 @@ tags:
 - tapOn: "Confirm & Finish"
 
 - tapOn:
-    id: "undefined.clearIcon"
+    id: "manageTokensSearch.clearIcon"
 
 - runFlow:
     label: "Add custom token"

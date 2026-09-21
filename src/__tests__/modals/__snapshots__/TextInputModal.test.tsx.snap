@@ -286,12 +286,13 @@ exports[`TextInputModal should render with a blank input field 1`] = `
       </View>
     </View>
     <View
-      fullHeight={false}
       style={
-        {
-          "flexGrow": undefined,
-          "flexShrink": 1,
-        }
+        [
+          {
+            "flexShrink": 1,
+          },
+          undefined,
+        ]
       }
     >
       <Text
@@ -1139,12 +1140,13 @@ exports[`TextInputModal should render with a populated input field 1`] = `
       </View>
     </View>
     <View
-      fullHeight={false}
       style={
-        {
-          "flexGrow": undefined,
-          "flexShrink": 1,
-        }
+        [
+          {
+            "flexShrink": 1,
+          },
+          undefined,
+        ]
       }
     >
       <Text

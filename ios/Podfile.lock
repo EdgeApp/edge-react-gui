@@ -17,13 +17,13 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-core-js (2.48.1):
     - React-Core
-  - edge-currency-accountbased (4.90.1):
+  - edge-currency-accountbased (4.94.2):
     - React-Core
-  - edge-currency-plugins (3.12.0):
+  - edge-currency-plugins (3.13.0):
     - React-Core
-  - edge-exchange-plugins (2.54.0):
+  - edge-exchange-plugins (2.56.0):
     - React-Core
-  - edge-login-ui-rn (3.36.0):
+  - edge-login-ui-rn (3.37.2):
     - React-Core
   - EXConstants (17.1.7):
     - ExpoModulesCore
@@ -3341,10 +3341,10 @@ SPEC CHECKSUMS:
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   edge-core-js: 3685f5569441d36e98b148eae44baca1849d1874
-  edge-currency-accountbased: d8903dfd6b0ad2004c1b1a0eca192bfa3c602f30
-  edge-currency-plugins: 2b0de648624d46c0e32e4530f853673a3edfeaa6
-  edge-exchange-plugins: f130b52ca5d58d774bf51c851bbb38df5fbf9238
-  edge-login-ui-rn: 5b9c03326583d1dd4839ca34d065b2b75af5870f
+  edge-currency-accountbased: fc7c072475d1f4f737c2942c271f8f0270c8cc75
+  edge-currency-plugins: a20658369218ee073470c5dd982d85efc28fa8cb
+  edge-exchange-plugins: d2e413a5dd8c35469407178c0875b1177eb4665b
+  edge-login-ui-rn: 80979efda996608d927563cd770f69f7bfce80a9
   EXConstants: 98bcf0f22b820f9b28f9fee55ff2daededadd2f8
   Expo: 43d9e0c3108cc3a1c2739743e9b51086144ee4b0
   ExpoAsset: ef06e880126c375f580d4923fdd1cdf4ee6ee7d6

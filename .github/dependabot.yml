@@ -1,0 +1,20 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    # Required key, but inert here: security updates are triggered by Dependabot
+    # alerts, not by this interval, and version updates are disabled below.
+    schedule:
+      interval: weekly
+    # 0 disables version updates entirely. Security updates are exempt from this
+    # limit and keep flowing, which is the only Dependabot traffic we want.
+    open-pull-requests-limit: 0
+    groups:
+      # Collapse every security update into one PR instead of one PR per
+      # advisory. Without `applies-to`, grouping would only cover version
+      # updates and would do nothing here.
+      all-security-updates:
+        applies-to: security-updates
+        patterns:
+          - '*'

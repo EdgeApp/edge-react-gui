@@ -61,6 +61,7 @@ export interface Props {
   onFocus?: () => void
   onNext?: () => void
   onSelectWallet: () => Promise<void>
+  walletPillTestID?: string
 }
 
 const forceFieldMap: { crypto: FieldNum; fiat: FieldNum } = {
@@ -80,6 +81,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       tokenId,
       wallet,
       walletPlaceholderText,
+      walletPillTestID,
       // Events:
       onAmountChanged,
       onSelectWallet,
@@ -320,6 +322,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           <PillButton
             label={walletPlaceholderText}
             onPress={onSelectWallet}
+            testID={walletPillTestID}
             icon={() => (
               <CryptoIcon
                 pluginId={wallet.currencyInfo.pluginId}

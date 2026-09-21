@@ -80,7 +80,7 @@ export default [
   {
     files: [
       'src/assets/vector/index.ts',
-      'src/components/icons/ThemedIcons.tsx',
+
       'src/components/themed/VectorIcon.tsx'
     ],
     rules: {
@@ -133,7 +133,6 @@ export default [
 
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
-      'src/actions/TransactionExportActions.tsx',
 
       'src/actions/WalletListActions.tsx',
 
@@ -146,7 +145,6 @@ export default [
       'src/components/buttons/ReturnKeyTypeButton.tsx',
       'src/components/buttons/SceneButtons.tsx',
 
-      'src/components/cards/BalanceCard.tsx',
       'src/components/cards/EarnOptionCard.tsx',
 
       'src/components/cards/FiatAmountInputCard.tsx',
@@ -224,13 +222,11 @@ export default [
       'src/components/modals/ScanModal.tsx',
       'src/components/modals/StateProvinceListModal.tsx',
 
-      'src/components/modals/TextInputModal.tsx',
       'src/components/modals/TransferModal.tsx',
 
       'src/components/modals/WalletListSortModal.tsx',
       'src/components/modals/WcSmartContractModal.tsx',
 
-      'src/components/navigation/AlertDropdown.tsx',
       'src/components/navigation/BackButton.tsx',
       'src/components/navigation/CurrencySettingsTitle.tsx',
       'src/components/navigation/EdgeHeader.tsx',
@@ -244,7 +240,7 @@ export default [
       'src/components/navigation/ParamHeaderTitle.tsx',
       'src/components/navigation/SideMenuButton.tsx',
       'src/components/navigation/TransactionDetailsTitle.tsx',
-      'src/components/notification/NotificationCenterCard.tsx',
+
       'src/components/progress-indicators/AccountSyncBar.tsx',
 
       'src/components/progress-indicators/FullScreenLoader.tsx',
@@ -299,8 +295,6 @@ export default [
       'src/components/scenes/Loans/LoanManageScene.tsx',
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
-      'src/components/scenes/ManageTokensScene.tsx',
-
       'src/components/scenes/NotificationCenterScene.tsx',
       'src/components/scenes/NotificationScene.tsx',
 
@@ -313,8 +307,6 @@ export default [
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
-
-      'src/components/scenes/TransactionsExportScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
       'src/components/scenes/WcConnectionsScene.tsx',
@@ -371,7 +363,6 @@ export default [
 
       'src/components/themed/SceneHeader.tsx',
 
-      'src/components/themed/SearchFooter.tsx',
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',
@@ -400,7 +391,7 @@ export default [
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
       'src/components/tiles/CryptoFiatAmountTile.tsx',
-      'src/components/tiles/EditableAmountTile.tsx',
+
       'src/components/tiles/ErrorTile.tsx',
       'src/components/tiles/FiatAmountTile.tsx',
       'src/components/tiles/InterestRateChangeTile.tsx',
@@ -457,12 +448,11 @@ export default [
       'src/plugins/gui/providers/mtpelerinProvider.ts',
 
       'src/plugins/gui/providers/revolutProvider.ts',
-      'src/plugins/gui/providers/simplexProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
 
       'src/plugins/gui/util/fetchRevolut.ts',
       'src/plugins/gui/util/initializeProviders.ts',
-      'src/plugins/stake-plugins/currency/tronStakePlugin.ts',
+
       'src/plugins/stake-plugins/generic/pluginInfo/optimismTarotPool.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
       'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
@@ -484,7 +474,6 @@ export default [
       'src/reducers/ExchangeInfoReducer.ts',
       'src/reducers/NetworkReducer.ts',
 
-      'src/selectors/getCreateWalletList.ts',
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
@@ -509,7 +498,6 @@ export default [
       'src/util/haptic.ts',
       'src/util/infoUtils.ts',
 
-      'src/util/maestro.ts',
       'src/util/memoUtils.ts',
       'src/util/middleware/perfLogger.ts',
 

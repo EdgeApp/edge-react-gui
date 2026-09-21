@@ -39,6 +39,10 @@ const asEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
+  // Blockscout's hosted API at `api.blockscout.com` bills per key. It has no
+  // default, because the currency plugin drops that server when the option is
+  // absent and an empty string would read as a key that is merely broken.
+  blockscoutApiKey: asOptional(asEither(asString, asArray(asString))),
   drpcApiKey: asOptional(asString, ''),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
@@ -405,6 +409,7 @@ export const asEnvConfig = asObject({
       referrerFee: asOptional(asString, '0.75')
     }).withRest
   ),
+  ROBINHOOD_INIT: asCorePluginInit(asEvmApiKeys),
   RSK_INIT: asCorePluginInit(asEvmApiKeys),
   SEPOLIA_INIT: asCorePluginInit(asEvmApiKeys),
   SIDESHIFT_INIT: asCorePluginInit(
@@ -423,6 +428,11 @@ export const asEnvConfig = asObject({
   SPOOKY_SWAP_INIT: asCorePluginInit(
     asObject({
       quiknodeApiKey: asOptional(asString, '')
+    }).withRest
+  ),
+  SWAPTER_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
     }).withRest
   ),
   SWAPUZ_INIT: asCorePluginInit(
@@ -559,6 +569,13 @@ export const asEnvConfig = asObject({
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_MAESTRO_BUILD: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),
+  // Optional override of the info server URL(s), e.g. for pointing a debug build
+  // at a local info server: ["http://127.0.0.1:8008"]. Absent in production.
+  INFO_SERVER: asOptional(asArray(asString)),
+  // Optional override of the login server URL(s), e.g. for pointing a debug
+  // build at a local login server: ["http://192.168.1.50:3123"]. Do not include
+  // `/api` in the path. Absent in production.
+  LOGIN_SERVER: asOptional(asArray(asString)),
   ENABLE_REDUX_PERF_LOGGING: asOptional(asBoolean, false),
   LOG_SERVER: asNullable(
     asObject({

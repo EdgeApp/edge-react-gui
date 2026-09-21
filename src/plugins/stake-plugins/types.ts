@@ -76,6 +76,24 @@ export interface StakeProviderInfo {
   stakeProviderId: string
 }
 
+/**
+ * Display strings for the claim action, already formatted for display. A policy
+ * provides these to replace the default reward wording.
+ */
+export interface StakeClaimLanguage {
+  // Claim button label and claim scene title
+  actionLabel: string
+
+  // Claim amount tile title
+  amountLabel: string
+
+  // Title of the claimable position row
+  positionLabel: string
+
+  // Shown once the claim transaction is sent
+  successMessage: string
+}
+
 export interface StakePolicy {
   // Internal policy id, unique across all stake policies offered by Edge
   stakePolicyId: string
@@ -95,6 +113,12 @@ export interface StakePolicy {
   hideClaimAction?: boolean
   hideUnstakeAction?: boolean
   hideUnstakeAndClaimAction?: boolean
+
+  // Replaces the default reward wording of the claim action. Policies such as
+  // Tron resource freezing pay no yield and hold no third-party reward: their
+  // claim only returns the user's own previously staked funds to the spendable
+  // balance, so calling it a reward misrepresents what the user receives.
+  claimLanguage?: StakeClaimLanguage
 
   // Staking policy properties
   isLiquidStaking?: boolean

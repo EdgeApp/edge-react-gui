@@ -46,6 +46,7 @@ import type {
   WalletsTabSceneProps
 } from '../../types/routerTypes'
 import { CryptoAmount } from '../../util/CryptoAmount'
+import { getCryptoText } from '../../util/cryptoTextUtils'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import {
@@ -60,6 +61,7 @@ import { getUkCompliantString } from '../../util/ukComplianceUtils'
 import {
   convertNativeToDenomination,
   DECIMAL_PRECISION,
+  getDenomFromIsoCode,
   removeIsoPrefix,
   zeroString
 } from '../../util/utils'
@@ -594,12 +596,16 @@ export const TransactionListTop: React.FC<Props> = props => {
     const nativeLocked = add(fioStatus.locked, lockedNativeAmount)
     if (nativeLocked === '0') return null
 
-    const stakingCryptoAmount = convertNativeToDenomination(
-      displayDenomination.multiplier
-    )(nativeLocked)
-    const stakingCryptoAmountFormat = formatNumber(
-      add(stakingCryptoAmount, '0')
-    )
+    // Truncate to an exchange-rate-appropriate number of decimals, so the
+    // whole "locked" message stays readable on narrow screens:
+    const stakingCryptoText = getCryptoText({
+      currencyCode: displayDenomination.name,
+      displayDenomination,
+      exchangeDenomination,
+      exchangeRate,
+      fiatDenomination: getDenomFromIsoCode(defaultIsoFiat),
+      nativeAmount: nativeLocked
+    })
 
     const stakingExchangeAmount = convertNativeToDenomination(
       exchangeDenomination.multiplier
@@ -615,7 +621,7 @@ export const TransactionListTop: React.FC<Props> = props => {
         <EdgeText style={styles.stakingStatusText}>
           {sprintf(
             lstrings.staking_status,
-            stakingCryptoAmountFormat + ' ' + displayDenomination.name,
+            stakingCryptoText,
             fiatSymbol + stakingFiatBalanceFormat + ' ' + defaultFiat
           )}
         </EdgeText>
@@ -1003,15 +1009,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Staking Box
   stakingBoxContainer: {
     height: theme.rem(1.25),
-    minWidth: theme.rem(18),
-    maxWidth: '70%',
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    flexDirection: 'row'
   },
   stakingStatusText: {
+    flexShrink: 1,
     color: theme.secondaryText,
-    maxWidth: '70%',
     fontSize: theme.rem(1)
   }
 }))

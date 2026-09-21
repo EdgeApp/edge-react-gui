@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "4.50.3",
+  "version": "4.51.0",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
@@ -31,6 +31,7 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android": "react-native run-android",
     "androidKeysCreate": "node -r sucrase/register scripts/createAndroidKeys.ts",
+    "extractSigningCert": "node -r sucrase/register scripts/extractSigningCert.ts",
     "configure": "node -r sucrase/register scripts/configure.ts",
     "deploy": "node -r sucrase/register scripts/deploy.ts",
     "fix-kotlin": "cd android; ./gradlew :app:ktlintFormat",
@@ -51,7 +52,7 @@
     "rates-cache-replay": "node -r sucrase/register scripts/ratesCacheReplay.ts",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
-    "test": "TZ=America/Los_Angeles jest",
+    "test": "NODE_ENV=test TZ=America/Los_Angeles jest",
     "typechain": "rm -rf './src/plugins/contracts/' && typechain --target ethers-v5 --out-dir ./src/plugins/contracts/ './src/plugins/abis/*.json'",
     "theme": "node -r sucrase/register ./scripts/themeServer.ts",
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
@@ -106,11 +107,11 @@
     "detect-bundler": "^1.1.0",
     "disklet": "^0.6.0",
     "edge-core-js": "^2.48.1",
-    "edge-currency-accountbased": "4.90.1",
-    "edge-currency-plugins": "^3.12.0",
-    "edge-exchange-plugins": "^2.54.0",
+    "edge-currency-accountbased": "^4.94.2",
+    "edge-currency-plugins": "^3.13.0",
+    "edge-exchange-plugins": "^2.56.0",
     "edge-info-server": "^3.12.0",
-    "edge-login-ui-rn": "^3.36.0",
+    "edge-login-ui-rn": "^3.37.2",
     "ethers": "^5.7.2",
     "expo": "^53.0.0",
     "expo-quick-actions": "^5.0.0",
@@ -261,7 +262,8 @@
     "typechain": "^8.3.2",
     "typescript": "5.0.4",
     "updot": "^1.2.0",
-    "vm-browserify": "^1.1.2"
+    "vm-browserify": "^1.1.2",
+    "xcode": "^3.0.1"
   },
   "engines": {
     "node": ">=18"

@@ -816,7 +816,7 @@ exports[`CreateWalletSelectCrypto should render with loading props 1`] = `
         contentContainerStyle={
           {
             "marginHorizontal": 11,
-            "paddingBottom": 112,
+            "paddingBottom": 0,
             "paddingLeft": 0,
             "paddingRight": 0,
             "paddingTop": 0,

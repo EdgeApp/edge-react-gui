@@ -1,16 +1,20 @@
 import { useIsFocused } from '@react-navigation/native'
-import { useQuery } from '@tanstack/react-query'
 import * as React from 'react'
 import { Linking, ScrollView, View } from 'react-native'
 
 import { showCountrySelectionModal } from '../../actions/CountryListActions'
+import { pickPurchaseDestination } from '../../actions/GiftCardActions'
+import {
+  isGiftCardProviderDisabled,
+  PHAZE_PLUGIN_ID
+} from '../../actions/GiftCardInfoActions'
 import { readSyncedSettings } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { guiPlugins } from '../../constants/plugins/GuiPlugins'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
-import { useGiftCardProvider } from '../../hooks/useGiftCardProvider'
 import { useHandler } from '../../hooks/useHandler'
+import { usePhazeOrdersQuery } from '../../hooks/usePhazeOrdersQuery'
 import { lstrings } from '../../locales/strings'
 import {
   mergeOrdersWithAugments,
@@ -22,7 +26,6 @@ import type { PhazeDisplayOrder } from '../../plugins/gift-cards/phazeGiftCardTy
 import type { FooterRender } from '../../state/SceneFooterState'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { debugLog } from '../../util/logger'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -40,14 +43,12 @@ import {
   type GiftCardMenuResult
 } from '../modals/GiftCardMenuModal'
 import { FillLoader } from '../progress-indicators/FillLoader'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { SceneFooterWrapper } from '../themed/SceneFooterWrapper'
 
 interface Props extends EdgeAppSceneProps<'giftCardList'> {}
-
-const POLL_INTERVAL_MS = 10000
 
 /** List of purchased gift cards */
 export const GiftCardListScene: React.FC<Props> = (props: Props) => {
@@ -62,52 +63,34 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const stateProvinceCode = useSelector(
     state => state.ui.settings.stateProvinceCode
   )
+  const giftCardDisablePlugins = useSelector(
+    state => state.ui.giftCardInfo.disablePlugins
+  )
 
   const isFocused = useIsFocused()
 
-  // Get Phaze provider for API access
-  const phazeConfig = (ENV.PLUGIN_API_KEYS as Record<string, unknown>)
-    ?.phaze as { apiKey?: string; baseUrl?: string } | undefined
-  const { provider, isReady } = useGiftCardProvider({
-    account,
-    apiKey: phazeConfig?.apiKey ?? '',
-    baseUrl: phazeConfig?.baseUrl ?? ''
-  })
+  // A remotely disabled Phaze leaves this scene read-only, so accounts can still
+  // reach the vouchers they already bought. It queries only the identities
+  // already stored, once per focus, and sends new purchases elsewhere.
+  const isPhazeDisabled = isGiftCardProviderDisabled(
+    giftCardDisablePlugins,
+    PHAZE_PLUGIN_ID
+  )
 
   // Get augments from synced storage
   const augments = usePhazeOrderAugments()
 
-  // Fetch orders + brands from API via TanStack Query.
-  // Query key includes rootLoginId so each account gets its own cache entry.
-  // Polling and focus gating are handled by refetchInterval + enabled.
   const {
-    data: apiOrders,
+    orders: apiOrders,
     isLoading,
-    isError: loadError
-  } = useQuery({
-    queryKey: ['phazeOrders', account.rootLoginId],
-    queryFn: async () => {
-      if (provider == null) throw new Error('Provider not ready')
-
-      await provider.getMarketBrands(countryCode)
-      const allOrders = await provider.getAllOrdersFromAllIdentities(account)
-      debugLog('phaze', 'Got', allOrders.length, 'orders from API')
-      return allOrders
-    },
-    enabled: isFocused && isReady,
-    refetchInterval: POLL_INTERVAL_MS,
-    refetchOnMount: 'always',
-    staleTime: POLL_INTERVAL_MS
+    isError: loadError,
+    getBrandImage
+  } = usePhazeOrdersQuery({
+    account,
+    countryCode,
+    enabled: isFocused,
+    readOnly: isPhazeDisabled
   })
-
-  // Brand lookup function using provider cache
-  const brandLookup = React.useCallback(
-    (productId: number): string | undefined => {
-      const brand = provider?.getCachedBrand(countryCode, productId)
-      return brand?.productImage
-    },
-    [countryCode, provider]
-  )
 
   // Merge API orders with local augments, then split into active/redeemed.
   // Recomputes when augments change (e.g., user marks as redeemed) without
@@ -115,7 +98,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   const { activeOrders, redeemedOrders } = React.useMemo(() => {
     if (apiOrders == null) return { activeOrders: [], redeemedOrders: [] }
 
-    const merged = mergeOrdersWithAugments(apiOrders, augments, brandLookup)
+    const merged = mergeOrdersWithAugments(apiOrders, augments, getBrandImage)
     const relevantOrders = merged.filter(
       order => order.vouchers.length > 0 || order.txid != null
     )
@@ -124,7 +107,7 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
       activeOrders: relevantOrders.filter(order => order.redeemedDate == null),
       redeemedOrders: relevantOrders.filter(order => order.redeemedDate != null)
     }
-  }, [apiOrders, augments, brandLookup])
+  }, [apiOrders, augments, getBrandImage])
 
   // Footer height for floating button
   const [footerHeight, setFooterHeight] = React.useState<number | undefined>()
@@ -139,6 +122,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
   )
 
   const handlePurchaseNew = useHandler(async () => {
+    if (isPhazeDisabled) {
+      if (pickPurchaseDestination(giftCardDisablePlugins) === 'bitrefill') {
+        navigation.navigate('pluginView', { plugin: guiPlugins.bitrefill })
+      } else {
+        showToast(lstrings.gift_card_providers_unavailable)
+      }
+      return
+    }
+
     // Provider auto-registers user if needed via ensureUser()
     // Ensure country is set:
     let nextCountryCode = countryCode
@@ -323,13 +315,21 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
             primary={{
               label: lstrings.gift_card_list_purchase_new_button,
               onPress: handlePurchaseNew,
-              disabled: !isConnected || loadError
+              // Purchases skip Phaze while it is disabled, so a Phaze error
+              // does not block them:
+              disabled: !isConnected || (loadError && !isPhazeDisabled)
             }}
           />
         </SceneFooterWrapper>
       )
     },
-    [handleFooterLayoutHeight, handlePurchaseNew, isConnected, loadError]
+    [
+      handleFooterLayoutHeight,
+      handlePurchaseNew,
+      isConnected,
+      isPhazeDisabled,
+      loadError
+    ]
   )
 
   const hasNoCards = activeOrders.length === 0 && redeemedOrders.length === 0
@@ -371,8 +371,15 @@ export const GiftCardListScene: React.FC<Props> = (props: Props) => {
               <Paragraph center>{lstrings.gift_card_list_no_cards}</Paragraph>
             ) : (
               <>
-                {/* Error banner when data exists but refresh failed */}
-                {loadError ? (
+                {/* Error notice when data exists but refresh failed. A disabled
+                    Phaze is an expected outage, so it gets plain text: */}
+                {loadError && isPhazeDisabled ? (
+                  <Paragraph center>
+                    {isConnected
+                      ? lstrings.gift_card_refresh_service_error
+                      : lstrings.gift_card_refresh_error}
+                  </Paragraph>
+                ) : loadError ? (
                   <AlertCardUi4
                     type="warning"
                     title={
