@@ -62,13 +62,29 @@ export function asMergeableKeys(raw: unknown): Record<string, unknown> {
   return raw
 }
 
+/** True for `{}`, which carries no opinion about anything. */
+function isEmptyObject(value: unknown): boolean {
+  return isPlainObject(value) && Object.keys(value).length === 0
+}
+
 /**
- * Recursively merge two values. `b` (the "keys" side) always wins on conflict.
- * Plain objects are merged field-by-field; arrays and primitives are replaced
- * wholesale. `undefined` on either side yields the other side.
+ * Recursively merge two values. `b` (the "keys" side) wins on conflict, except
+ * that it is never allowed to destroy what `a` already holds: `false` and `{}`
+ * on the `b` side both mean "no opinion" and yield `a` untouched, exactly as
+ * `undefined` does.
+ *
+ * That matters because the keys side can arrive from a remote infoRollup
+ * overlay or a disk cache. Without this, an overlay saying
+ * `swapPlugins.changenow: false` would replace the baked-in
+ * `{ apiKey: '…' }` with the scalar `false`, wiping the credential before
+ * `mergePluginInit` ever sees it. Only `config.json` disables a plugin; the
+ * keys side supplies secrets and nothing else.
+ *
+ * Plain objects are merged field-by-field; arrays and other primitives are
+ * replaced wholesale.
  */
 export function deepMerge(a: unknown, b: unknown): unknown {
-  if (b === undefined) return a
+  if (b === undefined || b === false || isEmptyObject(b)) return a
   if (a === undefined) return b
   if (isPlainObject(a) && isPlainObject(b)) {
     const out: Record<string, unknown> = { ...a }
@@ -91,9 +107,10 @@ export function mergePluginInit(
 ): unknown {
   if (configValue === false) return false
   // Keys are never an off switch: only config.json can disable a plugin. A
-  // remote/cache overlay that says `false` (or a hostile payload trying to)
-  // leaves the config-side enablement untouched.
-  if (keysValue === false) return configValue
+  // remote/cache overlay that says `false`, or hands back `{}`, contributes
+  // nothing and leaves the config-side value exactly as it was. `deepMerge`
+  // applies the same rule one level down.
+  if (keysValue === false || isEmptyObject(keysValue)) return configValue
   if (configValue === true) {
     return keysValue !== undefined ? keysValue : true
   }
