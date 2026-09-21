@@ -5,6 +5,7 @@ import path from 'path'
 import {
   asMergeableKeys,
   deepMerge,
+  mergePluginInit,
   nestGlobalKeys,
   redactValue,
   resolvePluginMaps
@@ -69,6 +70,56 @@ describe('deepMerge', () => {
     expect(merged.a).toBe(1)
     expect(Object.prototype.hasOwnProperty.call(merged, 'polluted')).toBe(false)
     expect((merged as { polluted?: boolean }).polluted).toBeUndefined()
+  })
+})
+
+describe('a keys overlay never destroys a baked value', () => {
+  // A remote infoRollup overlay or a stale disk cache can carry `false` or
+  // `{}` for a plugin. Neither may wipe the credential that shipped in the
+  // build: only config.json disables a plugin.
+  it('deepMerge treats a false override as no opinion', () => {
+    expect(deepMerge({ apiKey: 'baked' }, false)).toEqual({ apiKey: 'baked' })
+  })
+
+  it('deepMerge treats an empty object as no opinion', () => {
+    expect(deepMerge({ apiKey: 'baked' }, {})).toEqual({ apiKey: 'baked' })
+    expect(deepMerge(true, {})).toBe(true)
+  })
+
+  it('deepMerge still lets a real value win', () => {
+    expect(deepMerge({ apiKey: 'baked' }, { apiKey: 'fresh' })).toEqual({
+      apiKey: 'fresh'
+    })
+    expect(deepMerge({ apiKey: 'baked' }, { other: 'x' })).toEqual({
+      apiKey: 'baked',
+      other: 'x'
+    })
+  })
+
+  it('survives the full overlay path for one plugin', () => {
+    const baked = { swapPlugins: { changenow: { apiKey: 'baked' } } }
+    const merged = deepMerge(baked, {
+      swapPlugins: { changenow: false }
+    }) as { swapPlugins: { changenow: unknown } }
+    expect(merged.swapPlugins.changenow).toEqual({ apiKey: 'baked' })
+
+    // and the resolved plugin init is still a usable options object, not a
+    // bare boolean that every provider loader skips
+    expect(mergePluginInit(true, merged.swapPlugins.changenow)).toEqual({
+      apiKey: 'baked'
+    })
+  })
+
+  it('mergePluginInit ignores false and {} from the keys side', () => {
+    expect(mergePluginInit(true, false)).toBe(true)
+    expect(mergePluginInit(true, {})).toBe(true)
+    expect(mergePluginInit({ partnerId: 'p' }, false)).toEqual({
+      partnerId: 'p'
+    })
+  })
+
+  it('config.json can still disable a plugin', () => {
+    expect(mergePluginInit(false, { apiKey: 'fresh' })).toBe(false)
   })
 })
 
