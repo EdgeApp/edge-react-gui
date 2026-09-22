@@ -1319,6 +1319,7 @@
   "send_scan_modal_text_modal_hint": "公開アドレス",
   "send_address_expire_title": "支払いアドレス有効期限",
   "send_address_expired_error_message": "支払い先アドレスが期限切れです",
+  "send_funds_not_spendable_error_message": "These funds are not spendable yet. Wait for the wallet to finish syncing, then try again.",
   "request_balance": "あなたは %sを持っています",
   "exchange_same_address_upgrade": "Asset Upgrade",
   "exchange_generic_error_title": "交換エラー",
