@@ -319,7 +319,6 @@ export default [
 
       'src/components/scenes/WalletRestoreScene.tsx',
 
-      'src/components/scenes/WcConnectScene.tsx',
       'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
 
@@ -339,7 +338,7 @@ export default [
 
       'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
-      'src/components/services/WalletConnectService.tsx',
+
       'src/components/services/WalletLifecycle.ts',
       'src/components/services/WipeLogsService.tsx',
 
@@ -442,7 +441,7 @@ export default [
       'src/hooks/useTokenDisplayData.ts',
       'src/hooks/useTransactionList.ts',
       'src/hooks/useUnmount.ts',
-      'src/hooks/useWalletConnect.tsx',
+
       'src/hooks/useWalletsSubscriber.ts',
       'src/hooks/useWhyDidYouUpdate.ts',
       'src/locales/intl.ts',

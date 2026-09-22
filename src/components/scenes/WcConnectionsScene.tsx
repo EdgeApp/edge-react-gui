@@ -325,5 +325,14 @@ const getProposalNamespaceCompatibleEdgeTokenIds = (
     throw new Error(NO_WALLETS_DAPP_REQUIREMENTS)
   }
 
+  // A dapp that lists its chains as optional never trips the check above, so an
+  // unsupported chain reaches here as an empty match set. Handing that to the
+  // wallet picker as `allowedAssets` would filter every wallet out and leave
+  // only the create-wallet rows, which reads as "Edge wants me to make a new
+  // wallet" instead of "Edge cannot serve this dapp".
+  if (edgeTokenIdMap.size === 0) {
+    throw new Error(NO_WALLETS_DAPP_REQUIREMENTS)
+  }
+
   return [...edgeTokenIdMap.values()]
 }
