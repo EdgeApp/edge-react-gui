@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
+  asMaybePendingFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -1613,6 +1614,21 @@ const SendComponent: React.FC<Props> = props => {
             lstrings.transaction_failure,
             lstrings.transaction_failure_504_message
           )
+        } else if (asMaybePendingFundsError(error) != null) {
+          // A wallet that was spendable when the transaction was built can
+          // still refuse it at broadcast, which the plugin reports this way.
+          // The plugin's own text names the reason (syncing, rescanning,
+          // repairing), so keep it and fall back only when it sent none.
+          // The refusal happens before anything is submitted, so the
+          // broadcast lock does not apply and the slider re-arms for a
+          // retry once the wallet is spendable:
+          broadcastAttemptedRef.current = false
+          error = new I18nError(
+            lstrings.transaction_failure,
+            errorCasted.message !== ''
+              ? errorCasted.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
         }
 
         if (broadcastAttemptedRef.current) {
@@ -1839,6 +1855,22 @@ const SendComponent: React.FC<Props> = props => {
         const isTxPending =
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
+
+        // A wallet whose balance exists but is not spendable yet reports it
+        // this way, and the generic error card blames the network for it.
+        // Ethereum's pending-transaction case is excluded because it has its
+        // own warning card below:
+        const pendingFundsError = isTxPending
+          ? undefined
+          : asMaybePendingFundsError(error)
+        if (pendingFundsError != null) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            pendingFundsError.message !== ''
+              ? pendingFundsError.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
+        }
 
         // Only set hasPendingTx to true when pending tx error occurs;
         // don't clear it for other errors as it may have been legitimately
