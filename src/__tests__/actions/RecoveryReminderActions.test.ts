@@ -6,8 +6,13 @@ import type { PasswordReminderLevels } from '../../actions/SettingsActions'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Action, Dispatch } from '../../types/reduxTypes'
 
-// Provide a virtual env.json so importing env.ts does not fail:
-jest.mock('../../../env.json', () => ({}), { virtual: true })
+// `isMaestro` reads CONFIG, which loads the developer's local config.json.
+// Mock it so a machine that happens to have ENABLE_MAESTRO_BUILD on does not
+// suppress the reminder under test. (This replaces a virtual env.json mock
+// that existed for the same reason before config.json took over from env.ts.)
+jest.mock('../../util/maestro', () => ({
+  isMaestro: () => false
+}))
 
 const mockShowModal = jest.fn()
 const mockWriteReminders =
