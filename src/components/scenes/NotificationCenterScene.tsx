@@ -8,6 +8,7 @@ import {
   writeAccountNotifInfo,
   writeLocalAccountSettings
 } from '../../actions/LocalSettingsActions'
+import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
@@ -28,7 +29,7 @@ import { EdgeText } from '../themed/EdgeText.tsx'
 
 type Props = EdgeAppSceneProps<'notificationCenter'>
 
-export const NotificationCenterScene = (props: Props) => {
+export const NotificationCenterScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -204,7 +205,7 @@ export const NotificationCenterScene = (props: Props) => {
             }
             const { name, currencyInfo } = wallets[walletId]
 
-            const handleCloseNewToken = async () => {
+            const handleCloseNewToken = async (): Promise<void> => {
               // Since this isn't a priority notification, we can just fully
               // complete it here
               await completeNotif(key)()
@@ -213,7 +214,7 @@ export const NotificationCenterScene = (props: Props) => {
                 data: { walletId }
               })
             }
-            const handlePressNewToken = async () => {
+            const handlePressNewToken = async (): Promise<void> => {
               await handleCloseNewToken()
               navigation.navigate('manageTokens', {
                 walletId,
@@ -248,7 +249,7 @@ export const NotificationCenterScene = (props: Props) => {
             if (promoCard == null) return null
 
             // Make sure we have valid content
-            const { title, body, messageId, ctaUrl } = promoCard
+            const { title, body, messageId, ctaUrl, promoId } = promoCard
             if (
               title == null ||
               body == null ||
@@ -257,14 +258,30 @@ export const NotificationCenterScene = (props: Props) => {
             )
               return null
 
-            const handlePromoPress = async () => {
+            const handlePromoPress = async (): Promise<void> => {
               try {
-                // If it's already marked as expired or if validation fails, just open the URL
-                // The URL could be a download link, a web page, etc.
-                await openBrowserUri(ctaUrl)
+                // Route through the referral link handler so an Edge deep link
+                // (`edge://exchange/...`) opens the flow in-app carrying the
+                // card's promo id. Anything else stays a plain URL: the handler
+                // falls back to opening it externally, as a download link or a
+                // web page needs.
+                const followed = await dispatch(
+                  linkReferralWithCurrencies(
+                    // Same flat-navigation cast the other shared consumers in
+                    // this scene need, written against the callee's own
+                    // parameter type so it follows the v7 migration.
+                    navigation as Parameters<
+                      typeof linkReferralWithCurrencies
+                    >[0],
+                    ctaUrl,
+                    promoId
+                  )
+                )
 
-                // Complete the notification after tapping
-                await completeNotif(key)()
+                // Complete the notification only when the link actually
+                // opened. Backing out of the wallet picker an exchange link
+                // raises would otherwise retire the promo unread.
+                if (followed) await completeNotif(key)()
               } catch (error) {
                 console.error('Error handling promo card press:', error)
                 // Still mark as completed even if there was an error

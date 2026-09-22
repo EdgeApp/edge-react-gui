@@ -1,5 +1,5 @@
 import { mul } from 'biggystring'
-import type { EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -7,7 +7,10 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FundAccountModal } from '../components/modals/FundAccountModal'
-import { pickWallet } from '../components/modals/WalletListModal'
+import {
+  pickWallet,
+  type WalletListWalletResult
+} from '../components/modals/WalletListModal'
 import {
   Airship,
   showError,
@@ -27,7 +30,7 @@ import { config } from '../theme/appConfig'
 import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
-import type { EdgeAsset } from '../types/types'
+import type { EdgeAsset, LinkPromoTab } from '../types/types'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
@@ -124,15 +127,39 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
     case 'plugin':
       return 'wallets'
 
+    // An `exchange` link that names an asset opens the wallet picker, so it
+    // belongs with the group above; without one it only navigates:
+    case 'rampCreate':
+      return link.asset == null ? 'account' : 'wallets'
+    case 'swap':
+      return link.buyAsset == null && link.sellAsset == null
+        ? 'account'
+        : 'wallets'
+
     // Everything else just navigates, or hands off to an already-open scene:
     case 'edgeLogin':
     case 'fiatProvider':
     case 'price-change':
     case 'ramp':
-    case 'rampCreate':
     case 'scene':
-    case 'swap':
       return 'account'
+  }
+}
+
+/**
+ * Digs the navigating link out of the wrappers that carry one. An `affiliate`
+ * or `marketing` link activates a promotion or logs an open and then hands its
+ * inner link to the same `handleLink`, so the checks that key off a link's
+ * type have to read the inner one, exactly as `getDeepLinkReadiness` does.
+ */
+export function unwrapDeepLink(link: DeepLink): DeepLink {
+  switch (link.type) {
+    case 'affiliate':
+      return unwrapDeepLink(link.link)
+    case 'marketing':
+      return link.link == null ? link : unwrapDeepLink(link.link)
+    default:
+      return link
   }
 }
 
@@ -145,24 +172,143 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
 export function launchDeepLink(
   navigation: NavigationBase,
   link: DeepLink
-): ThunkAction<Promise<void>> {
+): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
+    // Only the exchange links raise the back-to-back pickers the drops below
+    // protect, and they raise them from inside an `affiliate` or `marketing`
+    // wrapper too, since that hands its inner link to the same `handleLink`.
+    // Dropping every link would lose a WalletConnect or payment link that
+    // arrives from another app while one is up, since `DeepLinkingManager`
+    // clears its pending slot before launching and ignores the result, and
+    // those were handled before this guard existed.
+    const innerType = unwrapDeepLink(link).type
+    const isExchangeLink = innerType === 'rampCreate' || innerType === 'swap'
+
+    // DeepLinkingManager only launches a link once the app has the state it
+    // needs, but promo card taps call in directly. A link that opens a wallet
+    // picker must see the full wallet list, so wait for it here too; for the
+    // manager's own calls this returns at once.
+    if (getDeepLinkReadiness(link) === 'wallets') {
+      const { account } = getState().core
+
+      // Once an exchange link is being followed its picker may already be on
+      // screen, so a newer one is dropped rather than stacking a second picker
+      // and then overwriting the first link's promo and navigation.
+      if (isExchangeLink && walletLinkAccount === account) return false
+
+      // While wallets load nothing is on screen yet, so the latest link to
+      // start waiting is the one followed, like the manager's single pending
+      // slot. Repeated taps during the wait would otherwise stack pickers.
+      const thisLink = ++latestWalletLink
+      const loggedIn = await waitForWallets(account)
+      if (!loggedIn || thisLink !== latestWalletLink) return false
+      if (isExchangeLink && walletLinkAccount === account) return false
+
+      if (isExchangeLink) walletLinkAccount = account
+      try {
+        return await handleLink(navigation, dispatch, getState(), link)
+      } finally {
+        if (isExchangeLink && walletLinkAccount === account) {
+          walletLinkAccount = undefined
+        }
+      }
+    }
     const state = getState()
-    await handleLink(navigation, dispatch, state, link)
+
+    // An exchange link that names no asset opens no picker of its own, so it
+    // never claims the slot above, but it does set the promo and the ramp
+    // params that a picker already on screen is about to write. Drop it while
+    // one is up, for the same reason the waiting path drops its own.
+    if (isExchangeLink && walletLinkAccount === state.core.account) return false
+
+    // It also supersedes an exchange link still waiting for wallets. This one
+    // navigates now, and the waiting one would otherwise open its picker once
+    // the wallets load and overwrite this link's promo and params.
+    if (isExchangeLink) ++latestWalletLink
+
+    return await handleLink(navigation, dispatch, state, link)
   }
 }
 
 /**
- * Launches a link if it app is able to do so.
- * @returns true if the link is handled,
- * or false if the app is in the wrong state to handle this link.
+ * Counts links that waited for wallets, plus the exchange links that did not
+ * need to. A waiting link is followed only if it is still the latest.
+ */
+let latestWalletLink = 0
+
+/**
+ * The account a link that opens a wallet picker is being followed for. Keyed
+ * by account so a picker left unsettled by a logout cannot block the links of
+ * whichever account logs in next.
+ */
+let walletLinkAccount: EdgeAccount | undefined
+
+/** The wallet wait in progress, shared by every link that arrives during it. */
+let walletWait: { account: EdgeAccount; loaded: Promise<boolean> } | undefined
+
+/**
+ * Resolve once every active wallet has loaded or failed to load: true while
+ * still logged in, false if the account logged out first. Picking a wallet
+ * against a partial list offers to create one the account already has.
+ *
+ * Links arriving during one wait share it, so repeated taps hold a single set
+ * of watchers, and a logout releases them. A wallet that never settles holds
+ * that one wait until logout, as it holds DeepLinkingManager's own queue.
+ */
+export async function waitForWallets(account: EdgeAccount): Promise<boolean> {
+  if (walletWait?.account !== account) {
+    const loaded = watchWallets(account)
+    walletWait = { account, loaded }
+    loaded
+      .finally(() => {
+        if (walletWait?.loaded === loaded) walletWait = undefined
+      })
+      .catch(() => {})
+  }
+  return await walletWait.loaded
+}
+
+async function watchWallets(account: EdgeAccount): Promise<boolean> {
+  return await new Promise<boolean>(resolve => {
+    let settled = false
+    const cleanups: Array<() => void> = []
+    const check = (): void => {
+      if (settled) return
+      const done =
+        !account.loggedIn ||
+        account.activeWalletIds.every(
+          walletId =>
+            account.currencyWallets[walletId] != null ||
+            account.currencyWalletErrors[walletId] != null
+        )
+      if (!done) return
+      settled = true
+      for (const cleanup of cleanups) cleanup()
+      resolve(account.loggedIn)
+    }
+    cleanups.push(
+      account.watch('loggedIn', check),
+      account.watch('activeWalletIds', check),
+      account.watch('currencyWallets', check),
+      account.watch('currencyWalletErrors', check)
+    )
+    // A wallet may have finished before the watchers were in place:
+    check()
+  })
+}
+
+/**
+ * Follow a link.
+ * @returns false when the user backed out of a prompt the link raised (a
+ * wallet picker they dismissed), so callers can leave whatever surface sent
+ * them here untouched. True otherwise.
  */
 async function handleLink(
   navigation: NavigationBase,
   dispatch: Dispatch,
   state: RootState,
   link: DeepLink
-): Promise<void> {
+): Promise<boolean> {
   const { account, context, disklet } = state.core
   const { defaultIsoFiat } = state.ui.settings
   const { currencyWallets } = account
@@ -277,16 +423,54 @@ async function handleLink(
 
     case 'affiliate':
       await dispatch(activatePromotion(link.installerId))
-      await handleLink(navigation, dispatch, state, link.link)
-      break
+      return await handleLink(navigation, dispatch, state, link.link)
 
     case 'requestAddress':
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       break
 
-    case 'swap':
-      navigation.navigate('swapTab', { screen: 'swapCreate' })
+    case 'swap': {
+      const { buyAsset, sellAsset, promoId } = link
+
+      // Sell side first, and each picker says which side it is asking for: a
+      // link that names both assets raises two pickers back to back, and an
+      // unlabelled pair is indistinguishable.
+      const fromResult = await pickLinkedWallet(
+        account,
+        navigation,
+        sellAsset,
+        lstrings.select_src_wallet
+      )
+      if (fromResult === null) return false
+      const toResult = await pickLinkedWallet(
+        account,
+        navigation,
+        buyAsset,
+        lstrings.select_recv_wallet
+      )
+      if (toResult === null) return false
+      dispatch({
+        type: 'LINK_PROMO/SET',
+        data: {
+          linkPromo: promoId == null ? null : { promoId, tab: 'swapTab' }
+        }
+      })
+
+      // A link that named no asset leaves every id undefined, which clears the
+      // scene's selection the same way a bare `edge://swap` does on develop: a
+      // nested navigate rebuilds the child action from its params alone, and
+      // `swapCreate` declares no `initialParams` for the router to merge.
+      navigation.navigate('swapTab', {
+        screen: 'swapCreate',
+        params: {
+          fromWalletId: fromResult?.walletId,
+          fromTokenId: fromResult?.tokenId,
+          toWalletId: toResult?.walletId,
+          toTokenId: toResult?.tokenId
+        }
+      })
       break
+    }
 
     case 'azteco': {
       const result = await pickWallet({
@@ -295,7 +479,7 @@ async function handleLink(
         navigation,
         showCreateWallet: true
       })
-      if (result?.type !== 'wallet') break
+      if (result?.type !== 'wallet') return false
       const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
@@ -372,7 +556,7 @@ async function handleLink(
         navigation,
         showCreateWallet: true
       })
-      if (result?.type !== 'wallet') break
+      if (result?.type !== 'wallet') return false
       const { walletId, tokenId } = result
       const wallet = account.currencyWallets[walletId]
       if (wallet == null) break
@@ -471,7 +655,7 @@ async function handleLink(
       // Optional navigation: delegate to the shared handler, mirroring the
       // affiliate link. Unsupported targets fall through its existing guards.
       if (link.link != null) {
-        await handleLink(navigation, dispatch, state, link.link)
+        return await handleLink(navigation, dispatch, state, link.link)
       }
       break
     }
@@ -529,7 +713,7 @@ async function handleLink(
           />
         ))
         if (!approved) {
-          return
+          return false
         }
       }
 
@@ -561,7 +745,7 @@ async function handleLink(
         navigation,
         showCreateWallet: true
       })
-      if (result?.type !== 'wallet') break
+      if (result?.type !== 'wallet') return false
       const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
@@ -601,16 +785,33 @@ async function handleLink(
       // type to the top of the quote results. The pin lives in the navigation
       // params only: nothing is written to the account referral state, and a
       // pin that matches no quote degrades to the normal ordering.
-      const { direction, providerId, paymentType } = link
+      const { direction, providerId, paymentType, asset, promoId } = link
+
+      // A null result means the user backed out of the wallet picker, so do
+      // not push them into the flow anyway. Resolve before stashing the promo
+      // id, so a dismissed picker leaves no id behind to mis-attribute a later
+      // conversion.
+      const forcedWalletResult = await pickLinkedWallet(
+        account,
+        navigation,
+        asset
+      )
+      if (forcedWalletResult === null) return false
+      const rampTab = direction === 'buy' ? 'buyTab' : 'sellTab'
+      dispatch({
+        type: 'LINK_PROMO/SET',
+        data: { linkPromo: promoId == null ? null : { promoId, tab: rampTab } }
+      })
+
       if (direction === 'buy') {
         navigation.navigate('buyTab', {
           screen: 'pluginListBuy',
-          params: { providerId, paymentType }
+          params: { providerId, paymentType, forcedWalletResult }
         })
       } else {
         navigation.navigate('sellTab', {
           screen: 'pluginListSell',
-          params: { providerId, paymentType }
+          params: { providerId, paymentType, forcedWalletResult }
         })
       }
       break
@@ -634,7 +835,7 @@ async function handleLink(
         navigation,
         showCreateWallet: true
       })
-      if (walletListResult?.type !== 'wallet') break
+      if (walletListResult?.type !== 'wallet') return false
       const { walletId } = walletListResult
       const wallet = account.currencyWallets[walletId]
       const { publicAddress } = (await wallet.getAddresses({ tokenId }))[0]
@@ -653,5 +854,63 @@ async function handleLink(
 
     default:
       break
+  }
+  return true
+}
+
+/**
+ * Resolve a deep link's asset to one of the account's wallets, offering to
+ * create one when the account holds none for that asset. Returns undefined
+ * when there is nothing to pre-select, and null when the user dismissed the
+ * picker, which callers treat as "do not navigate".
+ */
+async function pickLinkedWallet(
+  account: EdgeAccount,
+  // Taken from `pickWallet` rather than named directly, so this follows the
+  // v7 navigation migration instead of pinning the deprecated flat type.
+  navigation: Parameters<typeof pickWallet>[0]['navigation'],
+  asset: EdgeAsset | undefined,
+  headerTitle?: string
+): Promise<WalletListWalletResult | undefined | null> {
+  if (asset == null) return undefined
+
+  // An asset this build cannot resolve at all gets no pre-selection, and the
+  // flow still opens. `pickWallet` would otherwise raise a picker with nothing
+  // in it, and dismissing that picker aborts the navigation, so a partner link
+  // naming a typo'd plugin id, a contract missing from `allTokens`, or a chain
+  // this build does not ship would dead-end instead of degrading.
+  const currencyConfig = account.currencyConfig[asset.pluginId]
+  if (currencyConfig == null) return undefined
+  if (
+    asset.tokenId != null &&
+    currencyConfig.allTokens[asset.tokenId] == null
+  ) {
+    return undefined
+  }
+
+  const result = await pickWallet({
+    account,
+    assets: [asset],
+    headerTitle,
+    navigation,
+    showCreateWallet: true
+  })
+  return result?.type === 'wallet' ? result : null
+}
+
+/**
+ * Release the promo attribution a deep link or promo card set, because the
+ * user left the tab that entry opened without converting.
+ *
+ * The live slice is re-read here rather than captured by the caller: by the
+ * time a tab blurs, a newer link may already have claimed the attribution for
+ * a different tab, and the tab being left must not take it. Comparing `tab` is
+ * what distinguishes "this entry was abandoned" from "a newer entry replaced
+ * it", which is why `LinkPromo` carries the tab at all.
+ */
+export function releaseLinkPromo(tab: LinkPromoTab): ThunkAction<void> {
+  return (dispatch, getState) => {
+    if (getState().linkPromo?.tab !== tab) return
+    dispatch({ type: 'LINK_PROMO/SET', data: { linkPromo: null } })
   }
 }
