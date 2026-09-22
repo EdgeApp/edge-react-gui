@@ -68,23 +68,18 @@ function isEmptyObject(value: unknown): boolean {
 }
 
 /**
- * Recursively merge two values. `b` (the "keys" side) wins on conflict, except
- * that it is never allowed to destroy what `a` already holds: `false` and `{}`
- * on the `b` side both mean "no opinion" and yield `a` untouched, exactly as
- * `undefined` does.
+ * Recursively merge two values. `b` always wins on conflict, including when it
+ * is `false`: `scripts/deploy.ts` merges a branch's override block over a
+ * config file, and `false` is how a branch turns a plugin or flag off.
  *
- * That matters because the keys side can arrive from a remote infoRollup
- * overlay or a disk cache. Without this, an overlay saying
- * `swapPlugins.changenow: false` would replace the baked-in
- * `{ apiKey: '…' }` with the scalar `false`, wiping the credential before
- * `mergePluginInit` ever sees it. Only `config.json` disables a plugin; the
- * keys side supplies secrets and nothing else.
+ * Do not use this for a remote or cached keys overlay. That direction must not
+ * be able to delete anything, so it goes through `mergeKeysOverlay`.
  *
- * Plain objects are merged field-by-field; arrays and other primitives are
- * replaced wholesale.
+ * Plain objects are merged field-by-field; arrays and primitives are replaced
+ * wholesale. `undefined` on either side yields the other side.
  */
 export function deepMerge(a: unknown, b: unknown): unknown {
-  if (b === undefined || b === false || isEmptyObject(b)) return a
+  if (b === undefined) return a
   if (a === undefined) return b
   if (isPlainObject(a) && isPlainObject(b)) {
     const out: Record<string, unknown> = { ...a }
@@ -95,6 +90,37 @@ export function deepMerge(a: unknown, b: unknown): unknown {
     return out
   }
   return b
+}
+
+/**
+ * Merge a keys overlay (remote infoRollup `appKeys`, or the disk cache) onto
+ * the values baked into the build. The overlay supplies secrets and may never
+ * remove them, so unlike `deepMerge` it cannot replace something with nothing:
+ *
+ * - `undefined`, `false` and `{}` all mean "no opinion" and leave the baked
+ *   value untouched.
+ * - any non-object (`null`, a string, a number) arriving where the build holds
+ *   an init object is ignored, rather than flattening the object to a scalar.
+ *
+ * Without this an overlay saying `swapPlugins.changenow: false` would replace
+ * the baked `{ apiKey: '…' }` with `false`, wiping the credential before
+ * `mergePluginInit` ever sees it. Only `config.json` disables a plugin.
+ */
+export function mergeKeysOverlay(baked: unknown, overlay: unknown): unknown {
+  if (overlay === undefined || overlay === false || isEmptyObject(overlay)) {
+    return baked
+  }
+  if (isPlainObject(baked) && !isPlainObject(overlay)) return baked
+  if (baked === undefined) return overlay
+  if (isPlainObject(baked) && isPlainObject(overlay)) {
+    const out: Record<string, unknown> = { ...baked }
+    for (const key of Object.keys(overlay)) {
+      if (FORBIDDEN_MERGE_KEYS.has(key)) continue
+      out[key] = mergeKeysOverlay(baked[key], overlay[key])
+    }
+    return out
+  }
+  return overlay
 }
 
 /**
@@ -110,9 +136,12 @@ export function mergePluginInit(
   // remote/cache overlay that says `false`, or hands back `{}`, contributes
   // nothing and leaves the config-side value exactly as it was. `deepMerge`
   // applies the same rule one level down.
-  if (keysValue === false || isEmptyObject(keysValue)) return configValue
+  if (keysValue === false || keysValue === null || isEmptyObject(keysValue)) {
+    return configValue
+  }
   if (configValue === true) {
-    return keysValue !== undefined ? keysValue : true
+    // `null` is already handled above, so `??` only catches `undefined` here.
+    return keysValue ?? true
   }
   if (configValue === undefined) {
     return keysValue
