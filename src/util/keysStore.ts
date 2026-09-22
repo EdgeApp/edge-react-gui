@@ -11,8 +11,8 @@ import {
 import { CONFIG } from '../config'
 import {
   asMergeableKeys,
-  deepMerge,
   isPlainObject,
+  mergeKeysOverlay,
   nestGlobalKeys
 } from '../configKeysMerge'
 import { asKeysJson, type RuntimeKeys } from '../configKeysSchema'
@@ -150,7 +150,7 @@ function applyKeys(keys: unknown): boolean {
   const nestedOverlay = nestGlobalKeys(
     stripLocalOnlyFields(keepKeysFields(mergeable))
   )
-  const mergedKeys = deepMerge(bakedKeys, nestedOverlay) as RuntimeKeys
+  const mergedKeys = mergeKeysOverlay(bakedKeys, nestedOverlay) as RuntimeKeys
   applyRuntimeKeys(
     nestGlobalKeys(mergedKeys as unknown as Record<string, unknown>)
   )
