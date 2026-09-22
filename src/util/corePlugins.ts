@@ -113,6 +113,7 @@ export const swapPlugins = {
   sideshift: ENV.SIDESHIFT_INIT,
   swapter: ENV.SWAPTER_INIT,
   swapuz: ENV.SWAPUZ_INIT,
+  wizardswap: ENV.WIZARDSWAP_INIT,
   xgram: ENV.XGRAM_INIT,
   nymswap: ENV.NYM_SWAP_INIT,
 
