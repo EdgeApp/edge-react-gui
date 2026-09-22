@@ -91,6 +91,29 @@ describe('a keys overlay never destroys a baked value', () => {
     })
   })
 
+  it.each([
+    ['null', null],
+    ['an empty string', ''],
+    ['false', false],
+    ['undefined', undefined]
+  ])('mergeKeysOverlay will not blank a baked leaf secret with %s', (_l, o) => {
+    // globalKeys.* are plain strings, so the object-level guard above does not
+    // cover them: the leaf needs its own protection.
+    expect(
+      mergeKeysOverlay({ COINGECKO_API_KEY: 'baked' }, { COINGECKO_API_KEY: o })
+    ).toEqual({ COINGECKO_API_KEY: 'baked' })
+    expect(mergeKeysOverlay('baked', o)).toBe('baked')
+  })
+
+  it('mergeKeysOverlay still replaces a leaf with a real value', () => {
+    expect(
+      mergeKeysOverlay(
+        { COINGECKO_API_KEY: 'baked' },
+        { COINGECKO_API_KEY: 'fresh' }
+      )
+    ).toEqual({ COINGECKO_API_KEY: 'fresh' })
+  })
+
   it('mergeKeysOverlay still lets a real value win', () => {
     expect(mergeKeysOverlay({ apiKey: 'baked' }, { apiKey: 'fresh' })).toEqual({
       apiKey: 'fresh'
