@@ -39,6 +39,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useIsAppForeground } from '../../hooks/useIsAppForeground'
 import { KEYS } from '../../keys'
 import { lstrings } from '../../locales/strings'
+import { config } from '../../theme/appConfig'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
@@ -319,7 +320,11 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     return (
       <View style={styles.bootErrorContainer}>
         <Text style={styles.bootErrorText}>
-          {sprintf(lstrings.boot_failed_message_1s, bootFatalError)}
+          {sprintf(
+            lstrings.boot_failed_message_2s,
+            config.appName,
+            bootFatalError
+          )}
         </Text>
       </View>
     )

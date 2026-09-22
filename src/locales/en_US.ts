@@ -73,7 +73,7 @@ const strings = {
   bitcoin_received: '%1$s Received',
 
   // Shown instead of the app when the core fails to start at all:
-  boot_failed_message_1s: 'Edge failed to start: %1$s',
+  boot_failed_message_2s: '%1$s failed to start: %2$s',
 
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
