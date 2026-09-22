@@ -364,6 +364,8 @@
   "send_confirmation_calculating_fee": "手数料計算中",
   "send_confirmation_slide_to_confirm": "スライドして確認",
   "send_confirmation_balance": "残高",
+  "send_confirmation_zero_amount_title": "Send Zero Amount?",
+  "send_confirmation_zero_amount_message": "You're about to send a transaction with a zero amount. Network fees (gas) will still be charged. Are you sure you want to continue?",
   "send_confirmation_algo_recipient_not_activated_s": "Recipient must first activate %1$s before they can receive funds.",
   "send_confirmation_eos_error_cpu": "EOSトランザクションを送信するための十分なCPUがありません。 CPUが充電されるまで1〜3日お待ちください。",
   "send_confirmation_eos_error_net": "EOSトランザクションを送信するためのNETが不足しています。 NETが再充電されるまで1〜3日お待ちください。",
