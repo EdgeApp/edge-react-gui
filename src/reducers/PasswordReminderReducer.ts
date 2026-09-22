@@ -237,15 +237,11 @@ function translateAction(action: Action): PasswordReminderReducerAction {
     }
   }
 
+  // `validatePassword` dispatches this for every successful password entry,
+  // including the Account Settings unlock. It is the only signal counted here:
+  // each password entry must raise `passwordUseCount` exactly once, because the
+  // reminder thresholds grow as `GROWTH_RATE ** passwordUseCount`.
   if (action.type === 'PASSWORD_USED') {
-    return {
-      type: 'PASSWORD_USED',
-      data: {
-        lastPasswordUseDate: Date.now()
-      }
-    }
-  }
-  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && !action.data) {
     return {
       type: 'PASSWORD_USED',
       data: {
