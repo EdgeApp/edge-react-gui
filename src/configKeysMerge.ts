@@ -97,9 +97,9 @@ export function deepMerge(a: unknown, b: unknown): unknown {
  * the values baked into the build. The overlay supplies secrets and may never
  * remove them, so unlike `deepMerge` it cannot replace something with nothing:
  *
- * - `undefined`, `false` and `{}` all mean "no opinion" and leave the baked
- *   value untouched.
- * - any non-object (`null`, a string, a number) arriving where the build holds
+ * - `undefined`, `false`, `null`, `''` and `{}` all mean "no opinion" and leave
+ *   the baked value untouched.
+ * - any other non-object (a string, a number) arriving where the build holds
  *   an init object is ignored, rather than flattening the object to a scalar.
  *
  * Without this an overlay saying `swapPlugins.changenow: false` would replace
@@ -107,7 +107,13 @@ export function deepMerge(a: unknown, b: unknown): unknown {
  * `mergePluginInit` ever sees it. Only `config.json` disables a plugin.
  */
 export function mergeKeysOverlay(baked: unknown, overlay: unknown): unknown {
-  if (overlay === undefined || overlay === false || isEmptyObject(overlay)) {
+  if (
+    overlay === undefined ||
+    overlay === false ||
+    overlay === null ||
+    overlay === '' ||
+    isEmptyObject(overlay)
+  ) {
     return baked
   }
   if (isPlainObject(baked) && !isPlainObject(overlay)) return baked

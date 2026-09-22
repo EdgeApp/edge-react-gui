@@ -101,6 +101,25 @@ describe('a keys overlay never destroys a baked value', () => {
     })
   })
 
+  it('mergeKeysOverlay ignores null and empty string on string secrets', () => {
+    // Object-vs-scalar is already covered above. Remote globalKeys leaves are
+    // strings, so null/'' must not wipe a baked credential after recursion.
+    expect(mergeKeysOverlay('real-key', null)).toBe('real-key')
+    expect(mergeKeysOverlay('real-key', '')).toBe('real-key')
+    expect(
+      mergeKeysOverlay(
+        { globalKeys: { COINGECKO_API_KEY: 'baked' } },
+        { globalKeys: { COINGECKO_API_KEY: null } }
+      )
+    ).toEqual({ globalKeys: { COINGECKO_API_KEY: 'baked' } })
+    expect(
+      mergeKeysOverlay(
+        { globalKeys: { COINGECKO_API_KEY: 'baked' } },
+        { globalKeys: { COINGECKO_API_KEY: '' } }
+      )
+    ).toEqual({ globalKeys: { COINGECKO_API_KEY: 'baked' } })
+  })
+
   it('survives the full overlay path for one plugin', () => {
     const baked = { swapPlugins: { changenow: { apiKey: 'baked' } } }
     const merged = mergeKeysOverlay(baked, {
