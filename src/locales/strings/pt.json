@@ -1319,6 +1319,7 @@
   "send_scan_modal_text_modal_hint": "Endereço Publico",
   "send_address_expire_title": "Tempo de Expiração do Endereço de Pagamento",
   "send_address_expired_error_message": "Endereço de pagamento expirado",
+  "send_funds_not_spendable_error_message": "These funds are not spendable yet. Wait for the wallet to finish syncing, then try again.",
   "request_balance": "Você tem %s",
   "exchange_same_address_upgrade": "Asset Upgrade",
   "exchange_generic_error_title": "Erro na Troca",
