@@ -107,7 +107,16 @@ export function deepMerge(a: unknown, b: unknown): unknown {
  * `mergePluginInit` ever sees it. Only `config.json` disables a plugin.
  */
 export function mergeKeysOverlay(baked: unknown, overlay: unknown): unknown {
-  if (overlay === undefined || overlay === false || isEmptyObject(overlay)) {
+  // Everything that means "I have no secret for this": `null` and `''` matter
+  // at the leaves, where a baked string such as `globalKeys.COINGECKO_API_KEY`
+  // would otherwise be blanked by a sloppy layer or a bad cache entry.
+  if (
+    overlay === undefined ||
+    overlay === false ||
+    overlay === null ||
+    overlay === '' ||
+    isEmptyObject(overlay)
+  ) {
     return baked
   }
   if (isPlainObject(baked) && !isPlainObject(overlay)) return baked
