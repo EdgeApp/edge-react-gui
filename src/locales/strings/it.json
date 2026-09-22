@@ -1319,6 +1319,7 @@
   "send_scan_modal_text_modal_hint": "Indirizzo pubblico",
   "send_address_expire_title": "Tempo di scadenza dell'indirizzo di pagamento",
   "send_address_expired_error_message": "Indirizzo di pagamento scaduto",
+  "send_funds_not_spendable_error_message": "These funds are not spendable yet. Wait for the wallet to finish syncing, then try again.",
   "request_balance": "Hai %s",
   "exchange_same_address_upgrade": "Aggiornamento Asset",
   "exchange_generic_error_title": "Errore nello scambio",
