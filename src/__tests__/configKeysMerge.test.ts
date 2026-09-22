@@ -5,6 +5,7 @@ import path from 'path'
 import {
   asMergeableKeys,
   deepMerge,
+  mergeKeysOverlay,
   mergePluginInit,
   nestGlobalKeys,
   redactValue,
@@ -74,23 +75,27 @@ describe('deepMerge', () => {
 })
 
 describe('a keys overlay never destroys a baked value', () => {
-  // A remote infoRollup overlay or a stale disk cache can carry `false` or
-  // `{}` for a plugin. Neither may wipe the credential that shipped in the
-  // build: only config.json disables a plugin.
-  it('deepMerge treats a false override as no opinion', () => {
-    expect(deepMerge({ apiKey: 'baked' }, false)).toEqual({ apiKey: 'baked' })
+  // A remote infoRollup overlay or a stale disk cache can carry `false`, `{}`
+  // or junk for a plugin. None of it may wipe the credential that shipped in
+  // the build: only config.json disables a plugin.
+  it.each([
+    ['false', false],
+    ['null', null],
+    ['an empty object', {}],
+    ['a stray string', 'oops'],
+    ['a stray number', 0],
+    ['undefined', undefined]
+  ])('mergeKeysOverlay ignores %s', (_label, overlay) => {
+    expect(mergeKeysOverlay({ apiKey: 'baked' }, overlay)).toEqual({
+      apiKey: 'baked'
+    })
   })
 
-  it('deepMerge treats an empty object as no opinion', () => {
-    expect(deepMerge({ apiKey: 'baked' }, {})).toEqual({ apiKey: 'baked' })
-    expect(deepMerge(true, {})).toBe(true)
-  })
-
-  it('deepMerge still lets a real value win', () => {
-    expect(deepMerge({ apiKey: 'baked' }, { apiKey: 'fresh' })).toEqual({
+  it('mergeKeysOverlay still lets a real value win', () => {
+    expect(mergeKeysOverlay({ apiKey: 'baked' }, { apiKey: 'fresh' })).toEqual({
       apiKey: 'fresh'
     })
-    expect(deepMerge({ apiKey: 'baked' }, { other: 'x' })).toEqual({
+    expect(mergeKeysOverlay({ apiKey: 'baked' }, { other: 'x' })).toEqual({
       apiKey: 'baked',
       other: 'x'
     })
@@ -98,7 +103,7 @@ describe('a keys overlay never destroys a baked value', () => {
 
   it('survives the full overlay path for one plugin', () => {
     const baked = { swapPlugins: { changenow: { apiKey: 'baked' } } }
-    const merged = deepMerge(baked, {
+    const merged = mergeKeysOverlay(baked, {
       swapPlugins: { changenow: false }
     }) as { swapPlugins: { changenow: unknown } }
     expect(merged.swapPlugins.changenow).toEqual({ apiKey: 'baked' })
@@ -110,8 +115,9 @@ describe('a keys overlay never destroys a baked value', () => {
     })
   })
 
-  it('mergePluginInit ignores false and {} from the keys side', () => {
+  it('mergePluginInit ignores false, null and {} from the keys side', () => {
     expect(mergePluginInit(true, false)).toBe(true)
+    expect(mergePluginInit(true, null)).toBe(true)
     expect(mergePluginInit(true, {})).toBe(true)
     expect(mergePluginInit({ partnerId: 'p' }, false)).toEqual({
       partnerId: 'p'
@@ -120,6 +126,32 @@ describe('a keys overlay never destroys a baked value', () => {
 
   it('config.json can still disable a plugin', () => {
     expect(mergePluginInit(false, { apiKey: 'fresh' })).toBe(false)
+  })
+})
+
+describe('deepMerge keeps deploy-override semantics', () => {
+  // scripts/deploy.ts merges a branch override block over a config file, where
+  // `false` is exactly how a branch turns a plugin or flag off. That is the
+  // opposite of the keys-overlay rule above, which is why they are separate.
+  it('lets a branch override disable a plugin with false', () => {
+    const file = { guiApiKeys: { banxa: true, phaze: true } }
+    const overrides = { guiApiKeys: { phaze: false } }
+    expect(deepMerge(file, overrides)).toEqual({
+      guiApiKeys: { banxa: true, phaze: false }
+    })
+  })
+
+  it('lets a branch override flip a boolean flag either way', () => {
+    expect(
+      deepMerge({ ENABLE_VISA_PROGRAM: false }, { ENABLE_VISA_PROGRAM: true })
+    ).toEqual({
+      ENABLE_VISA_PROGRAM: true
+    })
+    expect(
+      deepMerge({ ENABLE_VISA_PROGRAM: true }, { ENABLE_VISA_PROGRAM: false })
+    ).toEqual({
+      ENABLE_VISA_PROGRAM: false
+    })
   })
 })
 
