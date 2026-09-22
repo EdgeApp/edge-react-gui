@@ -364,6 +364,8 @@
   "send_confirmation_calculating_fee": "Calculating Fee",
   "send_confirmation_slide_to_confirm": "滑动以确认",
   "send_confirmation_balance": "Balance",
+  "send_confirmation_zero_amount_title": "Send Zero Amount?",
+  "send_confirmation_zero_amount_message": "You're about to send a transaction with a zero amount. Network fees (gas) will still be charged. Are you sure you want to continue?",
   "send_confirmation_algo_recipient_not_activated_s": "Recipient must first activate %1$s before they can receive funds.",
   "send_confirmation_eos_error_cpu": "可用于发送 EOS 交易的CPU不足。请等待1-3天让CPU充值。",
   "send_confirmation_eos_error_net": "可用于发送 EOS 交易的NET不足。请等待1-3天让NET充值。",
