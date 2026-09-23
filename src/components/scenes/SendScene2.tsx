@@ -19,7 +19,6 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   InteractionManager,
-  Linking,
   type TextInput,
   View
 } from 'react-native'
@@ -1196,13 +1195,6 @@ const SendComponent: React.FC<Props> = props => {
     return null
   }
 
-  const handleLearnMore = useHandler(async () => {
-    const url =
-      config.pendingTxLearnMoreUrl ??
-      'https://support.edge.app/hc/en-us/articles/43465958781723'
-    return await Linking.openURL(url).catch(() => {})
-  })
-
   const renderPendingTransactionWarning = (): React.ReactElement | null => {
     if (!hasPendingTx) return null
 
@@ -1212,10 +1204,6 @@ const SendComponent: React.FC<Props> = props => {
           type="warning"
           title={lstrings.pending_transaction_modal_title}
           body={lstrings.pending_transaction_modal_message}
-          button={{
-            label: lstrings.learn_more_button,
-            onPress: handleLearnMore
-          }}
           marginRem={0.5}
         />
       </EdgeAnim>
