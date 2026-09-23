@@ -106,7 +106,7 @@
     "deprecated-react-native-prop-types": "^5.0.0",
     "detect-bundler": "^1.1.0",
     "disklet": "^0.6.0",
-    "edge-core-js": "^2.48.1",
+    "edge-core-js": "^2.49.0",
     "edge-currency-accountbased": "^4.95.0",
     "edge-currency-plugins": "^3.13.0",
     "edge-exchange-plugins": "^2.56.0",
