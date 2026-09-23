@@ -289,6 +289,14 @@ export const asEnvConfig = asObject({
       partnerId: asOptional(asString)
     }).withRest
   ),
+  CYPHERGOAT_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, ''),
+      // CypherGoat credits swap revenue to this affiliate code. Optional: the
+      // plugin omits the parameter when it is unset, so quotes still work.
+      affiliateId: asOptional(asString)
+    }).withRest
+  ),
   COREUM_INIT: asCorePluginInit(asBoolean),
   COSMOSHUB_INIT: asCorePluginInit(asBoolean),
   DASH_INIT: asCorePluginInit(
