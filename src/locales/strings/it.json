@@ -195,7 +195,7 @@
   "fragment_wallets_unpause_wallet": "Riprendi sincronizzazione",
   "fragment_wallets_wallet_paused": "Portafoglio In Pausa",
   "fragment_wallets_wallet_disabled": "Portafoglio disabilitato",
-  "fragment_wallets_wallet_engine_failed_1s": "Engine Failed: %1$s",
+  "fragment_wallets_wallet_engine_failed_1s": "L'engine non è partito: %1$s",
   "fragment_wallets_view_private_view_key": "Private View Key",
   "fragment_wallets_view_private_view_key_warning_s": "La private view key consente al ricevitore di vedere il saldo del tuo portafoglio %1$s. Non condividere questa chiave a meno che non sia necessario, ad esempio per motivi fiscali, contabili o simili.",
   "fragment_wallets_view_xpub": "Vedi l'indirizzo XPub",
