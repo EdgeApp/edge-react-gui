@@ -13,6 +13,11 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 npx patch-package
 
+# Assemble the Pirate Chain iOS framework.
+# The podspec also does this during `pod install`,
+# but a fresh install deletes it again:
+node ./node_modules/react-native-pirate-wallet/scripts/assemble-ios-framework.js
+
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.
