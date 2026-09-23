@@ -1,6 +1,10 @@
 import { useIsFocused } from '@react-navigation/native'
 import { add, div, gt, gte, lte, sub, toFixed } from 'biggystring'
-import type { EdgeSwapQuote, EdgeSwapResult } from 'edge-core-js'
+import type {
+  EdgeSwapQuote,
+  EdgeSwapRequestOptions,
+  EdgeSwapResult
+} from 'edge-core-js'
 import React, { useState } from 'react'
 import { SectionList, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -101,25 +105,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const termsCheckPending = React.useRef(false)
   const timerExpiredDuringTerms = React.useRef(false)
 
-  const pickBestQuoteWithPreference = (
-    allQuotes: EdgeSwapQuote[]
-  ): EdgeSwapQuote => {
-    const { preferType } = swapRequestOptions
-    if (preferType != null) {
-      const wantDex = preferType === 'DEX'
-      const preferredQuotes = allQuotes.filter(q => {
-        const isDex = q.swapInfo.isDex === true
-        return isDex === wantDex
-      })
-      if (preferredQuotes.length > 0) {
-        return pickBestQuote(preferredQuotes)
-      }
-    }
-    return pickBestQuote(allQuotes)
-  }
-
-  const [selectedQuote, setSelectedQuote] = useState(
-    pickBestQuoteWithPreference(quotes)
+  const [selectedQuote, setSelectedQuote] = useState(() =>
+    pickBestQuoteWithPreference(quotes, swapRequestOptions)
   )
   const [calledApprove, setCalledApprove] = useState(false)
 
@@ -697,6 +684,36 @@ const getBetterQuoteRate = (
     DECIMAL_PRECISION
   )
   return gte(aRate, bRate) ? quoteA : quoteB
+}
+
+/**
+ * Picks the quote to select when the confirmation scene opens. A preferred
+ * provider - pinned by a deep link, chosen in the swap settings, or set by an
+ * active promotion - is selected outright when it returned a quote. Otherwise
+ * the DEX/CEX preference narrows the field, and the best rate wins.
+ */
+export const pickBestQuoteWithPreference = (
+  quotes: EdgeSwapQuote[],
+  swapRequestOptions: EdgeSwapRequestOptions
+): EdgeSwapQuote => {
+  const { preferPluginId, preferType } = swapRequestOptions
+  if (preferPluginId != null) {
+    const preferredQuote = quotes.find(
+      quote => quote.pluginId === preferPluginId
+    )
+    if (preferredQuote != null) return preferredQuote
+  }
+  if (preferType != null) {
+    const wantDex = preferType === 'DEX'
+    const preferredQuotes = quotes.filter(q => {
+      const isDex = q.swapInfo.isDex === true
+      return isDex === wantDex
+    })
+    if (preferredQuotes.length > 0) {
+      return pickBestQuote(preferredQuotes)
+    }
+  }
+  return pickBestQuote(quotes)
 }
 
 export const pickBestQuote = (quotes: EdgeSwapQuote[]): EdgeSwapQuote => {
