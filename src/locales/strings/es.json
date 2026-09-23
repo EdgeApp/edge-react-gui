@@ -195,6 +195,7 @@
   "fragment_wallets_unpause_wallet": "Reanudar billetera",
   "fragment_wallets_wallet_paused": "Billetera en pausa",
   "fragment_wallets_wallet_disabled": "Billetera desactivada",
+  "fragment_wallets_wallet_engine_failed_1s": "Engine Failed: %1$s",
   "fragment_wallets_view_private_view_key": "Clave de visualización privada",
   "fragment_wallets_view_private_view_key_warning_s": "La clave de visualización privada permite al destinatario ver el saldo de tu billetera %1$s. No compartas esta clave a menos que sea necesario, por ejemplo, para fines fiscales, contabilidad o motivos similares.",
   "fragment_wallets_view_xpub": "Ver dirección XPub",
