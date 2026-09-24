@@ -2,9 +2,11 @@
 
 ## Unreleased (develop)
 
+## 4.51.1 (2026-09-23)
+
 - fixed: The preferred exchange chosen in the swap settings, or set by an active promotion, is now the selected quote when it can fill the order, instead of only being listed first.
 
-## 4.51.0 (staging)
+## 4.51.0 (2026-09-21)
 
 - added: Robinhood Chain wallets
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
