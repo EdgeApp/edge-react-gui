@@ -29,7 +29,7 @@ export interface ObjectHandleInfo {
   walletId?: string
 }
 
-interface HandleRecord<T = unknown> {
+export interface HandleRecord<T = unknown> {
   objectId: string
   kind: ObjectHandleKind
   value: T
@@ -37,6 +37,8 @@ interface HandleRecord<T = unknown> {
   walletId?: string
   createdAt: number
   expiresAt: number
+  /** The handle's own window, so a refresh cannot silently promote it. */
+  ttlMs: number
   onExpire?: (value: T) => void | Promise<void>
   /**
    * Set while a consuming call is in flight. A handle whose operation moves
@@ -106,6 +108,7 @@ export class ObjectHandleStore {
       walletId: opts.walletId,
       createdAt: now,
       expiresAt: now + ttlMs,
+      ttlMs,
       onExpire: opts.onExpire
     }
     this.handles.set(objectId, record as HandleRecord)
@@ -128,6 +131,17 @@ export class ObjectHandleStore {
         404
       )
     }
+    // Before expiry: a handle whose operation is still running has not
+    // expired, it is busy. Reporting it as expired would also release it, and
+    // releasing runs `onExpire` — for a swap that is `quote.close()` on a
+    // quote that is mid-approval.
+    if (record.consuming === true) {
+      throw engineError(
+        'OBJECT_IN_USE',
+        `Object handle is already being consumed: ${objectId}`,
+        409
+      )
+    }
     if (Date.now() > record.expiresAt) {
       this.delete(objectId).catch(() => {})
       throw engineError(
@@ -141,13 +155,6 @@ export class ObjectHandleStore {
         'OBJECT_KIND_MISMATCH',
         `Expected kind ${kind}, got ${record.kind}`,
         400
-      )
-    }
-    if (record.consuming === true) {
-      throw engineError(
-        'OBJECT_IN_USE',
-        `Object handle is already being consumed: ${objectId}`,
-        409
       )
     }
     return record as HandleRecord<T>
@@ -168,15 +175,46 @@ export class ObjectHandleStore {
     operation: (value: T) => Promise<R>
   ): Promise<R> {
     record.consuming = true
+    // Push the expiry out before the await, not after. A core call can take
+    // minutes, and an expiry that lands mid-call would otherwise release the
+    // handle and run `onExpire` underneath the operation. The sweeper skips a
+    // consuming record as well, because an operation can outlive even a
+    // refreshed window.
+    record.expiresAt = Date.now() + record.ttlMs
     let result: R
     try {
       result = await operation(record.value)
     } catch (error) {
       record.consuming = false
+      record.expiresAt = Date.now() + record.ttlMs
       throw error
     }
     await this.delete(record.objectId)
     return result
+  }
+
+  /**
+   * Hold a handle open across a call that does not consume it.
+   *
+   * `broadcast-tx` and `sign-tx` keep their handle afterwards, but their core
+   * call can outlive the TTL: the expiry was checked on the way *out*, through
+   * `update`, so a broadcast that crossed the boundary threw `OBJECT_EXPIRED`
+   * after the money had already left — no txid in the response, no handle left
+   * to `save-tx` with, and the transaction missing from local history until a
+   * sync found it.
+   */
+  async hold<T, R>(
+    record: HandleRecord<T>,
+    operation: (value: T) => Promise<R>
+  ): Promise<R> {
+    record.consuming = true
+    record.expiresAt = Date.now() + record.ttlMs
+    try {
+      return await operation(record.value)
+    } finally {
+      record.consuming = false
+      record.expiresAt = Date.now() + record.ttlMs
+    }
   }
 
   /**
@@ -187,9 +225,19 @@ export class ObjectHandleStore {
     value: T,
     opts?: { ttlMs?: number }
   ): ObjectHandleInfo {
-    const record = this.get<T>(objectId)
-    const ttlMs = opts?.ttlMs ?? OBJECT_HANDLE_TTL_MS
+    // Deliberately not `get`: the caller already holds this record, and a
+    // handle being written to is not a handle to reject as busy or expired.
+    const record = this.handles.get(objectId) as HandleRecord<T> | undefined
+    if (record == null) {
+      throw engineError(
+        'OBJECT_NOT_FOUND',
+        `No object handle: ${objectId}`,
+        404
+      )
+    }
+    const ttlMs = opts?.ttlMs ?? record.ttlMs
     record.value = value
+    record.ttlMs = ttlMs
     record.expiresAt = Date.now() + ttlMs
     return this.toInfo(record)
   }
@@ -221,6 +269,9 @@ export class ObjectHandleStore {
   private async sweep(): Promise<void> {
     const now = Date.now()
     for (const [id, record] of this.handles) {
+      // A busy handle is never swept: `delete` runs `onExpire`, which for a
+      // swap closes the quote at the exchange.
+      if (record.consuming === true) continue
       if (now > record.expiresAt) {
         await this.delete(id)
       }
