@@ -1,7 +1,11 @@
-import { ENV } from '../../../../env'
+import { globalKeys } from '../../../../keys'
 import type { EthereumPooledKilnAdapterConfig } from '../policyAdapters/EthereumKilnAdaptor'
 import type { StakePluginInfo, StakePolicyConfig } from '../types'
 
+// Secrets are exposed as getters, not values. This module is evaluated during
+// the initial bundle load, which is strictly before the keys store finishes
+// resolving remote secrets into `globalKeys`, so an eager read would pin the baked-in
+// fallback and silently defeat server-side rotation.
 const kilnPolicyConfig: Array<
   StakePolicyConfig<EthereumPooledKilnAdapterConfig>
 > = [
@@ -17,7 +21,9 @@ const kilnPolicyConfig: Array<
     adapterConfig: {
       exitQueueAddress: '0x8979117a69DfA7F4D4E3c7B59197ff03f4A2CeAF',
       type: 'ethereum-pooled-kiln',
-      apiKey: ENV.KILN_TESTNET_API_KEY,
+      get apiKey() {
+        return globalKeys.KILN_TESTNET_API_KEY
+      },
       baseUrl: 'https://api.testnet.kiln.fi',
       contractAddress: '0xb9b3b83daaaadd3866de311ffefec80dbcb048b1',
       pluginId: 'holesky',
@@ -43,7 +49,9 @@ const kilnPolicyConfig: Array<
     adapterConfig: {
       exitQueueAddress: '0x8d6Fd650500f82c7D978a440348e5a9b886943bF',
       type: 'ethereum-pooled-kiln',
-      apiKey: ENV.KILN_MAINNET_API_KEY,
+      get apiKey() {
+        return globalKeys.KILN_MAINNET_API_KEY
+      },
       baseUrl: 'https://api.kiln.fi',
       contractAddress: '0xEb4d67DBa18b3bE04484dFC7B7c2780E8D32A79d',
       pluginId: 'ethereum',

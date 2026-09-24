@@ -473,6 +473,8 @@ export default [
 
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
+      'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
+
       'src/plugins/stake-plugins/uniswapV2/policies/VelodromeV2StakePolicy.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
@@ -496,8 +498,6 @@ export default [
 
       'src/util/CurrencyWalletHelpers.ts',
 
-      'src/util/exchangeRates.ts',
-
       'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
@@ -513,7 +513,7 @@ export default [
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
-      'src/util/WebUtils.ts',
+
       'src/util/withWatchableProps.ts'
     ],
     languageOptions: {
@@ -537,6 +537,7 @@ export default [
       'android/*',
       'artifacts/*',
       'ios/*',
+      'lib/*',
       'src/plugins/contracts/*',
       'src/controllers/edgeProvider/client/rolledUp.js',
       'src/controllers/edgeProvider/injectThisInWebView.js'

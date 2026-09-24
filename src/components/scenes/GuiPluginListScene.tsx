@@ -20,6 +20,7 @@ import {
 } from '../../actions/DeviceSettingsActions'
 import type { NestedDisableMap } from '../../actions/ExchangeInfoActions'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import { CONFIG } from '../../config'
 import { FLAG_LOGO_URL } from '../../constants/CdnConstants'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
 import buyPluginJsonRaw from '../../constants/plugins/buyPluginList.json'
@@ -27,7 +28,6 @@ import buyPluginJsonOverrideRaw from '../../constants/plugins/buyPluginListOverr
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins'
 import sellPluginJsonRaw from '../../constants/plugins/sellPluginList.json'
 import sellPluginJsonOverrideRaw from '../../constants/plugins/sellPluginListOverride.json'
-import { ENV } from '../../env'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
@@ -56,8 +56,9 @@ import { filterGuiPluginJson } from '../../util/GuiPluginTools'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { infoServerData } from '../../util/network'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { getOsVersion } from '../../util/rnUtils'
 import { logEvent, type OnLogEvent } from '../../util/tracking'
-import { base58ToUuid, getOsVersion } from '../../util/utils'
+import { base58ToUuid } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { PaymentOptionCard } from '../cards/PaymentOptionCard'
 import {
@@ -463,7 +464,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const plugin = guiPlugins[pluginId]
     if (plugin == null) return null
 
-    if (plugin.betaOnly === true && !ENV.BETA_FEATURES) return null
+    if (plugin.betaOnly === true && !CONFIG.BETA_FEATURES) return null
 
     const styles = getStyles(this.props.theme)
     const partnerLogoThemeKey = pluginPartnerLogos[pluginId]
@@ -649,7 +650,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     )
     plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
-    if (!ENV.ENABLE_VISA_PROGRAM) {
+    if (!CONFIG.ENABLE_VISA_PROGRAM) {
       plugins = plugins.filter(plugin => plugin.pluginId !== 'rewardscard')
     }
 
