@@ -6790,7 +6790,7 @@
             }
           },
           "default": {
-            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "description": "BAD_REQUEST",
             "content": {
               "application/json": {
                 "schema": {
@@ -7031,7 +7031,7 @@
             }
           },
           "default": {
-            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "description": "BAD_REQUEST",
             "content": {
               "application/json": {
                 "schema": {
@@ -7081,7 +7081,7 @@
             }
           },
           "default": {
-            "description": "TRANSACTION_DATABASE_OFF",
+            "description": "Error.",
             "content": {
               "application/json": {
                 "schema": {
@@ -7129,7 +7129,7 @@
             }
           },
           "default": {
-            "description": "BAD_REQUEST, TRANSACTION_DATABASE_OFF",
+            "description": "BAD_REQUEST",
             "content": {
               "application/json": {
                 "schema": {
