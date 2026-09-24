@@ -242,7 +242,7 @@
         "sessionId?": "string — Session that created the handle; only that session may use it.",
         "walletId?": "string — Wallet the handle is bound to, when it belongs to one."
       },
-      "returnsDoc": "The handle fields, plus a `value` holding the live core object.",
+      "returnsDoc": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects.",
       "notes": [
         "Reading does not extend the TTL. Only a step that updates the value does."
       ],
