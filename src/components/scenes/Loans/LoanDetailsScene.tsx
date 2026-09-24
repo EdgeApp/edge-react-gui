@@ -2,7 +2,7 @@ import { add, div, gt, max, mul, sub } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -55,7 +55,7 @@ interface Props extends EdgeAppSceneProps<'loanDetails'> {
   loanAccount: LoanAccount
 }
 
-export const LoanDetailsSceneComponent = (props: Props): React.ReactElement => {
+export const LoanDetailsSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -144,14 +144,14 @@ export const LoanDetailsSceneComponent = (props: Props): React.ReactElement => {
     sprintf(AAVE_SUPPORT_ARTICLE_URL_1S, 'loan-details')
   )
 
-  const handleProgramStatusCardPress = (programEdge: LoanProgramEdge): void => {
+  const handleProgramStatusCardPress = (programEdge: LoanProgramEdge) => {
     navigation.navigate('loanStatus', {
       actionQueueId: programEdge.programId,
       loanAccountId
     })
   }
 
-  const renderProgramStatusCard = (): React.ReactElement | null => {
+  const renderProgramStatusCard = () => {
     if (runningProgramMessage != null && runningProgramEdge != null) {
       return (
         <EdgeTouchableOpacity
@@ -318,7 +318,8 @@ export const LoanDetailsSceneComponent = (props: Props): React.ReactElement => {
         withTopMargin
       />
       <KeyboardAwareScrollView
-        bottomOffset={theme.rem(2.75)}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <Space aroundRem={1} topRem={1.5}>
@@ -446,7 +447,7 @@ export const useFiatTotal = (
 export const displayFiatTotal = (
   isoFiatCurrencyCode: string,
   fiatAmount: string
-): string => {
+) => {
   const fiatSymbol = getFiatSymbol(isoFiatCurrencyCode)
 
   return `${fiatSymbol}${formatFiatString({ autoPrecision: true, fiatAmount })}`

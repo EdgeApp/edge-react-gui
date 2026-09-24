@@ -1,9 +1,9 @@
-internal import Expo
 import Firebase
 import FirebaseMessaging
 import RNBootSplash
 import React
 import ReactAppDependencyProvider
+import React_RCTAppDelegate
 import UIKit
 import UserNotifications
 
@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var rootViewController: UIViewController?
 
   var reactNativeDelegate: ReactNativeDelegate?
-  var reactNativeFactory: ExpoReactNativeFactory?
+  var reactNativeFactory: RCTReactNativeFactory?
 
   /**
    * Handles app start-up.
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // React Native template code:
     let delegate = ReactNativeDelegate()
-    let factory = ExpoReactNativeFactory(delegate: delegate)
+    let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
 
     reactNativeDelegate = delegate
@@ -132,15 +132,13 @@ private func setBadgeCount(_ count: Int) {
 
 /// Configures the React Native instance.
 /// React Native template code.
-class ReactNativeDelegate: ExpoReactNativeFactoryDelegate {
+class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {
     self.bundleURL()
   }
 
   // react-native-bootsplash integration:
-  // (Expo SDK 57's factory delegate passes the new-architecture root view as a
-  // plain UIView; RCTRootView is the old-architecture type.)
-  override func customize(_ rootView: UIView) {
+  override func customize(_ rootView: RCTRootView) {
     super.customize(rootView)
     RNBootSplash.initWithStoryboard("LaunchScreen", rootView: rootView)
   }

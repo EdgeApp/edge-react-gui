@@ -98,6 +98,18 @@ async function loadAugmentsFromStore(
 }
 
 /**
+ * True when the account has at least one saved gift card order. A purchase
+ * writes an augment, so this is the local record of purchase history, and it
+ * answers whether the list scene has anything to show without a network call.
+ */
+export async function hasPhazeGiftCardOrders(
+  account: EdgeAccount
+): Promise<boolean> {
+  const augments = await loadAugmentsFromStore(account)
+  return Object.keys(augments).length > 0
+}
+
+/**
  * Internal: Write augments to dataStore
  */
 async function saveAugmentsToStore(

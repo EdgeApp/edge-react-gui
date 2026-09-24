@@ -1,7 +1,7 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -27,7 +27,8 @@ export const InfoCarouselCard: React.FC<Props> = props => {
   const dispatch = useDispatch()
 
   const { navigation, promoInfo, onClose } = props
-  const { localeMessages, ctaButton, background, dismissable } = promoInfo
+  const { localeMessages, ctaButton, background, dismissable, promoId } =
+    promoInfo
 
   const backgroundInfo = theme.isDark
     ? background.darkMode
@@ -52,7 +53,7 @@ export const InfoCarouselCard: React.FC<Props> = props => {
       return
     }
 
-    await dispatch(linkReferralWithCurrencies(navigation, url))
+    await dispatch(linkReferralWithCurrencies(navigation, url, promoId))
   })
 
   const imageSrc = React.useMemo(() => ({ uri: imageUri }), [imageUri])

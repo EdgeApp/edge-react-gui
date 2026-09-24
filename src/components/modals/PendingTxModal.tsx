@@ -6,11 +6,11 @@ import type {
 import * as React from 'react'
 import type { AirshipBridge } from 'react-native-airship'
 
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import type { NavigationBase } from '../../types/routerTypes'
+import { isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { Paragraph } from '../themed/EdgeText'
@@ -23,16 +23,6 @@ interface PendingTxModalProps {
   wallet: EdgeCurrencyWallet
   tokenId: EdgeTokenId
   navigation: NavigationBase
-}
-
-/**
- * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID namespace.
- * EVM chains use the 'eip155' namespace.
- */
-function isEvmWallet(wallet: EdgeCurrencyWallet): boolean {
-  const { pluginId } = wallet.currencyInfo
-  const specialInfo = getSpecialCurrencyInfo(pluginId)
-  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
 }
 
 const PendingTxModal = (props: PendingTxModalProps): React.ReactElement => {

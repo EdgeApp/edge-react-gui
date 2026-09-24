@@ -1,11 +1,11 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export const EmptyLoader = (): React.ReactElement => {
+export const EmptyLoader = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
@@ -15,9 +15,7 @@ export const EmptyLoader = (): React.ReactElement => {
   )
 }
 
-export const SectionHeader = (props: {
-  title?: string
-}): React.ReactElement => {
+export const SectionHeader = (props: { title?: string }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -44,9 +42,7 @@ export const SectionHeader = (props: {
   )
 }
 
-export const SectionHeaderCentered = (props: {
-  title: string
-}): React.ReactElement => {
+export const SectionHeaderCentered = (props: { title: string }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (

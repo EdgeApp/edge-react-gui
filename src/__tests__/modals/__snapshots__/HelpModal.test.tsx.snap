@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`HelpModal should render with loading props 1`] = `
 [
@@ -102,6 +102,7 @@ exports[`HelpModal should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -132,8 +133,9 @@ exports[`HelpModal should render with loading props 1`] = `
       ]
     }
   >
-    <ExpoBlurView
-      intensity={100}
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         [
           {
@@ -149,7 +151,6 @@ exports[`HelpModal should render with loading props 1`] = `
           },
         ]
       }
-      tint="dark"
     />
     <View
       style={
@@ -452,7 +453,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -473,7 +473,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={11.05}
                 numberOfLines={2}
                 style={
                   [
@@ -615,7 +614,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -636,7 +634,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={11.05}
                 numberOfLines={2}
                 style={
                   [
@@ -771,7 +768,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -792,7 +788,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={11.05}
                 numberOfLines={2}
                 style={
                   [
@@ -927,7 +922,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -948,7 +942,6 @@ exports[`HelpModal should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={11.05}
                 numberOfLines={2}
                 style={
                   [
@@ -987,7 +980,6 @@ exports[`HelpModal should render with loading props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -1010,7 +1002,6 @@ exports[`HelpModal should render with loading props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [

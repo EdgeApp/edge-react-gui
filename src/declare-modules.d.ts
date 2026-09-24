@@ -34,4 +34,5 @@ declare module 'react-native-battery-optimization-check' {
 }
 
 declare module 'react-native-smart-splash-screen'
+declare module 'rn-id-blurview'
 declare module 'react-native-wheel-picker-android'

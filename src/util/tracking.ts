@@ -227,6 +227,17 @@ export function trackError(
 }
 
 /**
+ * The events that consume a link-scoped promo id. Reaching any of them means
+ * the deep link or promo card that opened the flow has been credited, so the
+ * id is retired.
+ */
+const CONVERSION_EVENTS: TrackingEventName[] = [
+  'Buy_Success',
+  'Sell_Success',
+  'Exchange_Shift_Success'
+]
+
+/**
  * Send a raw event to all backends.
  */
 export function logEvent(
@@ -234,6 +245,12 @@ export function logEvent(
   values: TrackingValues = {}
 ): ThunkAction<void> {
   return (dispatch, getState) => {
+    // Attribute the event to the link promo held when it was dispatched. The
+    // params below are built after several awaits, and leaving the flow's tab
+    // releases the promo, so reading it later would drop the credit from a
+    // conversion the user converted and then navigated away from.
+    const { linkPromo } = getState()
+
     getExperimentConfig()
       .then(async (experimentConfig: ExperimentConfig) => {
         // Persistent & Unchanged params:
@@ -262,7 +279,12 @@ export function logEvent(
         const { accountReferral } = account
         params.refDeviceInstallerId = deviceReferral.installerId
         params.refDeviceCurrencyCodes = deviceReferral.currencyCodes
-        params.promoIds = accountReferral.activePromotions
+        // A deep link or promo card that opened this flow attributes its own
+        // conversion, overriding the account's promo ids for this one entry.
+        params.promoIds =
+          linkPromo == null
+            ? accountReferral.activePromotions
+            : [linkPromo.promoId]
 
         const { creationDate, installerId, accountAppleAdsAttribution } =
           accountReferral
@@ -403,6 +425,20 @@ export function logEvent(
         ]).catch((error: unknown) => {
           console.warn(error)
         })
+
+        // The link promo attributes exactly one conversion. Retiring it here
+        // keeps a later, unrelated buy or swap on the account's own promo ids.
+        //
+        // Re-read the slice instead of trusting the value captured at dispatch:
+        // the event was built across several awaits, and a link that arrived
+        // meanwhile owns the attribution now. Compare by identity, not by
+        // `promoId`: every link stores a fresh `LinkPromo`, so a newer link
+        // for the same campaign is a different entry and must keep its credit.
+        if (linkPromo != null && CONVERSION_EVENTS.includes(event)) {
+          if (getState().linkPromo === linkPromo) {
+            dispatch({ type: 'LINK_PROMO/SET', data: { linkPromo: null } })
+          }
+        }
       })
       .catch((e: unknown) => {
         console.error(e)

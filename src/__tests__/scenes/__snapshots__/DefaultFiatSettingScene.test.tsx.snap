@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
 <View
@@ -26,8 +26,18 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
         "height": 1334,
         "width": 750,
       },
+      {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
+        "padding": 0,
+      },
     ]
   }
+  nativeID="0"
   style={
     [
       {
@@ -40,90 +50,165 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
         "width": 750,
       },
       {
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "paddingRight": 0,
+        "paddingTop": 64,
+      },
+      {
         "maxHeight": 1334,
+      },
+      {
+        "padding": 0,
       },
     ]
   }
 >
-  <BlurTargetView
-    collapsable={false}
-    ref={
+  <BVLinearGradient
+    colors={
+      [
+        4279900698,
+        4279900698,
+      ]
+    }
+    endPoint={
       {
-        "current": null,
+        "x": 1,
+        "y": 1,
+      }
+    }
+    locations={null}
+    onLayout={[Function]}
+    startPoint={
+      {
+        "x": 0,
+        "y": 0,
       }
     }
     style={
-      [
-        {
-          "alignItems": "stretch",
-          "flexDirection": "column",
-          "justifyContent": "flex-start",
-        },
-        {
-          "flexGrow": 1,
-          "flexShrink": 1,
-        },
-        {
-          "paddingBottom": 0,
-          "paddingLeft": 0,
-          "paddingRight": 0,
-          "paddingTop": 64,
-        },
-        {
-          "padding": 0,
-        },
-      ]
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
     }
   >
-    <ExpoLinearGradient
-      colors={
-        [
-          "#1a1a1a",
-          "#1a1a1a",
-        ]
-      }
-      end={
-        {
-          "x": 1,
-          "y": 1,
-        }
-      }
-      onLayout={[Function]}
-      start={
-        {
-          "x": 0,
-          "y": 0,
-        }
-      }
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={0}
+      bbWidth={0}
+      focusable={false}
+      height={0}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
       style={
         {
-          "bottom": 0,
-          "left": 0,
-          "position": "absolute",
-          "right": 0,
-          "top": 0,
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
         }
       }
+      vbHeight={0}
+      vbWidth={0}
+      width={0}
     >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight={0}
-        bbWidth={0}
-        focusable={false}
-        height={0}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        style={
+      <RNSVGGroup
+        fill={
           {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
+            "payload": 4278190080,
+            "type": 0,
           }
         }
-        vbHeight={0}
-        vbWidth={0}
-        width={0}
       >
+        <RNSVGDefs>
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -1,
+                0.125,
+                -167772161,
+                0.25,
+                -637534209,
+                0.75,
+                654311423,
+                0.875,
+                184549375,
+                1,
+                16777215,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad0"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -216279,
+                0.0588,
+                -216279,
+                0.1765,
+                -167988439,
+                0.29410000000000003,
+                -637750487,
+                0.7646999999999999,
+                654095145,
+                0.8824,
+                184333097,
+                1,
+                16560937,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad1"
+            rx="50%"
+            ry="50%"
+          />
+          <RNSVGRadialGradient
+            cx="50%"
+            cy="50%"
+            fx="50%"
+            fy="50%"
+            gradient={
+              [
+                0,
+                -16719740,
+                0.4667,
+                -16719740,
+                0.5333,
+                -184491900,
+                0.6,
+                -654253948,
+                0.8667,
+                637591684,
+                0.9333,
+                167829636,
+                1,
+                57476,
+              ]
+            }
+            gradientTransform={null}
+            gradientUnits={0}
+            name="grad2"
+            rx="50%"
+            ry="50%"
+          />
+        </RNSVGDefs>
         <RNSVGGroup
           fill={
             {
@@ -131,245 +216,216 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               "type": 0,
             }
           }
+          opacity={0.1}
         >
-          <RNSVGDefs>
-            <RNSVGRadialGradient
-              cx="50%"
-              cy="50%"
-              fx="50%"
-              fy="50%"
-              gradient={
-                [
-                  0,
-                  -1,
-                  0.125,
-                  -167772161,
-                  0.25,
-                  -637534209,
-                  0.75,
-                  654311423,
-                  0.875,
-                  184549375,
-                  1,
-                  16777215,
-                ]
-              }
-              gradientTransform={null}
-              gradientUnits={0}
-              name="grad0"
-              rx="50%"
-              ry="50%"
-            />
-            <RNSVGRadialGradient
-              cx="50%"
-              cy="50%"
-              fx="50%"
-              fy="50%"
-              gradient={
-                [
-                  0,
-                  -216279,
-                  0.0588,
-                  -216279,
-                  0.1765,
-                  -167988439,
-                  0.29410000000000003,
-                  -637750487,
-                  0.7646999999999999,
-                  654095145,
-                  0.8824,
-                  184333097,
-                  1,
-                  16560937,
-                ]
-              }
-              gradientTransform={null}
-              gradientUnits={0}
-              name="grad1"
-              rx="50%"
-              ry="50%"
-            />
-            <RNSVGRadialGradient
-              cx="50%"
-              cy="50%"
-              fx="50%"
-              fy="50%"
-              gradient={
-                [
-                  0,
-                  -16719740,
-                  0.4667,
-                  -16719740,
-                  0.5333,
-                  -184491900,
-                  0.6,
-                  -654253948,
-                  0.8667,
-                  637591684,
-                  0.9333,
-                  167829636,
-                  1,
-                  57476,
-                ]
-              }
-              gradientTransform={null}
-              gradientUnits={0}
-              name="grad2"
-              rx="50%"
-              ry="50%"
-            />
-          </RNSVGDefs>
-          <RNSVGGroup
+          <RNSVGCircle
+            cx="10%"
+            cy="10%"
             fill={
               {
-                "payload": 4278190080,
-                "type": 0,
+                "brushRef": "grad0",
+                "type": 1,
               }
             }
-            opacity={0.1}
-          >
-            <RNSVGCircle
-              cx="10%"
-              cy="10%"
-              fill={
-                {
-                  "brushRef": "grad0",
-                  "type": 1,
-                }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={224.73239436619718}
+          />
+          <RNSVGCircle
+            cx="95%"
+            cy="30%"
+            fill={
+              {
+                "brushRef": "grad1",
+                "type": 1,
               }
-              propList={
-                [
-                  "fill",
-                ]
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={238.7781690140845}
+          />
+          <RNSVGCircle
+            cx="-15%"
+            cy="100%"
+            fill={
+              {
+                "brushRef": "grad2",
+                "type": 1,
               }
-              r={224.73239436619718}
-            />
-            <RNSVGCircle
-              cx="95%"
-              cy="30%"
-              fill={
-                {
-                  "brushRef": "grad1",
-                  "type": 1,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-              r={238.7781690140845}
-            />
-            <RNSVGCircle
-              cx="-15%"
-              cy="100%"
-              fill={
-                {
-                  "brushRef": "grad2",
-                  "type": 1,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-              r={421.37323943661977}
-            />
-          </RNSVGGroup>
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+            r={421.37323943661977}
+          />
         </RNSVGGroup>
-      </RNSVGSvgView>
-    </ExpoLinearGradient>
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </BVLinearGradient>
+  <View
+    style={
+      {
+        "flex": 1,
+        "marginBottom": -0,
+        "marginLeft": -0,
+        "marginRight": -0,
+        "marginTop": 0,
+      }
+    }
+  >
     <View
       style={
-        {
-          "flex": 1,
-          "marginBottom": -0,
-          "marginLeft": -0,
-          "marginRight": -0,
-          "marginTop": 0,
-        }
+        [
+          {
+            "justifyContent": "center",
+            "marginHorizontal": 22,
+            "paddingBottom": 22,
+          },
+          {
+            "marginTop": 22,
+          },
+          undefined,
+        ]
       }
     >
       <View
         style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={false}
+          minimumFontScale={0.65}
+          numberOfLines={1}
+          style={
+            [
+              {
+                "color": "#FFFFFF",
+                "fontFamily": "Quicksand-Regular",
+                "fontSize": 22,
+                "includeFontPadding": false,
+              },
+              {
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 27,
+              },
+              null,
+            ]
+          }
+        >
+          Select Fiat
+        </Text>
+      </View>
+      <View
+        style={
           [
             {
+              "alignItems": "center",
+              "flexDirection": "row",
               "justifyContent": "center",
-              "marginHorizontal": 22,
-              "paddingBottom": 22,
             },
             {
+              "marginBottom": 0,
+              "marginLeft": 11,
+              "marginRight": 11,
               "marginTop": 22,
             },
-            undefined,
           ]
         }
       >
         <View
-          style={
+          accessibilityState={
             {
-              "alignItems": "center",
-              "flexDirection": "row",
-              "justifyContent": "space-between",
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": false,
+              "expanded": undefined,
+              "selected": undefined,
             }
           }
-        >
-          <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={false}
-            minimumFontScale={0.65}
-            minimumFontSize={17.55}
-            numberOfLines={1}
-            style={
-              [
-                {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                {
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 27,
-                },
-                null,
-              ]
+          accessible={false}
+          collapsable={false}
+          focusable={true}
+          jestAnimatedProps={
+            {
+              "value": {},
             }
-          >
-            Select Fiat
-          </Text>
-        </View>
-        <View
+          }
+          jestAnimatedStyle={
+            {
+              "value": {
+                "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                "borderColor": "rgba(0, 241, 162, 0)",
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
+              },
+            ]
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             [
               {
                 "alignItems": "center",
+                "borderRadius": 2247,
+                "borderWidth": 1,
                 "flexDirection": "row",
-                "justifyContent": "center",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "paddingHorizontal": 22,
+                "paddingVertical": 17,
               },
               {
-                "marginBottom": 0,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 22,
+                "backgroundColor": "rgba(255, 255, 255, 0.2)",
+                "borderColor": "rgba(0, 241, 162, 0)",
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               },
             ]
           }
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": false,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessible={false}
             collapsable={false}
-            focusable={true}
             jestAnimatedProps={
               {
                 "value": {},
@@ -378,9 +434,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
             jestAnimatedStyle={
               {
                 "value": {
-                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
-                  "borderColor": "rgba(0, 241, 162, 0)",
-                  "opacity": 1,
+                  "marginRight": 0,
                   "transform": [
                     {
                       "scale": 1,
@@ -392,40 +446,20 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
             jestInlineStyle={
               [
                 {
-                  "alignItems": "center",
-                  "borderRadius": 2247,
-                  "borderWidth": 1,
-                  "flexDirection": "row",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "paddingHorizontal": 22,
-                  "paddingVertical": 17,
+                  "height": 22,
+                  "width": 22,
                 },
               ]
             }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+            nativeID="2"
             style={
               [
                 {
-                  "alignItems": "center",
-                  "borderRadius": 2247,
-                  "borderWidth": 1,
-                  "flexDirection": "row",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "paddingHorizontal": 22,
-                  "paddingVertical": 17,
+                  "height": 22,
+                  "width": 22,
                 },
                 {
-                  "backgroundColor": "rgba(255, 255, 255, 0.2)",
-                  "borderColor": "rgba(0, 241, 162, 0)",
-                  "opacity": 1,
+                  "marginRight": 0,
                   "transform": [
                     {
                       "scale": 1,
@@ -434,6 +468,78 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 },
               ]
             }
+          >
+            <Text
+              allowFontScaling={false}
+              collapsable={false}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
+              jestAnimatedStyle={
+                {
+                  "value": {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 22,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                }
+              }
+              jestInlineStyle={{}}
+              nativeID="3"
+              style={
+                [
+                  {
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                    "fontFamily": "anticon",
+                    "fontSize": 22,
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                ]
+              }
+            >
+              
+            </Text>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={17}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+            testID="undefined.doneButton"
           >
             <View
               collapsable={false}
@@ -445,10 +551,10 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "marginRight": 0,
+                    "marginRight": -22,
                     "transform": [
                       {
-                        "scale": 1,
+                        "scale": 0,
                       },
                     ],
                   },
@@ -462,6 +568,7 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   },
                 ]
               }
+              nativeID="4"
               style={
                 [
                   {
@@ -469,10 +576,10 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                     "width": 22,
                   },
                   {
-                    "marginRight": 0,
+                    "marginRight": -22,
                     "transform": [
                       {
-                        "scale": 1,
+                        "scale": 0,
                       },
                     ],
                   },
@@ -490,8 +597,8 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "rgba(255, 255, 255, 0.502)",
-                      "fontFamily": "anticon",
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
@@ -499,11 +606,12 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   }
                 }
                 jestInlineStyle={{}}
+                nativeID="5"
                 style={
                   [
                     {
-                      "color": "rgba(255, 255, 255, 0.502)",
-                      "fontFamily": "anticon",
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "Feather",
                       "fontSize": 22,
                       "fontStyle": "normal",
                       "fontWeight": "normal",
@@ -511,139 +619,114 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
+          </View>
+          <TextInput
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            allowFontScaling={false}
+            autoCapitalize="words"
+            autoCorrect={false}
+            autoFocus={false}
+            collapsable={false}
+            defaultValue=""
+            forwardedRef={[Function]}
+            jestAnimatedProps={
+              {
+                "value": {},
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "color": "rgba(255, 255, 255, 1)",
+                },
+              }
+            }
+            jestInlineStyle={
+              [
+                {
+                  "flex": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                },
+              ]
+            }
+            nativeID="6"
+            onBlur={[Function]}
+            onChangeText={[Function]}
+            onFocus={[Function]}
+            onSubmitEditing={[Function]}
+            placeholder="Choose a fiat currency"
+            placeholderTextColor="rgba(255, 255, 255, .5)"
+            returnKeyType="search"
+            selectionColor="rgba(255, 255, 255, .25)"
+            style={
+              [
+                {
+                  "flex": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "margin": 0,
+                  "paddingHorizontal": 11,
+                  "paddingVertical": 0,
+                },
+                {
+                  "color": "rgba(255, 255, 255, 1)",
+                },
+              ]
+            }
+            submitBehavior="submit"
+            testID="undefined.textInput"
+            textAlignVertical="top"
+          />
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            hitSlop={22}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+            testID="undefined.clearIcon"
+          >
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
               collapsable={false}
-              focusable={true}
-              hitSlop={17}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-              testID="undefined.doneButton"
-            >
-              <View
-                collapsable={false}
-                jestAnimatedProps={
-                  {
-                    "value": {},
-                  }
-                }
-                jestAnimatedStyle={
-                  {
-                    "value": {
-                      "marginRight": -22,
-                      "transform": [
-                        {
-                          "scale": 0,
-                        },
-                      ],
-                    },
-                  }
-                }
-                jestInlineStyle={
-                  [
-                    {
-                      "height": 22,
-                      "width": 22,
-                    },
-                  ]
-                }
-                style={
-                  [
-                    {
-                      "height": 22,
-                      "width": 22,
-                    },
-                    {
-                      "marginRight": -22,
-                      "transform": [
-                        {
-                          "scale": 0,
-                        },
-                      ],
-                    },
-                  ]
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  collapsable={false}
-                  jestAnimatedProps={
-                    {
-                      "value": {},
-                    }
-                  }
-                  jestAnimatedStyle={
-                    {
-                      "value": {
-                        "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
-                        "fontSize": 22,
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                    }
-                  }
-                  jestInlineStyle={{}}
-                  style={
-                    [
-                      {
-                        "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "Feather",
-                        "fontSize": 22,
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
-            </View>
-            <TextInput
-              accessibilityState={
-                {
-                  "disabled": false,
-                }
-              }
-              accessible={true}
-              allowFontScaling={false}
-              autoCapitalize="words"
-              autoCorrect={false}
-              autoFocus={false}
-              collapsable={false}
-              defaultValue=""
-              forwardedRef={[Function]}
               jestAnimatedProps={
                 {
                   "value": {},
@@ -652,86 +735,43 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 1)",
+                    "marginLeft": -22,
+                    "transform": [
+                      {
+                        "scale": 0,
+                      },
+                    ],
                   },
                 }
               }
               jestInlineStyle={
                 [
                   {
-                    "flex": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "margin": 0,
-                    "paddingHorizontal": 11,
-                    "paddingVertical": 0,
+                    "height": 22,
+                    "width": 22,
                   },
                 ]
               }
-              onBlur={[Function]}
-              onChangeText={[Function]}
-              onFocus={[Function]}
-              onSubmitEditing={[Function]}
-              placeholder="Choose a fiat currency"
-              placeholderTextColor="rgba(255, 255, 255, .5)"
-              returnKeyType="search"
-              selectionColor="rgba(255, 255, 255, .25)"
+              nativeID="7"
               style={
                 [
                   {
-                    "flex": 1,
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "margin": 0,
-                    "paddingHorizontal": 11,
-                    "paddingVertical": 0,
+                    "height": 22,
+                    "width": 22,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 1)",
+                    "marginLeft": -22,
+                    "transform": [
+                      {
+                        "scale": 0,
+                      },
+                    ],
                   },
                 ]
               }
-              submitBehavior="submit"
-              testID="undefined.textInput"
-              textAlignVertical="top"
-            />
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              hitSlop={22}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
-              testID="undefined.clearIcon"
             >
-              <View
+              <Text
+                allowFontScaling={false}
                 collapsable={false}
                 jestAnimatedProps={
                   {
@@ -741,339 +781,293 @@ exports[`DefaultFiatSettingComponent should render with loading props 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "marginLeft": -22,
-                      "transform": [
-                        {
-                          "scale": 0,
-                        },
-                      ],
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "anticon",
+                      "fontSize": 22,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
                     },
                   }
                 }
-                jestInlineStyle={
-                  [
-                    {
-                      "height": 22,
-                      "width": 22,
-                    },
-                  ]
-                }
+                jestInlineStyle={{}}
+                nativeID="8"
                 style={
                   [
                     {
-                      "height": 22,
-                      "width": 22,
-                    },
-                    {
-                      "marginLeft": -22,
-                      "transform": [
-                        {
-                          "scale": 0,
-                        },
-                      ],
+                      "color": "rgba(255, 255, 255, 0.5019607843137255)",
+                      "fontFamily": "anticon",
+                      "fontSize": 22,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
                     },
                   ]
                 }
               >
-                <Text
-                  allowFontScaling={false}
-                  collapsable={false}
-                  jestAnimatedProps={
-                    {
-                      "value": {},
-                    }
-                  }
-                  jestAnimatedStyle={
-                    {
-                      "value": {
-                        "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "anticon",
-                        "fontSize": 22,
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                    }
-                  }
-                  jestInlineStyle={{}}
-                  style={
-                    [
-                      {
-                        "color": "rgba(255, 255, 255, 0.502)",
-                        "fontFamily": "anticon",
-                        "fontSize": 22,
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                    ]
-                  }
-                >
-                  
-                </Text>
-              </View>
+                
+              </Text>
             </View>
           </View>
         </View>
       </View>
-      <ExpoLinearGradient
-        colors={
-          [
-            "rgba(255, 255, 255, .1)",
-            "rgba(255, 255, 255, .1)",
-          ]
+    </View>
+    <BVLinearGradient
+      colors={
+        [
+          452984831,
+          452984831,
+        ]
+      }
+      endPoint={
+        {
+          "x": 1,
+          "y": 0.5,
         }
-        end={
+      }
+      locations={null}
+      startPoint={
+        {
+          "x": 0,
+          "y": 0.5,
+        }
+      }
+      style={
+        [
           {
-            "x": 1,
-            "y": 0.5,
-          }
-        }
-        start={
+            "alignSelf": "stretch",
+            "height": 1,
+          },
           {
-            "x": 0,
-            "y": 0.5,
-          }
+            "marginBottom": 0,
+            "marginLeft": 22,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    />
+    <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      collapsable={false}
+      contentContainerStyle={
+        {
+          "paddingBottom": 0,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 0,
         }
-        style={
-          [
-            {
-              "alignSelf": "stretch",
-              "height": 1,
-            },
-            {
-              "marginBottom": 0,
-              "marginLeft": 22,
-              "marginRight": 0,
-              "marginTop": 0,
-            },
-          ]
-        }
-      />
-      <RCTScrollView
-        automaticallyAdjustContentInsets={false}
-        collapsable={false}
-        contentContainerStyle={
+      }
+      data={
+        [
           {
-            "paddingBottom": 0,
-            "paddingLeft": 0,
-            "paddingRight": 0,
-            "paddingTop": 0,
-          }
+            "label": "Dollars",
+            "value": "USD",
+          },
+        ]
+      }
+      getItem={[Function]}
+      getItemCount={[Function]}
+      handlerTag={-1}
+      handlerType="NativeViewGestureHandler"
+      keyExtractor={[Function]}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      onContentSizeChange={[Function]}
+      onGestureHandlerEvent={[Function]}
+      onGestureHandlerStateChange={[Function]}
+      onLayout={[Function]}
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      renderScrollComponent={[Function]}
+      scrollEventThrottle={0.0001}
+      scrollIndicatorInsets={
+        {
+          "right": 1,
         }
-        data={
-          [
-            {
-              "label": "Dollars",
-              "value": "USD",
-            },
-          ]
-        }
-        getItem={[Function]}
-        getItemCount={[Function]}
-        handlerTag={-1}
-        handlerType="NativeViewGestureHandler"
-        keyExtractor={[Function]}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
-        onContentSizeChange={[Function]}
-        onGestureHandlerEvent={[Function]}
-        onGestureHandlerStateChange={[Function]}
-        onLayout={[Function]}
-        onMomentumScrollBegin={[Function]}
-        onMomentumScrollEnd={[Function]}
-        onScroll={[Function]}
-        onScrollBeginDrag={[Function]}
-        onScrollEndDrag={[Function]}
-        removeClippedSubviews={false}
-        renderItem={[Function]}
-        renderScrollComponent={[Function]}
-        scrollEventThrottle={0.0001}
-        scrollIndicatorInsets={
-          {
-            "right": 1,
-          }
-        }
-        stickyHeaderIndices={[]}
-        viewabilityConfigCallbackPairs={[]}
-      >
-        <View>
+      }
+      stickyHeaderIndices={[]}
+      viewabilityConfigCallbackPairs={[]}
+    >
+      <View>
+        <View
+          onFocusCapture={[Function]}
+          onLayout={[Function]}
+          style={null}
+        >
           <View
-            onFocusCapture={[Function]}
-            onLayout={[Function]}
-            style={null}
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={false}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignSelf": "stretch",
+                "borderRadius": 16,
+                "marginBottom": 11,
+                "marginLeft": 11,
+                "marginRight": 11,
+                "marginTop": 11,
+                "opacity": 1,
+                "paddingBottom": 11,
+                "paddingLeft": 11,
+                "paddingRight": 11,
+                "paddingTop": 11,
+              }
+            }
           >
             <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": false,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={false}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
               style={
                 {
-                  "alignSelf": "stretch",
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
                   "borderRadius": 16,
-                  "marginBottom": 11,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 11,
-                  "opacity": 1,
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "width": "100%",
                 }
               }
             >
               <View
                 style={
                   {
-                    "backgroundColor": "rgba(255, 255, 255, .1)",
-                    "borderRadius": 16,
-                    "bottom": 0,
-                    "left": 0,
-                    "overflow": "hidden",
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                    "justifyContent": "space-between",
-                    "width": "100%",
+                    "margin": 11,
                   }
                 }
               >
                 <View
                   style={
-                    {
-                      "margin": 11,
-                    }
+                    [
+                      {
+                        "overflow": "hidden",
+                      },
+                      {
+                        "borderRadius": 22,
+                        "height": 45,
+                        "marginLeft": 6,
+                        "width": 45,
+                      },
+                    ]
                   }
                 >
-                  <View
-                    style={
-                      [
-                        {
-                          "overflow": "hidden",
-                        },
-                        {
-                          "borderRadius": 22,
-                          "height": 45,
-                          "marginLeft": 6,
-                          "width": 45,
-                        },
-                      ]
+                  <FastImageView
+                    defaultSource={null}
+                    resizeMode="cover"
+                    source={
+                      {
+                        "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
+                      }
                     }
-                  >
-                    <FastImageView
-                      defaultSource={null}
-                      resizeMode="cover"
-                      source={
-                        {
-                          "uri": "https://content.edge.app/country-logos/united-states-of-america.png",
-                        }
+                    style={
+                      {
+                        "bottom": 0,
+                        "left": 0,
+                        "position": "absolute",
+                        "right": 0,
+                        "top": 0,
                       }
-                      style={
-                        {
-                          "bottom": 0,
-                          "left": 0,
-                          "position": "absolute",
-                          "right": 0,
-                          "top": 0,
-                        }
-                      }
-                    />
-                  </View>
+                    }
+                  />
                 </View>
-                <View
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-start",
+                    "flex": 1,
+                    "flexDirection": "column",
+                    "margin": 11,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={1}
                   style={
-                    {
-                      "alignItems": "flex-start",
-                      "flex": 1,
-                      "flexDirection": "column",
-                      "margin": 11,
-                    }
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      undefined,
+                      null,
+                    ]
                   }
                 >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    minimumFontSize={14.3}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        undefined,
-                        null,
-                      ]
-                    }
-                  >
-                    USD
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    minimumFontSize={11.05}
-                    numberOfLines={2}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "color": "#3dd9f4",
-                          "fontSize": 17,
-                          "marginTop": 6,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    United States Dollar
-                  </Text>
-                </View>
+                  USD
+                </Text>
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  minimumFontScale={0.65}
+                  numberOfLines={2}
+                  style={
+                    [
+                      {
+                        "color": "#FFFFFF",
+                        "fontFamily": "Quicksand-Regular",
+                        "fontSize": 22,
+                        "includeFontPadding": false,
+                      },
+                      {
+                        "color": "#3dd9f4",
+                        "fontSize": 17,
+                        "marginTop": 6,
+                      },
+                      null,
+                    ]
+                  }
+                >
+                  United States Dollar
+                </Text>
               </View>
             </View>
           </View>
         </View>
-      </RCTScrollView>
-    </View>
-  </BlurTargetView>
+      </View>
+    </RCTScrollView>
+  </View>
 </View>
 `;

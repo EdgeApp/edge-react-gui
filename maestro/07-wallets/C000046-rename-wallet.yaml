@@ -21,7 +21,7 @@ tags:
 - tapOn: Assets
 - longPressOn: ${".*" + WALLET_NAME}
 - tapOn:
-    id: "walletListMenu_walletSettings"
+    id: walletListMenu.walletSettings
 # Wallet Settings modal
 - assertVisible: Wallet Settings
 - assertVisible:

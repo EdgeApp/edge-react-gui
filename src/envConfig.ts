@@ -39,6 +39,10 @@ const asEvmApiKeys = asObject({
   alethioApiKey: asOptional(asString, ''),
   amberdataApiKey: asOptional(asString, ''),
   blockchairApiKey: asOptional(asString, ''),
+  // Blockscout's hosted API at `api.blockscout.com` bills per key. It has no
+  // default, because the currency plugin drops that server when the option is
+  // absent and an empty string would read as a key that is merely broken.
+  blockscoutApiKey: asOptional(asEither(asString, asArray(asString))),
   drpcApiKey: asOptional(asString, ''),
   evmScanApiKey: asOptional(asArray(asString), () => []),
   gasStationApiKey: asOptional(asString, ''),
@@ -532,6 +536,7 @@ export const asEnvConfig = asObject({
   ),
 
   YOLO_DEEP_LINK: asNullable(asString),
+  YOLO_OTP_KEY: asNullable(asString),
   YOLO_PASSWORD: asNullable(asString),
   YOLO_PIN: asNullable(asString),
   YOLO_USERNAME: asNullable(asString),

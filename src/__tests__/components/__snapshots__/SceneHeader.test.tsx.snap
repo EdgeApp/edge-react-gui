@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SceneHeader should render with loading props 1`] = `
 [
@@ -30,7 +30,6 @@ exports[`SceneHeader should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={17.55}
         numberOfLines={1}
         style={
           [
@@ -53,20 +52,21 @@ exports[`SceneHeader should render with loading props 1`] = `
     </View>
     hello
   </View>,
-  <ExpoLinearGradient
+  <BVLinearGradient
     colors={
       [
-        "rgba(255, 255, 255, .1)",
-        "rgba(255, 255, 255, .1)",
+        452984831,
+        452984831,
       ]
     }
-    end={
+    endPoint={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    start={
+    locations={null}
+    startPoint={
       {
         "x": 0,
         "y": 0.5,

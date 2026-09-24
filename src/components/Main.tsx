@@ -42,6 +42,7 @@ import type {
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
 import { getUkCompliantString } from '../util/ukComplianceUtils'
+import { hasYoloAccountLogin } from '../util/yoloLogin'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
@@ -1246,7 +1247,9 @@ export const Main: React.FC = () => {
   const experimentConfig = useExperimentConfig()
 
   const initialRouteName =
-    ENV.USE_WELCOME_SCREENS && localUsers.length === 0
+    ENV.USE_WELCOME_SCREENS &&
+    localUsers.length === 0 &&
+    !hasYoloAccountLogin(ENV)
       ? 'gettingStarted'
       : 'login'
 

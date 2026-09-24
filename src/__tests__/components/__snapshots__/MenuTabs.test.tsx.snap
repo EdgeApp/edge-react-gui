@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`MenuTabs should render with loading props 1`] = `
 <View
@@ -31,6 +31,7 @@ exports[`MenuTabs should render with loading props 1`] = `
       },
     ]
   }
+  nativeID="0"
   pointerEvents="box-none"
   shiftY={0}
   style={
@@ -83,6 +84,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="1"
     openRatio={1}
     pointerEvents="none"
     style={
@@ -105,37 +107,35 @@ exports[`MenuTabs should render with loading props 1`] = `
     }
     tabLabelHeight={25}
   >
-    <ExpoBlurView
-      intensity={100}
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
-        [
-          {
-            "backgroundColor": undefined,
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          null,
-        ]
+        {
+          "backgroundColor": undefined,
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
       }
-      tint="dark"
     />
-    <ExpoLinearGradient
+    <BVLinearGradient
       colors={
         [
-          "rgba(255, 255, 255, 0)",
-          "rgba(255, 255, 255, 0)",
+          16777215,
+          16777215,
         ]
       }
-      end={
+      endPoint={
         {
           "x": 0,
           "y": 1,
         }
       }
-      start={
+      locations={null}
+      startPoint={
         {
           "x": 0,
           "y": 0.5,
@@ -175,6 +175,7 @@ exports[`MenuTabs should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="2"
     openRatio={1}
     style={
       [

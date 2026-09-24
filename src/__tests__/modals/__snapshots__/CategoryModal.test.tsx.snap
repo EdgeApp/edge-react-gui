@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CategoryModal should render with a subcategory 1`] = `
 [
@@ -102,6 +102,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         },
       ]
     }
+    nativeID="11"
     style={
       [
         {
@@ -132,8 +133,9 @@ exports[`CategoryModal should render with a subcategory 1`] = `
       ]
     }
   >
-    <ExpoBlurView
-      intensity={100}
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         [
           {
@@ -149,7 +151,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           },
         ]
       }
-      tint="dark"
     />
     <View
       style={
@@ -188,7 +189,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -345,7 +345,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -409,7 +408,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -473,7 +471,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -537,7 +534,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -670,6 +666,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
+          nativeID="13"
           scale={0}
           style={
             [
@@ -712,6 +709,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               },
             ]
           }
+          nativeID="14"
           style={
             [
               {
@@ -764,6 +762,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
               ]
             }
+            nativeID="15"
             shift={1}
             style={
               [
@@ -805,7 +804,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 16.5,
                   },
                 }
@@ -819,6 +818,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   },
                 ]
               }
+              nativeID="16"
               numberOfLines={1}
               scale={1}
               shift={1}
@@ -830,7 +830,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 16.5,
                   },
                 ]
@@ -888,6 +888,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               ]
             }
             multiline={false}
+            nativeID="17"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -983,6 +984,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 },
               ]
             }
+            nativeID="18"
             scale={22}
             style={
               [
@@ -1008,7 +1010,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -1017,10 +1019,11 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                 }
               }
               jestInlineStyle={{}}
+              nativeID="19"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
                     "fontSize": 22,
                     "fontStyle": "normal",
@@ -1170,7 +1173,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1201,7 +1203,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1222,20 +1223,21 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1323,7 +1325,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1354,7 +1355,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1375,20 +1375,21 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1476,7 +1477,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1507,7 +1507,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1528,20 +1527,21 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1629,7 +1629,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1660,7 +1659,6 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -1681,20 +1679,21 @@ exports[`CategoryModal should render with a subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -1826,6 +1825,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -1856,8 +1856,9 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
       ]
     }
   >
-    <ExpoBlurView
-      intensity={100}
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         [
           {
@@ -1873,7 +1874,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           },
         ]
       }
-      tint="dark"
     />
     <View
       style={
@@ -1912,7 +1912,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -2069,7 +2068,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2133,7 +2131,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2197,7 +2194,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2261,7 +2257,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.25}
-          minimumFontSize={3.5}
           numberOfLines={1}
           style={
             {
@@ -2394,6 +2389,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
+          nativeID="3"
           scale={0}
           style={
             [
@@ -2436,6 +2432,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               },
             ]
           }
+          nativeID="4"
           style={
             [
               {
@@ -2488,6 +2485,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
               ]
             }
+            nativeID="5"
             shift={0}
             style={
               [
@@ -2529,7 +2527,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 22,
                   },
                 }
@@ -2543,6 +2541,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   },
                 ]
               }
+              nativeID="6"
               numberOfLines={1}
               scale={1}
               shift={0}
@@ -2554,7 +2553,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 22,
                   },
                 ]
@@ -2612,6 +2611,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               ]
             }
             multiline={false}
+            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -2707,6 +2707,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                 },
               ]
             }
+            nativeID="8"
             scale={0}
             style={
               [
@@ -2732,21 +2733,22 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 1,
+                    "fontSize": 0,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
                 }
               }
               jestInlineStyle={{}}
+              nativeID="9"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 1,
+                    "fontSize": 0,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -2894,7 +2896,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -2915,20 +2916,21 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3016,7 +3018,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -3037,20 +3038,21 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3138,7 +3140,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -3159,20 +3160,21 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -3260,7 +3262,6 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                     adjustsFontSizeToFit={true}
                     allowFontScaling={false}
                     minimumFontScale={0.65}
-                    minimumFontSize={13.65}
                     numberOfLines={1}
                     style={
                       [
@@ -3281,20 +3282,21 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
                   </Text>
                 </View>
               </View>
-              <ExpoLinearGradient
+              <BVLinearGradient
                 colors={
                   [
-                    "rgba(255, 255, 255, .1)",
-                    "rgba(255, 255, 255, .1)",
+                    452984831,
+                    452984831,
                   ]
                 }
-                end={
+                endPoint={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                start={
+                locations={null}
+                startPoint={
                   {
                     "x": 0,
                     "y": 0.5,

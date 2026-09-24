@@ -1,8 +1,8 @@
 import type { InstallSurvey2 } from 'edge-info-server'
 import React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -164,8 +164,12 @@ export const SurveyModal: React.FC<Props> = props => {
         </View>
       }
     >
+      {/** HACK: iOS and Android use extraScrollHeight differently... */}
       <KeyboardAwareScrollView
-        bottomOffset={theme.rem(2.75)}
+        extraScrollHeight={
+          Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)
+        }
+        enableOnAndroid
         contentContainerStyle={styles.contentContainerStyle}
         keyboardShouldPersistTaps="handled"
         style={styles.containerStyle}
@@ -315,7 +319,10 @@ const SurveyModal2: React.FC<{
       }
     >
       <KeyboardAwareScrollView
-        bottomOffset={theme.rem(2.75)}
+        extraScrollHeight={
+          Platform.OS === 'ios' ? theme.rem(-16) : theme.rem(9)
+        }
+        enableOnAndroid
         contentContainerStyle={styles.contentContainerStyle}
         keyboardShouldPersistTaps="handled"
         style={styles.containerStyle}

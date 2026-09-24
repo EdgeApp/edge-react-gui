@@ -1,34 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioConnectWalletConfirm should render with loading props 1`] = `
-<BlurTargetView
-  collapsable={false}
-  ref={
-    {
-      "current": null,
-    }
-  }
-  style={
-    {
-      "flex": 1,
-    }
-  }
->
-  <ExpoLinearGradient
+[
+  <BVLinearGradient
     colors={
       [
-        "#1a1a1a",
-        "#1a1a1a",
+        4279900698,
+        4279900698,
       ]
     }
-    end={
+    endPoint={
       {
         "x": 1,
         "y": 1,
       }
     }
+    locations={null}
     onLayout={[Function]}
-    start={
+    startPoint={
       {
         "x": 0,
         "y": 0,
@@ -218,7 +207,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </ExpoLinearGradient>
+  </BVLinearGradient>,
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -252,6 +241,7 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         },
       ]
     }
+    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -308,7 +298,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={17.55}
             numberOfLines={1}
             style={
               [
@@ -330,20 +319,21 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
           </Text>
         </View>
       </View>
-      <ExpoLinearGradient
+      <BVLinearGradient
         colors={
           [
-            "rgba(255, 255, 255, .1)",
-            "rgba(255, 255, 255, .1)",
+            452984831,
+            452984831,
           ]
         }
-        end={
+        endPoint={
           {
             "x": 1,
             "y": 0.5,
           }
         }
-        start={
+        locations={null}
+        startPoint={
           {
             "x": 0,
             "y": 0.5,
@@ -462,7 +452,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
-                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [
@@ -488,7 +477,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                   allowFontScaling={false}
                   ellipsizeMode="tail"
                   minimumFontScale={0.65}
-                  minimumFontSize={14.3}
                   numberOfLines={3}
                   style={
                     [
@@ -601,7 +589,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={11.05}
                 numberOfLines={4}
                 style={
                   [
@@ -627,6 +614,6 @@ exports[`FioConnectWalletConfirm should render with loading props 1`] = `
         </View>
       </View>
     </View>
-  </RCTScrollView>
-</BlurTargetView>
+  </RCTScrollView>,
+]
 `;

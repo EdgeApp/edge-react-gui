@@ -6,7 +6,6 @@ import {
   type TextStyle,
   type ViewStyle
 } from 'react-native'
-import type { AnimatedStyle } from 'react-native-reanimated'
 
 import {
   cacheStyles,
@@ -21,18 +20,11 @@ interface StyleProps {
 
 type ValidStyles = ImageStyle | TextStyle | ViewStyle
 
-// Reanimated 4 `useAnimatedStyle` returns an AnimatedStyleHandle (which
-// AnimatedStyle includes). Only the dynamic `theme => props => style` path may
-// return these; the cached `theme => style` and static-object paths stay plain.
-type DynamicStyles =
-  | ValidStyles
-  | AnimatedStyle<ImageStyle | TextStyle | ViewStyle>
-
 type Styler<Props> =
   | ValidStyles
   | ((
       theme: Theme
-    ) => ValidStyles | ((props: Props) => DynamicStyles | DynamicStyles[]))
+    ) => ValidStyles | ((props: Props) => ValidStyles | ValidStyles[]))
 
 /**
  * Creates a styled component using a `styler` parameter. The `styler` can be the
@@ -51,15 +43,13 @@ type Styler<Props> =
  */
 export function styled<BaseProps extends StyleProps>(
   Component: React.ComponentType<BaseProps>
-): <Props extends object>(
-  styler: Styler<Props>
-) => React.ComponentType<Omit<BaseProps, 'style'> & Props> {
+) {
   function makeStyledComponent<Props extends object>(
     styler: Styler<Props>
   ): React.ComponentType<Omit<BaseProps, 'style'> & Props> {
     function addName<P extends Omit<BaseProps, 'style'> & Props>(
       StyledComponent: React.ComponentType<P>
-    ): React.ComponentType<P> {
+    ) {
       // Use optional chaining to handle circular dependencies where Component
       // may be undefined during module loading.
       StyledComponent.displayName =
@@ -75,7 +65,7 @@ export function styled<BaseProps extends StyleProps>(
       if (typeof rv === 'function') {
         const stylerNarrowed = styler as (
           theme: Theme
-        ) => (props: Props) => DynamicStyles | DynamicStyles[]
+        ) => (props: Props) => ValidStyles | ValidStyles[]
         return addName(function StyledComponent(props) {
           const theme = useTheme()
           const style = stylerNarrowed(theme)(props)
@@ -120,12 +110,7 @@ export function styled<BaseProps extends StyleProps>(
 
 export function styledWithRef<Ref, BaseProps extends StyleProps>(
   Component: React.ComponentType<BaseProps>
-): <Props extends object>(
-  styler: Styler<Props>
-) => React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<Omit<BaseProps, 'style'> & Props> &
-    React.RefAttributes<Ref>
-> {
+) {
   type RefAttribute = React.RefAttributes<Ref>
   type PropsWithoutStyle = Omit<BaseProps, 'style'>
 
@@ -153,7 +138,7 @@ export function styledWithRef<Ref, BaseProps extends StyleProps>(
       if (typeof rv === 'function') {
         const stylerNarrowed = styler as (
           theme: Theme
-        ) => (props: Props) => DynamicStyles | DynamicStyles[]
+        ) => (props: Props) => ValidStyles | ValidStyles[]
         return addName(
           React.forwardRef<any, PropsWithoutStyle & Props>(
             function StyledComponent(props, ref) {

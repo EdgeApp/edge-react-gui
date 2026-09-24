@@ -14,14 +14,14 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { sprintf } from 'sprintf-js'
 
 import { launchPaymentProto } from '../../actions/PaymentProtoActions'
-import { addressWarnings } from '../../actions/ScanActions'
+import { addressWarnings, showScanModal } from '../../actions/ScanActions'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
-import { useSelector } from '../../types/reactRedux'
+import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
@@ -33,7 +33,6 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { AddressModal } from '../modals/AddressModal'
 import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
-import { ScanModal } from '../modals/ScanModal'
 import {
   WalletListModal,
   type WalletListResult
@@ -148,6 +147,7 @@ export const AddressTile2 = React.forwardRef(
 
     // Selectors:
     const account = useSelector(state => state.core.account)
+    const dispatch = useDispatch()
     const fioPlugin = account.currencyConfig.fio
 
     const currencyCode = getCurrencyCode(coreWallet, tokenId)
@@ -310,6 +310,24 @@ export const AddressTile2 = React.forwardRef(
             return
           }
 
+          // Prevent sending to the same wallet's own address. EVM wallets use a
+          // single static address across all EVM chains, so a self-send is
+          // always a mistake. (Cross-wallet "self transfer" to a *different*
+          // wallet via `handleSelfTransfer` is unaffected.) Compare
+          // case-insensitively since EVM addresses are checksummed hex.
+          if (isEvmWallet(coreWallet)) {
+            const ownReceiveAddress = await coreWallet.getReceiveAddress({
+              tokenId: null
+            })
+            if (
+              parsedUri.publicAddress.toLowerCase() ===
+              ownReceiveAddress.publicAddress.toLowerCase()
+            ) {
+              showError(lstrings.send_to_self_error_message)
+              return
+            }
+          }
+
           // If we don't already have a resolved name from a forward-typed
           // domain, attempt a reverse lookup against the parsed public
           // address. The dispatcher caches per (pluginId, address) so this
@@ -392,15 +410,14 @@ export const AddressTile2 = React.forwardRef(
         lstrings.send_scan_modal_text_modal_message_s,
         currencyCode
       )
-      Airship.show<string | undefined>(bridge => (
-        <ScanModal
-          bridge={bridge}
-          scanModalTitle={lstrings.scan_qr_label}
-          textModalHint={lstrings.send_scan_modal_text_modal_hint}
-          textModalBody={message}
-          textModalTitle={title}
-        />
-      ))
+      dispatch(
+        showScanModal({
+          scanModalTitle: lstrings.scan_qr_label,
+          textModalHint: lstrings.send_scan_modal_text_modal_hint,
+          textModalBody: message,
+          textModalTitle: title
+        })
+      )
         .then(async (result: string | undefined) => {
           if (result == null) return
           await changeAddress(result, 'scan')
@@ -517,6 +534,7 @@ export const AddressTile2 = React.forwardRef(
           >
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
+              testID="addressTileEnter"
               onPress={handleChangeAddress}
             >
               <FontAwesome
@@ -531,6 +549,7 @@ export const AddressTile2 = React.forwardRef(
             {canSelfTransfer ? (
               <EdgeTouchableOpacity
                 style={styles.buttonContainer}
+                testID="addressTileMyself"
                 onPress={handleSelfTransfer}
               >
                 <AntDesign
@@ -545,6 +564,7 @@ export const AddressTile2 = React.forwardRef(
             ) : null}
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
+              testID="addressTileScan"
               onPress={handleScan}
             >
               <FontAwesome5
@@ -558,6 +578,7 @@ export const AddressTile2 = React.forwardRef(
             </EdgeTouchableOpacity>
             <EdgeTouchableOpacity
               style={styles.buttonContainer}
+              testID="addressTilePaste"
               onPress={handlePasteFromClipboard}
             >
               <FontAwesome5

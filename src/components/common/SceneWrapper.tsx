@@ -18,7 +18,6 @@ import {
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
 import Reanimated, {
-  type AnimatedStyle,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue
@@ -42,13 +41,12 @@ import {
 } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import type { GradientColors, OverrideDots } from '../../types/Theme'
+import type { OverrideDots } from '../../types/Theme'
 import { styled } from '../hoc/styled'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SceneContainer } from '../layout/SceneContainer'
 import { NotificationView } from '../notification/NotificationView'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
-import { BlurTargetView, useSceneBlurTarget } from './BlurBackground'
 import { type AccentColors, DotsBackground } from './DotsBackground'
 
 export interface InsetStyle {
@@ -93,7 +91,7 @@ interface SceneWrapperProps {
   avoidKeyboard?: boolean
 
   // Optional backgroundGradient overrides
-  backgroundGradientColors?: GradientColors
+  backgroundGradientColors?: string[]
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
 
@@ -172,11 +170,6 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
 
   const navigation = useNavigation<NavigationBase>()
   const isIos = Platform.OS === 'ios'
-
-  // Publish this scene's content as the blur target chrome samples while the
-  // scene is focused (see BlurBackground):
-  const isSceneFocused = useIsFocused()
-  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused)
 
   // Track dock height for content padding when dockProps is used
   const [dockHeight, setDockHeight] = useState(0)
@@ -406,27 +399,21 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   if (scroll) {
     return (
       <>
-        <BlurTargetView
-          ref={sceneBlurTargetRef}
-          collapsable={false}
-          style={styles.blurTargetFill}
+        <DotsBackground
+          accentColors={accentColors}
+          overrideDots={overrideDots}
+          backgroundGradientColors={backgroundGradientColors}
+          backgroundGradientStart={backgroundGradientStart}
+          backgroundGradientEnd={backgroundGradientEnd}
+        />
+        <SceneWrapperScrollView
+          keyboardAwareStyle={keyboardAwareStyle}
+          insetStyle={insetStyle}
+          layoutStyle={layoutStyle}
+          {...props}
         >
-          <DotsBackground
-            accentColors={accentColors}
-            overrideDots={overrideDots}
-            backgroundGradientColors={backgroundGradientColors}
-            backgroundGradientStart={backgroundGradientStart}
-            backgroundGradientEnd={backgroundGradientEnd}
-          />
-          <SceneWrapperScrollView
-            keyboardAwareStyle={keyboardAwareStyle}
-            insetStyle={insetStyle}
-            layoutStyle={layoutStyle}
-            {...props}
-          >
-            {memoizedChildren}
-          </SceneWrapperScrollView>
-        </BlurTargetView>
+          {memoizedChildren}
+        </SceneWrapperScrollView>
         {renderFooter == null ? null : (
           <SceneWrapperFooterContainer
             footerHeight={footerHeight}
@@ -452,28 +439,23 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     return (
       <>
         <Reanimated.View
-          style={[styles.sceneContainer, layoutStyle, keyboardAwareStyle]}
+          style={[
+            styles.sceneContainer,
+            layoutStyle,
+            insetStyle,
+            keyboardAwareStyle,
+            { padding }
+          ]}
         >
-          <BlurTargetView
-            ref={sceneBlurTargetRef}
-            collapsable={false}
-            style={[
-              styles.sceneContainer,
-              styles.blurTargetGrow,
-              insetStyle,
-              { padding }
-            ]}
-          >
-            <DotsBackground
-              accentColors={accentColors}
-              overrideDots={overrideDots}
-              backgroundGradientColors={backgroundGradientColors}
-              backgroundGradientStart={backgroundGradientStart}
-              backgroundGradientEnd={backgroundGradientEnd}
-            />
+          <DotsBackground
+            accentColors={accentColors}
+            overrideDots={overrideDots}
+            backgroundGradientColors={backgroundGradientColors}
+            backgroundGradientStart={backgroundGradientStart}
+            backgroundGradientEnd={backgroundGradientEnd}
+          />
 
-            {memoizedChildren}
-          </BlurTargetView>
+          {memoizedChildren}
           {renderFooter == null ? null : (
             <SceneWrapperFooterContainer
               footerHeight={footerHeight}
@@ -498,9 +480,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
 
   return (
     <>
-      <BlurTargetView
-        ref={sceneBlurTargetRef}
-        collapsable={false}
+      <View
         style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}
       >
         <DotsBackground
@@ -512,7 +492,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
         />
 
         {memoizedChildren}
-      </BlurTargetView>
+      </View>
       {renderFooter == null ? null : (
         <SceneWrapperFooterContainer
           footerHeight={footerHeight}
@@ -541,20 +521,13 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flexDirection: 'column',
     justifyContent: 'flex-start'
-  },
-  blurTargetFill: {
-    flex: 1
-  },
-  blurTargetGrow: {
-    flexGrow: 1,
-    flexShrink: 1
   }
 })
 
 interface SceneWrapperScrollViewProps
   extends Pick<SceneWrapperProps, 'keyboardShouldPersistTaps' | 'padding'> {
   children: React.ReactNode
-  keyboardAwareStyle: AnimatedStyle<ViewStyle>
+  keyboardAwareStyle: ViewStyle
   insetStyle: InsetStyle
   layoutStyle: {
     height: number

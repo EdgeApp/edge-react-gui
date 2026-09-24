@@ -475,13 +475,15 @@ export const writeWalletsSort = async (
 
 export async function writePasswordRecoveryReminders(
   account: EdgeAccount,
-  level: PasswordReminderTime
+  levels: PasswordReminderTime[]
 ): Promise<void> {
   const settings = await readSyncedSettings(account)
   const passwordRecoveryRemindersShown = {
     ...settings.passwordRecoveryRemindersShown
   }
-  passwordRecoveryRemindersShown[level] = true
+  for (const level of levels) {
+    passwordRecoveryRemindersShown[level] = true
+  }
   const updatedSettings = { ...settings, passwordRecoveryRemindersShown }
   await writeSyncedSettings(account, updatedSettings)
 }
@@ -610,6 +612,7 @@ export async function migrateDenominationSettings(
         savedDenom.multiplier !== defaultDenom.multiplier ||
         savedDenom.name !== defaultDenom.name
       ) {
+        // @ts-expect-error - DenominationSettings type allows undefined
         cleanedSettings[pluginId][currencyCode] = savedDenom
       } else {
         needsCleanup = true

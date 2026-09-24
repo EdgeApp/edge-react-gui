@@ -1,13 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FioAddressDetails should render with loading props 1`] = `
-<BlurTargetView
-  collapsable={false}
-  ref={
-    {
-      "current": null,
-    }
-  }
+<View
   style={
     [
       {
@@ -31,21 +25,22 @@ exports[`FioAddressDetails should render with loading props 1`] = `
     ]
   }
 >
-  <ExpoLinearGradient
+  <BVLinearGradient
     colors={
       [
-        "#1a1a1a",
-        "#1a1a1a",
+        4279900698,
+        4279900698,
       ]
     }
-    end={
+    endPoint={
       {
         "x": 1,
         "y": 1,
       }
     }
+    locations={null}
     onLayout={[Function]}
-    start={
+    startPoint={
       {
         "x": 0,
         "y": 0,
@@ -235,7 +230,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </ExpoLinearGradient>
+  </BVLinearGradient>
   <View
     style={
       [
@@ -264,7 +259,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={17.55}
         numberOfLines={1}
         style={
           [
@@ -286,20 +280,21 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       </Text>
     </View>
   </View>
-  <ExpoLinearGradient
+  <BVLinearGradient
     colors={
       [
-        "rgba(255, 255, 255, .1)",
-        "rgba(255, 255, 255, .1)",
+        452984831,
+        452984831,
       ]
     }
-    end={
+    endPoint={
       {
         "x": 1,
         "y": 0.5,
       }
     }
-    start={
+    locations={null}
+    startPoint={
       {
         "x": 0,
         "y": 0.5,
@@ -332,7 +327,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       adjustsFontSizeToFit={true}
       allowFontScaling={false}
       minimumFontScale={0.65}
-      minimumFontSize={14.3}
       numberOfLines={1}
       style={
         [
@@ -472,6 +466,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 },
               ]
             }
+            nativeID="0"
             pending={false}
             style={
               [
@@ -512,6 +507,7 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
+            nativeID="1"
             pending={false}
             style={
               [
@@ -592,7 +588,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={1}
         style={
           [
@@ -662,22 +657,23 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
           >
-            <ExpoLinearGradient
+            <BVLinearGradient
               colors={
                 [
-                  "rgba(119, 43, 15, 0.44)",
-                  "rgba(130, 91, 33, 0.44)",
-                  "rgba(130, 91, 33, 0.44)",
-                  "rgba(119, 43, 15, 0.44)",
+                  1886857999,
+                  1887591201,
+                  1887591201,
+                  1886857999,
                 ]
               }
-              end={
+              endPoint={
                 {
                   "x": 0.9,
                   "y": 0,
                 }
               }
-              start={
+              locations={null}
+              startPoint={
                 {
                   "x": 0,
                   "y": 0.9,
@@ -736,7 +732,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={0}
                 style={
                   [
@@ -837,20 +832,21 @@ exports[`FioAddressDetails should render with loading props 1`] = `
               }
             }
           >
-            <ExpoLinearGradient
+            <BVLinearGradient
               colors={
                 [
-                  "#20312f",
-                  "#00604d",
+                  4280299823,
+                  4278214733,
                 ]
               }
-              end={
+              endPoint={
                 {
                   "x": 1,
                   "y": 0,
                 }
               }
-              start={
+              locations={null}
+              startPoint={
                 {
                   "x": 0,
                   "y": 0,
@@ -881,7 +877,6 @@ exports[`FioAddressDetails should render with loading props 1`] = `
                 adjustsFontSizeToFit={true}
                 allowFontScaling={false}
                 minimumFontScale={0.65}
-                minimumFontSize={14.3}
                 numberOfLines={1}
                 style={
                   [
@@ -914,5 +909,5 @@ exports[`FioAddressDetails should render with loading props 1`] = `
       </View>
     </View>
   </View>
-</BlurTargetView>
+</View>
 `;

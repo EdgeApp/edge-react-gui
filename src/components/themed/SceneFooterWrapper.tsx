@@ -8,10 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useLayoutOnce } from '../../hooks/useLayoutOnce'
 import { useSceneFooterState } from '../../state/SceneFooterState'
-import {
-  ChromeBlurBackground,
-  getBlurFallbackStyle
-} from '../common/BlurBackground'
+import { BlurBackgroundNoRoundedCorners } from '../common/BlurBackground'
 import type { SceneWrapperInfo } from '../common/SceneWrapper'
 import { styled } from '../hoc/styled'
 
@@ -72,10 +69,9 @@ export const SceneFooterWrapper = (
       footerOpenRatio={footerOpenRatio}
       isKeyboardOpen={isKeyboardOpen}
       insetBottom={maybeInsetBottom}
-      noBackgroundBlur={noBackgroundBlur}
       onLayout={handleLayoutOnce}
     >
-      {noBackgroundBlur ? null : <ChromeBlurBackground />}
+      {noBackgroundBlur ? null : <BlurBackgroundNoRoundedCorners />}
       {children}
     </ContainerAnimatedView>
   )
@@ -86,24 +82,16 @@ const ContainerAnimatedView = styled(Animated.View)<{
   footerOpenRatio: SharedValue<number>
   isKeyboardOpen: boolean
   insetBottom: number
-  noBackgroundBlur?: boolean
 }>(
-  theme =>
-    ({
-      containerHeight,
-      footerOpenRatio,
-      isKeyboardOpen,
-      insetBottom,
-      noBackgroundBlur = false
-    }) => {
+  () =>
+    ({ containerHeight, footerOpenRatio, isKeyboardOpen, insetBottom }) => {
       // Exclude inset if the keyboard is open
       const maybeInsetBottom = !isKeyboardOpen ? insetBottom : 0
 
       return [
         {
           overflow: 'hidden',
-          paddingBottom: maybeInsetBottom,
-          ...(noBackgroundBlur ? null : getBlurFallbackStyle(theme))
+          paddingBottom: maybeInsetBottom
         },
         useAnimatedStyle(() => {
           if (containerHeight == null) return {}

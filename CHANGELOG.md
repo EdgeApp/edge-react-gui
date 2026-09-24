@@ -1,28 +1,37 @@
 # edge-react-gui
 
 ## Unreleased (develop)
-- fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
-- changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
-- fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
-- fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
-- fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
-- fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
 
-- changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
-- changed: The feedback survey now uses the same keyboard offset on both platforms, replacing a per-platform workaround the old scroll library required.
-- fixed: The app no longer installs two copies of react-native-airship and react-native-patina (one nested under edge-login-ui-rn).
+- added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
+- added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
+- added: Logbox disable option to env.json
+- added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
+- added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
+- added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
+- added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
+- changed: Standardize wallet list automation test IDs to use period separators.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
+- changed: Prevent sending to the same wallet's own address for EVM assets.
+- changed: (ARRR) Pirate Chain wallets run on `react-native-pirate-wallet` 0.3.4, replacing `react-native-piratechain`
+- changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
+- changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+- fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
+- fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
+- fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
+- fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
+- fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
+- fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
+- fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
 
-- changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
-- changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
-- changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
-- fixed: Labels that shrink to fit stop at their minimum size again. The new architecture ignores `minimumFontScale` on both platforms and shrank long labels as far as 4 points; the app now also passes the absolute floor the renderers do honor, via a small `react-native` patch, so labels shrink no further than before.
-- changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
-- fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
-- fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
-- fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
-- fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+## 4.51.1 (2026-09-23)
 
-## 4.51.0 (staging)
+- fixed: The preferred exchange chosen in the swap settings, or set by an active promotion, is now the selected quote when it can fill the order, instead of only being listed first.
+
+## 4.51.0 (2026-09-21)
 
 - added: Robinhood Chain wallets
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
@@ -32,6 +41,7 @@
 - added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
 - added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
 - added: Provider priority in the buy/sell options for affiliated accounts, configured through the info server promo card data.
+- added: `blockscoutApiKey` env config for EVM core plugins
 - changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
@@ -44,12 +54,12 @@
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
 - changed: The balance card title now reads "Unhide Balance" while balances are hidden, and hiding balances shows a toast explaining how to bring them back.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
-- fixed: Wallet list rows now announce as a button to screen readers, instead of as an inert group that reads out but does not present itself as something to activate.
-- fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
-- fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - changed: Add maestro test selectors (testIDs) to Manage Tokens rows.
 - changed: Add maestro test selectors (testIDs) to the Wallet Settings name input and Done button.
 - changed: Add a maestro test selector (testID) to the split-wallet confirmation button.
+- fixed: Wallet list rows now announce as a button to screen readers, instead of as an inert group that reads out but does not present itself as something to activate.
+- fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
+- fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
 - fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.
@@ -65,6 +75,11 @@
 - fixed: An info card no longer disappears into an empty gap when the carousel's card list shrinks. A card's position comes entirely from an animated transform keyed on its index, and that transform is not re-applied when a surviving card shifts slots, so dropping a card left the ones after it parked a full card-width off-screen. The carousel now remounts a card whose slot changes. Reproduces wherever the list shrinks after mount - most visibly when a `noBalance` card is filtered out as balances finish loading.
 - fixed: Manage Tokens search now finds a token by its contract address, matching the Assets search.
 - fixed: Android quick-action shortcuts no longer throw a startup error when the app launches without ever coming to the foreground. Registration now waits for the app to be foregrounded, the native shortcut intent targets the launcher component instead of the current activity, and a registration failure is reported to Sentry instead of shown as a blocking alert.
+- fixed: Choose Wallets to Add search now matches multi-word chain names and words inside parentheses
+- fixed: Remote gift card provider disables from the info server now take effect
+- fixed: Spend Crypto opens Bitrefill directly when Phaze is remotely disabled
+- fixed: Purchased Phaze gift cards stay viewable while Phaze is remotely disabled
+- fixed: Phaze gift card purchases no longer fail when the quote has no expiry
 
 ## 4.50.3 (2026-08-28)
 

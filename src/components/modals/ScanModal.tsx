@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Linking, View } from 'react-native'
+import { View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { launchImageLibrary } from 'react-native-image-picker'
-import RNPermissions from 'react-native-permissions'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import {
@@ -12,16 +11,11 @@ import {
   useCodeScanner
 } from 'react-native-vision-camera'
 import RNQRGenerator from 'rn-qr-generator'
-import { sprintf } from 'sprintf-js'
 
 import { useLayout } from '../../hooks/useLayout'
 import { lstrings } from '../../locales/strings'
-import { config } from '../../theme/appConfig'
-import { useDispatch, useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
 import { logActivity } from '../../util/logger'
-import { ModalButtons } from '../buttons/ModalButtons'
-import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { QrPeephole } from '../common/QrPeephole'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -31,16 +25,12 @@ import {
   showError,
   showToast
 } from '../services/AirshipInstance'
-import { checkAndRequestPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText, Paragraph } from '../themed/EdgeText'
+import { EdgeText } from '../themed/EdgeText'
 import { ModalFooter } from '../themed/ModalParts'
 import { SceneHeaderUi4 } from '../themed/SceneHeaderUi4'
-import { EdgeModal } from './EdgeModal'
 
-interface Props {
-  bridge: AirshipBridge<string | undefined>
-
+export interface ScanModalProps {
   // The initial ScanModal title
   scanModalTitle: string
 
@@ -52,6 +42,19 @@ interface Props {
   textModalTitle?: string
 }
 
+interface Props extends ScanModalProps {
+  bridge: AirshipBridge<string | undefined>
+}
+
+/**
+ * The QR scanner camera sheet.
+ *
+ * This assumes the camera permission has already been granted and any
+ * first-use scam warning acknowledged -- `showScanModal` in
+ * `src/actions/ScanActions.tsx` owns that sequencing. Branching on the
+ * permission here is what used to make the scam warning flash away the instant
+ * the OS prompt was answered.
+ */
 export const ScanModal: React.FC<Props> = props => {
   const {
     bridge,
@@ -62,7 +65,6 @@ export const ScanModal: React.FC<Props> = props => {
     scanModalTitle
   } = props
 
-  const dispatch = useDispatch()
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -76,7 +78,6 @@ export const ScanModal: React.FC<Props> = props => {
       handleBarCodeRead(codes)
     }
   })
-  const cameraPermission = useSelector(state => state.permissions.camera)
   const [torchEnabled, setTorchEnabled] = React.useState(false)
   const [scanEnabled, setScanEnabled] = React.useState(false)
 
@@ -88,23 +89,15 @@ export const ScanModal: React.FC<Props> = props => {
   // Mount effects
   React.useEffect(() => {
     setScanEnabled(true)
-    dispatch(checkAndRequestPermission('camera')).catch((error: unknown) => {
-      showError(error)
-    })
     return () => {
       setScanEnabled(false)
     }
-  }, [dispatch])
+  }, [])
 
   const handleBarCodeRead = (codes: Code[]): void => {
     setScanEnabled(false)
     triggerHaptic('impactLight')
     bridge.resolve(codes[0].value)
-  }
-
-  const handleSettings = async (): Promise<void> => {
-    triggerHaptic('impactLight')
-    await Linking.openSettings()
   }
 
   const handleTextInput = async (): Promise<void> => {
@@ -276,8 +269,7 @@ export const ScanModal: React.FC<Props> = props => {
     )
   }
 
-  return cameraPermission === RNPermissions.RESULTS.GRANTED ||
-    cameraPermission === RNPermissions.RESULTS.LIMITED ? (
+  return (
     <AirshipModal
       bridge={bridge}
       margin={[airshipMarginTop, 0, 0]}
@@ -291,34 +283,11 @@ export const ScanModal: React.FC<Props> = props => {
       <ModalFooter onPress={handleClose} />
       <View style={styles.bottomSpace} />
     </AirshipModal>
-  ) : (
-    <EdgeModal bridge={bridge} onCancel={handleClose}>
-      <Paragraph>{lstrings.scan_camera_permission_denied}</Paragraph>
-      <AlertCardUi4
-        title={lstrings.warning_scam_title}
-        type="warning"
-        body={[
-          sprintf(
-            lstrings.warning_scam_message_financial_advice_s,
-            config.appName
-          ),
-          lstrings.warning_scam_message_irreversibility,
-          lstrings.warning_scam_message_unknown_recipients
-        ]}
-        footer={sprintf(lstrings.warning_scam_footer_s, config.supportEmail)}
-      />
-      <ModalButtons
-        primary={{ onPress: handleSettings, label: lstrings.open_settings }}
-      />
-    </EdgeModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   bottomSpace: { height: theme.rem(1.5) },
-  cameraPermissionContainer: {
-    padding: theme.rem(0.5)
-  },
   // Camera View
   cameraContainer: {
     position: 'absolute',

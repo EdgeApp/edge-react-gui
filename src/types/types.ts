@@ -124,6 +124,24 @@ const asAccountNotifDismissInfo = asObject({
 
 const asTokenWarningsShown = asArray(asString)
 
+/** The tab an exchange deep link or promo card opened. */
+export type LinkPromoTab = 'buyTab' | 'sellTab' | 'swapTab'
+
+/**
+ * Promo attribution for one entry into a buy, sell or swap flow, from a deep
+ * link or an in-app promo card.
+ *
+ * `tab` is the tab that entry opened. It is what ends the attribution: the
+ * scene on that tab releases the promo when the tab blurs, so a flow the user
+ * abandons stops crediting the campaign. Comparing it against the live slice
+ * is also what keeps one tab's release from taking a promo a newer link has
+ * already claimed for a different tab.
+ */
+export interface LinkPromo {
+  promoId: string
+  tab: LinkPromoTab
+}
+
 export interface NotifInfo {
   /**
    * Timestamp that this notification was detected locally. May accept
@@ -168,6 +186,12 @@ export interface NotifInfo {
 
       /** URL to open when the notification is tapped */
       ctaUrl: string
+
+      /**
+       * The card's promo id, so a conversion started from the notification is
+       * attributed to the same card as one started from the carousel.
+       */
+      promoId?: string
     }
   }
 }
@@ -185,7 +209,8 @@ export const asNotifInfo = asObject<NotifInfo>({
           messageId: asString,
           title: asString,
           body: asString,
-          ctaUrl: asString
+          ctaUrl: asString,
+          promoId: asMaybe(asString)
         })
       )
     })
@@ -205,6 +230,7 @@ export const asReviewTriggerData = asObject({
 })
 
 const asLocalAccountSettingsInner = asObject({
+  cameraScamWarningShown: asMaybe(asBoolean, false),
   contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
   notifState: asMaybe(asNotifState, asNotifState({})),
@@ -336,7 +362,7 @@ export interface WcConnectionInfo {
   icon: string
 }
 export interface WalletConnectChainId {
-  namespace: 'algorand' | 'cosmos' | 'eip155'
+  namespace: 'algorand' | 'bip122' | 'cosmos' | 'eip155'
   reference: string
 }
 export interface wcGetConnection {
@@ -393,6 +419,11 @@ export interface AppConfig {
    * "Learn more" link.
    */
   zcashMigrationLearnMoreUrl?: string
+  /**
+   * Support article for the large-UTXO-wallet card's "Learn More" link,
+   * covering stale balances and how to resync a wallet.
+   */
+  largeUtxoWalletLearnMoreUrl?: string
   /**
    * Home screen long-press quick action shortcuts.
    * Omit to disable the shortcuts for a build.

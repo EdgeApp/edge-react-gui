@@ -13,7 +13,6 @@ import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants'
 import { useIconColor } from '../../hooks/useIconColor'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import type { GradientColors } from '../../types/Theme'
 import type { FeeOption } from '../../types/types'
 import { darkenHexColor } from '../../util/utils'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -85,8 +84,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
     ) {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
-      // @ts-expect-error - defaultCustomFee starts as an empty object literal,
-      // so TypeScript infers no index signature to write these keys through.
+      // @ts-expect-error
       for (const key of customFormat) defaultCustomFee[key] = ''
       this.state = { networkFeeOption, customNetworkFee: defaultCustomFee }
     } else {
@@ -103,14 +101,14 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
     }
   }
 
-  onSubmit = (): void => {
+  onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     const { navigation, route } = this.props
     route.params.onSubmit(networkFeeOption, customNetworkFee)
     navigation.goBack()
   }
 
-  render(): React.ReactElement {
+  render() {
     const { iconColor, theme } = this.props
     const styles = getStyles(theme)
 
@@ -122,15 +120,14 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
       iconAccentColor: iconColor ?? '#00000000'
     }
 
-    // Destructured rather than mutated so the gradient keeps its tuple type:
-    // `LinearGradient` needs a compile-time guarantee of two or more stops.
-    const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
-    const backgroundColors: GradientColors = [
-      iconColor != null && theme.isDark
-        ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
-        : firstColor,
-      ...restColors
-    ]
+    const backgroundColors = [...theme.assetBackgroundGradientColors]
+    if (iconColor != null && theme.isDark) {
+      const scaledColor = darkenHexColor(
+        iconColor,
+        theme.assetBackgroundColorScale
+      )
+      backgroundColors[0] = scaledColor
+    }
 
     return (
       <SceneWrapper
@@ -146,20 +143,18 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
-                // @ts-expect-error - Object.keys widens to string, which
-                // cannot index feeOptions' literal keys.
+                // @ts-expect-error
                 key={feeOptions[feeSetting].text}
-                // @ts-expect-error - see above
+                // @ts-expect-error
                 label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
                 onPress={() => {
-                  // @ts-expect-error - feeSetting is a plain string here,
-                  // not the FeeOption union the state expects.
+                  // @ts-expect-error
                   this.setState({ networkFeeOption: feeSetting })
                 }}
               >
                 <MaterialCommunityIcons
-                  // @ts-expect-error - same widened-key problem as above.
+                  // @ts-expect-error
                   name={feeOptions[feeSetting].icon}
                   style={styles.settingsIcon}
                 />
@@ -190,9 +185,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
     )
   }
 
-  renderCustomFeeTextInput(
-    customFormat: Array<keyof typeof FEE_STRINGS>
-  ): React.ReactElement | null {
+  renderCustomFeeTextInput(customFormat: Array<keyof typeof FEE_STRINGS>) {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 
@@ -210,9 +203,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
               })
             }}
             value={customNetworkFee[key]}
-            // customFormat comes from the plugin's currencyInfo, which can name
-            // fee settings FEE_STRINGS has no label for, despite the key type.
-            placeholder={FEE_STRINGS[key] ?? key}
+            placeholder={FEE_STRINGS[key] || key}
             returnKeyType="done"
             keyboardType="numeric"
           />
@@ -221,7 +212,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<
     )
   }
 
-  renderFeeWarning(): React.ReactElement | null {
+  renderFeeWarning() {
     const { networkFeeOption } = this.state
     const { theme } = this.props
     const styles = getStyles(theme)

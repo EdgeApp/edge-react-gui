@@ -25,6 +25,7 @@ export const useTotalFiatAmount = (
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
 
   return React.useMemo(() => {
+    // @ts-expect-error
     return borrowArray.reduce((total, obj) => {
       const { currencyCode, denominations } =
         obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}

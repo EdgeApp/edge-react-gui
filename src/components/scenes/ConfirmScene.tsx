@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
@@ -24,14 +24,14 @@ export interface ConfirmSceneParams {
   onBack?: () => void
 }
 
-const ConfirmSceneComponent = (props: Props): React.ReactElement => {
+const ConfirmSceneComponent = (props: Props) => {
   const { navigation, route } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const { titleText, bodyText, infoTiles, onConfirm, onBack } = route.params
 
-  const renderInfoTiles = (): React.ReactElement[] | null => {
+  const renderInfoTiles = () => {
     if (infoTiles == null) return null
     return infoTiles.map(({ label, value }) => (
       <EdgeRow key={label} title={label} body={value} />
@@ -56,7 +56,8 @@ const ConfirmSceneComponent = (props: Props): React.ReactElement => {
   return (
     <SceneWrapper scroll padding={theme.rem(0.5)}>
       <KeyboardAwareScrollView
-        bottomOffset={theme.rem(2.75)}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {/* We have to use the SceneHeaderUi4 component here because 

@@ -59,10 +59,7 @@ function AnimatedFontIcon(
   const style = useAnimatedStyle(() => ({
     color: color?.value ?? defaultColor,
     fontFamily,
-    // Fabric on Android throws on non-positive text font sizes, and icon
-    // sizes legitimately animate to 0 (e.g. FilledTextInput side icons), so
-    // clamp to 1 (invisible - the containers collapse to zero width anyway):
-    fontSize: Math.max(size?.value ?? defaultSize, 1),
+    fontSize: size?.value ?? defaultSize,
     fontStyle: 'normal',
     fontWeight: 'normal'
   }))

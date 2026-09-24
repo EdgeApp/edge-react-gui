@@ -40,7 +40,9 @@
     "envJson": {
       "yolo": {
         "YOLO_USERNAME": "",
-        "YOLO_PASSWORD": ""
+        "YOLO_PASSWORD": "",
+        "YOLO_PIN": "",
+        "YOLO_OTP_KEY": ""
       }
     }
   }

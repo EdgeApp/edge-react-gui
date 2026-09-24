@@ -16,6 +16,7 @@ import * as React from 'react'
 
 import {
   pickBestQuote,
+  pickBestQuoteWithPreference,
   SwapConfirmationScene
 } from '../../components/scenes/SwapConfirmationScene'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -250,6 +251,69 @@ describe('SwapConfirmationScene', () => {
     bestQuote = pickBestQuote(quotes as any)
     expect(bestQuote).toEqual(quotes[1])
   })
+
+  describe('pickBestQuoteWithPreference', () => {
+    const cheaper: TestSwapQuote = {
+      pluginId: 'cheapswap',
+      swapInfo: { isDex: false },
+      isEstimate: false,
+      fromNativeAmount: '1000',
+      toNativeAmount: '11000'
+    }
+    const pinned: TestSwapQuote = {
+      pluginId: 'changenow',
+      swapInfo: { isDex: false },
+      isEstimate: false,
+      fromNativeAmount: '1000',
+      toNativeAmount: '10000'
+    }
+    const dex: TestSwapQuote = {
+      pluginId: 'thorchain',
+      swapInfo: { isDex: true },
+      isEstimate: true,
+      fromNativeAmount: '1000',
+      toNativeAmount: '9000'
+    }
+
+    it('selects the preferred provider over a better rate', () => {
+      expect(
+        pickBestQuoteWithPreference([cheaper, pinned] as any, {
+          preferPluginId: 'changenow'
+        })
+      ).toEqual(pinned)
+    })
+
+    it('ranks the preferred provider above the DEX/CEX preference', () => {
+      expect(
+        pickBestQuoteWithPreference([cheaper, pinned, dex] as any, {
+          preferPluginId: 'changenow',
+          preferType: 'DEX'
+        })
+      ).toEqual(pinned)
+    })
+
+    it('falls back to the best rate when the preferred provider has no quote', () => {
+      expect(
+        pickBestQuoteWithPreference([cheaper, pinned] as any, {
+          preferPluginId: 'godex'
+        })
+      ).toEqual(cheaper)
+    })
+
+    it('keeps honoring the DEX/CEX preference without a preferred provider', () => {
+      expect(
+        pickBestQuoteWithPreference([cheaper, pinned, dex] as any, {
+          preferType: 'DEX'
+        })
+      ).toEqual(dex)
+    })
+
+    it('picks the best rate with no preferences at all', () => {
+      expect(
+        pickBestQuoteWithPreference([cheaper, pinned, dex] as any, {})
+      ).toEqual(cheaper)
+    })
+  })
 })
 
 afterAll(async () => {
@@ -257,6 +321,7 @@ afterAll(async () => {
 })
 
 interface TestSwapQuote {
+  pluginId?: string
   swapInfo: { isDex: boolean }
   isEstimate: boolean
   fromNativeAmount: string

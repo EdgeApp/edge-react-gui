@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`RowUi4 renders correctly with an icon 1`] = `
 <View
@@ -39,7 +39,6 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={11.05}
       numberOfLines={1}
       style={
         [
@@ -65,7 +64,6 @@ exports[`RowUi4 renders correctly with an icon 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={14.3}
       numberOfLines={3}
       style={
         [
@@ -135,7 +133,6 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -161,7 +158,6 @@ exports[`RowUi4 renders correctly with an icon in a flex view 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -225,7 +221,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -294,7 +289,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -363,7 +357,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -505,7 +498,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -647,7 +639,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -789,7 +780,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -931,7 +921,6 @@ exports[`RowUi4 renders correctly with flex: 1 children 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1083,7 +1072,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1109,7 +1097,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1169,7 +1156,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1195,7 +1181,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1255,7 +1240,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1281,7 +1265,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1414,7 +1397,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1440,7 +1422,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1573,7 +1554,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1599,7 +1579,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1732,7 +1711,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -1758,7 +1736,6 @@ exports[`RowUi4 renders correctly with multiple rows in a flex: 1 View 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -1894,7 +1871,6 @@ exports[`RowUi4 should handle press events 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={11.05}
       numberOfLines={1}
       style={
         [
@@ -1920,7 +1896,6 @@ exports[`RowUi4 should handle press events 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={14.3}
       numberOfLines={3}
       style={
         [
@@ -2056,7 +2031,6 @@ exports[`RowUi4 should render a basic row 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={11.05}
       numberOfLines={1}
       style={
         [
@@ -2082,7 +2056,6 @@ exports[`RowUi4 should render a basic row 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={14.3}
       numberOfLines={3}
       style={
         [
@@ -2181,7 +2154,6 @@ exports[`RowUi4 should render a row in a card 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -2207,7 +2179,6 @@ exports[`RowUi4 should render a row in a card 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -2271,7 +2242,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -2297,7 +2267,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -2429,7 +2398,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -2455,7 +2423,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -2587,7 +2554,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -2613,7 +2579,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [
@@ -2745,7 +2710,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -2771,7 +2735,6 @@ exports[`RowUi4 should render a row with a right button 1`] = `
         allowFontScaling={false}
         ellipsizeMode="tail"
         minimumFontScale={0.65}
-        minimumFontSize={14.3}
         numberOfLines={3}
         style={
           [

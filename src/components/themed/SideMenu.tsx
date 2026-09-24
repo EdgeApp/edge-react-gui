@@ -4,7 +4,6 @@ import {
 } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import type { EdgeUserInfo } from 'edge-core-js'
-import { LinearGradient } from 'expo-linear-gradient'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import {
@@ -15,6 +14,7 @@ import {
   ScrollView,
   View
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -33,6 +33,7 @@ import { navigateToGiftCards } from '../../actions/GiftCardActions'
 import { useNotifCount } from '../../actions/LocalSettingsActions'
 import { getRootNavigation, logoutRequest } from '../../actions/LoginActions'
 import { executePluginAction } from '../../actions/PluginActions'
+import { showScanModal } from '../../actions/ScanActions'
 import { Fontello } from '../../assets/vector'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { ENV } from '../../env'
@@ -52,7 +53,6 @@ import { styled } from '../hoc/styled'
 import { IconBadge } from '../icons/IconBadge'
 import { ChevronDownIcon, CloseIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { ScanModal } from '../modals/ScanModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { Services } from '../services/Services'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -164,16 +164,15 @@ export function SideMenuComponent(props: Props): React.ReactElement {
 
   const handleScanQr = (): void => {
     navigation.dispatch(DrawerActions.closeDrawer())
-    Airship.show<string | undefined>(bridge => (
-      <ScanModal
-        bridge={bridge}
-        scanModalTitle={lstrings.scan_qr_label}
-        textModalAutoFocus={false}
-        textModalTitle={lstrings.enter_any_title}
-        textModalBody={lstrings.enter_any_body}
-        textModalHint={lstrings.enter_any_input_hint}
-      />
-    ))
+    dispatch(
+      showScanModal({
+        scanModalTitle: lstrings.scan_qr_label,
+        textModalAutoFocus: false,
+        textModalTitle: lstrings.enter_any_title,
+        textModalBody: lstrings.enter_any_body,
+        textModalHint: lstrings.enter_any_input_hint
+      })
+    )
       .then(async (result: string | undefined) => {
         if (result != null && result !== '') {
           const deepLink = parseDeepLink(result)

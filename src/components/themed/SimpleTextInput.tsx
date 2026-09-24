@@ -197,9 +197,8 @@ export const SimpleTextInput = React.forwardRef<
     setNativeProps
   }))
 
-  // Animates between 0 and 1 based our disabled state, starting at the
-  // mounted state so the input doesn't flash its enabled look on entry:
-  const disableAnimation = useSharedValue(disabled ? 1 : 0)
+  // Animates between 0 and 1 based our disabled state:
+  const disableAnimation = useSharedValue(0)
   React.useEffect(() => {
     disableAnimation.value = withTiming(disabled ? 1 : 0)
   }, [disableAnimation, disabled])

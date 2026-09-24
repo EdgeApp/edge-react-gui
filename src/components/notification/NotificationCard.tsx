@@ -13,10 +13,7 @@ import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
 import { getThemedIconUri } from '../../util/CdnUris'
-import {
-  ChromeBlurBackground,
-  getBlurFallbackStyle
-} from '../common/BlurBackground'
+import { BlurBackground } from '../common/BlurBackground'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { styled } from '../hoc/styled'
 import { showError } from '../services/AirshipInstance'
@@ -149,7 +146,7 @@ export const NotificationCard: React.FC<Props> = (props: Props) => {
           Platform.OS === 'android' ? styles.shadowAndroid : styles.shadowIos
         }
       >
-        <ChromeBlurBackground rounded />
+        <BlurBackground />
         <EdgeTouchableOpacity
           style={styles.cardContainer}
           onPress={handlePress}
@@ -211,7 +208,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     overflow: 'hidden',
     borderRadius: theme.cardBorderRadius,
     marginHorizontal: theme.rem(0.5),
-    ...getBlurFallbackStyle(theme),
     // TODO: Design approval that we don't need to make ios/android specific
     // adjustments here.
     ...theme.notificationCardShadow

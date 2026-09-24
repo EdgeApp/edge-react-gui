@@ -17,7 +17,6 @@ import { renderStateProviders } from '../../state/renderStateProviders'
 import type { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
-import { BlurTarget, BlurTargetProvider } from '../common/BlurBackground'
 import { Main } from '../Main'
 import { Airship } from './AirshipInstance'
 import { useTheme } from './ThemeContext'
@@ -30,7 +29,7 @@ interface Props {
  * Provides various global providers to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export function Providers(props: Props): React.ReactElement {
+export function Providers(props: Props) {
   const { context } = props
   const theme = useTheme()
   const isDesktop =
@@ -61,10 +60,10 @@ export function Providers(props: Props): React.ReactElement {
 
   // Actions to perform at startup:
   React.useEffect(() => {
-    store.dispatch(loadDeviceReferral()).catch((err: unknown) => {
+    store.dispatch(loadDeviceReferral()).catch(err => {
       console.warn(err)
     })
-    store.dispatch(fetchCountryCode()).catch((err: unknown) => {
+    store.dispatch(fetchCountryCode()).catch(err => {
       console.warn(err)
     })
   }, [store])
@@ -73,19 +72,14 @@ export function Providers(props: Props): React.ReactElement {
     <Provider store={store}>
       <LoginUiProvider
         isDesktop={isDesktop}
-        // @ts-expect-error - the app's Theme is a superset of login-ui's,
-        // and the provider merges it over its own defaults at runtime.
+        // @ts-expect-error
         themeOverride={theme}
       >
         <KeyboardProvider statusBarTranslucent>
           {renderStateProviders(
-            <BlurTargetProvider>
-              <Airship>
-                <BlurTarget>
-                  <Main />
-                </BlurTarget>
-              </Airship>
-            </BlurTargetProvider>
+            <Airship>
+              <Main />
+            </Airship>
           )}
         </KeyboardProvider>
       </LoginUiProvider>

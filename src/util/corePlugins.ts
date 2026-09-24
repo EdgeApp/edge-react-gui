@@ -2,8 +2,7 @@ import type { EdgeCorePluginsInit } from 'edge-core-js'
 
 import { ENV } from '../env'
 
-export const currencyPlugins: EdgeCorePluginsInit = {
-  // edge-currency-accountbased:
+const accountbasedPlugins: EdgeCorePluginsInit = {
   abstract: ENV.ABSTRACT_INIT,
   algorand: ENV.ALGORAND_INIT,
   amoy: ENV.AMOY_INIT,
@@ -21,7 +20,6 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   celo: ENV.CELO_INIT,
   coreum: ENV.COREUM_INIT,
   cosmoshub: ENV.COSMOSHUB_INIT,
-  ecash: ENV.ECASH_INIT,
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
@@ -63,8 +61,15 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   wax: true,
   zano: true,
   zcash: true,
-  zksync: ENV.ZKSYNC_INIT,
-  // edge-currency-bitcoin:
+  zksync: ENV.ZKSYNC_INIT
+}
+
+/**
+ * Plugin ids served by `edge-currency-plugins`, whose engines all scan an
+ * xpub for UTXOs. `UTXO_PLUGIN_IDS` in WalletAndCurrencyConstants.ts derives
+ * from this, so a chain added here is automatically picked up there.
+ */
+export const utxoPlugins: EdgeCorePluginsInit = {
   bitcoin: ENV.BITCOIN_INIT,
   bitcoincash: ENV.BITCOINCASH_INIT,
   bitcoincashtestnet: false,
@@ -77,6 +82,7 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   digibyte: ENV.DIGIBYTE_INIT,
   dogecoin: ENV.DOGE_INIT,
   eboost: true,
+  ecash: ENV.ECASH_INIT,
   feathercoin: true,
   groestlcoin: ENV.GROESTLCOIN_INIT,
   litecoin: ENV.LITECOIN_INIT,
@@ -87,6 +93,11 @@ export const currencyPlugins: EdgeCorePluginsInit = {
   ufo: true,
   vertcoin: true,
   zcoin: ENV.ZCOIN_INIT
+}
+
+export const currencyPlugins: EdgeCorePluginsInit = {
+  ...accountbasedPlugins,
+  ...utxoPlugins
 }
 
 export const swapPlugins = {

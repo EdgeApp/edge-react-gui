@@ -15,15 +15,8 @@ export interface ThemeDot {
 // Updates to dots. undefined keeps the dots, null deletes them
 export type OverrideDots = Array<Partial<ThemeDot> | undefined | null>
 
-/**
- * A gradient needs at least two stops to interpolate between. `LinearGradient`
- * enforces that in its own prop types, so the theme has to promise it too —
- * a plain `string[]` says nothing about length and won't satisfy it.
- */
-export type GradientColors = readonly [string, string, ...string[]]
-
 interface ThemeGradientParams {
-  colors: GradientColors
+  colors: string[]
   start: GradientCoords
   end: GradientCoords
 }
@@ -104,7 +97,7 @@ export interface Theme {
   loadingIcon: string
 
   // Background
-  backgroundGradientColors: GradientColors
+  backgroundGradientColors: string[]
   backgroundGradientStart: { x: number; y: number }
   backgroundGradientEnd: { x: number; y: number }
   backgroundDots: {
@@ -113,7 +106,7 @@ export interface Theme {
     dots: ThemeDot[]
     assetOverrideDots: OverrideDots
   }
-  assetBackgroundGradientColors: GradientColors
+  assetBackgroundGradientColors: string[]
   assetBackgroundGradientStart: { x: number; y: number }
   assetBackgroundGradientEnd: { x: number; y: number }
   assetBackgroundColorScale: number
@@ -148,7 +141,7 @@ export interface Theme {
   tileBackgroundMuted: string
 
   // Section Lists
-  listSectionHeaderBackgroundGradientColors: GradientColors
+  listSectionHeaderBackgroundGradientColors: string[]
   listSectionHeaderBackgroundGradientStart: { x: number; y: number } | null
   listSectionHeaderBackgroundGradientEnd: { x: number; y: number } | null
 
@@ -185,10 +178,10 @@ export interface Theme {
 
   // Header
   headerIcon: ImageProp
-  headerBackground: GradientColors
+  headerBackground: string[]
   headerBackgroundStart: GradientCoords
   headerBackgroundEnd: GradientCoords
-  headerOutlineColors: GradientColors
+  headerOutlineColors: string[]
 
   // Buttons
   buttonBorderRadiusRem: number
@@ -196,7 +189,7 @@ export interface Theme {
 
   keypadButtonOutline: string
   keypadButtonOutlineWidth: number
-  keypadButton: GradientColors
+  keypadButton: string[]
   keypadButtonColorStart: GradientCoords
   keypadButtonColorEnd: GradientCoords
   keypadButtonText: string
@@ -208,7 +201,7 @@ export interface Theme {
 
   primaryButtonOutline: string
   primaryButtonOutlineWidth: number
-  primaryButton: GradientColors
+  primaryButton: string[]
   primaryButtonColorStart: GradientCoords
   primaryButtonColorEnd: GradientCoords
   primaryButtonText: string
@@ -219,8 +212,8 @@ export interface Theme {
 
   secondaryButtonOutline: string
   secondaryButtonOutlineWidth: number
-  secondaryButton: GradientColors
-  secondaryButtonDisabled: GradientColors
+  secondaryButton: string[]
+  secondaryButtonDisabled: string[]
   secondaryButtonColorStart: GradientCoords
   secondaryButtonColorEnd: GradientCoords
   secondaryButtonText: string
@@ -231,7 +224,7 @@ export interface Theme {
 
   escapeButtonOutline: string
   escapeButtonOutlineWidth: number
-  escapeButton: GradientColors
+  escapeButton: string[]
   escapeButtonColorStart: GradientCoords
   escapeButtonColorEnd: GradientCoords
   escapeButtonText: string
@@ -242,7 +235,7 @@ export interface Theme {
 
   pinUsernameButtonOutline: string
   pinUsernameButtonOutlineWidth: number
-  pinUsernameButton: GradientColors
+  pinUsernameButton: string[]
   pinUsernameButtonColorStart: GradientCoords
   pinUsernameButtonColorEnd: GradientCoords
   pinUsernameButtonText: string
@@ -281,10 +274,10 @@ export interface Theme {
   // Mimics raised/embossed text on physical credit cards
   embossedTextShadow: TextShadowParams
 
-  tabBarBackground: GradientColors
+  tabBarBackground: string[]
   tabBarBackgroundStart: GradientCoords
   tabBarBackgroundEnd: GradientCoords
-  tabBarTopOutlineColors: GradientColors
+  tabBarTopOutlineColors: string[]
   tabBarIcon: string
   tabBarIconHighlighted: string
 
@@ -334,7 +327,7 @@ export interface Theme {
 
   // DividerLine component
   dividerLineHeight: number
-  dividerLineColors: GradientColors
+  dividerLineColors: string[]
 
   // Notifications
   // notificationBackground: string,

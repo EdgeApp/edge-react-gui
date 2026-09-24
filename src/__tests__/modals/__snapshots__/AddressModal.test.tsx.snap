@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AddressModalComponent should render with loaded props 1`] = `
 [
@@ -102,6 +102,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         },
       ]
     }
+    nativeID="1"
     style={
       [
         {
@@ -132,8 +133,9 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
       ]
     }
   >
-    <ExpoBlurView
-      intensity={100}
+    <BlurView
+      blurType="dark"
+      overlayColor="rgba(0, 0, 0, 0)"
       style={
         [
           {
@@ -149,7 +151,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
           },
         ]
       }
-      tint="dark"
     />
     <View
       style={
@@ -188,7 +189,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
-        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -403,6 +403,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               },
             ]
           }
+          nativeID="3"
           scale={0}
           style={
             [
@@ -445,6 +446,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               },
             ]
           }
+          nativeID="4"
           style={
             [
               {
@@ -497,6 +499,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
+            nativeID="5"
             shift={0}
             style={
               [
@@ -538,7 +541,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 22,
                   },
                 }
@@ -552,6 +555,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                   },
                 ]
               }
+              nativeID="6"
               numberOfLines={1}
               scale={1}
               shift={0}
@@ -563,7 +567,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                     "includeFontPadding": false,
                   },
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontSize": 22,
                   },
                 ]
@@ -621,6 +625,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               ]
             }
             multiline={false}
+            nativeID="7"
             onBlur={[Function]}
             onChangeText={[Function]}
             onFocus={[Function]}
@@ -716,6 +721,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
                 },
               ]
             }
+            nativeID="8"
             scale={0}
             style={
               [
@@ -741,21 +747,22 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
               jestAnimatedStyle={
                 {
                   "value": {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 1,
+                    "fontSize": 0,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
                 }
               }
               jestInlineStyle={{}}
+              nativeID="9"
               style={
                 [
                   {
-                    "color": "rgba(255, 255, 255, 0.502)",
+                    "color": "rgba(255, 255, 255, 0.5019607843137255)",
                     "fontFamily": "anticon",
-                    "fontSize": 1,
+                    "fontSize": 0,
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                   },
@@ -848,20 +855,21 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
           }
         }
       >
-        <ExpoLinearGradient
+        <BVLinearGradient
           colors={
             [
-              "#20312f",
-              "#00604d",
+              4280299823,
+              4278214733,
             ]
           }
-          end={
+          endPoint={
             {
               "x": 1,
               "y": 0,
             }
           }
-          start={
+          locations={null}
+          startPoint={
             {
               "x": 0,
               "y": 0,
@@ -892,7 +900,6 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [

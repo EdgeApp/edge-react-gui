@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
@@ -139,7 +139,9 @@ export const SepaFormScene = React.memo((props: Props) => {
             <KeyboardAwareScrollView
               contentContainerStyle={{ ...insetStyle, ...styles.container }}
               keyboardShouldPersistTaps="handled"
-              bottomOffset={theme.rem(2.75)}
+              extraScrollHeight={theme.rem(2.75)}
+              enableAutomaticScroll
+              enableOnAndroid
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               {scrollContent}

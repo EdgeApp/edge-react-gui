@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { writeSpendingLimits } from '../../actions/LocalSettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -20,7 +20,7 @@ import { MainButton } from '../themed/MainButton'
 
 interface Props extends EdgeAppSceneProps<'spendingLimits'> {}
 
-export const SpendingLimitsScene = (props: Props): React.ReactElement => {
+export const SpendingLimitsScene = (props: Props) => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -47,7 +47,7 @@ export const SpendingLimitsScene = (props: Props): React.ReactElement => {
     setTransactionIsEnabled(!transactionIsEnabled)
   })
 
-  const handleSubmitAsync = async (): Promise<void> => {
+  const handleSubmitAsync = async () => {
     const spendingLimits = {
       transaction: {
         isEnabled: transactionIsEnabled,
@@ -66,7 +66,7 @@ export const SpendingLimitsScene = (props: Props): React.ReactElement => {
 
   // Satsify "misused promise"
   const handleSubmit = useHandler(() => {
-    handleSubmitAsync().catch((err: unknown) => {
+    handleSubmitAsync().catch(err => {
       showError(err)
     })
   })

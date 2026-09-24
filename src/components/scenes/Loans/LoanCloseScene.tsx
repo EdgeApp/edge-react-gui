@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -49,7 +49,7 @@ export interface Props extends EdgeAppSceneProps<'loanClose'> {
 
 // TODO: Check contentPadding
 
-export const LoanCloseSceneComponent = (props: Props): React.ReactElement => {
+export const LoanCloseSceneComponent = (props: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
@@ -182,7 +182,8 @@ export const LoanCloseSceneComponent = (props: Props): React.ReactElement => {
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
-        bottomOffset={theme.rem(2.75)}
+        extraScrollHeight={theme.rem(2.75)}
+        enableOnAndroid
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <TotalDebtCollateralTile

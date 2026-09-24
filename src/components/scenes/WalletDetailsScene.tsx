@@ -39,7 +39,6 @@ import type {
   RouteProp,
   WalletsTabSceneProps
 } from '../../types/routerTypes'
-import type { GradientColors } from '../../types/Theme'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import {
@@ -346,15 +345,14 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  // Destructured rather than mutated so the gradient keeps its tuple type:
-  // `LinearGradient` needs a compile-time guarantee of two or more stops.
-  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
-  const backgroundColors: GradientColors = [
-    iconColor != null && theme.isDark
-      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
-      : firstColor,
-    ...restColors
-  ]
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null && theme.isDark) {
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
+    backgroundColors[0] = scaledColor
+  }
 
   return (
     <SceneWrapper

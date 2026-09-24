@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
+  asMaybePendingFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -22,8 +23,7 @@ import {
   type TextInput,
   View
 } from 'react-native'
-import type { KeyboardAwareScrollViewRef } from 'react-native-keyboard-controller'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
@@ -49,9 +49,8 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
-import type { GradientColors } from '../../types/Theme'
 import type { FioRequest } from '../../types/types'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   addToFioAddressCache,
@@ -117,6 +116,17 @@ import { EditableAmountTile } from '../tiles/EditableAmountTile'
 // TODO: Check contentPadding
 
 const SCROLL_TO_END_DELAY_MS = 150
+
+// Error names an engine assigns when the node explicitly refused the
+// transaction. Nothing was accepted, so the existing copy for these can name
+// the real fix (stake more CPU, activate the recipient) instead of the
+// ambiguous "status unknown" card.
+const DETERMINISTIC_REJECTIONS = new Set([
+  'ErrorAlgoRecipientNotActivated',
+  'ErrorEosInsufficientCpu',
+  'ErrorEosInsufficientNet',
+  'ErrorEosInsufficientRam'
+])
 
 type Props = EdgeAppSceneProps<'send2'>
 
@@ -193,16 +203,6 @@ const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
 
-/**
- * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
- * namespace. EVM chains use the 'eip155' namespace.
- */
-const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
-  const { pluginId } = wallet.currencyInfo
-  const specialInfo = getSpecialCurrencyInfo(pluginId)
-  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
-}
-
 const SendComponent: React.FC<Props> = props => {
   const { route, navigation } = props
   const dispatch = useDispatch()
@@ -211,7 +211,7 @@ const SendComponent: React.FC<Props> = props => {
 
   const needsScrollToEnd = React.useRef<boolean>(false)
   const makeSpendCounter = React.useRef<number>(0)
-  const scrollViewRef = React.useRef<KeyboardAwareScrollViewRef>(null)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
   const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
@@ -261,6 +261,14 @@ const SendComponent: React.FC<Props> = props => {
     AddressEntryMethod | undefined
   >(undefined)
   const [hasPendingTx, setHasPendingTx] = useState<boolean>(false)
+  // Once a broadcast has been attempted, the confirm slider never re-arms on
+  // this scene, whether the broadcast reported success or failure. A failure
+  // report does not prove the transaction is absent from the network, and a
+  // re-armed slider after a real broadcast is an invitation to pay twice.
+  // The ref is what the send handler reads (it survives the FIO retry
+  // recursion); the state is what drives the render.
+  const broadcastAttemptedRef = React.useRef<boolean>(false)
+  const [broadcastAttempted, setBroadcastAttempted] = useState<boolean>(false)
   const [fioSender, setFioSender] = useState<FioSenderInfo>({
     fioAddress: fioPendingRequest?.payer_fio_address ?? '',
     fioWallet: null,
@@ -537,7 +545,8 @@ const SendComponent: React.FC<Props> = props => {
     spendTarget.publicAddress = undefined
     spendTarget.nativeAmount = undefined
     spendTarget.memo = spendTarget.uniqueIdentifier = undefined
-    setError(undefined)
+    // Keep the locked-state card if a broadcast has been attempted:
+    if (!broadcastAttemptedRef.current) setError(undefined)
     setExpireDate(undefined)
     setPinValue(undefined)
     setSpendInfo({ ...spendInfo })
@@ -622,6 +631,11 @@ const SendComponent: React.FC<Props> = props => {
   const handleFlipInputModal =
     (index: number, spendTarget: EdgeSpendTarget) => (): void => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
+      // A max spend only has a defined meaning for a single recipient: it
+      // consumes the entire spendable balance. Once the send has more than one
+      // target there is nothing left over for the others, so the button is
+      // hidden rather than allowed to produce an insufficient-funds spend.
+      const isMultipleTargets = spendInfo.spendTargets.length > 1
       Airship.show<FlipInputModalResult>(bridge => (
         <FlipInputModal2
           ref={flipInputModalRef}
@@ -629,6 +643,7 @@ const SendComponent: React.FC<Props> = props => {
           startNativeAmount={spendTarget.nativeAmount}
           feeTokenId={null}
           forceField={fieldChanged}
+          hideMaxButton={isMultipleTargets}
           onAmountsChanged={handleAmountsChanged(spendTarget)}
           onMaxSet={() => {
             setMaxSpendSetter(index)
@@ -755,7 +770,11 @@ const SendComponent: React.FC<Props> = props => {
       hiddenFeaturesMap.address === true ||
       hiddenFeaturesMap.amount === true ||
       lockTilesMap.address === true ||
-      lockTilesMap.amount === true
+      lockTilesMap.amount === true ||
+      // The existing target already claims the whole spendable balance, so a
+      // second recipient could only ever be funded by shrinking it. Withhold
+      // the entry point instead of silently discarding the max amount.
+      maxSpendSetter >= 0
     ) {
       return null
     }
@@ -780,6 +799,11 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   const handleTimeoutDone = useHandler((): void => {
+    // The quote's expiry is moot once a broadcast has been attempted with it.
+    // Firing it now would either overwrite the locked-state card with an
+    // expiry error or, for launchers whose onExpired navigates back, pop the
+    // scene and hide the card entirely.
+    if (broadcastAttemptedRef.current) return
     if (onExpired != null) {
       // Caller provided custom expiry handler - call it without showing error
       onExpired()
@@ -1303,6 +1327,32 @@ const SendComponent: React.FC<Props> = props => {
         }
       }
 
+      // EVM chains broadcast zero-amount transactions, which still spend gas.
+      // Other chains disable the slider for zero amounts (unless allowZeroTx),
+      // so this confirmation only surfaces for EVM coin and token sends.
+      if (
+        isEvmWallet(coreWallet) &&
+        spendInfo.spendTargets.every(target => zeroString(target.nativeAmount))
+      ) {
+        const answer = await Airship.show<'continue' | 'cancel' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.send_confirmation_zero_amount_title}
+              message={lstrings.send_confirmation_zero_amount_message}
+              buttons={{
+                continue: { label: lstrings.legacy_address_modal_continue },
+                cancel: { label: lstrings.string_cancel_cap }
+              }}
+            />
+          )
+        )
+        if (answer !== 'continue') {
+          resetSlider()
+          return
+        }
+      }
+
       try {
         if (beforeTransaction != null) await beforeTransaction()
       } catch (e: unknown) {
@@ -1310,10 +1360,17 @@ const SendComponent: React.FC<Props> = props => {
           'Error from before transaction route param hook: ',
           String(e)
         )
+        resetSlider()
         return
       }
 
       isSendingRef.current = true
+      // Set once broadcastTx resolves, so the catch below can tell a broadcast
+      // that reported failure apart from an error after a successful one.
+      let broadcastSucceeded = false
+      // Hoisted so the catch can log the real txid. For UTXO coins makeSpend
+      // returns an empty txid and the engine only assigns it during signTx.
+      let signedTx: EdgeTransaction | undefined
       try {
         // Check the OBT data fee and error if we are sending to a FIO address but NOT if we are paying
         // a FIO request since we want to make sure that can go through.
@@ -1325,13 +1382,21 @@ const SendComponent: React.FC<Props> = props => {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
         }
 
-        const signedTx = await coreWallet.signTx(edgeTransaction)
+        signedTx = await coreWallet.signTx(edgeTransaction)
+
+        // From this point on the transaction may reach the network, so lock
+        // the slider for the life of this scene no matter what happens next.
+        // The render-side flag is set in the finally block, so the slider
+        // keeps its spinner while the attempt is in flight.
+        broadcastAttemptedRef.current = true
+
         let broadcastedTx: EdgeTransaction
         if (alternateBroadcast != null) {
           broadcastedTx = await alternateBroadcast(signedTx)
         } else {
           broadcastedTx = await coreWallet.broadcastTx(signedTx)
         }
+        broadcastSucceeded = true
 
         // Figure out metadata (preserve Zano alias if provided)
         let payeeName: string | undefined
@@ -1559,12 +1624,73 @@ const SendComponent: React.FC<Props> = props => {
             lstrings.transaction_failure,
             lstrings.transaction_failure_504_message
           )
+        } else if (asMaybePendingFundsError(error) != null) {
+          // A wallet that was spendable when the transaction was built can
+          // still refuse it at broadcast, which the plugin reports this way.
+          // The plugin's own text names the reason (syncing, rescanning,
+          // repairing), so keep it and fall back only when it sent none.
+          // The refusal happens before anything is submitted, so the
+          // broadcast lock does not apply and the slider re-arms for a
+          // retry once the wallet is spendable:
+          broadcastAttemptedRef.current = false
+          error = new I18nError(
+            lstrings.transaction_failure,
+            errorCasted.message !== ''
+              ? errorCasted.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
+        }
+
+        if (broadcastAttemptedRef.current) {
+          // The broadcast was attempted, so the slider stays locked whatever
+          // the cause. The copy is a separate decision: when the engine has
+          // named a deterministic rejection above, the node refused the
+          // transaction and that specific message stands, so the user learns
+          // the real fix. Anything else at or after the boundary is ambiguous
+          // and gets the honest "status unknown" card. That includes a 504,
+          // which during a broadcast proves nothing either way.
+          const txid = signedTx?.txid ?? edgeTransaction.txid
+          logActivity(
+            `Error ${
+              broadcastSucceeded ? 'after' : 'during'
+            } broadcastTx (txid ${txid}): ${String(err)}`
+          )
+          if (!DETERMINISTIC_REJECTIONS.has(errorCasted.name)) {
+            error = new I18nError(
+              lstrings.send_broadcast_failure_title,
+              sprintf(
+                broadcastSucceeded
+                  ? lstrings.send_broadcast_post_error_message_s
+                  : lstrings.send_broadcast_failure_message_s,
+                errorCasted.message
+              )
+            )
+          }
+          setError(error)
+          // The locked-state card is longer than a normal error, and the
+          // slider floats over the bottom of the scroll view. Scroll it into
+          // view so the whole message is readable without scrolling by hand.
+          needsScrollToEnd.current = true
+
+          // Deliberately no onDone(error) here. The ramp launchers pop this
+          // scene when their onDone promise rejects and show a generic
+          // failure, which would hide this card and put the user back in a
+          // flow that can start another real payment. They still terminate
+          // through onBack when the user leaves, as on develop.
+          return
         }
 
         setError(error)
       } finally {
         isSendingRef.current = false
-        resetSlider()
+        // The slider is idempotent once a broadcast has been attempted. Only a
+        // failure before that boundary (PIN, hooks, FIO fee check, signing)
+        // leaves the slider re-armed, because nothing could have been sent.
+        if (broadcastAttemptedRef.current) {
+          setBroadcastAttempted(true)
+        } else {
+          resetSlider()
+        }
       }
     }
   )
@@ -1590,6 +1716,16 @@ const SendComponent: React.FC<Props> = props => {
   // Calculate the transaction
   useAsyncEffect(
     async () => {
+      // Once a broadcast has been attempted the transaction may already be on
+      // the network. Re-quoting would be meaningless, and the success path
+      // below clears `error`, which is the only explanation the user has for
+      // the locked slider. Freeze the quote instead. The amount handler has
+      // already flagged "calculating" by the time we get here, so clear it
+      // or the fee tile spins forever.
+      if (broadcastAttemptedRef.current) {
+        setProcessingAmountChanged(false)
+        return
+      }
       pendingInsufficientFees.current = undefined
       try {
         setProcessingAmountChanged(true)
@@ -1730,6 +1866,22 @@ const SendComponent: React.FC<Props> = props => {
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
 
+        // A wallet whose balance exists but is not spendable yet reports it
+        // this way, and the generic error card blames the network for it.
+        // Ethereum's pending-transaction case is excluded because it has its
+        // own warning card below:
+        const pendingFundsError = isTxPending
+          ? undefined
+          : asMaybePendingFundsError(error)
+        if (pendingFundsError != null) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            pendingFundsError.message !== ''
+              ? pendingFundsError.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
+        }
+
         // Only set hasPendingTx to true when pending tx error occurs;
         // don't clear it for other errors as it may have been legitimately
         // set by handleTxUpdate or updatePendingTxState
@@ -1786,15 +1938,14 @@ const SendComponent: React.FC<Props> = props => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  // Destructured rather than mutated so the gradient keeps its tuple type:
-  // `LinearGradient` needs a compile-time guarantee of two or more stops.
-  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
-  const backgroundColors: GradientColors = [
-    iconColor != null && theme.isDark
-      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
-      : firstColor,
-    ...restColors
-  ]
+  const backgroundColors = [...theme.assetBackgroundGradientColors]
+  if (iconColor != null && theme.isDark) {
+    const scaledColor = darkenHexColor(
+      iconColor,
+      theme.assetBackgroundColorScale
+    )
+    backgroundColors[0] = scaledColor
+  }
 
   React.useEffect(() => {
     // Hack: While you would think to use InteractionManager.runAfterInteractions,
@@ -1802,7 +1953,7 @@ const SendComponent: React.FC<Props> = props => {
     // determined and the scrollToEnd call would be effective.
     const timeout = setTimeout(() => {
       if (needsScrollToEnd.current) {
-        scrollViewRef.current?.scrollToEnd({ animated: true })
+        scrollViewRef.current?.scrollToEnd(true)
         needsScrollToEnd.current = false
       }
     }, SCROLL_TO_END_DELAY_MS)
@@ -1833,13 +1984,17 @@ const SendComponent: React.FC<Props> = props => {
           <>
             <KeyboardAwareScrollView
               style={styles.keyboardAwareScrollView}
-              ref={scrollViewRef}
+              innerRef={ref => {
+                const kbRef: KeyboardAwareScrollView | null = ref as any
+                scrollViewRef.current = kbRef
+              }}
               contentContainerStyle={{
                 ...insetStyle,
                 paddingTop: 0,
                 paddingBottom: theme.rem(5)
               }}
-              bottomOffset={theme.rem(2.75)}
+              extraScrollHeight={theme.rem(2.75)}
+              enableOnAndroid
               scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
             >
               <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
@@ -1879,6 +2034,11 @@ const SendComponent: React.FC<Props> = props => {
                 <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                   <SafeSlider
                     disabledText={disabledText}
+                    lockedText={
+                      broadcastAttempted
+                        ? lstrings.send_confirmation_slider_locked
+                        : undefined
+                    }
                     onSlidingComplete={handleSliderComplete}
                     disabled={disableSlider}
                   />
