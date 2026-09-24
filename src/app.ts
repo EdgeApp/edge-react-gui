@@ -28,6 +28,7 @@ import { willSignInfoRollup } from './util/edgeApiSigner'
 import { log, logToServer } from './util/logger'
 import { INFO_TEST_SERVER, shouldUseTestServers } from './util/maestro'
 import {
+  configureInfoServer,
   configureNetwork,
   initCoinrankList,
   initInfoServer
@@ -48,6 +49,20 @@ configureNetwork({
       : undefined,
   referralServers: config.referralServers ?? [],
   notificationServers: config.notificationServers
+})
+
+// `keysStore` falls back to `fetchPublicRollup` on the cold-start path, which
+// runs from the first render — before the NetInfo listener below reaches
+// `initInfoServer`. Capturing the parameters here, synchronously, keeps that
+// fallback working whichever lands first.
+configureInfoServer({
+  osType: Platform.OS.toLowerCase(),
+  osVersion: getOsVersion(),
+  appVersion: getVersion(),
+  appId: config.appId ?? 'edge',
+  onRollup: async () => {
+    await runOnce('checkAppVersion', checkAppVersion)
+  }
 })
 
 export type Environment = 'development' | 'testing' | 'production'

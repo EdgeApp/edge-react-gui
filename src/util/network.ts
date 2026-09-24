@@ -48,6 +48,13 @@ export async function fetchWaterfall(
   timeout: number = 5000,
   doFetch: EdgeFetchFunction = fetch
 ): Promise<EdgeFetchResponse> {
+  // `asyncWaterfall([])` awaits `Promise.race([])`, which never settles. The
+  // referral and push lists start empty until `configureNetwork` fills them,
+  // and the CLI configures only the info servers, so an unconfigured caller
+  // would hang forever rather than fail.
+  if (servers.length === 0) {
+    throw new Error(`No servers configured for ${path}`)
+  }
   const funcs = servers.map(server => async () => {
     const result = await doFetch(server + '/' + path, options)
     if (typeof result !== 'object') {
@@ -188,6 +195,19 @@ export const fetchPublicRollup = async (): Promise<void> => {
   } catch (e) {
     console.warn('initInfoServer: Failed to ping info server')
   }
+}
+
+/**
+ * Record the fields `fetchPublicRollup` needs.
+ *
+ * Separate from `initInfoServer` because the GUI can supply all of these
+ * synchronously at startup, while the decision to skip the unsigned launch
+ * fetch depends on an async native read. `keysStore` calls
+ * `fetchPublicRollup` directly on the cold-start path, so it must not depend
+ * on that await having finished.
+ */
+export function configureInfoServer(params: InitInfoServerParams): void {
+  infoServerParams = params
 }
 
 export const initInfoServer = async (
