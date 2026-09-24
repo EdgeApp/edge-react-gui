@@ -34,7 +34,8 @@ function redactDetails(
 ): Record<string, unknown> {
   const out: Record<string, unknown> = { ...details }
   for (const field of SECRET_DETAIL_FIELDS) {
-    if (out[field] != null) out[field] = '[redacted: read it from the REST body]'
+    if (out[field] != null)
+      out[field] = '[redacted: read it from the REST body]'
   }
   return out
 }
