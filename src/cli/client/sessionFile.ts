@@ -1,17 +1,29 @@
+import { asJSON, asMaybe, asObject, asOptional, asString } from 'cleaners'
 import fs from 'fs'
 
 import { ensureRunDir, sessionFilePath } from '../engine/discovery'
 
-export interface SessionFile {
-  sessionId: string
-  username?: string
-  updatedAt: string
-}
+/**
+ * The session file, cleaned.
+ *
+ * The `sessionId` is a bearer token every account-scoped command sends. A cast
+ * let a malformed file through with `sessionId: undefined`, which reached the
+ * engine as the literal string 'undefined'.
+ */
+const asSessionFile = asJSON(
+  asObject({
+    sessionId: asString,
+    username: asOptional(asString),
+    updatedAt: asString
+  })
+)
+
+export type SessionFile = ReturnType<typeof asSessionFile>
 
 export function readSessionFile(profile: string): SessionFile | null {
   try {
     const text = fs.readFileSync(sessionFilePath(profile), 'utf8')
-    return JSON.parse(text) as SessionFile
+    return asMaybe(asSessionFile)(text) ?? null
   } catch {
     return null
   }

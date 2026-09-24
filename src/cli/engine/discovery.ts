@@ -1,3 +1,13 @@
+import {
+  asBoolean,
+  asEither,
+  asJSON,
+  asMaybe,
+  asNull,
+  asNumber,
+  asObject,
+  asString
+} from 'cleaners'
 import crypto from 'crypto'
 import fs from 'fs'
 import os from 'os'
@@ -81,10 +91,14 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
 export function claimRunFile(profile: string, data: EngineRunFile): boolean {
   ensureRunDir(profile)
   try {
-    fs.writeFileSync(runFilePath(profile), JSON.stringify(data, null, 2) + '\n', {
-      mode: 0o600,
-      flag: 'wx'
-    })
+    fs.writeFileSync(
+      runFilePath(profile),
+      JSON.stringify(data, null, 2) + '\n',
+      {
+        mode: 0o600,
+        flag: 'wx'
+      }
+    )
     return true
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'EEXIST') return false
@@ -92,10 +106,29 @@ export function claimRunFile(profile: string, data: EngineRunFile): boolean {
   }
 }
 
+/**
+ * The run file, cleaned.
+ *
+ * A cast would let a truncated or hand-edited engine.json through as an object
+ * whose `pid` is undefined, which `isProcessAlive` then hands to
+ * `process.kill`, and whose `socketPath` callers try to connect to.
+ */
+const asEngineRunFile = asJSON(
+  asObject({
+    pid: asNumber,
+    apiVersion: asString,
+    socketPath: asString,
+    tcpPort: asEither(asNumber, asNull),
+    appId: asString,
+    testMode: asBoolean,
+    startedAt: asString
+  })
+)
+
 export function readRunFile(profile: string): EngineRunFile | null {
   try {
     const text = fs.readFileSync(runFilePath(profile), 'utf8')
-    return JSON.parse(text) as EngineRunFile
+    return asMaybe(asEngineRunFile)(text) ?? null
   } catch {
     return null
   }
