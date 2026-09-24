@@ -243,6 +243,7 @@ export const approveSwapQuote = route({
     'OBJECT_EXPIRED',
     'OBJECT_KIND_MISMATCH',
     'OBJECT_SESSION_MISMATCH',
+    'OBJECT_IN_USE',
     'INSUFFICIENT_FUNDS',
     'NETWORK_ERROR'
   ],
@@ -259,8 +260,9 @@ export const approveSwapQuote = route({
         400
       )
     }
-    const result = await record.value.approve()
-    await ctx.state.objects.delete(ctx.params.objectId)
+    const result = await ctx.state.objects.consume(record, async quote =>
+      await quote.approve()
+    )
     return {
       ok: true,
       objectId: ctx.params.objectId,
