@@ -260,8 +260,9 @@ export const approveSwapQuote = route({
         400
       )
     }
-    const result = await ctx.state.objects.consume(record, async quote =>
-      await quote.approve()
+    const result = await ctx.state.objects.consume(
+      record,
+      async quote => await quote.approve()
     )
     return {
       ok: true,
