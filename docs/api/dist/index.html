@@ -1001,7 +1001,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div></div>
     <div class="pane resp">
     <h4>Response <span class="st ok">200</span></h4>
-    <div class="note"><p>The handle fields, plus a <code>value</code> holding the live core object.</p>
+    <div class="note"><p>The handle fields, plus a <code>value</code> holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects.</p>
 </div><div class="shape">
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{

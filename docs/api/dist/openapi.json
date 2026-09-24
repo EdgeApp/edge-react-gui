@@ -911,7 +911,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The handle fields, plus a `value` holding the live core object.",
+            "description": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects.",
             "content": {
               "application/json": {
                 "schema": {
