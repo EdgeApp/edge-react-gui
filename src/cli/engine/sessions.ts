@@ -1,6 +1,11 @@
+import { asMaybe } from 'cleaners'
 import crypto from 'crypto'
 import type { EdgeAccount } from 'edge-core-js'
 
+import {
+  asSyncedSettingsSubset,
+  SYNCED_SETTINGS_FILENAME
+} from '../../util/syncedSettingsFile'
 import { base58 } from './encoding'
 import { engineError } from './errors'
 import type { EventHub } from './events'
@@ -40,13 +45,15 @@ export function makeSessionId(): string {
   return 'sess_' + base58.stringify(bytes)
 }
 
+/**
+ * The account's auto-logout setting, read through the same cleaner the GUI
+ * uses, so the two cannot disagree about the file's shape or its defaults.
+ */
 async function readAutoLogoutSeconds(account: EdgeAccount): Promise<number> {
   try {
-    const text = await account.disklet.getText('Settings.json')
-    const json = JSON.parse(text) as { autoLogoutTimeInSeconds?: number }
-    if (typeof json.autoLogoutTimeInSeconds === 'number') {
-      return json.autoLogoutTimeInSeconds
-    }
+    const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
+    const settings = asMaybe(asSyncedSettingsSubset)(JSON.parse(text))
+    if (settings != null) return settings.autoLogoutTimeInSeconds
   } catch {
     // missing or invalid — use default
   }

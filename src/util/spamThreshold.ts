@@ -1,11 +1,15 @@
+import { asMaybe } from 'cleaners'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
 import { getExchangeDenom } from './exchangeDenom'
 import { getHistoricalCryptoRate } from './exchangeRates'
 import { readLocalAccountSettingsFromDisk } from './localAccountSettings'
+import {
+  asSyncedSettingsSubset,
+  SYNCED_SETTINGS_FILENAME
+} from './syncedSettingsFile'
 import { calculateSpamThreshold } from './utils'
 
-const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const DEFAULT_ISO_FIAT = 'iso:USD'
 
 /**
@@ -17,9 +21,9 @@ export async function readDefaultIsoFiat(
 ): Promise<string> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
-    const json = JSON.parse(text) as { defaultIsoFiat?: unknown }
-    if (typeof json.defaultIsoFiat === 'string' && json.defaultIsoFiat !== '') {
-      return json.defaultIsoFiat
+    const settings = asMaybe(asSyncedSettingsSubset)(JSON.parse(text))
+    if (settings != null && settings.defaultIsoFiat !== '') {
+      return settings.defaultIsoFiat
     }
   } catch {
     // missing or invalid — use default
