@@ -1,5 +1,5 @@
 import { asBoolean, asObject, asOptional, asString, asValue } from 'cleaners'
-import type { EdgeAccount, EdgeAccountTxQuery } from 'edge-core-js'
+import type { EdgeAccountTxQuery } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { engineError } from '../errors'
@@ -39,21 +39,6 @@ const asNativeAmount: (raw: unknown) => string = raw => {
     throw new TypeError('Expected an integer amount in the smallest unit')
   }
   return raw
-}
-
-/** Reads the account-wide store, or explains why it is not there. */
-function getStore(
-  account: EdgeAccount
-): NonNullable<EdgeAccount['transactions']> {
-  const store = account.transactions
-  if (store == null) {
-    throw engineError(
-      'TRANSACTION_DATABASE_OFF',
-      'The transaction database is not running. Start the engine with the transactionDatabase option.',
-      409
-    )
-  }
-  return store
 }
 
 function buildQuery(valid: {
@@ -216,11 +201,11 @@ export const queryAccountTransactions = route({
     )
   }).withRest,
   returns: doc(asCoreValue, '`{ transactions, cursor }`'),
-  errors: ['BAD_REQUEST', 'TRANSACTION_DATABASE_OFF'],
+  errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
     const account = getAccount(ctx)
-    const store = getStore(account)
+    const store = account.transactions
     const query = buildQuery(ctx.query.valid)
 
     const { after } = ctx.query.valid
@@ -282,11 +267,11 @@ export const summarizeAccountTransactions = route({
   },
   query: asObject({ ...FILTER_QUERY }).withRest,
   returns: doc(asCoreValue, 'Counts and the date range of the matching set.'),
-  errors: ['BAD_REQUEST', 'TRANSACTION_DATABASE_OFF'],
+  errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
     const account = getAccount(ctx)
-    const store = getStore(account)
+    const store = account.transactions
 
     // One call, not two: a summary and a page answer the same predicate, and
     // `details` is what lets the core compile it once.
@@ -313,10 +298,9 @@ export const getTransactionSettings = route({
   path: '/account/{sessionId}/transactions/settings',
   cli: { command: 'get-transaction-settings' },
   returns: doc(asCoreValue, 'This device transaction settings.'),
-  errors: ['TRANSACTION_DATABASE_OFF'],
 
   async handler(ctx) {
-    return getStore(getAccount(ctx)).localSettings
+    return getAccount(ctx).transactions.localSettings
   }
 })
 
@@ -343,10 +327,10 @@ export const setDefaultIsoFiat = route({
     defaultIsoFiat: doc(asString, 'An ISO code, such as `iso:USD`.')
   }).withRest,
   returns: doc(asCoreValue, '`{ ok: true }`'),
-  errors: ['BAD_REQUEST', 'TRANSACTION_DATABASE_OFF'],
+  errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
-    const store = getStore(getAccount(ctx))
+    const store = getAccount(ctx).transactions
     await store.changeLocalSettings({
       defaultIsoFiat: ctx.body.defaultIsoFiat
     })

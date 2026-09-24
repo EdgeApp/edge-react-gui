@@ -4357,7 +4357,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h4>Response <span class="st ok">200</span></h4>
     <div class="note"><p><code>{ transactions, cursor }</code></p>
 </div><pre class="ts"><code>unknown</code></pre>
-    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
+    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
     <div class="pane notes"><h4>Notes</h4><ul><li>One result per transaction, whatever it touched. A swap that moved two assets is one <code>EdgeTx</code> with two entries in <code>nativeAmounts</code>, not two results.</li><li>Amount and fee filters take the chain&#39;s smallest unit as an integer string, because a 256-bit amount does not fit a number and converting from a display figure needs a denomination this query does not have.</li><li>A page can hold fewer than <code>limit</code> transactions: the limit counts index rows, and a transaction touching two assets has two. Use <code>cursor</code> to tell whether there is more, never the length of the array.</li></ul></div>
   </section><section class="endpoint" id="summarizeAccountTransactions">
@@ -4514,7 +4514,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h4>Response <span class="st ok">200</span></h4>
     <div class="note"><p>Counts and the date range of the matching set.</p>
 </div><pre class="ts"><code>unknown</code></pre>
-    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
+    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
     <div class="pane notes"><h4>Notes</h4><ul><li>No amount total. Summing would mean arithmetic on amounts inside the database, which it does not do -- a caller wanting one reads the transactions and adds the exact <code>nativeAmounts</code> strings with <code>BigInt</code>.</li></ul></div>
   </section><section class="endpoint" id="getTransactionSettings">
@@ -4545,7 +4545,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h4>Response <span class="st ok">200</span></h4>
     <div class="note"><p>This device transaction settings.</p>
 </div><pre class="ts"><code>unknown</code></pre>
-    <h5>Errors</h5><p class="errs"><a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
+    
   </div>
     
   </section><section class="endpoint" id="setDefaultIsoFiat">
@@ -4592,7 +4592,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     <h4>Response <span class="st ok">200</span></h4>
     <div class="note"><p><code>{ ok: true }</code></p>
 </div><pre class="ts"><code>unknown</code></pre>
-    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-TRANSACTION_DATABASE_OFF" class="err" title="The account-wide transaction database is not running for this session, so there is nothing to query."><span class="st">409</span>TRANSACTION_DATABASE_OFF</a></p>
+    <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
     <div class="pane notes"><h4>Notes</h4><ul><li>Setting it to its current value does nothing at all. A setter that is not a no-op would re-rate the whole account on every boot.</li><li>It takes the user&#39;s own figures with it. <code>exchangeAmount</code> is keyed by fiat code, so a figure typed in dollars is not a figure in euros.</li></ul></div>
   </section><h3 class="sub" id="swap">Swap quotes</h3>
@@ -8526,9 +8526,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <h2 id="errors">Error codes</h2>
 <table class="fields"><tbody><tr id="err-BAD_REQUEST"><td class="k"><code>BAD_REQUEST</code></td>
         <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
-        <td class="doc">Malformed JSON, or a missing / wrongly typed field.</td></tr><tr id="err-TRANSACTION_DATABASE_OFF"><td class="k"><code>TRANSACTION_DATABASE_OFF</code></td>
-        <td class="ty"><span class="st">409</span><span class="dim">engine</span></td>
-        <td class="doc">The account-wide transaction database is not running for this session, so there is nothing to query.</td></tr><tr id="err-MISSING_BITWAVE_ACCOUNT_ID"><td class="k"><code>MISSING_BITWAVE_ACCOUNT_ID</code></td>
+        <td class="doc">Malformed JSON, or a missing / wrongly typed field.</td></tr><tr id="err-MISSING_BITWAVE_ACCOUNT_ID"><td class="k"><code>MISSING_BITWAVE_ACCOUNT_ID</code></td>
         <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
         <td class="doc">Bitwave export requested with no account id in the query and none saved in the wallet’s <code>exportTxInfo.json</code>.</td></tr><tr id="err-OBJECT_KIND_MISMATCH"><td class="k"><code>OBJECT_KIND_MISMATCH</code></td>
         <td class="ty"><span class="st">400</span><span class="dim">engine</span></td>
