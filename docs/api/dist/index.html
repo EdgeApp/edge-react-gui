@@ -6794,7 +6794,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>Invalid base64 decodes to empty rather than erroring, so validate before sending.</li><li>Support is per plugin, and failures surface as <code>500 INTERNAL_ERROR</code> from the plugin rather than as a typed error: litecoin answers &quot;litecoin doesn&#39;t support signBytes&quot;, and bitcoin requires <code>otherParams.publicAddress</code> naming which address to sign with.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Invalid base64 is refused with <code>BAD_REQUEST</code> rather than signed.</li><li>Support is per plugin, and failures surface as <code>500 INTERNAL_ERROR</code> from the plugin rather than as a typed error: litecoin answers &quot;litecoin doesn&#39;t support signBytes&quot;, and bitcoin requires <code>otherParams.publicAddress</code> naming which address to sign with.</li></ul></div>
   </section><section class="endpoint" id="getPaymentProtocolInfo">
     <header>
       <h3><a href="#getPaymentProtocolInfo">Fetch a BIP70 payment request.</a></h3>

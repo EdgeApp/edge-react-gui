@@ -1,4 +1,5 @@
 import { asBoolean, asObject, asOptional, asString } from 'cleaners'
+import { base64 } from 'rfc4648'
 import type {
   EdgeCurrencyWallet,
   EdgeMemo,
@@ -676,8 +677,7 @@ export const sweepPrivateKeys = route({
  *
  * Message signing and proof-of-ownership, for plugins that support it.
  *
- * @note Invalid base64 decodes to empty rather than erroring, so validate
- *   before sending.
+ * @note Invalid base64 is refused with `BAD_REQUEST` rather than signed.
  * @note Support is per plugin, and failures surface as `500 INTERNAL_ERROR`
  *   from the plugin rather than as a typed error: litecoin answers
  *   "litecoin doesn't support signBytes", and bitcoin requires
@@ -710,9 +710,21 @@ export const signBytes = route({
   async handler(ctx) {
     const body = ctx.body as SpendBody
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
-    const bytes = new Uint8Array(
-      Buffer.from(optionalString(body, 'bytes') ?? '', 'base64')
-    )
+    // `Buffer.from(.., 'base64')` scrubs anything it cannot decode and hands
+    // back short or empty bytes, so a typo produced a valid signature over the
+    // wrong payload. `base64.parse` rejects instead.
+    let bytes: Uint8Array
+    try {
+      bytes = base64.parse(optionalString(body, 'bytes') ?? '')
+    } catch (error) {
+      throw engineError(
+        'BAD_REQUEST',
+        `bytes must be valid base64: ${String(
+          error instanceof Error ? error.message : error
+        )}`,
+        400
+      )
+    }
     const otherParams = isPlainObject(body.otherParams)
       ? body.otherParams
       : undefined

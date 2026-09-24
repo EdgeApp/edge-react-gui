@@ -2681,7 +2681,7 @@
         "signature": "string — Base64."
       },
       "notes": [
-        "Invalid base64 decodes to empty rather than erroring, so validate before sending.",
+        "Invalid base64 is refused with `BAD_REQUEST` rather than signed.",
         "Support is per plugin, and failures surface as `500 INTERNAL_ERROR` from the plugin rather than as a typed error: litecoin answers \"litecoin doesn't support signBytes\", and bitcoin requires `otherParams.publicAddress` naming which address to sign with."
       ],
       "errors": [
