@@ -7273,7 +7273,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>multiplier</code></td>
   <td class="ty"><span class="t">string</span> <span class="flag opt">optional</span></td>
-  <td class="doc">Native units per whole coin. Defaults per plugin.</td>
+  <td class="doc">Native units per whole coin. Required: the engine cannot derive it here, and will not guess.</td>
 </tr>
 <tr>
   <td class="k"><code>date</code></td>
@@ -7355,7 +7355,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NOT_FOUND" class="err" title="No route matched, or a generic missing resource."><span class="st">404</span>NOT_FOUND</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li><code>displayAmount</code> is rounded to 8 decimals before conversion, so assets with finer precision lose the tail. For an exact figure use <code>rates-query</code> and do the arithmetic yourself.</li><li>Default multipliers cover bitcoin, ethereum, bitcoincash, litecoin and dogecoin; pass <code>multiplier</code> explicitly for anything else.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li><code>displayAmount</code> is rounded to 8 decimals before conversion, so assets with finer precision lose the tail. For an exact figure use <code>rates-query</code> and do the arithmetic yourself.</li><li><code>multiplier</code> is required. The engine has no logged-in account here, so it cannot read the asset&#39;s denomination from core, and a guessed multiplier would return a <code>nativeAmount</code> wrong by orders of magnitude under a field documented as what a spend takes.</li></ul></div>
   </section><h2 id="objects">Object handles</h2>
       <div class="groupdoc"><p>A core value with methods on it cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them.</p>
 </div>

@@ -1,3 +1,4 @@
+import { floor, mul } from 'biggystring'
 import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
 import type { EdgeFetchFunction, EdgeTokenId } from 'edge-core-js'
 
@@ -10,25 +11,18 @@ import { engineError } from '../errors'
 import { route } from '../route'
 import { asTokenId } from '../schemas'
 
-const DEFAULT_MULTIPLIERS: Record<string, string> = {
-  bitcoin: '100000000',
-  ethereum: '1000000000000000000',
-  bitcoincash: '100000000',
-  litecoin: '100000000',
-  dogecoin: '100000000'
-}
-
 const nodeFetch: EdgeFetchFunction = async (uri, opts) =>
   await fetch(uri, opts as RequestInit)
 
+/**
+ * Scale a whole-coin amount by the asset's multiplier.
+ *
+ * `floor` because a native amount is an integer number of the smallest unit,
+ * and biggystring rejects a malformed amount instead of scrubbing it into a
+ * plausible-looking number.
+ */
 function displayToNative(displayAmount: string, multiplier: string): string {
-  const [whole, frac = ''] = displayAmount.split('.')
-  const decimals = multiplier.replace(/^1/, '').length
-  const fracPadded = (frac + '0'.repeat(decimals)).slice(0, decimals)
-  const stripped = `${whole}${fracPadded}`.replace(/^0+(?=\d)/, '')
-  const combined = stripped !== '' ? stripped : '0'
-  const digits = combined.replace(/\D/g, '')
-  return digits !== '' ? digits : '0'
+  return floor(mul(displayAmount, multiplier), 0)
 }
 
 function parseTokenId(value: unknown): EdgeTokenId {
@@ -163,8 +157,10 @@ export const ratesQuery = route({
  * @note `displayAmount` is rounded to 8 decimals before conversion, so assets
  *   with finer precision lose the tail. For an exact figure use `rates-query`
  *   and do the arithmetic yourself.
- * @note Default multipliers cover bitcoin, ethereum, bitcoincash, litecoin and
- *   dogecoin; pass `multiplier` explicitly for anything else.
+ * @note `multiplier` is required. The engine has no logged-in account here, so
+ *   it cannot read the asset's denomination from core, and a guessed
+ *   multiplier would return a `nativeAmount` wrong by orders of magnitude
+ *   under a field documented as what a spend takes.
  * @coreNote GUI code (src/util/exchangeRates): getHistoricalCryptoRate.
  */
 export const ratesUsdToNative = route({
@@ -180,7 +176,10 @@ export const ratesUsdToNative = route({
     pluginId: doc(asString, 'Which chain to price.'),
     tokenId: asOptional(doc(asTokenId, 'Defaults to the native asset.')),
     multiplier: asOptional(
-      doc(asString, 'Native units per whole coin. Defaults per plugin.')
+      doc(
+        asString,
+        'Native units per whole coin. Required: the engine cannot derive it here, and will not guess.'
+      )
     ),
     date: asOptional(doc(asString, DATE_DOC))
   }).withRest,
@@ -216,8 +215,17 @@ export const ratesUsdToNative = route({
     }
     const { pluginId } = ctx.body
     const tokenId = parseTokenId(ctx.body.tokenId)
-    const multiplier =
-      ctx.body.multiplier ?? DEFAULT_MULTIPLIERS[pluginId] ?? '100000000'
+    // No guessing: an assumed multiplier returns a `nativeAmount` that is
+    // wrong by orders of magnitude under a field documented as what a spend
+    // actually takes, and nothing in the response says it was a guess.
+    const { multiplier } = ctx.body
+    if (multiplier == null) {
+      throw engineError(
+        'BAD_REQUEST',
+        `multiplier is required: pass the multiplier for ${pluginId}, which the engine cannot derive without a logged-in account`,
+        400
+      )
+    }
     const date = ctx.body.date ?? new Date().toISOString()
     const rate = await getHistoricalCryptoRate(
       pluginId,

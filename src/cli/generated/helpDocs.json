@@ -2329,7 +2329,7 @@
         },
         "multiplier": {
           "pass": "[--multiplier=<multiplier>]",
-          "doc": "Native units per whole coin. Defaults per plugin.",
+          "doc": "Native units per whole coin. Required: the engine cannot derive it here, and will not guess.",
           "optional": true
         },
         "date": {
@@ -2350,7 +2350,7 @@
       },
       "notes": [
         "`displayAmount` is rounded to 8 decimals before conversion, so assets with finer precision lose the tail. For an exact figure use `rates-query` and do the arithmetic yourself.",
-        "Default multipliers cover bitcoin, ethereum, bitcoincash, litecoin and dogecoin; pass `multiplier` explicitly for anything else."
+        "`multiplier` is required. The engine has no logged-in account here, so it cannot read the asset's denomination from core, and a guessed multiplier would return a `nativeAmount` wrong by orders of magnitude under a field documented as what a spend takes."
       ],
       "errors": [
         "BAD_REQUEST",
