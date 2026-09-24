@@ -161,7 +161,10 @@ const recoveryLoginCmd = command(
     const session = await ctx.client.post<Session>('/login-with-recovery', {
       username: args.requireString('username'),
       recoveryKey: args.requireString('recovery-key'),
-      answers
+      answers,
+      otp: args.string('otp'),
+      otpKey: args.string('otp-key'),
+      challengeId: args.string('challenge-id') ?? ctx.challengeId
     })
     ctx.setSessionId(session.sessionId, session.username)
     printJson(session)
