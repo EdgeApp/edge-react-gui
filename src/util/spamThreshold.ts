@@ -27,11 +27,16 @@ export async function readDefaultIsoFiat(
   return DEFAULT_ISO_FIAT
 }
 
+/** An hour is finer than a dust threshold needs and coarse enough to cache. */
+const RATE_BUCKET_MS = 60 * 60 * 1000
+
 /**
- * Same visibility rule as the GUI transaction list.
- * An explicit query override wins. Otherwise honor spamFilterOn (default
- * true) and calculateSpamThreshold from defaultIsoFiat + current rate.
- * Missing rates yield `'0'`, matching calculateSpamThreshold.
+ * Same visibility rule as the GUI transaction list, with a different rate
+ * source: the GUI reads live rates from Redux, this asks for a historical
+ * rate at the current hour. An explicit query override wins. Otherwise honor
+ * spamFilterOn (default true) and calculateSpamThreshold from defaultIsoFiat
+ * and that rate. A missing or non-finite rate yields `'0'` — no filtering —
+ * where the GUI's live rate would have filtered.
  */
 export async function resolveListSpamThreshold(opts: {
   account: EdgeAccount
@@ -50,11 +55,20 @@ export async function resolveListSpamThreshold(opts: {
   const denom = getExchangeDenom(opts.wallet.currencyConfig, opts.tokenId)
   let rate = 0
   try {
+    // Quantised to the hour. `getHistoricalCryptoRate` folds the date string
+    // into its cache key, so a millisecond-precision timestamp missed the
+    // cache on every call: each listing waited a full FETCH_FREQUENCY before
+    // the request even started, and left a permanent entry in the module-level
+    // rate map. In the GUI this value came from a Redux selector, so neither
+    // cost existed there.
+    const bucketedNow = new Date(
+      Math.floor(Date.now() / RATE_BUCKET_MS) * RATE_BUCKET_MS
+    ).toISOString()
     rate = await getHistoricalCryptoRate(
       opts.wallet.currencyInfo.pluginId,
       opts.tokenId,
       defaultIsoFiat,
-      new Date().toISOString()
+      bucketedNow
     )
   } catch {
     rate = 0
