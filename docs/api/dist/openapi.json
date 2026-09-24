@@ -8104,7 +8104,7 @@
             }
           },
           "default": {
-            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, INSUFFICIENT_FUNDS, NETWORK_ERROR",
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, OBJECT_IN_USE, INSUFFICIENT_FUNDS, NETWORK_ERROR",
             "content": {
               "application/json": {
                 "schema": {

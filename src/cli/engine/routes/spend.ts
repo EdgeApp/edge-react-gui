@@ -1,5 +1,4 @@
 import { asBoolean, asObject, asOptional, asString } from 'cleaners'
-import { base64 } from 'rfc4648'
 import type {
   EdgeCurrencyWallet,
   EdgeMemo,
@@ -8,6 +7,7 @@ import type {
   EdgeSpendTarget,
   EdgeTransaction
 } from 'edge-core-js'
+import { base64 } from 'rfc4648'
 
 import { saveTxAndMetadata } from '../../../util/txTagging'
 import { doc } from '../doc'
@@ -138,6 +138,13 @@ function storeTransaction(
   }
 }
 
+/**
+ * The staged transaction named by `objectId`, checked against a wallet.
+ *
+ * `walletId` must be a resolved `wallet.id`, never the caller's raw input:
+ * `asWalletId` accepts any unique prefix, so comparing raw strings rejected a
+ * prefix and a full id that name the same wallet.
+ */
 function requireTxHandle(
   ctx: RouteContext,
   body: Record<string, unknown>,
@@ -369,7 +376,7 @@ export const spend = route({
       // object expires (or they delete it) — nothing is signed/broadcast.
       return storeTransaction(ctx, {
         sessionId: ctx.params.sessionId,
-        walletId: ctx.body.walletId,
+        walletId: wallet.id,
         transaction: unsignedTx
       })
     }
@@ -400,7 +407,7 @@ export const spend = route({
         if (!broadcast) throw error
         saveError = error instanceof Error ? error.message : String(error)
         ctx.state.logger.warn('saveTx failed after broadcast', {
-          walletId: ctx.body.walletId,
+          walletId: wallet.id,
           txid: finalTx.txid,
           error: saveError
         })
@@ -465,7 +472,7 @@ export const makeSpend = route({
     const transaction = await wallet.makeSpend(spendInfo)
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.body.walletId,
+      walletId: wallet.id,
       transaction
     })
   }
@@ -591,7 +598,7 @@ export const accelerate = route({
     const objectId = optionalString(body, 'objectId')
     let source: EdgeTransaction
     if (objectId != null) {
-      source = requireTxHandle(ctx, body, ctx.body.walletId).transaction
+      source = requireTxHandle(ctx, body, wallet.id).transaction
     } else if (isPlainObject(body.transaction)) {
       source = body.transaction as unknown as EdgeTransaction
     } else {
@@ -614,7 +621,7 @@ export const accelerate = route({
     }
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.body.walletId,
+      walletId: wallet.id,
       transaction
     })
   }
@@ -666,7 +673,7 @@ export const sweepPrivateKeys = route({
     )
     return storeTransaction(ctx, {
       sessionId: ctx.params.sessionId,
-      walletId: ctx.body.walletId,
+      walletId: wallet.id,
       transaction
     })
   }
