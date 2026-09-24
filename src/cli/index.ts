@@ -216,19 +216,12 @@ async function main(): Promise<number> {
     }
   }
 
-  // Special-case login commands with --solve-captcha by wrapping client.post
-  // The individual commands call client directly; we handle retry at invoke
-  // for known login command names:
-  const loginCommands = new Set([
-    'password-login',
-    'account-create',
-    'account-available',
-    'pin-login',
-    'key-login'
-  ])
-
-  if (solveCaptcha && loginCommands.has(cmd.name)) {
-    // Re-invoke with challenge retry by intercepting ApiClientError
+  // With --solve-captcha, retry once on CHALLENGE_REQUIRED. The commands post
+  // to the engine themselves, so the retry is handled here at invoke time.
+  // Keying off the thrown error rather than a list of command names means the
+  // flag works for every command a challenge can reach, and cannot rot as
+  // commands are renamed.
+  if (solveCaptcha) {
     try {
       await cmd.invoke(ctx, argv)
     } catch (error: unknown) {
