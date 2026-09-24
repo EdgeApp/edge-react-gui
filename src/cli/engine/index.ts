@@ -26,9 +26,11 @@ import sourceMapSupport from 'source-map-support'
 import { defaultDirectory, loadConfig } from './cliConfig'
 import {
   API_VERSION,
+  claimRunFile,
   cleanupStaleLock,
   ensureRunDir,
   profileHash,
+  readRunFile,
   removeRunArtifacts,
   socketPathFor,
   writeRunFile
@@ -188,6 +190,36 @@ async function main(): Promise<void> {
     locale: args.locale
   })
 
+  // Claim the profile before touching the data directory. `makeCoreContext`
+  // opens the on-disk repos and starts every plugin, so doing it first let two
+  // cold `edge-cli` invocations hold two EdgeContexts on one directory for
+  // seconds before either noticed the other — and, because the run file was
+  // not written until the listeners were up, the second engine's
+  // `cleanupStaleLock` would unlink the first engine's live socket.
+  ensureRunDir(profile)
+  const livePid = cleanupStaleLock(profile)
+  const socketPath = socketPathFor(profile)
+  const claimed =
+    livePid == null &&
+    claimRunFile(profile, {
+      pid: process.pid,
+      apiVersion: API_VERSION,
+      socketPath,
+      tcpPort: null,
+      appId,
+      testMode,
+      startedAt: new Date().toISOString()
+    })
+  if (!claimed) {
+    const owner = livePid ?? readRunFile(profile)?.pid
+    console.error(
+      `[edge-engine] An engine is already running for profile ${profile}` +
+        (owner != null ? ` (pid ${owner})` : '') +
+        `.\nStop it first (edge-cli engine-stop) or use a different --directory/--app-id.`
+    )
+    process.exit(1)
+  }
+
   const core = await makeCoreContext({
     apiKey,
     appId,
@@ -197,17 +229,6 @@ async function main(): Promise<void> {
     events,
     logger
   })
-
-  const livePid = cleanupStaleLock(profile)
-  if (livePid != null) {
-    console.error(
-      `[edge-engine] An engine is already running for profile ${profile} (pid ${livePid}).\n` +
-        `Stop it first (edge-cli engine-stop) or use a different --directory/--app-id.`
-    )
-    process.exit(1)
-  }
-  ensureRunDir(profile)
-  const socketPath = socketPathFor(profile)
 
   let shuttingDown = false
   let unixServer: Awaited<ReturnType<typeof listenUnix>> | null = null
