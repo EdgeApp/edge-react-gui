@@ -1136,7 +1136,9 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
         <td class="ty"><span class="st">409</span><span class="dim">engine</span></td>
         <td class="doc">A wallet id prefix matched more than one wallet. <span class="dim">details: <code>details.candidates</code></span></td></tr><tr id="err-OBJECT_EXPIRED"><td class="k"><code>OBJECT_EXPIRED</code></td>
         <td class="ty"><span class="st">410</span><span class="dim">engine</span></td>
-        <td class="doc">The handle passed its 5 minute TTL and was released.</td></tr><tr id="err-PAYLOAD_TOO_LARGE"><td class="k"><code>PAYLOAD_TOO_LARGE</code></td>
+        <td class="doc">The handle passed its 5 minute TTL and was released.</td></tr><tr id="err-OBJECT_IN_USE"><td class="k"><code>OBJECT_IN_USE</code></td>
+        <td class="ty"><span class="st">409</span><span class="dim">engine</span></td>
+        <td class="doc">A consuming call on this handle is already in flight. Fund-moving calls outlive the client socket timeout, so a retry is refused rather than sending twice.</td></tr><tr id="err-PAYLOAD_TOO_LARGE"><td class="k"><code>PAYLOAD_TOO_LARGE</code></td>
         <td class="ty"><span class="st">413</span><span class="dim">engine</span></td>
         <td class="doc">Request body over 4 MiB.</td></tr><tr id="err-UNSUPPORTED_MEDIA_TYPE"><td class="k"><code>UNSUPPORTED_MEDIA_TYPE</code></td>
         <td class="ty"><span class="st">415</span><span class="dim">engine</span></td>

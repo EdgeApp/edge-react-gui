@@ -128,6 +128,12 @@ export const errorCodes: ErrorCode[] = [
     doc: 'The handle passed its 5 minute TTL and was released.'
   },
   {
+    code: 'OBJECT_IN_USE',
+    status: 409,
+    origin: 'engine',
+    doc: 'A consuming call on this handle is already in flight. Fund-moving calls outlive the client socket timeout, so a retry is refused rather than sending twice.'
+  },
+  {
     code: 'PAYLOAD_TOO_LARGE',
     status: 413,
     origin: 'engine',

@@ -38,6 +38,12 @@ interface HandleRecord<T = unknown> {
   createdAt: number
   expiresAt: number
   onExpire?: (value: T) => void | Promise<void>
+  /**
+   * Set while a consuming call is in flight. A handle whose operation moves
+   * funds must not be usable twice, and the operation outlives the client's
+   * socket timeout, so a retry would otherwise find the handle still present.
+   */
+  consuming?: boolean
 }
 
 function makeObjectId(prefix: string): string {
@@ -137,7 +143,40 @@ export class ObjectHandleStore {
         400
       )
     }
+    if (record.consuming === true) {
+      throw engineError(
+        'OBJECT_IN_USE',
+        `Object handle is already being consumed: ${objectId}`,
+        409
+      )
+    }
     return record as HandleRecord<T>
+  }
+
+  /**
+   * Run a consuming operation under an in-flight guard, releasing the handle
+   * when it succeeds and unlocking it when it fails.
+   *
+   * `get` rejects the handle with `OBJECT_IN_USE` for as long as `operation`
+   * runs, so a client that retries after its own socket timeout cannot start
+   * the same fund-moving call twice. A failure unlocks rather than releases,
+   * because a quote or staged transaction is still usable after an error the
+   * caller can correct.
+   */
+  async consume<T, R>(
+    record: HandleRecord<T>,
+    operation: (value: T) => Promise<R>
+  ): Promise<R> {
+    record.consuming = true
+    let result: R
+    try {
+      result = await operation(record.value)
+    } catch (error) {
+      record.consuming = false
+      throw error
+    }
+    await this.delete(record.objectId)
+    return result
   }
 
   /**
