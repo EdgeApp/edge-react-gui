@@ -28,14 +28,48 @@ export class IdleShutdown {
     this.reset()
   }
 
-  /** True while something is keeping the engine deliberately alive. */
-  private get held(): boolean {
+  /** Requests currently being served. */
+  private inFlight = 0
+
+  /**
+   * True while a client is deliberately keeping the engine alive.
+   *
+   * Reported to callers, so it deliberately excludes in-flight requests: the
+   * request asking for the shutdown time is itself in flight, and by the time
+   * the answer is read it is not.
+   */
+  private get heldByClients(): boolean {
     return this.getSessionCount() > 0 || this.getSubscriberCount() > 0
+  }
+
+  /** True while anything at all should keep the timer disarmed. */
+  private get held(): boolean {
+    return this.inFlight > 0 || this.heldByClients
+  }
+
+  /**
+   * Hold the engine open for the duration of one request.
+   *
+   * `touch` only records when a request *started*, so a call that outlives the
+   * idle timeout — a cold login, `wait-for-all-wallets`, `resync-blockchain` —
+   * could be shut down underneath itself, and the client saw a destroyed
+   * socket rather than a result or an error. Pre-login calls hold nothing
+   * else: there is no session or subscriber to keep the timer disarmed.
+   */
+  beginRequest(): void {
+    this.inFlight++
+    this.reset()
+  }
+
+  endRequest(): void {
+    if (this.inFlight > 0) this.inFlight--
+    this.lastActivityAt = Date.now()
+    this.reset()
   }
 
   get idleShutdownAt(): string | null {
     if (this.idleTimeoutMs === 0) return null
-    if (this.held) return null
+    if (this.heldByClients) return null
     return new Date(this.lastActivityAt + this.idleTimeoutMs).toISOString()
   }
 
