@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: The preferred exchange chosen in the swap settings, or set by an active promotion, is now the selected quote when it can fill the order, instead of only being listed first.
+
 ## 4.51.0 (staging)
 
 - added: Robinhood Chain wallets
