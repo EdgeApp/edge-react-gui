@@ -252,7 +252,16 @@ async function main(): Promise<number> {
 
 main()
   .then(code => {
-    process.exit(code)
+    // `process.exitCode` rather than `process.exit`: stdout writes are async
+    // on a pipe, and the documented usage pipes into jq. `wallet-tokens`
+    // returns `allTokens`, megabytes on an EVM chain, which `process.exit`
+    // truncated at the pipe buffer.
+    //
+    // A command that set its own code keeps it: `subscribe` reports why the
+    // stream ended and still resolves normally, so an unconditional
+    // assignment here would overwrite that with 0.
+    if (code !== EXIT.OK) process.exitCode = code
+    else process.exitCode ??= code
   })
   .catch((error: unknown) => {
     if (error instanceof UsageError) {
@@ -269,8 +278,9 @@ main()
           2
         )
       )
-      process.exit(EXIT.USAGE)
+      process.exitCode = EXIT.USAGE
+      return
     }
     const code = printError(error)
-    process.exit(code)
+    process.exitCode = code
   })

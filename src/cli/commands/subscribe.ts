@@ -68,6 +68,9 @@ const subscribeCmd = command(
     if (interrupted) return
     // The engine ended the stream. Say why, and exit accordingly.
     printJson({ type: 'subscription.ended', data: { reason: closeReason } })
-    process.exit(exitCodeForClose(closeReason))
+    // Not `process.exit`: this command is documented as newline-delimited
+    // JSON for piping, and exiting here discarded whatever stdout had not
+    // flushed — including this final frame.
+    process.exitCode = exitCodeForClose(closeReason)
   }
 )
