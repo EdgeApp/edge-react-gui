@@ -20,6 +20,26 @@ export function printJson(value: unknown): void {
 }
 
 /**
+ * Bearer values that must not reach a terminal, a shell history or a CI log.
+ *
+ * `resetToken` starts a 2FA reset on the account and `voucherAuth` authorises
+ * acting on a pending voucher. Both ride in the OTP_REQUIRED details so that a
+ * program can pass them to `request-otp-reset` or `approve-voucher`, which
+ * read them from the REST body — the terminal has no use for either.
+ */
+const SECRET_DETAIL_FIELDS = ['resetToken', 'voucherAuth']
+
+function redactDetails(
+  details: Record<string, unknown>
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...details }
+  for (const field of SECRET_DETAIL_FIELDS) {
+    if (out[field] != null) out[field] = '[redacted: read it from the REST body]'
+  }
+  return out
+}
+
+/**
  * Always emit a single JSON object on stderr for machine-readable errors.
  * No prose banners (e.g. CAPTCHA hints).
  */
@@ -30,7 +50,9 @@ export function printError(error: unknown): number {
         code: error.code,
         message: error.message,
         status: error.status,
-        ...(error.details != null ? { details: error.details } : {})
+        ...(error.details != null
+          ? { details: redactDetails(error.details) }
+          : {})
       }
     }
     console.error(JSON.stringify(body, null, 2))
