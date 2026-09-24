@@ -68,6 +68,30 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
   }
 }
 
+/**
+ * Claim the profile by creating the run file exclusively.
+ *
+ * `wx` fails when the file already exists, so two engines racing from cold
+ * cannot both believe they own the profile. The socket path is deterministic
+ * from the profile, so it can be recorded before anything is bound; the real
+ * `tcpPort` follows in the full `writeRunFile` once the listeners are up.
+ *
+ * Returns false when another engine won the race.
+ */
+export function claimRunFile(profile: string, data: EngineRunFile): boolean {
+  ensureRunDir(profile)
+  try {
+    fs.writeFileSync(runFilePath(profile), JSON.stringify(data, null, 2) + '\n', {
+      mode: 0o600,
+      flag: 'wx'
+    })
+    return true
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'EEXIST') return false
+    throw error
+  }
+}
+
 export function readRunFile(profile: string): EngineRunFile | null {
   try {
     const text = fs.readFileSync(runFilePath(profile), 'utf8')
