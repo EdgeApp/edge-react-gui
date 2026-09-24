@@ -40,6 +40,7 @@ async function handleRequest(
   res: ServerResponse
 ): Promise<void> {
   state.idle.touch()
+  state.idle.beginRequest()
 
   try {
     if (state.shuttingDown) {
@@ -132,6 +133,8 @@ async function handleRequest(
     if (res.writableEnded) return
     const { status, body } = toErrorBody(error)
     sendJson(res, status, body)
+  } finally {
+    state.idle.endRequest()
   }
 }
 
