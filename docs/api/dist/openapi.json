@@ -8613,7 +8613,7 @@
                   },
                   "multiplier": {
                     "type": "string",
-                    "description": "Native units per whole coin. Defaults per plugin."
+                    "description": "Native units per whole coin. Required: the engine cannot derive it here, and will not guess."
                   },
                   "date": {
                     "type": "string",
