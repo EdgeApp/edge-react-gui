@@ -409,6 +409,7 @@
         "OBJECT_EXPIRED",
         "OBJECT_KIND_MISMATCH",
         "OBJECT_SESSION_MISMATCH",
+        "OBJECT_IN_USE",
         "INSUFFICIENT_FUNDS",
         "NETWORK_ERROR"
       ]
