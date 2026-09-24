@@ -12,7 +12,7 @@ import { base64 } from 'rfc4648'
 import { saveTxAndMetadata } from '../../../util/txTagging'
 import { doc } from '../doc'
 import { engineError } from '../errors'
-import type { ObjectHandleInfo } from '../objectHandles'
+import type { HandleRecord, ObjectHandleInfo } from '../objectHandles'
 import { findWallet, parseTokenId } from '../resolve'
 import { route } from '../route'
 import type { RouteContext } from '../router'
@@ -191,6 +191,7 @@ function stagedTx(
   objectId: string
   wallet: EdgeCurrencyWallet
   transaction: EdgeTransaction
+  record: HandleRecord<EdgeTransaction>
 } {
   const record = ctx.state.objects.get<EdgeTransaction>(objectId, 'transaction')
   if (record.sessionId != null && record.sessionId !== ctx.params.sessionId) {
@@ -210,7 +211,8 @@ function stagedTx(
   return {
     objectId,
     wallet: findWallet(getAccount(ctx), record.walletId),
-    transaction: record.value
+    transaction: record.value,
+    record
   }
 }
 
@@ -498,9 +500,13 @@ export const signTx = route({
     const {
       objectId,
       wallet,
-      transaction: unsigned
+      transaction: unsigned,
+      record
     } = stagedTx(ctx, ctx.body.objectId)
-    const transaction = await wallet.signTx(unsigned)
+    const transaction = await ctx.state.objects.hold(
+      record,
+      async () => await wallet.signTx(unsigned)
+    )
     return txHandleResponse(ctx, objectId, transaction)
   }
 })
@@ -531,9 +537,13 @@ export const broadcastTx = route({
     const {
       objectId,
       wallet,
-      transaction: signed
+      transaction: signed,
+      record
     } = stagedTx(ctx, ctx.body.objectId)
-    const transaction = await wallet.broadcastTx(signed)
+    const transaction = await ctx.state.objects.hold(
+      record,
+      async () => await wallet.broadcastTx(signed)
+    )
     return txHandleResponse(ctx, objectId, transaction)
   }
 })
