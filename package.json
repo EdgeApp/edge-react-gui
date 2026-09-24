@@ -92,7 +92,17 @@
     "*.{js,jsx,ts,tsx}": "eslint"
   },
   "overrides": {
-    "bip39": "3.0.4"
+    "@hashgraph/sdk": {
+      "@grpc/proto-loader": {
+        "protobufjs": "7.6.3"
+      },
+      "@hiero-ledger/proto": {
+        "protobufjs": "7.6.3"
+      },
+      "protobufjs": "8.6.6"
+    },
+    "bip39": "3.0.4",
+    "protobufjs": "7.6.3"
   },
   "dependencies": {
     "@brigad/react-native-adservices": "^0.1.3",
