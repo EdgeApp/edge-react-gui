@@ -142,10 +142,13 @@ export function mergePluginInit(
 ): unknown {
   if (configValue === false) return false
   // Keys are never an off switch: only config.json can disable a plugin. A
-  // remote/cache overlay that says `false`, or hands back `{}`, contributes
-  // nothing and leaves the config-side value exactly as it was. `deepMerge`
-  // applies the same rule one level down.
-  if (keysValue === false || keysValue === null || isEmptyObject(keysValue)) {
+  // keys-side `false` or `null` contributes nothing and leaves the config-side
+  // value exactly as it was. A keys-side `{}` is a real value, the plugin's
+  // (empty) init options: with `true` it becomes the init ("enabled with
+  // defaults"), and merged into a config object it changes nothing. A `{}` from
+  // a remote or cache overlay never reaches here as a value of its own:
+  // `mergeKeysOverlay` already treats it as having no opinion.
+  if (keysValue === false || keysValue === null) {
     return configValue
   }
   if (configValue === true) {
