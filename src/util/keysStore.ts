@@ -24,6 +24,7 @@ import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
 import { fetchRemoteKeys } from './keysServer'
 import { fetchPublicRollup, infoServerData } from './network'
+import { raceTimeout, TIMED_OUT } from './raceTimeout'
 import { runOnce } from './runOnce'
 import { getOsVersion } from './utils'
 import { checkAppVersion } from './versionCheck'
@@ -278,26 +279,19 @@ async function cacheKeys(result: FetchedKeys): Promise<void> {
  * `COLD_TOTAL_TIMEOUT_MS`, then falls through to the baked-in file.
  */
 async function doInitializeKeys(): Promise<void> {
-  let settingsTimer: ReturnType<typeof setTimeout> | undefined
-  const settingsTimeout = new Promise<'timeout'>(resolve => {
-    settingsTimer = setTimeout(() => {
-      resolve('timeout')
-    }, SETTINGS_READ_TIMEOUT_MS)
-  })
   const settingsLoad = awaitDeviceSettingsDisk().catch((error: unknown) => {
     console.warn(
       'initializeKeys: awaitDeviceSettingsDisk failed',
       String(error)
     )
   })
-  const settingsResult = await Promise.race([
-    // Writers-only init settles on timeout; warm-cache / salvage still need the
-    // disk apply, so race the full disk wait against the boot budget.
-    settingsLoad.then(() => 'ok' as const),
-    settingsTimeout
-  ])
-  if (settingsTimer != null) clearTimeout(settingsTimer)
-  if (settingsResult === 'timeout') {
+  // Writers-only init settles on timeout; warm-cache / salvage still need the
+  // disk apply, so race the full disk wait against the boot budget.
+  const settingsResult = await raceTimeout(
+    settingsLoad,
+    SETTINGS_READ_TIMEOUT_MS
+  )
+  if (settingsResult === TIMED_OUT) {
     console.warn(
       `initializeKeys: DeviceSettings disk timed out after ${SETTINGS_READ_TIMEOUT_MS}ms`
     )
@@ -317,26 +311,15 @@ async function doInitializeKeys(): Promise<void> {
     return
   }
 
-  let timer: ReturnType<typeof setTimeout> | undefined
-  const timeout = new Promise<null>(resolve => {
-    timer = setTimeout(() => {
-      resolve(null)
-    }, COLD_TOTAL_TIMEOUT_MS)
-  })
   // Held outside the race so a fetch that answers after the gate closes can
   // still be observed and cached, rather than being ignored once boot proceeds.
   const pendingFetch = fetchKeys()
-  let result: FetchedKeys | null
-  try {
-    // Only the fetch is raced. Folding the cache write in would let a slow disk
-    // discard keys we already hold, and the write is not worth blocking boot
-    // for: losing it costs one refetch on the next launch.
-    result = await Promise.race([pendingFetch, timeout])
-  } finally {
-    // The race can settle long before the timer does, and a pending timer keeps
-    // the runtime awake for the rest of the window.
-    if (timer != null) clearTimeout(timer)
-  }
+  // Only the fetch is raced. Folding the cache write in would let a slow disk
+  // discard keys we already hold, and the write is not worth blocking boot
+  // for: losing it costs one refetch on the next launch. A timeout reads the
+  // same as a fetch that got nothing.
+  const raced = await raceTimeout(pendingFetch, COLD_TOTAL_TIMEOUT_MS)
+  const result: FetchedKeys | null = raced === TIMED_OUT ? null : raced
 
   const applyCacheFallback = async (
     pending?: Promise<FetchedKeys | null>
@@ -345,20 +328,7 @@ async function doInitializeKeys(): Promise<void> {
     // from boot start left zero budget when the network failed quickly after
     // the initial settings timeout, so a slightly slower disk never got a
     // chance to deliver keysCache.
-    let salvageTimer: ReturnType<typeof setTimeout> | undefined
-    const salvageTimeout = new Promise<'timeout'>(resolve => {
-      salvageTimer = setTimeout(() => {
-        resolve('timeout')
-      }, SETTINGS_SALVAGE_TIMEOUT_MS)
-    })
-    try {
-      await Promise.race([
-        settingsLoad.then(() => 'ok' as const),
-        salvageTimeout
-      ])
-    } finally {
-      if (salvageTimer != null) clearTimeout(salvageTimer)
-    }
+    await raceTimeout(settingsLoad, SETTINGS_SALVAGE_TIMEOUT_MS)
     cache = getKeysCache()
     if (cache?.keys == null) return false
     if (!applyKeys(cache.keys)) return false
@@ -443,14 +413,7 @@ function logTier(assuranceLevel?: string): void {
  */
 function cacheForNextLaunch(pending?: Promise<FetchedKeys | null>): void {
   const promise = pending ?? fetchKeys()
-  let timer: ReturnType<typeof setTimeout> | undefined
-  const TIMED_OUT = 'timedOut' as const
-  const timeout = new Promise<typeof TIMED_OUT>(resolve => {
-    timer = setTimeout(() => {
-      resolve(TIMED_OUT)
-    }, BACKGROUND_CACHE_TIMEOUT_MS)
-  })
-  Promise.race([promise, timeout])
+  raceTimeout(promise, BACKGROUND_CACHE_TIMEOUT_MS)
     .then(async result => {
       if (result === TIMED_OUT) {
         console.warn(
@@ -473,9 +436,6 @@ function cacheForNextLaunch(pending?: Promise<FetchedKeys | null>): void {
     })
     .catch((error: unknown) => {
       console.warn('initializeKeys: background refresh failed', String(error))
-    })
-    .finally(() => {
-      if (timer != null) clearTimeout(timer)
     })
 }
 

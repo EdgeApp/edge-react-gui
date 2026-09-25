@@ -409,6 +409,98 @@ describe('initializeKeys', () => {
     await expect(keysStore.initializeKeys()).resolves.toBeUndefined()
   })
 
+  it('salvages a cache the settings read delivers after its timeout', async () => {
+    jest.useFakeTimers()
+    // The settings read overruns SETTINGS_READ_TIMEOUT_MS (2000) but lands
+    // inside the salvage window that follows a fast network failure:
+    let diskLanded = false
+    mockAwaitDeviceSettingsDisk.mockImplementation(async () => {
+      await new Promise(resolve => setTimeout(resolve, 3000))
+      diskLanded = true
+    })
+    mockGetKeysCache.mockImplementation(() =>
+      diskLanded
+        ? {
+            keys: { globalKeys: { AZTECO_API_KEY: 'late-cache' } },
+            fetchedAt: 1,
+            assuranceLevel: 'unattested'
+          }
+        : undefined
+    )
+    mockFetchRemoteKeys.mockRejectedValue(new Error('offline'))
+
+    const { keysStore, keys } = freshModules()
+    const pending = keysStore.initializeKeys()
+    await jest.advanceTimersByTimeAsync(3000)
+    await pending
+
+    expect(keysStore.getKeysTier()).toBe('cache')
+    expect(keys.globalKeys.AZTECO_API_KEY).toBe('late-cache')
+  })
+
+  it('stops waiting on a settings read that never lands', async () => {
+    jest.useFakeTimers()
+    mockAwaitDeviceSettingsDisk.mockImplementation(async () => {
+      await new Promise<void>(() => {})
+    })
+    mockFetchRemoteKeys.mockRejectedValue(new Error('offline'))
+
+    const { keysStore } = freshModules()
+    const pending = keysStore.initializeKeys()
+    // SETTINGS_READ_TIMEOUT_MS, then SETTINGS_SALVAGE_TIMEOUT_MS:
+    await jest.advanceTimersByTimeAsync(2000 + 2000)
+    await pending
+
+    expect(keysStore.getKeysTier()).toBe('baked-in')
+  })
+
+  it('times out a hung background refresh but still caches a late answer', async () => {
+    jest.useFakeTimers()
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    mockGetKeysCache.mockReturnValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'from-cache' } },
+      fetchedAt: 1,
+      assuranceLevel: 'unattested'
+    })
+    let resolveFetch!: (value: {
+      keys: Record<string, unknown>
+      assuranceLevel?: string
+    }) => void
+    mockFetchRemoteKeys.mockImplementation(
+      async () =>
+        await new Promise(resolve => {
+          resolveFetch = resolve
+        })
+    )
+
+    try {
+      const { keysStore } = freshModules()
+      await keysStore.initializeKeys()
+      expect(keysStore.getKeysTier()).toBe('cache')
+
+      // BACKGROUND_CACHE_TIMEOUT_MS = COLD_TOTAL_TIMEOUT_MS = 13000
+      await jest.advanceTimersByTimeAsync(13_000)
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('background refresh timed out')
+      )
+      expect(mockWriteKeysCache).not.toHaveBeenCalled()
+
+      resolveFetch({
+        keys: { globalKeys: { AZTECO_API_KEY: 'late-refresh' } },
+        assuranceLevel: 'unattested'
+      })
+      await flushMicrotasks()
+      await flushMicrotasks()
+      expect(mockWriteKeysCache).toHaveBeenCalledWith(
+        expect.objectContaining({
+          keys: { globalKeys: { AZTECO_API_KEY: 'late-refresh' } }
+        })
+      )
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
   it('falls to baked-in on cold deadline expiry and still caches a late fetch', async () => {
     jest.useFakeTimers()
 
