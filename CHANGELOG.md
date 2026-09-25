@@ -18,6 +18,7 @@
 - changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
 - changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
 - fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+- fixed: A swap retried after a failure fetches a fresh quote instead of failing with a "closed proxy" error
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
 - fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools

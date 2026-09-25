@@ -29,6 +29,7 @@ import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { logActivity } from '../../util/logger'
+import { getSwapErrorCategory } from '../../util/swapErrorCategory'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -287,9 +288,14 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       } = selectedQuote
       // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
       const { toWallet, toTokenId, fromWallet, fromTokenId } = request
+      const swapAttempt = {
+        swapProviderId: pluginId,
+        sourcePluginId: fromWallet.currencyInfo.pluginId,
+        destPluginId: toWallet.currencyInfo.pluginId
+      }
 
       try {
-        dispatch(logEvent('Exchange_Shift_Start'))
+        dispatch(logEvent('Exchange_Shift_Start', swapAttempt))
         const result: EdgeSwapResult = await selectedQuote.approve()
 
         logActivity(`Swap Exchange Executed: ${account.username}`)
@@ -355,8 +361,17 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         // over the success scene that is already open. The ramp flow drops
         // its own count update the same way.
         dispatch(updateSwapCount()).catch(() => {})
-      } catch (error: any) {
-        dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
+      } catch (error: unknown) {
+        dispatch(
+          logEvent('Exchange_Shift_Failed', {
+            ...swapAttempt,
+            error: String(error),
+            errorCategory: getSwapErrorCategory(
+              error,
+              isQuoteExpired(selectedQuote)
+            )
+          })
+        )
         setTimeout(() => {
           showError(error)
         }, 1)
