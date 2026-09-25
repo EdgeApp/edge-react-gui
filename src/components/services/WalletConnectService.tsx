@@ -17,7 +17,7 @@ import {
   walletConnectClient
 } from '../../hooks/useWalletConnect'
 import { globalKeys } from '../../keys'
-import { asLegacyTokenId } from '../../types/types'
+import { asEdgeTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
@@ -251,7 +251,8 @@ export const WalletConnectService: React.FC<Props> = props => {
 const payloadAmounts = asObject({
   nativeAmount: asString,
   networkFee: asString,
-  tokenId: asLegacyTokenId
+  // Some chains' payload parsers omit tokenId for the native asset.
+  tokenId: asOptional(asEdgeTokenId, null)
 })
 const asSessionRequest = asObject({
   id: asNumber,
