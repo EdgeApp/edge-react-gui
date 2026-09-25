@@ -984,6 +984,7 @@
   "quote_selected_quote": "Selected Quote",
   "quote_swap_provider": "Select Swap Provider",
   "quote_variable_quotes": "Variable Quotes",
+  "quote_requote_toast": "This quote is no longer valid. Getting a new one.",
   "can_be_partial_quote_title": "Partial Quote",
   "can_be_partial_quote_message": "This quote may be partially fulfilled.",
   "can_be_partial_quote_with_max_body": "This swap will create an order to exchange funds at the quoted rate but might only fulfill a portion of your order.\n\nThe order will stay open for %s minutes after which funds that have not been swapped will remain in your source wallet or be returned.",
