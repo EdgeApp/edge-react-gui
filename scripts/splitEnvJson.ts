@@ -60,6 +60,7 @@ export const CURRENCY_INIT_MAP: Record<string, string> = {
   POLKADOT_INIT: 'polkadot',
   POLYGON_INIT: 'polygon',
   PULSECHAIN_INIT: 'pulsechain',
+  ROBINHOOD_INIT: 'robinhood',
   RSK_INIT: 'rsk',
   SEPOLIA_INIT: 'sepolia',
   SOLANA_INIT: 'solana',
