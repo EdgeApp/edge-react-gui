@@ -42,12 +42,7 @@ import { lstrings } from '../../locales/strings'
 import { addMetadataToContext } from '../../util/addMetadataToContext'
 import { onAttestationToken } from '../../util/attestation'
 import { allPlugins } from '../../util/corePlugins'
-import {
-  hasNativeApiSigner,
-  isUsableApiKey,
-  makeNativeApiSigner,
-  warmNativeApiKey
-} from '../../util/edgeApiSigner'
+import { getNativeApiSigner, isUsableApiKey } from '../../util/edgeApiSigner'
 import { fakeUser } from '../../util/fake-user'
 import { initializeKeys } from '../../util/keysStore'
 import {
@@ -124,8 +119,7 @@ const crashReporter: EdgeCrashReporter = {
 
 async function buildContextOptions(): Promise<EdgeContextOptions> {
   const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: apiSecret } = KEYS
-  const nativeKey = hasNativeApiSigner() ? await warmNativeApiKey() : ''
-  const nativeApiSigner = nativeKey !== '' ? makeNativeApiSigner() : undefined
+  const nativeApiSigner = await getNativeApiSigner()
   // A key with no secret is still worth sending: core falls back to the legacy
   // `Token {apiKey}` header, which the login server accepts for `type: token`
   // rows. Dropping it would silently downgrade that partner to core's built-in
@@ -219,15 +213,6 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     },
     [],
     'EdgeCoreManager'
-  )
-
-  // Cache the public API key from native for push / notification callers:
-  useAsyncEffect(
-    async () => {
-      if (hasNativeApiSigner()) await warmNativeApiKey()
-    },
-    [],
-    'EdgeCoreManager.warmNativeApiKey'
   )
 
   // Keep the core in sync with the application state:
