@@ -21,6 +21,8 @@
 - changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
 - changed: Split runtime `env.json` into non-secret `config.json` and secret `keys.json`; deploy-config branch overrides move from `envJson` to `configJson`/`keysJson` (legacy `envJson` is ignored on this GUI)
 - changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+- fixed: A swap retried after a failure fetches a fresh quote instead of failing with a "closed proxy" error
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
 - fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
 - fixed: USDC.e shown as USDC in the Optimism Tarot staking pools

@@ -1,4 +1,5 @@
 import { captureException, withScope } from '@sentry/react-native'
+import type { EdgeTokenId } from 'edge-core-js'
 import type {
   TrackingEventName as LoginTrackingEventName,
   TrackingValues as LoginTrackingValues
@@ -16,6 +17,7 @@ import { addMetadataToContext } from './addMetadataToContext'
 import type { CryptoAmount } from './CryptoAmount'
 import { fetchReferral } from './network'
 import { AggregateErrorFix, normalizeError } from './normalizeError'
+import type { SwapErrorCategory } from './swapErrorCategory'
 import { makeErrorLog } from './translateError'
 import { consify, monthsBetween } from './utils'
 
@@ -155,6 +157,14 @@ export interface TrackingValues extends LoginTrackingValues {
   surveyResponse2?: string // User's answer to a survey
   appleAdsKeywordId?: string // Apple Search Ads attribution keyword ID
   campaignId?: string // Marketing push campaign identifier (notification opens)
+
+  // Swap attempt details (Exchange_Shift_Start / Exchange_Shift_Failed)
+  swapProviderId?: string // Swap plugin that provided the quote
+  sourcePluginId?: string // Currency plugin of the wallet being swapped from
+  sourceTokenId?: EdgeTokenId // Token being swapped from (null for the native asset)
+  destPluginId?: string // Currency plugin of the wallet being swapped to
+  destTokenId?: EdgeTokenId // Token being swapped to (null for the native asset)
+  errorCategory?: SwapErrorCategory // Coarse bucket for a failed approval
 
   // Conversion values
   conversionValues?:

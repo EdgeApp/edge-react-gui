@@ -40,6 +40,7 @@ import {
   fakeSwapTabSceneProps
 } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import * as tracking from '../../util/tracking'
 
 jest.useRealTimers()
 
@@ -254,6 +255,36 @@ describe('SwapConfirmationScene', () => {
 
       unmount()
       expect(quote.close).toHaveBeenCalledTimes(1)
+    })
+
+    it('logs the source and dest tokenIds on a failed approval', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const logEvent = jest
+        .spyOn(tracking, 'logEvent')
+        .mockImplementation(() => () => undefined)
+      const approve = jest.fn(async () => {
+        throw new Error('Broadcast failed')
+      })
+      const quote = makeQuote(approve)
+      quote.request.fromTokenId = null
+      quote.request.toTokenId = null
+      const { slide, unmount } = renderScene(quote)
+
+      await slide()
+      const swapAttempt = {
+        swapProviderId: 'bitcoin',
+        sourcePluginId: 'bitcoin',
+        sourceTokenId: null,
+        destPluginId: 'ethereum',
+        destTokenId: null
+      }
+      expect(logEvent).toHaveBeenCalledWith('Exchange_Shift_Start', swapAttempt)
+      expect(logEvent).toHaveBeenCalledWith(
+        'Exchange_Shift_Failed',
+        expect.objectContaining(swapAttempt)
+      )
+
+      unmount()
     })
 
     it('requotes an expired quote without approving it', async () => {
