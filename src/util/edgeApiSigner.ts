@@ -55,9 +55,20 @@ export function hasNativeApiSigner(): boolean {
  * and must take the same unsigned startup path as a build with no signer.
  */
 export async function willSignInfoRollup(): Promise<boolean> {
-  if (hasNativeApiSigner() && (await warmNativeApiKey()) !== '') return true
+  if ((await getNativeApiSigner()) != null) return true
   const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
   return isUsableApiKey(apiKey) && secret != null && secret.byteLength > 0
+}
+
+/**
+ * The native signer, when this build links one and it holds a usable key; the
+ * one place that decides whether native signing is available. A linked module
+ * alone is not enough: a stub build embeds a placeholder key, which
+ * `getNativeApiKey` reads back as ''. Warms the key cache as a side effect.
+ */
+export async function getNativeApiSigner(): Promise<EdgeApiSigner | undefined> {
+  if (!hasNativeApiSigner()) return undefined
+  return (await warmNativeApiKey()) !== '' ? makeNativeApiSigner() : undefined
 }
 
 /**

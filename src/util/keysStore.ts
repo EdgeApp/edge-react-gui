@@ -22,12 +22,7 @@ import { pluginMaps, rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
 import { getAttestationToken } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
-import {
-  hasNativeApiSigner,
-  isUsableApiKey,
-  makeNativeApiSigner,
-  warmNativeApiKey
-} from './edgeApiSigner'
+import { getNativeApiSigner, isUsableApiKey } from './edgeApiSigner'
 import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
 import { fetchPublicRollup, infoServerData } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
@@ -222,13 +217,9 @@ async function fetchKeys(): Promise<FetchedKeys | null> {
  * failure mode here simply means falling through to the next tier.
  */
 async function fetchKeysInner(): Promise<FetchedKeys | null> {
-  let credentials: FetchCredentials | null = null
-  if (hasNativeApiSigner()) {
-    const nativeKey = await warmNativeApiKey()
-    if (nativeKey !== '') {
-      credentials = { apiSigner: makeNativeApiSigner() }
-    }
-  }
+  const nativeApiSigner = await getNativeApiSigner()
+  let credentials: FetchCredentials | null =
+    nativeApiSigner != null ? { apiSigner: nativeApiSigner } : null
   if (credentials == null) {
     const { EDGE_API_KEY: apiKey, EDGE_API_SECRET: secret } = KEYS
     if (isUsableApiKey(apiKey) && secret != null && secret.byteLength > 0) {
