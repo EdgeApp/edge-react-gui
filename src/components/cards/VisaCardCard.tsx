@@ -3,8 +3,8 @@ import * as React from 'react'
 import FastImage from 'react-native-fast-image'
 
 import { executePluginAction } from '../../actions/PluginActions'
+import { CONFIG } from '../../config'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors'
@@ -24,7 +24,7 @@ import { EdgeCard } from './EdgeCard'
 export const IONIA_SUPPORTED_FIATS = ['USD']
 
 export const ioniaPluginIds = Object.keys(SPECIAL_CURRENCY_INFO).filter(
-  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards
+  pluginId => SPECIAL_CURRENCY_INFO[pluginId].displayIoniaRewards === true
 )
 
 interface Props {
@@ -33,7 +33,7 @@ interface Props {
   navigation: WalletsTabSceneProps<'walletDetails'>['navigation']
 }
 
-export const VisaCardCard = (props: Props) => {
+export const VisaCardCard = (props: Props): React.ReactElement | null => {
   const { wallet, tokenId, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -43,7 +43,7 @@ export const VisaCardCard = (props: Props) => {
     dispatch(logEvent('Visa_Card_Launch'))
     dispatch(
       executePluginAction(navigation as NavigationBase, 'rewardscard', 'sell')
-    ).catch(err => {
+    ).catch((err: unknown) => {
       showError(err)
     })
   })
@@ -53,7 +53,7 @@ export const VisaCardCard = (props: Props) => {
     return null
   }
 
-  if (!ENV.ENABLE_VISA_PROGRAM) return null
+  if (!CONFIG.ENABLE_VISA_PROGRAM) return null
 
   const { pluginId } = wallet.currencyInfo
   const icon = getCurrencyIconUris(pluginId, tokenId)

@@ -2,7 +2,7 @@ import { asEither, type Cleaner, uncleaner } from 'cleaners'
 import { navigateDisklet } from 'disklet'
 import type { EdgeAccount } from 'edge-core-js'
 
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useSelector } from '../../types/reactRedux'
 import { filterUndefined } from '../../util/safeFilters'
 import type { LoanProgramEdge, LoanProgramType } from '../loan-manager/store'
@@ -16,7 +16,7 @@ import type {
 import { checkEffectIsDone } from './util/checkEffectIsDone'
 import { makeInitialProgramState } from './util/makeInitialProgramState'
 
-const { debugStore } = ENV.ACTION_QUEUE
+const { debugStore } = CONFIG.ACTION_QUEUE
 
 export const ACTION_QUEUE_DATASTORE_ID = 'actionQueue'
 
@@ -43,7 +43,7 @@ export const makeActionQueueStore = (
     path: string,
     data: unknown,
     cleaner: Cleaner<any>
-  ) {
+  ): Promise<void> {
     try {
       const uncleanData = uncleaner(cleaner)(data)
       const serializedData = JSON.stringify(uncleanData)
@@ -81,7 +81,7 @@ export const makeActionQueueStore = (
       )
 
       // Only add the mockMode field if environment is configured with the flag enabled
-      if (ENV.ACTION_QUEUE.mockMode) program.mockMode = true
+      if (CONFIG.ACTION_QUEUE.mockMode) program.mockMode = true
 
       // Save to disk
       await Promise.all([
@@ -127,7 +127,7 @@ export const makeActionQueueStore = (
       )
       const promises = programIds.map(
         async programId =>
-          await instance.getActionQueueItem(programId).catch(err => {
+          await instance.getActionQueueItem(programId).catch((err: unknown) => {
             // Silently fail on reads
             console.error(`Failed to get ActionQueueItem for '${programId}'`, {
               err

@@ -246,7 +246,8 @@ jest.mock('react-native-device-info', () => {
     getDeviceType: jest.fn(),
     hasNotch: jest.fn(),
     getBuildNumber: jest.fn(),
-    getVersion: jest.fn()
+    getVersion: jest.fn(() => '1.2.3'),
+    getSystemVersion: jest.fn(() => '18.0.0')
   }
 })
 
