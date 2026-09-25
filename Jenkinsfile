@@ -25,9 +25,7 @@ xcodebuild -exportArchive \
   -exportOptionsPlist /tmp/edge-mac-export/ExportOptions.plist \
   > /tmp/edge-mac-export/jenkins-export.log 2>&1
 mkdir -p "$WORKSPACE/mac-export"
-find /tmp/edge-mac-export/output-jenkins -maxdepth 1 -name '*.ipa' \
-  -exec cp {} "$WORKSPACE/mac-export/" \;
-test -n "$(find "$WORKSPACE/mac-export" -maxdepth 1 -name '*.ipa' -print -quit)"
+cp /tmp/edge-mac-export/output-jenkins/*.ipa "$WORKSPACE/mac-export/"
 '''
         archiveArtifacts artifacts: 'mac-export/*.ipa', fingerprint: true
       }
