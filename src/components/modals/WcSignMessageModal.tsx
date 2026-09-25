@@ -26,6 +26,8 @@ interface Props {
   dAppIcon: string
   dAppName: string
   message: string
+  /** The bip122 signing protocol the dapp asked for. */
+  protocol: 'ecdsa' | 'bip322'
   /** The address the session advertised, which is the one the dapp verifies
    * the signature against. */
   publicAddress: string
@@ -47,6 +49,7 @@ export const WcSignMessageModal: React.FC<Props> = props => {
     dAppIcon,
     dAppName,
     message,
+    protocol,
     publicAddress,
     requestId,
     topic,
@@ -70,12 +73,14 @@ export const WcSignMessageModal: React.FC<Props> = props => {
     try {
       // `signMessage` signs the literal UTF-8 message, which is what the dapp
       // verifies. `signBytes` would base64-re-encode first and sign the wrong
-      // data. BIP137 encodes the signing address' script type in the header
-      // byte, which SegWit verifiers require and which collapses to the legacy
-      // encoding for non-SegWit addresses.
+      // data. For `ecdsa`, BIP137 encodes the signing address' script type in
+      // the header byte, which SegWit verifiers require and which collapses to
+      // the legacy encoding for non-SegWit addresses. `bip322` is the BIP-322
+      // simple signature, a witness stack rather than a recoverable signature.
+      const signatureFormat = protocol === 'bip322' ? 'bip322' : 'bip137'
       // eslint-disable-next-line @typescript-eslint/no-deprecated
       const signatureBase64 = await wallet.signMessage(message, {
-        otherParams: { publicAddress, signatureFormat: 'bip137' }
+        otherParams: { publicAddress, signatureFormat }
       })
       await walletConnect.approveRequest(topic, requestId, {
         address: publicAddress,
