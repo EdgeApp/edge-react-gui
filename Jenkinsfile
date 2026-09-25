@@ -1,176 +1,36 @@
-def global = [:]
-
-def preBuildStages(String stageName, versionFile) {
-  stage("${stageName}: preBuildStages") {
-    echo "Running on ${env.NODE_NAME}"
-    deleteDir()
-    checkout scm
-
-    def versionString = "${versionFile.branch} ${versionFile.version} (${versionFile.build})"
-    echo "versionString: ${versionString}"
-    writeJSON file: './release-version.json', json: versionFile
-    currentBuild.description = versionString
-
-    sh 'npm ci'
-
-    // Import the settings files
-    withCredentials([file(credentialsId: 'githubSshKey', variable: 'id_github')]) {
-        sh "cp ${id_github} ./id_github"
-    }
-
-    sh "node -r sucrase/register ./scripts/secretFiles.ts ${BRANCH_NAME} ${SECRET_FILES}"
-    sh "node -r sucrase/register ./scripts/patchFiles.ts edge ${BRANCH_NAME}"
-
-    // Pick the new build number and version from git:
-    sh 'node -r sucrase/register ./scripts/updateVersion.ts'
-
-    sh 'npm run prepare'
-  }
-}
-
-def preTest(String stageName) {
-  stage("${stageName}: preTest") {
-    sh 'npm test -- --ci'
-  }
-}
-
-def buildProduction(String stageName) {
-  stage("Build ${stageName}") {
-    echo "Running on ${env.NODE_NAME}"
-    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'test-cheddar', 'test-feta', 'test-gouda', 'test-halloumi', 'test-paneer', 'test-kraft', 'test-colby', 'test-string', 'test-parm', 'test-swiss', 'test', 'testMaestro', 'yolo']) {
-      if (stageName == 'ios' && params.IOS_BUILD) {
-        sh 'npm run prepare.ios'
-        sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME}"
-      }
-      if (stageName == 'android' && params.ANDROID_BUILD) {
-        sh "node -r sucrase/register ./scripts/deploy.ts edge android ${BRANCH_NAME}"
-      }
-    }
-  }
-}
-
-def buildMaestro(String stageName) {
-  stage("Build Maestro ${stageName}") {
-    if (env.BRANCH_NAME in ['develop', 'staging', 'master', 'beta', 'testMaestro']) {
-      if (stageName == 'ios' && params.IOS_BUILD_MAESTRO) {
-        echo "Running on ${env.NODE_NAME}"
-        sh 'npm run prepare.ios'
-        sh "node -r sucrase/register ./scripts/deploy.ts edge ios ${BRANCH_NAME} maestro"
-      }
-      if (stageName == 'android' && params.ANDROID_BUILD_MAESTRO) {
-        echo "Running on ${env.NODE_NAME}"
-        sh "node -r sucrase/register ./scripts/deploy.ts edge android ${BRANCH_NAME} maestro"
-      }
-    }
-  }
-}
-
 pipeline {
-  agent none
+  agent { label 'koolaid' }
 
-  tools {
-    jdk '17'
-    nodejs '22'
-  }
   options {
     timestamps()
     skipDefaultCheckout true
-    overrideIndexTriggers true
-    buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10')
     disableConcurrentBuilds()
-  }
-  parameters {
-    booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
-    booleanParam(name: 'ANDROID_BUILD_MAESTRO', defaultValue: true, description: 'Build an Android Maestro version')
-    booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
-    booleanParam(name: 'IOS_BUILD_MAESTRO', defaultValue: true, description: 'Build an iOS simulator Maestro version')
-    booleanParam(name: 'VERBOSE', defaultValue: false, description: 'Complete build log output')
-  }
-  environment {
-    LC_CTYPE = 'en_US.UTF-8'
-    DISABLE_XCPRETTY = "${params.VERBOSE}"
   }
 
   stages {
-    stage('Preparation') {
-      agent { label 'ios-build || android-build' }
+    stage('Export Edge Develop for Mac') {
       steps {
-        script {
-          echo "Running on ${env.NODE_NAME}"
-          deleteDir()
-          checkout scm
-
-          // Import the settings files
-          withCredentials([file(credentialsId: 'githubSshKey', variable: 'id_github')]) {
-            sh "cp ${id_github} ./id_github"
-          }
-
-          // Install Sucrase so gitVersionFile.ts can run before the full npm ci below
-          sh 'npm install --save-dev sucrase'
-          sh "node -r sucrase/register ./scripts/gitVersionFile.ts ${BRANCH_NAME}"
-
-          def versionFile = readJSON file: './release-version.json'
-          global.versionFile = versionFile
-          echo "Created version file: ${global.versionFile.branch} ${global.versionFile.version} (${global.versionFile.build})"
-        }
+        sh '''#!/bin/bash
+set -euo pipefail
+set +x
+if [ -z "${KEYCHAIN_PASSWORD:-}" ]; then
+  echo 'Missing Jenkins keychain credential'
+  exit 1
+fi
+security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$HOME/Library/Keychains/login.keychain"
+security set-keychain-settings -l "$HOME/Library/Keychains/login.keychain"
+xcodebuild -exportArchive \
+  -archivePath /tmp/edge-mac-export/source.xcarchive \
+  -exportPath /tmp/edge-mac-export/output-jenkins \
+  -exportOptionsPlist /tmp/edge-mac-export/ExportOptions.plist \
+  > /tmp/edge-mac-export/jenkins-export.log 2>&1
+mkdir -p "$WORKSPACE/mac-export"
+find /tmp/edge-mac-export/output-jenkins -maxdepth 1 -name '*.ipa' \
+  -exec cp {} "$WORKSPACE/mac-export/" \;
+test -n "$(find "$WORKSPACE/mac-export" -maxdepth 1 -name '*.ipa' -print -quit)"
+'''
+        archiveArtifacts artifacts: 'mac-export/*.ipa', fingerprint: true
       }
-    }
-
-    stage('Parallel Stage') {
-      parallel {
-        stage('IOS Build') {
-          agent { label 'ios-build' }
-          steps {
-            script {
-              preBuildStages('IOS', global.versionFile)
-              preTest('IOS')
-              buildProduction('ios')
-            }
-          }
-        }
-        stage('IOS Maestro Build') {
-          agent { label 'ios-build-sim' }
-          steps {
-            script {
-              preBuildStages('IOS Maestro', global.versionFile)
-              preTest('IOS Maestro')
-              buildMaestro('ios')
-            }
-          }
-        }
-        stage('Android Build') {
-          agent { label 'android-build' }
-          steps {
-            script {
-              preBuildStages('Android', global.versionFile)
-              preTest('Android')
-              buildProduction('android')
-            }
-          }
-        }
-        stage('Android Maestro Build') {
-          agent { label 'android-build' }
-          steps {
-            script {
-              preBuildStages('Android', global.versionFile)
-              preTest('Android')
-              buildMaestro('android')
-            }
-          }
-        }
-      }
-    }
-  }
-
-  post {
-    success {
-      echo 'The force is strong with this one'
-    }
-    unstable {
-      echo 'Do or do not there is no try'
-    }
-    failure {
-      echo 'The dark side I sense in you.'
     }
   }
 }
