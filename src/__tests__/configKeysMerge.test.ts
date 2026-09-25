@@ -138,13 +138,19 @@ describe('a keys overlay never destroys a baked value', () => {
     })
   })
 
-  it('mergePluginInit ignores false, null and {} from the keys side', () => {
+  it('mergePluginInit ignores false and null from the keys side', () => {
     expect(mergePluginInit(true, false)).toBe(true)
     expect(mergePluginInit(true, null)).toBe(true)
-    expect(mergePluginInit(true, {})).toBe(true)
     expect(mergePluginInit({ partnerId: 'p' }, false)).toEqual({
       partnerId: 'p'
     })
+  })
+
+  it('keeps a keys-side {} as enabled-with-defaults, not a bare true', () => {
+    // bitsofgold / libertyx (and any ramp written as {}) ship an empty init.
+    // useRampPlugins and initializeProviders skip booleans, so collapsing
+    // that {} to true would silently drop those plugins from buy/sell.
+    expect(mergePluginInit(true, {})).toEqual({})
   })
 
   it('config.json can still disable a plugin', () => {
@@ -278,6 +284,14 @@ describe('resolvePluginMaps', () => {
     expect(maps.swapPlugins.thorchain).toBe(true)
     expect(maps.guiApiKeys.banxa).toBe(true)
     expect(maps.rampPlugins.infinite).toBeUndefined()
+  })
+
+  it('keeps an empty keys object for ramps enabled with defaults', () => {
+    const config = { rampPlugins: { bitsofgold: true, libertyx: true } }
+    const keys = { rampPlugins: { bitsofgold: {}, libertyx: {} } }
+    const maps = resolvePluginMaps(config as any, keys)
+    expect(maps.rampPlugins.bitsofgold).toEqual({})
+    expect(maps.rampPlugins.libertyx).toEqual({})
   })
 
   it('uses keys alone when config omits the plugin id', () => {
