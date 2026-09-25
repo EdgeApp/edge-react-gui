@@ -138,13 +138,23 @@ describe('a keys overlay never destroys a baked value', () => {
     })
   })
 
-  it('mergePluginInit ignores false, null and {} from the keys side', () => {
+  it('mergePluginInit ignores false and null from the keys side', () => {
     expect(mergePluginInit(true, false)).toBe(true)
     expect(mergePluginInit(true, null)).toBe(true)
-    expect(mergePluginInit(true, {})).toBe(true)
     expect(mergePluginInit({ partnerId: 'p' }, false)).toEqual({
       partnerId: 'p'
     })
+  })
+
+  it('mergePluginInit treats a keys-side {} as an empty init', () => {
+    // `true` + `{}` is "enabled with defaults", which splitEnvJson writes for
+    // plugins whose options are all optional. A bare `true` would be skipped by
+    // every ramp and provider loader.
+    expect(mergePluginInit(true, {})).toEqual({})
+    // Merged into an existing object, `{}` changes nothing:
+    expect(mergePluginInit({ partnerId: 'p' }, {})).toEqual({ partnerId: 'p' })
+    // And it still cannot enable a plugin that config.json disabled:
+    expect(mergePluginInit(false, {})).toBe(false)
   })
 
   it('config.json can still disable a plugin', () => {
@@ -278,6 +288,28 @@ describe('resolvePluginMaps', () => {
     expect(maps.swapPlugins.thorchain).toBe(true)
     expect(maps.guiApiKeys.banxa).toBe(true)
     expect(maps.rampPlugins.infinite).toBeUndefined()
+  })
+
+  it('keeps a ramp plugin enabled with defaults when keys hold {}', () => {
+    const config = { rampPlugins: { bitsofgold: true, libertyx: true } }
+    const keys = { rampPlugins: { bitsofgold: {}, libertyx: {} } }
+    const maps = resolvePluginMaps(config as any, keys)
+    expect(maps.rampPlugins.bitsofgold).toEqual({})
+    expect(maps.rampPlugins.libertyx).toEqual({})
+  })
+
+  it('still drops a plugin a remote layer withholds with {}', () => {
+    // info-tester's lowest layer answers `simplex: {}` to mean "not for this
+    // key". The overlay treats that as no opinion, so with nothing baked the
+    // plugin stays a bare `true`, which the loaders skip, rather than becoming
+    // an empty init its options cleaner would reject.
+    const baked = { rampPlugins: { banxa: { apiKey: 'b' } } }
+    const overlay = { rampPlugins: { simplex: {}, banxa: {} } }
+    const merged = mergeKeysOverlay(baked, overlay) as Record<string, unknown>
+    const config = { rampPlugins: { simplex: true, banxa: true } }
+    const maps = resolvePluginMaps(config as any, merged)
+    expect(maps.rampPlugins.simplex).toBe(true)
+    expect(maps.rampPlugins.banxa).toEqual({ apiKey: 'b' })
   })
 
   it('uses keys alone when config omits the plugin id', () => {
