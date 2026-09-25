@@ -732,6 +732,7 @@ export const pluginIdIcons: Record<string, string> = {
   swapkit: EDGE_CONTENT_SERVER_URI + '/swapkit.png',
   tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
+  wizardswap: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/wizardswap/icon.png',
   xgram: EDGE_CONTENT_SERVER_URI + '/xgram.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }

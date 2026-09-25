@@ -440,6 +440,13 @@ export const asEnvConfig = asObject({
       apiKey: asOptional(asString, '')
     }).withRest
   ),
+  WIZARDSWAP_INIT: asCorePluginInit(
+    asObject({
+      // Optional. WizardSwap uses the key only to credit an affiliate, so the
+      // plugin quotes and orders without one.
+      apiKey: asOptional(asString)
+    }).withRest
+  ),
   XGRAM_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, '')

@@ -11,6 +11,7 @@
 - added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
 - added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
 - added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
+- added: WizardSwap swap provider
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
