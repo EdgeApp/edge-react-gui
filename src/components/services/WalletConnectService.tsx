@@ -3,7 +3,14 @@ import '@walletconnect/react-native-compat'
 import { Core } from '@walletconnect/core'
 import type { SessionTypes } from '@walletconnect/types'
 import Web3Wallet, { type Web3WalletTypes } from '@walletconnect/web3wallet'
-import { asNumber, asObject, asOptional, asString, asUnknown } from 'cleaners'
+import {
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asUnknown,
+  asValue
+} from 'cleaners'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
@@ -17,7 +24,7 @@ import {
   waitingClients,
   walletConnectClient
 } from '../../hooks/useWalletConnect'
-import { asLegacyTokenId } from '../../types/types'
+import { asEdgeTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
@@ -69,16 +76,20 @@ export const WalletConnectService: React.FC<Props> = props => {
         return
       }
       case 'signMessage': {
-        const { account: requestedAccount, message } =
-          asBip122SignMessageParams(payload.params)
+        const {
+          account: requestedAccount,
+          address: requestedAddress,
+          message,
+          protocol
+        } = asBip122SignMessageParams(payload.params)
         // A dapp may name the account it wants signed for, as the bare address
         // or as the CAIP-10 account the session gave it. Edge holds one
         // address per session, so anything else is unservable.
-        if (
-          requestedAccount != null &&
-          requestedAccount !== publicAddress &&
-          requestedAccount !== sessionAccount
-        ) {
+        const isServable = (requested: string | undefined): boolean =>
+          requested == null ||
+          requested === publicAddress ||
+          requested === sessionAccount
+        if (!isServable(requestedAccount) || !isServable(requestedAddress)) {
           await walletConnect.rejectRequest(topic, requestId)
           return
         }
@@ -93,6 +104,7 @@ export const WalletConnectService: React.FC<Props> = props => {
             dAppIcon={dAppIcon}
             dAppName={session.peer.metadata.name}
             message={message}
+            protocol={protocol}
             publicAddress={publicAddress}
             requestId={requestId}
             topic={topic}
@@ -253,7 +265,8 @@ export const WalletConnectService: React.FC<Props> = props => {
 const payloadAmounts = asObject({
   nativeAmount: asString,
   networkFee: asString,
-  tokenId: asLegacyTokenId
+  // Some chains' payload parsers omit tokenId for the native asset.
+  tokenId: asOptional(asEdgeTokenId, null)
 })
 const asSessionRequest = asObject({
   id: asNumber,
@@ -269,5 +282,8 @@ const asBip122Payload = asObject({
 })
 const asBip122SignMessageParams = asObject({
   message: asString,
-  account: asOptional(asString)
+  account: asOptional(asString),
+  address: asOptional(asString),
+  // The bip122 spec defaults to ECDSA when the dapp names no protocol.
+  protocol: asOptional(asValue<['ecdsa', 'bip322']>('ecdsa', 'bip322'), 'ecdsa')
 })
