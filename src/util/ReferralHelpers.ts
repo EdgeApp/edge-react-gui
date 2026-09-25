@@ -99,9 +99,13 @@ export function bestOfPlugins(
   for (const promo of accountReferral.promotions) {
     const fromPromo = summarizePlugins(promo.plugins, now)
     out = mergePluginSummaries(out, fromPromo)
+    // This promotion is the source when it names the swap plugin that won.
+    // The second test keeps a promotion with no swap preference from claiming
+    // the source when nothing else has one either, since undefined equals
+    // undefined:
     if (
       out.preferredSwapPluginId === fromPromo.preferredSwapPluginId &&
-      fromPromo.preferredFiatPluginId != null
+      fromPromo.preferredSwapPluginId != null
     ) {
       swapSource = { type: 'promotion', installerId: promo.installerId }
     }
