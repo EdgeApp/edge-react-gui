@@ -90,7 +90,7 @@ function reportMissingPlugins(account: EdgeAccount): void {
   showError(
     new Error(
       sprintf(
-        lstrings.plugins_unavailable_message_s,
+        lstrings.plugins_unavailable_message_1s,
         missingPluginIds.join(', ')
       )
     )
