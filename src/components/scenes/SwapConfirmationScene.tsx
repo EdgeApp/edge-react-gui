@@ -108,7 +108,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const [selectedQuote, setSelectedQuote] = useState(() =>
     pickBestQuoteWithPreference(quotes, swapRequestOptions)
   )
-  const [calledApprove, setCalledApprove] = useState(false)
+  // Quotes this scene has handed to `approve`. Each one is closed once its
+  // attempt finishes, so none of them can be approved a second time:
+  const approvedQuotes = React.useRef(new Set<EdgeSwapQuote>())
 
   const { request } = selectedQuote
   const { quoteFor } = request
@@ -194,13 +196,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   )
   const showFeeWarning = gt(feeFiat, '0.01') && gte(feePercent, '0.05')
 
-  const handleExchangeTimerExpired = useHandler(() => {
-    if (!isFocused) return
-    if (termsCheckPending.current) {
-      timerExpiredDuringTerms.current = true
-      return
-    }
-
+  const requote = useHandler(() => {
     navigation.replace('swapProcessing', {
       swapRequest: selectedQuote.request,
       swapRequestOptions,
@@ -215,6 +211,16 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         })
       }
     })
+  })
+
+  const handleExchangeTimerExpired = useHandler(() => {
+    // An approval in flight owns the quote until it finishes:
+    if (!isFocused || pending) return
+    if (termsCheckPending.current) {
+      timerExpiredDuringTerms.current = true
+      return
+    }
+    requote()
   })
 
   useMount(() => {
@@ -238,16 +244,27 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       })
   })
 
-  // Close the quote if the component unmounts
+  // Close the selected quote if the component unmounts before approving it
   useUnmount(() => {
-    if (!calledApprove)
+    if (!approvedQuotes.current.has(selectedQuote))
       selectedQuote.close().catch((err: unknown) => {
         showError(err)
       })
   })
 
   const handleSlideComplete = async (reset: () => void): Promise<void> => {
-    setCalledApprove(true)
+    // A retry after a failed approval, a return from the success scene, or a
+    // slide after the timer expired while the scene was unfocused all land
+    // on a quote that cannot be approved, so fetch fresh quotes instead:
+    if (
+      approvedQuotes.current.has(selectedQuote) ||
+      isQuoteExpired(selectedQuote)
+    ) {
+      reset()
+      requote()
+      return
+    }
+    approvedQuotes.current.add(selectedQuote)
     setPending(true)
 
     try {
@@ -668,6 +685,9 @@ const getSwapInfo = (
     return swapInfo
   }
 }
+
+const isQuoteExpired = (quote: EdgeSwapQuote): boolean =>
+  quote.expirationDate != null && quote.expirationDate.valueOf() <= Date.now()
 
 const getBetterQuoteRate = (
   quoteA: EdgeSwapQuote,
