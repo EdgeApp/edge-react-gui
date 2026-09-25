@@ -90,6 +90,36 @@ describe('patchDeviceSettings', () => {
     expect(file.keysCache?.assuranceLevel).toBe('default')
   })
 
+  it('boots on defaults when the read hangs, then applies the late read', async () => {
+    jest.useFakeTimers()
+    try {
+      mockFiles[FILENAME] = JSON.stringify({
+        themeMode: 'light',
+        defaultScreen: 'assets'
+      })
+      let openGate: () => void = () => {}
+      mockReadGate = new Promise<void>(resolve => {
+        openGate = resolve
+      })
+
+      const { initDeviceSettings, getDeviceSettings, awaitDeviceSettingsDisk } =
+        freshModule()
+      const loaded = initDeviceSettings()
+      await jest.advanceTimersByTimeAsync(2000)
+      await loaded
+      // The read timed out, so boot proceeds on the cleaner's defaults:
+      expect(getDeviceSettings().defaultScreen).not.toBe('assets')
+
+      openGate()
+      await awaitDeviceSettingsDisk()
+      // ...and the late read still lands underneath:
+      expect(getDeviceSettings().defaultScreen).toBe('assets')
+      expect(getDeviceSettings().themeMode).toBe('light')
+    } finally {
+      jest.useRealTimers()
+    }
+  })
+
   it('preserves on-disk fields when write runs without initDeviceSettings first', async () => {
     mockFiles[FILENAME] = JSON.stringify({
       themeMode: 'light',

@@ -7,6 +7,7 @@ import {
   type DeviceSettings,
   type ThemeMode
 } from '../types/types'
+import { raceTimeout, TIMED_OUT } from '../util/raceTimeout'
 
 const disklet = makeReactNativeDisklet()
 const DEVICE_SETTINGS_FILENAME = 'DeviceSettings.json'
@@ -66,12 +67,6 @@ const enqueuePersist = (): void => {
  */
 export const initDeviceSettings = async (): Promise<void> => {
   initPromise ??= (async () => {
-    let timer: ReturnType<typeof setTimeout> | undefined
-    const timeout = new Promise<'timeout'>(resolve => {
-      timer = setTimeout(() => {
-        resolve('timeout')
-      }, INIT_READ_TIMEOUT_MS)
-    })
     const read = readDeviceSettings()
     diskLoadPromise = read
       .then(settings => {
@@ -84,21 +79,14 @@ export const initDeviceSettings = async (): Promise<void> => {
         console.warn('initDeviceSettings: disk read failed', String(error))
         deviceSettings = { ...asDeviceSettings({}), ...writtenFields }
       })
-    try {
-      const raced = await Promise.race([
-        diskLoadPromise.then(() => 'ok' as const),
-        timeout
-      ])
-      if (raced === 'timeout') {
-        console.warn(
-          `initDeviceSettings: read timed out after ${INIT_READ_TIMEOUT_MS}ms`
-        )
-        readTimedOut = true
-        // Unblock writers; diskLoadPromise still carries the late apply.
-        deviceSettings = { ...asDeviceSettings({}), ...writtenFields }
-      }
-    } finally {
-      if (timer != null) clearTimeout(timer)
+    const raced = await raceTimeout(diskLoadPromise, INIT_READ_TIMEOUT_MS)
+    if (raced === TIMED_OUT) {
+      console.warn(
+        `initDeviceSettings: read timed out after ${INIT_READ_TIMEOUT_MS}ms`
+      )
+      readTimedOut = true
+      // Unblock writers; diskLoadPromise still carries the late apply.
+      deviceSettings = { ...asDeviceSettings({}), ...writtenFields }
     }
   })()
   await initPromise
@@ -194,17 +182,7 @@ const patchDeviceSettings = async (
     // does not persist cleaner defaults over themeMode / defaultScreen / etc.
     // Bound the wait so a hung getText cannot wedge writeChain forever.
     if (diskLoadPromise != null) {
-      let waitTimer: ReturnType<typeof setTimeout> | undefined
-      const waitTimeout = new Promise<'timeout'>(resolve => {
-        waitTimer = setTimeout(() => {
-          resolve('timeout')
-        }, WRITE_DISK_WAIT_MS)
-      })
-      try {
-        await Promise.race([diskLoadPromise, waitTimeout])
-      } finally {
-        if (waitTimer != null) clearTimeout(waitTimer)
-      }
+      await raceTimeout(diskLoadPromise, WRITE_DISK_WAIT_MS)
     }
     // Serialized here rather than when the patch was applied, so the file
     // always receives the newest in-memory state: whichever write runs last
