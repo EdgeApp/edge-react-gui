@@ -109,6 +109,7 @@ export const swapPlugins = {
   godex: ENV.GODEX_INIT,
   lifi: ENV.LIFI_INIT,
   letsexchange: ENV.LETSEXCHANGE_INIT,
+  mptrade: ENV.MPTRADE_INIT,
   nexchange: ENV.NEXCHANGE_INIT,
   sideshift: ENV.SIDESHIFT_INIT,
   swapter: ENV.SWAPTER_INIT,
@@ -124,6 +125,9 @@ export const swapPlugins = {
   thorchain: ENV.THORCHAIN_INIT,
   swapkit: ENV.SWAPKIT_INIT,
   swapkitv3: ENV.SWAPKITV3_INIT,
+  // Same provider and credentials as `mptrade`; this registration is the
+  // DEX-classified half, whose route set is Solana-to-Solana today.
+  mptradedefi: ENV.MPTRADE_INIT,
   tombSwap: ENV.TOMB_SWAP_INIT,
   unizen: false,
   velodrome: true,

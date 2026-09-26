@@ -371,6 +371,11 @@ export const asEnvConfig = asObject({
       edgeApiKey: asOptional(asString, '')
     }).withRest
   ),
+  MPTRADE_INIT: asCorePluginInit(
+    asObject({
+      apiKey: asOptional(asString, '')
+    }).withRest
+  ),
   NEXCHANGE_INIT: asCorePluginInit(
     asObject({
       apiKey: asOptional(asString, ''),
