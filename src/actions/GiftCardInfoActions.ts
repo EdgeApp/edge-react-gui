@@ -28,17 +28,7 @@ export type GiftCardInfo = ReturnType<typeof asGiftCardInfo>
 export function updateGiftCardInfo(): ThunkAction<Promise<void>> {
   return async dispatch => {
     try {
-      // Read `giftCardInfo` from the RAW rollup, not the cleaned one:
-      // `asInfoRollup` in edge-info-server 3.12.0 has no such key and drops it,
-      // so the cleaned rollup reports every provider enabled no matter what the
-      // info server serves. 3.13.0 does define the field, but it also exports an
-      // attestation module that pulls `jose`'s node build, which Metro cannot
-      // resolve, so the bump is blocked. This cleaner is ours, so parsing the
-      // raw payload here needs neither.
-      const rollup = infoServerData.rollupRaw as
-        | { giftCardInfo?: unknown }
-        | undefined
-      const data = asGiftCardInfo(rollup?.giftCardInfo ?? {})
+      const data = asGiftCardInfo(infoServerData.rollup?.giftCardInfo ?? {})
       dispatch({ type: 'UPDATE_GIFT_CARD_INFO', data })
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : String(e)
