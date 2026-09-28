@@ -28,6 +28,7 @@
 - fixed: Password reminder no longer stops reappearing after unlocking Account Settings
 - fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
 - fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
+- fixed: (iOS) Debug builds crashing on text-input measurement when entering an amount on the Buy scene
 
 ## 4.51.1 (2026-09-23)
 
