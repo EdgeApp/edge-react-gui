@@ -143,9 +143,8 @@ export const revolutProvider: FiatProviderFactory = {
               throw new Error('No wallet address found')
             }
 
-            const successReturnURL = encodeURIComponent(
+            const successReturnURL =
               'https://return.edge.app/fiatprovider/buy/revolut?transactionStatus=success'
-            )
 
             const orderId = await io.makeUuid()
 
