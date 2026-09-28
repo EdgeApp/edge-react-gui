@@ -32,12 +32,11 @@ tags:
 - assertVisible: "Thanks for using Edge!"
 - assertVisible: "Knowledge Base"
 - assertVisible: "Live Chat"
-- assertVisible: "Submit a Support Ticket"
 - assertVisible: "Call for Assistance"
 - assertVisible: "Visit Official Site"
 - tapOn: "Knowledge Base"
 - extendedWaitUntil:
-    visible: "Edge Help Center home page"
+    visible: ".*Troubleshooting for Edge related issues.*"
     timeout: 15000
 - assertVisible:
     id: "chevronBack"
@@ -48,18 +47,13 @@ tags:
 - tapOn: "Live Chat"
 # Ensure it opens to correct page AND chat is open
 - assertVisible: ".*support\\.edge\\.app.*" 
-- assertVisible: "Options menu"
+- assertVisible: ".*Need Help\\? Reach Out via Our Chat Bubble!.*"
+# Call button opens in phone app
 - launchApp:
     stopApp: false
 - extendedWaitUntil:
-    visible: "Submit a Support Ticket"
+    visible: "Call for Assistance"
     timeout: 15000
-- tapOn: "Submit a Support Ticket"
-- assertVisible: "Submit a Request"
-- tapOn:
-    id: "chevronBack"
-# Call button opens in phone app
-- tapOn: "Help"
 - tapOn: "Call for Assistance"
 # Optional for iOS simulator (unable to open phone app)
 - extendedWaitUntil:
@@ -78,4 +72,3 @@ tags:
     id: "chevronBack"
 
 - stopApp
-

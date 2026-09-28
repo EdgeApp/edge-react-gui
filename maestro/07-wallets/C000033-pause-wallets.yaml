@@ -29,14 +29,14 @@ tags:
     label: "Import BCH wallet"
 # Find new wallet
 - scrollUntilVisible:
-    element: ${WALLET_NAME}
+    element: ${".*" + WALLET_NAME}
     centerElement: true
     direction: "DOWN"
 # Ensure synced to show balance
 - extendedWaitUntil: 
     visible: ${BALANCE}
     timeout: 20000
-- longPressOn: ${WALLET_NAME}
+- longPressOn: ${".*" + WALLET_NAME}
 
 # Test pause wallet
 - tapOn:
@@ -47,12 +47,12 @@ tags:
       platform: iOS
     commands:
       - assertVisible: "This wallet will no longer synchronize with the blockchain and will not detect new transactions or balance changes"
-- assertVisible: "Wallet Paused"
+- assertVisible: ".*Wallet Paused"
 
 # Wait an arbitrary amount of time to ensure state is saved
 # TODO: Reduce wait period if possible
 - extendedWaitUntil:
-    notVisible: "Wallet Paused"
+    notVisible: ".*Wallet Paused"
     timeout: 45000
     optional: true # Expected to fail
     label: "⏰ Waiting 45 seconds to ensure account state is saved"
@@ -71,10 +71,10 @@ tags:
 # Wait an arbitrary amount of time to ensure wallet is paused and does not sync to show balance
 - tapOn: Assets
 - scrollUntilVisible:
-    element: ${WALLET_NAME}
+    element: ".*Wallet Paused"
     centerElement: true
     direction: "DOWN"
-- assertVisible: "Wallet Paused"
+- assertVisible: ${".*" + WALLET_NAME + ".*Wallet Paused"}
 - extendedWaitUntil:
     visible: ${BALANCE}
     timeout: 10000
@@ -83,7 +83,7 @@ tags:
 - assertNotVisible: ${BALANCE}
 
 # Wallet should sync once you tap into it
-- tapOn: ${WALLET_NAME}
+- tapOn: ".*Wallet Paused"
 - extendedWaitUntil:
     visible: ${BALANCE}
     timeout: 15000
@@ -97,6 +97,6 @@ tags:
     optional: true # Disappears too quick for Android
 - tapOn:
     id: "chevronBack"
-- assertNotVisible: "Wallet Paused"
+- assertNotVisible: ".*Wallet Paused"
 
 - stopApp

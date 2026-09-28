@@ -22,9 +22,9 @@ tags:
 
 - tapOn: "Assets"
 - extendedWaitUntil:
-    visible: My Bitcoin
+    visible: ".*My Bitcoin"
     timeout: 15000
-- tapOn: My Bitcoin
+- tapOn: ".*My Bitcoin"
 - extendedWaitUntil:
     visible: 0.00003462 BTC
     timeout: 15000
@@ -68,4 +68,3 @@ tags:
 - assertVisible: "Bitcoin Network"
 
 - stopApp
-

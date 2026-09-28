@@ -8,8 +8,8 @@ appId: ${MAESTRO_APP_ID}
 env:
     ASSET_NAMES: ${ASSET_NAMES || ""}
 ---
-# Parse if an array/list- all passed env become strings with maestro's Rhino JS runtime
-- evalScript: ${if (ASSET_NAMES.startsWith('[')) ASSET_NAMES = JSON.parse(ASSET_NAMES); else ASSET_NAMES = [ASSET_NAMES]}
+# Parse if an array/list; all passed env values become strings
+- evalScript: ${if (ASSET_NAMES.startsWith('[')) output.ASSET_NAMES = JSON.parse(ASSET_NAMES); else output.ASSET_NAMES = [ASSET_NAMES]}
 
 - tapOn: Assets
 - tapOn:
@@ -17,17 +17,17 @@ env:
 - tapOn: Search Wallets
 
 # Loop over wallet names and add them
-- evalScript: ${var index = 0}
+- evalScript: ${output.index = 0}
 - repeat:
-    times: ${ASSET_NAMES.length}
+    times: ${output.ASSET_NAMES.length}
     commands:
       - tapOn:
           id: "undefined.clearIcon"
-      - inputText: ${ASSET_NAMES[index]}
+      - inputText: ${output.ASSET_NAMES[output.index]}
       - tapOn:
-          text: ${".*" + ASSET_NAMES[index]}
+          text: ${".*" + output.ASSET_NAMES[output.index]}
           index: 1 # First index is thesearch bar
-      - evalScript: ${index++}
+      - evalScript: ${output.index++}
 
 - tapOn: Next
 
