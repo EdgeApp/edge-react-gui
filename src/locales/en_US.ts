@@ -1676,8 +1676,6 @@ const strings = {
     'Stealth Send and cross-asset recipients are not available when sending to multiple recipients.',
   stealth_route_unavailable_toast:
     'Private routing is not available for this pair right now. Stealth Send has been turned off.',
-  stealth_swap_route_unavailable_toast:
-    'Private routing is not available for this pair right now. Stealth Swap has been turned off.',
   stealth_route_unavailable_info:
     'Private routing is not available for this pair right now.',
   stealth_self_private_unsupported_1s:

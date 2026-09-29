@@ -146,7 +146,9 @@ describe('SwapConfirmationScene', () => {
           {...fakeSwapTabSceneProps('swapConfirmation', {
             quotes: [quote],
             selectedQuote: quote,
-            onApprove: () => undefined
+            onApprove: () => undefined,
+            swapRequest: quote.request,
+            swapRequestOptions: {}
           })}
         />
       </FakeProviders>
