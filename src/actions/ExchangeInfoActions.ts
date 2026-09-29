@@ -8,6 +8,7 @@ import {
   asValue,
   type Cleaner
 } from 'cleaners'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import type { ThunkAction } from '../types/reduxTypes'
 import { infoServerData } from '../util/network'
@@ -64,6 +65,24 @@ export const asExchangeInfo = asObject({
 
 export type DisableAsset = ReturnType<typeof asDisableAsset>
 export type ExchangeInfo = ReturnType<typeof asExchangeInfo>
+
+/**
+ * True when the asset matches any entry in a disableAssets list.
+ * An entry without a tokenId matches the mainnet coin, whose tokenId is null.
+ */
+export const isAssetDisabled = (
+  disableAssets: DisableAsset[],
+  pluginId: string,
+  tokenId: EdgeTokenId
+): boolean => {
+  for (const disableAsset of disableAssets) {
+    if (disableAsset.pluginId !== pluginId) continue
+    if (disableAsset.tokenId === 'allCoins') return true
+    if (disableAsset.tokenId === 'allTokens' && tokenId != null) return true
+    if ((disableAsset.tokenId ?? null) === tokenId) return true
+  }
+  return false
+}
 
 export function updateExchangeInfo(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
