@@ -17,3 +17,5 @@ env:
 - tapOn: 'Next'
 - waitForAnimationToEnd:
     timeout: 4000
+- runFlow:
+    file: stealth-dismiss-swap-warning.yaml
