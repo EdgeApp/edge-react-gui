@@ -27,7 +27,6 @@ export function calculateQuotePriceImpact(
 ): number | undefined {
   const { request, fromNativeAmount, toNativeAmount } = quote
   const { fromWallet, fromTokenId, toWallet, toTokenId } = request
-  if (toWallet == null) return undefined
 
   const fromExchangeDenom = getExchangeDenom(
     fromWallet.currencyConfig,

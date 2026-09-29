@@ -10,7 +10,6 @@ import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { requireDestinationWallet } from '../../util/stealthSwap'
 import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
@@ -28,10 +27,7 @@ interface Props {
 export const ExchangeQuote: React.FC<Props> = props => {
   const { fromTo, priceImpact, quote, showFeeWarning } = props
   const { request, fromNativeAmount, toNativeAmount, networkFee } = quote
-  const { fromWallet, fromTokenId, toTokenId } = request
-  // A wallet-to-wallet swap quote always carries a destination wallet; only a
-  // swap-to-address request (its own flow) omits it.
-  const toWallet = requireDestinationWallet(request)
+  const { fromWallet, fromTokenId, toWallet, toTokenId } = request
 
   const theme = useTheme()
   const styles = getStyles(theme)
