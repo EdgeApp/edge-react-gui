@@ -25,10 +25,7 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import {
-  makeStealthSwapRequestOptions,
-  requireDestinationWallet
-} from '../../util/stealthSwap'
+import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -74,11 +71,6 @@ export interface SwapCreateParams {
 
   // Display error message in an alert card
   errorDisplayInfo?: SwapErrorDisplayInfo
-
-  // Turn the Stealth Swap toggle off on arrival. The confirmation scene sets
-  // this when a re-quote found the pair has no private route, so the degrade
-  // lands where the toggle actually lives.
-  disableStealth?: boolean
 }
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
@@ -90,8 +82,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
     fromTokenId = null,
     toWalletId,
     toTokenId = null,
-    errorDisplayInfo,
-    disableStealth
+    errorDisplayInfo
   } = route.params ?? {}
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -160,15 +151,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
       dispatch(checkEnabledExchanges())
     })
   }, [dispatch, navigation])
-
-  // A re-quote on the confirmation scene found no private route for the pair
-  // and sent the user back here to retry as a standard swap. Consume the flag
-  // so a later visit does not turn the toggle off again.
-  React.useEffect(() => {
-    if (disableStealth !== true) return
-    setStealth(false)
-    navigation.setParams({ disableStealth: undefined })
-  }, [disableStealth, navigation])
 
   //
   // Callbacks
@@ -249,9 +231,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
   }
 
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
-    // This scene only builds wallet-to-wallet swap requests, which always carry
-    // a destination wallet (swap-to-address has its own flow).
-    const toWallet = requireDestinationWallet(swapRequest)
     if (exchangeInfo != null) {
       const disableSrc = checkDisableAsset(
         exchangeInfo.swap.disableAssets.source,
@@ -271,7 +250,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
       const disableDest = checkDisableAsset(
         exchangeInfo.swap.disableAssets.destination,
-        toWallet.id,
+        swapRequest.toWallet.id,
         toTokenId
       )
       if (disableDest) {
@@ -279,7 +258,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
           sprintf(
             lstrings.swap_token_no_enabled_exchanges_2s,
             toCurrencyCode,
-            toWallet.currencyInfo.displayName
+            swapRequest.toWallet.currencyInfo.displayName
           )
         )
         return
@@ -294,13 +273,15 @@ export const SwapCreateScene: React.FC<Props> = props => {
     // Houdini privacy provider AND demands a private route: restricting the
     // provider alone would still accept that provider's transparent standard
     // routes, which are priced better and would be labelled private here.
+    const quoteRequest: EdgeSwapRequest = stealth
+      ? { ...swapRequest, privacy: 'required' }
+      : swapRequest
+    const quoteRequestOptions = stealth
+      ? makeStealthSwapRequestOptions(account, swapRequestOptions)
+      : swapRequestOptions
     navigation.navigate('swapProcessing', {
-      swapRequest: stealth
-        ? { ...swapRequest, privacy: 'required' }
-        : swapRequest,
-      swapRequestOptions: stealth
-        ? makeStealthSwapRequestOptions(account, swapRequestOptions)
-        : swapRequestOptions,
+      swapRequest: quoteRequest,
+      swapRequestOptions: quoteRequestOptions,
       onCancel: () => {
         navigation.goBack()
       },
@@ -309,27 +290,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
           selectedQuote: quotes[0],
           quotes,
           onApprove: resetState,
-          stealth
+          swapRequest: quoteRequest,
+          swapRequestOptions: quoteRequestOptions
         })
-      },
-      onError: error => {
-        // The provider has no private route for this pair: turn Stealth Swap
-        // off, say why, and bring the user back to their filled-in request so
-        // they can retry as a standard swap. Amount errors keep the generic
-        // handling, since the route exists and the amount is the problem.
-        if (!stealth || asMaybeSwapCurrencyError(error) == null) return false
-        setStealth(false)
-        showToast(lstrings.stealth_swap_route_unavailable_toast)
-        navigation.navigate('swapTab', {
-          screen: 'swapCreate',
-          params: {
-            fromWalletId: swapRequest.fromWallet.id,
-            fromTokenId: swapRequest.fromTokenId,
-            toWalletId: toWallet.id,
-            toTokenId: swapRequest.toTokenId
-          }
-        })
-        return true
       }
     })
   }
