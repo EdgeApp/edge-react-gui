@@ -26,7 +26,7 @@ import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
-import { parsePaymentUri } from '../../util/paymentUri'
+import type { CrossChainPayment } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
@@ -61,15 +61,14 @@ export interface ChangeAddressResult {
    */
   resolvedName?: { name: string; service: NameService }
   /**
-   * Display-units amount carried by a cross-chain payment URI, denominated in
-   * the destination chain's primary asset. The tile has no destination
-   * denomination to convert with, so the consumer converts to native units.
+   * Amount carried by a cross-chain payment URI, in the destination chain's
+   * native units as that chain's own parser read it.
    */
-  crossChainDisplayAmount?: string
+  crossChainNativeAmount?: string
 
   /**
-   * Destination memo carried by a cross-chain payment URI (an XRP `dt`, or a
-   * `memo`, `tag` or `message` parameter). Memo-required payout chains credit
+   * Destination memo carried by a cross-chain payment URI (such as an XRP
+   * `dt`), as the destination chain's parser reported it. Memo-required payout chains credit
    * the recipient by this value, so a scanned exchange deposit code that
    * carries one has to reach the consumer's destination-tag state.
    */
@@ -111,21 +110,14 @@ interface Props {
    */
   recipientNameService?: NameService | null
   /**
-   * Validates an entered address that belongs to a DIFFERENT chain than
-   * `coreWallet`'s (a cross-asset send-to-address destination), bypassing the
-   * wallet's own URI parsing and name-service resolution. Return false to
-   * reject the address.
-   *
-   * `uri` carries what the scanned code said about its own chain: the scheme,
-   * and the EIP-681 `@chainId`. Both are passed because the address alone
-   * cannot settle which chain a code is for: chains that share an address
-   * format validate each other's addresses, and every EVM network writes the
-   * same `ethereum:` scheme, so only the chain id separates them.
+   * Parses entered text as a destination on a DIFFERENT chain than
+   * `coreWallet`'s (a cross-asset send-to-address destination), in place of
+   * the wallet's own URI parsing and name-service resolution. Resolve
+   * undefined to reject the text.
    */
-  crossChainAddressValidation?: (
-    address: string,
-    uri: { scheme?: string; evmChainId?: string }
-  ) => boolean
+  parseCrossChainAddress?: (
+    text: string
+  ) => Promise<CrossChainPayment | undefined>
   /**
    * Last resort for input this tile could not resolve on its own chain (or on
    * the currently-picked destination chain). An address for another chain is
@@ -168,7 +160,7 @@ export const AddressTile2 = React.forwardRef(
       selfTransfer,
       recipientAddress,
       resetSendTransaction,
-      crossChainAddressValidation,
+      parseCrossChainAddress,
       title
     } = props
 
@@ -252,16 +244,11 @@ export const AddressTile2 = React.forwardRef(
         if (address == null || address.trim() === '') return
 
         // A cross-chain destination cannot go through this wallet's URI
-        // parsing or name services. Split payment URIs (scanned QR codes)
-        // generically, then validate against the destination chain's own
-        // rules and pass the address through verbatim.
-        if (crossChainAddressValidation != null) {
-          const { addressCandidates, displayAmount, scheme, evmChainId, memo } =
-            parsePaymentUri(address)
-          const crossChainAddress = addressCandidates.find(candidate =>
-            crossChainAddressValidation(candidate, { scheme, evmChainId })
-          )
-          if (crossChainAddress == null) {
+        // parsing or name services; the consumer parses it on the
+        // destination chain instead.
+        if (parseCrossChainAddress != null) {
+          const payment = await parseCrossChainAddress(address)
+          if (payment == null) {
             // Not valid on the picked destination either. It may still belong
             // to some other chain the consumer can switch to.
             const adopted = await onUnparsedAddress?.(
@@ -275,10 +262,10 @@ export const AddressTile2 = React.forwardRef(
             return
           }
           await onChangeAddress({
-            parsedUri: { publicAddress: crossChainAddress },
+            parsedUri: { publicAddress: payment.publicAddress },
             addressEntryMethod,
-            crossChainDisplayAmount: displayAmount,
-            crossChainMemo: memo
+            crossChainNativeAmount: payment.nativeAmount,
+            crossChainMemo: payment.memo
           })
           return
         }
