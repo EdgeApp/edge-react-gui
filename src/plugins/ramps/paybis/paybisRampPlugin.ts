@@ -1287,7 +1287,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                         depositAddress,
                         destinationTag
                       } = asPaymentDetails(payDetails)
-                      const { pluginId, tokenId } =
+                      const { pluginId: currencyPluginId, tokenId } =
                         PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
 
                       console.log(`Creating Paybis payment`)
@@ -1295,7 +1295,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                       console.log(`  assetId: ${assetId}`)
                       console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
                       console.log(`  network: ${network}`)
-                      console.log(`  pluginId: ${pluginId}`)
+                      console.log(`  pluginId: ${currencyPluginId}`)
                       console.log(`  tokenId: ${tokenId}`)
                       const { multiplier } = getExchangeDenom(
                         coreWallet.currencyConfig,

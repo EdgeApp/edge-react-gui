@@ -454,7 +454,6 @@ export default [
 
       'src/plugins/gui/providers/mtpelerinProvider.ts',
 
-      'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
 
       'src/plugins/gui/util/fetchRevolut.ts',

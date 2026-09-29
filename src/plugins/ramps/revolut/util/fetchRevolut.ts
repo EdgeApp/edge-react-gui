@@ -222,6 +222,8 @@ export interface RevolutRedirectUrlParams {
    * The URL to which to redirect the customer after the purchase – for example,
    * your website.
    * If not provided, the customer is shown transaction result in Revolut Ramp.
+   * Pass the plain URL: this helper encodes it into the query string, and
+   * Revolut appends `&orderId=` to it before redirecting.
    */
   partnerRedirectUrl?: string
 

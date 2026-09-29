@@ -143,9 +143,8 @@ export const revolutProvider: FiatProviderFactory = {
               throw new Error('No wallet address found')
             }
 
-            const successReturnURL = encodeURIComponent(
+            const successReturnURL =
               'https://return.edge.app/fiatprovider/buy/revolut?transactionStatus=success'
-            )
 
             const orderId = await io.makeUuid()
 
@@ -329,7 +328,7 @@ function addRevolutPaymentMethod(
 function addRevolutFiat(
   supportedAssets: ProviderSupportStore,
   fiat: RevolutFiat
-) {
+): void {
   const fiatKey = `iso:${fiat.currency}`
   supportedAssets.add.direction('*').region('*').fiat(fiatKey).payment('*')
   supportedAssets.addFiatInfo(fiatKey, fiat)
@@ -339,7 +338,7 @@ export function processRevolutConfig(
   configData: RevolutConfig,
   getTokenIdFromContract: FiatProviderGetTokenIdFromContract,
   supportedAssets: ProviderSupportStore
-) {
+): void {
   configData.countries.forEach(country => {
     supportedAssets.add.direction('*').region(country).fiat('*').payment('*')
   })
