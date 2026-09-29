@@ -36,6 +36,12 @@ const pluginData: Record<string, TermsUri> = {
     privacyUri: 'https://changelly.com/privacy-policy',
     kycUri: 'https://changelly.com/aml-kyc'
   },
+  cyphergoat: {
+    termsUri: 'https://cyphergoat.com/terms',
+    privacyUri: 'https://cyphergoat.com/privacy'
+    // No kycUri: CypherGoat publishes no KYC policy page. It is an aggregator,
+    // so the KYC exposure comes from whichever exchange the order is routed to.
+  },
   exolix: {
     termsUri: 'https://exolix.com/terms',
     privacyUri: 'https://exolix.com/privacy',
