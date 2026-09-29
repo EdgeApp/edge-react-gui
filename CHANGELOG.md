@@ -21,6 +21,8 @@
 - added: A pasted address from another chain sets up the cross-chain send
 - added: Swap-sends and stealth sends get their own titles in the transaction list and details
 - added: The send scene notes when a swap provider pays the recipient
+- added: MoonPay Trade swap provider
+- added: Per-provider swap asset disables from the info server
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
@@ -47,6 +49,7 @@
 - fixed: Paybis sell Max now quotes the wallet's full spendable amount.
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+- fixed: Info server swap disables for mainnet coins not applying
 - removed: LetsExchange swap provider
 ## 4.51.3 (2026-09-30)
 
