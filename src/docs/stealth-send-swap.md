@@ -11,7 +11,7 @@
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: 0b8bf0bc445d79c881e6174eab8559072b667a02 -->
+<!-- tdd-code-fingerprint: 5732fca2df12f6dd55ae0d2f09703f6845d3728e -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -668,7 +668,7 @@ export const showSwapSendWarningModal = async (
 ): Promise<void> => {
 ```
 
-The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive`. The cluster shows one swap card at a time: an error card (`showErrorCard`, the same test `renderError` uses) hides both swap warnings, and the fixed-to fallback card hides the generic one, since it is the more specific notice and clears on the next amount edit. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about a private swap when Stealth is on.
+The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive`. The cluster shows one swap card at a time: an error card (`showErrorCard`, the same test `renderError` uses) hides both swap warnings, and the fixed-to fallback card hides the generic one, since it is the more specific notice and clears on the next amount edit. The user can still send while the fallback card shows, so its body ends with the swap warning's own text: hiding the generic card must not drop the swap-and-delay notice. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about a private swap when Stealth is on.
 
 ### Shared price impact
 
@@ -1058,6 +1058,7 @@ Not our work, tracked so it is not rediscovered:
 
 - **Sketched:** on the kill-switch frame (Zano disabled, send to an ETH address), the "Swap before send" card stacked above the "Exchange Error" card. Review note: show one card at a time, errors superseding the warning.
 - **Shipped:** `showErrorCard` gates both swap warnings, and the fixed-to fallback card gates the generic one ([Saying that a swap is running](#saying-that-a-swap-is-running)).
+- **Review:** the low self-review found that hiding the generic card behind the fallback card dropped the swap-and-delay notice while the send stayed armed. The fallback card's body now carries that text, keeping one card on screen.
 - **Diverged:** nothing.
 - **Held:** the pre-existing pending-transaction, Nym and scam cards, which keep their own conditions; they are not swap-send cards and behave as on `develop`.
 
