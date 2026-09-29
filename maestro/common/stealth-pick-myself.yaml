@@ -30,3 +30,5 @@ env:
     id: 'walletPickerRow.${DEST_WALLET}.${DEST_CODE}'
 - waitForAnimationToEnd:
     timeout: 4000
+- runFlow:
+    file: stealth-dismiss-swap-warning.yaml

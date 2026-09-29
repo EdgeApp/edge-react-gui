@@ -25,3 +25,5 @@ env:
     id: 'radioListItem_${DEST_CHAIN}'
 - waitForAnimationToEnd:
     timeout: 2500
+- runFlow:
+    file: stealth-dismiss-swap-warning.yaml
