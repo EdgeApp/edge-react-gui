@@ -1,13 +1,14 @@
 import type { EdgeTokenId } from 'edge-core-js'
 
-import { parsePaymentUri } from './paymentUri'
+import { peekPaymentUri } from './paymentUri'
 
 /**
  * A destination chain HoudiniSwap can pay out to, keyed by the Edge currency
- * pluginId. `addressValidation` is Houdini's own per-chain regex, reused for
- * client-side validation of pasted destination addresses. `memoNeeded` chains
- * show a destination-tag row whose value rides `toAddressInfo.toMemos` to the
- * plugin and onward as `destinationTag` on order creation.
+ * pluginId. `addressValidation` is Houdini's own per-chain regex, used only to
+ * prefilter which chain a pasted address could belong to; the chosen chain's
+ * own `parseUri` is what validates it. `memoNeeded` chains
+ * show a destination-tag row whose value rides the send request's `toMemos`
+ * to the plugin and onward as `destinationTag` on order creation.
  */
 export interface HoudiniChain {
   pluginId: string
@@ -393,7 +394,10 @@ export function getHoudiniChain(
   return HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
 }
 
-/** Validate a pasted destination address against the chain's own regex. */
+/**
+ * Whether a pasted address fits the chain's address format. A prefilter for
+ * detection only: the chain's `parseUri` is the validator.
+ */
 export function isValidHoudiniAddress(
   chain: HoudiniChain,
   address: string
@@ -434,7 +438,7 @@ export function detectHoudiniChains(
   }
 ): HoudiniChain[] {
   const { sourcePluginId, sourceTokenId, isSupported } = opts
-  const { addressCandidates, scheme, evmChainId } = parsePaymentUri(text)
+  const { addressCandidates, scheme, evmChainId } = peekPaymentUri(text)
 
   const served = HOUDINI_CHAINS.filter(
     chain =>
@@ -450,8 +454,7 @@ export function detectHoudiniChains(
   // that matches nothing served resolves to nothing rather than falling back to
   // the scheme, since guessing here picks the wrong chain to pay.
   if (evmChainId != null) {
-    const wanted = Number(evmChainId)
-    const named = served.find(chain => chain.evmChainId === wanted)
+    const named = served.find(chain => chain.evmChainId === evmChainId)
     return named != null && matchesAddress(named) ? [named] : []
   }
 
