@@ -59,6 +59,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'abstract',
   'amoy',
   'arbitrum',
+  'arc',
   'avalanche',
   'axelar',
   'base',
@@ -172,7 +173,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monad',
   'wallet:opbnb',
   'wallet:nym',
-  'wallet:robinhood'
+  'wallet:robinhood',
+  'wallet:arc'
 ]
 
 export interface WalletSettingOption {
@@ -596,6 +598,17 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '4663'
+    }
+  },
+  arc: {
+    initWalletName: lstrings.string_first_arc_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    showChainIcon: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '5042'
     }
   },
   filecoin: {

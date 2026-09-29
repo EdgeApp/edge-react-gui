@@ -7,6 +7,7 @@ const accountbasedPlugins: EdgeCorePluginsInit = {
   algorand: ENV.ALGORAND_INIT,
   amoy: ENV.AMOY_INIT,
   arbitrum: ENV.ARBITRUM_INIT,
+  arc: ENV.ARC_INIT,
   avalanche: ENV.AVALANCHE_INIT,
   axelar: ENV.AXELAR_INIT,
   base: ENV.BASE_INIT,
