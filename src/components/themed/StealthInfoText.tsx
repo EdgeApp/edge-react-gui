@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { STEALTH_LEARN_MORE_URI } from '../../constants/stealthConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { STEALTH_LEARN_MORE_URI } from '../../util/stealthSwap'
 import { openBrowserUri } from '../../util/WebUtils'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
