@@ -11,7 +11,7 @@
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: 0b8bf0bc445d79c881e6174eab8559072b667a02 -->
+<!-- tdd-code-fingerprint: d2bd53247192b9a7902101ef93af71238fc8ee8b -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
