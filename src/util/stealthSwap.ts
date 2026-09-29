@@ -1,18 +1,13 @@
 import type {
   EdgeAccount,
   EdgePluginMap,
-  EdgeSwapRequestOptions,
-  EdgeTransaction
+  EdgeSwapRequestOptions
 } from 'edge-core-js'
 
 /**
- * The swap provider that powers both Stealth flows.
- *
- * It is named once because two rules depend on it: the request restriction
- * that keeps a stealth quote on this provider alone, and the
- * transaction-details redaction that must fail CLOSED when the flow stamp did
- * not persist. A provider-routed swap is privacy-routed by construction, so
- * the pluginId is the durable half of that test.
+ * The swap provider that powers both Stealth flows, and every send-to-address
+ * quote with them. Named once so the request restriction below and the send
+ * scene's terms modal agree on it.
  */
 export const STEALTH_SWAP_PLUGIN_ID = 'houdini'
 
@@ -53,22 +48,4 @@ export function makeStealthSwapRequestOptions(
     preferPluginId: undefined,
     preferType: undefined
   }
-}
-
-/**
- * Whether a broadcast swap-send also produced a parent-currency network-fee
- * row. A token send pays its fee in the chain's own coin, so the swap plugin
- * files a second action under `tokenId: null` alongside the token's.
- *
- * This mirrors the condition `makeSwapPluginQuote` writes that row under, and
- * exists so the caller stamps a row the plugin really created rather than
- * inventing a parent-currency entry for a mainnet send that has none. The
- * plugin reads the deprecated `parentNetworkFee`, whose upgraded form is a
- * `tokenId: null` entry in `networkFees` beside the token's own.
- */
-export function hasParentFeeRow(tx: EdgeTransaction): boolean {
-  return (
-    tx.tokenId != null &&
-    tx.networkFees.some(networkFee => networkFee.tokenId == null)
-  )
 }

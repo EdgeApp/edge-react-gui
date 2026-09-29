@@ -1,10 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
-import type { EdgeAccount, EdgeTransaction } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
-import {
-  hasParentFeeRow,
-  makeStealthSwapRequestOptions
-} from '../../util/stealthSwap'
+import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
 
 // Only `swapConfig`'s key set is read, to find the plugins to switch off:
 const fakeAccount = (swapPluginIds: string[]): EdgeAccount => {
@@ -86,33 +83,5 @@ describe('makeStealthSwapRequestOptions', () => {
   it('handles an account with Houdini as its only provider', () => {
     const { disabled } = makeStealthSwapRequestOptions(fakeAccount(['houdini']))
     expect(disabled).toEqual({})
-  })
-})
-
-describe('hasParentFeeRow', () => {
-  const makeTx = (
-    tokenId: string | null,
-    networkFees: Array<{ tokenId: string | null; nativeAmount: string }>
-  ): EdgeTransaction => ({ tokenId, networkFees } as unknown as EdgeTransaction)
-
-  it('reports a token send that paid its fee in the parent coin', () => {
-    const tx = makeTx('abcd', [
-      { tokenId: 'abcd', nativeAmount: '0' },
-      { tokenId: null, nativeAmount: '210000000000000' }
-    ])
-    expect(hasParentFeeRow(tx)).toBe(true)
-  })
-
-  it('reports no fee row for a mainnet send', () => {
-    // A mainnet send's own fee is a `tokenId: null` entry too, so the token
-    // check has to come first. Stamping a `tokenId: null` action here would
-    // invent a parent-currency entry the swap plugin never filed.
-    const tx = makeTx(null, [{ tokenId: null, nativeAmount: '702' }])
-    expect(hasParentFeeRow(tx)).toBe(false)
-  })
-
-  it('reports no fee row for a token send billed in the token itself', () => {
-    const tx = makeTx('abcd', [{ tokenId: 'abcd', nativeAmount: '1000' }])
-    expect(hasParentFeeRow(tx)).toBe(false)
   })
 })
