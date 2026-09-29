@@ -12,10 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
-import {
-  SWAP_SEND_LABEL_MAP,
-  TX_ACTION_LABEL_MAP
-} from '../constants/txActionConstants'
+import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCodeWithAccount } from '../util/CurrencyInfoHelpers'
@@ -337,8 +334,6 @@ export const getTxActionDisplayInfo = (
     tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
 
   let payeeText: string | undefined
-  /** Title wins over any stored metadata name (privacy-bearing titles). */
-  let forceSavedName = false
   let edgeCategory: EdgeCategory
   let direction: 'send' | 'receive'
   let notes: string | undefined
@@ -380,43 +375,15 @@ export const getTxActionDisplayInfo = (
     switch (actionType) {
       case 'swap': {
         iconPluginId = action.swapInfo.pluginId
-        // A token send files its parent-currency fee under the same swap
-        // action as the send itself. That row is the fee, not the send, so it
-        // keeps its own network-fee title while still obeying the privacy rule
-        // below.
-        const isNetworkFeeRow =
-          assetActionType === 'swapNetworkFee' ||
-          assetActionType === 'transferNetworkFee'
-        // A send-shaped swap is titled by the flow the user ran, so the three
-        // are distinguishable in the list. The two private flavors also drop
-        // the recipient from the title; the payout address stays on swapData
-        // for support.
-        if (action.swapType != null) {
-          if (!isNetworkFeeRow) payeeText = SWAP_SEND_LABEL_MAP[action.swapType]
-          // The two private flavors exist to keep the recipient off the
-          // screen, so their title outranks any stored metadata name. A
-          // recipient-style name reaching this transaction by any route would
-          // otherwise win the merge below and display exactly what the flow
-          // is meant to conceal.
-          forceSavedName =
-            action.swapType === 'stealthSend' ||
-            action.swapType === 'stealthSwapSend'
-        }
         switch (assetActionType) {
           case 'transfer': {
-            // A swap-to-address payout has no payout wallet, so there is no
-            // wallet id to compare against and the transfer can only be
-            // outbound from this one.
-            const txSrc =
-              action.payoutWalletId == null ||
-              action.payoutWalletId !== wallet.id
+            const txSrc = action.payoutWalletId !== wallet.id
             const toFromStr = txSrc
               ? lstrings.transaction_details_swap_to_subcat_1s
               : lstrings.transaction_details_swap_from_subcat_1s
             const walletName =
-              (action.payoutWalletId != null
-                ? account.currencyWallets[action.payoutWalletId]?.name
-                : undefined) ?? displayName
+              account.currencyWallets[action.payoutWalletId]?.name ??
+              displayName
             edgeCategory = {
               category: 'transfer',
               subcategory: sprintf(toFromStr, walletName)
@@ -480,6 +447,46 @@ export const getTxActionDisplayInfo = (
           }
           default:
             unsupported = true
+        }
+        break
+      }
+      case 'swapSend': {
+        iconPluginId = action.swapInfo.pluginId
+        switch (assetActionType) {
+          case 'transferNetworkFee':
+          case 'swapNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
+          default: {
+            // A send is titled by the flow the user ran, so the three are
+            // distinguishable in the list. The private flavors name no
+            // recipient; the payout address stays on the action for support.
+            const { fromAsset, toAsset } = action
+            const sameAsset =
+              fromAsset.pluginId === toAsset.pluginId &&
+              fromAsset.tokenId === toAsset.tokenId
+            payeeText = !action.privacy
+              ? lstrings.transaction_details_swap_and_send
+              : sameAsset
+              ? lstrings.transaction_details_stealth_send
+              : lstrings.transaction_details_stealth_swap_and_send
+            edgeCategory = {
+              category: 'exchange',
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_to_subcat_1s,
+                getCurrencyCodeWithAccount(
+                  account,
+                  toAsset.pluginId,
+                  toAsset.tokenId
+                )
+              )
+            }
+            direction = 'send'
+          }
         }
         break
       }
@@ -712,9 +719,14 @@ export const getTxActionDisplayInfo = (
     notes
   }
 
+  // A private send exists to keep the recipient off the screen, so its title
+  // outranks any stored name: a recipient-style name reaching the transaction
+  // by any route would otherwise display exactly what the flow conceals.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
+
   const mergedData: EdgeMetadata = {
     name:
-      !forceSavedName && metadata?.name != null && metadata.name.length > 0
+      !isPrivateSend && metadata?.name != null && metadata.name.length > 0
         ? metadata.name
         : savedData.name,
     category:

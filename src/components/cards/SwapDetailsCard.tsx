@@ -76,26 +76,24 @@ export const SwapDetailsCard: React.FC<Props> = props => {
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
-  // A swap-to-address payout has no wallet, and the wallet may also have
-  // been deleted:
+  // A send pays out to an address rather than a wallet, and the wallet may
+  // also have been deleted:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
-  const destinationWallet =
-    swapData.payoutWalletId == null
-      ? undefined
-      : currencyWallets[swapData.payoutWalletId]
+  const destinationWallet = currencyWallets[swapData.payoutWalletId]
   const destinationWalletName =
     destinationWallet == null ? '' : getWalletName(destinationWallet)
 
-  // The payout asset's own currency config. A swap-to-address payout has no
-  // wallet to read it off, so it comes from the saved action's destination
-  // asset instead. Falling back to the SOURCE wallet was not viable: it
-  // resolves the payout currency code against the wrong chain, which left
-  // `payoutTokenId` unset and made the guard below hide this whole card for
-  // every swap-and-send, taking the order id and provider with it.
+  // The payout asset's own currency config. A send has no payout wallet to
+  // read it off, so it comes from the saved action's destination asset
+  // instead. Falling back to the SOURCE wallet was not viable: it resolves the
+  // payout currency code against the wrong chain, which left `payoutTokenId`
+  // unset and made the guard below hide this whole card for every send,
+  // taking the order id and provider with it.
+  const { savedAction } = transaction
   const payoutSwapAction =
-    transaction.savedAction?.actionType === 'swap'
-      ? transaction.savedAction
+    savedAction?.actionType === 'swap' || savedAction?.actionType === 'swapSend'
+      ? savedAction
       : undefined
   const payoutConfig =
     destinationWallet?.currencyConfig ??
