@@ -6,7 +6,8 @@ import {
   asMaybeSwapCurrencyError,
   asMaybeSwapPermissionError,
   type EdgeDenomination,
-  type EdgeSwapRequest
+  type EdgeSwapRequest,
+  type EdgeSwapSendRequest
 } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
@@ -23,7 +24,7 @@ export interface SwapErrorDisplayInfo {
 
 interface ProcessSwapQuoteErrorOpts {
   error: unknown
-  swapRequest: EdgeSwapRequest
+  swapRequest: EdgeSwapRequest | EdgeSwapSendRequest
   fromDenomination: EdgeDenomination
   toDenomination: EdgeDenomination
   /**
@@ -129,12 +130,9 @@ export function processSwapQuoteError({
     )
     const toCode =
       toCurrencyCode ??
-      getCurrencyCode(
-        // Wallet-to-wallet swaps always have a destination wallet here; the
-        // fallback only keeps the type honest for swap-to-address requests.
-        swapRequest.toWallet ?? swapRequest.fromWallet,
-        swapRequest.toTokenId
-      )
+      ('toWallet' in swapRequest
+        ? getCurrencyCode(swapRequest.toWallet, swapRequest.toTokenId)
+        : swapRequest.toPluginId)
 
     return {
       title: lstrings.exchange_generic_error_title,
@@ -167,18 +165,19 @@ export function processSwapQuoteError({
  */
 function trackSwapError(
   error: unknown,
-  swapRequest: EdgeSwapRequest,
+  swapRequest: EdgeSwapRequest | EdgeSwapSendRequest,
   toCurrencyCode?: string
 ): void {
-  // The destination, from whichever half of the request carries it. A
-  // send-to-address request has no `toWallet` at all, and falling back to the
-  // SOURCE wallet there tagged every stealth-send failure as if the swap had
-  // ended on the chain it started on, which is exactly the pair-specific
-  // triage these tags exist for. The descriptor names the destination chain,
-  // and the caller supplies the payout currency code.
-  const { toWallet, toAddressInfo } = swapRequest
+  // The destination, from whichever request shape carries it. A send request
+  // has no `toWallet` at all, and falling back to the SOURCE wallet there
+  // tagged every stealth-send failure as if the swap had ended on the chain it
+  // started on, which is exactly the pair-specific triage these tags exist
+  // for. The send request names the destination chain, and the caller
+  // supplies the payout currency code.
+  const toWallet = 'toWallet' in swapRequest ? swapRequest.toWallet : undefined
   const toWalletKind =
-    toWallet?.currencyInfo.pluginId ?? toAddressInfo?.toPluginId ?? 'unknown'
+    toWallet?.currencyInfo.pluginId ??
+    ('toPluginId' in swapRequest ? swapRequest.toPluginId : 'unknown')
   const toCurrency =
     toWallet != null
       ? getCurrencyCode(toWallet, swapRequest.toTokenId)

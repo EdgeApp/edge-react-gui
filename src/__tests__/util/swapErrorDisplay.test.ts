@@ -4,6 +4,7 @@ import {
   type EdgeDenomination,
   type EdgeSwapInfo,
   type EdgeSwapRequest,
+  type EdgeSwapSendRequest,
   InsufficientFundsError,
   SwapAboveLimitError,
   SwapBelowLimitError,
@@ -47,20 +48,36 @@ const ltcDenomination: EdgeDenomination = {
 }
 
 /**
- * A swap-to-address request, which is the shape the send scene builds: no
- * destination wallet, a `toAddressInfo` descriptor in its place.
+ * A send request, which is the shape the send scene builds: no destination
+ * wallet, the destination chain and address in its place.
  */
-const sendSceneRequest: EdgeSwapRequest = {
+const sendSceneRequest: EdgeSwapSendRequest = {
   fromWallet: tronWallet,
   fromTokenId: null,
   toTokenId: null,
   nativeAmount: '80000000',
   quoteFor: 'from',
-  toAddressInfo: {
-    toPluginId: 'litecoin',
-    toAddress: 'MQMcJhpWHYVeQArcZR3sBgyPZxxRtnH441'
-  }
-} as unknown as EdgeSwapRequest
+  toPluginId: 'litecoin',
+  toAddresses: [
+    {
+      addressType: 'publicAddress',
+      publicAddress: 'MQMcJhpWHYVeQArcZR3sBgyPZxxRtnH441'
+    }
+  ]
+}
+
+/**
+ * The same request as a plugin holds it once the core resolved it, which is
+ * what a plugin's `SwapCurrencyError` carries.
+ */
+const resolvedRequest: EdgeSwapRequest = {
+  fromWallet: tronWallet,
+  fromTokenId: null,
+  toTokenId: null,
+  nativeAmount: '80000000',
+  quoteFor: 'from',
+  toWallet: litecoinWallet
+}
 
 const describeError = (
   error: unknown,
@@ -120,7 +137,7 @@ describe('processSwapQuoteError', () => {
     // supplies the payout currency code. Reading it off the request would name
     // the SOURCE asset on both sides and tell the user TRX cannot reach TRX.
     const info = describeError(
-      new SwapCurrencyError(swapInfo, sendSceneRequest),
+      new SwapCurrencyError(swapInfo, resolvedRequest),
       'LTC'
     )
     expect(info?.message).toContain('TRX')
@@ -128,14 +145,11 @@ describe('processSwapQuoteError', () => {
   })
 
   it('does not claim the destination is the source when no code is supplied', () => {
-    const info = describeError(
-      new SwapCurrencyError(swapInfo, sendSceneRequest)
-    )
-    // Without a supplied code there is only the source wallet to read, so the
-    // message degrades to naming it twice. That is the shape the caller must
-    // avoid by passing `toCurrencyCode`, and it is pinned here so a future
-    // change to the fallback is a deliberate one.
+    const info = describeError(new SwapCurrencyError(swapInfo, resolvedRequest))
+    // Without a supplied code the send request still names the destination
+    // chain, so the message never tells the user TRX cannot reach TRX.
     expect(info?.message).toContain('TRX')
+    expect(info?.message).toContain('litecoin')
   })
 
   it('reports insufficient funds from a real error instance', () => {
@@ -207,11 +221,8 @@ describe('processSwapQuoteError', () => {
 
   it('handles a wallet-to-wallet request with a real destination wallet', () => {
     const info = processSwapQuoteError({
-      error: new SwapCurrencyError(swapInfo, sendSceneRequest),
-      swapRequest: {
-        ...sendSceneRequest,
-        toWallet: litecoinWallet
-      } as unknown as EdgeSwapRequest,
+      error: new SwapCurrencyError(swapInfo, resolvedRequest),
+      swapRequest: resolvedRequest,
       fromDenomination: trxDenomination,
       toDenomination: ltcDenomination
     })

@@ -14,7 +14,6 @@ import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { requireDestinationWallet } from '../../util/stealthSwap'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
@@ -27,27 +26,13 @@ export interface SwapProcessingParams {
   swapRequestOptions: EdgeSwapRequestOptions
   onCancel: () => void
   onDone: (quotes: EdgeSwapQuote[]) => void
-  /**
-   * First chance at a failed quote, before the scene's own handling. Return
-   * true when the error was handled (the caller navigated or recovered), so
-   * the generic error display is skipped. Lets the swap create scene react to
-   * capability failures, such as turning Stealth Swap off when the provider
-   * has no private route for the pair.
-   */
-  onError?: (error: unknown) => boolean
 }
 
 type Props = SwapTabSceneProps<'swapProcessing'>
 
 export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const {
-    swapRequest,
-    swapRequestOptions,
-    onCancel,
-    onDone,
-    onError: onErrorParam
-  } = route.params
+  const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
@@ -57,15 +42,9 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
     swapRequest.fromTokenId
   )
   const toDenomination = useDisplayDenom(
-    // Wallet-to-wallet swaps always have a destination wallet here; fall back to
-    // the source config only so this hook stays unconditional.
-    (swapRequest.toWallet ?? swapRequest.fromWallet).currencyConfig,
+    swapRequest.toWallet.currencyConfig,
     swapRequest.toTokenId
   )
-
-  // This scene only processes wallet-to-wallet swap requests, which always
-  // carry a destination wallet (swap-to-address has its own flow).
-  const toWallet = requireDestinationWallet(swapRequest)
 
   const doWork = async (isCancelled: () => boolean): Promise<void> => {
     const quotes = await account.fetchSwapQuotes(
@@ -84,10 +63,6 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   }
 
   const onError = async (error: unknown): Promise<void> => {
-    // The caller gets first chance, e.g. to degrade a capability toggle
-    // instead of showing the generic no-quotes error:
-    if (onErrorParam?.(error) === true) return
-
     // Handle same-address requirement for swap flows requiring a split:
     const addressError = asMaybeSwapAddressError(error)
     if (addressError != null && addressError.reason === 'mustMatch') {
@@ -95,7 +70,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
         const fromWallet = swapRequest.fromWallet
         const fromAddresses = await fromWallet.getAddresses({ tokenId: null })
         const fromAddress = fromAddresses[0]?.publicAddress
-        const targetPluginId = toWallet.currencyInfo.pluginId
+        const targetPluginId = swapRequest.toWallet.currencyInfo.pluginId
 
         let matchingWalletId: string | undefined
         for (const walletId of Object.keys(account.currencyWallets)) {
@@ -114,8 +89,8 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
           }
         }
 
-        let finalToWalletId: string
-        let finalToWallet: typeof toWallet
+        let finalToWalletId: string = swapRequest.toWallet.id
+        let finalToWallet = swapRequest.toWallet
         let isWalletCreated = false
         if (matchingWalletId == null) {
           // If not found, split from the source chain wallet to the destination
@@ -190,7 +165,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
         params: {
           fromWalletId: swapRequest.fromWallet.id,
           fromTokenId: swapRequest.fromTokenId,
-          toWalletId: toWallet.id,
+          toWalletId: swapRequest.toWallet.id,
           toTokenId: swapRequest.toTokenId
         }
       })
@@ -214,7 +189,7 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
       params: {
         fromWalletId: swapRequest.fromWallet.id,
         fromTokenId: swapRequest.fromTokenId,
-        toWalletId: toWallet.id,
+        toWalletId: swapRequest.toWallet.id,
         toTokenId: swapRequest.toTokenId,
         errorDisplayInfo
       }
