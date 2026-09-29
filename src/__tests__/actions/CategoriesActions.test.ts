@@ -4,8 +4,7 @@ import type {
   EdgeAssetActionType,
   EdgeCurrencyWallet,
   EdgeMetadata,
-  EdgeTransaction,
-  EdgeTxActionSwapType
+  EdgeTransaction
 } from 'edge-core-js'
 
 import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
@@ -49,14 +48,14 @@ interface SwapTxOpts {
   fromPluginId?: string
   fromTokenId?: string | null
   metadata?: EdgeMetadata
-  swapType?: EdgeTxActionSwapType
+  privacy?: boolean
   tokenId?: string | null
+  toPluginId?: string
 }
 
 /**
- * A broadcast send-shaped swap, as the Houdini plugin and the send scene leave
- * it: the spend target is the provider's deposit address, and the payee rides
- * on the saved action alone.
+ * A broadcast send, as the Houdini plugin leaves it: the spend target is the
+ * provider's deposit address, and the payee rides on the saved action alone.
  */
 const makeSwapSendTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
   const {
@@ -64,8 +63,9 @@ const makeSwapSendTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
     fromPluginId = 'bitcoin',
     fromTokenId = null,
     metadata,
-    swapType,
-    tokenId = null
+    privacy = false,
+    tokenId = null,
+    toPluginId = 'bitcoin'
   } = opts
 
   return {
@@ -78,7 +78,7 @@ const makeSwapSendTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
     assetAction: { assetActionType },
     spendTargets: [{ publicAddress: DEPOSIT_ADDRESS, nativeAmount: '38693' }],
     savedAction: {
-      actionType: 'swap',
+      actionType: 'swapSend',
       swapInfo: { pluginId: 'houdini', displayName: 'HoudiniSwap' },
       orderId: '9zdiWHWi2Q4Y7NRPB8k7mL',
       isEstimate: true,
@@ -87,21 +87,41 @@ const makeSwapSendTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
         tokenId: fromTokenId,
         nativeAmount: '38693'
       },
-      toAsset: { pluginId: 'bitcoin', tokenId: null, nativeAmount: '37580' },
+      toAsset: { pluginId: toPluginId, tokenId: null, nativeAmount: '37580' },
       payoutAddress: RECIPIENT_ADDRESS,
-      swapType
+      privacy
     }
   } as unknown as EdgeTransaction
 }
 
-describe('getTxActionDisplayInfo, private send titles', () => {
-  it('titles a private send by the flow, not the asset', () => {
+describe('getTxActionDisplayInfo, send titles', () => {
+  it('titles a private same-asset send as a Stealth Send', () => {
     const { mergedData } = getTxActionDisplayInfo(
-      makeSwapSendTx({ swapType: 'stealthSend' }),
+      makeSwapSendTx({ privacy: true }),
       account,
       bitcoinWallet
     )
     expect(mergedData.name).toBe(lstrings.transaction_details_stealth_send)
+  })
+
+  it('titles a private cross-asset send as a Stealth Swap & Send', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapSendTx({ privacy: true, toPluginId: 'ethereum' }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(
+      lstrings.transaction_details_stealth_swap_and_send
+    )
+  })
+
+  it('titles a transparent send as a Swap & Send', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapSendTx({ toPluginId: 'ethereum' }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(lstrings.transaction_details_swap_and_send)
   })
 
   it('outranks a stored metadata name on a private send', () => {
@@ -109,7 +129,7 @@ describe('getTxActionDisplayInfo, private send titles', () => {
     // win the merge, or the flow displays what it exists to conceal.
     const { mergedData } = getTxActionDisplayInfo(
       makeSwapSendTx({
-        swapType: 'stealthSend',
+        privacy: true,
         metadata: { name: RECIPIENT_ADDRESS }
       }),
       account,
@@ -119,9 +139,9 @@ describe('getTxActionDisplayInfo, private send titles', () => {
     expect(mergedData.name).not.toContain(RECIPIENT_ADDRESS)
   })
 
-  it('lets a stored name stand on a non-private swap-send', () => {
+  it('lets a stored name stand on a transparent send', () => {
     const { mergedData } = getTxActionDisplayInfo(
-      makeSwapSendTx({ swapType: 'swapSend', metadata: { name: 'Alice' } }),
+      makeSwapSendTx({ metadata: { name: 'Alice' } }),
       account,
       bitcoinWallet
     )
@@ -130,14 +150,14 @@ describe('getTxActionDisplayInfo, private send titles', () => {
 })
 
 describe('getTxActionDisplayInfo, the parent network-fee row', () => {
-  // A token send files its fee under `tokenId: null` with the same swap
-  // action. Stamping that row with the flow is what keeps the private-send
-  // display rules true there, but the row is the fee, not the send.
+  // A token send files its fee under `tokenId: null` with the same send
+  // action, so the private-send display rules hold there too, but the row is
+  // the fee, not the send.
   const feeRow = makeSwapSendTx({
     assetActionType: 'swapNetworkFee',
     fromPluginId: 'ethereum',
     fromTokenId: '0000000000000000000000000000000000000001',
-    swapType: 'stealthSend',
+    privacy: true,
     tokenId: null
   })
 

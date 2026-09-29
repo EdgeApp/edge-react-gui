@@ -37,7 +37,6 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
-import { STEALTH_SWAP_PLUGIN_ID } from '../../util/stealthSwap'
 import {
   convertNativeToExchange,
   darkenHexColor,
@@ -103,43 +102,15 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
   // A private send must not reveal its recipient anywhere in the UI. The
-  // payout address stays on the swap data for support to trace the order.
-  //
-  // This test FAILS CLOSED, and that is why it has two halves. `swapType` is
-  // the precise answer, but it reaches the saved action through the send
-  // scene's best-effort `saveTxAction`, which is logged and swallowed so a
-  // storage hiccup cannot fail a completed send. A stamp that never landed
-  // would then leave the recipient's address on screen days later, for a send
-  // the user was told was private. The provider is the durable half: a swap
-  // routed by the privacy provider is privacy-routed by construction, whether
-  // or not the stamp arrived, and hiding the payout address on an ordinary
-  // provider swap costs nothing, since that payout goes to the user's own
-  // wallet and the wallet row already names it.
-  const isStealthSend =
-    action != null &&
-    action.actionType === 'swap' &&
-    (action.swapType === 'stealthSend' ||
-      action.swapType === 'stealthSwapSend' ||
-      action.swapInfo.pluginId === STEALTH_SWAP_PLUGIN_ID)
+  // payout address stays on the action for support to trace the order. The
+  // plugin writes this action with the transaction, so a token send's
+  // parent network-fee row carries the same answer.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
 
-  // A send-shaped swap spends to the provider's deposit address; the pasted
-  // recipient never reaches `spendTargets` at all. Titling that row "Recipient
-  // Addresses" therefore names the wrong party, and on a private send it reads
-  // as exactly the disclosure the flow exists to prevent.
-  const isSwapSend =
-    action != null && action.actionType === 'swap' && action.swapType != null
-
-  // A token send's parent network-fee row carries the same swap action as the
-  // send. It is not the send, though, so its payout address is never the datum
-  // anyone came for: the row it accompanies carries the identical order. Hiding
-  // it here unconditionally is what makes the private-send rule fail CLOSED,
-  // because the fee row's `swapType` arrives through a best-effort
-  // `saveTxAction` that the send deliberately does not fail on. A stamp that
-  // never landed costs the row its title, not its privacy.
-  const isNetworkFeeRow =
-    assetAction != null &&
-    (assetAction.assetActionType === 'swapNetworkFee' ||
-      assetAction.assetActionType === 'transferNetworkFee')
+  // A send spends to the provider's deposit address; the pasted recipient
+  // never reaches `spendTargets` at all. Titling that row "Recipient
+  // Addresses" therefore names the wrong party.
+  const isSwapSend = action?.actionType === 'swapSend'
 
   const thumbnailPath =
     useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
@@ -676,7 +647,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               swapData={swapData}
               transaction={transaction}
               wallet={wallet}
-              hidePayoutAddress={isStealthSend || isNetworkFeeRow}
+              hidePayoutAddress={isPrivateSend}
             />
           )}
         </EdgeAnim>
@@ -785,7 +756,7 @@ const convertActionToSwapData = (
     return
   }
 
-  if (action.actionType !== 'swap') {
+  if (action.actionType !== 'swap' && action.actionType !== 'swapSend') {
     return
   }
 
@@ -796,9 +767,11 @@ const convertActionToSwapData = (
     isEstimate,
     toAsset,
     payoutAddress,
-    payoutWalletId,
     refundAddress
   } = action
+  // A send pays out to an address, not a wallet, so its id matches none:
+  const payoutWalletId =
+    action.actionType === 'swap' ? action.payoutWalletId : ''
 
   const payoutCurrencyCode = getCurrencyCodeWithAccount(
     account,
@@ -816,7 +789,6 @@ const convertActionToSwapData = (
     payoutCurrencyCode,
     payoutTokenId: toAsset.tokenId,
     payoutNativeAmount: action.toAsset.nativeAmount ?? '0',
-    // Undefined for a swap-to-address (private send), which has no payout wallet
     payoutWalletId,
     refundAddress
   }
