@@ -19,6 +19,7 @@
 - changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
 - changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
 - changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
+- changed: (ZANO) Support the HF7 chain restart with a one-time resync of existing wallets
 - fixed: A send whose funds are not spendable yet says so instead of reporting a network error
 - fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
 - fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
