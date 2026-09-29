@@ -494,7 +494,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
   // Render
   //
 
-  const renderAlert = (): React.ReactNode => {
+  const renderAlert = (): React.ReactElement | null => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 

@@ -20,7 +20,7 @@ export const initialState: ExchangeInfo = {
 export const exchangeInfo = (
   state: ExchangeInfo = initialState,
   action: Action
-) => {
+): ExchangeInfo => {
   switch (action.type) {
     case 'UPDATE_EXCHANGE_INFO': {
       return {

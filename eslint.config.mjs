@@ -453,7 +453,7 @@ export default [
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
       'src/plugins/stake-plugins/util/builder.ts',
-      'src/reducers/ExchangeInfoReducer.ts',
+
       'src/reducers/NetworkReducer.ts',
 
       'src/selectors/SettingsSelectors.ts',
