@@ -1,6 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import * as React from 'react'
-import { View } from 'react-native'
+import { Linking, View } from 'react-native'
 
 import { Fontello } from '../../../assets/vector/index'
 import { SceneButtons } from '../../../components/buttons/SceneButtons'
@@ -23,6 +23,7 @@ export interface FiatPluginSepaTransferParams {
   promptMessage: string
   transferInfo: FiatPluginSepaTransferInfo
   headerIconUri?: string
+  supportUrl?: string
   onDone: () => Promise<void>
 }
 
@@ -38,7 +39,8 @@ export const InfoDisplayScene = React.memo((props: Props) => {
   const styles = getStyles(theme)
   const { route } = props
   // TODO: headerIconUri
-  const { headerTitle, transferInfo, promptMessage, onDone } = route.params
+  const { headerTitle, transferInfo, promptMessage, supportUrl, onDone } =
+    route.params
 
   const displayData: InfoDisplayGroup[] = React.useMemo(() => {
     const { input, output, paymentDetails } = transferInfo
@@ -109,6 +111,10 @@ export const InfoDisplayScene = React.memo((props: Props) => {
     await onDone()
   })
 
+  const handleSupport = useHandler(async () => {
+    if (supportUrl != null) await Linking.openURL(supportUrl)
+  })
+
   const renderCopyButton = (value: string): React.ReactElement => {
     return (
       <EdgeTouchableOpacity
@@ -156,6 +162,11 @@ export const InfoDisplayScene = React.memo((props: Props) => {
       {renderGroups()}
       <SceneButtons
         primary={{ label: lstrings.string_done_cap, onPress: handleDone }}
+        tertiary={
+          supportUrl != null
+            ? { label: lstrings.title_support, onPress: handleSupport }
+            : undefined
+        }
       />
     </SceneWrapper>
   )
