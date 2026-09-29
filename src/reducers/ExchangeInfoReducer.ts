@@ -13,6 +13,7 @@ export const initialState: ExchangeInfo = {
       source: [],
       destination: []
     },
+    disableAssetsByPlugin: {},
     disablePlugins: {}
   }
 }
