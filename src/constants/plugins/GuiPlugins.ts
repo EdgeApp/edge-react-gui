@@ -276,17 +276,6 @@ export const guiPlugins: Record<string, GuiPlugin> = {
     forceFiatCurrencyCode: 'iso:USD',
     displayName: 'Bank Wire Transfer'
   },
-  xanpool: {
-    pluginId: 'xanpool',
-    storeId: 'xanpool',
-    baseUri: 'https://widget.xanpool.com',
-    baseQuery: {
-      apiKey: 'ae524a0144ccd8dc087af39eabb7a02a',
-      isWebView: 'true'
-    },
-    displayName: 'Xanpool',
-    permissions: ['camera']
-  },
   // Partner whitelabel plugins
   coinhub: {
     pluginId: 'coinhub',
