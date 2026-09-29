@@ -15,7 +15,6 @@ import {
   type EdgeSwapQuote,
   type EdgeTokenId,
   type EdgeTransaction,
-  type EdgeTxActionSwapType,
   type InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
@@ -76,7 +75,6 @@ import {
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
-  isValidHoudiniAddress,
   recipientAssetKey,
   schemeNamesChain
 } from '../../util/houdiniChains'
@@ -88,11 +86,15 @@ import {
   getMemoLabel,
   getMemoTitle
 } from '../../util/memoUtils'
-import { parsePaymentUri } from '../../util/paymentUri'
+import {
+  type CrossChainPayment,
+  parseCrossChainPayment,
+  peekPaymentUri
+} from '../../util/paymentUri'
 import {
   disableAssetsCover,
-  hasParentFeeRow,
-  makeStealthSwapRequestOptions
+  makeStealthSwapRequestOptions,
+  STEALTH_SWAP_PLUGIN_ID
 } from '../../util/stealthSwap'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
 import {
@@ -521,13 +523,6 @@ const SendComponent: React.FC<Props> = props => {
    * same-chain send.
    */
   const crossAssetPicked = recipientPluginId != null && !sameAsset
-  /**
-   * Whether the swap crosses assets, for labelling the flow. Distinct from
-   * `crossAssetPicked`: a token send to its own chain pays out that chain's
-   * native asset, so it is a cross-asset swap even though no recipient asset
-   * was picked. Treating it as same-asset titled it "Stealth Send".
-   */
-  const crossAsset = !sameAsset
   const swapSendActive = swapSendAllowed && (stealth || crossAssetPicked)
   /**
    * The asset the recipient ends up with, which the "Recipient receives" row
@@ -689,11 +684,13 @@ const SendComponent: React.FC<Props> = props => {
         fromWallet: coreWallet,
         fromTokenId: tokenId,
         toTokenId: null,
-        toAddressInfo: {
-          toPluginId: destPluginId,
-          toAddress: spendInfo.spendTargets[0].publicAddress ?? '',
-          toMemos: []
-        },
+        toPluginId: destPluginId,
+        toAddresses: [
+          {
+            addressType: 'publicAddress',
+            publicAddress: spendInfo.spendTargets[0].publicAddress ?? ''
+          }
+        ],
         nativeAmount: spendInfo.spendTargets[0].nativeAmount ?? '0',
         quoteFor: guaranteedSide === 'send' ? 'from' : 'to'
       },
@@ -861,7 +858,7 @@ const SendComponent: React.FC<Props> = props => {
    * Sets the destination tag for a user- or URI-driven change, retiring any
    * held quote when the value actually moves.
    *
-   * The tag rides `toAddressInfo.toMemos` into the quote request, so it is one
+   * The tag rides the request's `toMemos` into the quote request, so it is one
    * of the terms the order was created against, exactly like the amount and the
    * address. Leaving a quote armed across a tag change lets a slide submit the
    * memo the order was built with while the screen shows a different one, which
@@ -884,7 +881,7 @@ const SendComponent: React.FC<Props> = props => {
         fioAddress,
         alias,
         resolvedName,
-        crossChainDisplayAmount,
+        crossChainNativeAmount,
         crossChainMemo,
         detectedDestPluginId
       } = changeAddressResult
@@ -894,10 +891,6 @@ const SendComponent: React.FC<Props> = props => {
       // below reads the detected chain rather than the stale render-time state.
       const uriGuaranteesReceiveSide =
         detectedDestPluginId != null || (swapSendActive && !sameAsset)
-      const uriDestExchangeDenom =
-        detectedDestPluginId == null
-          ? destExchangeDenom
-          : getExchangeDenom(account.currencyConfig[detectedDestPluginId], null)
 
       if (parsedUri != null) {
         // The recipient is one of the terms a quote was priced against, so a
@@ -943,16 +936,14 @@ const SendComponent: React.FC<Props> = props => {
         if (uriGuaranteesReceiveSide) {
           // A payment URI's amount is what the recipient should receive, so a
           // cross-asset send guarantees the destination side and prices the
-          // send side off the quote. A cross-chain URI carries display units
-          // to convert; a same-chain one is already destination-native.
+          // send side off the quote. Both a cross-chain and a same-chain URI
+          // amount arrive in destination-native units.
           //
           // Same-asset (stealth) sends stay on the send side: guaranteeing the
           // receive side needs a receive-priced quote, and the provider offers
           // no fixed-rate route when the source and destination assets match.
           const uriReceiveNativeAmount =
-            crossChainDisplayAmount != null && uriDestExchangeDenom != null
-              ? mul(crossChainDisplayAmount, uriDestExchangeDenom.multiplier)
-              : parsedUri.nativeAmount
+            crossChainNativeAmount ?? parsedUri.nativeAmount
           spendTarget.nativeAmount = undefined
           if (uriReceiveNativeAmount != null) {
             setReceiveNativeAmount(uriReceiveNativeAmount)
@@ -1018,7 +1009,7 @@ const SendComponent: React.FC<Props> = props => {
       destPluginId: string,
       publicAddress: string,
       addressEntryMethod: AddressEntryMethod,
-      crossChainDisplayAmount?: string,
+      crossChainNativeAmount?: string,
       /**
        * A destination memo the new destination arrived with, from a scanned
        * URI. Passed in rather than written by the caller beforehand, because
@@ -1040,7 +1031,7 @@ const SendComponent: React.FC<Props> = props => {
       await handleChangeAddress(spendTarget)({
         parsedUri: { publicAddress },
         addressEntryMethod,
-        crossChainDisplayAmount,
+        crossChainNativeAmount,
         detectedDestPluginId: destPluginId
       })
     }
@@ -1066,65 +1057,6 @@ const SendComponent: React.FC<Props> = props => {
     }
     return assets
   }, [account, multipleTargets, pluginId, swapSendAllowed, tokenId])
-
-  /**
-   * Which of the three send-shaped swap flows this scene just ran. Stealth is
-   * the toggle; cross-asset is the destination asset differing from the
-   * source.
-   */
-  const swapSendType: EdgeTxActionSwapType = stealth
-    ? crossAsset
-      ? 'stealthSwapSend'
-      : 'stealthSend'
-    : 'swapSend'
-
-  /**
-   * Record the flow on the broadcast transaction's saved action, preserving
-   * everything the swap plugin already wrote. A failure here costs the
-   * transaction its title, never the transaction, so it is logged and
-   * swallowed rather than surfaced over a completed send.
-   */
-  const stampSwapSendAction = async (tx: EdgeTransaction): Promise<void> => {
-    const { savedAction } = tx
-    if (savedAction == null || savedAction.actionType !== 'swap') return
-    const stamped = { ...savedAction, swapType: swapSendType }
-    // The success scene, and the details scene behind it, render this object
-    // rather than re-reading the wallet, so it carries the flow too.
-    tx.savedAction = stamped
-    try {
-      // A token send files a second action for its parent-currency fee, built
-      // from the plugin's own unstamped copy, so that row has no `swapType`
-      // and no flow identity. Stamping it is best effort, like the stamp
-      // beside it: the recipient's privacy on that row does NOT rest on this
-      // call landing, because the details scene suppresses a payout address on
-      // any network-fee row regardless. What a failure here costs is the row's
-      // title, not the recipient.
-      //
-      // The two writes are independent rows, so they go out together rather
-      // than one after the other, which held the success scene for two round
-      // trips on every token send.
-      await Promise.all([
-        coreWallet.saveTxAction({
-          txid: tx.txid,
-          tokenId,
-          assetAction: tx.assetAction ?? { assetActionType: 'swap' },
-          savedAction: stamped
-        }),
-        ...(hasParentFeeRow(tx)
-          ? [
-              coreWallet.saveTxAction({
-                txid: tx.txid,
-                tokenId: null,
-                assetAction: { assetActionType: 'swapNetworkFee' },
-                savedAction: stamped
-              })
-            ]
-          : [])
-      ])
-    } catch (error: unknown) {
-      console.warn('Could not save the swap-send action type', String(error))
-    }
-  }
 
   const handleSelfTransferAsset =
     (spendTarget: EdgeSpendTarget) =>
@@ -1201,12 +1133,12 @@ const SendComponent: React.FC<Props> = props => {
         chain = picked
       }
 
-      const { addressCandidates, displayAmount, memo } =
-        parsePaymentUri(address)
-      const publicAddress = addressCandidates.find(candidate =>
-        isValidHoudiniAddress(chain, candidate)
+      const payment = await parseCrossChainPayment(
+        account.currencyConfig[chain.pluginId],
+        address
       )
-      if (publicAddress == null) return false
+      if (payment == null) return false
+      const { publicAddress, nativeAmount, memo } = payment
 
       // A scanned exchange deposit code carries the tag that credits the
       // recipient. Adopting the address and dropping the tag pays the exchange
@@ -1218,7 +1150,7 @@ const SendComponent: React.FC<Props> = props => {
         chain.pluginId,
         publicAddress,
         addressEntryMethod,
-        displayAmount,
+        nativeAmount,
         crossChainMemo
       )
       return true
@@ -1321,14 +1253,12 @@ const SendComponent: React.FC<Props> = props => {
       if (openCameraRef.current) openCameraRef.current = false
 
       // A cross-chain destination address cannot be parsed by the source
-      // wallet; validate it against the destination chain's own rules:
-      const crossChainAddressValidation =
+      // wallet; parse it with the destination chain's own plugin:
+      const parseCrossChainAddress =
         swapSendActive && destPluginId !== pluginId
-          ? (
-              address: string,
-              uri: { scheme?: string; evmChainId?: string }
-            ) => {
-              if (destChain == null) return false
+          ? async (text: string): Promise<CrossChainPayment | undefined> => {
+              if (destChain == null) return
+              const uri = peekPaymentUri(text)
               // What the code says about its own chain wins over the fact that
               // the address happens to validate here. Refusing hands the input
               // to `onUnparsedAddress`, which adopts the chain the code names;
@@ -1341,18 +1271,21 @@ const SendComponent: React.FC<Props> = props => {
               // disagrees.
               if (
                 uri.evmChainId != null &&
-                Number(uri.evmChainId) !== destChain.evmChainId
+                uri.evmChainId !== destChain.evmChainId
               ) {
-                return false
+                return
               }
               if (
                 uri.scheme != null &&
                 uri.evmChainId == null &&
                 !schemeNamesChain(uri.scheme, destChain)
               ) {
-                return false
+                return
               }
-              return isValidHoudiniAddress(destChain, address)
+              return await parseCrossChainPayment(
+                account.currencyConfig[destChain.pluginId],
+                text
+              )
             }
           : undefined
 
@@ -1368,7 +1301,7 @@ const SendComponent: React.FC<Props> = props => {
           isCameraOpen={doOpenCamera}
           recipientName={recipientName}
           recipientNameService={recipientNameService}
-          crossChainAddressValidation={crossChainAddressValidation}
+          parseCrossChainAddress={parseCrossChainAddress}
           onUnparsedAddress={handleUnparsedAddress(spendTarget)}
           selfTransfer={
             selfTransferAssets == null
@@ -2720,11 +2653,6 @@ const SendComponent: React.FC<Props> = props => {
         isSendingRef.current = true
         try {
           const result = await liveQuote.approve()
-          // Name the flow on the saved action. Only this scene knows which of
-          // the three send shapes ran: the plugin sees an ordinary swap, and
-          // with every send-to-address quote restricted to the privacy
-          // provider, the winning plugin cannot tell them apart either.
-          await stampSwapSendAction(result.transaction)
           playSendSound().catch((error: unknown) => {
             console.log(error) // Fail quietly
           })
@@ -3327,11 +3255,11 @@ const SendComponent: React.FC<Props> = props => {
             fromWallet: coreWallet,
             fromTokenId: tokenId,
             toTokenId: null,
-            toAddressInfo: {
-              toPluginId: destPluginId,
-              toAddress,
-              toMemos
-            },
+            toPluginId: destPluginId,
+            toAddresses: [
+              { addressType: 'publicAddress', publicAddress: toAddress }
+            ],
+            toMemos,
             nativeAmount: quoteNativeAmount,
             quoteFor: guaranteedSide === 'send' ? 'from' : 'to',
             privacy: stealth ? 'required' : undefined
