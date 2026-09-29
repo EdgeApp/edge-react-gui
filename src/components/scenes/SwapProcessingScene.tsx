@@ -8,6 +8,7 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { getDisabledSwapPlugins } from '../../actions/ExchangeInfoActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -36,6 +37,9 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
+  const disableAssetsByPlugin = useSelector(
+    state => state.ui.exchangeInfo.swap.disableAssetsByPlugin
+  )
 
   const fromDenomination = useDisplayDenom(
     swapRequest.fromWallet.currencyConfig,
@@ -47,10 +51,13 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   )
 
   const doWork = async (isCancelled: () => boolean): Promise<void> => {
-    const quotes = await account.fetchSwapQuotes(
-      swapRequest,
-      swapRequestOptions
-    )
+    const quotes = await account.fetchSwapQuotes(swapRequest, {
+      ...swapRequestOptions,
+      disabled: {
+        ...swapRequestOptions.disabled,
+        ...getDisabledSwapPlugins(disableAssetsByPlugin, swapRequest)
+      }
+    })
     if (isCancelled()) return
     if (quotes.length === 0) {
       // fetchSwapQuotes usually throws when nothing can route, but it resolves
