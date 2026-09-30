@@ -88,7 +88,6 @@ export const SWAP_INIT_MAP: Record<string, string> = {
   GODEX_INIT: 'godex',
   HOUDINI_INIT: 'houdini',
   LIFI_INIT: 'lifi',
-  LETSEXCHANGE_INIT: 'letsexchange',
   MPTRADE_INIT: 'mptrade',
   NEXCHANGE_INIT: 'nexchange',
   SIDESHIFT_INIT: 'sideshift',

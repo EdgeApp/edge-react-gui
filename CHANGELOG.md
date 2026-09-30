@@ -46,6 +46,7 @@
 - fixed: Paybis sell Max now quotes the wallet's full spendable amount.
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+- removed: LetsExchange swap provider
 ## 4.51.3 (2026-09-30)
 
 - added: (Changelly) TON, BNB Smart Chain BNB and Avalanche C-Chain AVAX swaps
