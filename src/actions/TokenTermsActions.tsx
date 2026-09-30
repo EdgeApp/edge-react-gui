@@ -4,6 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { Airship } from '../components/services/AirshipInstance'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
 import { getUkCompliantString } from '../util/ukComplianceUtils'
@@ -17,6 +18,8 @@ export const approveTokenTerms = async (
   pluginId: string,
   countryCode: string
 ): Promise<boolean> => {
+  if (getSpecialCurrencyInfo(pluginId).isTokenFeeFree === true) return true
+
   const { currencyCode } = account.currencyConfig[pluginId].currencyInfo
   const { tokenWarningsShown } = await getLocalAccountSettings(account)
   if (tokenWarningsShown.includes(pluginId)) return true

@@ -144,7 +144,6 @@ export default [
       'src/actions/ScamWarningActions.tsx',
 
       'src/actions/SoundActions.ts',
-      'src/actions/TokenTermsActions.tsx',
 
       'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',

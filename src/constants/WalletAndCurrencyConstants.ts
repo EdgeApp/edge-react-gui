@@ -172,7 +172,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monad',
   'wallet:opbnb',
   'wallet:nym',
-  'wallet:robinhood'
+  'wallet:robinhood',
+  'wallet:hypercore'
 ]
 
 export interface WalletSettingOption {
@@ -256,6 +257,12 @@ interface SpecialCurrencyInfo {
    */
   hasSegwit?: boolean
   isAccountActivationRequired?: boolean
+  /**
+   * Whether token sends need none of the parent currency, so enabling a
+   * token skips the "%s Needed to Send Tokens" warning.
+   * (Default: false)
+   */
+  isTokenFeeFree?: boolean
   tokenActivationAdditionalReserveText?: string
   showTokenNames?: boolean
   isUriEncodedStructure?: boolean
@@ -1128,6 +1135,12 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       namespace: 'eip155',
       reference: '170000'
     }
+  },
+  hypercore: {
+    initWalletName: lstrings.string_first_hypercore_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: true,
+    isTokenFeeFree: true
   },
   hyperevm: {
     initWalletName: lstrings.string_first_hyperevm_wallet_name,

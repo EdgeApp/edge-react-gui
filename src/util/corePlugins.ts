@@ -31,6 +31,7 @@ const accountbasedPlugins: EdgeCorePluginsInit = {
   fio: ENV.FIO_INIT,
   hedera: ENV.HEDERA_INIT,
   holesky: ENV.HOLESKY_INIT,
+  hypercore: true,
   hyperevm: ENV.HYPEREVM_INIT,
   liberland: ENV.LIBERLAND_INIT,
   liberlandtestnet: false,
