@@ -5,9 +5,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { useHandler } from '../hooks/useHandler'
+import { getTestAnimationsMode } from '../util/testAnimations'
 import { CrashScene } from './scenes/CrashScene'
 import { EdgeCoreManager } from './services/EdgeCoreManager'
 import { QuickActionsManager } from './services/QuickActionsManager'
@@ -23,6 +25,10 @@ const queryClient = new QueryClient({
   }
 })
 
+// Automated UI runs finish Reanimated loops (shimmers, chart pulses) after
+// one cycle so the screen can settle between steps:
+const testAnimationsMode = getTestAnimationsMode()
+
 const MainApp: React.FC = () => {
   const handleBeforeCapture = useHandler((scope: Scope) => {
     scope.setLevel('fatal')
@@ -34,6 +40,9 @@ const MainApp: React.FC = () => {
       <SafeAreaProvider>
         <ThemeProvider>
           <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+            {testAnimationsMode == null ? null : (
+              <ReducedMotionConfig mode={ReduceMotion.Always} />
+            )}
             <ErrorBoundary
               beforeCapture={handleBeforeCapture}
               fallback={<CrashScene />}
