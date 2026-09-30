@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: iOS debug-build `EdgeTestAnimations` switch to turn off or speed up animations and freeze spinners in UI tests
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
 - added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
 - added: Logbox disable option to env.json
