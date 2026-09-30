@@ -37,6 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let window = UIWindow(windowScene: windowScene)
     self.window = window
     appDelegate.window = window
+    Self.applyTestAnimations(to: window)
 
     // A reconnecting scene already has React Native running, and starting it
     // again would mount a second copy of the app, so reuse the root view
@@ -150,6 +151,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   }
 
   /**
+   * Test-mode animation switch for automated UI runs, read from the
+   * `EdgeTestAnimations` user default (the `-EdgeTestAnimations off|fast`
+   * launch argument). `off` makes UIKit animations complete immediately and
+   * `fast` runs the window's Core Animation clock 100x. Either value freezes
+   * activity spinners. Debug builds only. Edge addition.
+   */
+  private static func applyTestAnimations(to window: UIWindow) {
+    #if DEBUG
+    switch UserDefaults.standard.string(forKey: "EdgeTestAnimations") {
+    case "off":
+      UIView.setAnimationsEnabled(false)
+    case "fast":
+      window.layer.speed = 100
+    default:
+      return
+    }
+    UIActivityIndicatorView.freezeForTests()
+    #endif
+  }
+
+  /**
    * Rebuilds the launch options React Native expects from the scene's
    * connection options.
    *
@@ -181,3 +203,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     return [:]
   }
 }
+
+#if DEBUG
+/**
+ * Test-mode spinners stay visible but stop turning, so a loading screen
+ * settles for screenshot comparisons. Edge addition.
+ */
+extension UIActivityIndicatorView {
+  private static let swapStartAnimating: Void = {
+    guard
+      let original = class_getInstanceMethod(
+        UIActivityIndicatorView.self, #selector(startAnimating)),
+      let frozen = class_getInstanceMethod(
+        UIActivityIndicatorView.self, #selector(frozenStartAnimating))
+    else {
+      return
+    }
+    method_exchangeImplementations(original, frozen)
+  }()
+
+  /** Swaps `startAnimating` once, however many scenes connect. */
+  static func freezeForTests() {
+    _ = swapStartAnimating
+  }
+
+  /** After the swap, the inner call runs UIKit's own `startAnimating`. */
+  @objc private func frozenStartAnimating() {
+    frozenStartAnimating()
+    layer.speed = 0
+  }
+}
+#endif
