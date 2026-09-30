@@ -144,8 +144,10 @@ export EDGE_CLI_KEYS_FILE=~/edge-local-keys.json   # the local login server's ke
 npm run cli -- -t -d /tmp/edge-local login-with-password --username=alice --password='pass'
 ```
 
-- Roles are `loginServer`, `infoServer`, `changeServer` and `syncServer`
-  (a URL or a list). Roles left out keep their tester host.
+- Roles are `loginServer`, `infoServer`, `changeServer`, `syncServer` (a URL
+  or a list) and `syncWebSocketServer` (a `ws://` or `wss://` URL or a list).
+  Roles left out keep their tester host. `syncWebSocketServer` has no tester
+  default: left out, core derives the socket from `syncServer`.
 - Every URL it names must be loopback, RFC 1918, link-local or `*.local`; any
   other host is refused, so the override can never reach production.
 - It only applies with `-t`. Setting it without `-t` is an error.

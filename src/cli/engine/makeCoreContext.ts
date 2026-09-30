@@ -164,6 +164,7 @@ export interface CoreContextBundle {
     infoServer?: string
     changeServer?: string
     syncServer?: string | string[]
+    syncWebSocketServer?: string[]
   }
   pluginsInit: EdgeCorePluginsInit
   /** Enabled currency/accountbased plugin ids (not swap). For wallet-create. */
@@ -209,7 +210,13 @@ export async function makeCoreContext(
   }
 
   const testServers = resolveServers(testMode)
-  const servers = testServers ?? {}
+  const servers: CoreContextBundle['servers'] = testServers ?? {}
+  const { syncWebSocketServer, ...coreServers } = servers
+  // `syncWebSocketServer` is newer than the edge-core-js this CLI builds
+  // against, so it rides in an untyped object: a core that knows the option
+  // uses it, and an older one ignores it.
+  const socketServers: object =
+    syncWebSocketServer != null ? { syncWebSocketServer } : {}
 
   if (testMode) {
     opts.logger?.info('Using tester servers', { servers })
@@ -314,7 +321,8 @@ export async function makeCoreContext(
     appId,
     path: directory,
     plugins: pluginsInit,
-    ...servers,
+    ...coreServers,
+    ...socketServers,
     onLog(event) {
       opts.logger?.write(String(event.type ?? 'info'), event.message, {
         source: event.source

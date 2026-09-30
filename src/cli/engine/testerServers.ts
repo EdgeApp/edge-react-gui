@@ -22,6 +22,20 @@ export interface TestServers {
   infoServer: string
   changeServer: string
   syncServer: string[]
+  /**
+   * Sync-server WebSocket endpoints. Only set by `EDGE_CLI_SERVERS`; when
+   * absent, core derives them from `syncServer`.
+   */
+  syncWebSocketServer?: string[]
+}
+
+/** The shape every server-set check accepts: roles are optional. */
+interface ServerUrls {
+  loginServer?: string
+  infoServer?: string
+  changeServer?: string
+  syncServer?: string | readonly string[]
+  syncWebSocketServer?: string | readonly string[]
 }
 
 /**
@@ -32,18 +46,17 @@ export interface TestServers {
  *     "infoServer":"http://127.0.0.1:8008",
  *     "syncServer":["http://127.0.0.1:8010"]}'
  *
+ * `syncWebSocketServer` (a `ws://` URL or a list of them) is the one role
+ * with no tester default: left out, core derives the socket from
+ * `syncServer`.
+ *
  * Every URL it names must be a local or private-network host. Roles it leaves
  * out keep their tester host, so the set can never reach production.
  */
 export const SERVERS_ENV = 'EDGE_CLI_SERVERS'
 
 /** True if every configured URL is a -tester or local host: never production. */
-export function isTesterConfig(servers: {
-  loginServer?: string
-  infoServer?: string
-  changeServer?: string
-  syncServer?: string | readonly string[]
-}): boolean {
+export function isTesterConfig(servers: ServerUrls): boolean {
   const hosts = listUrls(servers)
   if (hosts.length === 0) return false
   return hosts.every(h => isTesterUrl(h) || isLocalUrl(h))
@@ -53,19 +66,15 @@ function isTesterUrl(url: string): boolean {
   return url.includes('-tester') || url.includes('tester-')
 }
 
-function listUrls(servers: {
-  loginServer?: string
-  infoServer?: string
-  changeServer?: string
-  syncServer?: string | readonly string[]
-}): string[] {
+function listUrls(servers: ServerUrls): string[] {
   const urls: string[] = []
   if (servers.loginServer != null) urls.push(servers.loginServer)
   if (servers.infoServer != null) urls.push(servers.infoServer)
   if (servers.changeServer != null) urls.push(servers.changeServer)
-  const sync = servers.syncServer
-  if (typeof sync === 'string') urls.push(sync)
-  else if (Array.isArray(sync)) urls.push(...sync)
+  for (const list of [servers.syncServer, servers.syncWebSocketServer]) {
+    if (typeof list === 'string') urls.push(list)
+    else if (Array.isArray(list)) urls.push(...list)
+  }
   return urls
 }
 
@@ -125,7 +134,7 @@ export function resolveTestServers(
   }
 
   for (const [role, value] of Object.entries(json)) {
-    if (role === 'syncServer') {
+    if (role === 'syncServer' || role === 'syncWebSocketServer') {
       const list = typeof value === 'string' ? [value] : value
       if (
         !Array.isArray(list) ||
@@ -133,10 +142,20 @@ export function resolveTestServers(
         !list.every(url => typeof url === 'string')
       ) {
         throw new Error(
-          `${SERVERS_ENV}.syncServer must be a URL or a non-empty list of URLs`
+          `${SERVERS_ENV}.${role} must be a URL or a non-empty list of URLs`
         )
       }
-      servers.syncServer = list
+      if (role === 'syncWebSocketServer') {
+        const notSocket = list.filter(url => !/^wss?:\/\//i.test(url))
+        if (notSocket.length > 0) {
+          throw new Error(
+            `${SERVERS_ENV}.syncWebSocketServer takes ws:// or wss:// URLs, not ${notSocket.join(
+              ', '
+            )}`
+          )
+        }
+      }
+      servers[role] = list
     } else if (
       role === 'loginServer' ||
       role === 'infoServer' ||
@@ -151,7 +170,7 @@ export function resolveTestServers(
     }
   }
 
-  const overridden = listUrls(json as Partial<TestServers>)
+  const overridden = listUrls(json as ServerUrls)
   const remote = overridden.filter(url => !isLocalUrl(url))
   if (remote.length > 0) {
     throw new Error(

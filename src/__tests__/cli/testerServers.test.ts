@@ -84,6 +84,45 @@ describe('resolveTestServers', () => {
     ).toEqual(['http://localhost:8010'])
   })
 
+  it('accepts local sync WebSocket servers', () => {
+    expect(
+      resolveTestServers({
+        EDGE_CLI_SERVERS:
+          '{"syncWebSocketServer":"ws://127.0.0.1:8010/api/v2/ws"}'
+      })
+    ).toEqual({
+      ...resolveTestServers({}),
+      syncWebSocketServer: ['ws://127.0.0.1:8010/api/v2/ws']
+    })
+    expect(
+      resolveTestServers({
+        EDGE_CLI_SERVERS: '{"syncWebSocketServer":["wss://localhost:8443"]}'
+      }).syncWebSocketServer
+    ).toEqual(['wss://localhost:8443'])
+  })
+
+  it('leaves syncWebSocketServer out unless it is named', () => {
+    expect(
+      resolveTestServers({ EDGE_CLI_SERVERS: LOCAL }).syncWebSocketServer
+    ).toBeUndefined()
+  })
+
+  it('rejects remote or non-socket sync WebSocket servers', () => {
+    expect(() =>
+      resolveTestServers({
+        EDGE_CLI_SERVERS: '{"syncWebSocketServer":"wss://sync-us1.edge.app"}'
+      })
+    ).toThrow('may only name local or private-network hosts')
+    expect(() =>
+      resolveTestServers({
+        EDGE_CLI_SERVERS: '{"syncWebSocketServer":"http://127.0.0.1:8010"}'
+      })
+    ).toThrow('takes ws:// or wss:// URLs')
+    expect(() =>
+      resolveTestServers({ EDGE_CLI_SERVERS: '{"syncWebSocketServer":[]}' })
+    ).toThrow('syncWebSocketServer must be a URL or a non-empty list')
+  })
+
   it('rejects public hosts, unknown roles and malformed values', () => {
     expect(() =>
       resolveTestServers({
