@@ -5,12 +5,12 @@ import os from 'os'
 
 const ifaces = os.networkInterfaces()
 const PORT = 8080
-const envFile = './env.json'
+const configFile = './config.json'
 let address = ''
-let envJSON = { LOG_SERVER: {} }
+let configJson = { LOG_SERVER: {} }
 
 try {
-  envJSON = JSON.parse(fs.readFileSync(envFile, 'utf8'))
+  configJson = JSON.parse(fs.readFileSync(configFile, 'utf8'))
 } catch (e) {
   console.log(e)
 }
@@ -32,12 +32,12 @@ try {
     })
   })
 
-  // Set env.json with correct path
-  envJSON.LOG_SERVER = {
+  // Set config.json with correct path
+  configJson.LOG_SERVER = {
     host: `http://${address}`,
     port: `${PORT}`
   }
-  fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
+  fs.writeFileSync(configFile, JSON.stringify(configJson, null, 2))
 } catch (e) {
   console.log(e)
 }
@@ -49,7 +49,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.post('/log', function (req, res) {
-  if (req.body?.data) console.log(req.body.data.toString())
+  if (req.body?.data != null) console.log(req.body.data.toString())
   res.sendStatus(200)
 })
 

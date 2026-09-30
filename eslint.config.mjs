@@ -130,8 +130,6 @@ export default [
 
       'src/actions/CreateWalletActions.tsx',
 
-      'src/actions/DeviceSettingsActions.ts',
-
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
       'src/actions/FirstOpenActions.tsx',
@@ -470,6 +468,8 @@ export default [
       'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
       'src/plugins/stake-plugins/metadataCache.ts',
       'src/plugins/stake-plugins/stakePlugins.ts',
+
+      'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
       'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
 
