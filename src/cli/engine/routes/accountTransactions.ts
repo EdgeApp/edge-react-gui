@@ -41,6 +41,20 @@ const asNativeAmount: (raw: unknown) => string = raw => {
   return raw
 }
 
+/**
+ * A signed decimal number written out in a query string, such as `-12.50`.
+ *
+ * Fiat amounts are stored as numbers in the account's `defaultIsoFiat`, and
+ * signed like the native amount they value, so a bound can be negative.
+ */
+export const asQueryNumber = (raw: unknown): number => {
+  if (typeof raw === 'number' && Number.isFinite(raw)) return raw
+  if (typeof raw !== 'string' || !/^-?(\d+\.?\d*|\.\d+)$/.test(raw.trim())) {
+    throw new TypeError('Expected a decimal number')
+  }
+  return Number(raw)
+}
+
 function buildQuery(valid: {
   walletIds?: string[]
   pluginIds?: string[]
@@ -53,6 +67,8 @@ function buildQuery(valid: {
   maxAmount?: string
   minFee?: string
   maxFee?: string
+  minFiatAmount?: number
+  maxFiatAmount?: number
   minBlockHeight?: number
   maxBlockHeight?: number
   searchString?: string
@@ -78,6 +94,8 @@ function buildQuery(valid: {
     maxNativeAmount: valid.maxAmount,
     minNetworkFee: valid.minFee,
     maxNetworkFee: valid.maxFee,
+    minFiatAmount: valid.minFiatAmount,
+    maxFiatAmount: valid.maxFiatAmount,
     minBlockHeight: valid.minBlockHeight,
     maxBlockHeight: valid.maxBlockHeight,
     searchString: valid.searchString,
@@ -124,6 +142,15 @@ const FILTER_QUERY = {
     doc(asNativeAmount, "This asset's network fee, same units as minAmount.")
   ),
   maxFee: asOptional(doc(asNativeAmount, 'Upper bound, same units as minFee.')),
+  minFiatAmount: asOptional(
+    doc(
+      asQueryNumber,
+      "In the account's `defaultIsoFiat`. Signed like the amount: a send's value is negative, except one the user typed, which the app stores positive. Rows with no fiat value yet never match."
+    )
+  ),
+  maxFiatAmount: asOptional(
+    doc(asQueryNumber, 'Upper bound, same units as minFiatAmount.')
+  ),
   minBlockHeight: asOptional(
     doc(asQueryInteger, 'Inclusive. Zero matches unconfirmed transactions.')
   ),
@@ -184,8 +211,14 @@ export const queryAccountTransactions = route({
     ...FILTER_QUERY,
     sort: asOptional(
       doc(
-        asValue('date', 'nativeAmount', 'networkFee', 'blockHeight'),
-        'Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.'
+        asValue(
+          'date',
+          'nativeAmount',
+          'networkFee',
+          'fiatAmount',
+          'blockHeight'
+        ),
+        'Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount. `fiatAmount` drops rows whose fiat value is not known yet.'
       )
     ),
     sortDirection: asOptional(
