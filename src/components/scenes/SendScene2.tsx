@@ -6,7 +6,6 @@ import {
   asMaybePendingFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
-  type EdgeDenomination,
   type EdgeMemo,
   type EdgeMemoOption,
   type EdgeSpendInfo,
@@ -72,6 +71,7 @@ import {
   convertTransactionFeeToDisplayFee,
   darkenHexColor,
   DECIMAL_PRECISION,
+  getTxNetworkFee,
   zeroString
 } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -333,8 +333,16 @@ const SendComponent: React.FC<Props> = props => {
     coreWallet.currencyConfig,
     tokenId
   )
-  const parentDisplayDenom = useDisplayDenom(coreWallet.currencyConfig, null)
-  const parentExchangeDenom = getExchangeDenom(coreWallet.currencyConfig, null)
+  const feeTokenId =
+    edgeTransaction == null ? null : getTxNetworkFee(edgeTransaction).tokenId
+  const feeDisplayDenomination = useDisplayDenom(
+    coreWallet.currencyConfig,
+    feeTokenId
+  )
+  const feeExchangeDenomination = getExchangeDenom(
+    coreWallet.currencyConfig,
+    feeTokenId
+  )
   const iconColor = useIconColor({ pluginId, tokenId })
 
   spendInfo.tokenId = tokenId
@@ -641,7 +649,7 @@ const SendComponent: React.FC<Props> = props => {
           ref={flipInputModalRef}
           bridge={bridge}
           startNativeAmount={spendTarget.nativeAmount}
-          feeTokenId={null}
+          feeTokenId={feeTokenId}
           forceField={fieldChanged}
           hideMaxButton={isMultipleTargets}
           onAmountsChanged={handleAmountsChanged(spendTarget)}
@@ -844,24 +852,15 @@ const SendComponent: React.FC<Props> = props => {
       spendInfo.spendTargets[0].nativeAmount != null
     ) {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
-      let feeDisplayDenomination: EdgeDenomination
-      let feeExchangeDenomination: EdgeDenomination
 
       let fiatAmount = '0'
       let feeSyntax = ` 0 (${fiatAmount})`
       let feeSyntaxStyle: string | undefined
-      if (edgeTransaction?.parentNetworkFee != null) {
-        feeDisplayDenomination = parentDisplayDenom
-        feeExchangeDenomination = parentExchangeDenom
-      } else {
-        feeDisplayDenomination = cryptoDisplayDenomination
-        feeExchangeDenomination = cryptoExchangeDenomination
-      }
 
       if (edgeTransaction != null) {
         const transactionFee = convertTransactionFeeToDisplayFee(
           coreWallet.currencyInfo.pluginId,
-          null,
+          feeTokenId,
           defaultIsoFiat,
           exchangeRates,
           edgeTransaction,
@@ -1811,11 +1810,12 @@ const SendComponent: React.FC<Props> = props => {
           return
         }
         setEdgeTransaction(edgeTx)
-        const { parentNetworkFee, networkFee } = edgeTx
-        const feeNativeAmount = parentNetworkFee ?? networkFee
-        const feeTokenId = parentNetworkFee == null ? tokenId : null
-        setFeeNativeAmount(feeNativeAmount)
-        flipInputModalRef.current?.setFees({ feeTokenId, feeNativeAmount })
+        const fee = getTxNetworkFee(edgeTx)
+        setFeeNativeAmount(fee.nativeAmount)
+        flipInputModalRef.current?.setFees({
+          feeTokenId: fee.tokenId,
+          feeNativeAmount: fee.nativeAmount
+        })
         flipInputModalRef.current?.setError(null)
         setError(undefined)
       } catch (err: unknown) {

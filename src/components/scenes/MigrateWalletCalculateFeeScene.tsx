@@ -2,7 +2,9 @@ import { add, lt } from 'biggystring'
 import {
   asMaybeInsufficientFundsError,
   type EdgeSpendInfo,
+  type EdgeTokenId,
   type EdgeTransaction,
+  type EdgeTxAmount,
   InsufficientFundsError
 } from 'edge-core-js'
 import * as React from 'react'
@@ -18,9 +20,11 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   convertTransactionFeeToDisplayFee,
+  getTxNetworkFee,
   truncateDecimals
 } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -39,7 +43,8 @@ export interface MigrateWalletCalculateFeeParams {
 
 type Props = EdgeAppSceneProps<'migrateWalletCalculateFee'>
 
-type AssetRowState = string | Error | 'included'
+/** A fee may be charged in a token rather than the parent currency. */
+type AssetRowState = EdgeTxAmount | Error | 'included'
 type MakeMaxSpendMethod = (params: {
   tokenIds?: Array<string | null>
   spendTargets: Array<{ publicAddress: string }>
@@ -130,6 +135,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
           </EdgeText>
         )
       } else {
+        const feeCurrencyCode = getCurrencyCode(wallet, fee.tokenId)
         const fakeEdgeTransaction: EdgeTransaction = {
           blockHeight: 0,
           currencyCode,
@@ -137,21 +143,24 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
           memos: [],
           isSend: true,
           nativeAmount: '0',
-          networkFee: fee,
-          networkFees: [],
+          networkFee: fee.tokenId == null ? fee.nativeAmount : '0',
+          networkFees: [fee],
           ourReceiveAddresses: [],
           signedTx: '',
           tokenId: null,
           txid: '',
           walletId
         }
-        const exchangeDenom = getExchangeDenom(wallet.currencyConfig, null)
+        const exchangeDenom = getExchangeDenom(
+          wallet.currencyConfig,
+          fee.tokenId
+        )
         const displayDenom =
-          displayDenominations[pluginId]?.[currencyCode] ?? exchangeDenom
+          displayDenominations[pluginId]?.[feeCurrencyCode] ?? exchangeDenom
 
         const transactionFee = convertTransactionFeeToDisplayFee(
           wallet.currencyInfo.pluginId,
-          null,
+          fee.tokenId,
           isoFiatCurrencyCode,
           exchangeRates,
           fakeEdgeTransaction,
@@ -163,7 +172,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
             ? '0'
             : ` ${transactionFee.fiatAmount}`
         const feeSyntax = `${
-          transactionFee.cryptoSymbol ?? ''
+          transactionFee.cryptoSymbol ?? displayDenom.name
         } ${truncateDecimals(transactionFee.cryptoAmount)} (${
           transactionFee.fiatSymbol ?? ''
         }${fiatAmount})`
@@ -197,9 +206,10 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
   })
 
   const handleSlidingComplete = useHandler(() => {
-    const filteredMigrateWalletList = migrateWalletList.filter(
-      asset => typeof feeState.get(asset.key) === 'string'
-    )
+    const filteredMigrateWalletList = migrateWalletList.filter(asset => {
+      const state = feeState.get(asset.key)
+      return state != null && !(state instanceof Error)
+    })
     navigation.push('migrateWalletCompletion', {
       migrateWalletList: filteredMigrateWalletList
     })
@@ -240,9 +250,9 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
         const {
           currencyInfo: { pluginId }
         } = wallet
-        let feeTotal = '0'
+        const feeTotals = new Map<EdgeTokenId, string>()
         const bundlesFeeTotals = new Map<string, AssetRowState>(
-          bundle.map(item => [item.key, '0'])
+          bundle.map(item => [item.key, { tokenId: null, nativeAmount: '0' }])
         )
 
         let assetSpendRoutines: Array<() => Promise<void>>
@@ -255,8 +265,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
             async () => {
               const publicAddress =
                 SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ??
-                (await wallet.getReceiveAddress({ tokenId: null }))
-                  .publicAddress
+                (await wallet.getAddresses({ tokenId: null }))[0].publicAddress
 
               try {
                 const tokenIds = bundle.map(item => item.tokenId)
@@ -266,8 +275,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
                   tokenIds,
                   spendTargets: [{ publicAddress }]
                 })
-                const txFee =
-                  edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+                const txFee = getTxNetworkFee(edgeTransaction)
                 for (const item of bundle) {
                   bundlesFeeTotals.set(
                     item.key,
@@ -297,8 +305,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
             return async () => {
               const publicAddress =
                 SPECIAL_CURRENCY_INFO[pluginId].dummyPublicAddress ??
-                (await wallet.getReceiveAddress({ tokenId: null }))
-                  .publicAddress
+                (await wallet.getAddresses({ tokenId: null }))[0].publicAddress
               const spendInfo: EdgeSpendInfo = {
                 tokenId: asset.tokenId,
                 spendTargets: [{ publicAddress }],
@@ -315,20 +322,25 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
                   spendTargets: [{ publicAddress, nativeAmount: maxAmount }]
                 }
                 const edgeTransaction = await wallet.makeSpend(maxSpendInfo)
-                const txFee =
-                  edgeTransaction.parentNetworkFee ?? edgeTransaction.networkFee
+                const txFee = getTxNetworkFee(edgeTransaction)
                 bundlesFeeTotals.set(asset.key, txFee)
-                feeTotal = add(feeTotal, txFee)
+                feeTotals.set(
+                  txFee.tokenId,
+                  add(feeTotals.get(txFee.tokenId) ?? '0', txFee.nativeAmount)
+                )
 
-                // While imperfect, sanity check that the total fee spent so far to send tokens + fee to send mainnet currency is under the total mainnet balance
-                if (
-                  i === bundle.length - 1 &&
-                  lt(wallet.balanceMap.get(null) ?? '0', feeTotal)
-                ) {
-                  throw new InsufficientFundsError({
-                    tokenId: null,
-                    networkFee: feeTotal
-                  })
+                // While imperfect, sanity check that the total fee spent so far in each fee asset is under that asset's balance
+                if (i === bundle.length - 1) {
+                  for (const [feeTokenId, feeTotal] of feeTotals) {
+                    if (
+                      lt(wallet.balanceMap.get(feeTokenId) ?? '0', feeTotal)
+                    ) {
+                      throw new InsufficientFundsError({
+                        tokenId: feeTokenId,
+                        networkFee: feeTotal
+                      })
+                    }
+                  }
                 }
               } catch (e: any) {
                 for (const key of bundlesFeeTotals.keys()) {

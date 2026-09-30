@@ -7,7 +7,8 @@ import type {
   EdgeToken,
   EdgeTokenId,
   EdgeTokenMap,
-  EdgeTransaction
+  EdgeTransaction,
+  EdgeTxAmount
 } from 'edge-core-js'
 import { Linking, Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -499,6 +500,19 @@ export const feeStyle = {
   warning: 'warningText'
 }
 
+/**
+ * Returns the fee a transaction pays, preferring the parent currency, then
+ * the transaction's own asset, then whatever other asset the chain charges.
+ */
+export const getTxNetworkFee = (transaction: EdgeTransaction): EdgeTxAmount => {
+  const { networkFees, tokenId } = transaction
+  return (
+    networkFees.find(fee => fee.tokenId == null) ??
+    networkFees.find(fee => fee.tokenId === tokenId) ??
+    networkFees[0] ?? { tokenId: null, nativeAmount: '0' }
+  )
+}
+
 export const convertTransactionFeeToDisplayFee = (
   pluginId: string,
   tokenId: EdgeTokenId,
@@ -518,10 +532,7 @@ export const convertTransactionFeeToDisplayFee = (
 } => {
   const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
 
-  let feeNativeAmount
-  if (transaction.parentNetworkFee != null) {
-    feeNativeAmount = transaction.parentNetworkFee
-  } else feeNativeAmount = transaction.networkFee
+  const feeNativeAmount = getTxNetworkFee(transaction).nativeAmount
 
   if (gt(feeNativeAmount, '0')) {
     const cryptoFeeSymbol = feeDisplayDenomination?.symbol ?? ''

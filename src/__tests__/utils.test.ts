@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { log10 } from 'biggystring'
+import type { EdgeTransaction, EdgeTxAmount } from 'edge-core-js'
 
 import { selectDisplayDenom } from '../selectors/DenominationSelectors'
 import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
@@ -12,6 +13,7 @@ import {
   daysBetween,
   getNewArrayWithItem,
   getSupportedFiats,
+  getTxNetworkFee,
   isValidInput,
   maxPrimaryCurrencyConversionDecimals,
   MILLISECONDS_PER_DAY,
@@ -503,6 +505,44 @@ describe('roundedFee', function () {
       expect(
         roundedFee(amount, decimalPlacesBeyondLeadingZeros, multiplier)
       ).toBe(output[index])
+    })
+  })
+})
+
+describe('getTxNetworkFee', function () {
+  const makeTx = (
+    tokenId: string | null,
+    networkFees: EdgeTxAmount[]
+  ): EdgeTransaction => ({ tokenId, networkFees } as unknown as EdgeTransaction)
+
+  test('prefers the parent currency fee', function () {
+    const tx = makeTx('usdc', [
+      { tokenId: 'usdc', nativeAmount: '5' },
+      { tokenId: null, nativeAmount: '7' }
+    ])
+    expect(getTxNetworkFee(tx)).toEqual({ tokenId: null, nativeAmount: '7' })
+  })
+
+  test('falls back to the sent token', function () {
+    const tx = makeTx('usdc', [
+      { tokenId: 'usdt', nativeAmount: '3' },
+      { tokenId: 'usdc', nativeAmount: '5' }
+    ])
+    expect(getTxNetworkFee(tx)).toEqual({ tokenId: 'usdc', nativeAmount: '5' })
+  })
+
+  test('reports a fee in another token', function () {
+    const tx = makeTx(null, [{ tokenId: 'usdc', nativeAmount: '100000000' }])
+    expect(getTxNetworkFee(tx)).toEqual({
+      tokenId: 'usdc',
+      nativeAmount: '100000000'
+    })
+  })
+
+  test('returns a zero parent fee when there is none', function () {
+    expect(getTxNetworkFee(makeTx(null, []))).toEqual({
+      tokenId: null,
+      nativeAmount: '0'
     })
   })
 })
