@@ -13,7 +13,6 @@
 - added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
 - added: Native Edge API HMAC signer (`edgeKey.json` + XOR-split C shards) so login-server requests can be signed outside the JS bundle via `apiSigner`, with JS `KEYS.EDGE_API_*` remaining as a fallback.
 - added: Remote signed `GET /v1/infoRollup/:appId` `appKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
-- changed: Disable Pirate Chain on Android; existing wallets stay visible as keys-only.
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
@@ -32,6 +31,13 @@
 - fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
 - fixed: (iOS) Debug builds crashing on text-input measurement when entering an amount on the Buy scene
 - fixed: Unstake showing a bare "Insufficient funds" instead of naming the balance needed for the network fee
+
+## 4.51.3 (2026-09-30)
+
+- added: (Changelly) TON, BNB Smart Chain BNB and Avalanche C-Chain AVAX swaps
+- changed: Disable Pirate Chain on Android; existing wallets stay visible as keys-only.
+- fixed: (Changelly) L2 ETH swaps no longer pay out on Ethereum mainnet
+- fixed: (Changelly) Base and zkSync tokens are swappable
 
 ## 4.51.2 (2026-09-29)
 
