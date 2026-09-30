@@ -2,6 +2,12 @@
 
 ## Unreleased (develop)
 
+## 4.51.2 (2026-09-29)
+
+- added: MoonPay Trade swap provider
+- changed: (ARRR) Pirate Chain wallets run on `react-native-pirate-wallet` 0.3.4, replacing `react-native-piratechain`
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+
 ## 4.51.1 (2026-09-23)
 
 - fixed: The preferred exchange chosen in the swap settings, or set by an active promotion, is now the selected quote when it can fill the order, instead of only being listed first.
