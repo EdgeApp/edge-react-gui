@@ -81,6 +81,7 @@ exports[`initialState 1`] = `
           "destination": [],
           "source": [],
         },
+        "disableAssetsByPlugin": {},
         "disablePlugins": {},
       },
     },

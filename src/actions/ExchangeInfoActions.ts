@@ -8,6 +8,7 @@ import {
   asValue,
   type Cleaner
 } from 'cleaners'
+import type { EdgePluginMap, EdgeSwapRequest, EdgeTokenId } from 'edge-core-js'
 
 import type { ThunkAction } from '../types/reduxTypes'
 import { infoServerData } from '../util/network'
@@ -53,10 +54,22 @@ export const asExchangeInfo = asObject({
         }),
         () => ({ source: [], destination: [] })
       ),
+      // Same shape as disableAssets, keyed by swap pluginId. A match only
+      // removes that one swap provider from the quote request.
+      disableAssetsByPlugin: asMaybe(
+        asObject(
+          asObject({
+            source: asArray(asDisableAsset),
+            destination: asArray(asDisableAsset)
+          })
+        ),
+        () => ({})
+      ),
       disablePlugins: asMaybe(asDisablePluginsMap, () => ({}))
     }),
     () => ({
       disableAssets: { source: [], destination: [] },
+      disableAssetsByPlugin: {},
       disablePlugins: {}
     })
   )
@@ -64,11 +77,67 @@ export const asExchangeInfo = asObject({
 
 export type DisableAsset = ReturnType<typeof asDisableAsset>
 export type ExchangeInfo = ReturnType<typeof asExchangeInfo>
+export type DisableAssetsByPlugin =
+  ExchangeInfo['swap']['disableAssetsByPlugin']
+
+/**
+ * True when the asset matches any entry in a disableAssets list.
+ * An entry without a tokenId matches the mainnet coin, whose tokenId is null.
+ */
+export const isAssetDisabled = (
+  disableAssets: DisableAsset[],
+  pluginId: string,
+  tokenId: EdgeTokenId
+): boolean => {
+  for (const disableAsset of disableAssets) {
+    if (disableAsset.pluginId !== pluginId) continue
+    if (disableAsset.tokenId === 'allCoins') return true
+    if (disableAsset.tokenId === 'allTokens' && tokenId != null) return true
+    if ((disableAsset.tokenId ?? null) === tokenId) return true
+  }
+  return false
+}
+
+/**
+ * Returns the swap plugins whose disableAssetsByPlugin entry bans the
+ * request's source or destination asset.
+ */
+export const getDisabledSwapPlugins = (
+  disableAssetsByPlugin: DisableAssetsByPlugin,
+  request: EdgeSwapRequest
+): EdgePluginMap<true> => {
+  const out: EdgePluginMap<true> = {}
+  for (const swapPluginId of Object.keys(disableAssetsByPlugin)) {
+    const { source, destination } = disableAssetsByPlugin[swapPluginId]
+    if (
+      isAssetDisabled(
+        source,
+        request.fromWallet.currencyInfo.pluginId,
+        request.fromTokenId
+      ) ||
+      isAssetDisabled(
+        destination,
+        request.toWallet.currencyInfo.pluginId,
+        request.toTokenId
+      )
+    ) {
+      out[swapPluginId] = true
+    }
+  }
+  return out
+}
 
 export function updateExchangeInfo(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
-      const data = asExchangeInfo(infoServerData.rollup?.exchangeInfo)
+      // Read `exchangeInfo` from the RAW rollup, not the cleaned one:
+      // `asInfoRollup` in edge-info-server 3.12.0 has no
+      // `swap.disableAssetsByPlugin` key and drops it. This cleaner is ours,
+      // so parsing the raw payload keeps the field without a package bump.
+      const rollup = infoServerData.rollupRaw as
+        | { exchangeInfo?: unknown }
+        | undefined
+      const data = asExchangeInfo(rollup?.exchangeInfo)
       dispatch({ type: 'UPDATE_EXCHANGE_INFO', data })
     } catch (e: any) {
       console.warn(`Failed to get info server exchangeInfo: ${e.message}`)
