@@ -162,6 +162,12 @@ export const groupOrder: GroupInfo[] = [
     doc: "Reading transactions across every wallet at once, out of the core's account-wide transaction database. Each row is one asset of one transaction, so a swap that moved two assets appears twice."
   },
   {
+    id: 'names',
+    title: 'Payee names',
+    section: 'account',
+    doc: "FIO and ENS names as payees: the FIO names the app has cached from the user's own sends, requests and receipts, and resolving a name to the address one wallet should pay."
+  },
+  {
     id: 'objects',
     title: 'Object handles',
     section: 'objects',

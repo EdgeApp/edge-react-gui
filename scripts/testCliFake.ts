@@ -336,6 +336,57 @@ function main(): void {
       'query-transactions',
       '--sort=nativeAmount'
     )
+    // Fiat bounds are signed decimals in `defaultIsoFiat`; a fiat sort needs
+    // narrowing like any sort but date.
+    ok(
+      'query-transactions by fiat value',
+      'query-transactions',
+      '--sort=fiatAmount',
+      '--sort-direction=asc',
+      '--direction=send',
+      '--start-date=2026-01-01',
+      '--max-fiat-amount=-0.5'
+    )
+    ok(
+      'summarize-transactions by fiat value',
+      'summarize-transactions',
+      '--min-fiat-amount=12.50'
+    )
+    refuses(
+      'query-transactions refuses an unnarrowed fiat sort',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--sort=fiatAmount'
+    )
+    refuses(
+      'query-transactions refuses a non-number fiat bound',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--min-fiat-amount=ten'
+    )
+
+    // Payee names. A fresh account has never paid a FIO name, and the name
+    // check runs before any plugin, which the fake world does not have.
+    const cache = ok('fio-address-cache', 'fio-address-cache')
+    expect(
+      'fio-address-cache starts empty',
+      /"names":\s*\[\s*\]/.test(cache.out),
+      'expected an empty list'
+    )
+    refuses(
+      'resolve-name refuses an address',
+      'BAD_REQUEST',
+      'resolve-name',
+      w,
+      '--name=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7'
+    )
+    refuses(
+      'resolve-name refuses ENS on a bitcoin wallet',
+      'BAD_REQUEST',
+      'resolve-name',
+      w,
+      '--name=vitalik.eth'
+    )
     ok(
       'encode-uri',
       'encode-uri',

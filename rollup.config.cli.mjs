@@ -18,12 +18,17 @@ const babelOpts = {
       '@babel/preset-env',
       {
         exclude: ['transform-regenerator'],
-        loose: true
+        loose: true,
+        // The CLI only runs on Node, which has native classes and spread.
+        // Without a target, loose mode compiles `[...set]` to
+        // `[].concat(set)`, which yields `[set]` rather than its members, and
+        // `transform-fake-error-class` builds error subclasses that fail
+        // `instanceof`, so every engine error reached the client as a 500.
+        targets: { node: '18' }
       }
     ],
     '@babel/typescript'
-  ],
-  plugins: ['transform-fake-error-class']
+  ]
 }
 const resolveOpts = { extensions }
 
