@@ -83,6 +83,15 @@
       "args": []
     },
     {
+      "command": "admin-get-sync-repos",
+      "method": "GET",
+      "path": "/admin/{sessionId}/get-sync-repos",
+      "usage": "admin-get-sync-repos",
+      "help": "List the account's sync repos.",
+      "needsSession": true,
+      "args": []
+    },
+    {
       "command": "admin-hash-username",
       "method": "GET",
       "path": "/admin/hash-username",

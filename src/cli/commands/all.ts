@@ -3,6 +3,7 @@
  * side-effect. Import it once from the CLI entry point.
  */
 import './account'
+import './adminWatchSyncRepos'
 import './generated'
 import './edge'
 import './help'

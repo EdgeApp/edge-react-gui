@@ -367,6 +367,35 @@ a session does.
 (`logout`, `expired`, `cancelled`), and `7` when the engine went away — or for
 any close reason it does not recognise.
 
+### Watching sync repos
+
+`edge-cli admin-watch-sync-repos` makes the sync server's change notifications
+visible without an app. Like the other `admin-` commands it is a test and
+diagnostic tool. It asks the engine for the account repo and every wallet repo
+(the same list `admin-get-sync-repos` prints, by repo ID, never by sync key),
+opens its own WebSocket to the sync server's `/api/v2/ws`, subscribes every
+repo, and prints one JSON object per line until you interrupt it:
+
+```bash
+# terminal 1
+edge-cli -t admin-watch-sync-repos
+{"type":"subscribed","repos":[{"repoId":"EMEvo…","walletId":"account","result":1}, …]}
+{"type":"update","at":"2026-09-30T12:00:00.000Z","repos":[{"repoId":"3hnsH…","walletId":"7o7i6…=","checkpoint":"4:9"}]}
+
+# terminal 2, another -d directory logged in to the same account
+edge-cli -t -d /tmp/other rename-wallet --wallet-id=7o7i6 --name=Renamed
+edge-cli -t -d /tmp/other wallet-sync --wallet-id=7o7i6
+```
+
+A subscribe result is `1` (no changes since the checkpoint), `2` (changes to
+pull), `0` (the server could not check) or `-1` (not subscribable). The watch
+sends no checkpoints, so a repo with any data answers `2`. A `subLost` line
+names repos the server stopped watching. The socket goes to the
+`syncWebSocketServer` role when `EDGE_CLI_SERVERS` sets one, and otherwise to
+the first sync server with `http` swapped for `ws`; outside `-t` there is
+none, and the command says so. `admin-watch-sync-repos` exits `0` on Ctrl-C
+and `6` when the server closes the socket, after a final `closed` line.
+
 ### Exit codes
 
 | Code | Meaning |

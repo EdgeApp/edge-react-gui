@@ -217,6 +217,26 @@ function main(): void {
     ok('currency-wallets', 'currency-wallets')
     ok('wallet-info', 'wallet-info', w)
     ok('all-keys', 'all-keys')
+    const syncRepos = ok('admin-get-sync-repos', 'admin-get-sync-repos')
+    const repoWallets: string[] = (syncRepos.json?.repos ?? []).map(
+      (repo: { walletId: string }) => repo.walletId
+    )
+    if (repoWallets[0] === 'account' && repoWallets.includes(walletId)) {
+      passes++
+      console.log(
+        'OK   admin-get-sync-repos lists the account repo and the wallet'
+      )
+    } else {
+      failures++
+      console.error(
+        `FAIL admin-get-sync-repos listed ${JSON.stringify(repoWallets)}`
+      )
+    }
+    notInFakeWorld(
+      'admin-watch-sync-repos',
+      'No sync-server WebSocket',
+      'admin-watch-sync-repos'
+    )
     ok('get-wallet-info', 'get-wallet-info', `--id=${walletId}`)
     ok('get-raw-public-key', 'get-raw-public-key', w)
     ok('get-raw-private-key', 'get-raw-private-key', w)

@@ -9808,6 +9808,79 @@
         }
       }
     },
+    "/admin/{sessionId}/get-sync-repos": {
+      "get": {
+        "operationId": "adminGetSyncRepos",
+        "summary": "List the account's sync repos.",
+        "description": "**Core call:** _none — Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`._\n\n**Command line**\n\n```\nadmin-get-sync-repos\n```\n\nA test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the WebSocket endpoints that announce their changes. `admin-watch-sync-repos` subscribes to exactly this list.",
+        "tags": [
+          "Admin"
+        ],
+        "x-cli": {
+          "command": "admin-get-sync-repos",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`.",
+        "x-source": "src/cli/engine/routes/admin.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`walletId` is `account` for the account repo. `webSocketServers` is empty when the engine names no socket-capable sync server (core's built-in production fleet, or the fake world).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "repos": {
+                      "type": "array",
+                      "items": {
+                        "description": "{ repoId: string; walletId: string; type: string; }"
+                      },
+                      "description": "Account repo first, then wallets in `all-keys` order."
+                    },
+                    "webSocketServers": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
+                    }
+                  },
+                  "required": [
+                    "repos",
+                    "webSocketServers"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/engine/events": {
       "get": {
         "operationId": "engineEvents",

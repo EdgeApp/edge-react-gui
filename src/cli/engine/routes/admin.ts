@@ -6,6 +6,8 @@ import { engineError } from '../errors'
 import { getInternalStuff, type LobbyRequest } from '../internal'
 import { route } from '../route'
 import { asCoreValue, asOk } from '../schemas'
+import { ACCOUNT_REPO, repoIdFromKeys, syncWebSocketUrls } from '../syncRepos'
+import { getAccount } from './helpers'
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === 'object' && !Array.isArray(value)
@@ -347,5 +349,86 @@ export const adminRepoDelete = route({
     )
     await disklet.delete(path)
     return undefined
+  }
+})
+
+/**
+ * List the account's sync repos.
+ *
+ * A test and diagnostic call for the sync server's repo subscriptions.
+ *
+ * The account repo and every wallet storage repo, each by the repo ID the
+ * sync server files it under, plus the WebSocket endpoints that announce
+ * their changes. `admin-watch-sync-repos` subscribes to exactly this list.
+ *
+ * @returns `walletId` is `account` for the account repo. `webSocketServers`
+ *   is empty when the engine names no socket-capable sync server (core's
+ *   built-in production fleet, or the fake world).
+ * @note Deleted wallets are left out. Archived ones stay, since their repos
+ *   still sync.
+ * @coreNote Hashes each `account.getRawPrivateKey` sync key the way core
+ *   names its repos, `base58(sha256(sha256(syncKey)))`.
+ */
+export const adminGetSyncRepos = route({
+  core: null,
+  method: 'GET',
+  path: '/admin/{sessionId}/get-sync-repos',
+  cli: [
+    { command: 'admin-get-sync-repos' },
+    {
+      command: 'admin-watch-sync-repos',
+      custom: true,
+      exits: { interrupted: 0, socketClosed: 6 },
+      notes:
+        'Opens its own WebSocket to the first `webSocketServers` entry, ' +
+        'subscribes every repo, and prints newline-delimited JSON until ' +
+        "interrupted: one `subscribed` line with each repo's result (1 " +
+        'unchanged, 2 changes to pull, 0 failed, -1 not subscribable), then ' +
+        'one `update` or `subLost` line per notification. Exits 0 on SIGINT ' +
+        'and 6 when the server closes the socket.'
+    }
+  ],
+  returns: asObject({
+    repos: doc(
+      asArray(
+        asObject({
+          repoId: doc(asString, 'Base58 repo ID, never the sync key.'),
+          walletId: doc(asString, 'The wallet, or `account`.'),
+          type: doc(asString, 'Wallet type, e.g. `wallet:bitcoin`.')
+        })
+      ),
+      'Account repo first, then wallets in `all-keys` order.'
+    ),
+    webSocketServers: doc(
+      asArray(asString),
+      'Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, ' +
+        'or the sync servers with `http` swapped for `ws`.'
+    )
+  }),
+
+  async handler(ctx) {
+    const account = getAccount(ctx)
+    const repos: Array<{ repoId: string; walletId: string; type: string }> = []
+    const accountRepoId = repoIdFromKeys(
+      await account.getRawPrivateKey(account.id)
+    )
+    if (accountRepoId != null) {
+      repos.push({
+        repoId: accountRepoId,
+        walletId: ACCOUNT_REPO,
+        type: account.type
+      })
+    }
+    for (const info of account.allKeys) {
+      if (info.deleted || info.id === account.id) continue
+      if (!info.type.startsWith('wallet:')) continue
+      const repoId = repoIdFromKeys(await account.getRawPrivateKey(info.id))
+      if (repoId == null) continue
+      repos.push({ repoId, walletId: info.id, type: info.type })
+    }
+    return {
+      repos,
+      webSocketServers: syncWebSocketUrls(ctx.state.core.servers)
+    }
   }
 })
