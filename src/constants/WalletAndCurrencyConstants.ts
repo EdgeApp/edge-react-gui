@@ -1045,7 +1045,9 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    keysOnlyMode: Platform.OS === 'android' && Platform.constants.Version < 28,
+    // The Android build leaves out the Pirate native library
+    // (see react-native.config.js), so wallets there are keys-only:
+    keysOnlyMode: Platform.OS === 'android',
     highPrecisionSyncRatioDisplay: true,
     importKeyOptions: [
       {
