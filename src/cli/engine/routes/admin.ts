@@ -1,4 +1,12 @@
-import { asArray, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue
+} from 'cleaners'
 
 import { doc } from '../doc'
 import { base58 } from '../encoding'
@@ -6,7 +14,11 @@ import { engineError } from '../errors'
 import { getInternalStuff, type LobbyRequest } from '../internal'
 import { route } from '../route'
 import { asCoreValue, asOk } from '../schemas'
-import { ACCOUNT_REPO, repoIdFromKeys, syncWebSocketUrls } from '../syncRepos'
+import {
+  ACCOUNT_REPO,
+  readSyncWebSocketView,
+  repoIdFromKeys
+} from '../syncRepos'
 import { getAccount } from './helpers'
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
@@ -358,16 +370,23 @@ export const adminRepoDelete = route({
  * A test and diagnostic call for the sync server's repo subscriptions.
  *
  * The account repo and every wallet storage repo, each by the repo ID the
- * sync server files it under, plus the WebSocket endpoints that announce
- * their changes. `admin-watch-sync-repos` subscribes to exactly this list.
+ * sync server files it under, plus the sync-server WebSocket hosts core is
+ * following and the sockets it has open. `admin-watch-sync-repos`
+ * subscribes to exactly this list, on the host core's own socket uses.
  *
  * @returns `walletId` is `account` for the account repo. `webSocketServers`
- *   is empty when the engine names no socket-capable sync server (core's
- *   built-in production fleet, or the fake world).
+ *   is empty when there is no socket-capable sync server (core's built-in
+ *   production fleet on a core that cannot report its hosts, or the fake
+ *   world).
  * @note Deleted wallets are left out. Archived ones stay, since their repos
  *   still sync.
+ * @note Core follows the sync hosts the info server lists, which can differ
+ *   from the configured ones. A core that cannot report them (before repo
+ *   subscriptions) gets the configured hosts instead, with
+ *   `webSocketSource: derived` and no `sockets`.
  * @coreNote Hashes each `account.getRawPrivateKey` sync key the way core
- *   names its repos, `base58(sha256(sha256(syncKey)))`.
+ *   names its repos, `base58(sha256(sha256(syncKey)))`. The hosts and sockets
+ *   come from `context.$internalStuff.getSyncWebSocketStatus`.
  */
 export const adminGetSyncRepos = route({
   core: null,
@@ -380,7 +399,8 @@ export const adminGetSyncRepos = route({
       custom: true,
       exits: { interrupted: 0, socketClosed: 6 },
       notes:
-        'Opens its own WebSocket to the first `webSocketServers` entry, ' +
+        'Opens its own WebSocket to the host of a socket core has connected ' +
+        '(else one it is opening, else the first `webSocketServers` entry), ' +
         'subscribes every repo, and prints newline-delimited JSON until ' +
         "interrupted: one `subscribed` line with each repo's result (1 " +
         'unchanged, 2 changes to pull, 0 failed, -1 not subscribable), then ' +
@@ -401,8 +421,24 @@ export const adminGetSyncRepos = route({
     ),
     webSocketServers: doc(
       asArray(asString),
-      'Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, ' +
-        'or the sync servers with `http` swapped for `ws`.'
+      'Sync-server `/api/v2/ws` endpoints core follows, in its order.'
+    ),
+    sockets: doc(
+      asArray(
+        asObject({
+          url: doc(asString, 'The host the socket is on, or will try next.'),
+          connected: doc(asBoolean, 'The socket is open.'),
+          connecting: doc(asBoolean, 'The socket is being opened.'),
+          repoCount: doc(asNumber, 'How many repos the socket carries.')
+        })
+      ),
+      "Core's own sync-server sockets."
+    ),
+    webSocketSource: doc(
+      asValue('core', 'derived'),
+      '`core` when core reported its hosts; `derived` when they are the ' +
+        '`syncWebSocketServer` role, or the sync servers with `http` ' +
+        'swapped for `ws`.'
     )
   }),
 
@@ -426,9 +462,15 @@ export const adminGetSyncRepos = route({
       if (repoId == null) continue
       repos.push({ repoId, walletId: info.id, type: info.type })
     }
+    const view = await readSyncWebSocketView(
+      getInternalStuff(ctx.state.core.context),
+      ctx.state.core.servers
+    )
     return {
       repos,
-      webSocketServers: syncWebSocketUrls(ctx.state.core.servers)
+      webSocketServers: view.servers,
+      sockets: view.sockets,
+      webSocketSource: view.source
     }
   }
 })

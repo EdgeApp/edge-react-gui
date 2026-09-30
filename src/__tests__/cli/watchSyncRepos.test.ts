@@ -2,6 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 
 import {
   notificationLine,
+  pickWatchUrl,
   type RepoWatchLine,
   subscribeBatches,
   subscribedLine,
@@ -18,6 +19,30 @@ const REPOS: SyncRepo[] = [
   { repoId: 'WalletRepo', walletId: 'wallet1=' }
 ]
 const WALLET_IDS = new Map(REPOS.map(r => [r.repoId, r.walletId]))
+
+describe('pickWatchUrl', () => {
+  const servers = ['ws://a/api/v2/ws', 'ws://b/api/v2/ws']
+
+  it("prefers the host core's socket is connected to", () => {
+    expect(
+      pickWatchUrl(servers, [
+        { url: 'ws://c/api/v2/ws', connected: false, connecting: true },
+        { url: 'ws://b/api/v2/ws', connected: true, connecting: false }
+      ])
+    ).toBe('ws://b/api/v2/ws')
+  })
+
+  it('then one core is connecting to, then the first followed host', () => {
+    expect(
+      pickWatchUrl(servers, [
+        { url: 'ws://c/api/v2/ws', connected: false, connecting: true }
+      ])
+    ).toBe('ws://c/api/v2/ws')
+    expect(pickWatchUrl(servers, [])).toBe('ws://a/api/v2/ws')
+    expect(pickWatchUrl(servers)).toBe('ws://a/api/v2/ws')
+    expect(pickWatchUrl([], [])).toBeUndefined()
+  })
+})
 
 describe('subscribeBatches', () => {
   it('splits at 100 repos per call', () => {

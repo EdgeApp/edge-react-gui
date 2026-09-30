@@ -8097,9 +8097,9 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
       <h3><a href="#adminGetSyncRepos">List the account's sync repos.</a></h3>
       <div class="ids"><code class="cmdname">admin-get-sync-repos</code><span class="src" title="Declared in">src/cli/engine/routes/admin.ts</span></div>
     </header>
-    <p class="core none"><span class="lbl">core</span><em>Hashes each <code>account.getRawPrivateKey</code> sync key the way core names its repos, <code>base58(sha256(sha256(syncKey)))</code>.</em></p>
+    <p class="core none"><span class="lbl">core</span><em>Hashes each <code>account.getRawPrivateKey</code> sync key the way core names its repos, <code>base58(sha256(sha256(syncKey)))</code>. The hosts and sockets come from <code>context.$internalStuff.getSyncWebSocketStatus</code>.</em></p>
     <div class="desc"><p>A test and diagnostic call for the sync server&#39;s repo subscriptions.</p>
-<p>The account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the WebSocket endpoints that announce their changes. <code>admin-watch-sync-repos</code> subscribes to exactly this list.</p>
+<p>The account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the sync-server WebSocket hosts core is following and the sockets it has open. <code>admin-watch-sync-repos</code> subscribes to exactly this list, on the host core&#39;s own socket uses.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
@@ -8119,7 +8119,7 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   </div></div>
     <div class="pane resp">
     <h4>Response <span class="st ok">200</span></h4>
-    <div class="note"><p><code>walletId</code> is <code>account</code> for the account repo. <code>webSocketServers</code> is empty when the engine names no socket-capable sync server (core&#39;s built-in production fleet, or the fake world).</p>
+    <div class="note"><p><code>walletId</code> is <code>account</code> for the account repo. <code>webSocketServers</code> is empty when there is no socket-capable sync server (core&#39;s built-in production fleet on a core that cannot report its hosts, or the fake world).</p>
 </div><div class="shape">
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{
@@ -8129,6 +8129,13 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
     type: string
   }[]
   webSocketServers: string[]
+  sockets: {
+    url: string;
+    connected: boolean;
+    connecting: boolean;
+    repoCount: number
+  }[]
+  webSocketSource: &quot;core&quot; | &quot;derived&quot;
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
   &quot;repos&quot;: [
@@ -8136,7 +8143,11 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
   ],
   &quot;webSocketServers&quot;: [
     &quot;string&quot;
-  ]
+  ],
+  &quot;sockets&quot;: [
+    {}
+  ],
+  &quot;webSocketSource&quot;: &quot;&lt;\&quot;core\&quot;&gt;&quot;
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>repos</code></td>
@@ -8146,12 +8157,22 @@ a.err:hover { border-color: var(--accent); text-decoration: none; }
 <tr>
   <td class="k"><code>webSocketServers</code></td>
   <td class="ty"><span class="t">string[]</span></td>
-  <td class="doc">Sync-server <code>/api/v2/ws</code> endpoints: the <code>syncWebSocketServer</code> role, or the sync servers with <code>http</code> swapped for <code>ws</code>.</td>
+  <td class="doc">Sync-server <code>/api/v2/ws</code> endpoints core follows, in its order.</td>
+</tr>
+<tr>
+  <td class="k"><code>sockets</code></td>
+  <td class="ty"><span class="t">{ url: string; connected: boolean; connecting: boolean; repoCount: number; }[]</span></td>
+  <td class="doc">Core&#39;s own sync-server sockets.</td>
+</tr>
+<tr>
+  <td class="k"><code>webSocketSource</code></td>
+  <td class="ty"><span class="t">&quot;core&quot; | &quot;derived&quot;</span></td>
+  <td class="doc"><code>core</code> when core reported its hosts; <code>derived</code> when they are the <code>syncWebSocketServer</code> role, or the sync servers with <code>http</code> swapped for <code>ws</code>.</td>
 </tr></tbody></table>
   </div>
     
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>Deleted wallets are left out. Archived ones stay, since their repos still sync.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>Deleted wallets are left out. Archived ones stay, since their repos still sync.</li><li>Core follows the sync hosts the info server lists, which can differ from the configured ones. A core that cannot report them (before repo subscriptions) gets the configured hosts instead, with <code>webSocketSource: derived</code> and no <code>sockets</code>.</li></ul></div>
   </section>
 <h2 id="errors">Error codes</h2>
 <table class="fields"><tbody><tr id="err-BAD_REQUEST"><td class="k"><code>BAD_REQUEST</code></td>

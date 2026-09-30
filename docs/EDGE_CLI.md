@@ -390,11 +390,19 @@ edge-cli -t -d /tmp/other wallet-sync --wallet-id=7o7i6
 A subscribe result is `1` (no changes since the checkpoint), `2` (changes to
 pull), `0` (the server could not check) or `-1` (not subscribable). The watch
 sends no checkpoints, so a repo with any data answers `2`. A `subLost` line
-names repos the server stopped watching. The socket goes to the
-`syncWebSocketServer` role when `EDGE_CLI_SERVERS` sets one, and otherwise to
-the first sync server with `http` swapped for `ws`; outside `-t` there is
-none, and the command says so. `admin-watch-sync-repos` exits `0` on Ctrl-C
-and `6` when the server closes the socket, after a final `closed` line.
+names repos the server stopped watching.
+
+The socket goes where core's own socket goes. Core follows the sync hosts the
+info server lists, which can differ from the configured ones, so
+`admin-get-sync-repos` reports the hosts core follows (`webSocketServers`) and
+the sockets it has open (`sockets`), and `admin-watch-sync-repos` joins the
+host of a connected socket, else one being opened, else the first followed
+host. A core too old to report these gets the configured hosts instead
+(`webSocketSource: derived`): the `syncWebSocketServer` role when
+`EDGE_CLI_SERVERS` sets one, otherwise the sync servers with `http` swapped
+for `ws`. When there is no host at all, the command says so.
+`admin-watch-sync-repos` exits `0` on Ctrl-C and `6` when the server closes
+the socket, after a final `closed` line.
 
 ### Exit codes
 

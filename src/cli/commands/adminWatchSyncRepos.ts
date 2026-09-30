@@ -1,5 +1,7 @@
 import { EXIT } from '../client/output'
 import {
+  type CoreSocket,
+  pickWatchUrl,
   type SyncRepo,
   watchRepos,
   type WatchSocket
@@ -10,6 +12,8 @@ import { parseCommandArgs } from '../commandArgs'
 interface SyncReposResponse {
   repos: SyncRepo[]
   webSocketServers: string[]
+  /** Absent from an engine older than this client. */
+  sockets?: CoreSocket[]
 }
 
 /**
@@ -28,7 +32,8 @@ function makeSocket(url: string): WatchSocket {
  * Watches the logged-in account's sync repos over the sync server's own
  * WebSocket, so the subscription protocol is observable without an app.
  * A test and diagnostic tool, like the other `admin-` commands. The
- * engine only supplies the repo list; the socket belongs to this process.
+ * engine supplies the repo list and the hosts core uses; the socket belongs
+ * to this process.
  */
 const watchSyncReposCmd = command(
   'admin-watch-sync-repos',
@@ -40,10 +45,11 @@ const watchSyncReposCmd = command(
   async (ctx, argv) => {
     parseCommandArgs(watchSyncReposCmd, argv, { positional: 'none' })
     const sessionId = requireSession(ctx)
-    const { repos, webSocketServers } = await ctx.client.get<SyncReposResponse>(
-      `/admin/${encodeURIComponent(sessionId)}/get-sync-repos`
-    )
-    const url = webSocketServers[0]
+    const { repos, webSocketServers, sockets } =
+      await ctx.client.get<SyncReposResponse>(
+        `/admin/${encodeURIComponent(sessionId)}/get-sync-repos`
+      )
+    const url = pickWatchUrl(webSocketServers, sockets)
     if (url == null) {
       throw new Error(
         'No sync-server WebSocket is configured. Run under -t, where the ' +

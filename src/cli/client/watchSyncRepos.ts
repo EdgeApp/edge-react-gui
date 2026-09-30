@@ -17,6 +17,29 @@ export interface SyncRepo {
   type?: string
 }
 
+/** One of core's own sync-server sockets, as `admin-get-sync-repos` reports it. */
+export interface CoreSocket {
+  url: string
+  connected: boolean
+  connecting: boolean
+}
+
+/**
+ * The host to watch: the one core's socket is connected to, so the watch
+ * sees what the engine sees; else one core is connecting to; else the first
+ * host core follows. Undefined when there is none.
+ */
+export function pickWatchUrl(
+  servers: string[],
+  sockets: CoreSocket[] = []
+): string | undefined {
+  return (
+    sockets.find(socket => socket.connected)?.url ??
+    sockets.find(socket => socket.connecting)?.url ??
+    servers[0]
+  )
+}
+
 /** The most repos one `subscribeRepos` call may carry. */
 export const SUBSCRIBE_BATCH_SIZE = 100
 

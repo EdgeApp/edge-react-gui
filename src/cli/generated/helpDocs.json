@@ -121,14 +121,17 @@
       "method": "GET",
       "path": "/admin/{sessionId}/get-sync-repos",
       "usage": "admin-get-sync-repos",
-      "description": "A test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the WebSocket endpoints that announce their changes. `admin-watch-sync-repos` subscribes to exactly this list.",
+      "description": "A test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the sync-server WebSocket hosts core is following and the sockets it has open. `admin-watch-sync-repos` subscribes to exactly this list, on the host core's own socket uses.",
       "returns": {
         "repos": "{ repoId: string; walletId: string; type: string; }[] — Account repo first, then wallets in `all-keys` order.",
-        "webSocketServers": "string[] — Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
+        "webSocketServers": "string[] — Sync-server `/api/v2/ws` endpoints core follows, in its order.",
+        "sockets": "{ url: string; connected: boolean; connecting: boolean; repoCount: number; }[] — Core's own sync-server sockets.",
+        "webSocketSource": "\"core\" | \"derived\" — `core` when core reported its hosts; `derived` when they are the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
       },
-      "returnsDoc": "`walletId` is `account` for the account repo. `webSocketServers` is empty when the engine names no socket-capable sync server (core's built-in production fleet, or the fake world).",
+      "returnsDoc": "`walletId` is `account` for the account repo. `webSocketServers` is empty when there is no socket-capable sync server (core's built-in production fleet on a core that cannot report its hosts, or the fake world).",
       "notes": [
-        "Deleted wallets are left out. Archived ones stay, since their repos still sync."
+        "Deleted wallets are left out. Archived ones stay, since their repos still sync.",
+        "Core follows the sync hosts the info server lists, which can differ from the configured ones. A core that cannot report them (before repo subscriptions) gets the configured hosts instead, with `webSocketSource: derived` and no `sockets`."
       ]
     },
     "admin-hash-username": {
@@ -370,15 +373,18 @@
       "method": "GET",
       "path": "/admin/{sessionId}/get-sync-repos",
       "usage": "admin-watch-sync-repos",
-      "description": "A test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the WebSocket endpoints that announce their changes. `admin-watch-sync-repos` subscribes to exactly this list.",
+      "description": "A test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the sync-server WebSocket hosts core is following and the sockets it has open. `admin-watch-sync-repos` subscribes to exactly this list, on the host core's own socket uses.",
       "returns": {
         "repos": "{ repoId: string; walletId: string; type: string; }[] — Account repo first, then wallets in `all-keys` order.",
-        "webSocketServers": "string[] — Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
+        "webSocketServers": "string[] — Sync-server `/api/v2/ws` endpoints core follows, in its order.",
+        "sockets": "{ url: string; connected: boolean; connecting: boolean; repoCount: number; }[] — Core's own sync-server sockets.",
+        "webSocketSource": "\"core\" | \"derived\" — `core` when core reported its hosts; `derived` when they are the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
       },
-      "returnsDoc": "`walletId` is `account` for the account repo. `webSocketServers` is empty when the engine names no socket-capable sync server (core's built-in production fleet, or the fake world).",
+      "returnsDoc": "`walletId` is `account` for the account repo. `webSocketServers` is empty when there is no socket-capable sync server (core's built-in production fleet on a core that cannot report its hosts, or the fake world).",
       "notes": [
         "Deleted wallets are left out. Archived ones stay, since their repos still sync.",
-        "Opens its own WebSocket to the first `webSocketServers` entry, subscribes every repo, and prints newline-delimited JSON until s result (1 \" +\n         +\n         +\n        "
+        "Core follows the sync hosts the info server lists, which can differ from the configured ones. A core that cannot report them (before repo subscriptions) gets the configured hosts instead, with `webSocketSource: derived` and no `sockets`.",
+        "Opens its own WebSocket to the host of a socket core has connected (else one it is opening, else the first `webSocketServers` entry), subscribes every repo, and prints newline-delimited JSON until s result (1 \" +\n         +\n         +\n        "
       ]
     },
     "all-keys": {

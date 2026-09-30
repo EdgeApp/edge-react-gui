@@ -5,6 +5,7 @@
 import crypto from 'crypto'
 
 import { base58 } from './encoding'
+import type { EdgeInternalStuff, SyncWebSocketStatus } from './internal'
 
 /** Where the sync server accepts WebSocket upgrades. */
 export const SYNC_WEBSOCKET_PATH = '/api/v2/ws'
@@ -66,4 +67,52 @@ export function syncWebSocketUrls(servers: {
   if (servers.syncWebSocketServer != null) return urls
   const primary = urls.filter(url => !/^wss?:\/\/sync-eu\b/i.test(url))
   return primary.length > 0 ? primary : urls
+}
+
+export interface SyncWebSocketView {
+  /** The `/api/v2/ws` endpoints the engine's core follows. */
+  servers: string[]
+  /** Core's own sockets, empty when core cannot report them. */
+  sockets: SyncWebSocketStatus[]
+  /**
+   * `core` when core reported its hosts. `derived` when this core predates
+   * repo subscriptions, so the hosts come from the configured servers.
+   */
+  source: 'core' | 'derived'
+}
+
+/**
+ * The sync WebSocket hosts core is really following, and its open sockets.
+ *
+ * Core moves its socket to whatever sync hosts the info server lists, so a
+ * list derived from the engine's own configuration can name a host core has
+ * left. Asking core is the only reliable answer; the derivation is kept for a
+ * core that has no way to be asked.
+ */
+export async function readSyncWebSocketView(
+  internal: Partial<EdgeInternalStuff> | undefined,
+  servers: Parameters<typeof syncWebSocketUrls>[0]
+): Promise<SyncWebSocketView> {
+  if (internal?.getSyncWebSocketStatus != null) {
+    const status = await internal.getSyncWebSocketStatus()
+    return {
+      servers: status.servers.map(toSyncWebSocketUrl),
+      sockets: status.sockets.map(socket => ({
+        url: toSyncWebSocketUrl(socket.url),
+        connected: socket.connected,
+        connecting: socket.connecting,
+        repoCount: socket.repoCount
+      })),
+      source: 'core'
+    }
+  }
+  const followed = internal?.syncWebSocketServers
+  if (followed != null) {
+    return {
+      servers: followed.map(toSyncWebSocketUrl),
+      sockets: [],
+      source: 'core'
+    }
+  }
+  return { servers: syncWebSocketUrls(servers), sockets: [], source: 'derived' }
 }

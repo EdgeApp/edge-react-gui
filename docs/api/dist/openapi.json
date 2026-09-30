@@ -9812,7 +9812,7 @@
       "get": {
         "operationId": "adminGetSyncRepos",
         "summary": "List the account's sync repos.",
-        "description": "**Core call:** _none — Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`._\n\n**Command line**\n\n```\nadmin-get-sync-repos\n```\n\nA test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the WebSocket endpoints that announce their changes. `admin-watch-sync-repos` subscribes to exactly this list.",
+        "description": "**Core call:** _none — Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`. The hosts and sockets come from `context.$internalStuff.getSyncWebSocketStatus`._\n\n**Command line**\n\n```\nadmin-get-sync-repos\n```\n\nA test and diagnostic call for the sync server's repo subscriptions.\n\nThe account repo and every wallet storage repo, each by the repo ID the sync server files it under, plus the sync-server WebSocket hosts core is following and the sockets it has open. `admin-watch-sync-repos` subscribes to exactly this list, on the host core's own socket uses.",
         "tags": [
           "Admin"
         ],
@@ -9824,7 +9824,7 @@
           "preset": {}
         },
         "x-core-call": null,
-        "x-core-note": "Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`.",
+        "x-core-note": "Hashes each `account.getRawPrivateKey` sync key the way core names its repos, `base58(sha256(sha256(syncKey)))`. The hosts and sockets come from `context.$internalStuff.getSyncWebSocketStatus`.",
         "x-source": "src/cli/engine/routes/admin.ts",
         "parameters": [
           {
@@ -9839,7 +9839,7 @@
         ],
         "responses": {
           "200": {
-            "description": "`walletId` is `account` for the account repo. `webSocketServers` is empty when the engine names no socket-capable sync server (core's built-in production fleet, or the fake world).",
+            "description": "`walletId` is `account` for the account repo. `webSocketServers` is empty when there is no socket-capable sync server (core's built-in production fleet on a core that cannot report its hosts, or the fake world).",
             "content": {
               "application/json": {
                 "schema": {
@@ -9857,12 +9857,32 @@
                       "items": {
                         "type": "string"
                       },
-                      "description": "Sync-server `/api/v2/ws` endpoints: the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
+                      "description": "Sync-server `/api/v2/ws` endpoints core follows, in its order."
+                    },
+                    "sockets": {
+                      "type": "array",
+                      "items": {
+                        "description": "{ url: string; connected: boolean; connecting: boolean; repoCount: number; }"
+                      },
+                      "description": "Core's own sync-server sockets."
+                    },
+                    "webSocketSource": {
+                      "anyOf": [
+                        {
+                          "description": "\"core\""
+                        },
+                        {
+                          "description": "\"derived\""
+                        }
+                      ],
+                      "description": "`core` when core reported its hosts; `derived` when they are the `syncWebSocketServer` role, or the sync servers with `http` swapped for `ws`."
                     }
                   },
                   "required": [
                     "repos",
-                    "webSocketServers"
+                    "webSocketServers",
+                    "sockets",
+                    "webSocketSource"
                   ]
                 }
               }

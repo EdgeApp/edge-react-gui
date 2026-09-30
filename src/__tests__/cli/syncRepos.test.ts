@@ -1,6 +1,7 @@
 import { describe, expect, it } from '@jest/globals'
 
 import {
+  readSyncWebSocketView,
   repoIdFromKeys,
   syncKeyToRepoId,
   syncWebSocketUrls,
@@ -75,5 +76,67 @@ describe('syncWebSocketUrls', () => {
   it('is empty with no socket-capable server', () => {
     expect(syncWebSocketUrls({})).toEqual([])
     expect(syncWebSocketUrls({ syncServer: 'fake://sync' })).toEqual([])
+  })
+})
+
+describe('readSyncWebSocketView', () => {
+  const configured = { syncServer: ['http://127.0.0.1:8010'] }
+
+  it("reports core's followed hosts and open sockets", async () => {
+    const view = await readSyncWebSocketView(
+      {
+        syncWebSocketServers: ['ws://10.0.0.5:8010/api/v2/ws'],
+        getSyncWebSocketStatus: async () => ({
+          servers: ['ws://10.0.0.5:8010/api/v2/ws', 'ws://10.0.0.6:8010'],
+          sockets: [
+            {
+              url: 'ws://10.0.0.5:8010/api/v2/ws',
+              connected: true,
+              connecting: false,
+              repoCount: 4
+            }
+          ]
+        })
+      },
+      configured
+    )
+    expect(view).toEqual({
+      servers: ['ws://10.0.0.5:8010/api/v2/ws', 'ws://10.0.0.6:8010/api/v2/ws'],
+      sockets: [
+        {
+          url: 'ws://10.0.0.5:8010/api/v2/ws',
+          connected: true,
+          connecting: false,
+          repoCount: 4
+        }
+      ],
+      source: 'core'
+    })
+  })
+
+  it('uses the followed-host getter alone when that is all core has', async () => {
+    expect(
+      await readSyncWebSocketView(
+        { syncWebSocketServers: ['ws://10.0.0.5:8010'] },
+        configured
+      )
+    ).toEqual({
+      servers: ['ws://10.0.0.5:8010/api/v2/ws'],
+      sockets: [],
+      source: 'core'
+    })
+  })
+
+  it('derives the hosts from the configuration on an older core', async () => {
+    expect(await readSyncWebSocketView({}, configured)).toEqual({
+      servers: ['ws://127.0.0.1:8010/api/v2/ws'],
+      sockets: [],
+      source: 'derived'
+    })
+    expect(await readSyncWebSocketView(undefined, {})).toEqual({
+      servers: [],
+      sockets: [],
+      source: 'derived'
+    })
   })
 })
