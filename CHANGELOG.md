@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: HyperCore wallets
+- added: Split HyperEVM and HyperCore wallets into each other
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
 - added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
 - added: Logbox disable option to env.json

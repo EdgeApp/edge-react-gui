@@ -66,7 +66,9 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     const { pluginId } = sourceWallet.currencyInfo
     const specialInfo = getSpecialCurrencyInfo(pluginId)
     const namespace = specialInfo.walletConnectV2ChainId?.namespace
-    if (namespace === 'eip155') return lstrings.split_description_evm
+    // HyperCore shares its keys and address with HyperEVM:
+    if (namespace === 'eip155' || pluginId === 'hypercore')
+      return lstrings.split_description_evm
     if (namespace == null || namespace === 'bip122')
       return lstrings.split_description_utxo
     return lstrings.split_description
