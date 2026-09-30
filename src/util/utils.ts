@@ -535,7 +535,7 @@ export const convertTransactionFeeToDisplayFee = (
   const feeNativeAmount = getTxNetworkFee(transaction).nativeAmount
 
   if (gt(feeNativeAmount, '0')) {
-    const cryptoFeeSymbol = feeDisplayDenomination?.symbol ?? ''
+    const cryptoFeeSymbol = feeDisplayDenomination?.symbol
     const displayMultiplier =
       feeDisplayDenomination != null ? feeDisplayDenomination.multiplier : ''
     const exchangeMultiplier =
