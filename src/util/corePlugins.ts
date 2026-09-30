@@ -130,7 +130,6 @@ function buildSwapPlugins(): EdgeCorePluginsInit {
     exolix: swapInit('exolix'),
     godex: swapInit('godex'),
     lifi: swapInit('lifi'),
-    letsexchange: swapInit('letsexchange'),
     mptrade: swapInit('mptrade'),
     nexchange: swapInit('nexchange'),
     sideshift: swapInit('sideshift'),
