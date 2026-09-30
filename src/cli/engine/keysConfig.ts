@@ -58,9 +58,24 @@ function isMissingFile(error: unknown): boolean {
   )
 }
 
+/**
+ * A keys.json path from `EDGE_CLI_KEYS_FILE`, searched ahead of the defaults,
+ * so a session can carry its own API key pair (for example one minted on a
+ * local login server) without editing the shared files.
+ */
+export function keysFileOverride(): string | undefined {
+  const path = process.env.EDGE_CLI_KEYS_FILE
+  return path != null && path !== '' ? resolve(path) : undefined
+}
+
 /** Where loadKeys looks, in order. */
 export function keysSearchPaths(): string[] {
-  return [resolve('./keys.json'), join(os.homedir(), '.edge-cli', 'keys.json')]
+  const override = keysFileOverride()
+  return [
+    ...(override != null ? [override] : []),
+    resolve('./keys.json'),
+    join(os.homedir(), '.edge-cli', 'keys.json')
+  ]
 }
 
 function readKeysFile(path: string): KeysConfig | null {
@@ -88,8 +103,9 @@ function readKeysFile(path: string): KeysConfig | null {
 
 /**
  * Loads keys.json from (in order):
- * 1. ./keys.json
- * 2. ~/.edge-cli/keys.json
+ * 1. $EDGE_CLI_KEYS_FILE, when set
+ * 2. ./keys.json
+ * 3. ~/.edge-cli/keys.json
  *
  * Missing files are skipped. Present but invalid JSON/cleaner failures throw
  * so misconfiguration is not silently treated as empty defaults. A file that
@@ -104,8 +120,12 @@ export function loadKeys(): KeysConfig {
   const out = makeDefaultKeys()
   let foundApiKey = false
 
+  const override = keysFileOverride()
   for (const path of keysSearchPaths()) {
     const parsed = readKeysFile(path)
+    if (parsed == null && path === override) {
+      throw new Error(`EDGE_CLI_KEYS_FILE does not exist: ${path}`)
+    }
     if (parsed == null) continue
     out.pluginApiKeys = mergePluginApiKeys(
       out.pluginApiKeys,

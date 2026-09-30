@@ -44,7 +44,7 @@ import { type EngineState, Router } from './router'
 import { registerRoutes } from './routes'
 import { createRequestHandler, listenTcp, listenUnix } from './server'
 import { SessionStore } from './sessions'
-import { TESTER_SERVERS } from './testerServers'
+import { resolveServers } from './testerServers'
 
 sourceMapSupport.install()
 
@@ -134,7 +134,8 @@ function printHelp(): void {
   console.log(`Usage: edge-engine [options]
 
 Options:
-  -t, --test                 Use tester servers (login/info/sync/change-tester)
+  -t, --test                 Use tester servers (login/info/sync/change-tester),
+                             or the local ones named in EDGE_CLI_SERVERS
       --fake                 Emulate the login/info/sync servers in-process
   -d, --directory <path>     Working directory for core data
   -a, --app-id <id>          Application ID
@@ -177,9 +178,7 @@ async function main(): Promise<void> {
     testMode,
     loginServer: args.fake
       ? 'fake://login'
-      : testMode
-      ? TESTER_SERVERS.loginServer
-      : undefined
+      : resolveServers(testMode)?.loginServer
   })
   const logger = new EngineLogger(profile)
   logger.info('Engine starting', {

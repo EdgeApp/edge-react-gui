@@ -22,6 +22,7 @@ import {
   UsageError
 } from './command'
 import { defaultDirectory, loadConfig } from './engine/cliConfig'
+import { resolveServers } from './engine/testerServers'
 import { parseCliArgs, showCliHelp } from './parseArgs'
 
 sourceMapSupport.install()
@@ -68,11 +69,7 @@ async function buildContext(options: {
     noSpawn: options['no-spawn'] != null,
     tcpPort:
       options.tcp != null && options.tcp !== '' ? Number(options.tcp) : null,
-    loginServer: fake
-      ? 'fake://login'
-      : testMode
-      ? 'https://login-tester.edge.app'
-      : undefined
+    loginServer: fake ? 'fake://login' : resolveServers(testMode)?.loginServer
   })
 
   const envSession = process.env.EDGE_CLI_SESSION

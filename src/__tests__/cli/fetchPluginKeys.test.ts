@@ -14,8 +14,8 @@ describe('getKeysAppId', () => {
 
 describe('fetchPluginKeys', () => {
   it('throws when neither a native signer nor apiKey/apiSecret is provided', async () => {
-    await expect(
-      fetchPluginKeys({ appId: '', testMode: true })
-    ).rejects.toThrow('No HMAC credentials available for infoRollup appKeys')
+    await expect(fetchPluginKeys({ appId: '' })).rejects.toThrow(
+      'No HMAC credentials available for infoRollup appKeys'
+    )
   })
 })

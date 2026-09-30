@@ -14,10 +14,15 @@ import { loadAppConfig } from './appConfig'
 import { defaultDirectory } from './cliConfig'
 import type { EventHub } from './events'
 import { fetchPluginKeys } from './fetchPluginKeys'
-import { keysSearchPaths, loadKeys, mergePluginApiKeys } from './keysConfig'
+import {
+  keysFileOverride,
+  keysSearchPaths,
+  loadKeys,
+  mergePluginApiKeys
+} from './keysConfig'
 import type { EngineLogger } from './logger'
 import { hasNodeApiSigner, makeNodeApiSigner } from './nodeApiSigner'
-import { TESTER_SERVERS } from './testerServers'
+import { resolveServers } from './testerServers'
 
 let pluginsLocked = false
 
@@ -186,10 +191,13 @@ export async function makeCoreContext(
     apiSecretHex != null
       ? Buffer.from(apiSecretHex.replace(/^0x/i, ''), 'hex')
       : undefined
-  // Explicit -k / EDGE_CLI_FORCE_KEYS_JSON skips the N-API signer so operators
-  // can point a native-built engine at alternate keys for tester/debug.
+  // Explicit -k / EDGE_CLI_FORCE_KEYS_JSON / EDGE_CLI_KEYS_FILE skips the
+  // N-API signer so operators can point a native-built engine at alternate
+  // keys for tester/debug or a local server stack.
   const forceKeysJson =
-    opts.apiKey != null || process.env.EDGE_CLI_FORCE_KEYS_JSON === '1'
+    opts.apiKey != null ||
+    process.env.EDGE_CLI_FORCE_KEYS_JSON === '1' ||
+    keysFileOverride() != null
   const useNativeSigner = !forceKeysJson && hasNodeApiSigner()
   const apiSigner = useNativeSigner ? makeNodeApiSigner() : undefined
 
@@ -200,14 +208,8 @@ export async function makeCoreContext(
     )
   }
 
-  const servers = testMode
-    ? {
-        loginServer: TESTER_SERVERS.loginServer,
-        infoServer: TESTER_SERVERS.infoServer,
-        changeServer: TESTER_SERVERS.changeServer,
-        syncServer: [...TESTER_SERVERS.syncServer]
-      }
-    : {}
+  const testServers = resolveServers(testMode)
+  const servers = testServers ?? {}
 
   if (testMode) {
     opts.logger?.info('Using tester servers', { servers })
@@ -222,7 +224,7 @@ export async function makeCoreContext(
       apiKey: effectiveApiKey,
       apiSecret,
       appId,
-      testMode
+      infoServer: testServers?.infoServer
     })
     keysConfig.pluginApiKeys = mergePluginApiKeys(
       remote.pluginApiKeys,

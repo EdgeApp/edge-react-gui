@@ -90,8 +90,10 @@ commands, and EOF (Ctrl-D) leaves.
 | `-u, --username` / `-p, --password` | client | Legacy one-shot login helpers |
 | `-h, --help` | both | Show options |
 
-API keys load from `./keys.json`, then `~/.edge-cli/keys.json`
-(`edgeApiKey`, `edgeApiSecret`, `pluginApiKeys`).
+API keys load from `$EDGE_CLI_KEYS_FILE` (when set), then `./keys.json`,
+then `~/.edge-cli/keys.json` (`edgeApiKey`, `edgeApiSecret`, `pluginApiKeys`).
+Setting `EDGE_CLI_KEYS_FILE` also forces its JSON key/secret pair over the
+native signer, and a missing file is an error rather than a silent fallback.
 
 When the native Edge API HMAC signer is available, the engine prefers it over
 `keys.json` secrets for **both** `edge-core-js` and `GET /v1/getKeys` on the
@@ -129,6 +131,26 @@ npm run cli -- -t login-with-password --username=alice --password='pass'
 
 Confirm with `edge-cli engine-config` — `testMode` should be true and every
 server URL should be a `*-tester.edge.app` host.
+
+### Local servers
+
+`EDGE_CLI_SERVERS` holds a JSON object that replaces some or all of those
+hosts under `-t`, to run against login, info or sync servers on this machine
+or the LAN:
+
+```bash
+export EDGE_CLI_SERVERS='{"loginServer":"http://127.0.0.1:8001","infoServer":"http://127.0.0.1:8008","syncServer":["http://127.0.0.1:8010"]}'
+export EDGE_CLI_KEYS_FILE=~/edge-local-keys.json   # the local login server's key pair
+npm run cli -- -t -d /tmp/edge-local login-with-password --username=alice --password='pass'
+```
+
+- Roles are `loginServer`, `infoServer`, `changeServer` and `syncServer`
+  (a URL or a list). Roles left out keep their tester host.
+- Every URL it names must be loopback, RFC 1918, link-local or `*.local`; any
+  other host is refused, so the override can never reach production.
+- It only applies with `-t`. Setting it without `-t` is an error.
+- The login server is part of the engine profile, so a local engine and a
+  tester engine on the same `-d` directory run side by side.
 
 ## Architecture
 
@@ -387,7 +409,7 @@ src/cli/
     appConfig.ts       # appId / app config
     fetchPluginKeys.ts # Remote plugin keys over the signed infoRollup
     nodeApiSigner.ts   # Node HMAC signer for the Edge API
-    testerServers.ts   # The six -tester hosts
+    testerServers.ts   # The six -tester hosts and EDGE_CLI_SERVERS
     routes/            # status, login, account, wallets, …
   client/
     apiClient.ts       # HTTP over socketPath or TCP

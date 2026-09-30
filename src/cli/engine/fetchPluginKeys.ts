@@ -11,7 +11,6 @@ import os from 'os'
 import { version as APP_VERSION } from '../../../package.json'
 import { fetchRemoteKeys } from '../../util/keysServer'
 import { configureNetwork, infoServerData } from '../../util/network'
-import { TESTER_SERVERS } from './testerServers'
 
 const PROD_INFO_SERVERS = ['https://info1.edge.app', 'https://info2.edge.app']
 
@@ -20,7 +19,8 @@ export interface FetchPluginKeysOpts {
   apiKey?: string
   apiSecret?: Uint8Array
   appId: string
-  testMode: boolean
+  /** The info server to sign against. Production when omitted. */
+  infoServer?: string
 }
 
 export interface FetchedPluginKeys {
@@ -75,9 +75,8 @@ function cliOsParams(): {
 export async function fetchPluginKeys(
   opts: FetchPluginKeysOpts
 ): Promise<FetchedPluginKeys> {
-  const infoServers = opts.testMode
-    ? [TESTER_SERVERS.infoServer]
-    : PROD_INFO_SERVERS
+  const infoServers =
+    opts.infoServer != null ? [opts.infoServer] : PROD_INFO_SERVERS
   configureNetwork({ infoServers })
 
   const appId = getKeysAppId(opts.appId)
