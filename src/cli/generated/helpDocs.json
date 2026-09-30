@@ -1545,6 +1545,25 @@
         "SESSION_EXPIRED"
       ]
     },
+    "fio-address-cache": {
+      "summary": "The FIO names the user has sent to, requested from, or been paid by.",
+      "method": "GET",
+      "path": "/account/{sessionId}/fio-address-cache",
+      "usage": "fio-address-cache",
+      "description": "The Edge app adds a name to this list whenever the user sends to a FIO name, sends a FIO request, or receives a transaction from one. The list lives in the account's synced storage, so it holds names used on any device.",
+      "core": "account.disklet",
+      "returns": {
+        "names": "string[] — Cached FIO names, such as `paul@edge`."
+      },
+      "returnsDoc": "`{ names }`, lowercased and sorted.",
+      "notes": [
+        "Names only. Resolve one to an address for a given wallet with `resolve-name`."
+      ],
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
     "fix-username": {
       "summary": "Normalize a username.",
       "method": "GET",
@@ -2571,13 +2590,13 @@
       "summary": "Query transactions across every wallet in the account at once.",
       "method": "GET",
       "path": "/account/{sessionId}/transactions",
-      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
       "description": "Unlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
       "core": "account.transactions.queryTxs",
       "params": {
         "sort": {
           "pass": "[--sort=<sort>]",
-          "doc": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.",
+          "doc": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount. `fiatAmount` drops rows whose fiat value is not known yet.",
           "optional": true
         },
         "sortDirection": {
@@ -2653,6 +2672,16 @@
         "maxFee": {
           "pass": "[--max-fee=<maxFee>]",
           "doc": "Upper bound, same units as minFee.",
+          "optional": true
+        },
+        "minFiatAmount": {
+          "pass": "[--min-fiat-amount=<minFiatAmount>]",
+          "doc": "In the account's `defaultIsoFiat`. Signed like the amount: a send's value is negative, except one the user typed, which the app stores positive. Rows with no fiat value yet never match.",
+          "optional": true
+        },
+        "maxFiatAmount": {
+          "pass": "[--max-fiat-amount=<maxFiatAmount>]",
+          "doc": "Upper bound, same units as minFiatAmount.",
           "optional": true
         },
         "minBlockHeight": {
@@ -2906,6 +2935,48 @@
         "USERNAME_ERROR",
         "BAD_REQUEST",
         "NETWORK_ERROR"
+      ]
+    },
+    "resolve-name": {
+      "summary": "Resolve a FIO or ENS name to an address for one wallet.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/resolve-name",
+      "usage": "resolve-name --wallet-id=<walletId> [--token-id=<tokenId>] --name=<name>",
+      "description": "FIO names (`name@domain`) resolve through the FIO chain to the address the owner connected for this wallet's chain and token. ENS names ending in `.eth` resolve on Ethereum mainnet, and only for Ethereum wallets, followed by a reverse lookup that tells whether the address uses that name as its primary name.",
+      "params": {
+        "walletId": {
+          "pass": "--wallet-id=<walletId>",
+          "doc": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`.",
+          "optional": false
+        },
+        "tokenId": {
+          "pass": "[--token-id=<tokenId>]",
+          "doc": "The token to pay in. Omit for the chain asset.",
+          "optional": true
+        },
+        "name": {
+          "pass": "--name=<name>",
+          "doc": "A FIO name such as `paul@edge`, or `alice.eth`.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "name": "string — The name, lowercased.",
+        "service": "\"ens\" | \"fio\" — Which service resolved it.",
+        "address": "string — The address to pay.",
+        "reverseName": "string | null — ENS only: the address's primary name, or null. Always null for FIO."
+      },
+      "returnsDoc": "`{ name, service, address, reverseName }`.",
+      "notes": [
+        "The name is checked before any plugin is called, so a bare address or a name of any other shape fails without touching the network."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "NOT_FOUND",
+        "WALLET_NOT_FOUND",
+        "TOKEN_NOT_FOUND",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
       ]
     },
     "resync-blockchain": {
@@ -3448,7 +3519,7 @@
       "summary": "Count and summarize transactions across every wallet.",
       "method": "GET",
       "path": "/account/{sessionId}/transactions/summary",
-      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
       "description": "Computed over the whole matching set rather than by paging through it, so it does not take a `limit`. Takes the same filters as `query-transactions`.",
       "core": "account.transactions.queryTxs",
       "params": {
@@ -3505,6 +3576,16 @@
         "maxFee": {
           "pass": "[--max-fee=<maxFee>]",
           "doc": "Upper bound, same units as minFee.",
+          "optional": true
+        },
+        "minFiatAmount": {
+          "pass": "[--min-fiat-amount=<minFiatAmount>]",
+          "doc": "In the account's `defaultIsoFiat`. Signed like the amount: a send's value is negative, except one the user typed, which the app stores positive. Rows with no fiat value yet never match.",
+          "optional": true
+        },
+        "maxFiatAmount": {
+          "pass": "[--max-fiat-amount=<maxFiatAmount>]",
+          "doc": "Upper bound, same units as minFiatAmount.",
           "optional": true
         },
         "minBlockHeight": {

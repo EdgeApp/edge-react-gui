@@ -963,6 +963,15 @@
       ]
     },
     {
+      "command": "fio-address-cache",
+      "method": "GET",
+      "path": "/account/{sessionId}/fio-address-cache",
+      "usage": "fio-address-cache",
+      "help": "The FIO names the user has sent to, requested from, or been paid by.",
+      "needsSession": true,
+      "args": []
+    },
+    {
       "command": "fix-username",
       "method": "GET",
       "path": "/fix-username",
@@ -1454,7 +1463,7 @@
       "command": "query-transactions",
       "method": "GET",
       "path": "/account/{sessionId}/transactions",
-      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
+      "usage": "query-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
       "help": "Query transactions across every wallet in the account at once.",
       "needsSession": true,
       "args": [
@@ -1566,6 +1575,20 @@
         {
           "flag": "max-fee",
           "field": "maxFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-fiat-amount",
+          "field": "minFiatAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-fiat-amount",
+          "field": "maxFiatAmount",
           "target": "query",
           "kind": "string",
           "required": false
@@ -1752,6 +1775,37 @@
         {
           "flag": "otp-reset-token",
           "field": "otpResetToken",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "resolve-name",
+      "method": "POST",
+      "path": "/account/{sessionId}/wallet/resolve-name",
+      "usage": "resolve-name --wallet-id=<walletId> [--token-id=<tokenId>] --name=<name>",
+      "help": "Resolve a FIO or ENS name to an address for one wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-id",
+          "field": "walletId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "token-id",
+          "field": "tokenId",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "name",
+          "field": "name",
           "target": "body",
           "kind": "string",
           "required": true
@@ -2186,7 +2240,7 @@
       "command": "summarize-transactions",
       "method": "GET",
       "path": "/account/{sessionId}/transactions/summary",
-      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
+      "usage": "summarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]",
       "help": "Count and summarize transactions across every wallet.",
       "needsSession": true,
       "args": [
@@ -2263,6 +2317,20 @@
         {
           "flag": "max-fee",
           "field": "maxFee",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "min-fiat-amount",
+          "field": "minFiatAmount",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "max-fiat-amount",
+          "field": "maxFiatAmount",
           "target": "query",
           "kind": "string",
           "required": false

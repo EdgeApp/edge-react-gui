@@ -79,6 +79,10 @@
       "description": "Reading transactions across every wallet at once, out of the core's account-wide transaction database. Each row is one asset of one transaction, so a swap that moved two assets appears twice."
     },
     {
+      "name": "Payee names",
+      "description": "FIO and ENS names as payees: the FIO names the app has cached from the user's own sends, requests and receipts, and resolving a name to the address one wallet should pay."
+    },
+    {
       "name": "Object handles",
       "description": "A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them."
     },
@@ -6938,7 +6942,7 @@
       "get": {
         "operationId": "queryAccountTransactions",
         "summary": "Query transactions across every wallet in the account at once.",
-        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nquery-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nUnlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
+        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nquery-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nUnlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
         "tags": [
           "Account transactions"
         ],
@@ -6986,7 +6990,7 @@
             "name": "sort",
             "in": "query",
             "required": false,
-            "description": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.",
+            "description": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount. `fiatAmount` drops rows whose fiat value is not known yet.",
             "schema": {
               "type": "string"
             }
@@ -7145,6 +7149,24 @@
             }
           },
           {
+            "name": "minFiatAmount",
+            "in": "query",
+            "required": false,
+            "description": "In the account's `defaultIsoFiat`. Signed like the amount: a send's value is negative, except one the user typed, which the app stores positive. Rows with no fiat value yet never match.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxFiatAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minFiatAmount.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
             "name": "minBlockHeight",
             "in": "query",
             "required": false,
@@ -7216,7 +7238,7 @@
       "get": {
         "operationId": "summarizeAccountTransactions",
         "summary": "Count and summarize transactions across every wallet.",
-        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nsummarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nComputed over the whole matching set rather than by paging through it, so it does not take a `limit`. Takes the same filters as `query-transactions`.",
+        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nsummarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-fiat-amount=<minFiatAmount>] [--max-fiat-amount=<maxFiatAmount>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nComputed over the whole matching set rather than by paging through it, so it does not take a `limit`. Takes the same filters as `query-transactions`.",
         "tags": [
           "Account transactions"
         ],
@@ -7375,6 +7397,24 @@
             "description": "Upper bound, same units as minFee.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "minFiatAmount",
+            "in": "query",
+            "required": false,
+            "description": "In the account's `defaultIsoFiat`. Signed like the amount: a send's value is negative, except one the user typed, which the app stores positive. Rows with no fiat value yet never match.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxFiatAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minFiatAmount.",
+            "schema": {
+              "type": "number"
             }
           },
           {
@@ -7555,6 +7595,193 @@
                 },
                 "required": [
                   "defaultIsoFiat"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/fio-address-cache": {
+      "get": {
+        "operationId": "fioAddressCache",
+        "summary": "The FIO names the user has sent to, requested from, or been paid by.",
+        "description": "**Core call:** `account.disklet`\n\n**Command line**\n\n```\nfio-address-cache\n```\n\nThe Edge app adds a name to this list whenever the user sends to a FIO name, sends a FIO request, or receives a transaction from one. The list lives in the account's synced storage, so it holds names used on any device.",
+        "tags": [
+          "Payee names"
+        ],
+        "x-cli": {
+          "command": "fio-address-cache",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.disklet",
+        "x-source": "src/cli/engine/routes/names.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`{ names }`, lowercased and sorted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "names": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Cached FIO names, such as `paul@edge`."
+                    }
+                  },
+                  "required": [
+                    "names"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/wallet/resolve-name": {
+      "post": {
+        "operationId": "resolveName",
+        "summary": "Resolve a FIO or ENS name to an address for one wallet.",
+        "description": "**Core call:** _none — Calls the FIO plugin's `otherMethods.getConnectedPublicAddress`, the Ethereum plugin's `otherMethods.resolveEnsName`, and ethers' `lookupAddress` for the reverse record._\n\n**Command line**\n\n```\nresolve-name --wallet-id=<walletId> [--token-id=<tokenId>] --name=<name>\n```\n\nFIO names (`name@domain`) resolve through the FIO chain to the address the owner connected for this wallet's chain and token. ENS names ending in `.eth` resolve on Ethereum mainnet, and only for Ethereum wallets, followed by a reverse lookup that tells whether the address uses that name as its primary name.",
+        "tags": [
+          "Payee names"
+        ],
+        "x-cli": {
+          "command": "resolve-name",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Calls the FIO plugin's `otherMethods.getConnectedPublicAddress`, the Ethereum plugin's `otherMethods.resolveEnsName`, and ethers' `lookupAddress` for the reverse record.",
+        "x-source": "src/cli/engine/routes/names.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`{ name, service, address, reverseName }`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name, lowercased."
+                    },
+                    "service": {
+                      "type": "string",
+                      "enum": [
+                        "ens",
+                        "fio"
+                      ],
+                      "description": "Which service resolved it."
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "The address to pay."
+                    },
+                    "reverseName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "ENS only: the address's primary name, or null. Always null for FIO."
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "service",
+                    "address",
+                    "reverseName"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, NOT_FOUND, WALLET_NOT_FOUND, TOKEN_NOT_FOUND, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "walletId": {
+                    "type": "string",
+                    "description": "The wallet to act on. A full wallet id, or any unique prefix of one. An ambiguous prefix returns `409 AMBIGUOUS_WALLET_ID` with `details.candidates`."
+                  },
+                  "tokenId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "The token to pay in. Omit for the chain asset."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "A FIO name such as `paul@edge`, or `alice.eth`."
+                  }
+                },
+                "required": [
+                  "walletId",
+                  "name"
                 ]
               }
             }
