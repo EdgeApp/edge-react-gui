@@ -274,6 +274,18 @@ export const writeNymWarningShown = async (
 }
 
 /**
+ * Persists the user's acknowledgment of the QR scanner scam warning so it is
+ * only shown once per account, on the first use of the camera.
+ */
+export const writeCameraScamWarningShown = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
+  const settings = await getLocalAccountSettings(account)
+  const updatedSettings = { ...settings, cameraScamWarningShown: true }
+  return await writeLocalAccountSettings(account, updatedSettings)
+}
+
+/**
  * Tracks whether a token gas requirement warning has been shown per a
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.

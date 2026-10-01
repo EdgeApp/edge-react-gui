@@ -22,10 +22,10 @@ tags:
 
 - tapOn: "Assets"
 - extendedWaitUntil:
-    visible: FIRO
+    visible: "FIRO.*"
     timeout: 15000
 # If too fast, app won't save state of being on "Assets" scene 
-- tapOn: FIRO
+- tapOn: "FIRO.*"
 
 - stopApp
 - launchApp
@@ -33,6 +33,7 @@ tags:
 - extendedWaitUntil:
     visible: ${MAESTRO_EDGE_UTXO_USERNAME}
     timeout: 15000
+- waitForAnimationToEnd
 
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_1}
 - tapOn: ${MAESTRO_EDGE_UTXO_PIN_2}
@@ -49,7 +50,7 @@ tags:
     optional: true
 
 - extendedWaitUntil:
-    visible: FIRO
+    visible: "FIRO.*"
     timeout: 15000
 
 - stopApp

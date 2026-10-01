@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import {
   asMaybeInsufficientFundsError,
   asMaybeNoAmountSpecifiedError,
+  asMaybePendingFundsError,
   type EdgeAccount,
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -49,7 +50,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { FioRequest } from '../../types/types'
-import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   addToFioAddressCache,
@@ -201,16 +202,6 @@ const ALLOW_MULTIPLE_TARGETS = true
 const MULTI_OUT_DIFF_PERCENT = '0.005'
 const PIN_MAX_LENGTH = 4
 const INFINITY_STRING = '999999999999999999999999999999999999999'
-
-/**
- * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
- * namespace. EVM chains use the 'eip155' namespace.
- */
-const isEvmWallet = (wallet: EdgeCurrencyWallet): boolean => {
-  const { pluginId } = wallet.currencyInfo
-  const specialInfo = getSpecialCurrencyInfo(pluginId)
-  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
-}
 
 const SendComponent: React.FC<Props> = props => {
   const { route, navigation } = props
@@ -640,6 +631,11 @@ const SendComponent: React.FC<Props> = props => {
   const handleFlipInputModal =
     (index: number, spendTarget: EdgeSpendTarget) => (): void => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
+      // A max spend only has a defined meaning for a single recipient: it
+      // consumes the entire spendable balance. Once the send has more than one
+      // target there is nothing left over for the others, so the button is
+      // hidden rather than allowed to produce an insufficient-funds spend.
+      const isMultipleTargets = spendInfo.spendTargets.length > 1
       Airship.show<FlipInputModalResult>(bridge => (
         <FlipInputModal2
           ref={flipInputModalRef}
@@ -647,6 +643,7 @@ const SendComponent: React.FC<Props> = props => {
           startNativeAmount={spendTarget.nativeAmount}
           feeTokenId={null}
           forceField={fieldChanged}
+          hideMaxButton={isMultipleTargets}
           onAmountsChanged={handleAmountsChanged(spendTarget)}
           onMaxSet={() => {
             setMaxSpendSetter(index)
@@ -773,7 +770,11 @@ const SendComponent: React.FC<Props> = props => {
       hiddenFeaturesMap.address === true ||
       hiddenFeaturesMap.amount === true ||
       lockTilesMap.address === true ||
-      lockTilesMap.amount === true
+      lockTilesMap.amount === true ||
+      // The existing target already claims the whole spendable balance, so a
+      // second recipient could only ever be funded by shrinking it. Withhold
+      // the entry point instead of silently discarding the max amount.
+      maxSpendSetter >= 0
     ) {
       return null
     }
@@ -1315,13 +1316,52 @@ const SendComponent: React.FC<Props> = props => {
 
   const handleSliderComplete = useHandler(
     async (resetSlider: () => void): Promise<void> => {
-      if (edgeTransaction == null) return
+      // Every exit below has to re-arm the slider. SafeSlider holds its spinner
+      // and stays disabled until it is reset, so returning without one strands
+      // the user on a spinner that never clears.
+      if (edgeTransaction == null) {
+        resetSlider()
+        return
+      }
       if (pinSpendingLimitsEnabled && spendingLimitExceeded) {
-        const isAuthorized = await account.checkPin(pinValue ?? '')
+        let isAuthorized = false
+        try {
+          isAuthorized = await account.checkPin(pinValue ?? '')
+        } catch (error: unknown) {
+          resetSlider()
+          showError(error)
+          return
+        }
         if (!isAuthorized) {
           resetSlider()
           setPinValue('')
           showToast(lstrings.incorrect_pin)
+          return
+        }
+      }
+
+      // EVM chains broadcast zero-amount transactions, which still spend gas.
+      // Other chains disable the slider for zero amounts (unless allowZeroTx),
+      // so this confirmation only surfaces for EVM coin and token sends.
+      if (
+        isEvmWallet(coreWallet) &&
+        spendInfo.spendTargets.every(target => zeroString(target.nativeAmount))
+      ) {
+        const answer = await Airship.show<'continue' | 'cancel' | undefined>(
+          bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.send_confirmation_zero_amount_title}
+              message={lstrings.send_confirmation_zero_amount_message}
+              buttons={{
+                continue: { label: lstrings.legacy_address_modal_continue },
+                cancel: { label: lstrings.string_cancel_cap }
+              }}
+            />
+          )
+        )
+        if (answer !== 'continue') {
+          resetSlider()
           return
         }
       }
@@ -1597,6 +1637,21 @@ const SendComponent: React.FC<Props> = props => {
             lstrings.transaction_failure,
             lstrings.transaction_failure_504_message
           )
+        } else if (asMaybePendingFundsError(error) != null) {
+          // A wallet that was spendable when the transaction was built can
+          // still refuse it at broadcast, which the plugin reports this way.
+          // The plugin's own text names the reason (syncing, rescanning,
+          // repairing), so keep it and fall back only when it sent none.
+          // The refusal happens before anything is submitted, so the
+          // broadcast lock does not apply and the slider re-arms for a
+          // retry once the wallet is spendable:
+          broadcastAttemptedRef.current = false
+          error = new I18nError(
+            lstrings.transaction_failure,
+            errorCasted.message !== ''
+              ? errorCasted.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
         }
 
         if (broadcastAttemptedRef.current) {
@@ -1823,6 +1878,22 @@ const SendComponent: React.FC<Props> = props => {
         const isTxPending =
           error instanceof Error &&
           error.message === 'Unexpected pending transactions'
+
+        // A wallet whose balance exists but is not spendable yet reports it
+        // this way, and the generic error card blames the network for it.
+        // Ethereum's pending-transaction case is excluded because it has its
+        // own warning card below:
+        const pendingFundsError = isTxPending
+          ? undefined
+          : asMaybePendingFundsError(error)
+        if (pendingFundsError != null) {
+          error = new I18nError(
+            lstrings.transaction_failure,
+            pendingFundsError.message !== ''
+              ? pendingFundsError.message
+              : lstrings.send_funds_not_spendable_error_message
+          )
+        }
 
         // Only set hasPendingTx to true when pending tx error occurs;
         // don't clear it for other errors as it may have been legitimately

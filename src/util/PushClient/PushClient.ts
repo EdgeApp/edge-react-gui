@@ -1,6 +1,7 @@
 import { asMaybe } from 'cleaners'
 import type { EdgeAccount } from 'edge-core-js'
 
+import { CONFIG } from '../../config'
 import {
   asErrorResponse,
   asLoginPayload,
@@ -10,11 +11,10 @@ import {
   wasLoginUpdatePayload,
   wasPushRequestBody
 } from '../../controllers/action-queue/types/pushApiTypes'
-import { ENV } from '../../env'
+import { resolveApiKey, resolveApiKeyAsync } from '../edgeApiSigner'
 import { base58 } from '../encoding'
 
-const { ACTION_QUEUE, EDGE_API_KEY } = ENV
-const { pushServerUri } = ACTION_QUEUE
+const { pushServerUri } = CONFIG.ACTION_QUEUE
 
 export interface PushClient {
   getPushEvents: () => Promise<LoginPayload>
@@ -28,7 +28,12 @@ export const makePushClient = (
 ): PushClient => {
   const instance: PushClient = {
     async getPushEvents(): Promise<LoginPayload> {
+      // Warm the native key before building a sync request body.
+      await resolveApiKeyAsync()
       const requestBody = this.getPushRequestBody()
+      if (requestBody.apiKey === '') {
+        throw new Error('PushClient: missing Edge API key')
+      }
 
       const response = await fetch(`${pushServerUri}/v2/login`, {
         method: 'POST',
@@ -49,7 +54,7 @@ export const makePushClient = (
     getPushRequestBody(payload?: LoginUpdatePayload): PushRequestBody {
       const data = payload != null ? wasLoginUpdatePayload(payload) : undefined
       return {
-        apiKey: EDGE_API_KEY,
+        apiKey: resolveApiKey(),
         deviceId: clientId,
         loginId: base58.parse(account.rootLoginId),
         data
@@ -57,7 +62,11 @@ export const makePushClient = (
     },
 
     async uploadPushEvents(payload: LoginUpdatePayload): Promise<void> {
+      await resolveApiKeyAsync()
       const requestBody = instance.getPushRequestBody(payload)
+      if (requestBody.apiKey === '') {
+        throw new Error('PushClient: missing Edge API key')
+      }
       const response = await fetch(`${pushServerUri}/v2/login/update`, {
         method: 'POST',
         headers: {

@@ -19,6 +19,7 @@ import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
+import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -87,6 +88,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
   } = route.params ?? {}
   const theme = useTheme()
   const dispatch = useDispatch()
+
+  // An `edge://exchange/swap` link credits its promo to this one entry into
+  // the swap flow, so leaving the tab without swapping gives the credit back.
+  useLinkPromoRelease(navigation, 'swapTab')
 
   // Input state is the state of the user input
   const [inputNativeAmount, setInputNativeAmount] = useState('0')

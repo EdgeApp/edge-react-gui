@@ -1,5 +1,6 @@
 import { gte, lte } from 'biggystring'
 
+import { DONE_THRESHOLD } from '../../../constants/WalletAndCurrencyConstants'
 import { filterNull } from '../../../util/safeFilters'
 import { checkPushEvent } from '../push'
 import type {
@@ -120,6 +121,17 @@ export async function checkActionEffect(
       // TODO: Use effect.address when we can check address balances
       const { aboveAmount, belowAmount, tokenId, walletId } = effect
       const wallet = await account.waitForCurrencyWallet(walletId)
+
+      // The wallet object can exist before its engine loads (wallet cache),
+      // so don't evaluate the effect against cached, possibly stale
+      // balances. Report "not yet effective" until the engine has synced:
+      if (wallet.syncStatus.totalRatio < DONE_THRESHOLD) {
+        return {
+          delay: 15000,
+          isEffective: false
+        }
+      }
+
       const walletBalance = wallet.balanceMap.get(tokenId) ?? '0'
 
       return {

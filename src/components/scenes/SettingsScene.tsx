@@ -32,7 +32,7 @@ import {
   showReEnableOtpModal,
   showUnlockSettingsModal
 } from '../../actions/SettingsActions'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -204,11 +204,8 @@ export const SettingsScene: React.FC<Props> = props => {
         }
       )
       if (password == null) return true
+      // `showUnlockSettingsModal` already unlocked the settings.
       setValidatedPassword(password)
-      dispatch({
-        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
-        data: false
-      })
     }
     return false
   }
@@ -740,7 +737,7 @@ export const SettingsScene: React.FC<Props> = props => {
             />
           </EdgeCard>
         </>
-        {ENV.ALLOW_DEVELOPER_MODE && (
+        {CONFIG.ALLOW_DEVELOPER_MODE && (
           <EdgeCard sections>
             <SettingsSwitchRow
               key="developerMode"

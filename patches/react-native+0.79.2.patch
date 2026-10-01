@@ -1,3 +1,40 @@
+diff --git a/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.cpp b/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.cpp
+index f5c0a1c..5eb91ec 100644
+--- a/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.cpp
++++ b/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.cpp
+@@ -113,7 +113,8 @@ bool AttributedString::compareTextAttributesWithoutFrame(
+ }
+ 
+ bool AttributedString::operator==(const AttributedString& rhs) const {
+-  return fragments_ == rhs.fragments_;
++  return std::tie(fragments_, baseAttributes_) ==
++      std::tie(rhs.fragments_, rhs.baseAttributes_);
+ }
+ 
+ bool AttributedString::operator!=(const AttributedString& rhs) const {
+diff --git a/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.h b/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.h
+index 7bd57b3..8caa8af 100644
+--- a/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.h
++++ b/node_modules/react-native/ReactCommon/react/renderer/attributedstring/AttributedString.h
+@@ -127,7 +127,7 @@ struct hash<facebook::react::AttributedString::Fragment> {
+     return facebook::react::hash_combine(
+         fragment.string,
+         fragment.textAttributes,
+-        fragment.parentShadowView,
++        fragment.parentShadowView.tag,
+         fragment.parentShadowView.layoutMetrics);
+   }
+ };
+@@ -138,6 +138,9 @@ struct hash<facebook::react::AttributedString> {
+       const facebook::react::AttributedString& attributedString) const {
+     auto seed = size_t{0};
+ 
++    facebook::react::hash_combine(
++        seed, attributedString.getBaseTextAttributes());
++
+     for (const auto& fragment : attributedString.getFragments()) {
+       facebook::react::hash_combine(seed, fragment);
+     }
 diff --git a/node_modules/react-native/ReactCommon/react/renderer/mounting/ShadowTree.cpp b/node_modules/react-native/ReactCommon/react/renderer/mounting/ShadowTree.cpp
 index 522ec57..e6ad1df 100644
 --- a/node_modules/react-native/ReactCommon/react/renderer/mounting/ShadowTree.cpp

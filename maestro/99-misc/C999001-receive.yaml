@@ -21,9 +21,9 @@ tags:
 
 - tapOn: Assets
 - extendedWaitUntil:
-    visible: DGB
+    visible: "DGB.*"
     timeout: 15000
-- tapOn: DGB
+- tapOn: "DGB.*"
 - extendedWaitUntil:
     visible: 18.79649375 DGB
     timeout: 15000

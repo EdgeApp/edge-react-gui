@@ -13,7 +13,7 @@ import { Platform } from 'react-native'
 
 import { getDeviceSettings } from '../actions/DeviceSettingsActions'
 import { SwapCreateScene as SwapCreateSceneComponent } from '../components/scenes/SwapCreateScene'
-import { ENV } from '../env'
+import { CONFIG } from '../config'
 import { useExperimentConfig } from '../hooks/useExperimentConfig'
 import { useMount } from '../hooks/useMount'
 import { lstrings } from '../locales/strings'
@@ -42,6 +42,7 @@ import type {
 import { isMaestro } from '../util/maestro'
 import { logEvent } from '../util/tracking'
 import { getUkCompliantString } from '../util/ukComplianceUtils'
+import { hasYoloAccountLogin } from '../util/yoloLogin'
 import { ifLoggedIn } from './hoc/IfLoggedIn'
 import { BackButton } from './navigation/BackButton'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle'
@@ -1246,7 +1247,9 @@ export const Main: React.FC = () => {
   const experimentConfig = useExperimentConfig()
 
   const initialRouteName =
-    ENV.USE_WELCOME_SCREENS && localUsers.length === 0
+    CONFIG.USE_WELCOME_SCREENS &&
+    localUsers.length === 0 &&
+    !hasYoloAccountLogin(CONFIG)
       ? 'gettingStarted'
       : 'login'
 

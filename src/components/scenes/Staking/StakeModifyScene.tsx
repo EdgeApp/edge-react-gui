@@ -1,11 +1,6 @@
 import { div, eq, gt, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import {
-  DustSpendError,
-  type EdgeCurrencyWallet,
-  type EdgeTokenId,
-  InsufficientFundsError
-} from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -26,12 +21,11 @@ import {
   StakePoolFullError
 } from '../../../plugins/stake-plugins/types'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
-import { HumanFriendlyError } from '../../../types/HumanFriendlyError'
 import { useDispatch, useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
 import { getCurrencyIconUris } from '../../../util/CdnUris'
 import { getWalletName } from '../../../util/CurrencyWalletHelpers'
-import { getDisplayErrorMessage } from '../../../util/stakeErrorUtils'
+import { getStakeErrorMessage } from '../../../util/stakeErrorUtils'
 import {
   enableStakeTokens,
   getPolicyIconUris,
@@ -228,27 +222,15 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
               currencyCode
             )
             setErrorMessage(errMessage)
-          } else if (err instanceof InsufficientFundsError) {
-            // The unstake network fee is paid in the wallet's native asset, so
-            // tell the user which balance they need instead of a bare
-            // "Insufficient Funds".
-            setErrorMessage(
-              changeQuoteRequest.action === 'unstake'
-                ? sprintf(
-                    lstrings.stake_error_insufficient_funds_unstake_s,
-                    wallet.currencyInfo.currencyCode
-                  )
-                : lstrings.exchange_insufficient_funds_title
-            )
-          } else if (
-            err instanceof HumanFriendlyError ||
-            err instanceof DustSpendError
-          ) {
-            setErrorMessage(err.message)
           } else {
             // Show the real error in the on-scene error field rather than a
             // scary popup alert plus a generic "unknown error occurred".
-            setErrorMessage(getDisplayErrorMessage(err))
+            setErrorMessage(
+              getStakeErrorMessage(err, {
+                action: changeQuoteRequest.action,
+                nativeCurrencyCode: wallet.currencyInfo.currencyCode
+              })
+            )
           }
         })
         .finally(() => {
@@ -344,8 +326,16 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
         })
         .catch((err: unknown) => {
           // Surface the real error in the on-scene error field instead of a
-          // scary popup alert plus a generic "unknown error occurred".
-          setErrorMessage(getDisplayErrorMessage(err))
+          // scary popup alert plus a generic "unknown error occurred". The
+          // insufficient-funds failure lands here rather than on the quote
+          // fetch, because the balance is only checked when the change quote
+          // is signed and broadcast.
+          setErrorMessage(
+            getStakeErrorMessage(err, {
+              action: changeQuoteRequest.action,
+              nativeCurrencyCode: wallet.currencyInfo.currencyCode
+            })
+          )
         })
         .finally(() => {
           setSliderLocked(false)
