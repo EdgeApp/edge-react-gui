@@ -13,12 +13,7 @@ import FastImage from 'react-native-fast-image'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import {
-  formatCategory,
-  getTxActionDisplayInfo,
-  pluginIdIcons,
-  splitCategory
-} from '../../actions/CategoriesActions'
+import { formatCategory, pluginIdIcons } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
@@ -37,6 +32,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
+import { getTxActionDisplayInfo, splitCategory } from '../../util/txDisplay'
 import {
   convertNativeToExchange,
   darkenHexColor,

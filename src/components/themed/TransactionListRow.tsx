@@ -12,12 +12,7 @@ import Share from 'react-native-share'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import {
-  formatCategory,
-  getTxActionDisplayInfo,
-  pluginIdIcons,
-  splitCategory
-} from '../../actions/CategoriesActions'
+import { formatCategory, pluginIdIcons } from '../../actions/CategoriesActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
 import { useContactThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
@@ -31,6 +26,7 @@ import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { getTxActionDisplayInfo, splitCategory } from '../../util/txDisplay'
 import {
   DECIMAL_PRECISION,
   decimalOrZero,

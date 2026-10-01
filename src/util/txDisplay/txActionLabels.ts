@@ -1,8 +1,21 @@
 import type { EdgeAssetActionType } from 'edge-core-js'
 
-import { lstrings } from '../locales/strings'
+import { lstrings } from '../../locales/strings'
 
-export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
+/**
+ * The label for one `assetActionType`, read at call time.
+ *
+ * A module-scope `Record` froze all twenty labels to whatever `lstrings` held
+ * when *this* module first evaluated. `applyLocale` mutates `lstrings` in
+ * place, so the values were correct only if the locale boot had already run —
+ * an invisible ordering dependency on a module nothing here imports. Reading
+ * them lazily removes it: there is no order in which this can be wrong.
+ */
+export function txActionLabel(actionType: EdgeAssetActionType): string {
+  return labelMap()[actionType]
+}
+
+const labelMap = (): Record<EdgeAssetActionType, string> => ({
   buy: lstrings.transaction_details_bought_1s,
   claim: lstrings.transaction_details_claim,
   claimOrder: lstrings.transaction_details_claim_order,
@@ -23,4 +36,4 @@ export const TX_ACTION_LABEL_MAP: Record<EdgeAssetActionType, string> = {
   unstake: lstrings.transaction_details_unstake,
   unstakeNetworkFee: lstrings.transaction_details_unstake_network_fee,
   unstakeOrder: lstrings.transaction_details_unstake_order
-}
+})

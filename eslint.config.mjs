@@ -491,8 +491,6 @@ export default [
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
 
-      'src/util/exchangeRates.ts',
-
       'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
@@ -508,7 +506,7 @@ export default [
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
-      'src/util/WebUtils.ts',
+
       'src/util/withWatchableProps.ts'
     ],
     languageOptions: {
@@ -532,6 +530,7 @@ export default [
       'android/*',
       'artifacts/*',
       'ios/*',
+      'lib/*',
       'src/plugins/contracts/*',
       'src/controllers/edgeProvider/client/rolledUp.js',
       'src/controllers/edgeProvider/injectThisInWebView.js'

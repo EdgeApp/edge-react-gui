@@ -2,6 +2,14 @@
 
 ## Unreleased (develop)
 
+- changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
+- fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
+- fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
+- fixed: `splitCategory` keeps an unrecognised category prefix as part of the subcategory rather than discarding it, so opening and saving such a transaction no longer writes the prefix away.
+- fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
+- fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
+- added: Edge CLI (`edge-cli`) and its engine daemon: a long-lived process owning an `EdgeContext`, a JSON REST API over a Unix socket with an optional loopback TCP listener, and a thin client that spawns the engine on demand. 117 routes, generated command table, help text and OpenAPI reference.
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
 - added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
 - added: Logbox disable option to env.json
