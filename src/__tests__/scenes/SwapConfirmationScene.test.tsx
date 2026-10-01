@@ -1,5 +1,13 @@
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
-import { render } from '@testing-library/react-native'
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  jest
+} from '@jest/globals'
+import { act, render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
@@ -19,13 +27,20 @@ import {
   pickBestQuoteWithPreference,
   SwapConfirmationScene
 } from '../../components/scenes/SwapConfirmationScene'
+import * as AirshipInstance from '../../components/services/AirshipInstance'
+import { SafeSlider } from '../../components/themed/SafeSlider'
+import { lstrings } from '../../locales/strings'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
-import { fakeSwapTabSceneProps } from '../../util/fake/fakeSceneProps'
+import {
+  fakeNavigation,
+  fakeSwapTabSceneProps
+} from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import * as tracking from '../../util/tracking'
 
 jest.useRealTimers()
 
@@ -155,6 +170,142 @@ describe('SwapConfirmationScene', () => {
 
     expect(rendered.toJSON()).toMatchSnapshot()
     rendered.unmount()
+  })
+
+  describe('sliding on a quote that cannot be approved', () => {
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    const renderScene = (
+      quote: EdgeSwapQuote
+    ): {
+      replace: jest.SpiedFunction<typeof fakeNavigation.replace>
+      showToast: jest.SpiedFunction<typeof AirshipInstance.showToast>
+      slide: () => Promise<void>
+      unmount: () => void
+    } => {
+      const rootState: FakeState = { ...fakeRootState, core: { account } }
+      const replace = jest
+        .spyOn(fakeNavigation, 'replace')
+        .mockImplementation(() => undefined)
+      const showToast = jest
+        .spyOn(AirshipInstance, 'showToast')
+        .mockImplementation(() => undefined)
+      const props = fakeSwapTabSceneProps('swapConfirmation', {
+        quotes: [quote],
+        selectedQuote: quote,
+        onApprove: () => undefined
+      })
+      const rendered = render(
+        <FakeProviders initialState={rootState}>
+          <SwapConfirmationScene {...props} />
+        </FakeProviders>
+      )
+      const slide = async (): Promise<void> => {
+        await act(async () => {
+          await rendered
+            .UNSAFE_getByType(SafeSlider)
+            .props.onSlidingComplete(() => undefined)
+        })
+      }
+      return { replace, showToast, slide, unmount: rendered.unmount }
+    }
+
+    const makeQuote = (
+      approve: EdgeSwapQuote['approve'],
+      expirationDate?: Date
+    ): EdgeSwapQuote => {
+      const fakeRequest: any = { fromWallet: btcWallet, toWallet: ethWallet }
+      return {
+        swapInfo: dummySwapInfo,
+        request: fakeRequest,
+        isEstimate: false,
+        fromNativeAmount: '10000',
+        toNativeAmount: '10000',
+        networkFee: { currencyCode: 'BTC', nativeAmount: '1', tokenId: null },
+        pluginId: 'bitcoin',
+        expirationDate,
+        approve,
+        close: jest.fn(async () => {})
+      }
+    }
+
+    it('requotes a retry after a failed approval', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const approve = jest.fn(async () => {
+        throw new Error('Broadcast failed')
+      })
+      const quote = makeQuote(approve)
+      const { replace, showToast, slide, unmount } = renderScene(quote)
+
+      await slide()
+      expect(approve).toHaveBeenCalledTimes(1)
+      expect(quote.close).toHaveBeenCalledTimes(1)
+      expect(replace).not.toHaveBeenCalled()
+      expect(showToast).not.toHaveBeenCalled()
+
+      await slide()
+      expect(approve).toHaveBeenCalledTimes(1)
+      expect(showToast).toHaveBeenCalledWith(lstrings.quote_requote_toast)
+      expect(replace).toHaveBeenCalledWith(
+        'swapProcessing',
+        expect.objectContaining({ swapRequest: quote.request })
+      )
+
+      unmount()
+      expect(quote.close).toHaveBeenCalledTimes(1)
+    })
+
+    it('logs the source and dest tokenIds on a failed approval', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const logEvent = jest
+        .spyOn(tracking, 'logEvent')
+        .mockImplementation(() => () => undefined)
+      const approve = jest.fn(async () => {
+        throw new Error('Broadcast failed')
+      })
+      const quote = makeQuote(approve)
+      quote.request.fromTokenId = null
+      quote.request.toTokenId = null
+      const { slide, unmount } = renderScene(quote)
+
+      await slide()
+      const swapAttempt = {
+        swapProviderId: 'bitcoin',
+        sourcePluginId: 'bitcoin',
+        sourceTokenId: null,
+        destPluginId: 'ethereum',
+        destTokenId: null
+      }
+      expect(logEvent).toHaveBeenCalledWith('Exchange_Shift_Start', swapAttempt)
+      expect(logEvent).toHaveBeenCalledWith(
+        'Exchange_Shift_Failed',
+        expect.objectContaining(swapAttempt)
+      )
+
+      unmount()
+    })
+
+    it('requotes an expired quote without approving it', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const approve = jest.fn(async () => {
+        throw new Error('unreachable')
+      })
+      const quote = makeQuote(approve, new Date(Date.now() - 1000))
+      const { replace, showToast, slide, unmount } = renderScene(quote)
+
+      await slide()
+      expect(approve).not.toHaveBeenCalled()
+      expect(showToast).toHaveBeenCalledWith(lstrings.quote_requote_toast)
+      expect(replace).toHaveBeenCalledWith(
+        'swapProcessing',
+        expect.objectContaining({ swapRequest: quote.request })
+      )
+
+      unmount()
+      expect(quote.close).toHaveBeenCalledTimes(1)
+    })
   })
 
   let quotes: TestSwapQuote[]

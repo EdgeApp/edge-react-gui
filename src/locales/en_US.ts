@@ -1245,6 +1245,7 @@ const strings = {
   quote_selected_quote: 'Selected Quote',
   quote_swap_provider: 'Select Swap Provider',
   quote_variable_quotes: 'Variable Quotes',
+  quote_requote_toast: 'This quote is no longer valid. Getting a new one.',
   can_be_partial_quote_title: 'Partial Quote',
   can_be_partial_quote_message: 'This quote may be partially fulfilled.',
   can_be_partial_quote_with_max_body:
