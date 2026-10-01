@@ -14,7 +14,8 @@ export const edgeConfig: AppConfig = {
   pendingTxLearnMoreUrl:
     'https://support.edge.app/hc/en-us/articles/43465958781723',
   zcashMigrationLearnMoreUrl: 'https://support.edge.app/articles/16111542',
-  largeUtxoWalletLearnMoreUrl: 'https://support.edge.app/articles/13892386',
+  largeUtxoWalletLearnMoreUrl:
+    'https://support.edge.app/en/articles/17129745-what-does-the-large-wallet-card-mean',
   defaultWallets: [
     { pluginId: 'bitcoin', tokenId: null },
     { pluginId: 'ethereum', tokenId: null },
