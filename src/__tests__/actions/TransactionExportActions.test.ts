@@ -6,7 +6,7 @@ import {
   exportTransactionsToBitwave,
   exportTransactionsToCSVInner,
   exportTransactionsToQBO
-} from '../../actions/TransactionExportActions'
+} from '../../util/txExport'
 
 const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', {
   encoding: 'utf8'
@@ -194,6 +194,40 @@ test('export QBO matches reference data', function () {
     1524578071304
   )
   expect(out).toEqual(qboResult)
+})
+
+test('export QBO keeps its declared charset', function () {
+  // The header says `ENCODING:USASCII` / `CHARSET:1252`, which is what
+  // accounting importers expect, so the bytes have to match it. A payee or
+  // memo holds anything a dapp, `--metadata` or the engine's localized prose
+  // puts there, and those were previously emitted raw under an ASCII
+  // declaration. The alternative considered — declaring `ENCODING:UNICODE` —
+  // changed the format on 100% of exports and is not unambiguously UTF-8 in
+  // OFX 1.x.
+  const out = exportTransactionsToQBO(
+    [
+      {
+        ...edgeTxs[0],
+        metadata: {
+          name: 'Café Münster — naïve',
+          notes: 'Überweisung ✓',
+          category: 'Expense:Food'
+        }
+      }
+    ],
+    'iso:USD',
+    '100',
+    1524578071304
+  )
+  expect(out).toContain('ENCODING:USASCII')
+  expect(out).toContain('CHARSET:1252')
+  // Every byte inside the printable-ASCII range, so the declaration is true.
+  // eslint-disable-next-line no-control-regex
+  expect(/[^\x09\x0a\x0d\x20-\x7e]/.test(out)).toBe(false)
+  // And the original characters are recoverable, as numeric references.
+  expect(out).toContain('Caf&#233;')
+  expect(out).toContain('M&#252;nster')
+  expect(out).toContain('&#8212;')
 })
 
 test('export Bitwave matches reference data', async function () {
