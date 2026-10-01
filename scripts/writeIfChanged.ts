@@ -19,9 +19,19 @@ const CHECK_ONLY = process.argv.includes('--check')
  * nothing about the source moved. Returns true when something was written.
  *
  * Under `--check` nothing is written; a file that would have changed throws
- * instead.
+ * instead. `hint` names the command that regenerates this particular
+ * artifact: the route generators are not the only callers any more, and
+ * telling someone to run `npm run docs:api` when the stale file is the npm
+ * manifest sends them somewhere that cannot fix it.
  */
-export function writeIfChanged(file: string, contents: string): boolean {
+export function writeIfChanged(
+  file: string,
+  contents: string,
+  hint = {
+    why: 'A route declaration changed without regenerating it.',
+    run: 'npm run docs:api'
+  }
+): boolean {
   if (fs.existsSync(file) && fs.readFileSync(file, 'utf8') === contents) {
     return false
   }
@@ -29,8 +39,8 @@ export function writeIfChanged(file: string, contents: string): boolean {
     // A stack trace would bury the one line that matters.
     console.error(
       `✗ ${path.relative(process.cwd(), file)} is out of date.\n` +
-        '  A route declaration changed without regenerating it.\n' +
-        '  Run `npm run docs:api` and commit the result.'
+        `  ${hint.why}\n` +
+        `  Run \`${hint.run}\` and commit the result.`
     )
     process.exit(1)
   }

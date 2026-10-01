@@ -497,3 +497,55 @@ Full method/path/body/error documentation is generated:
 **[docs/api/dist/index.html](./api/dist/index.html)**, with an OpenAPI 3.1
 document beside it at `docs/api/dist/openapi.json`. The source of truth is
 `docs/api/`; see [docs/api/README.md](./api/README.md).
+
+## Publishing to npm
+
+The CLI ships as its own scoped package, built from this repository but not
+containing it: rollup inlines every module the CLI reaches from `src/`, so the
+published package is the two bundles, the native addon, this document as its
+README, and `LICENSE`. The app's `package.json` stays `private: true` and is
+never the thing published — `scripts/publishCli.ts` assembles a separate
+manifest in a temporary directory.
+
+| File | Role |
+| --- | --- |
+| `src/cli/npmMeta.ts` | The decisions: package name, bin name, licence, the per-platform native packages. |
+| `src/cli/generated/npmPackage.json` | The manifest, generated. `npm run cli:manifest` writes it; `cli:manifest:check` is the gate. |
+| `scripts/buildCliManifest.ts` | Derives the dependency list from the module graph. |
+| `scripts/publishCli.ts` | Builds, stages and publishes. |
+
+The version is not a decision: the CLI ships in lockstep with the app, so the
+manifest takes it from the app's own `package.json`. There is no second number
+to bump, and a published CLI says which app release it corresponds to. The
+cost is that each version can be published once, since npm will not replace an
+existing one — so a CLI-only fix goes out on the next app version bump rather
+than on its own.
+
+The dependency list is derived rather than written down. `rollup.config.cli.mjs`
+externalises every key of the app's `dependencies`, so the bundles leave all of
+them as bare `require`s while needing about a dozen; anything the app does not
+declare is inlined instead. The generator walks the module graph from both
+entry points, keeps the bare specifiers the app declares as dependencies,
+skips builtins and type-only imports, and treats the rest as bundled. The
+result is checked against the built bundles' own `require` calls.
+
+A build server needs `edgeKey.json` and nothing else:
+
+```sh
+npm run publish:cli -- --dry-run      # build, stage, pack, publish nothing
+npm run publish:cli -- --out /tmp/pkg # stage for inspection, then stop
+npm run publish:cli                   # publish
+```
+
+With `edgeKey.json` present the script runs `build:cli:all`, which generates
+the XOR-split secret shards, compiles the Node HMAC addon and copies it beside
+the bundles. Without the key the addon cannot be built, so publishing requires
+`--allow-unsigned` and the staged README says the build cannot sign. A publish
+from a dirty tree is refused, because the registry copy could not then be
+re-derived from any commit.
+
+The addon is compiled for the build machine's platform and Node ABI.
+`loadNodeApiSignerNative` answers `null` when it cannot load one, so a CLI on
+another platform still runs with unsigned info-server requests.
+`CliPackageMeta.nativePackages` is where per-platform packages are declared
+once they are published; it is empty until then.
