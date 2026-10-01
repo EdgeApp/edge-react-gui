@@ -4,13 +4,10 @@ import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import {
-  type Category,
   displayCategories,
   formatCategory,
   getSubcategories,
-  joinCategory,
-  setNewSubcategory,
-  splitCategory
+  setNewSubcategory
 } from '../../actions/CategoriesActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -18,6 +15,11 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
+import {
+  type Category,
+  joinCategory,
+  splitCategory
+} from '../../util/txDisplay'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
