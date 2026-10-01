@@ -1,4 +1,6 @@
-import { ENV } from '../../env'
+import type { JsonObject } from 'edge-core-js'
+
+import { pluginMaps } from '../../pluginMaps'
 import { makeTronStakePlugin } from './currency/tronStakePlugin'
 import { makeGenericStakePlugin } from './generic/GenericStakePlugin'
 import { genericPlugins } from './generic/pluginInfo'
@@ -16,30 +18,35 @@ export const getStakePlugins = async (
   let loadedPlugins = loadedPluginsMap.get(pluginId)
   if (loadedPlugins != null) return loadedPlugins
 
-  const tcInitOptions =
-    typeof ENV.THORCHAIN_INIT === 'object' ? ENV.THORCHAIN_INIT : {}
+  const thorchainInit = pluginMaps.swapPlugins.thorchain
+  const tcInitOptions: JsonObject =
+    typeof thorchainInit === 'object' && thorchainInit != null
+      ? (thorchainInit as JsonObject)
+      : {}
 
   const promises = [
-    makeUniV2StakePlugin(pluginId).catch(e => {
-      console.warn(e.message)
+    makeUniV2StakePlugin(pluginId).catch((e: unknown) => {
+      console.warn(e instanceof Error ? e.message : String(e))
     }),
-    makeTcSaversPlugin(pluginId, { initOptions: tcInitOptions }).catch(e => {
-      console.warn(e.message)
-    }),
-    makeTcSaversPluginSegwit(pluginId, { initOptions: tcInitOptions }).catch(
-      e => {
-        console.warn(e.message)
+    makeTcSaversPlugin(pluginId, { initOptions: tcInitOptions }).catch(
+      (e: unknown) => {
+        console.warn(e instanceof Error ? e.message : String(e))
       }
     ),
-    makeTronStakePlugin(pluginId).catch(e => {
-      console.warn(e.message)
+    makeTcSaversPluginSegwit(pluginId, { initOptions: tcInitOptions }).catch(
+      (e: unknown) => {
+        console.warn(e instanceof Error ? e.message : String(e))
+      }
+    ),
+    makeTronStakePlugin(pluginId).catch((e: unknown) => {
+      console.warn(e instanceof Error ? e.message : String(e))
     }),
     ...genericPlugins.map(async genericPlugin => {
       for (const config of genericPlugin.policyConfigs) {
         if (config.parentPluginId === pluginId) {
           return await makeGenericStakePlugin(
             genericPlugin
-          )(/* INIT OPTIONS */).catch(e => {
+          )(/* INIT OPTIONS */).catch((e: unknown) => {
             console.error(String(e))
           })
         }

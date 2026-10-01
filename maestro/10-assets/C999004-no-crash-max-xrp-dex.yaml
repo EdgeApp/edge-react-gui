@@ -24,21 +24,19 @@ tags:
     visible: "Wallets"
     timeout: 15000
 - extendedWaitUntil:
-    visible: "My XRP"
+    visible: ".*My XRP"
     timeout: 15000
 - assertVisible:
     text: "Exchange"
 - tapOn: "Exchange"
 - tapOn: "Select Source Wallet"
 - tapOn:
-    text: "XRP"
+    text: "XRP(?: .*)?"
 - tapOn: "Select Receiving Wallet"
-- tapOn: "Ripple USD"
+- tapOn: "Ripple USD.*"
 - tapOn: "MAX"
 - extendedWaitUntil:
-    visible: "Exchange"
+    visible: "Tap to Change Provider"
     timeout: 15000
-- assertVisible:
-    text: "Tap to Change Provider"
 
 - stopApp

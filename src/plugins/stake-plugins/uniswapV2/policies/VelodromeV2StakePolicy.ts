@@ -22,6 +22,7 @@ import { makeBigAccumulator } from '../../util/accumulator'
 import { round } from '../../util/biggystringplus'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
+import { getSignerSeed } from '../../util/signer'
 import { pluginInfo } from '../pluginInfo'
 import { optimismEcosystem as eco } from '../policyInfo/optimism'
 import type { StakePolicyInfo } from '../stakePolicy'
@@ -61,7 +62,7 @@ export const makeVelodromeV2StakePolicy = (
   const SLIPPAGE_FACTOR = 1 - SLIPPAGE // A multiplier to get a minimum amount
   const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
-  const serializeAssetId = (assetId: StakeAssetInfo) =>
+  const serializeAssetId = (assetId: StakeAssetInfo): string =>
     `${assetId.pluginId}:${assetId.currencyCode}`
 
   async function lpTokenToAssetPairAmounts(
@@ -175,7 +176,7 @@ export const makeVelodromeV2StakePolicy = (
       const metadataLpName = `${tokenACurrencyCode} - ${tokenBCurrencyCode}`
 
       // Get the signer for the wallet
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
       const signerAddress = await eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Infer this policy from the `options` if/when we support more than two stake assets
@@ -326,10 +327,11 @@ export const makeVelodromeV2StakePolicy = (
             txs.build(
               (gasLimit =>
                 async function approveSwapRouter({ signer }) {
-                  const allowanceResult = await tokenContract.allowance(
-                    signer.address,
-                    spenderAddress
-                  )
+                  const allowanceResult: BigNumber =
+                    await tokenContract.allowance(
+                      signer.address,
+                      spenderAddress
+                    )
                   if (allowanceResult.gte(allocation.nativeAmount)) return
 
                   const result = await tokenContract
@@ -485,7 +487,8 @@ export const makeVelodromeV2StakePolicy = (
                 'Transfer(address,address,uint256)'
               )
               const transferTopics = receipt.logs.filter(
-                // @ts-expect-error
+                // @ts-expect-error - ethers types the receipt as any, so the
+                // callback parameter has no inferred type
                 log => log.topics[0] === transferTopicHash
               )
               // The last token transfer log is the LP-token transfer
@@ -513,7 +516,7 @@ export const makeVelodromeV2StakePolicy = (
           VELODROME_V2_VOTER,
           signer
         )
-        const isAlive = await voterContract
+        const isAlive: boolean = await voterContract
           .connect(signer)
           .isAlive(voterAddress)
 
@@ -523,10 +526,11 @@ export const makeVelodromeV2StakePolicy = (
             (gasLimit =>
               async function approveStakingPool({ signer, liquidity }) {
                 const spenderAddress = stakingContract.address
-                const allowanceResult = await lpTokenContract.allowance(
-                  signer.address,
-                  spenderAddress
-                )
+                const allowanceResult: BigNumber =
+                  await lpTokenContract.allowance(
+                    signer.address,
+                    spenderAddress
+                  )
                 if (allowanceResult.gte(liquidity)) return
 
                 const approveResult = await lpTokenContract
@@ -692,10 +696,8 @@ export const makeVelodromeV2StakePolicy = (
         txs.build(
           (gasLimit =>
             async function approveSwapRouter({ signer }) {
-              const allowanceResult = await lpTokenContract.allowance(
-                signer.address,
-                spenderAddress
-              )
+              const allowanceResult: BigNumber =
+                await lpTokenContract.allowance(signer.address, spenderAddress)
               if (allowanceResult.gte(expectedLiquidityAmount)) return
 
               const result = await lpTokenContract
@@ -855,7 +857,7 @@ export const makeVelodromeV2StakePolicy = (
       request: StakePositionRequest
     ): Promise<StakePosition> {
       const { stakePolicyId, wallet, account } = request
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(
         p => p.stakePolicyId === stakePolicyId

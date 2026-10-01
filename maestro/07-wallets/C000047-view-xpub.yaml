@@ -25,7 +25,7 @@ tags:
 
 # View xpub for new Dash wallet (created by default)
 - tapOn: Assets
-- longPressOn: My Dash
+- longPressOn: ".*My Dash"
 - tapOn: ".*View XPub Address"
 - assertVisible: "View XPub Address"
 # Dash xpub starts with "drkp" followed by base58 characters (111 chars total)
@@ -46,9 +46,9 @@ tags:
 
 # View xpub for imported Dogecoin wallet
 - scrollUntilVisible:
-    element: "My Doge"
+    element: ".*My Doge"
     direction: DOWN
-- longPressOn: "My Doge"
+- longPressOn: ".*My Doge"
 - tapOn: ".*View XPub Address"
 - assertVisible: "View XPub Address"
 # Dogecoin xpub starts with "dgub" followed by base58 characters (111 chars total)
@@ -61,4 +61,3 @@ tags:
 - assertVisible: Assets
 
 - stopApp
-

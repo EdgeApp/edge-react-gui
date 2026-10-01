@@ -35,6 +35,7 @@ import type {
   FioAddress,
   FioDomain,
   GuiContact,
+  LinkPromo,
   MostRecentWallet,
   SpendingLimits,
   WalletListItem
@@ -87,6 +88,7 @@ export type Action =
       type: 'IS_NOTIFICATION_VIEW_ACTIVE'
       data: { isNotificationViewActive: boolean }
     }
+  | { type: 'LINK_PROMO/SET'; data: { linkPromo: LinkPromo | null } }
   | { type: 'LOGIN'; data: LoginPayload }
   | {
       type: 'MESSAGE_TWEAK_HIDDEN'

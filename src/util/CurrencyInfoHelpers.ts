@@ -10,8 +10,11 @@ import type {
 } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
-import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
-import { ENV } from '../env'
+import { CONFIG } from '../config'
+import {
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../constants/WalletAndCurrencyConstants'
 import type { EdgeAsset } from '../types/types'
 import { asMaybeContractLocation } from './cleaners'
 
@@ -21,7 +24,17 @@ import { asMaybeContractLocation } from './cleaners'
  */
 export function isKeysOnlyPlugin(pluginId: string): boolean {
   const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
-  return keysOnlyMode || ENV.KEYS_ONLY_PLUGINS[pluginId]
+  return keysOnlyMode || CONFIG.KEYS_ONLY_PLUGINS[pluginId]
+}
+
+/**
+ * Checks if a wallet is EVM-based by looking at its WalletConnect v2 chain ID
+ * namespace. EVM chains use the 'eip155' namespace.
+ */
+export function isEvmWallet(wallet: EdgeCurrencyWallet): boolean {
+  const { pluginId } = wallet.currencyInfo
+  const specialInfo = getSpecialCurrencyInfo(pluginId)
+  return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
 }
 
 export type FindTokenParams =

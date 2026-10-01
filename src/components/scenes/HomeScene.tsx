@@ -11,7 +11,6 @@ import {
   PHAZE_PLUGIN_ID
 } from '../../actions/GiftCardInfoActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
-import { ENV } from '../../env'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useSceneScrollHandler } from '../../state/SceneScrollState'
@@ -22,7 +21,9 @@ import type {
   NavigationBase
 } from '../../types/routerTypes'
 import { getUi4ImageUri } from '../../util/CdnUris'
+import { isCurrencyPluginEnabled } from '../../util/corePlugins'
 import { infoServerData } from '../../util/network'
+import { getPhazeConfig } from '../../util/phazeConfig'
 import { BalanceCard } from '../cards/BalanceCard'
 import { ContentPostCarousel } from '../cards/ContentPostCarousel'
 import { HomeTileCard } from '../cards/HomeTileCard'
@@ -97,7 +98,7 @@ export const HomeScene: React.FC<Props> = props => {
   // The Phaze catalog is what makes this tile more than a Bitrefill shortcut,
   // so the footer describes Bitrefill alone whenever Phaze is unavailable:
   const isPhazeAvailable =
-    ENV.PLUGIN_API_KEYS?.phaze?.apiKey != null &&
+    getPhazeConfig()?.apiKey != null &&
     !isGiftCardProviderDisabled(giftCardDisablePlugins, PHAZE_PLUGIN_ID)
 
   const { width: screenWidth } = useSafeAreaFrame()
@@ -183,7 +184,7 @@ export const HomeScene: React.FC<Props> = props => {
     () => [styles.homeRowContainer, { height: cardSize }],
     [styles, cardSize]
   )
-  const hideFio = ENV.FIO_INIT == null || ENV.FIO_INIT === false
+  const hideFio = !isCurrencyPluginEnabled('fio')
   const hideSwap = config.disableSwaps === true
 
   return (

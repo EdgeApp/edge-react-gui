@@ -69,17 +69,9 @@ the scene callbacks that was removed before commit:
   (`launchOptions(from:)` rebuilding the `userActivityDictionary`, which the app
   answers with "Parsing link...") and the warm path (`scene(_:continue:)`, answered
   with "No wallets exist that support this link."). Those two are driven from a
-  synthesized `NSUserActivity` rather than a real link, for the reason below.
+  synthesized `NSUserActivity` rather than a real link, because the simulator
+  harness cannot deliver a real universal link.
 - The Release configuration compiles.
-
-### Universal links are not associated today
-
-`edge.app` serves a 404 HTML page at `/.well-known/apple-app-site-association`, and
-Apple's CDN has no entry for the domain. The app ships
-`com.apple.developer.associated-domains: applinks:edge.app`, but with no association
-file iOS never hands the app a browsing-web activity, so both universal-link paths
-are unreachable in production regardless of this change. That is worth fixing on its
-own, and until it is, the scene code above cannot be exercised by a real link.
 
 ## What is still owed before Xcode 27
 

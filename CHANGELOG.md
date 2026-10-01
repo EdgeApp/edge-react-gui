@@ -2,7 +2,62 @@
 
 ## Unreleased (develop)
 
-## 4.51.0 (staging)
+## 4.52.0 (staging)
+
+- added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
+- added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
+- added: Logbox disable option to env.json
+- added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
+- added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
+- added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
+- added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
+- added: Native Edge API HMAC signer (`edgeKey.json` + XOR-split C shards) so login-server requests can be signed outside the JS bundle via `apiSigner`, with JS `KEYS.EDGE_API_*` remaining as a fallback.
+- added: Remote signed `GET /v1/infoRollup/:appId` `appKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
+- changed: Standardize wallet list automation test IDs to use period separators.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
+- changed: Prevent sending to the same wallet's own address for EVM assets.
+- changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
+- changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
+- changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
+- changed: Split runtime `env.json` into non-secret `config.json` and secret `keys.json`; deploy-config branch overrides move from `envJson` to `configJson`/`keysJson` (legacy `envJson` is ignored on this GUI)
+- changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
+- changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
+- changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+- fixed: A swap retried after a failure fetches a fresh quote instead of failing with a "closed proxy" error
+- fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
+- fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
+- fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
+- fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
+- fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
+- fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
+- fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
+- fixed: (iOS) Debug builds crashing on text-input measurement when entering an amount on the Buy scene
+- fixed: Unstake showing a bare "Insufficient funds" instead of naming the balance needed for the network fee
+- fixed: Paybis sell Max now quotes the wallet's full spendable amount.
+- fixed: A failed confirmation slide shows the error instead of a stuck spinner.
+- fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+## 4.51.3 (2026-09-30)
+
+- added: (Changelly) TON, BNB Smart Chain BNB and Avalanche C-Chain AVAX swaps
+- changed: Disable Pirate Chain on Android; existing wallets stay visible as keys-only.
+- fixed: (Changelly) L2 ETH swaps no longer pay out on Ethereum mainnet
+- fixed: (Changelly) Base and zkSync tokens are swappable
+
+## 4.51.2 (2026-09-29)
+
+- added: MoonPay Trade swap provider
+- changed: (ARRR) Pirate Chain wallets run on `react-native-pirate-wallet` 0.3.4, replacing `react-native-piratechain`
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+
+## 4.51.1 (2026-09-23)
+
+- fixed: The preferred exchange chosen in the swap settings, or set by an active promotion, is now the selected quote when it can fill the order, instead of only being listed first.
+
+## 4.51.0 (2026-09-21)
 
 - added: Robinhood Chain wallets
 - added: Push info-server attestation tokens into edge-core-js via `setAttestationToken` so the login server can skip CAPTCHA for attested devices, and allow `LOGIN_SERVER` / `INFO_SERVER` env overrides for local E2E stacks.
@@ -27,6 +82,9 @@
 - changed: The balance card title now reads "Unhide Balance" while balances are hidden, and hiding balances shows a toast explaining how to bring them back.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
 - changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
+- changed: Add maestro test selectors (testIDs) to Manage Tokens rows.
+- changed: Add maestro test selectors (testIDs) to the Wallet Settings name input and Done button.
+- changed: Add a maestro test selector (testID) to the split-wallet confirmation button.
 - fixed: Wallet list rows now announce as a button to screen readers, instead of as an inert group that reads out but does not present itself as something to activate.
 - fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
 - fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
