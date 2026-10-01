@@ -19,7 +19,7 @@ import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
-import { ButtonsView } from '../buttons/ButtonsView'
+import { SCENE_BUTTONS_MARGIN_REM, SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -148,6 +148,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView
+        style={styles.scroll}
         contentContainerStyle={styles.container}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
@@ -165,16 +166,16 @@ export const WcConnectScene = withWallet((props: Props) => {
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
         {renderWalletSelect()}
-        {subTitleText === '' ? null : (
-          <ButtonsView
-            parentType="scene"
-            primary={{
-              label: lstrings.wc_confirm_connect_button,
-              onPress: handleConnect
-            }}
-          />
-        )}
       </ScrollView>
+      {subTitleText === '' ? null : (
+        <SceneButtons
+          absolute
+          primary={{
+            label: lstrings.wc_confirm_connect_button,
+            onPress: handleConnect
+          }}
+        />
+      )}
     </SceneWrapper>
   )
 })
@@ -185,9 +186,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     marginLeft: theme.rem(0.5)
   },
+  scroll: {
+    flex: 1
+  },
   container: {
     padding: theme.rem(0.5),
-    paddingTop: theme.rem(1)
+    paddingTop: theme.rem(1),
+    // Keep the last row clear of the absolutely-positioned SceneButtons:
+    paddingBottom: theme.rem(SCENE_BUTTONS_MARGIN_REM)
   },
   listRow: {
     marginTop: theme.rem(1),
