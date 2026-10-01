@@ -14,13 +14,13 @@
  * `--force` is passed.
  */
 
-import { asMap, asUnknown } from 'cleaners'
+import { asObject, asUnknown } from 'cleaners'
 import fs from 'fs'
 import path from 'path'
 
 import { deepMerge, isPlainObject } from '../src/configKeysMerge'
 
-const asUnknownMap = asMap(asUnknown)
+const asUnknownMap = asObject(asUnknown)
 
 /** Legacy `*_INIT` field name -> edge-core currency plugin ID. */
 export const CURRENCY_INIT_MAP: Record<string, string> = {
@@ -60,6 +60,7 @@ export const CURRENCY_INIT_MAP: Record<string, string> = {
   POLKADOT_INIT: 'polkadot',
   POLYGON_INIT: 'polygon',
   PULSECHAIN_INIT: 'pulsechain',
+  ROBINHOOD_INIT: 'robinhood',
   RSK_INIT: 'rsk',
   SEPOLIA_INIT: 'sepolia',
   SOLANA_INIT: 'solana',
