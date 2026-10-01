@@ -1,5 +1,3 @@
-import { getLocales } from 'react-native-localize'
-
 import en from './en_US'
 import de from './strings/de.json'
 import es from './strings/es.json'
@@ -19,11 +17,6 @@ export const lstrings = { ...en } as const
 export type LStrings = typeof lstrings
 export type LStringsKey = keyof LStrings
 export type LStringsValues = LStrings[LStringsKey]
-
-// Set the language at boot:
-const [firstLocale] = getLocales()
-const { languageTag = 'en-US' } = firstLocale ?? {}
-if (languageTag !== 'en-US') selectLocale(languageTag)
 
 function mergeStrings(
   primary: Record<string, string>,
