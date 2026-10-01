@@ -15,9 +15,14 @@ import {
   type PasswordReminder,
   type SpendingLimits
 } from '../types/types'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  readLocalAccountSettingsOrDefaults,
+  writeLocalAccountSettingsToDisk
+} from '../util/localAccountSettings'
 import { logActivity } from '../util/logger'
 
-export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+export { LOCAL_SETTINGS_FILENAME }
 
 // Long enough to read the instructions in the balance-hidden toast:
 const TOAST_HIDE_MS = 5000
@@ -316,21 +321,18 @@ export const readLocalAccountSettings = async (
     return localAccountSettings
   }
 
-  try {
-    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
-    const json = JSON.parse(text)
-    const settings = asLocalAccountSettings(json)
-    emitAccountSettings(settings)
-    readSettingsFromDisk = true
-    return settings
-  } catch (error: unknown) {
-    // If Settings.json doesn't exist yet, return defaults without writing.
-    // Defaults can be derived from cleaners. Only write when values change.
-    const defaults = asLocalAccountSettings({})
-    emitAccountSettings(defaults)
-    readSettingsFromDisk = true
-    return defaults
-  }
+  // Lenient: this is the GUI's read-only cached reader, reached from
+  // `initializeAccount`, and before this branch it could not fail. A
+  // `Settings.json` that is present but unreadable must not stop the login.
+  // `readSettingsFromDisk` stays false in that case, so a later
+  // `writeLocalAccountSettings` cannot persist these defaults over the real
+  // file — the loss the strict reader exists to prevent.
+  const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
+    account
+  )
+  emitAccountSettings(settings)
+  readSettingsFromDisk = trusted
+  return settings
 }
 
 export const writeLocalAccountSettings = async (
@@ -339,9 +341,6 @@ export const writeLocalAccountSettings = async (
 ): Promise<LocalAccountSettings> => {
   // Refresh cache, notify callers
   emitAccountSettings(settings)
-
-  const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
-
+  await writeLocalAccountSettingsToDisk(account, settings)
   return settings
 }
