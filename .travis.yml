@@ -15,4 +15,11 @@ install:
 script:
   - npm run lint
   - npx tsc
+  # The five documentation gates, which are read-only and take seconds
+  # between them. `npm run prepare` above regenerates the committed
+  # artifacts, so without this nothing anywhere notices a stale
+  # `commands.json` — and that file is the table the CLI parses argv against.
+  - npm run docs:api:gates
+  - npm run test:cli:node-safe
   - npm test
+  - npm run test:cli:offline

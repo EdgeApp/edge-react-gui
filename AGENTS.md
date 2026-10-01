@@ -14,9 +14,26 @@
 - `npm test` - Run Jest tests (single run)
 - `npm run watch` - Run Jest tests in watch mode
 - `npm test -- --testNamePattern="test name"` - Run specific test by name
-- `npm run verify` - Run lint, typechain, tsc, and test (full verification)
-- `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
+- `npm run verify` - Full verification: lint, typechain, tsc, the five
+  documentation gates, the Node-safety smoke test, Jest, and the CLI's offline
+  suites against both the sources and the built bundle
+- `npm run precommit` - Pre-commit check: localize, update-eslint-warnings,
+  lint-staged, the documentation gates, the Node-safety smoke test, tsc, Jest
+  and the CLI's offline suites
 - `tsc` - TypeScript type checking (via package.json script)
+
+### Edge CLI
+
+The repository also builds `edge-cli` and `edge-engine` from `src/cli/`.
+[`docs/EDGE_CLI.md`](docs/EDGE_CLI.md) is the guide; `docs/api/README.md`
+covers the route declarations the reference is generated from.
+
+- `npm run cli -- <command>` / `npm run engine` - run either half from source
+- `npm run build:cli` - the single-file bundles in `lib/`
+- `npm run docs:api` - regenerate the committed reference and command table
+- `npm run docs:api:gates` - the five read-only checks that it is in step
+- `npm run test:cli:offline` - the fake-world suites, no network
+- `npm run test:cli:network` - the suites that need the tester servers
 
 ## Swap Provider Integration
 

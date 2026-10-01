@@ -1,3 +1,6 @@
+// Re-exported from the Node-safe module that owns it: the GUI and the CLI feed
+// the same user-visible subcategory string from this, so two implementations
+// is one divergence away from describing a transaction two ways.
 import type {
   EdgeAccount,
   EdgeCurrencyConfig,
@@ -17,6 +20,7 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import type { EdgeAsset } from '../types/types'
 import { asMaybeContractLocation } from './cleaners'
+export { getCurrencyCodeWithAccount } from './txDisplay/currencyCodes'
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -124,32 +128,6 @@ export const getCurrencyCode = (
       return ''
     }
     return wallet.currencyConfig.allTokens[tokenId].currencyCode
-  }
-}
-
-/**
- * Get the currencyCode associated with a tokenId
- */
-export const getCurrencyCodeWithAccount = (
-  account: EdgeAccount,
-  pluginId: string,
-  tokenId: EdgeTokenId
-): string | undefined => {
-  if (account.currencyConfig[pluginId] == null) {
-    return
-  }
-
-  if (tokenId == null) {
-    return account.currencyConfig[pluginId].currencyInfo.currencyCode
-  } else {
-    if (account.currencyConfig[pluginId].allTokens[tokenId] == null) {
-      // Fail gracefully if we don't have the token for some reason
-      console.warn(
-        `getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`
-      )
-      return ''
-    }
-    return account.currencyConfig[pluginId].allTokens[tokenId].currencyCode
   }
 }
 
