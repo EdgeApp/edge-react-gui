@@ -33,6 +33,7 @@
 - fixed: Unstake showing a bare "Insufficient funds" instead of naming the balance needed for the network fee
 - fixed: Paybis sell Max now quotes the wallet's full spendable amount.
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
+- fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
 
 ## 4.51.3 (2026-09-30)
 
