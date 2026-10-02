@@ -44,6 +44,7 @@ interface Props {
   icon?: React.ReactNode
   loading?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
+  rightButtonAccessibilityLabel?: string
   rightButtonType?: RowActionIcon
   title?: string
   testID?: string
@@ -54,7 +55,7 @@ interface Props {
   marginRem?: number[] | number
 }
 
-export const EdgeRow = (props: Props) => {
+export const EdgeRow = (props: Props): React.ReactElement => {
   const {
     body,
     children,
@@ -63,6 +64,7 @@ export const EdgeRow = (props: Props) => {
     loading,
     marginRem,
     maximumHeight = 'medium',
+    rightButtonAccessibilityLabel,
     testID,
     title,
 
@@ -122,12 +124,12 @@ export const EdgeRow = (props: Props) => {
         {title == null ? null : (
           <EdgeText
             ellipsizeMode="tail"
-            style={error ? styles.textHeaderError : styles.textHeader}
+            style={error === true ? styles.textHeaderError : styles.textHeader}
           >
             {title}
           </EdgeText>
         )}
-        {loading ? (
+        {loading === true ? (
           <ActivityIndicator
             style={styles.loader}
             color={theme.primaryText}
@@ -150,7 +152,11 @@ export const EdgeRow = (props: Props) => {
         // If right action icon button is visible, only the icon dims on row tap
         rightButtonVisible ? (
           <EdgeTouchableOpacity
-            accessible={false}
+            accessibilityLabel={rightButtonAccessibilityLabel}
+            accessibilityRole={
+              rightButtonAccessibilityLabel == null ? undefined : 'button'
+            }
+            accessible={rightButtonAccessibilityLabel != null}
             style={styles.tappableIconContainer}
             testID={testID}
             onPress={handlePress}
