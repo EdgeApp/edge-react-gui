@@ -4,7 +4,7 @@ import type { EdgeEncodeUri } from 'edge-core-js'
 import { doc } from '../doc'
 import { findWallet } from '../resolve'
 import { route } from '../route'
-import { asCoreValue, asWalletId } from '../schemas'
+import { asCoreValue, asIntegerString, asWalletId } from '../schemas'
 import { getAccount } from './helpers'
 
 const CURRENCY_CODE_DOC = 'Disambiguates on chains that carry several assets.'
@@ -55,7 +55,9 @@ export const encodeUri = route({
   body: asObject({
     walletId: asWalletId,
     publicAddress: doc(asString, 'Where the payment should go.'),
-    nativeAmount: asOptional(doc(asString, 'Amount, in the native unit.')),
+    nativeAmount: asOptional(
+      doc(asIntegerString, 'Amount, in the native unit.')
+    ),
     label: asOptional(
       doc(asString, 'BIP21 `label`; becomes `metadata.name` when parsed back.')
     ),

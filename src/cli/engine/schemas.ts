@@ -35,6 +35,7 @@ import type {
 } from 'edge-core-js'
 
 import { asBiggystring } from '../../util/cleaners'
+import { hasOwn } from '../../util/predicates'
 import { doc } from './doc'
 import {
   SPEND_AMOUNT_ALIAS_DOC,
@@ -606,6 +607,11 @@ export const asEdgeMetadata: Cleaner<EdgeMetadata> = asNotArray(
 /**
  * Native units as core stores them: digits only.
  *
+ * The cleaner for every `nativeAmount`, `amount` or threshold a *caller*
+ * sends. Response-position amounts stay `asString`: a transaction's
+ * `nativeAmount` is negative for a send, and core's own values are already
+ * valid, so tightening those would reject legitimate output.
+ *
  * `asString` here was the one field of the five `asEdgeTxAction*` cleaners
  * looser than core's own, and it re-opened the hole those cleaners exist to
  * close. `save-tx-action` with `"nativeAmount":"1.5"` passed this route,
@@ -614,7 +620,7 @@ export const asEdgeMetadata: Cleaner<EdgeMetadata> = asNotArray(
  * engine served a `savedAction` the disk did not have for the life of the
  * daemon, and the caller got a 500 on a route declaring only 400 and 404.
  */
-const asIntegerString: Cleaner<string> = raw => {
+export const asIntegerString: Cleaner<string> = raw => {
   const value = asString(raw)
   if (!/^\d+$/.test(value)) {
     throw new TypeError(`"${value}" is not an integer string`)
@@ -751,7 +757,18 @@ const txActionCleaners: Record<string, Cleaner<EdgeTxAction>> = {
  */
 export const asEdgeTxAction: Cleaner<EdgeTxAction> = asNotArray(raw => {
   const { actionType } = asObject({ actionType: asString }).withRest(raw)
-  const cleaner = txActionCleaners[actionType]
+  // `hasOwn`, not a truthiness test on the lookup: `txActionCleaners` is a
+  // plain object literal, so `actionType: "toString"` resolved
+  // `Object.prototype.toString` — not null, so the guard below was skipped
+  // and this returned a string as an `EdgeTxAction`. `"constructor"` was
+  // worse: `Object(raw)` handed back the unvalidated body. Either reached
+  // `wallet.saveTxAction`, where core dispatches
+  // `CURRENCY_WALLET_FILE_CHANGED` before its own uncleaner rejects, so the
+  // caller got a 500 from a route promising only 400 and 404. Same guard
+  // `util/exchangeDenom.ts` uses for the same reason.
+  const cleaner = hasOwn(txActionCleaners, actionType)
+    ? txActionCleaners[actionType]
+    : null
   if (cleaner == null) {
     throw new TypeError(
       `Unknown actionType "${actionType}": expected one of ${Object.keys(
@@ -796,7 +813,7 @@ export const asCreateCurrencyWallet = asObject({
 /** A spend target: where the money goes and how much. */
 export const asSpendTarget = asObject({
   publicAddress: asOptional(asString),
-  nativeAmount: asOptional(asString),
+  nativeAmount: asOptional(asIntegerString),
   uniqueIdentifier: asOptional(asString),
   memo: asOptional(asString),
   otherParams: asOptional(asObject(asUnknown))
@@ -880,8 +897,8 @@ export const asSpendShorthandBody = asObject({
     )
   ),
   to: asOptional(doc(asString, SPEND_TO_DOC)),
-  nativeAmount: asOptional(doc(asString, SPEND_AMOUNT_DOC)),
-  amount: asOptional(doc(asString, SPEND_AMOUNT_ALIAS_DOC)),
+  nativeAmount: asOptional(doc(asIntegerString, SPEND_AMOUNT_DOC)),
+  amount: asOptional(doc(asIntegerString, SPEND_AMOUNT_ALIAS_DOC)),
   tokenId: asOptional(doc(asRequestTokenId, TOKEN_ID_DOC), null),
   metadata: asOptional(doc(asEdgeMetadata, SPEND_METADATA_DOC))
 })

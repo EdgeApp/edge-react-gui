@@ -20,6 +20,7 @@ import { findWallet } from '../resolve'
 import { route } from '../route'
 import {
   asCoreValue,
+  asIntegerString,
   asOkObject,
   asRequestTokenId,
   asSwapQuote
@@ -90,7 +91,7 @@ export const fetchSwapQuotes = route({
   body: asObject({
     fromWalletId: doc(asString, 'Source wallet. Accepts a unique prefix.'),
     toWalletId: doc(asString, 'Destination wallet.'),
-    nativeAmount: doc(asString, 'How much, in native units.'),
+    nativeAmount: doc(asIntegerString, 'How much, in native units.'),
     // `asRequestTokenId`, like the ten other request-position tokenIds: the
     // CLI sends every tokenId as text, so `--from-token-id=null` — the
     // spelling the guide documents — arrived as the four characters "null"

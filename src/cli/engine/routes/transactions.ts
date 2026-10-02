@@ -38,6 +38,7 @@ import {
   asEdgeAssetAction,
   asEdgeMetadataChange,
   asEdgeTxAction,
+  asIntegerString,
   asQueryBoolean,
   asQueryDate,
   asQueryNonNegativeInteger,
@@ -158,7 +159,7 @@ export const getTransactions = route({
     ),
     spamThreshold: asOptional(
       doc(
-        asString,
+        asIntegerString,
         'Native-amount floor. Omitted, the account spam-filter setting applies; a value always overrides it, and `0` shows everything. An empty value reads as omitted, like every other query parameter.'
       )
     ),

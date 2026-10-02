@@ -616,6 +616,41 @@ function main(): void {
       w,
       '--spend-info={"tokenId":null,"spendTargets":[{"publicAdress":"bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7","nativeAmount":"1"}]}'
     )
+    // Declared `asString`, these reached biggystring, which throws a plain
+    // `Error` that `toErrorBody` has no arm for — so a mistyped amount
+    // answered 500 on routes declaring 400. A fractional one was worse: the
+    // UTXO plugin sums fees with biggystring but builds the output with
+    // `parseInt`, so "1.5" funded the fee math at 1.5 and paid out 1.
+    for (const [label, amount] of [
+      ['non-numeric', 'abc'],
+      ['fractional', '1.5'],
+      ['negative', '-1000']
+    ]) {
+      refuses(
+        `make-spend with a ${label} native amount`,
+        'BAD_REQUEST',
+        'make-spend',
+        w,
+        '--to=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7',
+        `--native-amount=${amount}`
+      )
+    }
+    refuses(
+      'get-transactions with a non-numeric spam threshold',
+      'BAD_REQUEST',
+      'get-transactions',
+      w,
+      '--spam-threshold=abc'
+    )
+    refuses(
+      'encode-uri with a fractional native amount',
+      'BAD_REQUEST',
+      'encode-uri',
+      w,
+      '--public-address=bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7',
+      '--native-amount=0.5'
+    )
+
     refuses(
       'spend with a target missing nativeAmount',
       'BAD_REQUEST',
@@ -677,6 +712,20 @@ function main(): void {
       '--txid=deadbeef',
       '--saved-action={"actionType":"swap"}'
     )
+    // `actionType` is dispatched through a plain object literal, so these two
+    // names resolved `Object.prototype.toString` and `Object` rather than
+    // missing: the "unknown actionType" guard was skipped and a string, or
+    // the unvalidated body, was returned as an `EdgeTxAction`.
+    for (const actionType of ['toString', 'constructor']) {
+      refuses(
+        `save-tx-action with actionType "${actionType}"`,
+        'BAD_REQUEST',
+        'save-tx-action',
+        w,
+        '--txid=deadbeef',
+        `--saved-action={"actionType":"${actionType}"}`
+      )
+    }
     refuses(
       'save-tx-metadata with a non-object metadata',
       'BAD_REQUEST',
