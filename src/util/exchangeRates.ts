@@ -109,6 +109,14 @@ let inQuery = false
  * independent of page size, and ~1s even when every rate was already cached.
  */
 let lastQueryEndedAt = 0
+/**
+ * Bumped by `stopRateQueue`, so a pass in flight can tell it is unwanted.
+ *
+ * Stopping the queue clears `inQuery` but cannot cancel a `doQuery` already
+ * awaiting a response. Without this, a key queued immediately after a stop
+ * armed a second chain that ran concurrently with the first.
+ */
+let queueEpoch = 0
 let queryTimer: ReturnType<typeof setTimeout> | undefined
 
 /**
@@ -138,6 +146,7 @@ interface RateQueryGroup {
 let numDoQuery = 0
 const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   const n = numDoQuery++
+  const epoch = queueEpoch
   clog(`${n} doQuery enter`)
 
   const groups = new Map<string, RateQueryGroup>()
@@ -260,7 +269,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   // during the round trip, which `addToQueue` deliberately does not arm a
   // second timer for. Each pass therefore removes at least the keys it asked
   // about, so this terminates.
-  if (resolverMap.size > 0) {
+  if (epoch !== queueEpoch) {
+    // The queue was stopped while this pass was in flight. Whatever is left
+    // was settled by `stopRateQueue`, and recursing would run a second chain
+    // alongside a queue that no longer wants one.
+    clog(`${n} doQuery abandoned: queue stopped`)
+  } else if (resolverMap.size > 0) {
     clog(`${n} Calling doQuery again`)
     await doQuery(doFetch)
   } else {
@@ -304,6 +318,19 @@ const addToQueue = (
     queryTimer = setTimeout(() => {
       queryTimer = undefined
       doQuery(doFetch).catch((error: unknown) => {
+        // Unlatch before reporting. `inQuery` is set above and the only
+        // place that cleared it was `doQuery`'s own terminal branch, so a
+        // rejection from anywhere outside its per-group `try` — building the
+        // groups, or stringifying the params — left it latched for the life
+        // of the process: every later arrival took the `!inQuery` false
+        // path, armed no timer, and never settled, because
+        // `getHistoricalRate` never calls its own `reject`. In the engine
+        // that is a `get-transactions` that hangs to the client's deadline,
+        // for ever, on a daemon documented as long-lived. One bad pass now
+        // costs one pass.
+        inQuery = false
+        lastQueryEndedAt = Date.now()
+        settleQueuedWithZero()
         onQueryError(error)
       })
     }, delay)
@@ -355,10 +382,25 @@ export function stopRateQueue(): void {
     queryTimer = undefined
   }
   inQuery = false
+  // So a pass already in flight does not recurse into another one after the
+  // queue has been stopped. It cannot be cancelled, but it can be told its
+  // work is no longer wanted: `doQuery` compares the epoch it started with.
+  queueEpoch++
   // So the next query after a stop is not throttled against a pass that
   // never ran. A test that stops the queue between cases wants the same
   // starting point each time.
   lastQueryEndedAt = 0
+  settleQueuedWithZero()
+}
+
+/**
+ * Settle every queued caller with `0` and empty the queue.
+ *
+ * `0` is what `getHistoricalRate` already answers for a rate the server
+ * cannot price, and what every caller of these helpers treats as "no rate",
+ * so it is the one value that cannot leave a promise hanging.
+ */
+function settleQueuedWithZero(): void {
   for (const [key, { resolvers }] of [...resolverMap.entries()]) {
     resolverMap.delete(key)
     resolvers.forEach(resolve => resolve(0))

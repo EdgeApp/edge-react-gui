@@ -215,3 +215,31 @@ describe('query scheduling', () => {
     expect(posts).toBe(1)
   })
 })
+
+describe('stopping the queue', () => {
+  it('does not leave a pass in flight running a second chain', async () => {
+    stopRateQueue()
+    clearRateCache()
+    posts = 0
+
+    // A server slow enough that the first pass is still awaiting when the
+    // queue is stopped underneath it. `stopRateQueue` clears `inQuery` but
+    // cannot cancel that pass, so without an epoch the key queued below
+    // armed a second chain that ran alongside the first.
+    const slowFetch: any = async (uri: string, opts: any) => {
+      await new Promise(resolve => setTimeout(resolve, 200))
+      return await fakeFetch(uri, opts)
+    }
+
+    const first = rateFor('2024-03-01T00:00:00.000Z', slowFetch)
+    await new Promise(resolve => setTimeout(resolve, 50))
+    stopRateQueue()
+    // Settled rather than hanging: a stopped queue answers 0, which is what
+    // every caller of these helpers treats as "no rate".
+    expect(await first).toBe(0)
+
+    // And the module still works afterwards.
+    const second = await rateFor('2024-03-02T00:00:00.000Z')
+    expect(second).toBe(30000)
+  })
+})
