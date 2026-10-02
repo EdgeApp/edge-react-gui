@@ -61,15 +61,20 @@ export interface PaymentProtoLink {
 }
 
 /**
- * A provider sell-completion redirect (e.g. MoonPay's "Send with Edge" button).
- * Carries everything needed to open the Send scene so the user can finish
- * depositing crypto for a pending sell order:
+ * A provider sell-completion redirect (e.g. MoonPay's "Send with Edge" button),
+ * which lets the user finish depositing crypto for a pending sell order:
  *
- *   https://edge.app/redirect/payment/?baseCurrencyCode=btc&baseCurrencyAmount=0.001&depositWalletAddress=...&depositWalletAddressTag=...
+ *   https://deep.edge.app/redirect/payment/<providerId>/<pluginId>[_<tokenId>]/?transactionId=...&baseCurrencyCode=btc&baseCurrencyAmount=0.001&depositWalletAddress=...&depositWalletAddressTag=...
  *
- * `currencyCode` is the provider's base currency code (resolved to a wallet at
- * handle time), `addressTag` is the destination tag / memo (required for chains
- * like XRP), and `amount` is in whole units of the base currency.
+ * The path segments after `payment` are ours (see `makePaymentReturnUrl`) and
+ * are missing on links from orders created before they existed. The query is
+ * appended by the provider. `transactionId` is the provider's order id, which
+ * the handler uses to look the order up: everything else here comes from a URL
+ * anybody can author, so it is a hint and never the source of what gets sent.
+ *
+ * `currencyCode` is the provider's base currency code, `addressTag` is the
+ * destination tag / memo (required for chains like XRP), and `amount` is in
+ * whole units of the base currency.
  */
 export interface PaymentRedirectLink {
   type: 'paymentRedirect'
@@ -77,6 +82,9 @@ export interface PaymentRedirectLink {
   depositAddress: string
   amount?: string
   addressTag?: string
+  providerId?: string
+  asset?: EdgeAsset
+  transactionId?: string
 }
 
 export interface EdgeLoginLink {
