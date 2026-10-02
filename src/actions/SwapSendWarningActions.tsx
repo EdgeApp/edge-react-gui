@@ -13,8 +13,10 @@ import { runOnce } from '../util/runOnce'
 /**
  * Explain, the first time a send turns into a swap, that the send scene is no
  * longer paying the recipient directly: the wallet pays the swap provider, and
- * the provider pays the recipient. Shown once per account, like the send scam
- * warning it sits beside.
+ * the provider pays the recipient. It also names the two risks of that shape:
+ * a rare compliance hold, and that a held swap is the provider's to resolve.
+ * Informative only, it never blocks the quote. Shown once per account, like
+ * the send scam warning it sits beside.
  **/
 export const showSwapSendWarningModal = async (
   disklet: Disklet,
@@ -29,8 +31,19 @@ export const showSwapSendWarningModal = async (
         config.appName,
         providerName
       )
+      const recoveryMessage = sprintf(
+        lstrings.stealth_swap_send_modal_message_recovery_1s,
+        config.appName
+      )
       await Airship.show<boolean>(bridge => {
-        const warningMessage = `• ${routingMessage}\n\n• ${lstrings.stealth_swap_send_modal_message_timing}`
+        const warningMessage = [
+          routingMessage,
+          lstrings.stealth_swap_send_modal_message_timing,
+          lstrings.stealth_swap_send_modal_message_kyc,
+          recoveryMessage
+        ]
+          .map(message => `• ${message}`)
+          .join('\n\n')
 
         return (
           <ConfirmContinueModal

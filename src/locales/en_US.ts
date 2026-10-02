@@ -1695,6 +1695,10 @@ const strings = {
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
   stealth_recipient_hidden: 'Hidden for privacy',
   stealth_swap_send_modal_title: 'This send uses a swap provider',
+  stealth_swap_send_modal_message_kyc:
+    'In rare cases, the provider or its exchange partners may hold a transaction for AML/KYC review and ask you to verify your identity before releasing the funds.',
+  stealth_swap_send_modal_message_recovery_1s:
+    'A held or failed swap is resolved with the provider. %1$s cannot cancel, refund, or recover funds once they are sent.',
   stealth_swap_send_modal_message_2s:
     '%1$s reaches this recipient by swapping through %2$s. Your wallet pays the provider, and the provider pays the recipient.',
   stealth_swap_send_modal_message_timing:
