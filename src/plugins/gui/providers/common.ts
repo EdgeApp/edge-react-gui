@@ -1,5 +1,6 @@
 import { asObject, asString } from 'cleaners'
 
+import type { EdgeAsset } from '../../../types/types'
 import type { FiatPluginRegionCode } from '../fiatPluginTypes'
 import {
   FiatProviderError,
@@ -26,6 +27,26 @@ export const RETURN_URL_SUCCESS = `${CLAIMED_REDIRECT_HOST}success/`
 export const RETURN_URL_FAIL = `${CLAIMED_REDIRECT_HOST}fail/`
 export const RETURN_URL_CANCEL = `${CLAIMED_REDIRECT_HOST}cancel/`
 export const RETURN_URL_PAYMENT = `${CLAIMED_REDIRECT_HOST}payment/`
+
+/**
+ * Build a payment redirect URL that names the provider and the asset being
+ * sold: `<RETURN_URL_PAYMENT><providerId>/<pluginId>[_<tokenId>]/`. A provider
+ * that persists the redirect and resurfaces it outside the app (an email or
+ * order-history "Send with Edge" button) then hands the deep-link handler the
+ * order's network, which a bare ticker in the query cannot identify. The asset
+ * segment uses the same `<pluginId>[_<tokenId>]` spec as the other deep links.
+ * The result still starts with `RETURN_URL_PAYMENT`, so `isReturnUrl` matches
+ * it inside the provider WebView.
+ */
+export const makePaymentReturnUrl = (
+  providerId: string,
+  asset: EdgeAsset
+): string => {
+  const { pluginId, tokenId } = asset
+  const assetSpec =
+    tokenId == null ? pluginId : `${pluginId}_${encodeURIComponent(tokenId)}`
+  return `${RETURN_URL_PAYMENT}${encodeURIComponent(providerId)}/${assetSpec}/`
+}
 
 // Match a ramp redirect URL as it appears inside the provider WebView. Orders
 // created before the host switch still carry the legacy apex `edge.app` host —
