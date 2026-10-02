@@ -19,9 +19,7 @@ import {
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
-import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { findTokenIdByNetworkLocation } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -65,6 +63,7 @@ import {
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
+import { resolveMoonpayAsset } from './moonpayAssetUtils'
 import {
   asInitOptions,
   asMoonpayCountries,
@@ -101,34 +100,6 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   paypal: 'paypal',
   venmo: 'venmo',
   fasterpayments: 'gbp_bank_transfer'
-}
-
-const NETWORK_CODE_PLUGINID_MAP: StringMap = {
-  algorand: 'algorand',
-  arbitrum: 'arbitrum',
-  avalanche_c_chain: 'avalanche',
-  base: 'base',
-  binance_smart_chain: 'binancesmartchain',
-  bitcoin: 'bitcoin',
-  bitcoin_cash: 'bitcoincash',
-  cardano: 'cardano',
-  cosmos: 'cosmoshub',
-  dogecoin: 'dogecoin',
-  ethereum: 'ethereum',
-  hedera: 'hedera',
-  litecoin: 'litecoin',
-  optimism: 'optimism',
-  osmosis: 'osmosis',
-  polygon: 'polygon',
-  ripple: 'ripple',
-  solana: 'solana',
-  s_sonic: 'sonic',
-  stellar: 'stellar',
-  sui: 'sui',
-  tezos: 'tezos',
-  tron: 'tron',
-  ton: 'ton',
-  zksync: 'zksync'
 }
 
 const ensureIsoPrefix = (currencyCode: string): string => {
@@ -242,23 +213,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
         if (currency.type === 'crypto') {
           const { metadata } = currency
           if (metadata == null) continue
-          const { contractAddress, networkCode } = metadata
-          const currencyPluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
-          if (currencyPluginId == null) continue
-
-          let tokenId: EdgeTokenId
-          if (contractAddress != null) {
-            const resolved = findTokenIdByNetworkLocation({
-              account,
-              pluginId: currencyPluginId,
-              networkLocation: { contractAddress }
-            })
-            if (resolved === undefined) continue // not found
-            tokenId = resolved
-          } else {
-            // Native asset for this network
-            tokenId = null
-          }
+          const asset = resolveMoonpayAsset(account, metadata)
+          if (asset == null) continue // unknown network or token
+          const { pluginId: currencyPluginId, tokenId } = asset
 
           // Add to all payment types
           for (const dir of ['buy', 'sell'] as FiatDirection[]) {
