@@ -1,11 +1,13 @@
 import { mul } from 'biggystring'
 import { asMaybe, asString } from 'cleaners'
-import type {
-  EdgeAssetAction,
-  EdgeMemo,
-  EdgeSpendInfo,
-  EdgeTokenId,
-  EdgeTxActionFiat
+import {
+  asMaybePendingFundsError,
+  type EdgeAssetAction,
+  type EdgeMemo,
+  type EdgeSpendInfo,
+  type EdgeTokenId,
+  type EdgeTransaction,
+  type EdgeTxActionFiat
 } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
@@ -1006,7 +1008,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   // Re-sign on every open: IP-bound signatures must be fresh, and
                   // this path re-opens the widget on a failed/cancelled send.
                   const signedUrl = await signMoonpayUrl(urlObj.href)
-                  await new Promise<void>((resolve, reject) => {
+                  await new Promise<void>(resolve => {
                     navigation.navigate('guiPluginWebView', {
                       url: signedUrl,
                       onClose: () => {
@@ -1030,6 +1032,14 @@ export const moonpayRampPlugin: RampPluginFactory = (
                           if (inPayment) return
                           inPayment = true
 
+                          const assetAction: EdgeAssetAction = {
+                            assetActionType: 'sell'
+                          }
+                          let savedAction: EdgeTxActionFiat
+                          let tx: EdgeTransaction
+                          let broadcastAttempted = false
+                          let sendSceneClosed = false
+                          let broadcastTx: EdgeTransaction | undefined
                           try {
                             if (
                               baseCurrencyAmount == null ||
@@ -1049,10 +1059,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                               multiplier
                             )
 
-                            const assetAction: EdgeAssetAction = {
-                              assetActionType: 'sell'
-                            }
-                            const savedAction: EdgeTxActionFiat = {
+                            savedAction = {
                               actionType: 'fiat',
                               orderId: transactionId,
                               orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
@@ -1107,90 +1114,87 @@ export const moonpayRampPlugin: RampPluginFactory = (
                               },
                               hiddenFeaturesMap: {
                                 address: true
-                              },
-                              onDone: async (error, tx): Promise<void> => {
-                                if (error != null) {
-                                  throw error
-                                }
-                                if (tx == null) {
-                                  throw new Error(SendErrorNoTransaction)
-                                }
-
-                                onLogEvent('Sell_Success', {
-                                  conversionValues: {
-                                    conversionType: 'sell',
-                                    destFiatCurrencyCode: fiatCurrencyCode,
-                                    destFiatAmount: fiatAmount,
-                                    sourceAmount: new CryptoAmount({
-                                      currencyConfig: coreWallet.currencyConfig,
-                                      tokenId,
-                                      exchangeAmount: baseCurrencyAmount
-                                    }),
-                                    fiatProviderId: pluginId,
-                                    orderId: transactionId
-                                  }
-                                })
-
-                                if (tokenId != null) {
-                                  const params: SaveTxActionParams = {
-                                    walletId: coreWallet.id,
-                                    tokenId,
-                                    txid: tx.txid,
-                                    savedAction,
-                                    assetAction: {
-                                      ...assetAction,
-                                      assetActionType: 'sell'
-                                    }
-                                  }
-                                  await coreWallet.saveTxAction({
-                                    txid: params.txid,
-                                    tokenId: params.tokenId,
-                                    assetAction: params.assetAction,
-                                    savedAction: params.savedAction
-                                  })
-                                }
-
-                                navigation.pop()
-
-                                const message =
-                                  sprintf(
-                                    lstrings.fiat_plugin_sell_complete_message_s,
-                                    cryptoAmount,
-                                    displayCurrencyCode,
-                                    fiatAmount,
-                                    displayFiatCurrencyCode,
-                                    '1'
-                                  ) +
-                                  '\n\n' +
-                                  sprintf(
-                                    lstrings.fiat_plugin_sell_complete_message_2_hour_s,
-                                    '1'
-                                  ) +
-                                  '\n\n' +
-                                  lstrings.fiat_plugin_sell_complete_message_3
-
-                                await showButtonsModal({
-                                  buttons: {
-                                    ok: {
-                                      label: lstrings.string_ok,
-                                      type: 'primary'
-                                    }
-                                  },
-                                  title:
-                                    lstrings.fiat_plugin_sell_complete_title,
-                                  message
-                                })
-                                resolve()
-                              },
-                              onBack: () => {
-                                reject(new Error(SendErrorBackPressed))
                               }
                             }
 
-                            navigation.navigate('send2', sendParams)
+                            // The send scene calls onBack whenever it unmounts, so
+                            // wait for it here: leaving without sending lands in the
+                            // catch below, which re-opens the widget.
+                            tx = await new Promise<EdgeTransaction>(
+                              (resolve, reject) => {
+                                navigation.navigate('send2', {
+                                  ...sendParams,
+                                  // The default broadcast, wrapped to record
+                                  // that the signed transaction was handed to
+                                  // the network:
+                                  alternateBroadcast: async (
+                                    signedTx: EdgeTransaction
+                                  ) => {
+                                    // Leaving the scene does not stop a send
+                                    // that is still signing. The widget is
+                                    // open for a retry by then, so that send
+                                    // must not go out:
+                                    if (sendSceneClosed) {
+                                      throw new Error(
+                                        'Moonpay sell send scene closed before broadcast'
+                                      )
+                                    }
+                                    broadcastAttempted = true
+                                    try {
+                                      broadcastTx =
+                                        await coreWallet.broadcastTx(signedTx)
+                                      return broadcastTx
+                                    } catch (e: unknown) {
+                                      // The wallet refused the spend before
+                                      // submitting anything:
+                                      if (asMaybePendingFundsError(e) != null) {
+                                        broadcastAttempted = false
+                                      }
+                                      throw e
+                                    }
+                                  },
+                                  onDone: (
+                                    error: Error | null,
+                                    edgeTransaction?: EdgeTransaction
+                                  ) => {
+                                    if (error != null) {
+                                      reject(error)
+                                    } else if (edgeTransaction != null) {
+                                      resolve(edgeTransaction)
+                                    } else {
+                                      reject(new Error(SendErrorNoTransaction))
+                                    }
+                                  },
+                                  onBack: () => {
+                                    sendSceneClosed = true
+                                    // Backing out after the broadcast went
+                                    // through still completes the sale:
+                                    if (broadcastTx != null) {
+                                      resolve(broadcastTx)
+                                    } else {
+                                      reject(new Error(SendErrorBackPressed))
+                                    }
+                                  }
+                                })
+                              }
+                            )
                           } catch (e: unknown) {
                             navigation.pop()
-                            await openWebView()
+
+                            // An attempted broadcast may have reached the
+                            // network, so the widget stays closed and the
+                            // guard stays set: this order cannot open a second
+                            // send. A failure before that point (signing, a
+                            // refused spend) leaves the order open to retry,
+                            // and a send still in flight is refused at the
+                            // broadcast above.
+                            if (!broadcastAttempted) {
+                              // Clear the guard before waiting on the
+                              // re-opened widget, so its payment redirect can
+                              // open the send scene again:
+                              inPayment = false
+                              await openWebView()
+                            }
 
                             if (
                               e instanceof Error &&
@@ -1208,6 +1212,75 @@ export const moonpayRampPlugin: RampPluginFactory = (
                             } else {
                               showError(e)
                             }
+                            return
+                          }
+
+                          // The funds are sent, so a failure from here on is a
+                          // plain error and never re-opens the widget:
+                          try {
+                            navigation.pop()
+
+                            onLogEvent('Sell_Success', {
+                              conversionValues: {
+                                conversionType: 'sell',
+                                destFiatCurrencyCode: fiatCurrencyCode,
+                                destFiatAmount: fiatAmount,
+                                sourceAmount: new CryptoAmount({
+                                  currencyConfig: coreWallet.currencyConfig,
+                                  tokenId,
+                                  exchangeAmount: baseCurrencyAmount
+                                }),
+                                fiatProviderId: pluginId,
+                                orderId: transactionId
+                              }
+                            })
+
+                            if (tokenId != null) {
+                              const params: SaveTxActionParams = {
+                                walletId: coreWallet.id,
+                                tokenId,
+                                txid: tx.txid,
+                                savedAction,
+                                assetAction: {
+                                  ...assetAction,
+                                  assetActionType: 'sell'
+                                }
+                              }
+                              await coreWallet.saveTxAction({
+                                txid: params.txid,
+                                tokenId: params.tokenId,
+                                assetAction: params.assetAction,
+                                savedAction: params.savedAction
+                              })
+                            }
+
+                            const message =
+                              sprintf(
+                                lstrings.fiat_plugin_sell_complete_message_s,
+                                cryptoAmount,
+                                displayCurrencyCode,
+                                fiatAmount,
+                                displayFiatCurrencyCode,
+                                '1'
+                              ) +
+                              '\n\n' +
+                              sprintf(
+                                lstrings.fiat_plugin_sell_complete_message_2_hour_s,
+                                '1'
+                              ) +
+                              '\n\n' +
+                              lstrings.fiat_plugin_sell_complete_message_3
+
+                            await showButtonsModal({
+                              buttons: {
+                                ok: {
+                                  label: lstrings.string_ok,
+                                  type: 'primary'
+                                }
+                              },
+                              title: lstrings.fiat_plugin_sell_complete_title,
+                              message
+                            })
                           } finally {
                             inPayment = false
                           }
