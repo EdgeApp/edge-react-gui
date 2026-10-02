@@ -202,7 +202,86 @@ describe('parseDeepLink', function () {
           currencyCode: 'btc',
           depositAddress: 'bc1qqp44yqt9nzrca7cw4hrl2hu5nmpw5fg0r32z62',
           amount: '0.00212',
-          addressTag: undefined
+          addressTag: undefined,
+          providerId: undefined,
+          asset: undefined,
+          transactionId: '6ae325aa-d930-47cd-9ef0-d26e03b68f3c'
+        },
+      // A link we built names the provider and a native asset in the path:
+      'https://deep.edge.app/redirect/payment/moonpay/arbitrum/?transactionId=order-1&baseCurrencyCode=eth_arbitrum&baseCurrencyAmount=0.5&depositWalletAddress=0xdeposit':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'eth_arbitrum',
+          depositAddress: '0xdeposit',
+          amount: '0.5',
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: { pluginId: 'arbitrum', tokenId: null },
+          transactionId: 'order-1'
+        },
+      // A token asset segment, also on the legacy apex host and edge://:
+      'https://edge.app/redirect/payment/moonpay/ethereum_a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/?transactionId=order-2&baseCurrencyCode=usdc&depositWalletAddress=0xdeposit':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'usdc',
+          depositAddress: '0xdeposit',
+          amount: undefined,
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: {
+            pluginId: 'ethereum',
+            tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+          },
+          transactionId: 'order-2'
+        },
+      // The token id is percent-encoded in the path, and keeps its own
+      // underscores and separators once decoded:
+      'edge://redirect/payment/moonpay/sui_0x2%3A%3Amy_coin%3A%3AMY_COIN/?transactionId=order-3&baseCurrencyCode=mycoin&depositWalletAddress=0xdeposit':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'mycoin',
+          depositAddress: '0xdeposit',
+          amount: undefined,
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: { pluginId: 'sui', tokenId: '0x2::my_coin::MY_COIN' },
+          transactionId: 'order-3'
+        },
+      // A malformed asset segment (empty half, or bad percent-encoding) drops
+      // the asset without throwing, and the rest of the link survives:
+      'edge://redirect/payment/moonpay/ethereum_/?transactionId=order-4&baseCurrencyCode=usdc&depositWalletAddress=0xdeposit':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'usdc',
+          depositAddress: '0xdeposit',
+          amount: undefined,
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: undefined,
+          transactionId: 'order-4'
+        },
+      'https://deep.edge.app/redirect/payment/moonpay/ethereum_%E0%A4%A/?transactionId=order-5&baseCurrencyCode=usdc&depositWalletAddress=0xdeposit':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'usdc',
+          depositAddress: '0xdeposit',
+          amount: undefined,
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: undefined,
+          transactionId: 'order-5'
+        },
+      // A provider segment with no asset segment:
+      'edge://redirect/payment/moonpay/?transactionId=order-6&baseCurrencyCode=btc&depositWalletAddress=bc1qexample':
+        {
+          type: 'paymentRedirect',
+          currencyCode: 'btc',
+          depositAddress: 'bc1qexample',
+          amount: undefined,
+          addressTag: undefined,
+          providerId: 'moonpay',
+          asset: undefined,
+          transactionId: 'order-6'
         },
       // XRP needs a destination tag, carried as depositWalletAddressTag:
       'edge://redirect/payment/?baseCurrencyCode=xrp&baseCurrencyAmount=10&depositWalletAddress=rEXAMPLExrpADDRESS&depositWalletAddressTag=123456':
