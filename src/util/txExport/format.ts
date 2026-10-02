@@ -46,13 +46,21 @@ function padZero(val: string): string {
  * SGML numeric character references rather than emitted raw. The declaration
  * is then true, and an importer that reads the references shows the original
  * character.
+ *
+ * The `u` flag is what makes that last sentence true outside the BMP. Without
+ * it the pattern matches one UTF-16 code unit at a time, so `codePointAt(0)`
+ * saw half a surrogate pair: `Tip 🍕` came out as `Tip &#55356;&#57173;`,
+ * two lone surrogates, which are not characters in SGML, XML or OFX, so no
+ * importer can turn them back. An emoji in a payee or memo is ordinary —
+ * a dapp sets it through `edgeProvider`, the CLI's `--metadata` takes any
+ * string, and the GUI's notes field is free text.
  */
 function escapeOFXString(str: string): string {
   str = str.replace(/&/g, '&amp;')
   str = str.replace(/>/g, '&gt;')
   str = str.replace(/</g, '&lt;')
   return str.replace(
-    /[^\x20-\x7e\t\r\n]/g,
+    /[^\x20-\x7e\t\r\n]/gu,
     char => `&#${char.codePointAt(0) ?? 0};`
   )
 }

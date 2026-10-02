@@ -230,6 +230,35 @@ test('export QBO keeps its declared charset', function () {
   expect(out).toContain('&#8212;')
 })
 
+test('export QBO escapes characters outside the BMP', function () {
+  // Every character in the case above is BMP, so all of them survive a
+  // pattern that walks UTF-16 code units. An emoji does not: without the `u`
+  // flag `codePointAt(0)` saw half a surrogate pair and 🍕 came out as
+  // `&#55356;&#57173;`, two lone surrogates, which are not characters in
+  // SGML, XML or OFX — so the promise that an importer can recover the
+  // original was false for exactly the inputs the case above lists. An emoji
+  // in a payee or memo is ordinary: a dapp sets it through `edgeProvider`,
+  // `--metadata` takes any string, and the notes field is free text.
+  const out = exportTransactionsToQBO(
+    [
+      {
+        ...edgeTxs[0],
+        metadata: { name: 'Tip 🍕', notes: 'thanks 🙏', category: 'Expense' }
+      }
+    ],
+    'iso:USD',
+    '100',
+    1524578071304
+  )
+  // The real code points, not surrogate halves.
+  expect(out).toContain('&#127829;')
+  expect(out).toContain('&#128591;')
+  expect(out).not.toContain('&#55356;')
+  expect(out).not.toContain('&#55357;')
+  // eslint-disable-next-line no-control-regex
+  expect(/[^\x09\x0a\x0d\x20-\x7e]/.test(out)).toBe(false)
+})
+
 test('export Bitwave matches reference data', async function () {
   const out = await exportTransactionsToBitwave(
     BITWAVE_ACCOUNT_ID,
