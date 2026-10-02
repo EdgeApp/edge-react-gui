@@ -48,6 +48,49 @@ export function findWallet(
 }
 
 /**
+ * Resolve a wallet id over `allKeys`, not the loaded wallets.
+ *
+ * `findWallet` searches `account.currencyWallets`, which core builds only
+ * from `activeWalletIds` and only for wallets whose api exists — so an
+ * archived wallet, or one whose currency plugin this engine did not load, is
+ * absent from it. That is right for anything that needs a live
+ * `EdgeCurrencyWallet`, and wrong for the calls that only need an id:
+ * `getRawPrivateKey`, `getDisplayPrivateKey`, `getRawPublicKey`,
+ * `listSplittableWalletTypes` and `changeWalletStates` all work off
+ * `allKeys`. Resolving those through the loaded set made key export answer
+ * `WALLET_NOT_FOUND` for a wallet `all-keys` had just listed — on the
+ * disaster-recovery path a CLI key export exists for.
+ *
+ * Same prefix contract and same errors as `findWallet`, so a caller cannot
+ * tell the two apart except by which wallets they can reach.
+ */
+export function findWalletId(account: EdgeAccount, prefix: string): string {
+  if (prefix === '') {
+    throw engineError('BAD_REQUEST', 'walletId must not be empty', 400)
+  }
+  const ids = account.allKeys.map(info => info.id)
+  if (ids.includes(prefix)) return prefix
+
+  const matches = ids.filter(id => id.startsWith(prefix))
+  if (matches.length === 0) {
+    throw engineError(
+      'WALLET_NOT_FOUND',
+      `No wallet found matching: ${prefix}`,
+      404
+    )
+  }
+  if (matches.length > 1) {
+    throw engineError(
+      'AMBIGUOUS_WALLET_ID',
+      `Ambiguous wallet ID "${prefix}"`,
+      409,
+      { candidates: matches }
+    )
+  }
+  return matches[0]
+}
+
+/**
  * Refuse a tokenId the wallet's plugin does not know.
  *
  * Over REST a tokenId is free-form caller input, where in the GUI it always

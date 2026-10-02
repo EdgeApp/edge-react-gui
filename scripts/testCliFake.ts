@@ -748,6 +748,17 @@ function main(): void {
         `--saved-action={"actionType":"${actionType}"}`
       )
     }
+    // Core treats an unknown wallet id as new and writes a state file for it
+    // without error, so these answered 204 while changing nothing and left a
+    // bogus record to sync to every device.
+    refuses(
+      'change-wallet-states with an unknown wallet id',
+      'WALLET_NOT_FOUND',
+      'change-wallet-states',
+      '--wallet-id=nosuchwalletid',
+      '--archived=true'
+    )
+
     refuses(
       'save-tx-metadata with a non-object metadata',
       'BAD_REQUEST',

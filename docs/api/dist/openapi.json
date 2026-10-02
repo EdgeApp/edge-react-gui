@@ -6581,7 +6581,7 @@
       "get": {
         "operationId": "getObject",
         "summary": "Inspect an object handle.",
-        "description": "**Core call:** _none — Engine handle store; core identifies these values by object reference._\n\n**Command line**\n\n```\nobject-get <objectId>\n```\n\nWorks for every kind: transactions, pending logins, swap quotes and lobbies.",
+        "description": "**Core call:** _none — Engine handle store; core identifies these values by object reference._\n\n**Command line**\n\n```\nobject-get <objectId>\n```\n\nFor the session-scoped kinds: a staged transaction or a swap quote.",
         "tags": [
           "Object handles"
         ],
@@ -6618,7 +6618,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects; a lobby has no scalar projection and reports `value: null`.",
+            "description": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6676,7 +6676,7 @@
       "post": {
         "operationId": "deleteObject",
         "summary": "Release an object handle.",
-        "description": "**Core call:** _none — Engine handle store._\n\n**Command line**\n\n```\nobject-delete <objectId>\n```\n\nRuns the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
+        "description": "**Core call:** _none — Engine handle store._\n\n**Command line**\n\n```\nobject-delete <objectId>\n```\n\nRuns the handle's cleanup — closing a swap quote, discarding a staged transaction — instead of waiting out the TTL.",
         "tags": [
           "Object handles"
         ],

@@ -10,7 +10,7 @@ import type { EdgeWalletStates } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { engineError } from '../errors'
-import { findWallet } from '../resolve'
+import { findWalletId } from '../resolve'
 import { route } from '../route'
 import type { RouteContext } from '../router'
 import { asCoreValue, asWalletId, asWalletKeys } from '../schemas'
@@ -28,7 +28,7 @@ function walletIdFor(
     query: { valid: { walletId: string } }
   }
 ): string {
-  return findWallet(getAccount(ctx), ctx.query.valid.walletId).id
+  return findWalletId(getAccount(ctx), ctx.query.valid.walletId)
 }
 
 const asWalletIdQuery = asObject({ walletId: asWalletId }).withRest
@@ -265,9 +265,22 @@ export const changeWalletStates = route({
   errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
-    await getAccount(ctx).changeWalletStates(
-      ctx.body.walletStates as unknown as EdgeWalletStates
-    )
+    const account = getAccount(ctx)
+    // Every key resolved first. Core treats an id it has never seen as new
+    // and writes a state file for it without complaint, so a typo or a
+    // prefix answered 204 while nothing changed — and left a bogus
+    // `Keys/<hash>.json` record in the account repo to sync to every device.
+    // This was also the one wallet route that did not honour the prefix
+    // contract `walletId` is documented with everywhere else, so an id that
+    // worked with `rename-wallet` silently did nothing here. Resolved over
+    // `allKeys`, because archiving and deleting are exactly the states an
+    // already-archived wallet has.
+    const resolved: EdgeWalletStates = {}
+    for (const [prefix, states] of Object.entries(ctx.body.walletStates)) {
+      resolved[findWalletId(account, prefix)] =
+        states as unknown as EdgeWalletStates[string]
+    }
+    await account.changeWalletStates(resolved)
     return undefined
   }
 })

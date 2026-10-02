@@ -3,8 +3,16 @@
  *
  * Core values with methods on them — a staged transaction, a swap quote, a
  * pending login, an edge-login lobby — cannot cross JSON, so the engine keeps
- * them and hands back an id. These two calls read and release any of them,
- * whatever kind it is.
+ * them and hands back an id.
+ *
+ * These two calls reach the session-scoped kinds only. A handle is owned by a
+ * session when it is created with one, and of the four kinds only
+ * `transaction` (`spend.ts`) and `swap` (`swap.ts`) are; `pendingLogin`
+ * (`login.ts`) and `lobby` (`admin.ts`) are deliberately not, because they
+ * exist before there is a session to own them. `requireOwnedHandle` refuses
+ * an owner-less handle, so those two can only ever answer
+ * `OBJECT_SESSION_MISMATCH` here and are read and released through their own
+ * routes instead.
  */
 import type { EdgeSwapQuote, EdgeTransaction } from 'edge-core-js'
 
@@ -31,21 +39,6 @@ function projectHandleValue(kind: ObjectHandleKind, value: unknown): unknown {
     case 'transaction':
       return value as EdgeTransaction
 
-    case 'pendingLogin': {
-      const record = value as {
-        pending?: { id?: string; state?: string; username?: string }
-        cancelled?: boolean
-        error?: string
-      }
-      return {
-        lobbyId: record.pending?.id ?? null,
-        state: record.pending?.state ?? null,
-        username: record.pending?.username ?? null,
-        cancelled: record.cancelled === true,
-        error: record.error ?? null
-      }
-    }
-
     case 'swap': {
       const quote = value as EdgeSwapQuote
       return {
@@ -57,8 +50,16 @@ function projectHandleValue(kind: ObjectHandleKind, value: unknown): unknown {
       }
     }
 
+    case 'pendingLogin':
     case 'lobby':
-      // Nothing scalar worth reporting, and the value is a live lobby.
+      // Unreachable: neither kind is created with a `sessionId`, so
+      // `requireOwnedHandle` rejects them before this runs. A projection is
+      // still needed wherever a pending login *is* serialised — see
+      // `pendingSummary` in `login.ts`, which is that projection — because
+      // handing an `EdgePendingEdgeLogin` to `JSON.stringify` walks into
+      // `pending.account` and its `otpKey`/`recoveryKey` getters. Left as
+      // explicit arms rather than a `default`, so adding a fifth kind is a
+      // compile error here.
       return null
   }
 }
@@ -66,8 +67,7 @@ function projectHandleValue(kind: ObjectHandleKind, value: unknown): unknown {
 /**
  * Inspect an object handle.
  *
- * Works for every kind: transactions, pending logins, swap quotes and
- * lobbies.
+ * For the session-scoped kinds: a staged transaction or a swap quote.
  *
  * @note Reading does not extend the TTL. Only a step that updates the value
  *   does.
@@ -81,7 +81,7 @@ export const getObject = route({
   cli: { command: 'object-get', positional: 'objectId' },
   returns: doc(
     asObjectHandle,
-    'The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects; a lobby has no scalar projection and reports `value: null`.'
+    'The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.'
   ),
   errors: [
     'OBJECT_NOT_FOUND',
@@ -102,8 +102,8 @@ export const getObject = route({
 /**
  * Release an object handle.
  *
- * Runs the handle's cleanup — closing a swap quote, cancelling a pending
- * login — instead of waiting out the TTL.
+ * Runs the handle's cleanup — closing a swap quote, discarding a staged
+ * transaction — instead of waiting out the TTL.
  *
  * @coreNote Engine handle store.
  */

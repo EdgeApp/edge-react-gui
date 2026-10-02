@@ -7626,7 +7626,7 @@ h5.alt code {
       <div class="ids"><code class="cmdname">object-get</code><span class="src" title="Declared in">src/cli/engine/routes/objects.ts</span></div>
     </header>
     <p class="core none"><span class="lbl">core</span><em>Engine handle store; core identifies these values by object reference.</em></p>
-    <div class="desc"><p>Works for every kind: transactions, pending logins, swap quotes and lobbies.</p>
+    <div class="desc"><p>For the session-scoped kinds: a staged transaction or a swap quote.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
@@ -7647,7 +7647,7 @@ h5.alt code {
   </div></div>
     <div class="pane resp">
     <h4>Response <span class="st ok">200</span></h4>
-    <div class="note"><p>The handle fields, plus a <code>value</code> holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects; a lobby has no scalar projection and reports <code>value: null</code>.</p>
+    <div class="note"><p>The handle fields, plus a <code>value</code> holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.</p>
 </div><div class="shape">
     <div class="shape-h">Response body</div>
     <pre class="ts"><code>{
@@ -7706,7 +7706,7 @@ h5.alt code {
       <div class="ids"><code class="cmdname">object-delete</code><span class="src" title="Declared in">src/cli/engine/routes/objects.ts</span></div>
     </header>
     <p class="core none"><span class="lbl">core</span><em>Engine handle store.</em></p>
-    <div class="desc"><p>Runs the handle&#39;s cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.</p>
+    <div class="desc"><p>Runs the handle&#39;s cleanup — closing a swap quote, discarding a staged transaction — instead of waiting out the TTL.</p>
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>

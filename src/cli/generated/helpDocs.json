@@ -2348,7 +2348,7 @@
       "method": "POST",
       "path": "/account/{sessionId}/object/delete/{objectId}",
       "usage": "object-delete <objectId>",
-      "description": "Runs the handle's cleanup — closing a swap quote, cancelling a pending login — instead of waiting out the TTL.",
+      "description": "Runs the handle's cleanup — closing a swap quote, discarding a staged transaction — instead of waiting out the TTL.",
       "returns": {
         "ok": "boolean — Always true; a failure arrives as an error envelope.",
         "objectId": "string — The handle this call consumed. It is now expired."
@@ -2367,7 +2367,7 @@
       "method": "GET",
       "path": "/account/{sessionId}/object/{objectId}",
       "usage": "object-get <objectId>",
-      "description": "Works for every kind: transactions, pending logins, swap quotes and lobbies.",
+      "description": "For the session-scoped kinds: a staged transaction or a swap quote.",
       "returns": {
         "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
         "kind": "string — What the handle refers to, which decides the calls that accept it.",
@@ -2376,7 +2376,7 @@
         "sessionId?": "string — Session that created the handle; only that session may use it.",
         "walletId?": "string — Wallet the handle is bound to, when it belongs to one."
       },
-      "returnsDoc": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; pending logins and swap quotes are summarised, because the values behind them are live core objects; a lobby has no scalar projection and reports `value: null`.",
+      "returnsDoc": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.",
       "notes": [
         "Reading does not extend the TTL. Only a step that updates the value does."
       ],

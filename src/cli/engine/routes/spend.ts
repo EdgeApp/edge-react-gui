@@ -647,9 +647,21 @@ export const saveTx = route({
   errors: ['BAD_REQUEST', ...HANDLE_ERRORS],
 
   async handler(ctx) {
-    const { objectId, wallet, transaction } = stagedTx(ctx, ctx.body.objectId)
-    await saveTxAndMetadata(wallet, transaction)
-    await ctx.state.objects.delete(objectId)
+    const { objectId, wallet, record } = stagedTx(ctx, ctx.body.objectId)
+    // Under `consume`, like every other handle-advancing route. This was the
+    // one that set neither `consuming` nor `hold`, so three guards were
+    // blind to an in-flight save: `get`'s `OBJECT_IN_USE`, the sweeper's
+    // skip, and the bounded wait a bulk release does. A slow `save-tx`
+    // overlapping a `broadcast-tx` for the same handle — what a client
+    // timeout and a retry of the other step produce — passed `stagedTx`
+    // because `consuming` was false, and the bare `delete` below removed the
+    // record under the in-flight broadcast, so that call answered
+    // `OBJECT_NOT_FOUND` *after the funds had left*, with no txid in the
+    // response. `consume` also does the delete in its own `finally`, which
+    // is what this handler was doing by hand.
+    await ctx.state.objects.consume(record, async transaction => {
+      await saveTxAndMetadata(wallet, transaction)
+    })
     return { ok: true, objectId }
   }
 })
