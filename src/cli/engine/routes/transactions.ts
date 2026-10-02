@@ -87,7 +87,7 @@ function overlayDisplayMetadata(
  * request and 100 cost two. The point of the default is that a page prices
  * in a single request, which 100 did not deliver.
  */
-const DEFAULT_TX_LIMIT = 99
+export const DEFAULT_TX_LIMIT = 99
 
 /**
  * List or export a wallet's transactions.
@@ -137,7 +137,12 @@ export const getTransactions = route({
     limit: asOptional(
       doc(
         asQueryNonNegativeInteger,
-        'How many to return. Defaults to 100; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`.'
+        // The number has to match `DEFAULT_TX_LIMIT`, and a template literal
+        // cannot say so: `extractRoutes` reads this through the checker as a
+        // string *literal*, and interpolating dropped the description from
+        // the reference altogether. `txLimitDoc.test.ts` asserts the two
+        // agree instead.
+        'How many to return. Defaults to 99; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`.'
       ),
       DEFAULT_TX_LIMIT
     ),
@@ -295,23 +300,6 @@ export const getTransactions = route({
     if (formats.includes('bitwave')) {
       if (bitwaveAccountIdQuery != null && bitwaveAccountIdQuery !== '') {
         bitwaveAccountId = bitwaveAccountIdQuery
-        // Persisting is opt-in. This writes `exportTxInfo.json` on the
-        // wallet's *synced* disklet, which is the record the GUI's export
-        // scene reads back to pre-set its three switches — so doing it
-        // unasked turned a one-off `--bitwave-account-id` into the user's
-        // saved account id and flipped "Export to Bitwave" on for them.
-        if (ctx.query.valid.saveExportPrefs) {
-          await mergeExportTxInfo(wallet, tokenId, {
-            bitwaveAccountId,
-            // The same field set the GUI writes, so one record keeps one
-            // meaning: a partial patch left isExportCsv/isExportQbo at
-            // `false` on a first write and the record no longer described
-            // the last export either tool ran.
-            isExportBitwave: formats.includes('bitwave'),
-            isExportCsv: formats.includes('csv'),
-            isExportQbo: formats.includes('qbo')
-          })
-        }
       } else {
         let saved: string | undefined
         try {
@@ -329,6 +317,30 @@ export const getTransactions = route({
         }
         bitwaveAccountId = saved
       }
+    }
+
+    // Outside the bitwave branches, because the flag is documented as saving
+    // "`bitwaveAccountId` **and** the chosen formats" and it used to be
+    // honoured only when the caller asked for bitwave *and* passed an
+    // explicit account id. So `--export-format=csv,qbo --save-export-prefs`
+    // answered `ok` and wrote nothing, leaving the GUI export scene's
+    // switches untouched. Persisting is still opt-in: writing unasked turned
+    // a one-off `--bitwave-account-id` into the user's saved account id and
+    // flipped "Export to Bitwave" on for them.
+    if (ctx.query.valid.saveExportPrefs) {
+      await mergeExportTxInfo(wallet, tokenId, {
+        // Safe to pass when absent: `mergeExportTxInfo` reads every field as
+        // `patch.x ?? prev?.x`, so an undefined id keeps whatever was saved
+        // rather than clearing it for a caller who never mentioned bitwave.
+        bitwaveAccountId,
+        // The same field set the GUI writes, so one record keeps one
+        // meaning: a partial patch left isExportCsv/isExportQbo at `false`
+        // on a first write and the record no longer described the last
+        // export either tool ran.
+        isExportBitwave: formats.includes('bitwave'),
+        isExportCsv: formats.includes('csv'),
+        isExportQbo: formats.includes('qbo')
+      })
     }
 
     const files: Array<{ format: TxExportFormat; contents: string }> = []

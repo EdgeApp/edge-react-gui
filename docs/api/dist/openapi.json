@@ -6194,7 +6194,7 @@
             "name": "limit",
             "in": "query",
             "required": false,
-            "description": "How many to return. Defaults to 100; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`.",
+            "description": "How many to return. Defaults to 99; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`.",
             "schema": {
               "type": "number"
             }

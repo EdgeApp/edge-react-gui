@@ -538,6 +538,28 @@ function main(): void {
       '--export-format=bitwave',
       `--out=${path.join(exportDir, 'bw2.csv')}`
     )
+    // `--save-export-prefs` used to be honoured only inside the bitwave
+    // branches, so this combination answered `ok` and wrote nothing. The
+    // write now runs for every format. The bitwave call after it checks that
+    // the saved id survived a write that did not mention one — it has no
+    // `--bitwave-account` of its own, so it can only succeed from the
+    // record. `mergeExportTxInfo` is what preserves it, by reading each
+    // field as `patch.x ?? prev?.x`.
+    ok(
+      'csv and qbo preferences are saved',
+      'get-transactions',
+      w,
+      '--export-format=csv,qbo',
+      '--save-export-prefs',
+      `--out=${path.join(exportDir, 'prefs')}`
+    )
+    ok(
+      'saving csv preferences keeps the bitwave account id',
+      'get-transactions',
+      w,
+      '--export-format=bitwave',
+      `--out=${path.join(exportDir, 'bw3.csv')}`
+    )
     fs.rmSync(exportDir, { recursive: true, force: true })
     // A tokenId is free-form caller input over REST, where in the GUI it
     // always came from a real token. Unvalidated, each of these destructured
