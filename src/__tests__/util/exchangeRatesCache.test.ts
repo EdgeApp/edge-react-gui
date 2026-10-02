@@ -4,7 +4,8 @@ import {
   clearRateCache,
   getHistoricalCryptoRate,
   rateCacheSize,
-  stopRateQueue
+  stopRateQueue,
+  UNPRICED_TTL_MS
 } from '../../util/exchangeRates'
 
 // Real timers: the queue debounces by FETCH_FREQUENCY before it fetches.
@@ -95,15 +96,32 @@ describe('the module-level rate cache', () => {
     expect(rateCacheSize()).toBe(0)
   })
 
-  it('does not cache a zero, so one unpriced response is not permanent', async () => {
+  it('remembers an unpriced key briefly rather than for ever', async () => {
     clearRateCache()
     const date = '2019-03-03T04:00:00.000Z'
+    posts = 0
 
-    // The route publishes `0` for a rate the server cannot supply.
+    // The route publishes `0` for a rate the server cannot supply, and that
+    // never enters the rate cache: answering `0` for the life of the process
+    // would outlast any server outage.
     expect(await rateFor(date, unpricedFetch)).toBe(0)
     expect(rateCacheSize()).toBe(0)
+    expect(posts).toBe(1)
 
-    // A later pass against a recovered server therefore prices it.
+    // But the repeat is free. Nothing absorbed it before, so an asset the
+    // server has no feed for re-paid the whole fill on every listing — 13
+    // requests and about a second per listing on a 1,200-transaction wallet,
+    // for ever.
+    expect(await rateFor(date, unpricedFetch)).toBe(0)
+    expect(posts).toBe(1)
+
+    // Short enough to be a cache rather than an answer: minutes, so a
+    // recovered server is picked up well inside any session.
+    expect(UNPRICED_TTL_MS).toBeLessThanOrEqual(15 * 60_000)
+
+    // And forgotten with the rest of the cache, which the engine clears when
+    // the last session logs out.
+    clearRateCache()
     expect(await rateFor(date)).toBe(30000)
     expect(rateCacheSize()).toBe(1)
   })

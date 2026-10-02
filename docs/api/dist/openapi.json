@@ -185,6 +185,10 @@
                       "type": "number",
                       "description": "Exchange rates held in the engine’s process cache. It is bounded and cleared when the last session goes away, and this is how an operator sees it."
                     },
+                    "rateUnpricedCount": {
+                      "type": "number",
+                      "description": "Rate keys the server answered without a price, remembered for a few minutes so a repeated listing does not re-ask for every date. A number that stays high means an asset with no feed on the rates server — a hand-added custom token, a long-tail token, or dates predating its market."
+                    },
                     "locale": {
                       "type": "string",
                       "description": "Language tag the engine resolved at boot."
@@ -212,6 +216,7 @@
                     "tcpPort",
                     "socketPath",
                     "rateCachedCount",
+                    "rateUnpricedCount",
                     "locale",
                     "localeMatched",
                     "decimalSeparator",

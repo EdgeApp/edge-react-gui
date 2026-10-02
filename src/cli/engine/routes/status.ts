@@ -9,7 +9,7 @@ import {
 } from 'cleaners'
 
 import { getAppliedLocale } from '../../../locales/bootLocale'
-import { rateCacheSize } from '../../../util/exchangeRates'
+import { rateCacheSize, rateUnpricedCount } from '../../../util/exchangeRates'
 import { API_VERSION } from '../apiVersion'
 import { doc } from '../doc'
 import { route } from '../route'
@@ -43,6 +43,10 @@ const asEngineStatus = asObject({
   rateCachedCount: doc(
     asNumber,
     'Exchange rates held in the engine\u2019s process cache. It is bounded and cleared when the last session goes away, and this is how an operator sees it.'
+  ),
+  rateUnpricedCount: doc(
+    asNumber,
+    'Rate keys the server answered without a price, remembered for a few minutes so a repeated listing does not re-ask for every date. A number that stays high means an asset with no feed on the rates server \u2014 a hand-added custom token, a long-tail token, or dates predating its market.'
   ),
   locale: doc(asString, 'Language tag the engine resolved at boot.'),
   localeMatched: doc(
@@ -98,6 +102,7 @@ export const engineStatus = route({
       tcpPort: state.tcpPort,
       socketPath: state.socketPath,
       rateCachedCount: rateCacheSize(),
+      rateUnpricedCount: rateUnpricedCount(),
       locale: applied.languageTag,
       localeMatched: applied.matched,
       decimalSeparator: applied.decimalSeparator,

@@ -91,6 +91,27 @@ const RATE_CACHE_MAX = 20_000
 
 // A Map, for insertion-ordered eviction and a real `size`.
 const rateMap = new Map<string, number>()
+
+/**
+ * How long a key the server answered but could not price stays unpriceable.
+ *
+ * Not caching `0` is right — it would answer `0` for the life of the process,
+ * long after the rates server recovered — but nothing absorbed the repeat
+ * either, so an asset the server has no feed for re-paid the whole fill on
+ * every listing. Measured against a stub answering 200 with `rate` absent: a
+ * 1,200-transaction wallet cost 13 upstream requests and about a second on
+ * listing one, two and three alike, with the cache staying empty.
+ *
+ * Reachable on a hand-added custom token, a long-tail token with no feed, and
+ * dates predating an asset's market — none of them rare on an old wallet.
+ * Minutes is far longer than a listing loop and far shorter than a server
+ * outage, so a repeated listing is free and a recovered server is still
+ * picked up.
+ */
+export const UNPRICED_TTL_MS = 5 * 60_000
+
+/** Keys the server answered without a price, and when it said so. */
+const unpricedMap = new Map<string, number>()
 const resolverMap = new Map<
   string,
   {
@@ -239,10 +260,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
           }
         }
 
-        // `0` means "the server could not price this", not a rate. Caching it
-        // would answer `0` for that key for the life of the process, long
-        // after the rates server recovered.
+        // `0` means "the server could not price this", not a rate, so it does
+        // not go in the rate cache — that would answer `0` for the life of
+        // the process. It goes in a short-lived negative cache instead, so a
+        // second listing of the same wallet does not re-ask for every date.
         if (rate !== 0) cacheRate(key, rate)
+        else noteUnpriced(key)
         clog(`${n} deleting ${key}`)
         resolverMap.delete(key)
         resolvers.forEach(r => r(rate))
@@ -345,6 +368,31 @@ const addToQueue = (
  * listing pages through dates in order, and the earliest are the ones least
  * likely to be asked for again.
  */
+/** Remember that the server answered this key without a price. */
+function noteUnpriced(key: string): void {
+  // Bounded like the rate cache, and by the same reasoning: a daemon that
+  // never exits would otherwise accumulate one entry per unpriceable date.
+  if (unpricedMap.size >= RATE_CACHE_MAX) {
+    for (const victim of [...unpricedMap.keys()].slice(
+      0,
+      RATE_CACHE_MAX >> 2
+    )) {
+      unpricedMap.delete(victim)
+    }
+  }
+  unpricedMap.set(key, Date.now())
+}
+
+/** Whether the server said recently that it cannot price this key. */
+function isRecentlyUnpriced(key: string): boolean {
+  const at = unpricedMap.get(key)
+  if (at == null) return false
+  if (Date.now() - at < UNPRICED_TTL_MS) return true
+  // Expired, so forget it rather than leaving it to the size bound.
+  unpricedMap.delete(key)
+  return false
+}
+
 function cacheRate(key: string, rate: number): void {
   if (!rateMap.has(key) && rateMap.size >= RATE_CACHE_MAX) {
     // A quarter at a time rather than one per insert, so a long listing does
@@ -365,6 +413,7 @@ function cacheRate(key: string, rate: number): void {
  */
 export function clearRateCache(): void {
   rateMap.clear()
+  unpricedMap.clear()
 }
 
 /**
@@ -410,6 +459,18 @@ function settleQueuedWithZero(): void {
 /** How many rates are cached. `engine-status` reports it as `rateCachedCount`. */
 export function rateCacheSize(): number {
   return rateMap.size
+}
+
+/**
+ * How many keys the server answered without a price.
+ *
+ * `engine-status` reports it as `rateUnpricedCount`. Worth publishing beside
+ * the cached count: an asset with no feed used to cost a full re-query on
+ * every listing with nothing to show for it, and the number is what makes
+ * that visible rather than silent.
+ */
+export function rateUnpricedCount(): number {
+  return unpricedMap.size
 }
 
 const createRateKey = (
@@ -506,6 +567,12 @@ const getHistoricalRate = async (
   return await new Promise((resolve, reject) => {
     const rate = rateMap.get(rateKey)
     if (rate == null) {
+      if (isRecentlyUnpriced(rateKey)) {
+        // Answered already: the server has said it cannot price this key
+        // within the TTL, and asking again costs a round trip per date.
+        resolve(0)
+        return
+      }
       addToQueue(RatesParams, rateKey, resolve, maxQuerySize, doFetch)
       return
     }
