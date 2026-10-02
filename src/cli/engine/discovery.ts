@@ -268,6 +268,32 @@ function isProcessAlive(pid: number): boolean {
 }
 
 /**
+ * Whether a run file's claim belongs to an engine that is still around.
+ *
+ * One definition, because there were two and they disagreed.
+ * `cleanupStaleLock` required a listening socket as well as a live pid, and
+ * its comment asserted that `sweepStaleProfiles` "skips the directory for
+ * the same reason" — but the sweep tested the pid alone, so it permanently
+ * skipped exactly the profiles it exists to clear: a SIGKILLed engine whose
+ * pid the OS later recycled looks alive for ever, and its `session.json` —
+ * a full-account bearer token — survived in a directory nothing would
+ * revisit, because `testCliFake` derives its data directory from the pid so
+ * every run hashes fresh.
+ */
+async function isClaimLive(
+  profile: string,
+  run: EngineRunFile
+): Promise<boolean> {
+  if (!isProcessAlive(run.pid)) return false
+  if (await isEngineListening(run.socketPath ?? socketPathFor(profile))) {
+    return true
+  }
+  // Nothing listening yet is not the same as nothing coming: the claim is
+  // written before `makeCoreContext`, and the socket is bound seconds later.
+  return claimedWithin(profile, run, BOOT_GRACE_MS)
+}
+
+/**
  * Whether a claim is young enough that its engine may still be booting.
  *
  * `startedAt` when the claim carries one, and the run file's own mtime
@@ -329,27 +355,13 @@ export async function cleanupStaleLock(
     }
     return null
   }
-  // `isProcessAlive` alone is not enough. It is `process.kill(pid, 0)`, so a
-  // run file left behind by a SIGKILLed engine whose pid the OS has since
-  // recycled looks live for ever: the engine prints "already running" and
-  // exits 1 on every invocation, `sweepStaleProfiles` skips the directory
-  // for the same reason, and the only recovery is deleting it by hand — the
-  // exact wedge this function exists to prevent. So the claim also has to be
-  // backed by something actually listening on the socket it names.
-  if (isProcessAlive(run.pid)) {
-    if (await isEngineListening(run.socketPath ?? socketPathFor(profile))) {
-      return run.pid
-    }
-    // Nothing listening yet is not the same as nothing coming. The claim is
-    // written before `makeCoreContext`, which opens the on-disk repos and
-    // starts every plugin, and the socket is not bound until seconds later —
-    // so for that whole window a live, *booting* engine reads exactly like a
-    // dead one. Sweeping it let a second cold invocation claim the same
-    // profile and open a second EdgeContext on one directory, which is the
-    // corruption the claim ordering exists to prevent. This is the reasoning
-    // `sweepStaleProfiles` already applies to its own `run == null` arm.
-    if (claimedWithin(profile, run, BOOT_GRACE_MS)) return run.pid
-  }
+  // Through `isClaimLive`, which `sweepStaleProfiles` also uses, so the two
+  // cannot disagree about what a live claim is. `isProcessAlive` alone is
+  // not enough: it is `process.kill(pid, 0)`, so a run file left by a
+  // SIGKILLed engine whose pid the OS has recycled looks live for ever, and
+  // the only recovery is deleting the directory by hand — the exact wedge
+  // this function exists to prevent.
+  if (await isClaimLive(profile, run)) return run.pid
   // A dead engine's artifacts go, but not the startup log: a client spawning
   // the replacement has already opened it, and it is where a boot failure is
   // recorded.
@@ -402,7 +414,7 @@ export async function isEngineListening(socketPath: string): Promise<boolean> {
  * left alone, as is one belonging to the profile starting up, and as is one
  * young enough to be mid-boot.
  */
-export function sweepStaleProfiles(except: string): number {
+export async function sweepStaleProfiles(except: string): Promise<number> {
   let profiles: string[]
   try {
     profiles = fs.readdirSync(runRoot())
@@ -431,7 +443,7 @@ export function sweepStaleProfiles(except: string): number {
     // pointed at a file that had just been removed.
     const run = readRunFile(profile)
     if (run == null && now - newestMtime < BOOT_GRACE_MS) continue
-    if (run != null && isProcessAlive(run.pid)) continue
+    if (run != null && (await isClaimLive(profile, run))) continue
     // No live owner, so nothing here can be in use. The startup log is kept:
     // it is the only record of a boot that died before the socket existed,
     // and the cost of keeping one stale file is a few hundred bytes.

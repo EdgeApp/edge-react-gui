@@ -358,7 +358,7 @@ async function main(): Promise<void> {
   // only by how many throwaway profiles a machine has ever used: 428 run
   // directories and 612 log files had accumulated on one development
   // machine, and 235 of those directories still held a session.json.
-  const staleProfiles = sweepStaleProfiles(profile)
+  const staleProfiles = await sweepStaleProfiles(profile)
   // `logger.logPath` is this process's own file, which `unlinkSync` would
   // happily remove on POSIX while the stream kept writing to the inode.
   const staleLogs = sweepOldLogs(undefined, logger.logPath)

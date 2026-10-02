@@ -285,7 +285,7 @@ describe('cleanupStaleLock', () => {
 })
 
 describe('sweepStaleProfiles', () => {
-  it('removes every profile no live process owns, except the caller', () => {
+  it('removes every profile no live process owns, except the caller', async () => {
     const {
       ensureRunDir,
       runDir,
@@ -315,7 +315,7 @@ describe('sweepStaleProfiles', () => {
     write('alive', process.pid)
     ensureRunDir('mine')
 
-    expect(sweepStaleProfiles('mine')).toBe(2)
+    expect(await sweepStaleProfiles('mine')).toBe(2)
     expect(fs.existsSync(runDir('orphan1'))).toBe(false)
     expect(fs.existsSync(runDir('orphan2'))).toBe(false)
     // A live engine's directory and the caller's own are untouched.
@@ -323,8 +323,44 @@ describe('sweepStaleProfiles', () => {
     expect(fs.existsSync(runDir('mine'))).toBe(true)
   })
 
-  it('does nothing when there is no run root yet', () => {
+  it('sweeps a live pid whose engine is long gone', async () => {
+    const {
+      ensureRunDir,
+      runDir,
+      runFilePath,
+      sessionFilePath,
+      socketPathFor,
+      sweepStaleProfiles
+    } = load()
+    // The recycled-pid case. `process.kill(pid, 0)` succeeds for ever once
+    // the OS hands the pid to something else, so testing the pid alone meant
+    // the sweep permanently skipped the directories it exists to clear —
+    // leaving `session.json`, a full-account bearer token, on disk in a
+    // profile nothing would revisit. Backdated past the boot grace, because
+    // that is what a recycled pid always is.
+    ensureRunDir('recycled')
+    fs.writeFileSync(
+      runFilePath('recycled'),
+      JSON.stringify({
+        pid: process.pid,
+        apiVersion: '1',
+        socketPath: socketPathFor('recycled'),
+        tcpPort: null,
+        appId: 'edge.app',
+        testMode: false,
+        startedAt: new Date(Date.now() - 600_000).toISOString()
+      })
+    )
+    fs.writeFileSync(sessionFilePath('recycled'), '{"sessionId":"sess_x"}')
+    ensureRunDir('mine')
+
+    expect(await sweepStaleProfiles('mine')).toBe(1)
+    expect(fs.existsSync(sessionFilePath('recycled'))).toBe(false)
+    expect(fs.existsSync(runDir('mine'))).toBe(true)
+  })
+
+  it('does nothing when there is no run root yet', async () => {
     const { sweepStaleProfiles } = load()
-    expect(sweepStaleProfiles('mine')).toBe(0)
+    expect(await sweepStaleProfiles('mine')).toBe(0)
   })
 })
