@@ -2,7 +2,6 @@ import { mul } from 'biggystring'
 import { asMaybe, asString } from 'cleaners'
 import type {
   EdgeAssetAction,
-  EdgeMemo,
   EdgeSpendInfo,
   EdgeTokenId,
   EdgeTxActionFiat
@@ -76,11 +75,17 @@ import {
   type MoonpayPaymentMethod,
   type MoonpaySellWidgetQueryParams
 } from './moonpayRampTypes'
+import {
+  createMoonpayMemo,
+  makeMoonpaySellReceiptUrl,
+  MOONPAY_DISPLAY_NAME,
+  MOONPAY_SUPPORT_EMAIL
+} from './moonpaySellOrder'
 
 const pluginId = 'moonpay'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
-const pluginDisplayName = 'MoonPay'
-const supportEmail = 'support@moonpay.com'
+const pluginDisplayName = MOONPAY_DISPLAY_NAME
+const supportEmail = MOONPAY_SUPPORT_EMAIL
 
 // Local asset map type
 interface AssetMap {
@@ -104,22 +109,6 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
 
 const ensureIsoPrefix = (currencyCode: string): string => {
   return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
-}
-
-const createMemo = (pluginId: string, value: string): EdgeMemo => {
-  const memo: EdgeMemo = {
-    type: 'text',
-    value,
-    hidden: true
-  }
-
-  switch (pluginId) {
-    case 'ripple': {
-      memo.type = 'number'
-      memo.memoName = 'destination tag'
-    }
-  }
-  return memo
 }
 
 // Cache structure with TTL
@@ -1015,7 +1004,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                             const savedAction: EdgeTxActionFiat = {
                               actionType: 'fiat',
                               orderId: transactionId,
-                              orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
+                              orderUri: makeMoonpaySellReceiptUrl(
+                                sellWidgetUrl,
+                                transactionId
+                              ),
                               isEstimate: true,
                               fiatPlugin: {
                                 providerId: pluginId,
@@ -1048,7 +1040,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
                             if (depositWalletAddressTag != null) {
                               spendInfo.memos = [
-                                createMemo(
+                                createMoonpayMemo(
                                   coreWallet.currencyInfo.pluginId,
                                   depositWalletAddressTag
                                 )

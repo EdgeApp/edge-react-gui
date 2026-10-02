@@ -1222,6 +1222,13 @@ const strings = {
   alert_deep_link_no_wallet:
     'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
   alert_deep_link_no_wallet_for_uri: 'No wallets exist that support this link.',
+  payment_redirect_checking_order: 'Checking sell order...',
+  payment_redirect_order_closed_title: 'Sell Order Closed',
+  payment_redirect_order_closed_message:
+    'This sell order is no longer waiting for a deposit, so nothing was sent. Start a new sell order to continue.',
+  payment_redirect_unverified_title: 'Unable to Verify Sell Order',
+  payment_redirect_unverified_message:
+    'Edge could not confirm this sell order with the provider, so nothing was sent. Check your connection and open the link again, or start a new sell order.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
   create_wallet_failed: 'Failed to create wallet',

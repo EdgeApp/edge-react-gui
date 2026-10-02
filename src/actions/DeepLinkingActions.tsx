@@ -1,5 +1,12 @@
-import { mul } from 'biggystring'
-import type { EdgeAccount, EdgeParsedUri, EdgeTokenId } from 'edge-core-js'
+import { floor, mul } from 'biggystring'
+import { asMaybe } from 'cleaners'
+import type {
+  EdgeAccount,
+  EdgeAssetAction,
+  EdgeParsedUri,
+  EdgeSpendInfo,
+  EdgeTokenId
+} from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -20,10 +27,19 @@ import {
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
+import { pluginMaps } from '../pluginMaps'
 import {
   executePlugin,
   fiatProviderDeeplinkHandler
 } from '../plugins/gui/fiatPlugin'
+import { asInitOptions } from '../plugins/ramps/moonpay/moonpayRampTypes'
+import {
+  createMoonpayMemo,
+  fetchMoonpaySellOrder,
+  makeMoonpaySellAction,
+  MOONPAY_PROVIDER_ID,
+  type MoonpaySellOrderResult
+} from '../plugins/ramps/moonpay/moonpaySellOrder'
 import { rampDeeplinkManager } from '../plugins/ramps/rampDeeplinkHandler'
 import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import { config } from '../theme/appConfig'
@@ -31,12 +47,14 @@ import type { DeepLink } from '../types/DeepLinkTypes'
 import type { Dispatch, RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
 import type { EdgeAsset, LinkPromoTab } from '../types/types'
+import { CryptoAmount } from '../util/CryptoAmount'
 import { logEvent } from '../util/tracking'
 import { base58ToUuid, isEmail } from '../util/utils'
 import { activatePromotion } from './AccountReferralActions'
 import { checkAndShowLightBackupModal } from './BackupModalActions'
 import { logoutRequest } from './LoginActions'
 import { launchPaymentProto } from './PaymentProtoActions'
+import { updateFiatPurchaseCount } from './RequestReviewActions'
 import { doRequestAddress, handleWalletUris } from './ScanActions'
 
 // These are the asset types that we'll manually check for when deep linking with a
@@ -515,80 +533,161 @@ async function handleLink(
       break
 
     case 'paymentRedirect': {
-      // A provider sell-completion redirect (e.g. MoonPay "Send with Edge").
-      // Resolve the provider's base currency code to candidate assets, then
-      // open the Send scene pre-filled with the deposit address, amount, and
-      // destination tag / memo so the user can finish the sell order.
-      const { currencyCode, depositAddress, amount, addressTag } = link
+      // A provider sell-completion redirect (MoonPay's "Send with Edge"
+      // button), which asks the user to deposit crypto for a pending sell
+      // order. The link is a URL anybody can write, and it names the currency
+      // by a ticker several networks share. So the link only identifies the
+      // order: the asset, deposit address, tag and amount all come from the
+      // provider's own record of it, and the Send scene opens only while the
+      // provider is still waiting for that deposit. Anything that cannot be
+      // confirmed sends nothing.
+      const { transactionId } = link
+      // Links from orders created before the provider was in the path are MoonPay:
+      const fiatProviderId = link.providerId ?? MOONPAY_PROVIDER_ID
 
-      // Collect every native AND token asset that shares the symbol, and let
-      // the user disambiguate via the wallet picker. A provider sell can be a
-      // token whose ticker collides with another chain's native asset (the
-      // provider disambiguates by network metadata we do not get here), so we
-      // must not exclude token matches when a native one also matches. Iterate
-      // `allTokens` (builtin + user-added custom tokens) rather than
-      // `builtinTokens`: pickWallet matches wallets by their enabled token ids,
-      // which include custom tokens, so a sell of a custom token would
-      // otherwise resolve zero assets and wrongly report "no wallet".
-      const symbol = currencyCode.split('_')[0].toUpperCase()
-      const assets: EdgeAsset[] = []
-      for (const pluginId of Object.keys(account.currencyConfig)) {
-        const currencyConfig = account.currencyConfig[pluginId]
-        if (currencyConfig.currencyInfo.currencyCode.toUpperCase() === symbol) {
-          assets.push({ pluginId, tokenId: null })
-        }
-        const { allTokens } = currencyConfig
-        for (const tokenId of Object.keys(allTokens)) {
-          if (allTokens[tokenId].currencyCode.toUpperCase() === symbol) {
-            assets.push({ pluginId, tokenId })
-          }
-        }
-      }
+      // MoonPay is the only provider whose orders can be looked up. A link that
+      // names another provider, or no order at all, cannot be confirmed:
+      const initOptions = asMaybe(asInitOptions)(pluginMaps.rampPlugins.moonpay)
+      const order: MoonpaySellOrderResult =
+        transactionId == null ||
+        fiatProviderId !== MOONPAY_PROVIDER_ID ||
+        initOptions?.apiKey == null
+          ? { type: 'error', reason: 'lookupFailed' }
+          : await showToastSpinner(
+              lstrings.payment_redirect_checking_order,
+              fetchMoonpaySellOrder(account, transactionId, {
+                apiKey: initOptions.apiKey,
+                apiUrl: initOptions.apiUrl
+              })
+            )
 
-      if (assets.length === 0) {
-        showToast(lstrings.alert_deep_link_no_wallet_for_uri)
+      dispatch(
+        logEvent('Sell_Payment_Redirect', {
+          fiatProviderId,
+          orderId: transactionId,
+          orderStatus: order.type === 'error' ? order.reason : order.status
+        })
+      )
+
+      if (order.type !== 'open') {
+        await Airship.show<'ok' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={
+              order.type === 'notOpen'
+                ? lstrings.payment_redirect_order_closed_title
+                : lstrings.payment_redirect_unverified_title
+            }
+            message={
+              order.type === 'notOpen'
+                ? lstrings.payment_redirect_order_closed_message
+                : lstrings.payment_redirect_unverified_message
+            }
+            buttons={{ ok: { label: lstrings.string_ok } }}
+          />
+        ))
         break
       }
 
+      const { asset, depositAddress, addressTag, exchangeAmount } = order
+      const { pluginId, tokenId } = asset
+      if (
+        link.asset != null &&
+        (link.asset.pluginId !== pluginId || link.asset.tokenId !== tokenId)
+      ) {
+        console.warn(
+          `Payment redirect names ${link.asset.pluginId} but the order is on ${pluginId}. Using the order.`
+        )
+      }
+
+      // Exactly one asset, so the picker lists wallets on the order's network and
+      // no other wallet that happens to share the ticker:
       const result = await pickWallet({
         account,
-        assets,
+        assets: [asset],
         navigation,
         showCreateWallet: true
       })
       if (result?.type !== 'wallet') return false
-      const { walletId, tokenId } = result
-      const wallet = account.currencyWallets[walletId]
+      const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
 
-      // A token-metadata refresh race could leave the picked tokenId
-      // unresolvable, in which case getExchangeDenom silently returns a
-      // multiplier of '1' and mul() would treat a decimal amount as already
-      // native (a wildly wrong send amount). Abort with a toast rather than
-      // pre-filling a wrong amount.
-      if (
-        amount != null &&
-        tokenId != null &&
-        wallet.currencyConfig.allTokens[tokenId] == null
-      ) {
-        showToast(lstrings.alert_deep_link_no_wallet_for_uri)
-        break
-      }
-      const nativeAmount =
-        amount != null
-          ? mul(
-              amount,
-              getExchangeDenom(wallet.currencyConfig, tokenId).multiplier
-            )
-          : undefined
+      const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
+      const nativeAmount = floor(mul(exchangeAmount, multiplier), 0)
 
-      const parsedUri: EdgeParsedUri = {
-        publicAddress: depositAddress,
-        nativeAmount,
-        uniqueIdentifier: addressTag,
-        tokenId
+      // Record the deposit as a sell, as the in-app sell flow does. An order
+      // with no quote has nothing to record, and is sent as a plain spend:
+      const assetAction: EdgeAssetAction = { assetActionType: 'sell' }
+      const savedAction =
+        initOptions == null || transactionId == null
+          ? undefined
+          : makeMoonpaySellAction(order, {
+              orderId: transactionId,
+              nativeAmount,
+              sellWidgetUrl: initOptions.sellWidgetUrl
+            })
+
+      const spendInfo: EdgeSpendInfo = {
+        tokenId,
+        ...(savedAction == null ? {} : { assetAction, savedAction }),
+        spendTargets: [{ publicAddress: depositAddress, nativeAmount }],
+        memos:
+          addressTag == null
+            ? undefined
+            : [createMoonpayMemo(pluginId, addressTag)]
       }
-      await dispatch(handleWalletUris(navigation, wallet, parsedUri))
+
+      navigation.push('send2', {
+        walletId: wallet.id,
+        tokenId,
+        spendInfo,
+        // The order fixes all three, so none of them is the user's to change:
+        lockTilesMap: { address: true, amount: true, wallet: true },
+        hiddenFeaturesMap: { scamWarning: false },
+        // The Send scene pops itself before calling this:
+        onDone: async (error, edgeTransaction) => {
+          if (error != null || edgeTransaction == null) return
+
+          dispatch(
+            logEvent('Sell_Success', {
+              conversionValues: {
+                conversionType: 'sell',
+                destFiatAmount: order.fiatAmount ?? '0',
+                destFiatCurrencyCode: `iso:${order.fiatCurrencyCode ?? ''}`,
+                sourceAmount: new CryptoAmount({
+                  currencyConfig: wallet.currencyConfig,
+                  tokenId,
+                  exchangeAmount
+                }),
+                fiatProviderId,
+                orderId: transactionId
+              }
+            })
+          )
+          dispatch(updateFiatPurchaseCount()).catch(() => {})
+
+          // Tokens get the action saved again once the transaction exists,
+          // as the in-app sell flow does. The deposit is already sent, so a
+          // failure here must not read as a failed send:
+          if (tokenId != null && savedAction != null) {
+            await wallet
+              .saveTxAction({
+                txid: edgeTransaction.txid,
+                tokenId,
+                assetAction,
+                savedAction
+              })
+              .catch((error: unknown) => {
+                console.warn(`Saving the sell action failed: ${String(error)}`)
+              })
+          }
+
+          navigation.push('transactionDetails', {
+            edgeTransaction,
+            walletId: wallet.id
+          })
+        }
+      })
       break
     }
 
