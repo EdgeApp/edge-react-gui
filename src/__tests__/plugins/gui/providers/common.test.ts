@@ -1,6 +1,9 @@
 import { describe, expect, it } from '@jest/globals'
 
-import { isReturnUrl } from '../../../../plugins/gui/providers/common'
+import {
+  isReturnUrl,
+  makePaymentReturnUrl
+} from '../../../../plugins/gui/providers/common'
 
 describe('isReturnUrl', () => {
   it('matches the claimed deep.edge.app host per kind', () => {
@@ -62,5 +65,50 @@ describe('isReturnUrl', () => {
     expect(
       isReturnUrl('https://example.com/redirect/payment/', 'payment')
     ).toBe(false)
+  })
+})
+
+describe('makePaymentReturnUrl', () => {
+  it('names the provider and a native asset', () => {
+    expect(
+      makePaymentReturnUrl('moonpay', { pluginId: 'bitcoin', tokenId: null })
+    ).toBe('https://deep.edge.app/redirect/payment/moonpay/bitcoin/')
+  })
+
+  it('appends the token id to the asset segment', () => {
+    expect(
+      makePaymentReturnUrl('moonpay', {
+        pluginId: 'arbitrum',
+        tokenId: 'af88d065e77c8cc2239327c5edb3a432268e5831'
+      })
+    ).toBe(
+      'https://deep.edge.app/redirect/payment/moonpay/arbitrum_af88d065e77c8cc2239327c5edb3a432268e5831/'
+    )
+  })
+
+  it('percent-encodes a token id that carries reserved characters', () => {
+    expect(
+      makePaymentReturnUrl('moonpay', {
+        pluginId: 'sui',
+        tokenId: '0x2::sui::SUI/a b'
+      })
+    ).toBe(
+      'https://deep.edge.app/redirect/payment/moonpay/sui_0x2%3A%3Asui%3A%3ASUI%2Fa%20b/'
+    )
+  })
+
+  it('is still matched by isReturnUrl once the provider appends its query', () => {
+    const redirectUrl = makePaymentReturnUrl('moonpay', {
+      pluginId: 'arbitrum',
+      tokenId: null
+    })
+    expect(isReturnUrl(redirectUrl, 'payment')).toBe(true)
+    expect(
+      isReturnUrl(
+        `${redirectUrl}?transactionId=abc&baseCurrencyCode=eth_arbitrum`,
+        'payment'
+      )
+    ).toBe(true)
+    expect(isReturnUrl(redirectUrl, 'success')).toBe(false)
   })
 })

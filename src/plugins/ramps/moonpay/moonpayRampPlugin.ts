@@ -2,7 +2,6 @@ import { mul } from 'biggystring'
 import { asMaybe, asString } from 'cleaners'
 import type {
   EdgeAssetAction,
-  EdgeMemo,
   EdgeSpendInfo,
   EdgeTokenId,
   EdgeTxActionFiat
@@ -19,9 +18,7 @@ import {
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
-import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
-import { findTokenIdByNetworkLocation } from '../../../util/CurrencyInfoHelpers'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -41,8 +38,8 @@ import {
 import {
   addExactRegion,
   isReturnUrl,
+  makePaymentReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
-  RETURN_URL_PAYMENT,
   validateExactRegion
 } from '../../gui/providers/common'
 import { signMoonpayUrl } from '../../gui/providers/moonpaySign'
@@ -65,6 +62,7 @@ import {
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
 import { openExternalWebView } from '../utils/webViewUtils'
+import { resolveMoonpayAsset } from './moonpayAssetUtils'
 import {
   asInitOptions,
   asMoonpayCountries,
@@ -77,11 +75,17 @@ import {
   type MoonpayPaymentMethod,
   type MoonpaySellWidgetQueryParams
 } from './moonpayRampTypes'
+import {
+  createMoonpayMemo,
+  makeMoonpaySellReceiptUrl,
+  MOONPAY_DISPLAY_NAME,
+  MOONPAY_SUPPORT_EMAIL
+} from './moonpaySellOrder'
 
 const pluginId = 'moonpay'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
-const pluginDisplayName = 'MoonPay'
-const supportEmail = 'support@moonpay.com'
+const pluginDisplayName = MOONPAY_DISPLAY_NAME
+const supportEmail = MOONPAY_SUPPORT_EMAIL
 
 // Local asset map type
 interface AssetMap {
@@ -103,52 +107,8 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   fasterpayments: 'gbp_bank_transfer'
 }
 
-const NETWORK_CODE_PLUGINID_MAP: StringMap = {
-  algorand: 'algorand',
-  arbitrum: 'arbitrum',
-  avalanche_c_chain: 'avalanche',
-  base: 'base',
-  binance_smart_chain: 'binancesmartchain',
-  bitcoin: 'bitcoin',
-  bitcoin_cash: 'bitcoincash',
-  cardano: 'cardano',
-  cosmos: 'cosmoshub',
-  dogecoin: 'dogecoin',
-  ethereum: 'ethereum',
-  hedera: 'hedera',
-  litecoin: 'litecoin',
-  optimism: 'optimism',
-  osmosis: 'osmosis',
-  polygon: 'polygon',
-  ripple: 'ripple',
-  solana: 'solana',
-  s_sonic: 'sonic',
-  stellar: 'stellar',
-  sui: 'sui',
-  tezos: 'tezos',
-  tron: 'tron',
-  ton: 'ton',
-  zksync: 'zksync'
-}
-
 const ensureIsoPrefix = (currencyCode: string): string => {
   return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
-}
-
-const createMemo = (pluginId: string, value: string): EdgeMemo => {
-  const memo: EdgeMemo = {
-    type: 'text',
-    value,
-    hidden: true
-  }
-
-  switch (pluginId) {
-    case 'ripple': {
-      memo.type = 'number'
-      memo.memoName = 'destination tag'
-    }
-  }
-  return memo
 }
 
 // Cache structure with TTL
@@ -242,23 +202,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
         if (currency.type === 'crypto') {
           const { metadata } = currency
           if (metadata == null) continue
-          const { contractAddress, networkCode } = metadata
-          const currencyPluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
-          if (currencyPluginId == null) continue
-
-          let tokenId: EdgeTokenId
-          if (contractAddress != null) {
-            const resolved = findTokenIdByNetworkLocation({
-              account,
-              pluginId: currencyPluginId,
-              networkLocation: { contractAddress }
-            })
-            if (resolved === undefined) continue // not found
-            tokenId = resolved
-          } else {
-            // Native asset for this network
-            tokenId = null
-          }
+          const asset = resolveMoonpayAsset(account, metadata)
+          if (asset == null) continue // unknown network or token
+          const { pluginId: currencyPluginId, tokenId } = asset
 
           // Add to all payment types
           for (const dir of ['buy', 'sell'] as FiatDirection[]) {
@@ -989,7 +935,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   baseCurrencyCode: cryptoCurrencyObj.code,
                   lockAmount: true,
                   showAllCurrencies: false,
-                  redirectURL: RETURN_URL_PAYMENT
+                  redirectURL: makePaymentReturnUrl(pluginId, {
+                    pluginId: coreWallet.currencyInfo.pluginId,
+                    tokenId
+                  })
                 }
                 if (request.amountType === 'crypto') {
                   queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
@@ -1055,7 +1004,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                             const savedAction: EdgeTxActionFiat = {
                               actionType: 'fiat',
                               orderId: transactionId,
-                              orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
+                              orderUri: makeMoonpaySellReceiptUrl(
+                                sellWidgetUrl,
+                                transactionId
+                              ),
                               isEstimate: true,
                               fiatPlugin: {
                                 providerId: pluginId,
@@ -1088,7 +1040,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
                             if (depositWalletAddressTag != null) {
                               spendInfo.memos = [
-                                createMemo(
+                                createMoonpayMemo(
                                   coreWallet.currencyInfo.pluginId,
                                   depositWalletAddressTag
                                 )
