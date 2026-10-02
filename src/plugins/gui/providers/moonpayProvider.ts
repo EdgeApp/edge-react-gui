@@ -24,8 +24,10 @@ import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { redactUrl } from '../../../util/redactUrl'
 import { removeIsoPrefix } from '../../../util/utils'
 import { MOONPAY_NETWORK_CODE_PLUGINID_MAP } from '../../ramps/moonpay/moonpayAssetUtils'
+import { makeMoonpayExternalTransactionId } from '../../ramps/moonpay/moonpaySellOrder'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
   FiatDirection,
@@ -182,6 +184,9 @@ type MoonpayBuyWidgetQueryParams = MoonpayWidgetQueryParams & {
 }
 
 type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
+  /** proves a "Send with Edge" link for the order came from this account */
+  externalTransactionId: string
+
   /** fiat currency code */
   quoteCurrencyCode: string
 
@@ -246,7 +251,7 @@ export const moonpayProvider: FiatProviderFactory = {
   makeProvider: async (
     params: FiatProviderFactoryParams
   ): Promise<FiatProvider> => {
-    const { apiKeys, getTokenIdFromContract } = params
+    const { apiKeys, getTokenIdFromContract, io } = params
     const apiKey = asApiKeys(apiKeys)
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
     const out: FiatProvider = {
@@ -678,6 +683,11 @@ export const moonpayProvider: FiatProviderFactory = {
               const urlObj = new URL('https://sell.moonpay.com?', true)
               const queryObj: MoonpaySellWidgetQueryParams = {
                 apiKey,
+                // Lets a "Send with Edge" link for this order prove it came
+                // from this account:
+                externalTransactionId: await makeMoonpayExternalTransactionId(
+                  io.store
+                ),
                 refundWalletAddress: publicAddress,
                 quoteCurrencyCode: fiatCurrencyObj.code,
                 paymentMethod,
@@ -695,17 +705,21 @@ export const moonpayProvider: FiatProviderFactory = {
                 queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
               }
               urlObj.set('query', queryObj)
-              console.log('Approving moonpay sell quote url=' + urlObj.href)
+              console.log(
+                'Approving moonpay sell quote url=' + redactUrl(urlObj.href)
+              )
               const signedUrl = await signMoonpayUrl(urlObj.href)
 
               let inPayment = false
 
               const openWebView = async (): Promise<void> => {
                 const onUrlChangeAsync = async (uri: string): Promise<void> => {
-                  console.log('Moonpay WebView url change: ' + uri)
+                  console.log('Moonpay WebView url change: ' + redactUrl(uri))
 
                   if (isReturnUrl(uri, 'payment')) {
-                    console.log('Moonpay WebView launch payment: ' + uri)
+                    console.log(
+                      'Moonpay WebView launch payment: ' + redactUrl(uri)
+                    )
                     const urlObj = new URL(uri, true)
                     const { query } = urlObj
                     const {

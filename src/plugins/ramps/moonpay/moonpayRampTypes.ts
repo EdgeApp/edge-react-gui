@@ -112,6 +112,7 @@ export type MoonpayBuyWidgetQueryParams = MoonpayWidgetQueryParams & {
 }
 
 export type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
+  externalTransactionId: string
   quoteCurrencyCode: string
   baseCurrencyCode: string
   refundWalletAddress: string

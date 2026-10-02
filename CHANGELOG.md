@@ -30,6 +30,7 @@
 - changed: Rename the HoudiniSwap provider to Houdini and link its privacy pages on docs.houdini.com
 - changed: Stealth sends to a pasted Zcash unified address pay out to its transparent address
 - changed: The Accelerate Transaction confirmation shows the recipient address and send amount alongside the fees.
+- changed: MoonPay "Send with Edge" sell links verify the order, pin its network and save a sell record
 - fixed: FIO Crypto Handle wallet-connect toggles sit at the right edge of each row on iOS again
 - fixed: Restore Wallets toggles sit vertically centered on each card on iOS again
 - fixed: Swaps with no exact receive quote switch to a send amount of the same value with a toast, not a no-provider error
