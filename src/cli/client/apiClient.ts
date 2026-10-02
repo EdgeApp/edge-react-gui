@@ -9,7 +9,7 @@ import {
 import http from 'http'
 
 import { stringifyJson } from '../engine/json'
-import { EXAMPLE_TCP_PORT } from '../engine/tcpPort'
+import { SHUTDOWN_WAIT_MS } from '../engine/shutdownTiming'
 
 /**
  * The error envelope every failure arrives in, on both transports.
@@ -55,9 +55,18 @@ export class ApiClientError extends Error {
 }
 
 export interface ApiClientOptions {
+  /**
+   * The engine's unix socket. The only transport this client speaks.
+   *
+   * There were `host` and `port` fields beside it, and they could not work:
+   * the engine's TCP listener requires an `X-Edge-Token` header and this
+   * client never sent one, so every TCP request would have been a 401. No
+   * call site set them either — the client always talks to the engine it
+   * spawned, over the socket — and `--tcp` is forwarded to the *engine*, for
+   * other local scripts to use. Removed rather than wired up, the way
+   * `idleTimeoutSeconds` and `spawnTimeoutMs` were.
+   */
   socketPath?: string
-  host?: string
-  port?: number
   /**
    * How long one request may take, in milliseconds.
    *
@@ -89,9 +98,6 @@ export interface ApiClientOptions {
 
 /** The per-request deadline when no `--timeout` is given. */
 export const DEFAULT_TIMEOUT_MS = 120_000
-
-/** How long to wait for a shutting-down engine to let go of its socket. */
-const SHUTDOWN_WAIT_MS = 15_000
 
 /** Nothing is listening on the socket or port yet. */
 function isNotListening(error: unknown): boolean {
@@ -163,9 +169,15 @@ export class ApiClient {
   /**
    * Poll until the engine stops answering, or give up.
    *
-   * Bounded by the drain the engine itself allows, plus a margin: past that
-   * the engine is wedged rather than shutting down, and `onConnectFail` will
-   * report whatever it finds.
+   * Bounded by `SHUTDOWN_WAIT_MS`, which is the sum of the engine's own
+   * teardown phases rather than a number picked here — it used to be 15 s
+   * against a 110 s drain, so a stop with a slow request in flight sent the
+   * next command off to spawn a replacement that could not claim the
+   * profile. Past the deadline the engine is wedged rather than shutting
+   * down, and `onConnectFail` reports whatever it finds.
+   *
+   * The loop can tell the two apart: a shutting-down engine answers 503 on
+   * `/engine/status`, and a gone one answers ENOENT or ECONNREFUSED.
    */
   private async waitForSocketToClose(): Promise<void> {
     const deadline = Date.now() + SHUTDOWN_WAIT_MS
@@ -243,12 +255,7 @@ export class ApiClient {
           method,
           path,
           headers,
-          ...(this.opts.socketPath != null
-            ? { socketPath: this.opts.socketPath }
-            : {
-                host: this.opts.host ?? '127.0.0.1',
-                port: this.opts.port ?? EXAMPLE_TCP_PORT
-              }),
+          socketPath: this.opts.socketPath,
           timeout: this.opts.timeoutMs ?? DEFAULT_TIMEOUT_MS
         },
         res => {
@@ -372,8 +379,6 @@ export class ApiClient {
         const req = http.request(
           {
             socketPath: this.opts.socketPath,
-            host: this.opts.host,
-            port: this.opts.port,
             method: 'GET',
             path,
             headers: { Accept: 'text/event-stream' }

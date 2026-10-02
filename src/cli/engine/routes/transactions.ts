@@ -140,7 +140,7 @@ export const getTransactions = route({
         // The number has to match `DEFAULT_TX_LIMIT`, and a template literal
         // cannot say so: `extractRoutes` reads this through the checker as a
         // string *literal*, and interpolating dropped the description from
-        // the reference altogether. `txLimitDoc.test.ts` asserts the two
+        // the reference altogether. `derivedNumbers.test.ts` asserts the two
         // agree instead.
         'How many to return. Defaults to 99; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`.'
       ),

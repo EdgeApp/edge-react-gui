@@ -30,18 +30,8 @@ import { engineError } from './errors'
 import type { EventHub } from './events'
 import type { ObjectHandleStore } from './objectHandles'
 import type { asLoginMethod } from './schemas'
+import { LOGOUT_WAIT_MS } from './shutdownTiming'
 import { makeSweepTicker } from './sweepTicker'
-
-/**
- * How long a logout waits for the session's other requests to finish.
- *
- * Long enough to cover a broadcast on a congested chain, which is the call
- * whose interruption actually costs something, and short enough that an
- * operator does not conclude the command has hung. Shorter than
- * `SHUTDOWN_DRAIN_MS`, because a shutdown has nothing else to do and a
- * logout is one request among many.
- */
-const LOGOUT_WAIT_MS = 30_000
 
 /**
  * How often a session with auto-logout *off* re-reads the synced setting.

@@ -40,6 +40,7 @@ import { type EngineState, Router } from './router'
 import { registerRoutes } from './routes'
 import { createRequestHandler, listenTcp, listenUnix } from './server'
 import { SessionStore } from './sessions'
+import { SHUTDOWN_DRAIN_MS } from './shutdownTiming'
 import { makeSweepTicker } from './sweepTicker'
 import { EXAMPLE_TCP_PORT, parseTcpPort } from './tcpPort'
 import { TESTER_SERVERS } from './testerServers'
@@ -130,17 +131,6 @@ let claimedProfile: string | null = null
  * unreachable, holding an EdgeContext and a logged-in account open.
  */
 let boundSocket = false
-
-/**
- * How long a shutdown waits for requests that have already started.
- *
- * Long enough for a broadcast to finish saving, short enough that a wedged
- * request cannot keep the process alive. It is deliberately the same order
- * as the client's own socket timeout: a bound shorter than that let the
- * engine exit while the client was still waiting for an answer, which for a
- * `spend` means the money has left and the caller is told nothing.
- */
-const SHUTDOWN_DRAIN_MS = 110_000
 
 /** An env var that is set but blank is as good as unset. */
 function emptyToUndefined(value: string | undefined): string | undefined {

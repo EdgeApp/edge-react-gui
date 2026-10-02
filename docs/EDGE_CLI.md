@@ -456,7 +456,7 @@ src/cli/
     testerServers.ts   # The six -tester hosts
     routes/            # status, login, account, wallets, …
   client/
-    apiClient.ts       # HTTP over socketPath or TCP
+    apiClient.ts       # HTTP over the engine’s unix socket
     spawnEngine.ts     # Auto-spawn + readiness poll
     sessionFile.ts     # Persisted sessionId
     solveCaptcha.ts    # Headless ALTCHA solver for --solve-captcha

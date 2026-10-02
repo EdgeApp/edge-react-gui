@@ -17,16 +17,8 @@ import crypto from 'crypto'
 import { base58 } from '../../util/encoding'
 import type { PeriodicTask } from '../../util/PeriodicTask'
 import { engineError } from './errors'
+import { HANDLE_BUSY_WAIT_MS } from './shutdownTiming'
 import { makeSweepTicker } from './sweepTicker'
-
-/**
- * How long a bulk release waits for a handle that is mid-call.
- *
- * Long enough for a broadcast to finish, short enough that a wedged plugin
- * call cannot keep the process alive. The engine's own shutdown drain is the
- * outer bound.
- */
-const BUSY_WAIT_MS = 10_000
 
 /** Default TTL for method-bearing core object handles. */
 export const OBJECT_HANDLE_TTL_MS = 5 * 60 * 1000
@@ -152,7 +144,7 @@ export class ObjectHandleStore {
    * abandonment is logged rather than silent.
    */
   private async deleteMany(ids: string[], why: string): Promise<void> {
-    const deadline = Date.now() + BUSY_WAIT_MS
+    const deadline = Date.now() + HANDLE_BUSY_WAIT_MS
     const abandoned: string[] = []
     for (const id of ids) {
       while (this.handles.get(id)?.consuming === true) {
@@ -169,7 +161,7 @@ export class ObjectHandleStore {
       console.warn(
         `[edge-engine] ${why}: gave up waiting for ${abandoned.join(
           ', '
-        )} after ${BUSY_WAIT_MS}ms; left in place`
+        )} after ${HANDLE_BUSY_WAIT_MS}ms; left in place`
       )
     }
   }

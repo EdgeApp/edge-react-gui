@@ -25,6 +25,7 @@ import http from 'http'
 import os from 'os'
 import path from 'path'
 
+import { TCP_TOKEN_HEADER } from '../src/cli/engine/transportAuth'
 import { CLI, runRoot } from './util/cliHarness'
 
 const DIR = path.join(os.tmpdir(), `edge-cli-subscribe-${process.pid}`)
@@ -394,7 +395,7 @@ async function main(): Promise<void> {
   )
 
   const wrongOrigin = await tcpRequest({
-    'X-Edge-Token': tcpToken ?? '',
+    [TCP_TOKEN_HEADER]: tcpToken ?? '',
     Origin: 'https://evil.example'
   })
   check(
@@ -404,7 +405,7 @@ async function main(): Promise<void> {
   )
 
   const wrongHost = await tcpRequest({
-    'X-Edge-Token': tcpToken ?? '',
+    [TCP_TOKEN_HEADER]: tcpToken ?? '',
     Host: `evil.example:${tcpPort}`
   })
   check(
@@ -419,7 +420,7 @@ async function main(): Promise<void> {
   // catalogue, never that a catalogued code can be produced, so these arms
   // could rot silently.
   const wrongMethod = await tcpRequest(
-    { 'X-Edge-Token': readTcpToken(tcpPort) ?? '' },
+    { [TCP_TOKEN_HEADER]: readTcpToken(tcpPort) ?? '' },
     '/engine/stop'
   )
   check(
@@ -441,7 +442,7 @@ async function main(): Promise<void> {
           port: tcpPort,
           method: 'POST',
           path: '/rates/query',
-          headers: { 'X-Edge-Token': token, ...headers }
+          headers: { [TCP_TOKEN_HEADER]: token, ...headers }
         },
         res => {
           let raw = ''
@@ -476,7 +477,7 @@ async function main(): Promise<void> {
         port: tcpPort,
         method: 'GET',
         path: '/engine/status',
-        headers: { 'X-Edge-Token': tcpToken ?? '' }
+        headers: { [TCP_TOKEN_HEADER]: tcpToken ?? '' }
       },
       res => {
         let raw = ''
