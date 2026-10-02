@@ -2125,10 +2125,13 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  // The scene's warning area shows one card at a time: a shown error
+  // supersedes the swap-send warnings below it.
+  const showErrorCard =
+    error != null && asMaybeNoAmountSpecifiedError(error) == null
+
   const renderError = (): React.ReactElement | null => {
-    if (error != null && asMaybeNoAmountSpecifiedError(error) == null) {
-      return <ErrorCard error={error} />
-    }
+    if (showErrorCard) return <ErrorCard error={error} />
     return null
   }
 
@@ -2524,10 +2527,11 @@ const SendComponent: React.FC<Props> = props => {
    * A send routed through a swap does not reach the recipient in this
    * transaction: the provider pays them in a second one, once the deposit
    * confirms. That wait is the part the scene does not otherwise show, so it
-   * sits with the other warning cards for as long as the send stays a swap.
+   * sits with the other warning cards for as long as the send stays a swap,
+   * giving way to the more specific fallback warning or an error.
    */
   const renderSwapSendWarning = (): React.ReactElement | null => {
-    if (!swapSendActive) return null
+    if (!swapSendActive || fixedToFallback || showErrorCard) return null
     return (
       <EdgeAnim
         enter={{ type: 'fadeInUp', distance: 60 }}
@@ -2558,7 +2562,7 @@ const SendComponent: React.FC<Props> = props => {
    * cards and clears as soon as the user edits an amount.
    */
   const renderFixedToFallbackWarning = (): React.ReactElement | null => {
-    if (!fixedToFallback || !swapSendActive) return null
+    if (!fixedToFallback || !swapSendActive || showErrorCard) return null
     return (
       <EdgeAnim
         enter={{ type: 'fadeInUp', distance: 60 }}
