@@ -42,8 +42,8 @@ import {
 } from '../../gui/fiatProviderTypes'
 import {
   addExactRegion,
+  makePaymentReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
-  RETURN_URL_PAYMENT,
   validateExactRegion
 } from '../../gui/providers/common'
 import { signMoonpayUrl } from '../../gui/providers/moonpaySign'
@@ -991,7 +991,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   baseCurrencyCode: cryptoCurrencyObj.code,
                   lockAmount: true,
                   showAllCurrencies: false,
-                  redirectURL: RETURN_URL_PAYMENT
+                  redirectURL: makePaymentReturnUrl(pluginId, {
+                    pluginId: coreWallet.currencyInfo.pluginId,
+                    tokenId
+                  })
                 }
                 if (request.amountType === 'crypto') {
                   queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount

@@ -48,8 +48,8 @@ import {
   addExactRegion,
   isDailyCheckDue,
   isReturnUrl,
+  makePaymentReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
-  RETURN_URL_PAYMENT,
   validateExactRegion
 } from './common'
 import { signMoonpayUrl } from './moonpaySign'
@@ -712,7 +712,10 @@ export const moonpayProvider: FiatProviderFactory = {
                 baseCurrencyCode: cryptoCurrencyObj.code,
                 lockAmount: true,
                 showAllCurrencies: false,
-                redirectURL: RETURN_URL_PAYMENT
+                redirectURL: makePaymentReturnUrl(providerId, {
+                  pluginId: coreWallet.currencyInfo.pluginId,
+                  tokenId: params.tokenId
+                })
               }
               if (params.amountType === 'crypto') {
                 queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
