@@ -23,9 +23,9 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
-import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
 import { removeIsoPrefix } from '../../../util/utils'
+import { MOONPAY_NETWORK_CODE_PLUGINID_MAP } from '../../ramps/moonpay/moonpayAssetUtils'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
   FiatDirection,
@@ -208,34 +208,6 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   fasterpayments: 'gbp_bank_transfer'
 }
 
-const NETWORK_CODE_PLUGINID_MAP: StringMap = {
-  algorand: 'algorand',
-  arbitrum: 'arbitrum',
-  avalanche_c_chain: 'avalanche',
-  base: 'base',
-  binance_smart_chain: 'binancesmartchain',
-  bitcoin: 'bitcoin',
-  bitcoin_cash: 'bitcoincash',
-  cardano: 'cardano',
-  cosmos: 'cosmoshub',
-  dogecoin: 'dogecoin',
-  ethereum: 'ethereum',
-  hedera: 'hedera',
-  litecoin: 'litecoin',
-  optimism: 'optimism',
-  osmosis: 'osmosis',
-  polygon: 'polygon',
-  ripple: 'ripple',
-  solana: 'solana',
-  s_sonic: 'sonic',
-  stellar: 'stellar',
-  sui: 'sui',
-  tezos: 'tezos',
-  tron: 'tron',
-  ton: 'ton',
-  zksync: 'zksync'
-}
-
 // Special case memo creation for plugins (not used in current flow)
 // Memo type is not documented by Moonpay but can be inferred from /currencies response field "addressTagRegex"
 // const createMemo = (pluginId: string, value: string): EdgeMemo => {
@@ -340,7 +312,7 @@ export const moonpayProvider: FiatProviderFactory = {
               const { metadata } = currency
               if (metadata == null) continue
               const { contractAddress, networkCode } = metadata
-              const pluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
+              const pluginId = MOONPAY_NETWORK_CODE_PLUGINID_MAP[networkCode]
               if (pluginId == null) continue
 
               let tokenId: EdgeTokenId
