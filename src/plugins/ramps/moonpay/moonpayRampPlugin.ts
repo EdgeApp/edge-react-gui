@@ -3,7 +3,6 @@ import { asMaybe, asString } from 'cleaners'
 import {
   asMaybePendingFundsError,
   type EdgeAssetAction,
-  type EdgeMemo,
   type EdgeSpendInfo,
   type EdgeTokenId,
   type EdgeTransaction,
@@ -22,6 +21,7 @@ import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { redactUrl } from '../../../util/redactUrl'
 import { removeIsoPrefix } from '../../../util/utils'
 import {
   SendErrorBackPressed,
@@ -78,11 +78,18 @@ import {
   type MoonpayPaymentMethod,
   type MoonpaySellWidgetQueryParams
 } from './moonpayRampTypes'
+import {
+  createMoonpayMemo,
+  makeMoonpayExternalTransactionId,
+  makeMoonpaySellReceiptUrl,
+  MOONPAY_DISPLAY_NAME,
+  MOONPAY_SUPPORT_EMAIL
+} from './moonpaySellOrder'
 
 const pluginId = 'moonpay'
 const partnerIcon = `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
-const pluginDisplayName = 'MoonPay'
-const supportEmail = 'support@moonpay.com'
+const pluginDisplayName = MOONPAY_DISPLAY_NAME
+const supportEmail = MOONPAY_SUPPORT_EMAIL
 
 // Local asset map type
 interface AssetMap {
@@ -106,22 +113,6 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
 
 const ensureIsoPrefix = (currencyCode: string): string => {
   return currencyCode.startsWith('iso:') ? currencyCode : `iso:${currencyCode}`
-}
-
-const createMemo = (pluginId: string, value: string): EdgeMemo => {
-  const memo: EdgeMemo = {
-    type: 'text',
-    value,
-    hidden: true
-  }
-
-  switch (pluginId) {
-    case 'ripple': {
-      memo.type = 'number'
-      memo.memoName = 'destination tag'
-    }
-  }
-  return memo
 }
 
 // Cache structure with TTL
@@ -942,6 +933,11 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 const urlObj = new URL(`${sellWidgetUrl}?`, true)
                 const queryObj: MoonpaySellWidgetQueryParams = {
                   apiKey,
+                  // Lets a "Send with Edge" link for this order prove it
+                  // came from this account:
+                  externalTransactionId: await makeMoonpayExternalTransactionId(
+                    pluginConfig.store
+                  ),
                   refundWalletAddress: receiveAddress.publicAddress,
                   quoteCurrencyCode: fiatCurrencyObj.code,
                   paymentMethod,
@@ -960,7 +956,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
                     moonpayQuote.quoteCurrencyAmount
                 }
                 urlObj.set('query', queryObj)
-                console.log('Approving moonpay sell quote url=' + urlObj.href)
+                console.log(
+                  'Approving moonpay sell quote url=' + redactUrl(urlObj.href)
+                )
 
                 let inPayment = false
 
@@ -969,7 +967,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 const handlePaymentRedirect = async (
                   uri: string
                 ): Promise<void> => {
-                  console.log('Moonpay WebView launch payment: ' + uri)
+                  console.log(
+                    'Moonpay WebView launch payment: ' + redactUrl(uri)
+                  )
                   const urlObj = new URL(uri, true)
                   const { query } = urlObj
                   const {
@@ -1010,7 +1010,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                     savedAction = {
                       actionType: 'fiat',
                       orderId: transactionId,
-                      orderUri: `${sellWidgetUrl}/transaction_receipt?transactionId=${transactionId}`,
+                      orderUri: makeMoonpaySellReceiptUrl(
+                        sellWidgetUrl,
+                        transactionId
+                      ),
                       isEstimate: true,
                       fiatPlugin: {
                         providerId: pluginId,
@@ -1043,7 +1046,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
 
                     if (depositWalletAddressTag != null) {
                       spendInfo.memos = [
-                        createMemo(
+                        createMoonpayMemo(
                           coreWallet.currencyInfo.pluginId,
                           depositWalletAddressTag
                         )
@@ -1251,7 +1254,9 @@ export const moonpayRampPlugin: RampPluginFactory = (
                     },
                     onShouldStartLoad: redirect.onShouldStartLoad,
                     onUrlChange: async (uri: string): Promise<void> => {
-                      console.log('Moonpay WebView url change: ' + uri)
+                      console.log(
+                        'Moonpay WebView url change: ' + redactUrl(uri)
+                      )
                       await redirect.onUrlChange(uri)
                     }
                   })
