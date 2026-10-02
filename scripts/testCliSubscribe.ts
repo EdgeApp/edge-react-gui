@@ -363,6 +363,36 @@ async function main(): Promise<void> {
     String(tcpToken)
   )
 
+  // A rejected TCP request is the only sign of a probe or a brute-force
+  // attempt, and nothing recorded it. It is also the one request that must
+  // not reach `idle.touch()`: before the guard was hoisted above the idle
+  // clock, each rejection pushed `idleShutdownAt` out by a full
+  // `--idle-timeout`, so an unauthenticated poller could hold the daemon
+  // open for good.
+  const logText = ((): string => {
+    const dir = path.join(os.homedir(), '.edge-cli', 'logs')
+    try {
+      return fs
+        .readdirSync(dir)
+        .filter(name => name.startsWith('engine-'))
+        .map(name => {
+          const file = path.join(dir, name)
+          return { file, mtime: fs.statSync(file).mtimeMs }
+        })
+        .sort((a, b) => b.mtime - a.mtime)
+        .slice(0, 3)
+        .map(({ file }) => fs.readFileSync(file, 'utf8'))
+        .join('\n')
+    } catch {
+      return ''
+    }
+  })()
+  check(
+    'a rejected TCP request is logged',
+    logText.includes('Rejected a TCP request'),
+    logText.slice(-200).replace(/\s+/g, ' ')
+  )
+
   const wrongOrigin = await tcpRequest({
     'X-Edge-Token': tcpToken ?? '',
     Origin: 'https://evil.example'

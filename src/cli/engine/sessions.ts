@@ -44,6 +44,15 @@ import { makeSweepTicker } from './sweepTicker'
 const LOGOUT_WAIT_MS = 30_000
 
 /**
+ * How often a session with auto-logout *off* re-reads the synced setting.
+ *
+ * Once a minute against the ticker's 15 seconds: a quarter of the reads, and
+ * a user who re-enables auto-logout on their phone sees it on a live session
+ * within a minute rather than never.
+ */
+const DISABLED_RECHECK_MS = 60_000
+
+/**
  * Derived from the response cleaner, not restated beside it.
  *
  * The same six values were declared twice, independently, in a different
@@ -81,6 +90,16 @@ export interface SessionRecord {
   account: EdgeAccount
   loginMethod: LoginMethod
   autoLogoutSeconds: number
+  /**
+   * When the synced setting was last re-read for this session.
+   *
+   * Only a session with auto-logout *off* consults it. Those are re-read on
+   * a slower cadence than the ticker runs at, because the read is a decrypt
+   * plus a parse on core's synced disklet with no cache, and `isExpired`
+   * answers false for `0` before it looks at a clock — so re-reading 240
+   * times an hour buys nothing. Not re-reading at all was worse: see `tick`.
+   */
+  lastSettingReadAt: number
   lastActivityAt: number
   createdAt: number
   /**
@@ -214,6 +233,7 @@ export class SessionStore {
       account,
       loginMethod,
       autoLogoutSeconds,
+      lastSettingReadAt: now,
       lastActivityAt: now,
       createdAt: now,
       inFlight: 0
@@ -470,11 +490,26 @@ export class SessionStore {
     // CLI run keeps timing out — has to see that on a session the engine is
     // already holding.
     for (const record of [...this.sessions.values()]) {
-      // Skipped when auto-logout is off: `isExpired` returns false before it
-      // looks at the window, so re-reading a synced file 240 times an hour
-      // per session buys nothing. The read is a decrypt plus a parse on
-      // core's *synced* disklet and there is deliberately no cache.
-      if (record.autoLogoutSeconds === 0) continue
+      // Auto-logout off is re-read on a slower cadence, not skipped. The
+      // cost argument is real — `isExpired` answers false for `0` before it
+      // looks at a window, and the read is a decrypt plus a parse on core's
+      // synced disklet with no cache — but skipping it outright made `0` a
+      // one-way latch: a session created while the setting said `0` captured
+      // it at `create` and the ticker never looked again, so a user turning
+      // auto-logout back on from their phone had no effect on a session the
+      // engine was already holding. It stayed logged in for the life of the
+      // process while `engine-sessions` reported `autoLogoutSeconds: 0` as
+      // though that were still their choice. Auto-logout is a security
+      // control and `0` is the one value whose staleness has no upper bound.
+      if (
+        record.autoLogoutSeconds === 0 &&
+        Date.now() - record.lastSettingReadAt < DISABLED_RECHECK_MS
+      ) {
+        continue
+      }
+      // Before the read, so a persistently unreadable file is retried on the
+      // same slow cadence rather than on every tick.
+      record.lastSettingReadAt = Date.now()
       try {
         record.autoLogoutSeconds = await reReadAutoLogoutSeconds(record.account)
       } catch {

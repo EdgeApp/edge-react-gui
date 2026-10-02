@@ -244,7 +244,7 @@ describe('SessionStore auto-logout', () => {
     expect(codeOf(() => store.beginRequest(sessionId))).toBe('SESSION_EXPIRED')
   })
 
-  it('does not re-read the synced file when auto-logout is off', async () => {
+  it('re-reads an off setting a quarter as often as the ticker runs', async () => {
     const logout = jest.fn<() => Promise<void>>(async () => {})
     let reads = 0
     const account = {
@@ -263,10 +263,44 @@ describe('SessionStore auto-logout', () => {
     await store.create(account, 'password')
     const afterLogin = reads
     store.startAutoLogoutTicker()
-    // `isExpired` returns false before it looks at the window, so re-reading
-    // a decrypt-and-parse 240 times an hour per session buys nothing.
+    // The ticker runs every 15s; a session with auto-logout off re-reads at
+    // most once a minute, because `isExpired` answers false for `0` before
+    // it looks at a window and the read is a decrypt plus a parse with no
+    // cache. Two minutes is two reads, not eight.
     await jest.advanceTimersByTimeAsync(120_000)
-    expect(reads).toBe(afterLogin)
+    expect(reads - afterLogin).toBeLessThanOrEqual(2)
+    expect(reads).toBeGreaterThan(afterLogin)
+    store.stopAutoLogoutTicker()
+  })
+
+  it('applies auto-logout turned back on from another device', async () => {
+    const logout = jest.fn<() => Promise<void>>(async () => {})
+    // Off at login, then re-enabled on the user's phone.
+    let setting = '{"autoLogoutTimeInSeconds":0}'
+    const account = {
+      username: 'clitester',
+      rootLoginId: 'root123',
+      logout,
+      waitForAllWallets: async () => {},
+      disklet: { getText: async () => setting }
+    } as unknown as EdgeAccount
+
+    const { sessionId } = await store.create(account, 'password')
+    expect(store.get(sessionId).autoLogoutSeconds).toBe(0)
+    // `peek`, not `get`: `expiresAt` is derived in `toInfo`, which is what
+    // `engine-sessions` publishes.
+    expect(store.peek(sessionId)?.expiresAt).toBeNull()
+    store.startAutoLogoutTicker()
+
+    // Skipping the re-read entirely made `0` a one-way latch: the session
+    // stayed logged in for the life of the process, and `engine-sessions`
+    // kept reporting `autoLogoutSeconds: 0` as though it were still the
+    // user's choice.
+    setting = '{"autoLogoutTimeInSeconds":60}'
+    // The re-read lands on the 60s tick, and `isExpired` wants the window
+    // genuinely exceeded, so the logout falls on the tick after it.
+    await jest.advanceTimersByTimeAsync(90_000)
+    expect(logout).toHaveBeenCalledTimes(1)
     store.stopAutoLogoutTicker()
   })
 })

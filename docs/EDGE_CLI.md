@@ -255,6 +255,11 @@ from the account’s synced `Settings.json` (default `3600`, `0` = disabled) and
 logs the account out after that much idle time since the last REST call that
 touched the session. `edge-cli touch` is an explicit keepalive.
 
+The setting is re-read as the engine sweeps, so changing it on another device
+reaches a session the engine is already holding: within 15 seconds normally,
+and within a minute for a session whose auto-logout is currently off, which is
+re-read less often because the read is a decrypt and a parse with no cache.
+
 **Engine idle shutdown:** after ~5 minutes with nothing holding it open, the
 engine closes the context, unlinks the socket / run file, and exits. Four
 things hold it: a logged-in session, a live subscription, a request being

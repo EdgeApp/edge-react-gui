@@ -101,14 +101,32 @@ async function handleRequest(
   res: ServerResponse,
   guard?: TcpGuard
 ): Promise<void> {
+  // Authenticate before touching any engine state, which is what the
+  // comment below has always claimed and the ordering did not deliver.
+  // `idle.touch()` and `idle.beginRequest()` used to run first, so every
+  // rejected request pushed `idleShutdownAt` out by a full `--idle-timeout`:
+  // any other local process — the threat `transportAuth.ts` names — could
+  // poll the port once a minute with no token and keep the daemon resident
+  // for good, holding its EdgeContext and every plugin's polling open. That
+  // is the leak `idleShutdown.ts` exists to bound.
+  try {
+    if (guard != null) checkTcpRequest(req, guard)
+  } catch (error: unknown) {
+    // Logged, because a rejected request on the TCP transport is the only
+    // sign of a probe or a brute-force attempt and nothing recorded it.
+    const message = error instanceof Error ? error.message : String(error)
+    state.logger.warn(`Rejected a TCP request: ${message}`)
+    if (!res.writableEnded) {
+      const { status, body } = toErrorBody(error)
+      sendJson(res, status, body)
+    }
+    return
+  }
+
   state.idle.touch()
   state.idle.beginRequest()
 
   try {
-    // First, before the route table, the body and even the shutdown state: a
-    // caller that cannot authenticate learns nothing about this engine.
-    if (guard != null) checkTcpRequest(req, guard)
-
     const host = req.headers.host ?? 'localhost'
     const url = new URL(req.url ?? '/', `http://${host}`)
     const pathname = url.pathname
