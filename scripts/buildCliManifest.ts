@@ -240,6 +240,44 @@ console.log(
 if (bundled.length > 0) {
   console.log(`  bundled, not declared: ${bundled.join(', ')}`)
 }
+// When the bundles are built, say which declared packages neither of them
+// actually requires. The graph over-approximates on purpose, and that is the
+// safe direction — but an unused declaration still installs, and `date-fns`
+// alone is 25 MB. It is reached through `src/locales/intl.ts`, whose `format`
+// binding no CLI path calls today, so rollup shakes it out; it stays declared
+// because the moment a CLI path does call it, a missing declaration is an
+// `npm install` that succeeds and a CLI that cannot resolve a module.
+const bundles = ['lib/edgeCli.js', 'lib/edgeEngine.js'].map(f =>
+  path.join(ROOT, f)
+)
+if (bundles.every(f => fs.existsSync(f))) {
+  const required = new Set<string>()
+  for (const file of bundles) {
+    const text = fs.readFileSync(file, 'utf8')
+    for (const match of text.matchAll(/require\('([^']+)'\)/g)) {
+      const specifier = match[1]
+      if (specifier.startsWith('.') || BUILTINS.has(specifier)) continue
+      required.add(packageOf(specifier))
+    }
+  }
+  const missing = Object.keys(dependencies).filter(n => !required.has(n))
+  if (missing.length > 0) {
+    console.log(
+      `  declared but not required by the built bundles: ${missing.join(', ')}`
+    )
+  }
+  const undeclaredByBundle = [...required].filter(n => dependencies[n] == null)
+  if (undeclaredByBundle.length > 0) {
+    // This direction is a real defect: the published package could not
+    // resolve them.
+    console.error(
+      `✗ the built bundles require ${undeclaredByBundle.join(', ')}, ` +
+        'which the manifest does not declare.'
+    )
+    process.exit(1)
+  }
+}
+
 if (undeclared.length > 0) {
   // Not fatal: rollup inlines them, so the published package is fine. It is
   // the *build* that rests on a package nobody declared, resolved only

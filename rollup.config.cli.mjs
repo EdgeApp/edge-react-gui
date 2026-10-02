@@ -63,9 +63,29 @@ const external = [
   ...Object.keys(packageJson.dependencies)
 ]
 
+/**
+ * External modules are side-effect free; the bundle's own are not.
+ *
+ * Rollup keeps a module it cannot prove side-effect free, even after
+ * tree-shaking every binding away — so the built client opened with six bare
+ * `require`s it never used: `edge-core-js`, `biggystring`,
+ * `csv-stringify/lib/browser/sync`, `sha.js`, `sprintf-js` and `date-fns`.
+ * Measured on this machine, five runs each: `node lib/edgeCli.js help` was
+ * 162 ms with them and 68 ms without, byte-identical output — so most of
+ * every command's fixed overhead was spent loading modules the client cannot
+ * reach, while `src/cli/index.ts` states the opposite as its contract
+ * ("Nothing here imports `edge-core-js`").
+ *
+ * Externals only. The bundle's own modules keep their side effects, because
+ * the client's `import './bootNodeLocale'` and `import './commands/all'` are
+ * side-effect imports and dropping them would unregister every command.
+ */
+const treeshake = { moduleSideEffects: (id, isExternal) => !isExternal }
+
 export default [
   {
     external,
+    treeshake,
     input: 'src/cli/index.ts',
     output: {
       banner: '#!/usr/bin/env node',
@@ -76,6 +96,7 @@ export default [
   },
   {
     external,
+    treeshake,
     input: 'src/cli/engine/index.ts',
     output: {
       banner: '#!/usr/bin/env node',
