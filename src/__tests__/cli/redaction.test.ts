@@ -6,10 +6,12 @@ import {
   it,
   jest
 } from '@jest/globals'
+import { OtpError } from 'edge-core-js'
 
 import { ApiClientError } from '../../cli/client/apiClient'
 import { EXIT } from '../../cli/client/exitCodes'
 import { printError } from '../../cli/client/output'
+import { toErrorBody } from '../../cli/engine/errors'
 
 let errors: string[]
 let spy: jest.SpiedFunction<typeof console.error>
@@ -67,18 +69,26 @@ describe('printError redaction', () => {
   })
 
   it('redacts every field OTP_REQUIRED carries that is a credential', () => {
-    // So the two sides cannot drift: each key the OTP arm emits is either
-    // redacted here or deliberately not. The list comes from
-    // `errors.ts`'s OTP_REQUIRED details projection.
-    const emitted = [
-      'reason',
-      'loginId',
-      'resetDate',
-      'resetToken',
-      'voucherId',
-      'voucherAuth',
-      'voucherActivates'
-    ]
+    // Derived from the arm itself, not copied from it. A hand-written list
+    // drifts silently: renaming a field in `errors.ts` would leave this
+    // asserting a key nothing emits any more, and the test would still
+    // pass. Reading the keys back out of `toErrorBody` means a rename fails
+    // here or in `errors.test.ts`, which is the point of having both.
+    const { body: emittedBody } = toErrorBody(
+      new OtpError({
+        login_id: 'ZGVhZGJlZWY=',
+        otp_reset_auth: 'reset-token',
+        reason: 'ip',
+        otp_timeout_date: '2026-01-01T00:00:00.000Z',
+        voucher_activates: '2026-01-02T00:00:00.000Z',
+        voucher_auth: 'dm91Y2hlcg==',
+        voucher_id: 'v-1'
+      })
+    )
+    const emitted = Object.keys(emittedBody.error.details ?? {})
+    // Seven today. Asserted so a projection that loses a field is a failure
+    // here rather than a quietly shorter loop below.
+    expect(emitted).toHaveLength(7)
     const secrets = ['resetToken', 'voucherAuth']
     const details: Record<string, unknown> = {}
     for (const key of emitted) details[key] = `value-of-${key}`

@@ -120,6 +120,23 @@ function ok(label: string, ...args: string[]): Run {
  * pinned "the command failed" and nothing else, and a regression from
  * `INSUFFICIENT_FUNDS`/422 to `INTERNAL_ERROR`/500 kept the suite green.
  */
+/**
+ * Assert something the harness worked out for itself.
+ *
+ * `ok` and `refuses` both run a command and judge its output. Some checks
+ * are about what a command *left behind* — a file on disk, its first line —
+ * and those need an assertion of their own rather than another invocation.
+ */
+function check(label: string, condition: boolean, detail = ''): void {
+  if (condition) {
+    passes++
+    console.log(`OK   ${label}`)
+  } else {
+    failures++
+    console.error(`FAIL ${label}${detail !== '' ? ` — ${detail}` : ''}`)
+  }
+}
+
 function refuses(label: string, code: string, ...args: string[]): void {
   refusesInner(label, code, undefined, args)
 }
@@ -495,6 +512,45 @@ function main(): void {
       w,
       '--export-format=csv,qbo',
       `--out=${path.join(exportDir, 'tx')}`
+    )
+    // Seven export checks and not one of them opened a file, so an engine
+    // that stopped assembling `files`, or a `writeExportFiles` whose
+    // `fs.writeFile` were deleted, would have kept all seven green: `ok()`
+    // asserts only `status === 0` and the absence of an error, and the
+    // client returns early when `result.files == null`.
+    //
+    // The wallet is empty in the fake world, which is what makes the two
+    // formats differ here: QBO always writes its envelope, and the CSV
+    // exporter ends in `csvStringify(items, { header: true })`, which takes
+    // its header from the first record's keys — so no records means no
+    // header and a zero-byte file. That is inherited from the shared
+    // exporter the GUI uses, not from the CLI, and is asserted rather than
+    // changed.
+    const exported = (name: string): string => {
+      const file = path.join(exportDir, name)
+      return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '<absent>'
+    }
+    check(
+      'a multi-format export writes exactly one file per format',
+      fs.existsSync(path.join(exportDir, 'tx.csv')) &&
+        fs.existsSync(path.join(exportDir, 'tx.qbo')) &&
+        !fs.existsSync(path.join(exportDir, 'tx')),
+      fs.readdirSync(exportDir).join(', ')
+    )
+    check(
+      'the QBO file carries its OFX header',
+      exported('tx.qbo').startsWith('OFXHEADER:100'),
+      exported('tx.qbo').slice(0, 60)
+    )
+    check(
+      'the QBO file is not empty',
+      exported('tx.qbo').length > 100,
+      String(exported('tx.qbo').length)
+    )
+    check(
+      'an empty wallet exports an empty CSV',
+      exported('tx.csv') === '',
+      JSON.stringify(exported('tx.csv').slice(0, 60))
     )
     refuses(
       'an unknown export format',

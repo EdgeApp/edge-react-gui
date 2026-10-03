@@ -58,8 +58,17 @@ const cases: Array<{
   code: string
   status: number
   error: unknown
-  /** Keys the arm promises in `details`. */
-  details?: string[]
+  /**
+   * The `details` the arm promises, with the values core supplied.
+   *
+   * Values rather than key names, because `toHaveProperty(key)` passes for a
+   * key whose value is `undefined` — and every arm builds `details` as a
+   * fixed object literal, so the key is always present. The old assertion
+   * therefore held for a projection gutted to
+   * `{ challengeId: undefined, challengeUri: undefined }`, which is the one
+   * thing it existed to catch.
+   */
+  details?: Record<string, unknown>
 }> = [
   {
     code: 'CHALLENGE_REQUIRED',
@@ -68,22 +77,41 @@ const cases: Array<{
       challengeId: 'cid',
       challengeUri: 'https://example.com/c'
     }),
-    details: ['challengeId', 'challengeUri']
+    details: { challengeId: 'cid', challengeUri: 'https://example.com/c' }
   },
   {
     code: 'PASSWORD_ERROR',
     status: 401,
     error: new PasswordError({ wait_seconds: 30 }),
     // The caller needs the wait to know when to retry.
-    details: ['wait']
+    details: { wait: 30 }
   },
   {
     code: 'OTP_REQUIRED',
     status: 401,
-    error: new OtpError({ otp_reset_auth: 'token', voucher_id: 'v' }),
-    // Seven fields, two of which are credentials the client redacts — see
-    // `redaction.test.ts`. The arm has to emit them for that to be possible.
-    details: ['reason', 'resetToken', 'voucherId']
+    // Every field populated, so all seven can be asserted by value. Three
+    // of them were listed before and four were not, and the one that
+    // mattered most was absent: `voucherAuth`, the second credential whose
+    // redaction `redaction.test.ts` exists to pin. The two halves of that
+    // guard did not meet.
+    error: new OtpError({
+      login_id: 'ZGVhZGJlZWY=',
+      otp_reset_auth: 'reset-token',
+      reason: 'ip',
+      otp_timeout_date: '2026-01-01T00:00:00.000Z',
+      voucher_activates: '2026-01-02T00:00:00.000Z',
+      voucher_auth: 'dm91Y2hlcg==',
+      voucher_id: 'v-1'
+    }),
+    details: {
+      reason: 'ip',
+      loginId: 'ZGVhZGJlZWY=',
+      resetDate: '2026-01-01T00:00:00.000Z',
+      resetToken: 'reset-token',
+      voucherId: 'v-1',
+      voucherAuth: 'dm91Y2hlcg==',
+      voucherActivates: '2026-01-02T00:00:00.000Z'
+    }
   },
   { code: 'USERNAME_ERROR', status: 400, error: new UsernameError() },
   {
@@ -110,13 +138,15 @@ const cases: Array<{
     code: 'SWAP_ABOVE_LIMIT',
     status: 422,
     error: new SwapAboveLimitError(swapInfo, '999'),
-    details: ['nativeMax']
+    // All three, not just the limit: a caller deciding what to do next needs
+    // to know which side of the trade and which plugin imposed it.
+    details: { direction: 'from', nativeMax: '999', swapPluginId: 'fakeswap' }
   },
   {
     code: 'SWAP_BELOW_LIMIT',
     status: 422,
     error: new SwapBelowLimitError(swapInfo, '1'),
-    details: ['nativeMin']
+    details: { direction: 'from', nativeMin: '1', swapPluginId: 'fakeswap' }
   },
   {
     code: 'SWAP_CURRENCY',
@@ -151,9 +181,10 @@ describe('toErrorBody', () => {
     '$code carries the details it promises',
     ({ details, error }) => {
       const { body } = toErrorBody(error)
-      for (const key of details ?? []) {
-        expect(body.error.details).toHaveProperty(key)
-      }
+      // `toMatchObject`, so a value core supplied has to arrive. `details`
+      // is published per code in the generated reference, and a caller
+      // branching on `resetToken` or `wait` needs the value, not the key.
+      expect(body.error.details).toMatchObject(details ?? {})
     }
   )
 
