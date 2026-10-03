@@ -15,6 +15,7 @@
 - added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
 - added: Native Edge API HMAC signer (`edgeKey.json` + XOR-split C shards) so login-server requests can be signed outside the JS bundle via `apiSigner`, with JS `KEYS.EDGE_API_*` remaining as a fallback.
 - added: Remote signed `GET /v1/infoRollup/:appId` `appKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
+- changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Prevent sending to the same wallet's own address for EVM assets.
