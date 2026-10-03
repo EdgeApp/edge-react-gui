@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import type { EdgeTokenId } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -8,6 +8,7 @@ import {
   type ButtonInfo,
   ButtonsModal
 } from '../components/modals/ButtonsModal'
+import { DisplayPublicKeysModal } from '../components/modals/DisplayPublicKeysModal'
 import { RawTextModal } from '../components/modals/RawTextModal'
 import {
   EditWalletSettingsModal,
@@ -47,6 +48,18 @@ export type WalletListMenuKey =
   | 'rawDelete'
   | 'togglePause'
   | string // for split keys like splitbitcoincash, splitethereum, etc.
+
+const singularDisplayPublicKeyPluginIds = new Set(['eos', 'telos', 'wax'])
+
+export async function getWalletDisplayPublicKeys(
+  account: EdgeAccount,
+  wallet: EdgeCurrencyWallet
+): Promise<Record<string, string>> {
+  if (singularDisplayPublicKeyPluginIds.has(wallet.currencyInfo.pluginId)) {
+    return { publicKey: await account.getDisplayPublicKey(wallet.id) }
+  }
+  return await account.getDisplayPublicKeys(wallet.id)
+}
 
 export function walletListMenuAction(
   navigation: WalletsTabSceneProps<
@@ -211,8 +224,7 @@ export function walletListMenuAction(
         })
       }
     }
-    case 'viewPrivateViewKey':
-    case 'viewXPub': {
+    case 'viewPrivateViewKey': {
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
@@ -229,30 +241,23 @@ export function walletListMenuAction(
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 
-        const title =
-          switchString === 'viewPrivateViewKey'
-            ? lstrings.fragment_wallets_view_private_view_key
-            : lstrings.fragment_wallets_view_xpub
-
         await Airship.show<'copy' | 'link' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
             buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
             message={displayPublicSeed}
-            title={title}
+            title={lstrings.fragment_wallets_view_private_view_key}
           >
-            {switchString === 'viewXPub' ? null : (
-              <Alert
-                type="warning"
-                title={lstrings.string_warning}
-                marginRem={0.5}
-                message={sprintf(
-                  lstrings.fragment_wallets_view_private_view_key_warning_s,
-                  getWalletName(wallet)
-                )}
-                numberOfLines={0}
-              />
-            )}
+            <Alert
+              type="warning"
+              title={lstrings.string_warning}
+              marginRem={0.5}
+              message={sprintf(
+                lstrings.fragment_wallets_view_private_view_key_warning_s,
+                getWalletName(wallet)
+              )}
+              numberOfLines={0}
+            />
           </ButtonsModal>
         )).then(async result => {
           switch (result) {
@@ -269,6 +274,39 @@ export function walletListMenuAction(
               break
           }
         })
+      }
+    }
+
+    case 'viewXPub': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { account } = state.core
+        const wallet = account.currencyWallets[walletId]
+        const { xpubExplorer } = wallet.currencyInfo
+        const displayPublicKeys = await getWalletDisplayPublicKeys(
+          account,
+          wallet
+        )
+        const publicKeys = Object.values(displayPublicKeys)
+        const explorerPublicKey =
+          publicKeys.length === 1 ? publicKeys[0] : undefined
+
+        const result = await Airship.show<'link' | undefined>(bridge => (
+          <DisplayPublicKeysModal
+            bridge={bridge}
+            displayPublicKeys={displayPublicKeys}
+            showExplorer={xpubExplorer != null && explorerPublicKey != null}
+            title={lstrings.fragment_wallets_view_xpub}
+          />
+        ))
+
+        if (
+          result === 'link' &&
+          xpubExplorer != null &&
+          explorerPublicKey != null
+        ) {
+          await Linking.openURL(sprintf(xpubExplorer, explorerPublicKey))
+        }
       }
     }
 

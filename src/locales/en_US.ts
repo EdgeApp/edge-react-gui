@@ -301,6 +301,13 @@ const strings = {
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
+  fragment_wallets_copy_all_public_keys: 'Copy All',
+  fragment_wallets_copy_public_key_s: 'Copy %1$s public key',
+  fragment_wallets_public_key: 'Public Key',
+  fragment_wallets_public_key_bip32: 'BIP32',
+  fragment_wallets_public_key_bip44: 'Legacy (BIP44)',
+  fragment_wallets_public_key_bip49: 'Wrapped SegWit (BIP49)',
+  fragment_wallets_public_key_bip84: 'SegWit (BIP84)',
   fragment_wallets_sign_message: 'Sign Message',
   sign_message_title: 'Sign Message',
   sign_message_instructions:
