@@ -41,6 +41,7 @@
 - fixed: Paybis sell Max now quotes the wallet's full spendable amount.
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+- fixed: Backing out of the send scene in a MoonPay sell returns to the MoonPay order instead of an error and QR code page
 
 ## 4.51.3 (2026-09-30)
 
