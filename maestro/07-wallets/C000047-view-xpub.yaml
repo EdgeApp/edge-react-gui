@@ -2,14 +2,16 @@
 # Test ID: C000047
 # Title: View XPub Address
 # Expected Result:
-#   1. XPub Address is visible for new Dash wallet
-#   2. XPub Address is visible for imported Dogecoin wallet
+#   1. Wrapped-SegWit and SegWit public keys are separately copyable for Bitcoin
+#   2. XPub Address is visible for new Dash wallet
+#   3. XPub Address is visible for imported Dogecoin wallet
 
-# Notes: Tests xpub visibility for Dash, Bitcoin Cash, and Dogecoin
+# Notes: Tests multi-key display for Bitcoin and single-key display for Dash and Dogecoin
 
 appId: ${MAESTRO_APP_ID}
 env:
-    SEED_PHRASE: ${MAESTRO_EDGE_MAX_IMPORT_SEED}
+    # Public BIP39 test vector. Never use this mnemonic for funds.
+    SEED_PHRASE: "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 tags:
 - all
 - C000047
@@ -17,21 +19,53 @@ tags:
 - runFlow:
     file: ../common/launch-cleared.yaml
 - runFlow:
+    file: ../common/generate-password.yaml
+    label: "Generate compliant disposable password"
+- runFlow:
     file: ../common/create-account.yaml
     env:
-      NEW_WALLETS: '["Dash"]'
+      NEW_WALLETS: '["Bitcoin","Dash"]'
+      NEW_ACCOUNT_PASSWORD: "${output.generatedPassword}"
+      NEW_ACCOUNT_PIN: "1234"
 - runFlow:
     file: ../common/dismiss-modals.yaml
 
-# View xpub for new Dash wallet (created by default)
+# View separate ypub and zpub values for the new Bitcoin wallet
 - tapOn: Assets
+- longPressOn: ".*My Bitcoin"
+- tapOn: ".*View XPub Address"
+- assertVisible: "View XPub Address"
+- assertVisible: "Wrapped SegWit (BIP49)"
+- assertVisible: "SegWit (BIP84)"
+- assertVisible:
+    text: "^ypub[1-9A-HJ-NP-Za-km-z]{107}$"
+- assertVisible:
+    text: "^zpub[1-9A-HJ-NP-Za-km-z]{107}$"
+- assertVisible:
+    id: "display-public-key-copy-bip49"
+- assertVisible:
+    id: "display-public-key-copy-bip84"
+# Exercise both independent copy actions. The confirmation toast is too brief
+# for slow-device accessibility polling, but remains visible in video evidence.
+- tapOn:
+    id: "display-public-key-copy-bip49"
+    waitToSettleTimeoutMs: 100
+- tapOn:
+    id: "display-public-key-copy-bip84"
+    waitToSettleTimeoutMs: 100
+- tapOn:
+    id: "modal-close-button"
+
+# View xpub for new Dash wallet
 - longPressOn: ".*My Dash"
 - tapOn: ".*View XPub Address"
 - assertVisible: "View XPub Address"
 # Dash xpub starts with "drkp" followed by base58 characters (111 chars total)
 - assertVisible:
     text: "^drkp[1-9A-HJ-NP-Za-km-z]{107}$"
-- assertVisible: Copy
+- assertVisible: "Legacy (BIP44)"
+- assertVisible:
+    id: "display-public-key-copy-bip44"
 - tapOn:
     id: "modal-close-button"
 
@@ -54,7 +88,9 @@ tags:
 # Dogecoin xpub starts with "dgub" followed by base58 characters (111 chars total)
 - assertVisible:
     text: "^dgub[1-9A-HJ-NP-Za-km-z]{107}$"
-- assertVisible: Copy
+- assertVisible: "Legacy (BIP44)"
+- assertVisible:
+    id: "display-public-key-copy-bip44"
 - tapOn:
     id: "modal-close-button"
 

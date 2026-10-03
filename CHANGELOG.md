@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: View XPub Address shows each available derivation type separately with an independent copy action.
+
 ## 4.52.0 (staging)
 
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.

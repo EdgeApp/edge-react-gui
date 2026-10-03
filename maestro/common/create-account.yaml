@@ -79,9 +79,9 @@ env:
     key: Enter
 
 # Set PIN
-# Using UTXO creds for now
+# Use the per-flow PIN (or the default declared above).
 - assertVisible: Set PIN
-- inputText: ${MAESTRO_EDGE_NEW_ACCOUNT_PIN}
+- inputText: ${NEW_ACCOUNT_PIN}
 - tapOn: Next
 
 # Confirm TOS
