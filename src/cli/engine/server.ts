@@ -267,6 +267,27 @@ async function handleRequest(
   } catch (error: unknown) {
     if (res.writableEnded) return
     const { status, body } = toErrorBody(error)
+    // Logged before it is sent, because this path never touched the logger.
+    // Anything `mapCoreError` does not recognise becomes `500
+    // INTERNAL_ERROR` carrying only `error.message`, and for a detached
+    // daemon whose one diagnostic surface is
+    // `~/.edge-cli/logs/engine-<profile>.log` that made a plugin or core
+    // fault unreproducible after the fact: the operator had the single line
+    // the client printed, and the client is often a script that discarded
+    // it. The response body is unchanged.
+    const where = `${req.method ?? 'GET'} ${req.url ?? '/'}`
+    if (status >= 500) {
+      state.logger.error(`Request failed: ${where}`, {
+        code: body.error.code,
+        message: body.error.message,
+        stack: error instanceof Error ? error.stack : undefined
+      })
+    } else {
+      // A 4xx is the caller's doing, so it is worth seeing without a stack.
+      state.logger.warn(
+        `Request refused: ${where} ${body.error.code} ${body.error.message}`
+      )
+    }
     sendJson(res, status, body)
   } finally {
     state.idle.endRequest()

@@ -42,7 +42,7 @@ import { createRequestHandler, listenTcp, listenUnix } from './server'
 import { SessionStore } from './sessions'
 import { SHUTDOWN_DRAIN_MS } from './shutdownTiming'
 import { makeSweepTicker } from './sweepTicker'
-import { EXAMPLE_TCP_PORT, parseTcpPort } from './tcpPort'
+import { EXAMPLE_TCP_PORT, parseTcpHost, parseTcpPort } from './tcpPort'
 import { TESTER_SERVERS } from './testerServers'
 import {
   allowedHostnamesFor,
@@ -68,29 +68,6 @@ interface EngineArgs {
 function requireNonEmpty(value: string, flag: string): string {
   if (value === '') throw new EngineUsageError(`${flag} requires a value`)
   return value
-}
-
-/**
- * Refuse a TCP bind address that is not loopback.
- *
- * `--tcp` opens an authenticated port for local scripts, and every surface
- * that describes it — the help text, `docs/EDGE_CLI.md`, the comment on the
- * listener — says `127.0.0.1`. Binding elsewhere publishes
- * `get-raw-private-key`, `get-pin` and `spend` to whatever network the host
- * is on, which no token makes safe to offer by accident.
- */
-function requireLoopback(host: string): string {
-  const loopback =
-    host === 'localhost' ||
-    host === '::1' ||
-    host === '[::1]' ||
-    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)
-  if (!loopback) {
-    throw new EngineUsageError(
-      `--tcp-host must be a loopback address (127.0.0.0/8, ::1 or localhost), not "${host}": the TCP transport is for local scripts`
-    )
-  }
-  return host
 }
 
 /**
@@ -258,9 +235,18 @@ function parseArgs(argv: string[]): EngineArgs {
       // same thing and was the bigger hole: the help text, the guide and this
       // code's own intent all say loopback, and an engine reachable from the
       // LAN exposes `get-raw-private-key` and `spend` to it.
-      args.tcpHost = requireLoopback(
-        requireNonEmpty(a.slice('--tcp-host='.length), '--tcp-host')
-      )
+      // The one place the spelling is canonicalised, shared with the port
+      // validator so neither entry can disagree about what is accepted.
+      try {
+        args.tcpHost = parseTcpHost(
+          requireNonEmpty(a.slice('--tcp-host='.length), '--tcp-host')
+        )
+      } catch (error: unknown) {
+        if (error instanceof RangeError) {
+          throw new EngineUsageError(error.message)
+        }
+        throw error
+      }
     } else if (a.startsWith('--idle-timeout=')) {
       args.idleTimeoutSeconds = parseIdleTimeout(
         a.slice('--idle-timeout='.length)

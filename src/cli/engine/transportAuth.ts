@@ -77,7 +77,7 @@ export function allowedHostnamesFor(host: string): Set<string> {
  * `::1` and a header with a path, userinfo or whitespace in it is refused
  * rather than partially matched.
  */
-function hostnameOf(hostHeader: string): string | null {
+export function hostnameOf(hostHeader: string): string | null {
   try {
     const url = new URL(`http://${hostHeader}`)
     if (url.hostname === '' || url.pathname !== '/' || url.username !== '') {
