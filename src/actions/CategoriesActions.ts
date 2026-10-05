@@ -15,6 +15,8 @@ import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
+import type { Theme } from '../types/Theme'
+import { getSwapPluginIconUri, hasThemedSwapPluginIcon } from '../util/CdnUris'
 import { getCurrencyCodeWithAccount } from '../util/CurrencyInfoHelpers'
 import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
 
@@ -450,6 +452,46 @@ export const getTxActionDisplayInfo = (
         }
         break
       }
+      case 'swapSend': {
+        iconPluginId = action.swapInfo.pluginId
+        switch (assetActionType) {
+          case 'transferNetworkFee':
+          case 'swapNetworkFee': {
+            edgeCategory = {
+              category: 'expense',
+              subcategory: lstrings.wc_smartcontract_network_fee
+            }
+            break
+          }
+          default: {
+            // A send is titled by the flow the user ran, so the three are
+            // distinguishable in the list. The private flavors name no
+            // recipient; the payout address stays on the action for support.
+            const { fromAsset, toAsset } = action
+            const sameAsset =
+              fromAsset.pluginId === toAsset.pluginId &&
+              fromAsset.tokenId === toAsset.tokenId
+            payeeText = !action.privacy
+              ? lstrings.transaction_details_swap_and_send
+              : sameAsset
+              ? lstrings.transaction_details_stealth_send
+              : lstrings.transaction_details_stealth_swap_and_send
+            edgeCategory = {
+              category: 'exchange',
+              subcategory: sprintf(
+                lstrings.transaction_details_swap_to_subcat_1s,
+                getCurrencyCodeWithAccount(
+                  account,
+                  toAsset.pluginId,
+                  toAsset.tokenId
+                )
+              )
+            }
+            direction = 'send'
+          }
+        }
+        break
+      }
       case 'stake': {
         iconPluginId = action.pluginId
         switch (assetActionType) {
@@ -679,9 +721,14 @@ export const getTxActionDisplayInfo = (
     notes
   }
 
+  // A private send exists to keep the recipient off the screen, so its title
+  // outranks any stored name: a recipient-style name reaching the transaction
+  // by any route would otherwise display exactly what the flow conceals.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
+
   const mergedData: EdgeMetadata = {
     name:
-      metadata?.name != null && metadata.name.length > 0
+      !isPrivateSend && metadata?.name != null && metadata.name.length > 0
         ? metadata.name
         : savedData.name,
     category:
@@ -705,7 +752,7 @@ export const getTxActionDisplayInfo = (
   }
 }
 
-export const pluginIdIcons: Record<string, string> = {
+const pluginIdIcons: Record<string, string> = {
   '0xgasless': EDGE_CONTENT_SERVER_URI + '/0xgasless.png',
   bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
   bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
@@ -736,4 +783,32 @@ export const pluginIdIcons: Record<string, string> = {
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
   xgram: EDGE_CONTENT_SERVER_URI + '/xgram.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
+}
+
+export interface PluginIdIcon {
+  uri: string
+
+  /**
+   * True for a full logo with its own outline, which a thumbnail must fit
+   * whole. False for an image drawn to be cropped to a circle.
+   */
+  fit: boolean
+}
+
+/**
+ * The provider logo for a transaction. A provider whose logo is a single-color
+ * mark uses the logo the swap scenes show: it follows the theme, so it stays
+ * visible on a light background, and it is fitted instead of cropped. Every
+ * other provider has one static image drawn for the circular thumbnail.
+ */
+export function getPluginIdIcon(
+  pluginId: string | undefined,
+  theme: Theme
+): PluginIdIcon | undefined {
+  if (pluginId == null) return undefined
+  if (hasThemedSwapPluginIcon(pluginId)) {
+    return { uri: getSwapPluginIconUri(pluginId, theme), fit: true }
+  }
+  const uri = pluginIdIcons[pluginId]
+  return uri == null ? undefined : { uri, fit: false }
 }

@@ -162,7 +162,9 @@ describe('SwapConfirmationScene', () => {
           {...fakeSwapTabSceneProps('swapConfirmation', {
             quotes: [quote],
             selectedQuote: quote,
-            onApprove: () => undefined
+            onApprove: () => undefined,
+            swapRequest: quote.request,
+            swapRequestOptions: {}
           })}
         />
       </FakeProviders>
@@ -195,7 +197,9 @@ describe('SwapConfirmationScene', () => {
       const props = fakeSwapTabSceneProps('swapConfirmation', {
         quotes: [quote],
         selectedQuote: quote,
-        onApprove: () => undefined
+        onApprove: () => undefined,
+        swapRequest: quote.request,
+        swapRequestOptions: {}
       })
       const rendered = render(
         <FakeProviders initialState={rootState}>

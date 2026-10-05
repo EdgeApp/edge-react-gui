@@ -26,11 +26,14 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
+import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   EdgeAnim,
   fadeInDown30,
@@ -49,8 +52,10 @@ import {
 } from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { StealthInfoText } from '../themed/StealthInfoText'
 import {
   SwapInput,
   type SwapInputCardAmounts,
@@ -67,12 +72,6 @@ export interface SwapCreateParams {
 
   // Display error message in an alert card
   errorDisplayInfo?: SwapErrorDisplayInfo
-}
-
-export interface SwapErrorDisplayInfo {
-  message: string
-  title: string
-  error: unknown
 }
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
@@ -99,6 +98,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const [inputNativeAmountFor, setInputNativeAmountFor] = useState<
     'from' | 'to'
   >('from')
+
+  // Stealth Swap: when enabled, the quote routes through the Houdini privacy
+  // provider as a fixed provider (see SwapConfirmationScene).
+  const [stealth, setStealth] = useState(false)
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -271,10 +274,19 @@ export const SwapCreateScene: React.FC<Props> = props => {
       errorDisplayInfo: undefined
     })
 
-    // Start request for quote:
+    // Start request for quote. A stealth swap restricts the request to the
+    // Houdini privacy provider AND demands a private route: restricting the
+    // provider alone would still accept that provider's transparent standard
+    // routes, which are priced better and would be labelled private here.
+    const quoteRequest: EdgeSwapRequest = stealth
+      ? { ...swapRequest, privacy: 'required' }
+      : swapRequest
+    const quoteRequestOptions = stealth
+      ? makeStealthSwapRequestOptions(account, swapRequestOptions)
+      : swapRequestOptions
     navigation.navigate('swapProcessing', {
-      swapRequest,
-      swapRequestOptions,
+      swapRequest: quoteRequest,
+      swapRequestOptions: quoteRequestOptions,
       onCancel: () => {
         navigation.goBack()
       },
@@ -282,7 +294,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove: resetState
+          onApprove: resetState,
+          swapRequest: quoteRequest,
+          swapRequestOptions: quoteRequestOptions
         })
       }
     })
@@ -444,6 +458,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const handleCancelKeyPress = useHandler(() => {
     Keyboard.dismiss()
+  })
+
+  const handleToggleStealth = useHandler(() => {
+    setStealth(value => !value)
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
@@ -614,6 +632,23 @@ export const SwapCreateScene: React.FC<Props> = props => {
               />
             )}
           </EdgeAnim>
+          {fromWallet != null && toWallet != null ? (
+            <EdgeAnim enter={fadeInDown60}>
+              <EdgeCard sections>
+                <SettingsSwitchRow
+                  label={lstrings.stealth_swap_toggle}
+                  value={stealth}
+                  onPress={handleToggleStealth}
+                />
+                {stealth ? (
+                  <StealthInfoText
+                    message={lstrings.stealth_swap_info}
+                    showLearnMore
+                  />
+                ) : null}
+              </EdgeCard>
+            </EdgeAnim>
+          ) : null}
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (

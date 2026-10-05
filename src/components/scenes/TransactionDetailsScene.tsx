@@ -15,8 +15,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   formatCategory,
+  getPluginIdIcon,
   getTxActionDisplayInfo,
-  pluginIdIcons,
   splitCategory
 } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -101,8 +101,21 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   const swapData =
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  const thumbnailPath =
-    useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+  // A private send must not reveal its recipient anywhere in the UI. The
+  // payout address stays on the action for support to trace the order. The
+  // plugin writes this action with the transaction, so a token send's
+  // parent network-fee row carries the same answer.
+  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
+
+  // A send spends to the provider's deposit address; the pasted recipient
+  // never reaches `spendTargets` at all. Titling that row "Recipient
+  // Addresses" therefore names the wrong party.
+  const isSwapSend = action?.actionType === 'swapSend'
+
+  const contactThumbnail = useContactThumbnail(mergedData.name)
+  const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
+  const thumbnailPath = contactThumbnail ?? pluginIdIcon?.uri
+  const fitThumbnail = contactThumbnail == null && pluginIdIcon?.fit === true
 
   // Check if this is a gift card transaction
   const giftCardAction =
@@ -519,7 +532,13 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               rightButtonType="editable"
               icon={
                 hasThumbnail ? (
-                  <FastImage style={styles.tileThumbnail} source={iconSource} />
+                  <FastImage
+                    style={
+                      fitThumbnail ? styles.tileLogo : styles.tileThumbnail
+                    }
+                    source={iconSource}
+                    resizeMode={fitThumbnail ? 'contain' : 'cover'}
+                  />
                 ) : (
                   <IonIcon
                     style={styles.tileAvatarIcon}
@@ -636,6 +655,7 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               swapData={swapData}
               transaction={transaction}
               wallet={wallet}
+              hidePayoutAddress={isPrivateSend}
             />
           )}
         </EdgeAnim>
@@ -662,7 +682,11 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               <EdgeRow
                 maximumHeight="large"
                 rightButtonType="copy"
-                title={lstrings.transaction_details_recipient_addresses}
+                title={
+                  isSwapSend
+                    ? lstrings.transaction_details_exchange_deposit_address
+                    : lstrings.transaction_details_recipient_addresses
+                }
                 body={recipientsAddresses}
               />
             )}
@@ -712,6 +736,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderRadius: theme.rem(1),
     marginRight: theme.rem(0.5)
   },
+  tileLogo: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    marginRight: theme.rem(0.5)
+  },
   tileTextPriceChangeUp: {
     color: theme.positiveText
   },
@@ -740,7 +769,7 @@ const convertActionToSwapData = (
     return
   }
 
-  if (action.actionType !== 'swap') {
+  if (action.actionType !== 'swap' && action.actionType !== 'swapSend') {
     return
   }
 
@@ -751,9 +780,11 @@ const convertActionToSwapData = (
     isEstimate,
     toAsset,
     payoutAddress,
-    payoutWalletId,
     refundAddress
   } = action
+  // A send pays out to an address, not a wallet, so its id matches none:
+  const payoutWalletId =
+    action.actionType === 'swap' ? action.payoutWalletId : ''
 
   const payoutCurrencyCode = getCurrencyCodeWithAccount(
     account,

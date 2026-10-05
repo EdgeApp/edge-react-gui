@@ -1,0 +1,54 @@
+# Sets one side of the linked swap-send amounts.
+#
+# env ROW     which row to edit: "You send" or "Recipient gets". The edited
+#             side becomes the guaranteed amount and the other tracks the
+#             quote as an estimate.
+# env AMOUNT  the number to type, in the account's fiat currency.
+#
+# Both rows open their flip input on fiat, so AMOUNT is a fiat figure and the
+# crypto amount is whatever the live rate makes of it. That is the denomination
+# the provider's floors are stated in, so a caller aiming above or below one of
+# them says so directly instead of converting into source units first.
+appId: ${APP_ID}
+env:
+  APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
+  # Declared under a different name than the one callers pass: a subflow env
+  # entry that reuses the caller's key overwrites what the caller passed, so
+  # `ROW: ${ROW || default}` would silently ignore the argument.
+  AMOUNT_ROW: ${ROW || 'You send'}
+---
+# Rows can sit above or below the fold depending on where the previous step
+# left the scroll position, so the row is brought into view from either side
+# before it is tapped. A `scrollUntilVisible` that is already satisfied is a
+# no-op, and one that scrolls the wrong way is optional and warns.
+#
+# The trailing `.*` is load-bearing: text matching is a full-string match, and
+# the row's title carries its own state word, as in "You send (Guaranteed)".
+- scrollUntilVisible:
+    element:
+      text: '${AMOUNT_ROW}.*'
+    direction: UP
+    timeout: 4000
+    centerElement: true
+    optional: true
+- scrollUntilVisible:
+    element:
+      text: '${AMOUNT_ROW}.*'
+    direction: DOWN
+    timeout: 4000
+    centerElement: true
+    optional: true
+- tapOn: '${AMOUNT_ROW}.*'
+- waitForAnimationToEnd:
+    timeout: 3000
+# The flip input opens pre-filled with whatever the row already holds, and
+# `inputText` appends. On a first edit the field is empty and this erases
+# nothing; on a re-edit it is the difference between setting the amount and
+# concatenating onto the old one, which commits a number nobody asked for.
+- eraseText
+- inputText: '${AMOUNT}'
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: 'Done'
+- waitForAnimationToEnd:
+    timeout: 4000

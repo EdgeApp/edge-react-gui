@@ -78,6 +78,15 @@ interface Props {
   excludeWalletIds?: string[]
   filterActivation?: boolean
 
+  /**
+   * Opt-in grouping: assets matching this filter render first under
+   * `pinnedTitle`, everything else follows under `otherTitle`. Omitting it
+   * leaves the default ordering alone for every other caller.
+   */
+  pinnedAssets?: EdgeAsset[]
+  pinnedTitle?: string
+  otherTitle?: string
+
   // Visuals:
   createWalletId?: string
   headerTitle: string
@@ -99,6 +108,9 @@ export const WalletListModal: React.FC<Props> = props => {
     excludeAssets,
     excludeWalletIds,
     filterActivation,
+    pinnedAssets,
+    pinnedTitle,
+    otherTitle,
 
     // Visuals:
     createWalletId,
@@ -289,6 +301,7 @@ export const WalletListModal: React.FC<Props> = props => {
             aroundRem={0.5}
             returnKeyType="search"
             placeholder={lstrings.search_wallets}
+            testID="walletPickerSearch"
             onChangeText={setSearchText}
             onClear={handleSearchClear}
             value={searchText}
@@ -309,6 +322,9 @@ export const WalletListModal: React.FC<Props> = props => {
         excludeAssets={walletListExcludeAssets}
         excludeWalletIds={excludeWalletIds}
         filterActivation={filterActivation}
+        pinnedAssets={pinnedAssets}
+        pinnedTitle={pinnedTitle}
+        otherTitle={otherTitle}
         searchText={searchText}
         showCreateWallet={showCreateWallet}
         createWalletId={createWalletId}
