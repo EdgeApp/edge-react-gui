@@ -4,6 +4,7 @@
 
 - fixed: Algorand WalletConnect requests list every transaction they ask the wallet to sign, grouped the way the dapp grouped them, and warn when one rekeys the account or closes it out. The request modal used to show only the first transaction's amount and fee while the wallet signed the whole group.
 - fixed: Algorand WalletConnect no longer signs the transactions a dapp marks as another party's (`signers: []`).
+- fixed: A WalletConnect request the wallet cannot parse or refuses to sign is rejected, with the reason shown, instead of leaving the dapp waiting.
 
 ## 4.52.0 (staging)
 

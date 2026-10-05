@@ -194,8 +194,12 @@ export const WalletConnectService: React.FC<Props> = props => {
           wallet={wallet}
         />
       ))
-    } catch (e: any) {
-      console.warn('Invalid walletConnect session params', e)
+    } catch (error: unknown) {
+      // The plugin throws on a payload it cannot parse or refuses to sign.
+      // Reject the request before surfacing the error, so the dapp is not
+      // left waiting.
+      await walletConnect.rejectRequest(request.topic, request.id)
+      throw error
     }
   }
 
