@@ -24,6 +24,7 @@ import { sprintf } from 'sprintf-js'
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
+import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
@@ -36,10 +37,12 @@ import {
 } from '../../util/algorandWalletConnect'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { raceTimeout, TIMED_OUT } from '../../util/raceTimeout'
 import { zeroString } from '../../util/utils'
 import {
   asWcAction,
   asWcDetails,
+  asWcSimulation,
   asWcWarning,
   getWcRisks
 } from '../../util/walletConnectActions'
@@ -48,6 +51,7 @@ import { AlgoWcTransactionsCard } from '../cards/AlgoWcTransactionsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { WcActionsCard } from '../cards/WcActionsCard'
 import { WcDetailsCard } from '../cards/WcDetailsCard'
+import { WcSimulationCard } from '../cards/WcSimulationCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -61,6 +65,9 @@ interface Props extends WcSmartContractModalProps {
   bridge: AirshipBridge<void>
   wallet: EdgeCurrencyWallet
 }
+
+// How long to wait for the network to simulate a transaction:
+const SIMULATION_TIMEOUT_MS = 15000
 
 export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const {
@@ -91,6 +98,26 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   // A request to sign a message moves nothing by itself:
   const isSignRequest =
     asMaybe(asObject({ method: asEvmSignMethod }).withRest)(rawPayload) != null
+
+  // Ask the network what a transaction would do, if the wallet's plugin
+  // knows how. The request stays on screen while the answer loads:
+  const canSimulate =
+    asMaybe(asEvmTransactionPayload)(rawPayload) != null &&
+    wallet.otherMethods.simulateWalletConnectV2Payload != null
+  const [simulationResult, simulationError] = useAsyncValue(async () => {
+    if (!canSimulate) return
+    const result = await raceTimeout(
+      wallet.otherMethods.simulateWalletConnectV2Payload(rawPayload),
+      SIMULATION_TIMEOUT_MS
+    )
+    if (result === TIMED_OUT) throw new Error('The simulation timed out')
+    return asWcSimulation(result)
+  }, [])
+  const simulation = !canSimulate
+    ? undefined
+    : simulationError != null
+    ? 'unavailable'
+    : simulationResult ?? 'loading'
 
   const {
     currencyCode: feeCurrencyCode,
@@ -152,7 +179,9 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   }
 
   const renderRisks = (): React.ReactElement | null => {
-    const risks = getWcRisks(actions, warnings, {
+    // An allowance the simulation finds counts just like one we decoded:
+    const approvals = typeof simulation === 'object' ? simulation.approvals : []
+    const risks = getWcRisks([...actions, ...approvals], warnings, {
       currencyConfig: wallet.currencyConfig,
       dAppOrigin
     })
@@ -346,6 +375,13 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         {actions.length === 0 ? null : (
           <WcActionsCard
             actions={actions}
+            wallet={wallet}
+            walletAddress={walletAddress}
+          />
+        )}
+        {simulation == null ? null : (
+          <WcSimulationCard
+            simulation={simulation}
             wallet={wallet}
             walletAddress={walletAddress}
           />

@@ -114,6 +114,34 @@ export const asWcDetails = asObject({
 export type WcDetails = ReturnType<typeof asWcDetails>
 
 /**
+ * Something that would leave the wallet (a negative amount) or enter it.
+ */
+export const asWcAssetChange = asObject({
+  ...asTokenRef,
+  nativeAmount: asString,
+  // Which NFT this is, for a token that is one:
+  nftId: asOptional(asString),
+  // What a token the wallet does not know calls itself.
+  // Anyone can give a token any name:
+  symbol: asOptional(asString),
+  decimals: asOptional(asNumber)
+})
+export type WcAssetChange = ReturnType<typeof asWcAssetChange>
+
+/**
+ * What a request would do if it ran right now, according to the network.
+ */
+export const asWcSimulation = asObject({
+  success: asBoolean,
+  error: asOptional(asString),
+  // Missing when the network can only say whether the request succeeds:
+  assetChanges: asOptional(asArray(asWcAssetChange)),
+  // The allowances the request would leave in place:
+  approvals: asOptional(asArray(asWcAction), () => [])
+})
+export type WcSimulation = ReturnType<typeof asWcSimulation>
+
+/**
  * The description a plugin may add to its parsed WalletConnect payload.
  */
 export const asWcRequestDescription = asObject({
@@ -324,6 +352,67 @@ export function describeWcAction(
 }
 
 /**
+ * Describes one simulated balance change as a row title and body.
+ */
+export function describeWcAssetChange(
+  change: WcAssetChange,
+  opts: DescribeOpts
+): { title: string; body: string } {
+  const { currencyConfig } = opts
+  const { contractAddress, decimals, nftId, symbol, tokenId } = change
+  const isSend = change.nativeAmount.startsWith('-')
+  const nativeAmount = change.nativeAmount.replace(/^-/, '')
+  const title = isSend ? lstrings.wc_sim_send : lstrings.wc_sim_receive
+
+  if (nftId != null && contractAddress != null) {
+    const collection = shortAddress(contractAddress)
+    return {
+      title,
+      body:
+        nativeAmount === '1'
+          ? sprintf(lstrings.wc_sim_nft_2s, nftId, collection)
+          : sprintf(
+              lstrings.wc_sim_nft_count_3s,
+              formatNumber(nativeAmount),
+              nftId,
+              collection
+            )
+    }
+  }
+
+  // A token the wallet does not know, going by what it says about itself.
+  // The contract address stays in view, since the name proves nothing:
+  const isKnown = tokenId != null && currencyConfig.allTokens[tokenId] != null
+  if (contractAddress != null && !isKnown && decimals != null) {
+    const amount = formatNumber(
+      convertNativeToDenomination('1' + '0'.repeat(decimals))(nativeAmount)
+    )
+    const token = shortAddress(contractAddress)
+    return {
+      title,
+      body:
+        symbol == null
+          ? sprintf(lstrings.wc_sim_token_amount_2s, amount, token)
+          : sprintf(
+              lstrings.wc_sim_named_token_amount_3s,
+              amount,
+              symbol,
+              token
+            )
+    }
+  }
+
+  return {
+    title,
+    body: getAmountText(
+      currencyConfig,
+      { contractAddress, tokenId, nativeAmount },
+      false
+    )
+  }
+}
+
+/**
  * Lists the reasons to distrust a request: the ones the plugin found,
  * plus the ones that depend on who is asking.
  */
@@ -388,7 +477,8 @@ export function getWcRisks(
         break
     }
   }
-  return out
+  // The decoder and the simulation can both report one approval:
+  return [...new Set(out)]
 }
 
 /**

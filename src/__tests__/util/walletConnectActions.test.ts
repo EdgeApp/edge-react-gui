@@ -3,9 +3,12 @@ import { describe, expect, it } from '@jest/globals'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import {
   asWcRequestDescription,
+  asWcSimulation,
   describeWcAction,
+  describeWcAssetChange,
   getWcRisks,
-  type WcAction
+  type WcAction,
+  type WcAssetChange
 } from '../../util/walletConnectActions'
 
 const WALLET = '0xCb563b7B20eaD56c1Be5AA733164D34D4617EAB7'
@@ -371,7 +374,123 @@ describe('describeWcAction', () => {
   })
 })
 
+describe('asWcSimulation', () => {
+  it('accepts each shape the plugin sends', () => {
+    expect(asWcSimulation({ success: false, error: 'STF' })).toEqual({
+      success: false,
+      error: 'STF',
+      assetChanges: undefined,
+      approvals: []
+    })
+    expect(asWcSimulation({ success: true })).toEqual({
+      success: true,
+      error: undefined,
+      assetChanges: undefined,
+      approvals: []
+    })
+    const full = asWcSimulation({
+      success: true,
+      assetChanges: [
+        { nativeAmount: '-1' },
+        { contractAddress: NFT, nftId: '7', nativeAmount: '1' }
+      ],
+      approvals: [
+        {
+          type: 'approveAll',
+          contractAddress: NFT,
+          operator: SPENDER,
+          approved: true
+        }
+      ]
+    })
+    expect(full.assetChanges?.length).toBe(2)
+    expect(full.approvals[0].type).toBe('approveAll')
+  })
+})
+
+describe('describeWcAssetChange', () => {
+  const makeChange = (fields: Partial<WcAssetChange>): WcAssetChange => ({
+    contractAddress: undefined,
+    tokenId: undefined,
+    nativeAmount: '0',
+    nftId: undefined,
+    symbol: undefined,
+    decimals: undefined,
+    ...fields
+  })
+
+  it("describes the chain's own coin leaving and arriving", () => {
+    expect(
+      describeWcAssetChange(
+        makeChange({ nativeAmount: '-100000000000000000' }),
+        opts
+      )
+    ).toEqual({ title: 'You Send', body: '0.1 ETH' })
+    expect(
+      describeWcAssetChange(makeChange({ nativeAmount: '1' }), opts)
+    ).toEqual({ title: 'You Receive', body: '0.000000000000000001 ETH' })
+  })
+
+  it('describes a token the wallet knows', () => {
+    expect(
+      describeWcAssetChange(
+        makeChange({
+          contractAddress: USDC,
+          tokenId: USDC_TOKEN_ID,
+          nativeAmount: '270698529',
+          // The wallet's own token list wins over what the contract says:
+          symbol: 'FAKE',
+          decimals: 0
+        }),
+        opts
+      )
+    ).toEqual({ title: 'You Receive', body: '270.698529 USDC' })
+  })
+
+  it('keeps the contract in view for a token it does not know', () => {
+    const shib = { contractAddress: DAI, nativeAmount: '-2500000' }
+    expect(
+      describeWcAssetChange(
+        makeChange({ ...shib, symbol: 'USDC', decimals: 6 }),
+        opts
+      )
+    ).toEqual({ title: 'You Send', body: '2.5 USDC (token 0x6B17...271d0F)' })
+    expect(
+      describeWcAssetChange(makeChange({ ...shib, decimals: 6 }), opts).body
+    ).toBe('2.5 of token 0x6B17...271d0F')
+    expect(describeWcAssetChange(makeChange(shib), opts).body).toBe(
+      '2,500,000 base units of token 0x6B17...271d0F'
+    )
+  })
+
+  it('describes NFTs', () => {
+    expect(
+      describeWcAssetChange(
+        makeChange({ contractAddress: NFT, nftId: '8817', nativeAmount: '-1' }),
+        opts
+      )
+    ).toEqual({
+      title: 'You Send',
+      body: 'NFT #8817 from collection 0xBC4C...36f13D'
+    })
+    expect(
+      describeWcAssetChange(
+        makeChange({ contractAddress: NFT, nftId: '5', nativeAmount: '20' }),
+        opts
+      )
+    ).toEqual({
+      title: 'You Receive',
+      body: '20 of NFT #5 from collection 0xBC4C...36f13D'
+    })
+  })
+})
+
 describe('getWcRisks', () => {
+  it('lists one approval once, however many sources report it', () => {
+    const approval = makeApprove({ unlimited: true })
+    expect(getWcRisks([approval, { ...approval }], [], opts).length).toBe(1)
+  })
+
   it('finds nothing in an ordinary request', () => {
     expect(getWcRisks([makeApprove({})], [], opts)).toEqual([])
   })

@@ -65,6 +65,13 @@ const renderModal = (
     </FakeProviders>
   )
 
+// Lets a promise the modal is waiting on resolve and render:
+const settle = async (): Promise<void> => {
+  await act(async () => {
+    for (let i = 0; i < 10; ++i) await Promise.resolve()
+  })
+}
+
 const approve = async (rendered: ReturnType<typeof render>): Promise<void> => {
   await act(async () => {
     rendered.UNSAFE_getByType(SafeSlider).props.onSlidingComplete()
@@ -94,6 +101,7 @@ describe('WcSmartContractModal with an Algorand request', () => {
       currencyConfig: makeFakeCurrencyConfig(currencyInfo),
       currencyInfo,
       fiatCurrencyCode: 'iso:USD',
+      otherMethods: {},
       signMessage: jest.fn(async (txn: string) => `signed:${txn}`),
       watch: () => () => {}
     }
@@ -180,7 +188,7 @@ describe('WcSmartContractModal with an Algorand request', () => {
   })
 })
 
-describe('WcSmartContractModal with an EVM signature request', () => {
+describe('WcSmartContractModal with an EVM request', () => {
   const WALLET = '0xCb563b7B20eaD56c1Be5AA733164D34D4617EAB7'
   const SPENDER = '0xDe709F2102306220921060314715629080e2fB77'
   const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
@@ -207,6 +215,7 @@ describe('WcSmartContractModal with an EVM signature request', () => {
       }),
       currencyInfo,
       fiatCurrencyCode: 'iso:USD',
+      otherMethods: {},
       signMessage: jest.fn(async (message: string) => `signed:${message}`),
       watch: () => () => {}
     }
@@ -287,6 +296,149 @@ describe('WcSmartContractModal with an EVM signature request', () => {
       'This lets 0xDe70...e2fB77 take every NFT you hold in collection 0xA0b8...06eB48'
     )
     rendered.unmount()
+  })
+
+  describe('with a plugin that can simulate', () => {
+    const request = {
+      nativeAmount: '100000000000000000',
+      networkFee: '1000000000000000',
+      payload: {
+        method: 'eth_sendTransaction',
+        params: [{ from: WALLET, to: SPENDER, data: '0x04e45aaf' }]
+      },
+      walletAddress: WALLET
+    }
+    const makeSimulatingWallet = (simulate: () => Promise<unknown>): any => {
+      const wallet = makeFakeWallet()
+      wallet.otherMethods = {
+        simulateWalletConnectV2Payload: jest.fn(simulate)
+      }
+      return wallet
+    }
+
+    it('shows what a swap would send and receive', async () => {
+      const wallet = makeSimulatingWallet(async () => ({
+        success: true,
+        assetChanges: [
+          { nativeAmount: '-100000000000000000' },
+          {
+            contractAddress: USDC,
+            tokenId: USDC_TOKEN_ID,
+            nativeAmount: '270698529'
+          },
+          {
+            contractAddress: SPENDER,
+            symbol: 'SHIB',
+            decimals: 18,
+            nativeAmount: '45845964669569975277825777'
+          }
+        ],
+        approvals: [
+          {
+            type: 'approve',
+            contractAddress: USDC,
+            tokenId: USDC_TOKEN_ID,
+            owner: WALLET,
+            spender: SPENDER,
+            nativeAmount: '5000000',
+            unlimited: false
+          }
+        ]
+      }))
+      const rendered = renderModal(wallet, request)
+
+      // The request shows right away, and the result fills in:
+      rendered.getByText('Expected Result')
+      await settle()
+      rendered.getByText('This transaction is expected to succeed')
+      expect(
+        wallet.otherMethods.simulateWalletConnectV2Payload
+      ).toHaveBeenCalledWith(request.payload)
+      rendered.getByText('You Send')
+      rendered.getByText('0.1 ETH')
+      expect(rendered.getAllByText('You Receive').length).toBe(2)
+      rendered.getByText('270.698529 USDC')
+      rendered.getByText(
+        '45,845,964.669569975277825777 SHIB (token 0xDe70...e2fB77)'
+      )
+      rendered.getByText(
+        'Allow 0xDe70...e2fB77 to spend 5 USDC\nDoes not expire'
+      )
+      rendered.unmount()
+    })
+
+    it('warns when the transaction would fail', async () => {
+      const wallet = makeSimulatingWallet(async () => ({
+        success: false,
+        error: 'STF'
+      }))
+      const rendered = renderModal(wallet, request)
+
+      await settle()
+      rendered.getByText('This Transaction Is Expected to Fail')
+      rendered.getByText('STF')
+      rendered.unmount()
+    })
+
+    it('alerts on an allowance only the simulation finds', async () => {
+      const wallet = makeSimulatingWallet(async () => ({
+        success: true,
+        assetChanges: [],
+        approvals: [
+          {
+            type: 'approve',
+            contractAddress: USDC,
+            tokenId: USDC_TOKEN_ID,
+            spender: SPENDER,
+            nativeAmount: '1' + '0'.repeat(40),
+            unlimited: true
+          }
+        ]
+      }))
+      const rendered = renderModal(wallet, request)
+
+      await settle()
+      rendered.getByText(
+        'This lets 0xDe70...e2fB77 spend all of your USDC, now and in the future'
+      )
+      rendered.unmount()
+    })
+
+    it('says when the network cannot report balance changes', async () => {
+      const wallet = makeSimulatingWallet(async () => ({ success: true }))
+      const rendered = renderModal(wallet, request)
+
+      await settle()
+      rendered.getByText(
+        'This transaction is expected to succeed. This network cannot show how it changes your balances'
+      )
+      rendered.unmount()
+    })
+
+    it('says when the simulation is not available', async () => {
+      const wallet = makeSimulatingWallet(async () => {
+        throw new Error('All servers failed')
+      })
+      const rendered = renderModal(wallet, request)
+
+      await settle()
+      rendered.getByText('Could not simulate this transaction')
+      rendered.unmount()
+    })
+
+    it('does not simulate a signature request', () => {
+      const wallet = makeSimulatingWallet(async () => ({ success: true }))
+      const rendered = renderModal(wallet, {
+        payload: { method: 'personal_sign', params: ['0x4869', WALLET] },
+        actions: [{ type: 'signText', text: 'Hi' }]
+      })
+
+      expect(rendered.queryByText('Expected Result')).toBeNull()
+      expect(
+        wallet.otherMethods.simulateWalletConnectV2Payload
+      ).not.toHaveBeenCalled()
+      rendered.unmount()
+    })
   })
 
   it('warns when a sign-in is for another site', () => {
