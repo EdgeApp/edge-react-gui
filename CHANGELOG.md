@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- fixed: Algorand WalletConnect requests list every transaction they ask the wallet to sign, grouped the way the dapp grouped them, and warn when one rekeys the account or closes it out. The request modal used to show only the first transaction's amount and fee while the wallet signed the whole group.
+- fixed: Algorand WalletConnect no longer signs the transactions a dapp marks as another party's (`signers: []`).
+
 ## 4.52.0 (staging)
 
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.

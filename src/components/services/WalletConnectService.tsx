@@ -4,6 +4,7 @@ import { Core } from '@walletconnect/core'
 import type { SessionTypes } from '@walletconnect/types'
 import Web3Wallet, { type Web3WalletTypes } from '@walletconnect/web3wallet'
 import {
+  asArray,
   asNumber,
   asObject,
   asOptional,
@@ -25,6 +26,7 @@ import {
 } from '../../hooks/useWalletConnect'
 import { globalKeys } from '../../keys'
 import { asEdgeTokenId } from '../../types/types'
+import { asAlgoWcTransaction } from '../../util/algorandWalletConnect'
 import { snooze } from '../../util/utils'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
@@ -167,6 +169,10 @@ export const WalletConnectService: React.FC<Props> = props => {
         )
       const { nativeAmount, networkFee, tokenId } =
         payloadAmounts(parsedPayload)
+      const algoTransactions =
+        namespace === 'algorand'
+          ? asAlgoParsedPayload(parsedPayload).transactions
+          : undefined
       const iconUri = session.peer.metadata.icons[0] ?? '.svg'
       const icon = iconUri.endsWith('.svg')
         ? 'https://content.edge.app/walletConnectLogo.png'
@@ -176,6 +182,7 @@ export const WalletConnectService: React.FC<Props> = props => {
       }
       await Airship.show(bridge => (
         <WcSmartContractModal
+          algoTransactions={algoTransactions}
           bridge={bridge}
           dApp={dApp}
           nativeAmount={nativeAmount}
@@ -265,6 +272,9 @@ const payloadAmounts = asObject({
   networkFee: asString,
   // Some chains' payload parsers omit tokenId for the native asset.
   tokenId: asOptional(asEdgeTokenId, null)
+})
+const asAlgoParsedPayload = asObject({
+  transactions: asOptional(asArray(asAlgoWcTransaction))
 })
 const asSessionRequest = asObject({
   id: asNumber,

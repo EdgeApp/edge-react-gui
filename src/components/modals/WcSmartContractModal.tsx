@@ -27,10 +27,17 @@ import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
 import { asEdgeTokenId } from '../../types/types'
+import {
+  asAlgoPayloadMethod,
+  asAlgoWcTransaction,
+  getAlgoWcDangers,
+  signAlgoWcTransactions
+} from '../../util/algorandWalletConnect'
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { AlgoWcTransactionsCard } from '../cards/AlgoWcTransactionsCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -48,6 +55,7 @@ interface Props extends WcSmartContractModalProps {
 
 export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const {
+    algoTransactions,
     bridge,
     dApp,
     nativeAmount,
@@ -119,6 +127,20 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         showError(error)
       })
       .finally(props.bridge.resolve)
+  }
+
+  const renderAlgoDanger = (): React.ReactElement | null => {
+    if (algoTransactions == null) return null
+    const dangers = getAlgoWcDangers(algoTransactions, wallet.currencyConfig)
+    if (dangers.length === 0) return null
+    return (
+      <AlertCardUi4
+        title={lstrings.wc_algo_danger_title}
+        body={dangers}
+        type="error"
+        marginRem={0.5}
+      />
+    )
   }
 
   const renderWarning = (): React.ReactElement => {
@@ -220,11 +242,9 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
           break
         }
         case 'algo_signTxn': {
-          const cleanPayload = asAlgoWcRpcPayload(payload)
-          const signedTxs = await Promise.all(
-            cleanPayload.params[0].map(
-              async txnObj => await wallet.signMessage(txnObj.txn)
-            )
+          const signedTxs = await signAlgoWcTransactions(
+            payload,
+            async txn => await wallet.signMessage(txn)
           )
           await walletConnect.approveRequest(topic, requestId, signedTxs)
           break
@@ -279,6 +299,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {renderWarning()}
+        {renderAlgoDanger()}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.string_amount}
@@ -294,6 +315,12 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         <EdgeCard icon={iconUri}>
           <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </EdgeCard>
+        {algoTransactions == null ? null : (
+          <AlgoWcTransactionsCard
+            transactions={algoTransactions}
+            wallet={wallet}
+          />
+        )}
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.wc_smartcontract_network_fee}
@@ -377,19 +404,6 @@ const asEvmTransactionPayload = asObject({
     asOptional(asString, '')
   )
 })
-const asAlgoPayloadMethod = asValue('algo_signTxn')
-const asAlgoWcRpcPayload = asObject({
-  method: asAlgoPayloadMethod,
-  params: asTuple(
-    asArray(
-      asObject({
-        txn: asString,
-        message: asOptional(asString)
-      })
-    )
-  )
-})
-
 const asCosmosPayloadMethod = asValue(
   'cosmos_getAccounts',
   'cosmos_signDirect',
@@ -440,6 +454,8 @@ const asPayload = asObject({
 }).withRest
 
 export const asWcSmartContractModalProps = asObject({
+  // Algorand requests list every transaction they ask the wallet to sign:
+  algoTransactions: asOptional(asArray(asAlgoWcTransaction)),
   dApp: asObject({
     peerMeta: asObject({
       name: asString,
