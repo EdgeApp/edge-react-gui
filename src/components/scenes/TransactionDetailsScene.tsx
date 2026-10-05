@@ -15,8 +15,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   formatCategory,
+  getPluginIdIcon,
   getTxActionDisplayInfo,
-  pluginIdIcons,
   splitCategory
 } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
@@ -112,8 +112,10 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   // Addresses" therefore names the wrong party.
   const isSwapSend = action?.actionType === 'swapSend'
 
-  const thumbnailPath =
-    useContactThumbnail(mergedData.name) ?? pluginIdIcons[iconPluginId ?? '']
+  const contactThumbnail = useContactThumbnail(mergedData.name)
+  const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
+  const thumbnailPath = contactThumbnail ?? pluginIdIcon?.uri
+  const fitThumbnail = contactThumbnail == null && pluginIdIcon?.fit === true
 
   // Check if this is a gift card transaction
   const giftCardAction =
@@ -530,7 +532,13 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               rightButtonType="editable"
               icon={
                 hasThumbnail ? (
-                  <FastImage style={styles.tileThumbnail} source={iconSource} />
+                  <FastImage
+                    style={
+                      fitThumbnail ? styles.tileLogo : styles.tileThumbnail
+                    }
+                    source={iconSource}
+                    resizeMode={fitThumbnail ? 'contain' : 'cover'}
+                  />
                 ) : (
                   <IonIcon
                     style={styles.tileAvatarIcon}
@@ -726,6 +734,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     height: theme.rem(2),
     borderRadius: theme.rem(1),
+    marginRight: theme.rem(0.5)
+  },
+  tileLogo: {
+    width: theme.rem(2),
+    height: theme.rem(2),
     marginRight: theme.rem(0.5)
   },
   tileTextPriceChangeUp: {
