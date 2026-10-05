@@ -25,6 +25,10 @@ export const getBorrowPluginIconUri = (
  */
 const themedSwapPluginIcons = new Set<string>(['houdini'])
 
+export function hasThemedSwapPluginIcon(pluginId: string): boolean {
+  return themedSwapPluginIcons.has(pluginId)
+}
+
 /**
  * Swap Plugin Icons
  */

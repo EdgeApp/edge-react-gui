@@ -14,8 +14,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   formatCategory,
+  getPluginIdIcon,
   getTxActionDisplayInfo,
-  pluginIdIcons,
   splitCategory
 } from '../../actions/CategoriesActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -180,8 +180,10 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   }
 
   // Icon & Thumbnail
-  const thumbnailPath =
-    useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
+  const contactThumbnail = useContactThumbnail(name)
+  const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
+  const thumbnailPath = contactThumbnail ?? pluginIdIcon?.uri
+  const fitThumbnail = contactThumbnail == null && pluginIdIcon?.fit === true
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)
@@ -209,7 +211,11 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   const icon =
     thumbnailPath != null ? (
       <ShadowedView style={styles.contactContainer}>
-        <FastImage style={styles.contactImage} source={iconSource} />
+        <FastImage
+          style={fitThumbnail ? styles.logoImage : styles.contactImage}
+          source={iconSource}
+          resizeMode={fitThumbnail ? 'contain' : 'cover'}
+        />
         {arrowIcon}
       </ShadowedView>
     ) : (
@@ -385,6 +391,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     borderRadius: theme.rem(1)
+  },
+  logoImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
   },
   arrowIconOverlayContainer: {
     position: 'absolute',

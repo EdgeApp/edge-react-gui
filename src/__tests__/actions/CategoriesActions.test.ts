@@ -7,8 +7,13 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 
-import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
+import {
+  getPluginIdIcon,
+  getTxActionDisplayInfo
+} from '../../actions/CategoriesActions'
 import { lstrings } from '../../locales/strings'
+import { edgeDark } from '../../theme/variables/edgeDark'
+import { edgeLight } from '../../theme/variables/edgeLight'
 
 const BITCOIN_WALLET_ID = 'bitcoin-wallet-id'
 const RECIPIENT_ADDRESS = 'bc1qrecipientaddressthepayeecontrols'
@@ -191,5 +196,29 @@ describe('getTxActionDisplayInfo, the parent network-fee row', () => {
       ethereumWallet
     )
     expect(mergedData.category).toContain(lstrings.wc_smartcontract_network_fee)
+  })
+})
+
+describe('getPluginIdIcon', () => {
+  it('follows the theme and fits a single-color logo', () => {
+    expect(getPluginIdIcon('houdini', edgeDark)).toEqual({
+      uri: 'https://content.edge.app/exchangeIcons/houdini/icon.png',
+      fit: true
+    })
+    expect(getPluginIdIcon('houdini', edgeLight)).toEqual({
+      uri: 'https://content.edge.app/exchangeIcons/houdini/icon-light.png',
+      fit: true
+    })
+  })
+
+  it('keeps the one cropped image for every other provider', () => {
+    const lifiIcon = { uri: 'https://content.edge.app/lifi.png', fit: false }
+    expect(getPluginIdIcon('lifi', edgeDark)).toEqual(lifiIcon)
+    expect(getPluginIdIcon('lifi', edgeLight)).toEqual(lifiIcon)
+  })
+
+  it('has no logo for an unknown or missing provider', () => {
+    expect(getPluginIdIcon('notAProvider', edgeDark)).toBeUndefined()
+    expect(getPluginIdIcon(undefined, edgeDark)).toBeUndefined()
   })
 })
