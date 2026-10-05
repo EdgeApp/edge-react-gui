@@ -5,6 +5,7 @@ import type { SessionTypes } from '@walletconnect/types'
 import Web3Wallet, { type Web3WalletTypes } from '@walletconnect/web3wallet'
 import {
   asArray,
+  asMaybe,
   asNumber,
   asObject,
   asOptional,
@@ -28,6 +29,7 @@ import { globalKeys } from '../../keys'
 import { asEdgeTokenId } from '../../types/types'
 import { asAlgoWcTransaction } from '../../util/algorandWalletConnect'
 import { snooze } from '../../util/utils'
+import { asWcRequestDescription } from '../../util/walletConnectActions'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
@@ -173,6 +175,8 @@ export const WalletConnectService: React.FC<Props> = props => {
         namespace === 'algorand'
           ? asAlgoParsedPayload(parsedPayload).transactions
           : undefined
+      const { actions, details, warnings } =
+        asWcRequestDescription(parsedPayload)
       const iconUri = session.peer.metadata.icons[0] ?? '.svg'
       const icon = iconUri.endsWith('.svg')
         ? 'https://content.edge.app/walletConnectLogo.png'
@@ -182,9 +186,14 @@ export const WalletConnectService: React.FC<Props> = props => {
       }
       await Airship.show(bridge => (
         <WcSmartContractModal
+          actions={actions}
           algoTransactions={algoTransactions}
           bridge={bridge}
           dApp={dApp}
+          dAppOrigin={
+            request.verifyContext?.verified.origin ?? session.peer.metadata.url
+          }
+          details={details}
           nativeAmount={nativeAmount}
           networkFee={networkFee}
           payload={request.params.request}
@@ -192,6 +201,11 @@ export const WalletConnectService: React.FC<Props> = props => {
           tokenId={tokenId}
           topic={request.topic}
           wallet={wallet}
+          // The session names one account per chain, which is this wallet's:
+          walletAddress={
+            session.namespaces[namespace]?.accounts[0]?.split(':')[2]
+          }
+          warnings={warnings}
         />
       ))
     } catch (error: unknown) {
@@ -286,7 +300,10 @@ const asSessionRequest = asObject({
   params: asObject({
     request: asUnknown,
     chainId: asString
-  })
+  }),
+  // WalletConnect's own record of which site sent the request.
+  // The origin is only the site's claim unless WalletConnect verified it:
+  verifyContext: asMaybe(asObject({ verified: asObject({ origin: asString }) }))
 })
 const asBip122Payload = asObject({
   method: asString,

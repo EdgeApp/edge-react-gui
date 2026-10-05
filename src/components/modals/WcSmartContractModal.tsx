@@ -2,6 +2,7 @@ import { abs, add, div, gt, mul } from 'biggystring'
 import {
   asArray,
   asEither,
+  asMaybe,
   asNumber,
   asObject,
   asOptional,
@@ -36,9 +37,17 @@ import {
 import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
+import {
+  asWcAction,
+  asWcDetails,
+  asWcWarning,
+  getWcRisks
+} from '../../util/walletConnectActions'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { AlgoWcTransactionsCard } from '../cards/AlgoWcTransactionsCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { WcActionsCard } from '../cards/WcActionsCard'
+import { WcDetailsCard } from '../cards/WcDetailsCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -55,16 +64,21 @@ interface Props extends WcSmartContractModalProps {
 
 export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const {
+    actions = [],
     algoTransactions,
     bridge,
     dApp,
+    dAppOrigin,
+    details = [],
     nativeAmount,
     networkFee,
     payload: rawPayload,
     tokenId,
     topic,
     requestId,
-    wallet
+    wallet,
+    walletAddress,
+    warnings = []
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -73,6 +87,10 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const iconUri = dApp.peerMeta.icons[0]
 
   const walletName = getWalletName(wallet)
+
+  // A request to sign a message moves nothing by itself:
+  const isSignRequest =
+    asMaybe(asObject({ method: asEvmSignMethod }).withRest)(rawPayload) != null
 
   const {
     currencyCode: feeCurrencyCode,
@@ -111,7 +129,11 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         Airship.show(bridge => (
           <FlashNotification
             bridge={bridge}
-            message={lstrings.wc_smartcontract_confirmed}
+            message={
+              isSignRequest
+                ? lstrings.wc_sign_message_confirmed
+                : lstrings.wc_smartcontract_confirmed
+            }
           />
         )).catch(() => {})
       })
@@ -127,6 +149,22 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         showError(error)
       })
       .finally(props.bridge.resolve)
+  }
+
+  const renderRisks = (): React.ReactElement | null => {
+    const risks = getWcRisks(actions, warnings, {
+      currencyConfig: wallet.currencyConfig,
+      dAppOrigin
+    })
+    if (risks.length === 0) return null
+    return (
+      <AlertCardUi4
+        title={lstrings.wc_request_alert_title}
+        body={risks}
+        type="error"
+        marginRem={0.5}
+      />
+    )
   }
 
   const renderAlgoDanger = (): React.ReactElement | null => {
@@ -290,7 +328,11 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
       title={
         <View style={styles.title}>
           <Image style={styles.logo} source={WalletConnectLogo} />
-          <ModalTitle>{lstrings.wc_smartcontract_title}</ModalTitle>
+          <ModalTitle>
+            {isSignRequest
+              ? lstrings.wc_sign_message_title
+              : lstrings.wc_smartcontract_title}
+          </ModalTitle>
         </View>
       }
     >
@@ -299,7 +341,15 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {renderWarning()}
+        {renderRisks()}
         {renderAlgoDanger()}
+        {actions.length === 0 ? null : (
+          <WcActionsCard
+            actions={actions}
+            wallet={wallet}
+            walletAddress={walletAddress}
+          />
+        )}
         {zeroString(nativeAmount) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.string_amount}
@@ -321,6 +371,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
             wallet={wallet}
           />
         )}
+        <WcDetailsCard details={details} />
         {zeroString(networkFee) ? null : (
           <CryptoFiatAmountTile
             title={lstrings.wc_smartcontract_network_fee}
@@ -454,8 +505,16 @@ const asPayload = asObject({
 }).withRest
 
 export const asWcSmartContractModalProps = asObject({
+  // What the plugin says the request would sign or do:
+  actions: asOptional(asArray(asWcAction)),
+  warnings: asOptional(asArray(asWcWarning)),
+  details: asOptional(asArray(asWcDetails)),
   // Algorand requests list every transaction they ask the wallet to sign:
   algoTransactions: asOptional(asArray(asAlgoWcTransaction)),
+  // Where WalletConnect says the request came from:
+  dAppOrigin: asOptional(asString),
+  // The address the session gave the dapp for this wallet:
+  walletAddress: asOptional(asString),
   dApp: asObject({
     peerMeta: asObject({
       name: asString,
