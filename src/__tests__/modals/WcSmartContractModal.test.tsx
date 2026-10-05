@@ -253,6 +253,42 @@ describe('WcSmartContractModal with an EVM signature request', () => {
     rendered.unmount()
   })
 
+  it('shows what a transaction asks for', () => {
+    const rendered = renderModal(makeFakeWallet(), {
+      nativeAmount: '250000000000000000',
+      networkFee: '1000000000000000',
+      payload: {
+        method: 'eth_sendTransaction',
+        params: [{ from: WALLET, to: USDC, data: '0x' }]
+      },
+      walletAddress: WALLET,
+      actions: [
+        {
+          type: 'contractCall',
+          contractAddress: USDC,
+          selector: '0x5ae401dc',
+          functionName: undefined,
+          nativeAmount: '250000000000000000'
+        },
+        {
+          type: 'approveAll',
+          contractAddress: USDC,
+          operator: SPENDER,
+          approved: true
+        }
+      ]
+    })
+
+    rendered.getByText('Smart Contract Call')
+    rendered.getByText('Contract Call')
+    rendered.getByText('0x5ae401dc on 0xA0b8...06eB48\nSends 0.25 ETH')
+    rendered.getByText('NFT Collection Approval')
+    rendered.getByText(
+      'This lets 0xDe70...e2fB77 take every NFT you hold in collection 0xA0b8...06eB48'
+    )
+    rendered.unmount()
+  })
+
   it('warns when a sign-in is for another site', () => {
     const signIn: WcAction = {
       type: 'signIn',

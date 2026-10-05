@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: WalletConnect signature requests on EVM chains show what is being signed: the message text, the site a sign-in is for, and for typed data the token approval or transfer it grants, plus every field the signature covers. An alert calls out unlimited token approvals, a sign-in for a different site than the one asking, and data the app cannot read.
+- added: WalletConnect transaction requests on EVM chains show what the transaction asks for: who a payment goes to, token approvals and transfers, NFT collection approvals, and for any other call the contract and function. Unlimited token approvals and approvals for a whole NFT collection get an alert.
 - fixed: Algorand WalletConnect requests list every transaction they ask the wallet to sign, grouped the way the dapp grouped them, and warn when one rekeys the account or closes it out. The request modal used to show only the first transaction's amount and fee while the wallet signed the whole group.
 - fixed: Algorand WalletConnect no longer signs the transactions a dapp marks as another party's (`signers: []`).
 - fixed: A WalletConnect request the wallet cannot parse or refuses to sign is rejected, with the reason shown, instead of leaving the dapp waiting.

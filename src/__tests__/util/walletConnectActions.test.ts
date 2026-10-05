@@ -14,6 +14,7 @@ const SPENDER = '0xDe709F2102306220921060314715629080e2fB77'
 const USDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+const NFT = '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D'
 
 const currencyConfig = makeFakeCurrencyConfig(
   {
@@ -98,7 +99,21 @@ describe('asWcRequestDescription', () => {
               to: OTHER,
               nativeAmount: '1'
             },
-            { type: 'signTypedData', primaryType: 'Mail' }
+            { type: 'signTypedData', primaryType: 'Mail' },
+            { type: 'transfer', from: WALLET, to: OTHER, nativeAmount: '1' },
+            {
+              type: 'approveAll',
+              contractAddress: NFT,
+              operator: SPENDER,
+              approved: true
+            },
+            {
+              type: 'contractCall',
+              contractAddress: OTHER,
+              selector: '0x49404b7c',
+              nativeAmount: '0'
+            },
+            { type: 'contractCall', nativeAmount: '0' }
           ],
           warnings: [
             { code: 'wrongChain', chainId: '137' },
@@ -116,7 +131,11 @@ describe('asWcRequestDescription', () => {
       'signIn',
       'approve',
       'transfer',
-      'signTypedData'
+      'signTypedData',
+      'transfer',
+      'approveAll',
+      'contractCall',
+      'contractCall'
     ])
     expect(clean.warnings?.length).toBe(4)
     expect(clean.details?.[0].rows).toEqual([{ name: 'to', value: OTHER }])
@@ -248,6 +267,80 @@ describe('describeWcAction', () => {
     )
   })
 
+  it("describes a payment in the chain's own coin", () => {
+    expect(
+      describeWcAction(
+        {
+          type: 'transfer',
+          contractAddress: undefined,
+          tokenId: undefined,
+          from: WALLET,
+          to: OTHER,
+          nativeAmount: '10000000000000000',
+          expiration: undefined
+        },
+        opts
+      )
+    ).toEqual({
+      title: 'Token Transfer',
+      body: '0.01 ETH to 0x5290...169EE7',
+      isRisky: false
+    })
+  })
+
+  it('describes an approval for a whole NFT collection', () => {
+    const approveAll: WcAction = {
+      type: 'approveAll',
+      contractAddress: NFT,
+      operator: SPENDER,
+      approved: true
+    }
+    expect(describeWcAction(approveAll, opts)).toEqual({
+      title: 'NFT Collection Approval',
+      body: 'Allow 0xDe70...e2fB77 to move every NFT in 0xBC4C...36f13D',
+      isRisky: true
+    })
+    expect(describeWcAction({ ...approveAll, approved: false }, opts)).toEqual({
+      title: 'NFT Collection Approval',
+      body: 'Stop 0xDe70...e2fB77 from moving the NFTs in 0xBC4C...36f13D',
+      isRisky: false
+    })
+  })
+
+  it('describes a call it has no summary for', () => {
+    const call: WcAction = {
+      type: 'contractCall',
+      contractAddress: OTHER,
+      selector: '0x49404b7c',
+      functionName: undefined,
+      nativeAmount: '0'
+    }
+    expect(describeWcAction(call, opts)).toEqual({
+      title: 'Contract Call',
+      body: '0x49404b7c on 0x5290...169EE7',
+      isRisky: false
+    })
+    expect(
+      describeWcAction(
+        {
+          ...call,
+          functionName: 'multicall',
+          nativeAmount: '250000000000000000'
+        },
+        opts
+      ).body
+    ).toBe('multicall on 0x5290...169EE7\nSends 0.25 ETH')
+    expect(describeWcAction({ ...call, selector: undefined }, opts).body).toBe(
+      '0x5290...169EE7'
+    )
+    expect(
+      describeWcAction(
+        { ...call, contractAddress: undefined, selector: undefined },
+        opts
+      ).body
+    ).toBe('Creates a new contract')
+  })
+
   it('describes typed data it has no summary for', () => {
     expect(
       describeWcAction(
@@ -287,6 +380,21 @@ describe('getWcRisks', () => {
     expect(getWcRisks([makeApprove({ unlimited: true })], [], opts)).toEqual([
       'This lets 0xDe70...e2fB77 spend all of your USDC, now and in the future'
     ])
+  })
+
+  it('spells out an approval for a whole NFT collection', () => {
+    const approveAll: WcAction = {
+      type: 'approveAll',
+      contractAddress: NFT,
+      operator: SPENDER,
+      approved: true
+    }
+    expect(getWcRisks([approveAll], [], opts)).toEqual([
+      'This lets 0xDe70...e2fB77 take every NFT you hold in collection 0xBC4C...36f13D'
+    ])
+    expect(getWcRisks([{ ...approveAll, approved: false }], [], opts)).toEqual(
+      []
+    )
   })
 
   it('explains each plugin warning', () => {

@@ -16,10 +16,11 @@ import { lstrings } from '../locales/strings'
 import { getExchangeDenom } from '../selectors/DenominationSelectors'
 import { convertNativeToDenomination, truncateString } from './utils'
 
-// A token a request refers to.
-// The plugin only sends a `tokenId` for tokens the wallet knows:
+// A currency a request refers to. The chain's own coin has no
+// `contractAddress`, and the plugin only sends a `tokenId` for tokens
+// the wallet knows:
 const asTokenRef = {
-  contractAddress: asString,
+  contractAddress: asOptional(asString),
   tokenId: asOptional(asString)
 }
 
@@ -64,6 +65,21 @@ export const asWcAction = asEither(
     to: asString,
     nativeAmount: asString,
     expiration: asOptional(asNumber)
+  }),
+  asObject({
+    type: asValue<['approveAll']>('approveAll'),
+    contractAddress: asString,
+    operator: asString,
+    approved: asBoolean
+  }),
+  asObject({
+    type: asValue<['contractCall']>('contractCall'),
+    // Missing when the call creates a contract:
+    contractAddress: asOptional(asString),
+    selector: asOptional(asString),
+    functionName: asOptional(asString),
+    // How much of the chain's own coin goes along:
+    nativeAmount: asString
   }),
   asObject({
     type: asValue<['signTypedData']>('signTypedData'),
@@ -243,6 +259,54 @@ export function describeWcAction(
       }
     }
 
+    case 'approveAll':
+      return {
+        title: lstrings.wc_action_approve_all,
+        body: sprintf(
+          action.approved
+            ? lstrings.wc_action_approve_all_2s
+            : lstrings.wc_action_revoke_all_2s,
+          name(action.operator),
+          shortAddress(action.contractAddress)
+        ),
+        isRisky: action.approved
+      }
+
+    case 'contractCall': {
+      const { contractAddress, functionName, nativeAmount, selector } = action
+      const lines: string[] = []
+      if (contractAddress == null) {
+        lines.push(lstrings.wc_action_create_contract)
+      } else if (functionName != null || selector != null) {
+        lines.push(
+          sprintf(
+            lstrings.wc_action_call_2s,
+            functionName ?? selector,
+            shortAddress(contractAddress)
+          )
+        )
+      } else {
+        lines.push(shortAddress(contractAddress))
+      }
+      if (nativeAmount !== '0') {
+        lines.push(
+          sprintf(
+            lstrings.wc_action_call_value_1s,
+            getAmountText(
+              currencyConfig,
+              { contractAddress: undefined, tokenId: undefined, nativeAmount },
+              false
+            )
+          )
+        )
+      }
+      return {
+        title: lstrings.wc_action_contract_call,
+        body: lines.join('\n'),
+        isRisky: false
+      }
+    }
+
     case 'signTypedData':
       return {
         title: lstrings.wc_action_typed_data,
@@ -278,6 +342,15 @@ export function getWcRisks(
           lstrings.wc_warning_unlimited_2s,
           shortAddress(action.spender),
           getTokenName(currencyConfig, action)
+        )
+      )
+    }
+    if (action.type === 'approveAll' && action.approved) {
+      out.push(
+        sprintf(
+          lstrings.wc_warning_approve_all_2s,
+          shortAddress(action.operator),
+          shortAddress(action.contractAddress)
         )
       )
     }
@@ -334,7 +407,7 @@ const shortAddress = (address: string): string =>
   truncateString(address, 12, true)
 
 interface TokenRef {
-  contractAddress: string
+  contractAddress: string | undefined
   tokenId: string | undefined
 }
 
@@ -343,6 +416,7 @@ function getTokenName(
   token: TokenRef
 ): string {
   const { contractAddress, tokenId } = token
+  if (contractAddress == null) return currencyConfig.currencyInfo.currencyCode
   const edgeToken =
     tokenId == null ? undefined : currencyConfig.allTokens[tokenId]
   return edgeToken != null
@@ -355,22 +429,27 @@ function getAmountText(
   token: TokenRef & { nativeAmount: string },
   unlimited: boolean
 ): string {
-  const { contractAddress, nativeAmount, tokenId } = token
+  const { contractAddress, nativeAmount } = token
   if (unlimited) {
     return sprintf(
       lstrings.wc_amount_unlimited_1s,
       getTokenName(currencyConfig, token)
     )
   }
+  // The chain's own coin has no token ID:
+  const tokenId = contractAddress == null ? null : token.tokenId
   // Without the token we do not know the decimals, so show the raw amount:
-  if (tokenId == null || currencyConfig.allTokens[tokenId] == null) {
+  if (
+    contractAddress != null &&
+    (tokenId == null || currencyConfig.allTokens[tokenId] == null)
+  ) {
     return sprintf(
       lstrings.wc_unknown_token_amount_2s,
       formatNumber(nativeAmount),
       shortAddress(contractAddress)
     )
   }
-  const { multiplier, name } = getExchangeDenom(currencyConfig, tokenId)
+  const { multiplier, name } = getExchangeDenom(currencyConfig, tokenId ?? null)
   const amount = convertNativeToDenomination(multiplier)(nativeAmount)
   return `${formatNumber(amount)} ${name}`
 }
