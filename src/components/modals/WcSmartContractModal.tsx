@@ -66,8 +66,9 @@ interface Props extends WcSmartContractModalProps {
   wallet: EdgeCurrencyWallet
 }
 
-// How long to wait for the network to simulate a transaction:
-const SIMULATION_TIMEOUT_MS = 15000
+// How long to wait for the network to simulate a transaction. The wallet
+// tries its nodes one after another, so a few dead ones take a while:
+const SIMULATION_TIMEOUT_MS = 30000
 
 export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const {
@@ -118,6 +119,14 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
     : simulationError != null
     ? 'unavailable'
     : simulationResult ?? 'loading'
+
+  // The card only says the simulation is unavailable, so keep the reason
+  // where support can find it:
+  React.useEffect(() => {
+    if (simulationError != null) {
+      console.warn('WalletConnect simulation failed:', String(simulationError))
+    }
+  }, [simulationError])
 
   const {
     currencyCode: feeCurrencyCode,

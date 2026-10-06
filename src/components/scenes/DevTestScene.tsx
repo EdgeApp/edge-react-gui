@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { addBreadcrumb, captureException } from '@sentry/react-native'
 import { eq } from 'biggystring'
+import { asArray, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeCurrencyWallet, InsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { type ReturnKeyType, View } from 'react-native'
@@ -9,6 +10,7 @@ import type { AirshipBridge } from 'react-native-airship'
 import { showBackupModal } from '../../actions/BackupModalActions'
 import { launchDeepLink } from '../../actions/DeepLinkingActions'
 import { Fontello } from '../../assets/vector'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../../locales/strings'
 import type { HomeAddress } from '../../types/FormTypes'
 import { useState } from '../../types/reactHooks'
@@ -17,9 +19,13 @@ import type {
   EdgeTabsSceneProps,
   NavigationBase
 } from '../../types/routerTypes'
+import { asEdgeTokenId } from '../../types/types'
+import { asAlgoWcTransaction } from '../../util/algorandWalletConnect'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { consify } from '../../util/utils'
 import { makeEdgeVault } from '../../util/vault/edgeVault'
+import { asWcRequestDescription } from '../../util/walletConnectActions'
+import { type WcSample, wcSamples } from '../../util/walletConnectSamples'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -46,6 +52,11 @@ import { PasswordReminderModal } from '../modals/PasswordReminderModal'
 import { ScamWarningModal } from '../modals/ScamWarningModal'
 import { SurveyModal } from '../modals/SurveyModal'
 import { TextInputModal } from '../modals/TextInputModal'
+import {
+  WalletListModal,
+  type WalletListResult
+} from '../modals/WalletListModal'
+import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -110,6 +121,92 @@ export const DevTestScene: React.FC<Props> = props => {
 
   const onAmountsChanged = (amounts: ExchangedFlipInputAmounts): void => {
     console.log(JSON.stringify(amounts, null, 2))
+  }
+
+  // The wallet the last sample request went to, so the next one can skip
+  // the picker:
+  const wcWalletIdRef = React.useRef<string | undefined>(undefined)
+
+  /**
+   * Shows the WalletConnect request modal for a sample request, parsed by
+   * the chosen wallet's own plugin. The wallet it gets cannot broadcast,
+   * so approving the request moves nothing.
+   */
+  const handleWcSample = async (sample: WcSample): Promise<void> => {
+    const fitsSample = (wallet: EdgeCurrencyWallet): boolean => {
+      const chainId =
+        SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId]
+          ?.walletConnectV2ChainId
+      return (
+        chainId?.namespace === sample.namespace &&
+        wallet.otherMethods.parseWalletConnectV2Payload != null
+      )
+    }
+    let wallet: EdgeCurrencyWallet | undefined =
+      wcWalletIdRef.current == null
+        ? undefined
+        : account.currencyWallets[wcWalletIdRef.current]
+    if (wallet == null || !fitsSample(wallet)) {
+      const walletIds = Object.keys(account.currencyWallets).filter(
+        walletId => {
+          const candidate = account.currencyWallets[walletId]
+          return candidate != null && fitsSample(candidate)
+        }
+      )
+      const result = await Airship.show<WalletListResult>(bridge => (
+        <WalletListModal
+          bridge={bridge}
+          navigation={navigation as NavigationBase}
+          headerTitle={sample.title}
+          allowedWalletIds={walletIds}
+        />
+      ))
+      if (result?.type !== 'wallet') return
+      wallet = account.currencyWallets[result.walletId]
+      wcWalletIdRef.current = wallet.id
+    }
+    // Closures below cannot see the narrowing above:
+    const chosen: EdgeCurrencyWallet = wallet
+    const chainId =
+      SPECIAL_CURRENCY_INFO[chosen.currencyInfo.pluginId].walletConnectV2ChainId
+    if (chainId == null) return
+
+    const [{ publicAddress }] = await chosen.getAddresses({ tokenId: null })
+    const payload = sample.makePayload(publicAddress, chainId.reference)
+    const parsed = await chosen.otherMethods.parseWalletConnectV2Payload(
+      payload
+    )
+    const { nativeAmount, networkFee, tokenId } = asWcSampleAmounts(parsed)
+    const { actions, details, warnings } = asWcRequestDescription(parsed)
+    const algoTransactions =
+      sample.namespace === 'algorand'
+        ? asWcSampleAlgo(parsed).transactions
+        : undefined
+
+    await Airship.show(bridge => (
+      <WcSmartContractModal
+        actions={actions}
+        algoTransactions={algoTransactions}
+        bridge={bridge}
+        dApp={{
+          peerMeta: {
+            name: 'Sample dApp',
+            icons: ['https://content.edge.app/walletConnectLogo.png']
+          }
+        }}
+        dAppOrigin={sample.dAppOrigin}
+        details={details}
+        nativeAmount={nativeAmount}
+        networkFee={networkFee}
+        payload={payload}
+        requestId={Math.floor(Date.now() / 1000)}
+        tokenId={tokenId}
+        topic="dev-sample"
+        wallet={makeNoBroadcastWallet(chosen)}
+        walletAddress={publicAddress}
+        warnings={warnings}
+      />
+    ))
   }
 
   const handleToastAllowFontScaling = (): void => {
@@ -240,6 +337,29 @@ export const DevTestScene: React.FC<Props> = props => {
       <SceneHeaderUi4 title="Scene Header" />
       <SceneHeader title="Scene Header (Legacy)" underline />
       <SectionView>
+        <>
+          <SectionHeader leftTitle="WalletConnect Requests" />
+          <EdgeButton
+            label="Forget the chosen wallet"
+            type="secondary"
+            marginRem={0.25}
+            onPress={() => {
+              wcWalletIdRef.current = undefined
+            }}
+          />
+          {wcSamples.map(sample => (
+            <EdgeButton
+              key={sample.title}
+              label={sample.title}
+              marginRem={0.25}
+              onPress={() => {
+                handleWcSample(sample).catch((error: unknown) => {
+                  showError(error)
+                })
+              }}
+            />
+          ))}
+        </>
         <>
           <SectionHeader leftTitle="Scenes" />
           <EdgeButton
@@ -802,6 +922,33 @@ export const DevTestScene: React.FC<Props> = props => {
       </SectionView>
     </SceneWrapper>
   )
+}
+
+const asWcSampleAmounts = asObject({
+  nativeAmount: asString,
+  networkFee: asString,
+  tokenId: asOptional(asEdgeTokenId, null)
+})
+const asWcSampleAlgo = asObject({
+  transactions: asOptional(asArray(asAlgoWcTransaction))
+})
+
+/**
+ * A view of the wallet that refuses to broadcast, so a sample request can
+ * be approved without moving funds. Signing still happens for real.
+ */
+function makeNoBroadcastWallet(wallet: EdgeCurrencyWallet): EdgeCurrencyWallet {
+  return new Proxy(wallet, {
+    get(target, key) {
+      if (key === 'broadcastTx') {
+        return async () => {
+          throw new Error('Sample requests never broadcast')
+        }
+      }
+      const value: unknown = Reflect.get(target, key, target)
+      return typeof value === 'function' ? value.bind(target) : value
+    }
+  })
 }
 
 const OutlinedView = styled(View)({
