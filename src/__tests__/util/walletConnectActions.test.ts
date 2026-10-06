@@ -6,6 +6,7 @@ import {
   asWcSimulation,
   describeWcAction,
   describeWcAssetChange,
+  describeWcIntentField,
   getWcRisks,
   type WcAction,
   type WcAssetChange
@@ -116,7 +117,14 @@ describe('asWcRequestDescription', () => {
               selector: '0x49404b7c',
               nativeAmount: '0'
             },
-            { type: 'contractCall', nativeAmount: '0' }
+            { type: 'contractCall', nativeAmount: '0' },
+            {
+              type: 'intent',
+              intent: 'Swap',
+              fields: [{ label: 'Send', value: '1 USDC' }],
+              contractAddress: OTHER,
+              nativeAmount: '0'
+            }
           ],
           warnings: [
             { code: 'wrongChain', chainId: '137' },
@@ -138,7 +146,8 @@ describe('asWcRequestDescription', () => {
       'transfer',
       'approveAll',
       'contractCall',
-      'contractCall'
+      'contractCall',
+      'intent'
     ])
     expect(clean.warnings?.length).toBe(4)
     expect(clean.details?.[0].rows).toEqual([{ name: 'to', value: OTHER }])
@@ -342,6 +351,74 @@ describe('describeWcAction', () => {
         opts
       ).body
     ).toBe('Creates a new contract')
+  })
+
+  it('describes a call its contract explains', () => {
+    const intent: WcAction = {
+      type: 'intent',
+      intent: 'swap',
+      summary: undefined,
+      fields: [],
+      contractAddress: OTHER,
+      contractName: 'Uniswap v3 Router 2',
+      owner: 'Uniswap Labs',
+      nativeAmount: '0'
+    }
+    expect(describeWcAction(intent, opts)).toEqual({
+      title: 'Swap',
+      body: 'Uniswap v3 Router 2 by Uniswap Labs',
+      isRisky: false
+    })
+    expect(
+      describeWcAction(
+        {
+          ...intent,
+          summary: 'Swap 1000 USDC for at least 0.3 WETH',
+          contractName: undefined,
+          nativeAmount: '250000000000000000'
+        },
+        opts
+      ).body
+    ).toBe('Swap 1000 USDC for at least 0.3 WETH\nUniswap Labs\nSends 0.25 ETH')
+    expect(
+      describeWcAction(
+        { ...intent, contractName: undefined, owner: undefined },
+        opts
+      ).body
+    ).toBe('0x5290...169EE7')
+  })
+
+  it('describes the values a descriptor shows', () => {
+    const field = { address: undefined, tokenAddress: undefined }
+    expect(
+      describeWcIntentField(
+        { ...field, label: 'Send', value: '1000 USDC' },
+        opts
+      )
+    ).toEqual({ title: 'Send', body: '1000 USDC' })
+    expect(
+      describeWcIntentField(
+        {
+          ...field,
+          label: 'Minimum to Receive',
+          value: '300000000000000000',
+          tokenAddress: DAI
+        },
+        opts
+      ).body
+    ).toBe('300,000,000,000,000,000 base units of token 0x6B17...271d0F')
+    expect(
+      describeWcIntentField(
+        { ...field, label: 'Beneficiary', value: WALLET, address: WALLET },
+        opts
+      ).body
+    ).toBe('this wallet')
+    expect(
+      describeWcIntentField(
+        { ...field, label: 'Beneficiary', value: OTHER, address: OTHER },
+        opts
+      ).body
+    ).toBe(OTHER)
   })
 
   it('describes typed data it has no summary for', () => {

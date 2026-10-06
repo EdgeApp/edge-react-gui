@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import {
   describeWcAction,
+  describeWcIntentField,
   type WcAction
 } from '../../util/walletConnectActions'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -20,21 +21,34 @@ interface Props {
 export const WcActionsCard: React.FC<Props> = props => {
   const { actions, wallet, walletAddress } = props
 
+  const opts = { currencyConfig: wallet.currencyConfig, walletAddress }
+
   return (
     <EdgeCard sections>
       {actions.map((action, index) => {
-        const { title, body, isRisky } = describeWcAction(action, {
-          currencyConfig: wallet.currencyConfig,
-          walletAddress
-        })
+        const { title, body, isRisky } = describeWcAction(action, opts)
         return (
-          <EdgeRow
-            key={index}
-            title={title}
-            body={body}
-            error={isRisky}
-            maximumHeight="large"
-          />
+          <React.Fragment key={index}>
+            <EdgeRow
+              title={title}
+              body={body}
+              error={isRisky}
+              maximumHeight="large"
+            />
+            {action.type !== 'intent'
+              ? null
+              : action.fields.map((field, fieldIndex) => {
+                  const { title, body } = describeWcIntentField(field, opts)
+                  return (
+                    <EdgeRow
+                      key={fieldIndex}
+                      title={title}
+                      body={body}
+                      maximumHeight="large"
+                    />
+                  )
+                })}
+          </React.Fragment>
         )
       })}
     </EdgeCard>

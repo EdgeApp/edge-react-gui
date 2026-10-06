@@ -24,6 +24,16 @@ const asTokenRef = {
   tokenId: asOptional(asString)
 }
 
+// One value an ERC-7730 descriptor says to show, already formatted:
+const asWcIntentField = asObject({
+  label: asString,
+  value: asString,
+  // Set when the value is an address:
+  address: asOptional(asString),
+  // Set when the value is a raw amount of a token the wallet does not know:
+  tokenAddress: asOptional(asString)
+})
+
 /**
  * One thing a WalletConnect request asks the wallet to sign or do,
  * as the wallet's currency plugin describes it.
@@ -86,9 +96,23 @@ export const asWcAction = asEither(
     primaryType: asString,
     domainName: asOptional(asString),
     contractAddress: asOptional(asString)
+  }),
+  asObject({
+    // What a call or message does, according to the ERC-7730
+    // descriptor its contract publishes:
+    type: asValue<['intent']>('intent'),
+    intent: asString,
+    // A sentence with the values filled in:
+    summary: asOptional(asString),
+    fields: asArray(asWcIntentField),
+    contractAddress: asString,
+    contractName: asOptional(asString),
+    owner: asOptional(asString),
+    nativeAmount: asString
   })
 )
 export type WcAction = ReturnType<typeof asWcAction>
+export type WcIntentField = ReturnType<typeof asWcIntentField>
 
 export const asWcWarning = asEither(
   asObject({
@@ -348,7 +372,66 @@ export function describeWcAction(
               ),
         isRisky: false
       }
+
+    case 'intent': {
+      const { contractAddress, contractName, nativeAmount, owner } = action
+      const lines: string[] = []
+      if (action.summary != null) lines.push(action.summary)
+      lines.push(
+        contractName != null && owner != null
+          ? sprintf(lstrings.wc_action_intent_contract_2s, contractName, owner)
+          : contractName ?? owner ?? shortAddress(contractAddress)
+      )
+      if (nativeAmount !== '0') {
+        lines.push(
+          sprintf(
+            lstrings.wc_action_call_value_1s,
+            getAmountText(
+              currencyConfig,
+              { contractAddress: undefined, tokenId: undefined, nativeAmount },
+              false
+            )
+          )
+        )
+      }
+      return {
+        title: capitalize(action.intent),
+        body: lines.join('\n'),
+        isRisky: false
+      }
+    }
   }
+}
+
+/**
+ * Describes one value an ERC-7730 descriptor shows, as a row title and body.
+ */
+export function describeWcIntentField(
+  field: WcIntentField,
+  opts: DescribeOpts
+): { title: string; body: string } {
+  const { walletAddress } = opts
+  const { address, label, tokenAddress, value } = field
+
+  // Without the token we do not know the decimals, so show the raw amount:
+  if (tokenAddress != null) {
+    return {
+      title: label,
+      body: sprintf(
+        lstrings.wc_unknown_token_amount_2s,
+        formatNumber(value),
+        shortAddress(tokenAddress)
+      )
+    }
+  }
+  if (
+    address != null &&
+    walletAddress != null &&
+    sameAddress(address, walletAddress)
+  ) {
+    return { title: label, body: lstrings.wc_this_wallet }
+  }
+  return { title: label, body: value }
 }
 
 /**
@@ -492,6 +575,10 @@ function getHost(url: string): string | undefined {
 
 const sameAddress = (a: string, b: string): boolean =>
   a.toLowerCase() === b.toLowerCase()
+
+// Descriptors write their intents in whatever case they like:
+const capitalize = (text: string): string =>
+  text.slice(0, 1).toUpperCase() + text.slice(1)
 
 const shortAddress = (address: string): string =>
   truncateString(address, 12, true)

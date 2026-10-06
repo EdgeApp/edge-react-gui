@@ -298,6 +298,51 @@ describe('WcSmartContractModal with an EVM request', () => {
     rendered.unmount()
   })
 
+  it('shows what a described call does, value by value', () => {
+    const rendered = renderModal(makeFakeWallet(), {
+      networkFee: '1000000000000000',
+      payload: {
+        method: 'eth_sendTransaction',
+        params: [{ from: WALLET, to: SPENDER, data: '0x04e45aaf' }]
+      },
+      walletAddress: WALLET,
+      actions: [
+        {
+          type: 'intent',
+          intent: 'swap',
+          summary: undefined,
+          fields: [
+            {
+              label: 'Amount to Send',
+              value: '1000 USDC',
+              address: undefined,
+              tokenAddress: undefined
+            },
+            {
+              label: 'Beneficiary',
+              value: WALLET,
+              address: WALLET,
+              tokenAddress: undefined
+            }
+          ],
+          contractAddress: SPENDER,
+          contractName: 'Uniswap v3 Router 2',
+          owner: 'Uniswap Labs',
+          nativeAmount: '0'
+        }
+      ]
+    })
+
+    rendered.getByText('Swap')
+    rendered.getByText('Uniswap v3 Router 2 by Uniswap Labs')
+    rendered.getByText('Amount to Send')
+    rendered.getByText('1000 USDC')
+    rendered.getByText('Beneficiary')
+    rendered.getByText('this wallet')
+    expect(rendered.queryByText('Check This Request Carefully')).toBeNull()
+    rendered.unmount()
+  })
+
   describe('with a plugin that can simulate', () => {
     const request = {
       nativeAmount: '100000000000000000',

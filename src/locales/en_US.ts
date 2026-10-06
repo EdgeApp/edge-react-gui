@@ -1793,6 +1793,7 @@ const strings = {
   wc_warning_approve_all_2s:
     'This lets %1$s take every NFT you hold in collection %2$s',
   wc_action_typed_data: 'Typed Data',
+  wc_action_intent_contract_2s: '%1$s by %2$s',
   wc_action_typed_data_2s: '%1$s for %2$s',
   wc_action_until_1s: 'Until %s',
   wc_action_one_time: 'One time only',
