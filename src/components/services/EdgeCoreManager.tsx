@@ -44,7 +44,6 @@ import { fakeUser } from '../../util/fake-user'
 import {
   INFO_TEST_SERVER,
   LOGIN_TEST_SERVER,
-  shouldUseTestServers,
   SYNC_TEST_SERVER
 } from '../../util/maestro'
 import { getOsVersion } from '../../util/utils'
@@ -210,23 +209,11 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     ENV.DEBUG_EXCHANGES ? exchangeDebugUri : exchangeUri
   ]
 
-  let infoServer: string | string[] | undefined
-  let loginServer: string | string[] | undefined
-  let syncServer: string | undefined
-
-  if (shouldUseTestServers()) {
-    console.log('Using test servers')
-    infoServer = INFO_TEST_SERVER
-    loginServer = LOGIN_TEST_SERVER
-    syncServer = SYNC_TEST_SERVER
-  }
-
-  if (ENV.LOGIN_SERVER != null && ENV.LOGIN_SERVER.length > 0) {
-    loginServer = ENV.LOGIN_SERVER
-  }
-  if (ENV.INFO_SERVER != null && ENV.INFO_SERVER.length > 0) {
-    infoServer = ENV.INFO_SERVER
-  }
+  // This test build always uses the tester hosts; env.json cannot override them.
+  console.log('Using test servers')
+  const infoServer: string | string[] | undefined = INFO_TEST_SERVER
+  const loginServer: string | string[] | undefined = LOGIN_TEST_SERVER
+  const syncServer: string | undefined = SYNC_TEST_SERVER
 
   return (
     <>

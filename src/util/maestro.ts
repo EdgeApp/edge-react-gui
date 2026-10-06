@@ -7,10 +7,7 @@ export const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
 export const isMaestro = (): boolean => ENV.ENABLE_MAESTRO_BUILD
 
 /**
- * Maestro builds default to tester login/info/sync hosts unless
- * `ENABLE_TEST_SERVERS` explicitly disables them. Non-Maestro builds only
- * use tester hosts when `ENABLE_TEST_SERVERS` is true.
+ * This test build always uses the tester login, info and sync hosts,
+ * whatever `ENABLE_TEST_SERVERS` or the Maestro flag say.
  */
-export const shouldUseTestServers = (): boolean =>
-  (ENV.ENABLE_TEST_SERVERS == null && isMaestro()) ||
-  ENV.ENABLE_TEST_SERVERS === true
+export const shouldUseTestServers = (): boolean => true
