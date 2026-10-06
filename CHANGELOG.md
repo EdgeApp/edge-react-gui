@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
+
 ## 4.52.0 (staging)
 
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
