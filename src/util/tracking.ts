@@ -49,6 +49,7 @@ export type TrackingEventName =
   | 'Load_Install_Reason_Fail'
   | 'Push_Notification_Opened'
   | 'Sell_Quote'
+  | 'Sell_Payment_Redirect'
   | 'Sell_Quote_Next'
   | 'Sell_Success'
   | 'Signup_Welcome'
@@ -165,6 +166,11 @@ export interface TrackingValues extends LoginTrackingValues {
   destPluginId?: string // Currency plugin of the wallet being swapped to
   destTokenId?: EdgeTokenId // Token being swapped to (null for the native asset)
   errorCategory?: SwapErrorCategory // Coarse bucket for a failed approval
+
+  // Sell payment redirect link (Sell_Payment_Redirect)
+  fiatProviderId?: string // Provider the link belongs to
+  orderId?: string // Provider order the link points at
+  orderStatus?: string // Provider's status for that order, or why the lookup failed
 
   // Conversion values
   conversionValues?:

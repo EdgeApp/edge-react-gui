@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: MoonPay "Send with Edge" sell links verify the order, pin its network and save a sell record
+
 ## 4.52.0 (staging)
 
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.

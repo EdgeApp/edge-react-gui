@@ -294,7 +294,12 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       // normalizes to this `edge://` path. parseRedirectSection resolves each
       // section (payment -> pre-filled Send scene; terminal states and any
       // malformed payment link -> no-op) identically for the apex host below.
-      const link = parseRedirectSection(pathParts[0], parseQuery(url.query))
+      const [section, ...deepPath] = pathParts
+      const link = parseRedirectSection(
+        section,
+        deepPath,
+        parseQuery(url.query)
+      )
       if (link != null) return link
       break
     }
@@ -485,7 +490,8 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
   // both hosts stay in sync: a malformed apex payment link resolves to a no-op
   // instead of falling through to a browser-opened dead apex page.
   if (firstPath === 'redirect') {
-    const link = parseRedirectSection(pathParts[1], query)
+    const [, section, ...deepPath] = pathParts
+    const link = parseRedirectSection(section, deepPath, query)
     if (link != null) return link
   }
 
@@ -510,10 +516,11 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
  */
 function parseRedirectSection(
   section: string | undefined,
+  deepPath: string[],
   query: UriQueryMap
 ): DeepLink | null {
   if (section === 'payment') {
-    return parsePaymentRedirect(query) ?? { type: 'noop' }
+    return parsePaymentRedirect(deepPath, query) ?? { type: 'noop' }
   }
   if (section === 'success' || section === 'fail' || section === 'cancel') {
     return { type: 'noop' }
@@ -527,8 +534,19 @@ function parseRedirectSection(
  * deposit details for a pending sell order. Returns null when the required
  * deposit parameters are missing so the caller can fall back to its default
  * handling (e.g. opening the link in a browser).
+ *
+ * `deepPath` holds the path segments after `payment`, which name the provider
+ * and the asset on links we built with `makePaymentReturnUrl`:
+ *
+ *   /redirect/payment/<providerId>/<pluginId>[_<tokenId>]/
+ *
+ * Older orders link to the bare `/redirect/payment/`, so both are optional, and
+ * a segment we cannot read is dropped rather than failing the link.
  */
-function parsePaymentRedirect(query: UriQueryMap): DeepLink | null {
+function parsePaymentRedirect(
+  deepPath: string[],
+  query: UriQueryMap
+): DeepLink | null {
   // Treat a present-but-blank required param the same as an absent one: an empty
   // `depositWalletAddress=` or `baseCurrencyCode=` would otherwise open the Send
   // flow with an empty address/asset instead of degrading to the no-op the
@@ -558,12 +576,40 @@ function parsePaymentRedirect(query: UriQueryMap): DeepLink | null {
   const rawTag = query.depositWalletAddressTag ?? undefined
   const addressTag = rawTag != null && rawTag.trim() !== '' ? rawTag : undefined
 
+  const [rawProviderId, rawAssetSpec] = deepPath
+  const providerId = decodePathSegment(rawProviderId)
+  const asset = parseOptionalAsset(decodePathSegment(rawAssetSpec) ?? null)
+
+  const rawTransactionId = query.transactionId ?? undefined
+  const transactionId =
+    rawTransactionId != null && rawTransactionId.trim() !== ''
+      ? rawTransactionId
+      : undefined
+
   return {
     type: 'paymentRedirect',
     currencyCode: baseCurrencyCode,
     depositAddress: depositWalletAddress,
     amount,
-    addressTag
+    addressTag,
+    providerId,
+    asset,
+    transactionId
+  }
+}
+
+/**
+ * Percent-decode one path segment. `url-parse` leaves the pathname encoded, and
+ * `decodeURIComponent` throws on a stray `%`, so a missing, empty or badly
+ * encoded segment comes back undefined.
+ */
+function decodePathSegment(segment: string | undefined): string | undefined {
+  if (segment == null || segment === '') return undefined
+  try {
+    return decodeURIComponent(segment)
+  } catch (error: unknown) {
+    console.warn(`Ignoring malformed deep link path segment: ${segment}`)
+    return undefined
   }
 }
 
