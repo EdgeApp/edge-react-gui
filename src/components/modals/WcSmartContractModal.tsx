@@ -108,11 +108,13 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
     wallet.otherMethods.simulateWalletConnectV2Payload != null
   const [simulationResult, simulationError] = useAsyncValue(async () => {
     if (!canSimulate) return
+    const started = Date.now()
     const result = await raceTimeout(
       wallet.otherMethods.simulateWalletConnectV2Payload(rawPayload),
       SIMULATION_TIMEOUT_MS
     )
     if (result === TIMED_OUT) throw new Error('The simulation timed out')
+    console.log(`WalletConnect simulation took ${Date.now() - started} ms`)
     return asWcSimulation(result)
   }, [])
   const simulation = !canSimulate

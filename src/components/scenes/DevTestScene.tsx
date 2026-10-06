@@ -173,8 +173,14 @@ export const DevTestScene: React.FC<Props> = props => {
 
     const [{ publicAddress }] = await chosen.getAddresses({ tokenId: null })
     const payload = sample.makePayload(publicAddress, chainId.reference)
+    const parseStarted = Date.now()
     const parsed = await chosen.otherMethods.parseWalletConnectV2Payload(
       payload
+    )
+    console.log(
+      `WalletConnect sample "${sample.title}" parsed in ${
+        Date.now() - parseStarted
+      } ms`
     )
     const { nativeAmount, networkFee, tokenId } = asWcSampleAmounts(parsed)
     const { actions, details, warnings } = asWcRequestDescription(parsed)
