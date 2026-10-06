@@ -37,6 +37,7 @@ class MainApplication :
           val packages = PackageList(this).packages
           packages.add(EdgeAttestationPackage())
           packages.add(EdgeApiSignerPackage())
+          packages.add(EdgeClipboardPackage())
           return packages
         }
 
