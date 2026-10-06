@@ -131,7 +131,6 @@ function buildSwapPlugins(): EdgeCorePluginsInit {
     godex: swapInit('godex'),
     houdini: swapInit('houdini'),
     lifi: swapInit('lifi'),
-    letsexchange: swapInit('letsexchange'),
     mptrade: swapInit('mptrade'),
     nexchange: swapInit('nexchange'),
     sideshift: swapInit('sideshift'),
