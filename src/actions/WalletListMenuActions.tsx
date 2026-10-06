@@ -27,6 +27,7 @@ import type { WalletsTabSceneProps } from '../types/routerTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { logActivity } from '../util/logger'
+import { copySensitiveText } from '../util/sensitiveClipboard'
 import { validatePassword } from './AccountActions'
 import { showDeleteWalletModal } from './DeleteWalletModalActions'
 import { showResyncWalletModal } from './ResyncWalletModalActions'
@@ -307,30 +308,30 @@ export function walletListMenuAction(
               name ?? ''
             } -- ${type} -- ${id}`
           )
-          // Add a copy button only for development
-          let devButtons = {}
-          // @ts-expect-error -- global.__DEV__ is set by React Native
-          if (global.__DEV__ === true)
-            devButtons = {
-              copy: { label: lstrings.fragment_wallets_copy_seed }
-            }
-
           const privateKey = await account.getDisplayPrivateKey(wallet.id)
 
-          await Airship.show<'copy' | 'ok' | undefined>(bridge => (
-            <ButtonsModal
-              title={lstrings.fragment_wallets_get_seed_wallet}
-              bridge={bridge}
-              message={privateKey}
-              buttons={{ ok: { label: lstrings.string_ok_cap }, ...devButtons }}
-            />
-          )).then(buttonPressed => {
-            // @ts-expect-error -- global.__DEV__ is set by React Native
-            if (global.__DEV__ === true && buttonPressed === 'copy') {
-              Clipboard.setString(privateKey)
-              showToast(lstrings.fragment_wallets_copied_seed)
-            }
-          })
+          const buttonPressed = await Airship.show<'copy' | 'ok' | undefined>(
+            bridge => (
+              <ButtonsModal
+                title={lstrings.fragment_wallets_get_seed_wallet}
+                bridge={bridge}
+                message={privateKey}
+                buttons={{
+                  ok: { label: lstrings.string_ok_cap },
+                  copy: { label: lstrings.fragment_wallets_copy_seed }
+                }}
+              />
+            )
+          )
+          if (buttonPressed === 'copy') {
+            logActivity(
+              `Copy Master Private Key: ${account.username} -- ${
+                name ?? ''
+              } -- ${type} -- ${id}`
+            )
+            await copySensitiveText(privateKey)
+            showToast(lstrings.fragment_wallets_copied_seed_clears)
+          }
         }
       }
     }
