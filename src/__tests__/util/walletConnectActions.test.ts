@@ -8,6 +8,7 @@ import {
   describeWcAssetChange,
   describeWcIntentField,
   getWcRisks,
+  omitKnownApprovals,
   type WcAction,
   type WcAssetChange
 } from '../../util/walletConnectActions'
@@ -386,6 +387,44 @@ describe('describeWcAction', () => {
         opts
       ).body
     ).toBe('0x5290...169EE7')
+  })
+
+  it('names the addresses in a descriptor summary like the fields do', () => {
+    const summary = `Swap 100 USDC for at least 0.03 WETH to recipient ${WALLET}, paying ${OTHER}`
+    expect(
+      describeWcAction(
+        {
+          type: 'intent',
+          intent: 'Swap',
+          summary,
+          fields: [],
+          contractAddress: OTHER,
+          contractName: undefined,
+          owner: undefined,
+          nativeAmount: '0'
+        },
+        opts
+      ).body
+    ).toBe(
+      'Swap 100 USDC for at least 0.03 WETH to recipient this wallet, paying 0x5290...169EE7\n0x5290...169EE7'
+    )
+  })
+
+  it('drops the simulated allowances the request already shows', () => {
+    const decoded = makeApprove({})
+    const simulated = { ...decoded, owner: undefined, expiration: undefined }
+    const unlimited = { ...simulated, unlimited: true, nativeAmount: '9' }
+    const smaller = { ...simulated, nativeAmount: '100' }
+    const other = { ...simulated, spender: OTHER }
+    expect(omitKnownApprovals([simulated], [decoded])).toEqual([])
+    expect(
+      omitKnownApprovals([unlimited], [makeApprove({ unlimited: true })])
+    ).toEqual([])
+    expect(omitKnownApprovals([smaller, other], [decoded])).toEqual([
+      smaller,
+      other
+    ])
+    expect(omitKnownApprovals([simulated], [])).toEqual([simulated])
   })
 
   it('describes the values a descriptor shows', () => {

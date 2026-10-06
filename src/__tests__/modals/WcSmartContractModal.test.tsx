@@ -255,6 +255,10 @@ describe('WcSmartContractModal with an EVM request', () => {
     rendered.getByText(
       'Allow 0xDe70...e2fB77 to spend unlimited USDC\nDoes not expire'
     )
+    // A signature that grants an allowance keeps the full warning:
+    rendered.getByText(
+      'Approving this request may move funds or grant permissions'
+    )
     // The details list every signed field in full:
     rendered.getByText('Permit')
     rendered.getByText('spender')
@@ -425,6 +429,35 @@ describe('WcSmartContractModal with an EVM request', () => {
       rendered.unmount()
     })
 
+    it('shows an approval once when the simulation repeats it', async () => {
+      const approval = {
+        type: 'approve' as const,
+        contractAddress: USDC,
+        tokenId: USDC_TOKEN_ID,
+        spender: SPENDER,
+        nativeAmount: '5000000',
+        unlimited: false
+      }
+      const wallet = makeSimulatingWallet(async () => ({
+        success: true,
+        assetChanges: [],
+        approvals: [approval]
+      }))
+      const rendered = renderModal(wallet, {
+        ...request,
+        actions: [
+          { ...approval, owner: WALLET, expiration: undefined, oneTime: false }
+        ]
+      })
+
+      await settle()
+      expect(rendered.getAllByText('Token Approval').length).toBe(1)
+      rendered.getByText(
+        'This transaction is expected to succeed without changing your balances'
+      )
+      rendered.unmount()
+    })
+
     it('alerts on an allowance only the simulation finds', async () => {
       const wallet = makeSimulatingWallet(async () => ({
         success: true,
@@ -533,6 +566,33 @@ describe('WcSmartContractModal with an EVM request', () => {
     )
     rendered.getByText('This request is too large to show in full')
     rendered.unmount()
+  })
+
+  it('tells a signer what a plain signature can and cannot do', () => {
+    const rendered = renderModal(makeFakeWallet(), {
+      payload: { method: 'personal_sign', params: ['0x4869', WALLET] },
+      actions: [{ type: 'signText', text: 'Hi' }]
+    })
+    rendered.getByText(
+      'Signing proves you control this address. It moves no funds, but only approve it for an application you trust.'
+    )
+    expect(
+      rendered.queryByText(
+        'Approving this request may move funds or grant permissions'
+      )
+    ).toBeNull()
+    rendered.unmount()
+
+    // Data nobody can read keeps the full warning:
+    const unreadable = renderModal(makeFakeWallet(), {
+      payload: { method: 'personal_sign', params: ['0xfffe', WALLET] },
+      actions: [{ type: 'signBytes', hex: '0xfffe', byteLength: 2 }],
+      warnings: [{ code: 'unreadable' }]
+    })
+    unreadable.getByText(
+      'Approving this request may move funds or grant permissions'
+    )
+    unreadable.unmount()
   })
 
   it('signs the message a personal_sign request shows', async () => {

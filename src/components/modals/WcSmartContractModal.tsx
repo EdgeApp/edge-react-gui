@@ -44,7 +44,8 @@ import {
   asWcDetails,
   asWcSimulation,
   asWcWarning,
-  getWcRisks
+  getWcRisks,
+  omitKnownApprovals
 } from '../../util/walletConnectActions'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { AlgoWcTransactionsCard } from '../cards/AlgoWcTransactionsCard'
@@ -119,6 +120,26 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
     : simulationError != null
     ? 'unavailable'
     : simulationResult ?? 'loading'
+  // The request's own actions already show the allowances it grants:
+  const shownSimulation =
+    typeof simulation === 'object'
+      ? {
+          ...simulation,
+          approvals: omitKnownApprovals(simulation.approvals, actions)
+        }
+      : simulation
+
+  // A signature that grants nothing and moves nothing gets a gentler
+  // warning. Unreadable data could be anything, so it keeps the full one:
+  const signsOnly =
+    isSignRequest &&
+    actions.every(
+      action =>
+        action.type === 'signText' ||
+        action.type === 'signIn' ||
+        action.type === 'signTypedData' ||
+        action.type === 'intent'
+    )
 
   // The card only says the simulation is unavailable, so keep the reason
   // where support can find it:
@@ -227,6 +248,13 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
           lstrings.wc_smartcontract_insufficient_text,
           feeCurrencyStr
         )}
+        type="warning"
+        marginRem={0.5}
+      />
+    ) : signsOnly ? (
+      <AlertCardUi4
+        title={lstrings.wc_smartcontract_warning_title}
+        body={lstrings.wc_sign_message_warning_text}
         type="warning"
         marginRem={0.5}
       />
@@ -388,9 +416,9 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
             walletAddress={walletAddress}
           />
         )}
-        {simulation == null ? null : (
+        {shownSimulation == null ? null : (
           <WcSimulationCard
-            simulation={simulation}
+            simulation={shownSimulation}
             wallet={wallet}
             walletAddress={walletAddress}
           />

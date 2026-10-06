@@ -376,7 +376,9 @@ export function describeWcAction(
     case 'intent': {
       const { contractAddress, contractName, nativeAmount, owner } = action
       const lines: string[] = []
-      if (action.summary != null) lines.push(action.summary)
+      if (action.summary != null) {
+        lines.push(nameAddressesIn(action.summary, walletAddress))
+      }
       lines.push(
         contractName != null && owner != null
           ? sprintf(lstrings.wc_action_intent_contract_2s, contractName, owner)
@@ -401,6 +403,28 @@ export function describeWcAction(
       }
     }
   }
+}
+
+/**
+ * Drops the simulated allowances the request's own actions already show,
+ * so one approval does not appear twice.
+ */
+export function omitKnownApprovals(
+  approvals: WcAction[],
+  actions: WcAction[]
+): WcAction[] {
+  return approvals.filter(approval => {
+    if (approval.type !== 'approve') return true
+    return !actions.some(
+      action =>
+        action.type === 'approve' &&
+        (action.contractAddress ?? '').toLowerCase() ===
+          (approval.contractAddress ?? '').toLowerCase() &&
+        sameAddress(action.spender, approval.spender) &&
+        action.unlimited === approval.unlimited &&
+        (action.unlimited || action.nativeAmount === approval.nativeAmount)
+    )
+  })
 }
 
 /**
@@ -579,6 +603,17 @@ const sameAddress = (a: string, b: string): boolean =>
 // Descriptors write their intents in whatever case they like:
 const capitalize = (text: string): string =>
   text.slice(0, 1).toUpperCase() + text.slice(1)
+
+/**
+ * Names the wallet's own address and shortens the others in a sentence a
+ * descriptor wrote, the same way the fields below it show them.
+ */
+const nameAddressesIn = (text: string, walletAddress?: string): string =>
+  text.replace(/\b0x[0-9a-fA-F]{40}\b/g, address =>
+    walletAddress != null && sameAddress(address, walletAddress)
+      ? lstrings.wc_this_wallet
+      : shortAddress(address)
+  )
 
 const shortAddress = (address: string): string =>
   truncateString(address, 12, true)
