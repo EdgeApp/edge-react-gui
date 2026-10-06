@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: BTC Direct buy provider for EUR purchases
+
 ## 4.52.0 (staging)
 
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
