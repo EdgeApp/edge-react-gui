@@ -651,6 +651,7 @@
   "string_first_sonic_wallet_name": "I miei Sonic",
   "string_first_opbnb_wallet_name": "I miei opBNB",
   "string_first_robinhood_wallet_name": "I miei Robinhood Chain",
+  "string_first_arc_wallet_name": "My Arc",
   "my_crypto_wallet_name": "I miei %s",
   "string_help": "Aiuto",
   "string_exit": "Esci",
