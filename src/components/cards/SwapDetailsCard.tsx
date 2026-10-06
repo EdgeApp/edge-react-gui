@@ -1,4 +1,4 @@
-import { abs, sub } from 'biggystring'
+import { abs, add, sub } from 'biggystring'
 import type {
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
@@ -60,6 +60,36 @@ const upgradeSwapData = (
       : null
 
   return swapData
+}
+
+/**
+ * The amount a swap transaction takes from the source wallet.
+ *
+ * The saved swap action is the best source, since some swaps move the asset
+ * without sending it as the transaction's value. An Arc USDC swap pulls the
+ * USDC through an approval, so `nativeAmount` holds only the fee.
+ * Transactions without a matching saved action fall back to the spent amount
+ * minus the fee.
+ */
+export const getSwapSourceNativeAmount = (
+  transaction: EdgeTransaction,
+  pluginId: string
+): string => {
+  const { savedAction } = transaction
+  if (savedAction?.actionType === 'swap') {
+    const { fromAsset } = savedAction
+    if (
+      fromAsset.nativeAmount != null &&
+      fromAsset.pluginId === pluginId &&
+      fromAsset.tokenId === transaction.tokenId
+    ) {
+      return fromAsset.nativeAmount
+    }
+  }
+  const networkFee = transaction.networkFees
+    .filter(fee => fee.tokenId === transaction.tokenId)
+    .reduce((sum, fee) => add(sum, fee.nativeAmount), '0')
+  return sub(abs(transaction.nativeAmount), networkFee)
 }
 
 export const SwapDetailsCard: React.FC<Props> = props => {
@@ -180,12 +210,8 @@ export const SwapDetailsCard: React.FC<Props> = props => {
   )
   if (destinationDenomination == null) return null
 
-  const sourceNativeAmount = sub(
-    abs(transaction.nativeAmount),
-    transaction.networkFee
-  )
   const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
-    sourceNativeAmount
+    getSwapSourceNativeAmount(transaction, currencyInfo.pluginId)
   )
   const sourceAssetName =
     tokenId == null
