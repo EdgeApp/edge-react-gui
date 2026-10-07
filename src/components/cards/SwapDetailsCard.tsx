@@ -20,7 +20,7 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -229,10 +229,9 @@ export const SwapDetailsCard: React.FC<Props> = props => {
       : `${payoutCurrencyCode} (${getExchangeDenom(payoutConfig, null).name})`
 
   const symbolString =
-    currencyInfo.currencyCode === transaction.currencyCode &&
-    walletDefaultDenom.symbol != null
+    tokenId == null && walletDefaultDenom.symbol != null
       ? walletDefaultDenom.symbol
-      : transaction.currencyCode
+      : getCurrencyCode(wallet, tokenId)
 
   const createExchangeDataString = (newline: string = '\n'): string => {
     const uniqueIdentifier = memos

@@ -5,13 +5,13 @@
 | Status | Implemented (pending dependency publishes) |
 | Author | Jon Tzeng |
 | Reviewer | - |
-| Last updated | 2026-10-05 |
+| Last updated | 2026-10-07 |
 | Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui), [edge-core-js](https://github.com/EdgeApp/edge-core-js), [edge-exchange-plugins](https://github.com/EdgeApp/edge-exchange-plugins) |
 | Implementation | [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066), [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730), [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) |
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: 262f1d478cdc5b7d218fd3a0d98a5cf2cb807d7e -->
+<!-- tdd-code-fingerprint: d4ac8cf100f3bc6cebe3aaa541af9418b4f1f538 -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -110,7 +110,7 @@ sequenceDiagram
 
 A send to an address is its own request type rather than an optional field on the wallet-to-wallet one. `EdgeSwapRequest` keeps its required `toWallet`, and `EdgeSwapSendRequest` names the destination chain and addresses in its place. Both share `EdgeSwapRequestBase`, which carries the source, the amount, and the route-privacy requirement.
 
-[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/types/types.ts)
+[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/master/src/types/types.ts)
 ```ts
 /**
  * A swap between two wallets. This is also the resolved shape swap plugins
@@ -147,7 +147,7 @@ The `getMemos` split matters: a request field the plugin could read directly wou
 
 `resolveSwapRequest` in `src/core/swap/swap-api.ts` passes a wallet request through, refuses one that carries both shapes, validates the destination plugin and token, and builds the synthetic wallet from the rest:
 
-[`src/core/swap/swap-api.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/core/swap/swap-api.ts)
+[`src/core/swap/swap-api.ts`](https://github.com/EdgeApp/edge-core-js/blob/master/src/core/swap/swap-api.ts)
 ```ts
   const { toPluginId, toAddresses, toMemos, ...base } = request
 ```
@@ -158,7 +158,7 @@ Destructuring the send fields off is what keeps the resolved request re-submitta
 
 `src/core/swap/synthetic-wallet.ts` builds an object backed by the real `EdgeCurrencyConfig` the core already holds, so `currencyInfo` and `allTokens` are authentic while `getAddresses` returns the caller's addresses and `getReceiveAddress` returns the first:
 
-[`src/core/swap/synthetic-wallet.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/core/swap/synthetic-wallet.ts)
+[`src/core/swap/synthetic-wallet.ts`](https://github.com/EdgeApp/edge-core-js/blob/master/src/core/swap/synthetic-wallet.ts)
 ```ts
 export function makeSyntheticDestinationWallet(
   currencyConfig: EdgeCurrencyConfig,
@@ -175,7 +175,7 @@ The wallet is bridgified so plugin calls work unchanged across the core's WebVie
 
 A swap that paid out to an address is saved as its own action type, written by the plugin that ran it:
 
-[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/types/types.ts)
+[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/master/src/types/types.ts)
 ```ts
 /**
  * A send that settled through a swap provider: the payout went to an address
@@ -205,7 +205,7 @@ It has no `payoutWalletId`, because there is no payout wallet. `EdgeTxActionSwap
 
 A scanned code for a chain the user holds no wallet on still needs that chain's own URI parser. `EdgeCurrencyConfig.parseUri` takes the same `(uri, currencyCode?)` arguments as `EdgeCurrencyWallet.parseUri` and returns the same result, because both delegate to one helper:
 
-[`src/core/account/custom-tokens.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/core/account/custom-tokens.ts)
+[`src/core/account/custom-tokens.ts`](https://github.com/EdgeApp/edge-core-js/blob/master/src/core/account/custom-tokens.ts)
 ```ts
 export async function parseCurrencyUri(
   ai: ApiInput,
@@ -379,7 +379,7 @@ Every other central swap plugin rejects a swap from an asset to itself through t
 
 `SendScene2` gains the feature in place rather than in a parallel scene. The gate is a single predicate:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/scenes/SendScene2.tsx)
 ```ts
   const swapSendAllowed =
     lockTilesMap.address !== true &&
@@ -398,7 +398,7 @@ Every constrained caller fails at least one clause, so payment protocol, [FIO](#
 
 Activation is then:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/scenes/SendScene2.tsx)
 ```ts
   const destPluginId = recipientPluginId ?? pluginId
   const sameAsset = destPluginId === pluginId && tokenId == null
@@ -417,7 +417,7 @@ When active, the scene requests a quote instead of building a spend. `makeSpend`
 
 Stealth restricts the request to the privacy provider through a shared helper, `src/util/stealthSwap.ts`, used by both the send scene and the swap scene:
 
-[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/stealthSwap.ts)
+[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/stealthSwap.ts)
 ```ts
 export function makeStealthSwapRequestOptions(
   account: EdgeAccount,
@@ -457,7 +457,7 @@ Both sides open on **fiat**. That is what the Exchange scene's two inputs and th
 
 A destination on another chain cannot go through the source wallet's `parseUri`, so `AddressTile2` takes two hooks. The first, `parseCrossChainAddress`, reads input once the destination chain is known, using that chain's own parser through `EdgeCurrencyConfig.parseUri`:
 
-[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/tiles/AddressTile2.tsx)
+[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/tiles/AddressTile2.tsx)
 ```ts
   parseCrossChainAddress?: (
     text: string
@@ -466,7 +466,7 @@ A destination on another chain cannot go through the source wallet's `parseUri`,
 
 The second, `onUnparsedAddress`, is the one that makes the feature discoverable:
 
-[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/tiles/AddressTile2.tsx)
+[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/tiles/AddressTile2.tsx)
 ```ts
   onUnparsedAddress?: (
     address: string,
@@ -478,7 +478,7 @@ It fires when this wallet's chain cannot read the input, immediately before the 
 
 `SendScene2`'s handler detects the chain, adopts it as the recipient asset, and applies the address. Chain detection lives in `src/util/houdiniChains.ts`:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/houdiniChains.ts)
 ```ts
 export function detectHoudiniChains(
   text: string,
@@ -495,7 +495,7 @@ export function detectHoudiniChains(
 
 A URI scheme names its chain outright and wins. A bare address is matched against each served chain's regex, as a prefilter only: whichever chain is picked, its own `parseUri` reads the input before anything is adopted; several chains share a format, so every match is returned and the caller disambiguates. The source chain is dropped from the candidates only when the source IS that chain's coin: from a TOKEN it is a real destination, since USDC on Ethereum paying out native ETH is a cross-asset route no plain send can make, and dropping it left a pasted `0x` address offering every other [EVM](#evm) network but not the one the recipient holds. The chain table entry is:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/houdiniChains.ts)
 ```ts
 export interface HoudiniChain {
   pluginId: string
@@ -512,7 +512,7 @@ The intersection is by pluginId, and a matching pluginId is not a matching netwo
 
 Because `setRecipientPluginId` has not re-rendered when the address is applied, the detected chain is threaded through the result object rather than read back from state:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/scenes/SendScene2.tsx)
 ```ts
       // A destination detected from the address itself makes this a cross-asset
       // send. `setRecipientPluginId` has not re-rendered yet, so the routing
@@ -525,7 +525,7 @@ Because `setRecipientPluginId` has not re-rendered when the address is applied, 
 
 A scanned QR carries a payment URI, not a bare address. Reading one is split in two, in `src/util/paymentUri.ts`. `peekPaymentUri` reads only what the code says about its own chain, the scheme and the [EIP-681](#eip-681) `@chainId`, plus bare-address candidates for detection, and loads no chain's parser:
 
-[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/paymentUri.ts)
+[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/paymentUri.ts)
 ```ts
 export interface PaymentUriPeek {
   addressCandidates: string[]
@@ -538,7 +538,7 @@ Candidates are returned in priority order (raw trimmed text, scheme-prefixed pat
 
 Once a chain is picked, `parseCrossChainPayment` hands the text to that chain's own parser, asking for the chain's own coin:
 
-[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/paymentUri.ts)
+[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/paymentUri.ts)
 ```ts
     const parsed = await currencyConfig.parseUri(text.trim(), currencyCode)
     const { publicAddress, nativeAmount, tokenId, uniqueIdentifier } = parsed
@@ -583,7 +583,7 @@ Every surface that decides whether an asset can be a send-to-address destination
 
 The "Recipient receives" row and the picker that edits it name one asset, computed once:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/util/houdiniChains.ts)
 ```ts
   return swapSendActive
     ? { pluginId: destPluginId, tokenId: null }
@@ -620,21 +620,21 @@ Ignoring the enable flag does not extend to the info server's swap kill switch. 
 
 Three send shapes reach the transaction list, and each carries its own title:
 
-| Flow | Title | Recipient |
-|---|---|---|
-| Cross-asset send, stealth off | Swap & Send | shown |
-| Same-asset send, stealth on | Stealth Send | hidden |
-| Cross-asset send, stealth on | Stealth Swap & Send | hidden |
+| Flow | Title |
+|---|---|
+| Cross-asset send, stealth off | Swap & Send |
+| Same-asset send, stealth on | Stealth Send |
+| Cross-asset send, stealth on | Stealth Swap & Send |
 
 The flow is named on the saved action, not inferred in the GUI. A send is a `swapSend` action (see [The send action](#the-send-action)) written by the plugin, and `getTxActionDisplayInfo` titles it from two facts the action carries: `privacy`, and whether `fromAsset` and `toAsset` name the same asset. A transparent send is a Swap & Send whatever its assets, a private same-asset send is a Stealth Send, and a private cross-asset send is a Stealth Swap & Send.
 
-Hiding the recipient is a display rule, not a storage rule. The action keeps `orderId` and `payoutAddress` intact so support can trace a stuck order. What changes is what renders: the broadcast path skips the `payeeName` write into `metadata.name` for a stealth send, a private send's title outranks any stored metadata name, and the details scene hides the payout address when `privacy` is set. The transaction list's own fallback needs no change, because a swap-send's spend target is the provider's deposit address, never the recipient's.
+Privacy changes what a send is called, and nothing about who it paid. The broadcast path skips the `payeeName` write into `metadata.name` for a stealth send, and a private send's title outranks any stored metadata name, so the list reads "Stealth Send" where another send would read a payee. The transaction list's own fallback needs no change, because a swap-send's spend target is the provider's deposit address, never the recipient's.
 
-That last fact is worth naming on screen rather than leaving implied. The details scene's spend-target row is titled "Recipient Addresses", which on a send-shaped swap names the wrong party: the row holds the provider's deposit address, and the pasted recipient never reaches `spendTargets` at all. On a private send it reads as precisely the disclosure the flow exists to prevent, which is how it was reported. The row is therefore titled from the action: a `swapSend` action means the title is "Exchange Deposit Address", and every other transaction keeps the original wording. The row stays, because the deposit address is the one address that makes a stuck order traceable from the app. Ordinary Exchange-scene swaps carry the same mislabel and are deliberately left alone here, since they are not this branch's flows.
+The details scene names both parties. The recipient the user pasted never reaches `spendTargets`; it lives on the action's `payoutAddress` alone. Every `swapSend` action therefore gets a "Recipient Address" row of its own, private or not, with a copy button. Directly under it sits the spend-target row, which every other transaction titles "Recipient Addresses". On a send-shaped swap that title would name the wrong party, since the row holds the provider's deposit address, so a `swapSend` action titles it "Exchange Deposit Address". That row stays because the deposit address is the one address that makes a stuck order traceable from the app. Ordinary Exchange-scene swaps carry the same mislabel and are deliberately left alone here, since they are not this branch's flows. Why a private send shows its recipient at all is argued in [Show the recipient on the device](#show-the-recipient-on-the-device).
 
-The privacy rules bind on **every** row a flow produced, not just the one the send scene holds. A token send pays its fee in the chain's own coin, and the plugin files that fee row with the same `swapSend` action (see [Naming the send](#naming-the-send)), so every rule keyed on `privacy` reads the same on both rows. The fee row is the fee and not the send, so it keeps the network-fee title while still obeying the name-suppression rule: `getTxActionDisplayInfo` applies the send titles only when the asset action is not a `*NetworkFee`, and the stored-name override stays bound to `privacy` regardless of row.
+The privacy rules bind on **every** row a flow produced, not just the one the send scene holds. A token send pays its fee in the chain's own coin, and the plugin files that fee row with the same `swapSend` action (see [Naming the send](#naming-the-send)), so every rule keyed on `privacy` reads the same on both rows. The fee row is the fee and not the send, so it keeps the network-fee title while still obeying the name-suppression rule: `getTxActionDisplayInfo` applies the send titles only when the asset action is not a `*NetworkFee`, and the stored-name override stays bound to `privacy` regardless of row. For the same reason the fee row gets no "Recipient Address" row. It paid a network, not a person, and its Exchange Details text still carries the payout address for anyone tracing the order from that row.
 
-The exchange order details themselves stay **visible** for a stealth transaction: order id, provider, and both sides' assets and amounts. Only the payout address is hidden. The support-traceability argument for keeping the data cuts no ice if the person reading the screen cannot see the order id, so the two rules are separate. Getting there required a fix: `SwapDetailsCard` resolved the payout denomination through the destination wallet and returned `null` without one, and a swap-send has no payout wallet to resolve. Every swap-send therefore rendered no card at all. The payout asset's currency config now comes off the saved action's `toAsset.pluginId`, which exists for exactly the case that has no wallet.
+The exchange order details render in full for a stealth transaction: order id, provider, both sides' assets and amounts, and the payout address, in the Exchange Details text and in the support email body alike. Support traces a stuck order by its order id and payout address, so both have to be readable by the person asking for help. Getting there required a fix: `SwapDetailsCard` resolved the payout denomination through the destination wallet and returned `null` without one, and a swap-send has no payout wallet to resolve. Every swap-send therefore rendered no card at all. The payout asset's currency config now comes off the saved action's `toAsset.pluginId`, which exists for exactly the case that has no wallet.
 
 ### Multi-recipient gating
 
@@ -660,7 +660,7 @@ The terms modal is the pre-existing centralized-provider acknowledgement, keyed 
 
 The swap-send modal is the send scene's own, because the send scene never reaches `SwapConfirmationScene` and so never runs `swapVerifyTerms`. It follows the send scam warning beside it: a disklet key, `runOnce` against a double-fire within one app run, and a `ConfirmContinueModal`. The provider names itself off `account.swapConfig[STEALTH_SWAP_PLUGIN_ID].swapInfo.displayName`, so the copy survives a provider change. Its four bullets cover the routing, the wait, a rare AML/KYC hold, and that a held or failed swap is resolved with the provider. It informs and never gates the quote; the card below is the persistent notice and carries no KYC wording.
 
-[`src/actions/SwapSendWarningActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/actions/SwapSendWarningActions.tsx)
+[`src/actions/SwapSendWarningActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/actions/SwapSendWarningActions.tsx)
 ```ts
 export const showSwapSendWarningModal = async (
   disklet: Disklet,
@@ -674,7 +674,7 @@ The card is the recurring half. A modal shown once cannot warn the user on their
 
 The prototype recreated the price-delta UI. It is instead extracted from the swap confirmation scene into `src/components/themed/PriceImpactText.tsx` and reused by both:
 
-[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/themed/PriceImpactText.tsx)
+[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/eaa02435e66eeb43b56279d7e50d79266bc48dca/src/components/themed/PriceImpactText.tsx)
 ```ts
 export const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 export function calculateQuotePriceImpact(…)
@@ -759,9 +759,9 @@ Learned capabilities are per pair and per session (`routeCaps` in `SendScene2`),
 
 ### Unit tests
 
-Eleven files across three repos hold 165 tests, all passing.
+Twelve files across three repos hold 171 tests, all passing.
 
-In the gui, 104 across five files:
+In the gui, 110 across six files:
 
 1. `src/__tests__/util/paymentUri.test.ts` (15): the peek passing a bare address through, trimming whitespace, reading a [BIP-21](#bip-21) scheme, keeping the [cashaddr](#cashaddr) `prefix:` candidate, stripping the [EIP-681](#eip-681) `pay-` prefix, and keeping the case of a `scheme://` address that url-parse would lowercase; the EIP-681 `@chainId` read in decimal and hex, left unset when absent, and a token-transfer code offering no address; and `parseCrossChainPayment` returning the chain parser's address, native amount and [memo](#memo), asking for the chain's own coin, and refusing a parser rejection, a token code, and an empty address.
 2. `src/__tests__/util/houdiniChains.test.ts` (51): the address-detection cases (EIP-681 chain ids naming Robinhood Chain and Monad, a TON address matching TON alone, single-chain detection, all-[EVM](#evm) fan-out for a bare `0x`, scheme resolution including a scheme differing from the pluginId, source chain never offered from that chain's own coin but offered from a token on it, unsupported chains skipped, Solana and Dogecoin and legacy Bitcoin formats, non-address text rejected, unknown scheme falling back to format matching, a mislabeled scheme not trusted, the Cardano catch-all regression), plus lookup and table invariants: `getHoudiniChain` resolving a served chain, refusing an unserved one, refusing the three chains with no mainnet native, and refusing a token id on a served chain; no duplicate plugin ids or provider chain names; every entry carrying a boolean `hasSelfPrivate`; every address regex rejecting the empty string and free text, which is the shape the Cardano catch-all had; the [memo](#memo)-required set; and the floor constants ordered [dex](#dex) < standard < private, shaped as biggystring-comparable strings, and equal to the values the provider published. The picker cases pin that the first row names the payout its pick gives under each Stealth and token combination, that a token source without Stealth is offered its own chain's native coin, that no payout is listed twice, and that a native source lists every served chain but its own.
@@ -769,6 +769,7 @@ In the gui, 104 across five files:
 4. `src/__tests__/util/swapErrorDisplay.test.ts` (17): a missing error, minimums and maximums rendered in the units of whichever side was fixed, the limit-free fallback when the bound is zero, both assets named on an unroutable pair including the swap-to-address case where the payout code has to be supplied, insufficient funds from both the typed error and the stringified shape some plugins throw, pending transactions, a geographic restriction, an unrecognized error surfacing the provider's own text, a rate limit never rewritten into a pair error, a thrown non-error stringified, and the original error preserved for the caller to log.
 
 5. `src/__tests__/actions/CategoriesActions.test.ts` (8): the three send titles read off the `swapSend` action's `privacy` flag and its asset pair, a private send's title outranking a stored metadata name shaped like a recipient address, a plain swap-send leaving a stored name alone, and the parent network-fee row keeping both its own title and its own category while still refusing a stored recipient-style name. The fee-row title case fails on the pre-fix code, which is what makes it worth having.
+6. `src/__tests__/scenes/TransactionDetailsScene.test.tsx` (6 of its 8): the "Recipient Address" row carrying the action's `payoutAddress` above "Exchange Deposit Address" on a private and on a transparent send, no such row on the parent network-fee row or on an ordinary send, and a private send's payout address printed in the Exchange Details text and in the support email body. The last two render the scene, press the row, and read what reached the modal and the mailer, so they cover the card through the same `convertActionToSwapData` path the app takes.
 
 In edge-core-js, 19: `test/core/synthetic-wallet.test.ts` (5) for the synthetic wallet's shape and bridge survival and its address list (every address returned verbatim, the first paid out to); `test/core/account/account.test.ts` for `parseUri` on a config with no wallet (the chain's coin, a builtin token by currency code, and a custom token the parser has to be told about) and a send request quoted end to end; `test/core/currency/wallet/currency-wallet-cleaners.test.ts` for a `swapSend` action round-tripping through the disk cleaners and one without `privacy` rejected; the plugin-selection truth table in `test/core/swap.test.ts` (8), which pins that a caller can reach a provider the user switched off and can never reach one it disabled itself in the same call, and `test/core/swap-quote-close.test.ts` (2) for the synthetic wallet's reference-counted release, including a double-close that must not free it twice.
 
@@ -1093,6 +1094,13 @@ Not our work, tracked so it is not rediscovered:
 - **Diverged:** the first cut returned only the image and let both scenes crop it to the thumbnail circle like every other provider. The HoudiniSwap logo is the mark above a wordmark that runs edge to edge, so the circle cut the wordmark down to a fragment. Seen on the simulator, then changed to fit the logo, which is how the swap scenes already draw it.
 - **Held:** a contact or merchant-name match still outranks the provider logo, as it does for every provider. No `MERCHANT_CONTACTS` entry was added: that map holds one static image per name, which cannot follow the theme. On a transaction row the direction arrow still overlaps the logo's lower right corner, as it does on every thumbnail. A mark-only image drawn for the circle would remove both the flag and the overlap; it needs a new asset on the content server, which is outside this change.
 
+### Phase 35: the recipient comes back to the details scene
+
+- **Sketched:** stop masking the payout address on a private send, and give every swap-send a row that names who was paid.
+- **Shipped:** a "Recipient Address" row above "Exchange Deposit Address" on every `swapSend` action, holding the action's `payoutAddress`. `SwapDetailsCard` lost its `hidePayoutAddress` prop and the "Hidden for privacy" string went with it, so the Exchange Details text and the support email print the address for a private send as they do for any other swap. [Transaction identity](#transaction-identity) describes the result and [Show the recipient on the device](#show-the-recipient-on-the-device) argues it.
+- **Diverged:** nothing in the mechanism. The decision it replaces had already written down the evidence against itself: the boundary is the on-chain link, and reading the device implies holding the keys. It then hid the address from the one reader that evidence says is the owner.
+- **Held:** the list title and the name rules. A private send still titles as "Stealth Send" or "Stealth Swap & Send", a stored name still does not override that, and the broadcast path still skips the `payeeName` write. The parent network-fee row gets no recipient row. No log or analytics call carries the address; the row's copy button writes to the clipboard and nothing else.
+
 ## 11. Decisions
 
 ### Let a plain send take a dex route
@@ -1205,15 +1213,15 @@ Rejected: **a metadata-name or category convention**, which is a magic string a 
 
 Reopen if: a second provider starts serving sends to addresses, which would test whether every plugin can be trusted to write the send shape.
 
-### Suppress the recipient in the UI, keep it in storage
+### Show the recipient on the device
 
-Chosen: a stealth send keeps `payoutAddress` on its saved action and hides it in every rendered surface.
+Chosen: a stealth send keeps `payoutAddress` on its saved action and shows it wherever the transaction's details render: a "Recipient Address" row, the Exchange Details text, and the support email body.
 
-Evidence: support traces stuck orders by payout address, and losing it would make a failed private send unrecoverable. The privacy boundary this feature defends is the on-chain link between source and destination, which storing the address locally does not weaken: device-level access to the transaction file already implies access to the keys.
+Evidence: the privacy boundary this feature defends is the on-chain link between source and destination. Neither storing the address locally nor drawing it on the owner's screen weakens that link, because device-level access to the transaction file already implies access to the keys. Against that, the address is the user's only record of who a send paid: the spend target is the provider's deposit address, so nothing else in the app names the payee of a private send. Support traces stuck orders by payout address too, and a support email that reads "Hidden for privacy" where the address belongs withholds the field they trace by.
 
-Rejected: **not storing the address**, which buys no privacy against any attacker who is not already inside the device, and costs every future support ticket.
+Rejected: **hiding the address in every rendered surface while keeping it in storage**, which shipped first and was reversed in [Phase 35](#phase-35-the-recipient-comes-back-to-the-details-scene). It protected the address from the one person certain to know it already, and it rested on the same evidence as this entry. **Not storing the address**, which buys no privacy against any attacker who is not already inside the device, and costs every future support ticket. **Masking it behind a tap-to-reveal**, which treats a glance at an unlocked screen as the threat; the app's login and auto-logout already cover an unlocked device, and the transaction's amount and txid sit unmasked on the same scene.
 
-Reopen if: the threat model grows to include an attacker with read access to wallet files but not keys.
+Reopen if: the threat model grows to include an attacker with read access to wallet files but not keys, or screens shared with someone other than the wallet's owner.
 
 ### Gate swap-send behind the PIN spending limit
 
@@ -1255,11 +1263,11 @@ Rejected: **trusting the stated figures unverified**, which would have shipped a
 
 Reopen if: the floors move, or the provider exposes them per pair on the token or chain metadata, at which point they should be read rather than declared.
 
-### Show the order details on a stealth transaction, hide only the address
+### Show the order details on a stealth transaction
 
-Chosen: `SwapDetailsCard` renders for every swap-send, resolving the payout asset from the saved action when there is no payout wallet. `hidePayoutAddress` continues to mask the address alone.
+Chosen: `SwapDetailsCard` renders for every swap-send, resolving the payout asset from the saved action when there is no payout wallet. A private send's card prints the same fields as any other, the payout address included.
 
-Evidence: the reason for keeping `payoutAddress` in storage is that support must be able to trace a stuck order. That argument requires the order id, provider, and amounts to be readable, so hiding them defeats the thing the storage rule was protecting. The card was in fact rendering nothing at all for every swap-send, private or not, because it bailed when the destination wallet lookup failed, and a synthetic payout wallet id never resolves.
+Evidence: the reason for keeping `payoutAddress` in storage is that support must be able to trace a stuck order. That argument requires the order id, provider, amounts, and the address itself to be readable, so hiding them defeats the thing the storage rule was protecting. The card was in fact rendering nothing at all for every swap-send, private or not, because it bailed when the destination wallet lookup failed, and a synthetic payout wallet id never resolves.
 
 Rejected: **hiding the whole card for stealth transactions**, which is the outcome the bug produced by accident and which no one wanted. **Keeping the source wallet as the fallback config**, which resolves the payout currency code against the wrong chain and was the reason `payoutTokenId` stayed unset.
 
@@ -1394,6 +1402,8 @@ Yet Another Object Bridge, the RPC layer that carries objects between the app's 
 7. **Missing funds were treated as a precondition instead of a task.** Phase 10 found the six empty-string chains, fixed them, confirmed the fix was present in the installed bundle, and then wrote "drive them once one is funded" as a follow-up, because none of those assets held a balance. That was the wrong shape of answer. Funding a wallet is a swap away, the principal stays inside the account, and only the spread and network fee are spent, so "unfunded" is a step to perform rather than a blocker to report. The cost of getting it wrong was a full extra phase before the highest-value fix of the round was exercised at all. Phase 11 funded Sonic by swapping into it and executed a private send between two of the six, which took under twenty minutes and about a dollar. The general rule this leaves behind: when a test needs an asset the account does not hold, acquire it and continue, and treat any follow-up phrased as "once X is funded" as a task that was skipped rather than one that was blocked.
 
 8. **The lookup's own checks lost two served chains.** Phase 10 read TON as unserved and took it out of the table. It is served: its coin's row carries a contract-style address, and the lookup rejected any native with an address. The same lookup compared each row's `chain` with the queried name, and `bitcoincash` answers with rows on `bch`, so Bitcoin Cash never resolved in either direction while it sat in both tables. A live replay of the plugin's own predicate against every mapped chain (2026-09-10) showed both. The tests could not, because the scripted catalogue echoed the queried chain and ignored `mainnet=true`; it now answers the way the live catalogue does.
+
+9. **The recipient was hidden from the reader the evidence called the owner.** [Transaction identity](#transaction-identity) masked the payout address on every rendered surface of a private send, on a decision whose own evidence said device access implies key access. A user could not see who a private send had paid, and the support email blanked the payee's address. [Phase 35](#phase-35-the-recipient-comes-back-to-the-details-scene) reversed it. A display rule justified as privacy needs its attacker named, and this one had none.
 
 ### What held
 
