@@ -436,8 +436,10 @@ outright has nothing to wait for and simply does nothing.
 
 The on-disk cache does **not** expire. Any mergeable `keysCache` is used as a
 warm start so later launches never block on the network; a background refresh
-updates the cache for the _next_ launch. `fetchedAt` may still be recorded for
-diagnostics, but it does not gate the warm path. There is no TTL.
+updates the cache for the _next_ launch. `fetchedAt` does not gate the warm
+path, and there is no TTL. Its one use is to bound how long an attested entry is
+kept over an unattested answer (see
+[Which answer the cache keeps](#which-answer-the-cache-keeps)).
 
 The baked-in file is the **base layer** of a `deepMerge`, not a wholesale
 replacement, so a partial remote payload degrades gracefully instead of blanking
@@ -675,9 +677,58 @@ to win **this** launch:
 
 If attestation finishes inside its budget the fetch goes out attested and
 receives the full payload immediately; otherwise it goes out unattested and takes
-the `default` tier, and the background refresh upgrades the cached payload for the
-next launch. A feature needing a key absent from the current payload can trigger
-an on-demand foreground escalation.
+the `default` tier. A token that arrives later in the launch refreshes the
+cache for the next one (see below).
+
+#### A token that arrives after the fetch
+
+The handshake can still produce a token later in the same launch: it ran past
+`ATTESTATION_BUDGET_MS`, or it failed and a retry succeeded after its backoff.
+Without a second request the `default` payload would stay in the cache, and the
+next launch would warm-start on it with no partner keys from the attested
+layers.
+
+So a request that goes out with no token arms `refreshWhenAttested`, which
+subscribes to the attestation engine (`onAttestationToken`). When a token
+arrives it fetches again and writes the answer to the cache for the next launch.
+The rules it follows:
+
+- It writes the cache only. The running `KEYS` and plugins keep the payload the
+  launch started on, the same rule as every other background refresh.
+- It subscribes at most once per launch and stays subscribed until the answer to
+  a request that carried a token is in the cache. The engine reports every new
+  token, so a refetch that fails (network error, 5xx) is tried again at the
+  engine's next token instead of leaving the cache on `default` for the rest of
+  the launch.
+- One refetch runs at a time. A token that arrives while a refetch is in flight
+  does not start a second one.
+
+#### Which answer the cache keeps
+
+The cache entry records whether its request carried a token (`attested`) next to
+`fetchedAt`. `cacheKeys` reads the entry before every write and applies one
+rule: the answer to a request without a token does not replace an attested
+entry that is younger than `ATTESTED_CACHE_HOLD_MS` (3 days) and still merges.
+
+That rule covers three cases:
+
+- **A launch that misses the budget on a device that still attests.** The
+  handshake was slow, failed, or was rate limited (a 429 backs off for at least
+  60 seconds and up to 30 minutes), and the user may close the app before the
+  retry lands. Without the rule the `default` answer would be cached at once and
+  the next launch would start without the attested partner keys.
+- **Two requests in flight at once.** The first request and the late-token
+  refetch can overlap. `writeKeysCache` updates the in-memory entry before it
+  touches disk, so whichever answer lands second sees the first, and the
+  attested one is kept in either order.
+- **A device that can no longer attest.** Only an attested answer renews
+  `fetchedAt`, so once the entry is 3 days old the `default` answer replaces
+  it. Old attested keys are not served from disk indefinitely.
+
+An entry written before the `attested` field existed counts as unattested, and
+so does one that no longer merges, so any answer replaces either. The age is
+measured in both directions: an entry stamped later than the current clock by
+more than the hold (the clock has since been set back) is not kept.
 
 ### Where the cache lives
 
