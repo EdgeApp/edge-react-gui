@@ -34,13 +34,6 @@ interface Props {
   swapData: EdgeTxSwap
   transaction: EdgeTransaction
   wallet: EdgeCurrencyWallet
-
-  /**
-   * Keep the payout address out of the details text. Set for a private send,
-   * whose recipient the UI must not reveal. The address stays on `swapData`
-   * so support can still trace the order.
-   */
-  hidePayoutAddress?: boolean
 }
 
 const TXID_PLACEHOLDER = '{{TXID}}'
@@ -93,7 +86,7 @@ export const getSwapSourceNativeAmount = (
 }
 
 export const SwapDetailsCard: React.FC<Props> = props => {
-  const { swapData, transaction, wallet, hidePayoutAddress = false } = props
+  const { swapData, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -272,9 +265,7 @@ export const SwapDetailsCard: React.FC<Props> = props => {
       lstrings.transaction_details_exchange_exchange_unique_id
     }:${newline}${uniqueIdentifier}${newline}${newline}${
       lstrings.transaction_details_exchange_payout_address
-    }:${newline}${
-      hidePayoutAddress ? lstrings.stealth_recipient_hidden : payoutAddress
-    }${newline}${newline}${
+    }:${newline}${payoutAddress}${newline}${newline}${
       lstrings.transaction_details_exchange_refund_address
     }:${newline}${refundAddress ?? ''}${newline}`
   }
@@ -283,6 +274,7 @@ export const SwapDetailsCard: React.FC<Props> = props => {
     <EdgeCard sections>
       <EdgeRow
         rightButtonType="touchable"
+        testID="exchangeDetailsRow"
         title={lstrings.transaction_details_exchange_details}
         onPress={handleExchangeDetails}
       >
@@ -315,6 +307,7 @@ export const SwapDetailsCard: React.FC<Props> = props => {
       {plugin.supportEmail == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
+          testID="exchangeSupportRow"
           title={lstrings.transaction_details_exchange_support}
           onPress={handleEmail}
           body={swapData.plugin.supportEmail}

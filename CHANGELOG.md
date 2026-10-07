@@ -22,6 +22,7 @@
 - added: Stealth Swap, routing a swap through the Houdini privacy provider
 - added: A pasted address from another chain sets up the cross-chain send
 - added: Swap-sends and stealth sends get their own titles in the transaction list and details
+- added: Swap-sends and stealth sends show the recipient address in transaction details
 - added: The send scene notes when a swap provider pays the recipient
 - added: MoonPay Trade swap provider
 - added: Per-provider swap asset disables from the info server

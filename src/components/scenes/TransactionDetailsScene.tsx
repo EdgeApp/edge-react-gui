@@ -101,16 +101,22 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
   const swapData =
     convertActionToSwapData(account, transaction) ?? transaction.swapData
 
-  // A private send must not reveal its recipient anywhere in the UI. The
-  // payout address stays on the action for support to trace the order. The
-  // plugin writes this action with the transaction, so a token send's
-  // parent network-fee row carries the same answer.
-  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
-
   // A send spends to the provider's deposit address; the pasted recipient
   // never reaches `spendTargets` at all. Titling that row "Recipient
   // Addresses" therefore names the wrong party.
   const isSwapSend = action?.actionType === 'swapSend'
+
+  // The recipient lives only on the saved action, so it gets a row of its
+  // own, private send or not. The plugin writes the same action onto a token
+  // send's parent network-fee row. That row is the fee, not the payment, so
+  // it names no recipient.
+  const isNetworkFeeRow =
+    assetAction?.assetActionType === 'transferNetworkFee' ||
+    assetAction?.assetActionType === 'swapNetworkFee'
+  const swapSendRecipientAddress =
+    action?.actionType === 'swapSend' && !isNetworkFeeRow
+      ? action.payoutAddress
+      : undefined
 
   const contactThumbnail = useContactThumbnail(mergedData.name)
   const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
@@ -657,7 +663,6 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               swapData={swapData}
               transaction={transaction}
               wallet={wallet}
-              hidePayoutAddress={isPrivateSend}
             />
           )}
         </EdgeAnim>
@@ -680,6 +685,14 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
               title={lstrings.transaction_details_tx_id_modal_title}
               body={txid}
             />
+            {swapSendRecipientAddress == null ? null : (
+              <EdgeRow
+                maximumHeight="large"
+                rightButtonType="copy"
+                title={lstrings.transaction_details_recipient_address}
+                body={swapSendRecipientAddress}
+              />
+            )}
             {recipientsAddresses === '' ? null : (
               <EdgeRow
                 maximumHeight="large"
