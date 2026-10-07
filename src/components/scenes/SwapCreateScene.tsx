@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import type { DisableAsset } from '../../actions/ExchangeInfoActions'
+import { isAssetDisabled } from '../../actions/ExchangeInfoActions'
 import { checkEnabledExchanges } from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
@@ -202,24 +202,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
     return { errorDisplayInfo: clearError ? undefined : errorDisplayInfo }
   }
 
-  const checkDisableAsset = (
-    disableAssets: DisableAsset[],
-    walletId: string,
-    tokenId: EdgeTokenId
-  ): boolean => {
-    const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
-    const walletPluginId = wallet.currencyInfo.pluginId
-    const walletTokenId = tokenId
-    for (const disableAsset of disableAssets) {
-      const { pluginId, tokenId } = disableAsset
-      if (pluginId !== walletPluginId) continue
-      if (tokenId === walletTokenId) return true
-      if (tokenId === 'allCoins') return true
-      if (tokenId === 'allTokens' && walletTokenId != null) return true
-    }
-    return false
-  }
-
   function checkAmountExceedsBalance(): boolean {
     // If no from wallet, return false:
     if (fromWallet == null) return false
@@ -237,9 +219,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(
+      const disableSrc = isAssetDisabled(
         exchangeInfo.swap.disableAssets.source,
-        swapRequest.fromWallet.id,
+        swapRequest.fromWallet.currencyInfo.pluginId,
         fromTokenId
       )
       if (disableSrc) {
@@ -253,9 +235,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
         return
       }
 
-      const disableDest = checkDisableAsset(
+      const disableDest = isAssetDisabled(
         exchangeInfo.swap.disableAssets.destination,
-        swapRequest.toWallet.id,
+        swapRequest.toWallet.currencyInfo.pluginId,
         toTokenId
       )
       if (disableDest) {
@@ -494,7 +476,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
   // Render
   //
 
-  const renderAlert = (): React.ReactNode => {
+  const renderAlert = (): React.ReactElement | null => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
