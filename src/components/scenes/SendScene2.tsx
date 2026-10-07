@@ -95,6 +95,7 @@ import {
 } from '../../util/paymentUri'
 import {
   disableAssetsCover,
+  getStealthDisableAssets,
   makeStealthSwapRequestOptions,
   STEALTH_SWAP_PLUGIN_ID
 } from '../../util/stealthSwap'
@@ -412,8 +413,17 @@ const SendComponent: React.FC<Props> = props => {
   const swapDisablePlugins = useSelector(
     state => state.ui.exchangeInfo.swap.disablePlugins
   )
-  const swapDisableAssets = useSelector(
+  const disableAssets = useSelector(
     state => state.ui.exchangeInfo.swap.disableAssets
+  )
+  const disableAssetsByPlugin = useSelector(
+    state => state.ui.exchangeInfo.swap.disableAssetsByPlugin
+  )
+  // An asset banned for the stealth provider alone is refused like one banned
+  // for every swap, since no other provider answers a send-to-address quote:
+  const swapDisableAssets = React.useMemo(
+    () => getStealthDisableAssets(disableAssets, disableAssetsByPlugin),
+    [disableAssets, disableAssetsByPlugin]
   )
 
   /**
