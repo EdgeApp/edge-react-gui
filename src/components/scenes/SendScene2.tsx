@@ -1883,7 +1883,7 @@ const SendComponent: React.FC<Props> = props => {
     return renderSwapAmountRow(
       lstrings.stealth_you_send,
       displayAmount,
-      currencyCode,
+      cryptoDisplayDenomination.name,
       guaranteedSide === 'send',
       handleEditYouSend,
       swapRowFiat(nativeAmount, coreWallet.currencyConfig, tokenId)
@@ -2073,7 +2073,7 @@ const SendComponent: React.FC<Props> = props => {
     )
     return (
       <EdgeRow title={lstrings.string_total_amount}>
-        <EdgeText>{`${totalDisplayAmount} ${currencyCode}`}</EdgeText>
+        <EdgeText>{`${totalDisplayAmount} ${cryptoDisplayDenomination.name}`}</EdgeText>
       </EdgeRow>
     )
   }
