@@ -22,6 +22,7 @@ import {
 import process from 'process'
 import * as React from 'react'
 
+import * as SwapVerifyTermsModal from '../../components/modals/SwapVerifyTermsModal'
 import {
   pickBestQuote,
   pickBestQuoteWithPreference,
@@ -309,6 +310,140 @@ describe('SwapConfirmationScene', () => {
 
       unmount()
       expect(quote.close).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('declining the provider terms', () => {
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    const renderDeclined = async (
+      privacy?: 'required'
+    ): Promise<{
+      navigate: jest.SpiedFunction<typeof fakeNavigation.navigate>
+      onStealthTermsDeclined: jest.Mock<() => void>
+      replace: jest.SpiedFunction<typeof fakeNavigation.replace>
+      verifyTerms: jest.SpiedFunction<
+        typeof SwapVerifyTermsModal.swapVerifyTerms
+      >
+      unmount: () => void
+    }> => {
+      const rootState: FakeState = { ...fakeRootState, core: { account } }
+      const navigate = jest
+        .spyOn(fakeNavigation, 'navigate')
+        .mockImplementation(() => undefined)
+      const replace = jest
+        .spyOn(fakeNavigation, 'replace')
+        .mockImplementation(() => undefined)
+      const verifyTerms = jest
+        .spyOn(SwapVerifyTermsModal, 'swapVerifyTerms')
+        .mockImplementation(async () => false)
+      const onStealthTermsDeclined = jest.fn<() => void>()
+      const fakeRequest: any = {
+        fromWallet: btcWallet,
+        fromTokenId: null,
+        toWallet: ethWallet,
+        toTokenId: null,
+        privacy
+      }
+      const quote: EdgeSwapQuote = {
+        swapInfo: dummySwapInfo,
+        request: fakeRequest,
+        isEstimate: false,
+        fromNativeAmount: '10000',
+        toNativeAmount: '10000',
+        networkFee: { currencyCode: 'BTC', nativeAmount: '1', tokenId: null },
+        pluginId: 'bitcoin',
+        approve: async () => {
+          throw new Error('unreachable')
+        },
+        close: async () => {}
+      }
+      const rendered = render(
+        <FakeProviders initialState={rootState}>
+          <SwapConfirmationScene
+            {...fakeSwapTabSceneProps('swapConfirmation', {
+              quotes: [quote],
+              selectedQuote: quote,
+              onApprove: () => undefined,
+              onStealthTermsDeclined,
+              swapRequest: quote.request,
+              swapRequestOptions: {}
+            })}
+          />
+        </FakeProviders>
+      )
+      // Let the mount-time terms check settle:
+      await act(async () => {})
+      return {
+        navigate,
+        onStealthTermsDeclined,
+        replace,
+        verifyTerms,
+        unmount: rendered.unmount
+      }
+    }
+
+    it('backs out of a Stealth Swap with the toggle off', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const {
+        navigate,
+        onStealthTermsDeclined,
+        replace,
+        verifyTerms,
+        unmount
+      } = await renderDeclined('required')
+
+      // A requote would return the one stealth provider again and reopen the
+      // modal, so the decline has to end the attempt:
+      expect(verifyTerms).toHaveBeenCalledTimes(1)
+      expect(verifyTerms.mock.calls[0][1]).toEqual({
+        declineIsCancelOnly: true
+      })
+      expect(onStealthTermsDeclined).toHaveBeenCalledTimes(1)
+      // The create scene takes its pair from these params, and a navigate
+      // without them would clear the selection:
+      expect(navigate.mock.calls).toEqual([
+        [
+          'swapTab',
+          {
+            screen: 'swapCreate',
+            params: {
+              fromWalletId: btcWallet.id,
+              fromTokenId: null,
+              toWalletId: ethWallet.id,
+              toTokenId: null
+            }
+          }
+        ]
+      ])
+      expect(replace).not.toHaveBeenCalled()
+
+      unmount()
+    })
+
+    it('requotes a swap with Stealth off', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const {
+        navigate,
+        onStealthTermsDeclined,
+        replace,
+        verifyTerms,
+        unmount
+      } = await renderDeclined()
+
+      expect(verifyTerms.mock.calls[0][1]).toEqual({
+        declineIsCancelOnly: false
+      })
+      expect(replace).toHaveBeenCalledWith(
+        'swapProcessing',
+        expect.objectContaining({ swapRequestOptions: {} })
+      )
+      expect(navigate).not.toHaveBeenCalled()
+      expect(onStealthTermsDeclined).not.toHaveBeenCalled()
+
+      unmount()
     })
   })
 
