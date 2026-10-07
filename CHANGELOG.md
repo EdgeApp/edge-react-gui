@@ -79,6 +79,7 @@
 - fixed: Swap-send notice title cut off on Android
 - removed: LetsExchange swap provider
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
+- fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 
 ## 4.51.3 (2026-09-30)
 

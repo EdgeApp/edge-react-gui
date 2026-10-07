@@ -1017,6 +1017,7 @@ const strings = {
   transaction_details_swap: 'Swap Funds',
   transaction_details_swap_and_send: 'Swap & Send',
   transaction_details_stealth_send: 'Stealth Send',
+  transaction_details_stealth_swap: 'Stealth Swap',
   transaction_details_stealth_swap_and_send: 'Stealth Swap & Send',
   transaction_details_swap_network_fee: 'Swap Network Fee',
   transaction_details_swap_order_cancel: 'Swap Order Cancelled',
