@@ -10,7 +10,6 @@ import type {
 import * as React from 'react'
 import { View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -66,6 +65,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { NameServicePrefix } from '../themed/NameServicePrefix'
+import { VectorIcon } from '../themed/VectorIcon'
 
 interface Props extends EdgeAppSceneProps<'transactionDetails'> {
   wallet: EdgeCurrencyWallet
@@ -540,10 +540,12 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
                     resizeMode={fitThumbnail ? 'contain' : 'cover'}
                   />
                 ) : (
-                  <IonIcon
-                    style={styles.tileAvatarIcon}
+                  <VectorIcon
+                    color={theme.primaryText}
+                    font="Ionicons"
                     name="person"
                     size={theme.rem(2)}
+                    style={styles.tileAvatarIcon}
                   />
                 )
               }
@@ -727,7 +729,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   tileAvatarIcon: {
-    color: theme.primaryText,
     marginRight: theme.rem(0.5)
   },
   tileThumbnail: {
