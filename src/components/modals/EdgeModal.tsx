@@ -56,6 +56,14 @@ export interface EdgeModalProps<T = unknown> {
    * If this is missing, the modal will not be closable.
    */
   onCancel?: () => void
+
+  /**
+   * Only the close button (and whatever buttons the caller renders) dismiss
+   * the modal. Dragging it down, tapping the backdrop, and the hardware back
+   * button do nothing, for modals where closing has consequences, such as
+   * rejecting a request someone is waiting on.
+   */
+  closeButtonOnly?: boolean
 }
 
 const safeAreaGap = 64 // Overkill to avoid bottom of screen
@@ -72,7 +80,8 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     children,
     scroll = false,
     warning = false,
-    onCancel
+    onCancel,
+    closeButtonOnly = false
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -90,6 +99,11 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
 
   const handleCancel = useHandler(() => {
     if (onCancel != null) onCancel()
+  })
+
+  // The gestures that can happen by accident:
+  const handleDismiss = useHandler(() => {
+    if (!closeButtonOnly) handleCancel()
   })
 
   //
@@ -123,26 +137,29 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       () => {
-        handleCancel()
+        handleDismiss()
         return true
       }
     )
     return () => {
       backHandler.remove()
     }
-  }, [handleCancel])
+  }, [handleDismiss])
 
   const gesture = Gesture.Pan()
     .onUpdate(e => {
-      offset.value = e.translationY
+      // A modal that cannot be dragged away only follows the finger a little,
+      // like scrolling past the end of a list:
+      offset.value = closeButtonOnly ? e.translationY / 4 : e.translationY
     })
     .onEnd(() => {
       if (offset.value > closeThreshold) {
-        runOnJS(handleCancel)()
+        runOnJS(handleDismiss)()
       }
       offset.value = withTiming(0, { duration })
     })
     .simultaneousWithExternalGesture(Gesture.Tap())
+    .withTestId('modal-drag')
 
   //
   // Dynamic styles
@@ -170,7 +187,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
 
   return (
     <>
-      <EdgeTouchableWithoutFeedback onPress={handleCancel}>
+      <EdgeTouchableWithoutFeedback
+        onPress={handleDismiss}
+        testID="modal-backdrop"
+      >
         <Animated.View style={[styles.underlay, underlayStyle]} />
       </EdgeTouchableWithoutFeedback>
       <GestureDetector gesture={gesture}>

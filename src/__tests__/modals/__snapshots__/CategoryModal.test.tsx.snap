@@ -61,6 +61,7 @@ exports[`CategoryModal should render with a subcategory 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}
@@ -1784,6 +1785,7 @@ exports[`CategoryModal should render with an empty subcategory 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}

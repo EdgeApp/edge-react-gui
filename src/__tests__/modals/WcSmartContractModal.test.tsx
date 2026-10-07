@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
-import { act, render } from '@testing-library/react-native'
+import { act, fireEvent, render } from '@testing-library/react-native'
 import * as React from 'react'
 
 import { WcSmartContractModal } from '../../components/modals/WcSmartContractModal'
@@ -607,6 +607,40 @@ describe('WcSmartContractModal with an EVM request', () => {
 
     expect(wallet.signMessage.mock.calls).toEqual([['0x4869']])
     expect(mockApproveRequest).toHaveBeenCalledWith('topic', 7, 'signed:0x4869')
+    rendered.unmount()
+  })
+
+  it('rejects the request from the Reject button', async () => {
+    const rendered = renderModal(makeFakeWallet(), {
+      payload: { method: 'personal_sign', params: ['0x4869', WALLET] },
+      actions: [{ type: 'signText', text: 'Hi' }]
+    })
+    await act(async () => {
+      fireEvent.press(rendered.getByTestId('wcSmartContractRejectButton'))
+    })
+
+    expect(mockRejectRequest).toHaveBeenCalledWith('topic', 7)
+    expect(mockApproveRequest).not.toHaveBeenCalled()
+    rendered.unmount()
+  })
+
+  it('takes no second answer while the approval is in flight', async () => {
+    // An approval the relay never acknowledges:
+    mockApproveRequest.mockReturnValueOnce(new Promise<void>(() => {}))
+    const rendered = renderModal(makeFakeWallet(), {
+      payload: { method: 'personal_sign', params: ['0x4869', WALLET] },
+      actions: [{ type: 'signText', text: 'Hi' }]
+    })
+    rendered.getByTestId('modal-close-button')
+    await approve(rendered)
+
+    expect(mockApproveRequest).toHaveBeenCalledTimes(1)
+    expect(rendered.queryByTestId('modal-close-button')).toBeNull()
+    expect(
+      rendered.getByTestId('wcSmartContractRejectButton').props
+        .accessibilityState.disabled
+    ).toBe(true)
+    expect(mockRejectRequest).not.toHaveBeenCalled()
     rendered.unmount()
   })
 })

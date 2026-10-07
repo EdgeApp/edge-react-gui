@@ -61,6 +61,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}

@@ -46,6 +46,7 @@ import {
   getWcRisks,
   omitKnownApprovals
 } from '../../util/walletConnectActions'
+import { ModalButtons } from '../buttons/ModalButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { AlgoWcTransactionsCard } from '../cards/AlgoWcTransactionsCard'
 import { EdgeCard } from '../cards/EdgeCard'
@@ -181,7 +182,12 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
       ? gt(abs(totalNativeCrypto), feeCurrencyBalance)
       : gt(networkFee, feeCurrencyBalance)
 
+  // Once the slider fires, the request is being answered. Closing the modal
+  // then would reject a request the approval is about to answer:
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
   const handleSubmit = (): void => {
+    setIsSubmitting(true)
     wcRequestResponse(true)
       .then(() => {
         Airship.show(bridge => (
@@ -391,9 +397,12 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   return (
     <EdgeModal
       bridge={bridge}
-      onCancel={handleClose}
+      onCancel={isSubmitting ? undefined : handleClose}
+      // Dismissing this modal rejects the dApp's request, so a stray drag or
+      // tap must not do it. Scrolling back to the top is a downward drag:
+      closeButtonOnly
       // The modal's own scroll view, which Android lets scroll under the
-      // drag-to-close gesture. A plain ScrollView in here does not:
+      // drag gesture. A plain ScrollView in here does not:
       scroll
       title={
         <View style={styles.title}>
@@ -464,6 +473,14 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
           />
         )}
         {slider}
+        <ModalButtons
+          secondary={{
+            label: lstrings.wc_smartcontract_reject_button,
+            onPress: handleClose,
+            disabled: isSubmitting,
+            testID: 'wcSmartContractRejectButton'
+          }}
+        />
       </View>
     </EdgeModal>
   )

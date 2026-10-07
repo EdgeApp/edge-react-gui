@@ -118,8 +118,11 @@ export const WcSignMessageModal: React.FC<Props> = props => {
       // Dismissing while the signature is in flight would reject a request the
       // approve path is about to answer, so the modal only closes when idle.
       onCancel={isSigning ? undefined : handleReject}
+      // Dismissing this modal rejects the dApp's request, so a stray drag or
+      // tap must not do it. Scrolling back to the top is a downward drag:
+      closeButtonOnly
       // The modal's own scroll view, which Android lets scroll under the
-      // drag-to-close gesture. A plain ScrollView in here does not:
+      // drag gesture. A plain ScrollView in here does not:
       scroll
       title={
         <View style={styles.title}>

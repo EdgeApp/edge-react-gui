@@ -61,6 +61,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}

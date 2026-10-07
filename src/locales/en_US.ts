@@ -1739,6 +1739,7 @@ const strings = {
   wc_smartcontract_network_fee: 'Network Fee',
   wc_smartcontract_max_total: 'Max Total',
   wc_smartcontract_confirmed: 'Smart Contract Call confirmed',
+  wc_smartcontract_reject_button: 'Reject',
   wc_algo_danger_title: 'This Request Can Take Your Funds',
   wc_algo_danger_rekey_2s:
     'Transaction %1$s gives %2$s permanent control of this account and everything in it',

@@ -61,6 +61,7 @@ exports[`CountryListModal should render with a country list 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}

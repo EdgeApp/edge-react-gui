@@ -61,6 +61,7 @@ exports[`AddressModalComponent should render with loaded props 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}

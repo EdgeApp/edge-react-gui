@@ -61,6 +61,7 @@ exports[`TextInputModal should render with a blank input field 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}
@@ -915,6 +916,7 @@ exports[`TextInputModal should render with a populated input field 1`] = `
         },
       ]
     }
+    testID="modal-backdrop"
   />,
   <View
     collapsable={false}
