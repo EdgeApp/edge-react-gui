@@ -94,17 +94,36 @@ const mockFetchRemoteKeys = jest.fn<
   }>
 >()
 
+// Stands in for the real error class. Defined once out here so the copy that
+// `keysStore` checks with `instanceof` inside each isolated module registry is
+// the same one the tests construct.
+class MockRemoteKeysError extends Error {
+  readonly status: number
+  readonly serverDate: string | undefined
+
+  constructor(status: number, serverDate?: string) {
+    super(`fetchRemoteKeys ${status}`)
+    this.status = status
+    this.serverDate = serverDate
+  }
+}
+
 jest.mock('../../util/keysServer', () => ({
+  RemoteKeysError: MockRemoteKeysError,
   fetchRemoteKeys: async (...args: unknown[]) =>
     await mockFetchRemoteKeys(...(args as [unknown]))
 }))
 const mockGetAttestationToken = jest.fn(
   async (_ms?: number) => undefined as string | undefined
 )
+const mockMaybeWarnClockSkew = jest.fn((_serverTime: unknown) => {})
 
 jest.mock('../../util/attestation', () => ({
   getAttestationToken: async (...args: unknown[]) =>
-    await mockGetAttestationToken(...(args as [number?]))
+    await mockGetAttestationToken(...(args as [number?])),
+  maybeWarnClockSkew: (serverTime: unknown) => {
+    mockMaybeWarnClockSkew(serverTime)
+  }
 }))
 
 const mockRebuildAllPlugins = jest.fn()
@@ -407,6 +426,46 @@ describe('initializeKeys', () => {
     const { keysStore } = freshModules()
     await expect(keysStore.initializeKeys()).resolves.toBeUndefined()
     expect(keysStore.getKeysTier()).toBe('baked-in')
+  })
+
+  it('checks the device clock against the server when the fetch is refused', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    const serverDate = 'Wed, 07 Oct 2026 19:55:14 GMT'
+    mockFetchRemoteKeys.mockRejectedValue(
+      new MockRemoteKeysError(401, serverDate)
+    )
+
+    try {
+      const { keysStore } = freshModules()
+      await keysStore.initializeKeys()
+
+      expect(keysStore.getKeysTier()).toBe('baked-in')
+      expect(mockMaybeWarnClockSkew).toHaveBeenCalledTimes(1)
+      expect(mockMaybeWarnClockSkew).toHaveBeenCalledWith(serverDate)
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('leaves the clock alone when the fetch fails for another reason', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+    mockFetchRemoteKeys
+      .mockRejectedValueOnce(
+        new MockRemoteKeysError(503, 'Wed, 07 Oct 2026 19:55:14 GMT')
+      )
+      .mockRejectedValue(new Error('network down'))
+
+    try {
+      const first = freshModules()
+      await first.keysStore.initializeKeys()
+      const second = freshModules()
+      await second.keysStore.initializeKeys()
+
+      expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+      expect(mockMaybeWarnClockSkew).not.toHaveBeenCalled()
+    } finally {
+      warn.mockRestore()
+    }
   })
 
   it('never rejects even when awaitDeviceSettingsDisk throws', async () => {

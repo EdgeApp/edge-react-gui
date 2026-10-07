@@ -19,10 +19,14 @@ import { applyRuntimeKeys, bakedKeys, globalKeys, KEYS } from '../keys'
 import { LOCAL_ONLY_PREFIXES, LOCAL_ONLY_TOP_LEVEL } from '../localOnlyKeys'
 import { rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
-import { getAttestationToken } from './attestation'
+import { getAttestationToken, maybeWarnClockSkew } from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
 import { getNativeApiSigner, isUsableApiKey } from './edgeApiSigner'
-import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
+import {
+  type FetchCredentials,
+  fetchRemoteKeys,
+  RemoteKeysError
+} from './keysServer'
 import { debugLog } from './logger'
 import { fetchPublicRollup, infoServerData } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
@@ -253,6 +257,13 @@ async function fetchKeysInner(): Promise<FetchedKeys | null> {
         result.assuranceLevel ?? (attested ? 'attested' : 'unattested')
     }
   } catch (error: unknown) {
+    // The server signs off on a request only when its timestamp is inside a
+    // few minutes of server time, so a wrong device clock fails every launch
+    // here with a 401. An error response is never served from an HTTP cache,
+    // which makes its `Date` header a current reading of the server clock.
+    if (error instanceof RemoteKeysError && error.status === 401) {
+      maybeWarnClockSkew(error.serverDate)
+    }
     console.warn('initializeKeys: remote keys fetch failed', String(error))
     return null
   }
