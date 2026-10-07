@@ -40,6 +40,7 @@ import { IdleShutdown } from './idleShutdown'
 import { EngineLogger } from './logger'
 import { makeCoreContext } from './makeCoreContext'
 import { ObjectHandleStore } from './objectHandles'
+import { logUnhandledRejection } from './rejections'
 import { type EngineState, Router } from './router'
 import { registerRoutes } from './routes'
 import { createRequestHandler, listenTcp, listenUnix } from './server'
@@ -348,6 +349,7 @@ async function main(): Promise<void> {
   }
   process.on('SIGINT', onSignal)
   process.on('SIGTERM', onSignal)
+  process.on('unhandledRejection', logUnhandledRejection(logger))
 
   console.error(
     `[edge-engine] Ready (pid=${process.pid}, profile=${profile}, testMode=${testMode}, log=${logger.logPath})`
