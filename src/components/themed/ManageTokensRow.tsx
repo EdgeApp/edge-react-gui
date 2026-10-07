@@ -104,6 +104,7 @@ export const ManageTokensRowComponent: React.FC<Props> = props => {
           accessibilityHint={lstrings.edit_icon_hint}
           accessibilityRole="button"
           style={styles.editIcon}
+          testID={`manageTokensRow.${token.currencyCode}.${token.displayName}.edit`}
           onPress={handleEdit}
         >
           <EditIcon color={theme.iconTappable} size={theme.rem(1)} />
