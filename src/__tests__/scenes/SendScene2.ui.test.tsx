@@ -286,6 +286,49 @@ describe('SendScene2', () => {
     )
     expect(rendered3.toJSON()).toMatchSnapshot()
   })
+
+  it('2 spendTargets with sats display denomination', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: {
+        ...fakeRootState.ui,
+        settings: {
+          ...fakeRootState.ui?.settings,
+          denominationSettings: {
+            ...fakeRootState.ui?.settings?.denominationSettings,
+            bitcoin: { BTC: { name: 'sats', multiplier: '1', symbol: 's' } }
+          }
+        }
+      }
+    }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet.id,
+            tokenId: null,
+            spendInfo: {
+              tokenId: null,
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' },
+                { publicAddress: 'some pub address 2', nativeAmount: '12345' }
+              ]
+            },
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
+      </FakeProviders>
+    )
+
+    // The total's unit follows the display denomination, like its value:
+    expect(rendered.getByText('13579 sats')).toBeTruthy()
+    expect(rendered.queryByText('13579 BTC')).toBeNull()
+    rendered.unmount()
+  })
 })
 
 afterAll(async () => {

@@ -52,6 +52,8 @@
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
 - fixed: Info server swap disables for mainnet coins not applying
+- fixed: Send totals for multiple recipients show the wallet's display unit, such as sats, instead of the currency code
+- fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
