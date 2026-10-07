@@ -8,6 +8,7 @@ import {
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
+  isOwnChainAddressText,
   isValidHoudiniAddress,
   recipientAssetKey,
   schemeNamesChain
@@ -465,6 +466,62 @@ describe('schemeNamesChain', () => {
     // cannot tell them apart and only the scheme can.
     expect(schemeNamesChain('ethereum', getChain('polygon'))).toEqual(false)
     expect(schemeNamesChain('polygon', getChain('ethereum'))).toEqual(false)
+  })
+})
+
+describe('isOwnChainAddressText', () => {
+  const getChain = (pluginId: string): (typeof HOUDINI_CHAINS)[number] => {
+    const chain = HOUDINI_CHAINS.find(entry => entry.pluginId === pluginId)
+    if (chain == null) throw new Error(`no ${pluginId} in HOUDINI_CHAINS`)
+    return chain
+  }
+  const ethereum = getChain('ethereum')
+
+  it('accepts a bare address in the chain format', () => {
+    expect(isOwnChainAddressText(ethereum, ADDRESSES.ethereum)).toEqual(true)
+    expect(
+      isOwnChainAddressText(ethereum, ADDRESSES.ethereum.toLowerCase())
+    ).toEqual(true)
+  })
+
+  it('accepts a payment URI that names the chain', () => {
+    // A scanned code whose address fails the checksum reaches the scene in
+    // this form, and it is a bad Ethereum address, not another network's:
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}`)
+    ).toEqual(true)
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}@1`)
+    ).toEqual(true)
+    expect(
+      isOwnChainAddressText(
+        getChain('polygon'),
+        `ethereum:${ADDRESSES.ethereum}@137`
+      )
+    ).toEqual(true)
+  })
+
+  it('rejects a payment URI that names another chain', () => {
+    expect(
+      isOwnChainAddressText(ethereum, `polygon:${ADDRESSES.ethereum}`)
+    ).toEqual(false)
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}@137`)
+    ).toEqual(false)
+    expect(
+      isOwnChainAddressText(
+        getChain('polygon'),
+        `ethereum:${ADDRESSES.ethereum}`
+      )
+    ).toEqual(false)
+  })
+
+  it('rejects text in another chain format', () => {
+    expect(isOwnChainAddressText(ethereum, ADDRESSES.bitcoin)).toEqual(false)
+    expect(
+      isOwnChainAddressText(ethereum, `bitcoin:${ADDRESSES.bitcoin}`)
+    ).toEqual(false)
+    expect(isOwnChainAddressText(ethereum, 'not an address')).toEqual(false)
   })
 })
 

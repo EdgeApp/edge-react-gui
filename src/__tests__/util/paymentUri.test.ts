@@ -2,7 +2,11 @@ import { describe, expect, it } from '@jest/globals'
 import type { EdgeCurrencyConfig, EdgeParsedUri } from 'edge-core-js'
 
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
-import { parseCrossChainPayment, peekPaymentUri } from '../../util/paymentUri'
+import {
+  isPayableOnAny,
+  parseCrossChainPayment,
+  peekPaymentUri
+} from '../../util/paymentUri'
 
 describe('peekPaymentUri', () => {
   it('passes a bare address through as its own candidate', () => {
@@ -161,5 +165,32 @@ describe('parseCrossChainPayment', () => {
   it('rejects a result with no address', async () => {
     const config = makeConfig(async () => ({}))
     expect(await parseCrossChainPayment(config, 'ripple:')).toBeUndefined()
+  })
+})
+
+describe('isPayableOnAny', () => {
+  const makeConfig = (accepts: boolean): EdgeCurrencyConfig => ({
+    ...makeFakeCurrencyConfig({ pluginId: 'polygon', currencyCode: 'POL' }),
+    parseUri: async (uri: string): Promise<EdgeParsedUri> => {
+      if (!accepts) throw new Error('InvalidPublicAddressError')
+      return { publicAddress: uri }
+    }
+  })
+
+  it('is true when one chain parser accepts the text', async () => {
+    expect(
+      await isPayableOnAny([makeConfig(false), makeConfig(true)], '0xabc')
+    ).toBe(true)
+  })
+
+  it('is false when every chain parser rejects the text', async () => {
+    // A mistyped `0x` address fits each EVM pattern and passes no checksum.
+    expect(
+      await isPayableOnAny([makeConfig(false), makeConfig(false)], '0xabc')
+    ).toBe(false)
+  })
+
+  it('is false with no chain to ask', async () => {
+    expect(await isPayableOnAny([], '0xabc')).toBe(false)
   })
 })
