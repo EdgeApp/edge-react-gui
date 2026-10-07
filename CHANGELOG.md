@@ -65,6 +65,8 @@
 - fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
 - fixed: Backing out of the send scene in a MoonPay sell returns to the MoonPay order instead of an error and QR code page
 - fixed: Jest snapshot failures when `AGENT_TEST_MODE` is on in the local `config.json`
+- fixed: An address the send scene cannot use shows a message naming the reason
+- fixed: An address on the sending wallet's own network switches the recipient network back
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
