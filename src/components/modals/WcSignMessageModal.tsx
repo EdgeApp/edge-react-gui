@@ -1,11 +1,10 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { base16, base64 } from 'rfc4648'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
-import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useHandler } from '../../hooks/useHandler'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
@@ -119,6 +118,9 @@ export const WcSignMessageModal: React.FC<Props> = props => {
       // Dismissing while the signature is in flight would reject a request the
       // approve path is about to answer, so the modal only closes when idle.
       onCancel={isSigning ? undefined : handleReject}
+      // The modal's own scroll view, which Android lets scroll under the
+      // drag-to-close gesture. A plain ScrollView in here does not:
+      scroll
       title={
         <View style={styles.title}>
           <Image style={styles.logo} source={WalletConnectLogo} />
@@ -126,10 +128,7 @@ export const WcSignMessageModal: React.FC<Props> = props => {
         </View>
       }
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollPadding}
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      >
+      <View style={styles.scrollPadding}>
         <Alert
           numberOfLines={0}
           title={lstrings.wc_smartcontract_warning_title}
@@ -172,7 +171,7 @@ export const WcSignMessageModal: React.FC<Props> = props => {
             testID: 'wcSignMessageRejectButton'
           }}
         />
-      </ScrollView>
+      </View>
     </EdgeModal>
   )
 }

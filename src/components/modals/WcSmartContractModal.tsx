@@ -17,13 +17,12 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import WalletConnectLogo from '../../assets/images/walletconnect-logo.png'
 import { FlashNotification } from '../../components/navigation/FlashNotification'
-import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncValue } from '../../hooks/useAsyncValue'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { useWalletConnect } from '../../hooks/useWalletConnect'
@@ -393,6 +392,9 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
     <EdgeModal
       bridge={bridge}
       onCancel={handleClose}
+      // The modal's own scroll view, which Android lets scroll under the
+      // drag-to-close gesture. A plain ScrollView in here does not:
+      scroll
       title={
         <View style={styles.title}>
           <Image style={styles.logo} source={WalletConnectLogo} />
@@ -404,10 +406,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         </View>
       }
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollPadding}
-        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-      >
+      <View style={styles.scrollPadding}>
         {renderWarning()}
         {renderRisks()}
         {renderAlgoDanger()}
@@ -465,8 +464,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
           />
         )}
         {slider}
-      </ScrollView>
-      {/* <ModalFooterFade /> */}
+      </View>
     </EdgeModal>
   )
 }
