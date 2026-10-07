@@ -39,6 +39,23 @@ export type FetchCredentials =
   | { apiSigner: EdgeApiSigner }
   | { apiKey: string; secret: Uint8Array }
 
+/**
+ * A non-OK answer to the signed infoRollup request. Carries the status and the
+ * response's HTTP `Date` header, so the caller can tell a refused signature
+ * from an outage and compare the device clock against the server's.
+ */
+export class RemoteKeysError extends Error {
+  readonly status: number
+  readonly serverDate: string | undefined
+
+  constructor(status: number, text: string, serverDate: string | undefined) {
+    super(`fetchRemoteKeys ${status}: ${text.slice(0, 200)}`)
+    this.name = 'RemoteKeysError'
+    this.status = status
+    this.serverDate = serverDate
+  }
+}
+
 export async function fetchRemoteKeys(
   opts: FetchCredentials & {
     appId: string
@@ -100,7 +117,11 @@ export async function fetchRemoteKeys(
   )
   if (!response.ok) {
     const text = await response.text()
-    throw new Error(`fetchRemoteKeys ${response.status}: ${text.slice(0, 200)}`)
+    throw new RemoteKeysError(
+      response.status,
+      text,
+      response.headers.get('date') ?? undefined
+    )
   }
 
   const parsed = asSignedInfoRollupKeysFile(await response.text())
