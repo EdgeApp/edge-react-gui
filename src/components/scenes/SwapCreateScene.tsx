@@ -277,6 +277,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
           selectedQuote: quotes[0],
           quotes,
           onApprove: resetState,
+          onStealthTermsDeclined: handleStealthTermsDeclined,
           swapRequest: quoteRequest,
           swapRequestOptions: quoteRequestOptions
         })
@@ -444,6 +445,14 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const handleToggleStealth = useHandler(() => {
     setStealth(value => !value)
+  })
+
+  // Declining the stealth provider's terms backs out to this scene with the
+  // toggle off, so the next tap on the button asks for an ordinary swap
+  // instead of walking straight back into the same terms modal. Turning the
+  // toggle back on brings the modal back, until the terms are accepted.
+  const handleStealthTermsDeclined = useHandler(() => {
+    setStealth(false)
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
