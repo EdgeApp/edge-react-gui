@@ -1,7 +1,6 @@
 import type { EdgeCurrencyWallet, EdgeToken } from 'edge-core-js'
 import * as React from 'react'
 import { Pressable, Switch, View } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { approveTokenTerms } from '../../actions/TokenTermsActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -10,6 +9,7 @@ import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { EditIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -100,14 +100,13 @@ export const ManageTokensRowComponent: React.FC<Props> = props => {
         <EdgeText style={styles.displayName}>{token.displayName}</EdgeText>
       </View>
       {!isCustom ? null : (
-        <EdgeTouchableOpacity style={styles.editIcon} onPress={handleEdit}>
-          <FontAwesomeIcon
-            color={theme.iconTappable}
-            name="edit"
-            size={theme.rem(1)}
-            accessibilityHint={lstrings.edit_icon_hint}
-            accessibilityRole="button"
-          />
+        <EdgeTouchableOpacity
+          accessibilityHint={lstrings.edit_icon_hint}
+          accessibilityRole="button"
+          style={styles.editIcon}
+          onPress={handleEdit}
+        >
+          <EditIcon color={theme.iconTappable} size={theme.rem(1)} />
         </EdgeTouchableOpacity>
       )}
       <View pointerEvents="none" style={styles.switchBox}>
