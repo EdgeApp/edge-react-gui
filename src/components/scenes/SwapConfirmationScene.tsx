@@ -69,6 +69,13 @@ export interface SwapConfirmationParams {
   onApprove: () => void
 
   /**
+   * Called when the user declines the provider's terms on a Stealth Swap, just
+   * before this scene backs out to the swap create scene. The caller owns the
+   * Stealth toggle, so this is where it switches the toggle off.
+   */
+  onStealthTermsDeclined?: () => void
+
+  /**
    * The request and options the quotes were fetched with. An expiry re-quote
    * reuses them verbatim, so a Stealth Swap keeps its privacy demand and its
    * provider restriction. `quote.request` cannot stand in: it is the plugin's
@@ -88,7 +95,13 @@ interface Section {
 
 export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { quotes, onApprove, swapRequest, swapRequestOptions } = route.params
+  const {
+    quotes,
+    onApprove,
+    onStealthTermsDeclined,
+    swapRequest,
+    swapRequestOptions
+  } = route.params
   // A Stealth Swap's provider is fixed, so its powered-by card is not tappable:
   const isStealth = swapRequest.privacy === 'required'
 
@@ -190,6 +203,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           selectedQuote: quotes[0],
           quotes,
           onApprove,
+          onStealthTermsDeclined,
           swapRequest,
           swapRequestOptions
         })
@@ -217,9 +231,27 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
     dispatch(logEvent('Exchange_Shift_Quote'))
     termsCheckPending.current = true
-    swapVerifyTerms(swapConfig)
+    swapVerifyTerms(swapConfig, { declineIsCancelOnly: isStealth })
       .then(async result => {
         termsCheckPending.current = false
+        if (!result && isStealth) {
+          // A Stealth Swap has one provider, so there is nothing to re-quote
+          // against: a new quote would come from the same provider and ask
+          // again. Declining its terms backs out of this swap with the
+          // Stealth toggle off, and saves nothing. The create scene reads
+          // its pair from the route params, so they go back with it.
+          onStealthTermsDeclined?.()
+          navigation.navigate('swapTab', {
+            screen: 'swapCreate',
+            params: {
+              fromWalletId: swapRequest.fromWallet.id,
+              fromTokenId: swapRequest.fromTokenId,
+              toWalletId: swapRequest.toWallet.id,
+              toTokenId: swapRequest.toTokenId
+            }
+          })
+          return
+        }
         if (!result || timerExpiredDuringTerms.current) {
           handleExchangeTimerExpired()
         }
