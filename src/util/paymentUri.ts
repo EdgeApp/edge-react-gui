@@ -1,4 +1,9 @@
-import type { EdgeCurrencyConfig } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet,
+  EdgeParsedUri,
+  EdgeTokenId
+} from 'edge-core-js'
 import URL from 'url-parse'
 
 /**
@@ -112,4 +117,106 @@ export async function parseCrossChainPayment(
   } catch (error: unknown) {
     return undefined
   }
+}
+
+/** A payment the sending wallet's own parser read, address included. */
+export type OwnNetworkPayment = EdgeParsedUri & { publicAddress: string }
+
+/**
+ * Names the asset a payment code states its amount in, on a parse the sending
+ * wallet made.
+ *
+ * The wallet stamps the asset it was asked about on any parse that names
+ * none. An EIP-681 coin payment (`ethereum:<payee>?value=<wei>`) names none,
+ * and its `value` is the chain's coin whatever is being sent, so a token
+ * send's parse of it comes back as that many of the token: 500 of a
+ * six-decimal token for half a gwei. The text settles it. A `value` with no
+ * function call is the coin, and the parse says so with a `tokenId` of `null`.
+ */
+export function withStatedAsset<T extends EdgeParsedUri>(
+  parsedUri: T,
+  text: string
+): T {
+  if (parsedUri.nativeAmount == null || !statesCoinValue(text)) return parsedUri
+  return { ...parsedUri, tokenId: null }
+}
+
+function statesCoinValue(text: string): boolean {
+  const trimmed = text.trim()
+  const { scheme, addressCandidates } = peekPaymentUri(trimmed)
+  // A function call (no address candidates) spends its `value` on a contract:
+  if (scheme == null || addressCandidates.length === 0) return false
+  return new URL(trimmed, {}, true).query.value != null
+}
+
+/**
+ * Reads scanned or pasted text with the sending wallet's own parser, for a
+ * send whose recipient is set to another network. The full parse comes back,
+ * so a payment code keeps its amount, memo and metadata.
+ *
+ * Resolves undefined for anything the parser rejects, and for a code that
+ * names a different asset than the one being sent: the wallet reports the
+ * asset a code names, and paying one asset to a request for another is wrong.
+ * That covers a coin-denominated code on a token send, which the caller can
+ * still pay as a swap to the chain's coin.
+ */
+export async function parseOwnNetworkPayment(
+  wallet: Pick<EdgeCurrencyWallet, 'parseUri'>,
+  currencyCode: string,
+  tokenId: EdgeTokenId,
+  text: string
+): Promise<OwnNetworkPayment | undefined> {
+  try {
+    const trimmed = text.trim()
+    const parsed = withStatedAsset(
+      await wallet.parseUri(trimmed, currencyCode),
+      trimmed
+    )
+    const { publicAddress } = parsed
+    if (publicAddress == null || publicAddress === '') return
+    if (parsed.tokenId !== undefined && parsed.tokenId !== tokenId) return
+    return { ...parsed, publicAddress }
+  } catch (error: unknown) {
+    return undefined
+  }
+}
+
+/**
+ * Whether a payment code's amount is written in one of the sending chain's
+ * tokens, as opposed to a chain's own coin.
+ *
+ * A code read by another chain's parser states that chain's coin, and arrives
+ * as `crossChainNativeAmount`. A code read by the sending wallet states the
+ * asset its parse names once `withStatedAsset` has corrected it: a `tokenId`
+ * of `null` is the chain's coin, and any other is a token, with the amount in
+ * that token's units. A swap-send pays out a chain's coin, so only a token
+ * amount is not the amount the recipient receives.
+ */
+export function isTokenAmount(
+  parsedUri: EdgeParsedUri,
+  crossChainNativeAmount: string | undefined
+): boolean {
+  return (
+    crossChainNativeAmount == null &&
+    parsedUri.nativeAmount != null &&
+    parsedUri.tokenId != null
+  )
+}
+
+/**
+ * Whether any of these chains' own parsers accepts the text as a payment to
+ * its coin. A format shared across chains (any EVM `0x…`) fits all of them by
+ * pattern, so only a parser, which checks the checksum, can say the text is
+ * an address on one of them.
+ */
+export async function isPayableOnAny(
+  currencyConfigs: EdgeCurrencyConfig[],
+  text: string
+): Promise<boolean> {
+  const payments = await Promise.all(
+    currencyConfigs.map(
+      async currencyConfig => await parseCrossChainPayment(currencyConfig, text)
+    )
+  )
+  return payments.some(payment => payment != null)
 }

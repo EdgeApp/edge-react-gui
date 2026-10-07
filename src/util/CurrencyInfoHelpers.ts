@@ -37,6 +37,24 @@ export function isEvmWallet(wallet: EdgeCurrencyWallet): boolean {
   return specialInfo.walletConnectV2ChainId?.namespace === 'eip155'
 }
 
+/**
+ * Whether the address is this wallet's own, on a wallet where paying it is
+ * always a mistake. EVM wallets use a single static address across all EVM
+ * chains, so a send to it on the wallet's own network pays the sender.
+ * Compared case-insensitively since EVM addresses are checksummed hex.
+ */
+export async function isOwnEvmAddress(
+  wallet: EdgeCurrencyWallet,
+  publicAddress: string
+): Promise<boolean> {
+  if (!isEvmWallet(wallet)) return false
+  const ownAddresses = await wallet.getAddresses({ tokenId: null })
+  return ownAddresses.some(
+    ownAddress =>
+      ownAddress.publicAddress.toLowerCase() === publicAddress.toLowerCase()
+  )
+}
+
 export type FindTokenParams =
   | {
       account: EdgeAccount

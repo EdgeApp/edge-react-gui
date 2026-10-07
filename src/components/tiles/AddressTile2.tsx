@@ -22,11 +22,15 @@ import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
-import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
+import { describeAddressRejection } from '../../util/addressRejection'
+import {
+  getCurrencyCode,
+  isOwnEvmAddress
+} from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
-import type { CrossChainPayment } from '../../util/paymentUri'
+import { type CrossChainPayment, withStatedAsset } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
@@ -122,13 +126,15 @@ interface Props {
    * the currently-picked destination chain). An address for another chain is
    * usually a cross-chain send whose recipient asset has not been picked yet,
    * so the consumer gets a chance to detect that chain and adopt the address.
-   * Return true when it took ownership, false to show the invalid-address
-   * error as before.
+   * Resolve true when it took ownership: it adopted the address, or told the
+   * user itself why it did not. Resolve a message to have this tile show it as
+   * the reason the address was declined, or false for the tile's own message,
+   * which names this wallet's network.
    */
   onUnparsedAddress?: (
     address: string,
     addressEntryMethod: AddressEntryMethod
-  ) => Promise<boolean>
+  ) => Promise<boolean | string>
   /**
    * Opt-in expansion of the "Myself" picker past the source asset. The caller
    * supplies the destination assets this send can route to, derived from route
@@ -239,6 +245,29 @@ export const AddressTile2 = React.forwardRef(
     // Handlers
     // ---------------------------------------------------------------------------
 
+    /**
+     * Last stop for text no parser accepted: the consumer may adopt it for
+     * another chain, and otherwise the user is told why it was declined.
+     */
+    const rejectUnparsedAddress = useHandler(
+      async (
+        address: string,
+        addressEntryMethod: AddressEntryMethod
+      ): Promise<void> => {
+        const result =
+          (await onUnparsedAddress?.(address, addressEntryMethod)) ?? false
+        if (result === true) return
+        showToast(
+          result === false
+            ? describeAddressRejection({
+                type: 'invalid',
+                networkName: coreWallet.currencyInfo.displayName
+              })
+            : result
+        )
+      }
+    )
+
     const changeAddress = useHandler(
       async (address: string, addressEntryMethod: AddressEntryMethod) => {
         if (address == null || address.trim() === '') return
@@ -251,14 +280,7 @@ export const AddressTile2 = React.forwardRef(
           if (payment == null) {
             // Not valid on the picked destination either. It may still belong
             // to some other chain the consumer can switch to.
-            const adopted = await onUnparsedAddress?.(
-              address,
-              addressEntryMethod
-            )
-            if (adopted === true) return
-            showToast(
-              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
-            )
+            await rejectUnparsedAddress(address, addressEntryMethod)
             return
           }
           await onChangeAddress({
@@ -373,7 +395,10 @@ export const AddressTile2 = React.forwardRef(
 
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
-            await coreWallet.parseUri(address, currencyCode)
+            withStatedAsset(
+              await coreWallet.parseUri(address, currencyCode),
+              address
+            )
           setLoading(false)
 
           // Check if the URI requires a warning to the user
@@ -410,22 +435,12 @@ export const AddressTile2 = React.forwardRef(
             return
           }
 
-          // Prevent sending to the same wallet's own address. EVM wallets use a
-          // single static address across all EVM chains, so a self-send is
-          // always a mistake. (Cross-wallet "self transfer" to a *different*
-          // wallet via `handleSelfTransfer` is unaffected.) Compare
-          // case-insensitively since EVM addresses are checksummed hex.
-          if (isEvmWallet(coreWallet)) {
-            const ownReceiveAddress = await coreWallet.getReceiveAddress({
-              tokenId: null
-            })
-            if (
-              parsedUri.publicAddress.toLowerCase() ===
-              ownReceiveAddress.publicAddress.toLowerCase()
-            ) {
-              showError(lstrings.send_to_self_error_message)
-              return
-            }
+          // Prevent sending to the same wallet's own address. (Cross-wallet
+          // "self transfer" to a *different* wallet via `handleSelfTransfer`
+          // is unaffected.)
+          if (await isOwnEvmAddress(coreWallet, parsedUri.publicAddress)) {
+            showError(lstrings.send_to_self_error_message)
+            return
           }
 
           // If we don't already have a resolved name from a forward-typed
@@ -486,14 +501,7 @@ export const AddressTile2 = React.forwardRef(
             // invalid, let the consumer check whether it addresses another
             // chain, which turns the send into a cross-chain swap.
             setLoading(false)
-            const adopted = await onUnparsedAddress?.(
-              address,
-              addressEntryMethod
-            )
-            if (adopted === true) return
-            showToast(
-              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
-            )
+            await rejectUnparsedAddress(address, addressEntryMethod)
           }
 
           setLoading(false)

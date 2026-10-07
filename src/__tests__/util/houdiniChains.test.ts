@@ -4,10 +4,12 @@ import { lt } from 'biggystring'
 import {
   detectHoudiniChains,
   getHoudiniChain,
+  getOwnNetworkBlock,
   getRecipientAsset,
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
+  isOwnChainAddressText,
   isValidHoudiniAddress,
   recipientAssetKey,
   schemeNamesChain
@@ -468,6 +470,62 @@ describe('schemeNamesChain', () => {
   })
 })
 
+describe('isOwnChainAddressText', () => {
+  const getChain = (pluginId: string): (typeof HOUDINI_CHAINS)[number] => {
+    const chain = HOUDINI_CHAINS.find(entry => entry.pluginId === pluginId)
+    if (chain == null) throw new Error(`no ${pluginId} in HOUDINI_CHAINS`)
+    return chain
+  }
+  const ethereum = getChain('ethereum')
+
+  it('accepts a bare address in the chain format', () => {
+    expect(isOwnChainAddressText(ethereum, ADDRESSES.ethereum)).toEqual(true)
+    expect(
+      isOwnChainAddressText(ethereum, ADDRESSES.ethereum.toLowerCase())
+    ).toEqual(true)
+  })
+
+  it('accepts a payment URI that names the chain', () => {
+    // A scanned code whose address fails the checksum reaches the scene in
+    // this form, and it is a bad Ethereum address, not another network's:
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}`)
+    ).toEqual(true)
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}@1`)
+    ).toEqual(true)
+    expect(
+      isOwnChainAddressText(
+        getChain('polygon'),
+        `ethereum:${ADDRESSES.ethereum}@137`
+      )
+    ).toEqual(true)
+  })
+
+  it('rejects a payment URI that names another chain', () => {
+    expect(
+      isOwnChainAddressText(ethereum, `polygon:${ADDRESSES.ethereum}`)
+    ).toEqual(false)
+    expect(
+      isOwnChainAddressText(ethereum, `ethereum:${ADDRESSES.ethereum}@137`)
+    ).toEqual(false)
+    expect(
+      isOwnChainAddressText(
+        getChain('polygon'),
+        `ethereum:${ADDRESSES.ethereum}`
+      )
+    ).toEqual(false)
+  })
+
+  it('rejects text in another chain format', () => {
+    expect(isOwnChainAddressText(ethereum, ADDRESSES.bitcoin)).toEqual(false)
+    expect(
+      isOwnChainAddressText(ethereum, `bitcoin:${ADDRESSES.bitcoin}`)
+    ).toEqual(false)
+    expect(isOwnChainAddressText(ethereum, 'not an address')).toEqual(false)
+  })
+})
+
 // A USDT contract on Ethereum, standing in for any token source:
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 // The POL ERC-20 on Ethereum. Its `displayName` is "Polygon" and its
@@ -507,6 +565,73 @@ describe('getRecipientAsset', () => {
         swapSendActive: true
       })
     ).toEqual({ pluginId: 'litecoin', tokenId: null })
+  })
+})
+
+describe('getOwnNetworkBlock', () => {
+  const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+
+  it('never blocks a plain send, whatever the provider offers', () => {
+    expect(
+      getOwnNetworkBlock({
+        sourceTokenId: null,
+        stealthActive: false,
+        selfPrivateAvailable: false,
+        privateRouteOffered: false
+      })
+    ).toBeUndefined()
+  })
+
+  it('lets a private coin send through when the coin routes to itself', () => {
+    expect(
+      getOwnNetworkBlock({
+        sourceTokenId: null,
+        stealthActive: true,
+        selfPrivateAvailable: true,
+        privateRouteOffered: undefined
+      })
+    ).toBeUndefined()
+  })
+
+  it('blocks a private coin send the coin cannot route to itself', () => {
+    expect(
+      getOwnNetworkBlock({
+        sourceTokenId: null,
+        stealthActive: true,
+        selfPrivateAvailable: false,
+        privateRouteOffered: undefined
+      })
+    ).toEqual('selfPrivateUnsupported')
+  })
+
+  it('blocks a private send once a probe found no private route', () => {
+    expect(
+      getOwnNetworkBlock({
+        sourceTokenId: null,
+        stealthActive: true,
+        selfPrivateAvailable: true,
+        privateRouteOffered: false
+      })
+    ).toEqual('privateRouteUnavailable')
+  })
+
+  it('reads a token source off the route probe alone', () => {
+    // A token pays out the chain's coin, so the same-asset flag, which is
+    // never set for a token, does not apply to it.
+    const tokenSource = {
+      sourceTokenId: USDC_TOKEN_ID,
+      stealthActive: true,
+      selfPrivateAvailable: false
+    }
+    expect(
+      getOwnNetworkBlock({ ...tokenSource, privateRouteOffered: undefined })
+    ).toBeUndefined()
+    expect(
+      getOwnNetworkBlock({ ...tokenSource, privateRouteOffered: true })
+    ).toBeUndefined()
+    expect(
+      getOwnNetworkBlock({ ...tokenSource, privateRouteOffered: false })
+    ).toEqual('privateRouteUnavailable')
   })
 })
 

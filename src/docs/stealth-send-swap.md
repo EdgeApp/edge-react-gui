@@ -5,13 +5,13 @@
 | Status | Implemented (pending dependency publishes) |
 | Author | Jon Tzeng |
 | Reviewer | - |
-| Last updated | 2026-10-05 |
+| Last updated | 2026-10-08 |
 | Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui), [edge-core-js](https://github.com/EdgeApp/edge-core-js), [edge-exchange-plugins](https://github.com/EdgeApp/edge-exchange-plugins) |
 | Implementation | [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066), [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730), [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) |
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: 262f1d478cdc5b7d218fd3a0d98a5cf2cb807d7e -->
+<!-- tdd-code-fingerprint: 84d65245c5c3166d2440b5c03d4273a11fbfb77e -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -110,7 +110,7 @@ sequenceDiagram
 
 A send to an address is its own request type rather than an optional field on the wallet-to-wallet one. `EdgeSwapRequest` keeps its required `toWallet`, and `EdgeSwapSendRequest` names the destination chain and addresses in its place. Both share `EdgeSwapRequestBase`, which carries the source, the amount, and the route-privacy requirement.
 
-[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/types/types.ts)
+[`src/types/types.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/types/types.ts)
 ```ts
 /**
  * A swap between two wallets. This is also the resolved shape swap plugins
@@ -175,7 +175,7 @@ The wallet is bridgified so plugin calls work unchanged across the core's WebVie
 
 A swap that paid out to an address is saved as its own action type, written by the plugin that ran it:
 
-[`src/types/types.ts`](https://github.com/EdgeApp/edge-core-js/blob/f283aaf6470f3e1fb1e6b7428c918c16177f25a3/src/types/types.ts)
+[`src/types/types.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/types/types.ts)
 ```ts
 /**
  * A send that settled through a swap provider: the payout went to an address
@@ -379,7 +379,7 @@ Every other central swap plugin rejects a swap from an asset to itself through t
 
 `SendScene2` gains the feature in place rather than in a parallel scene. The gate is a single predicate:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/scenes/SendScene2.tsx)
 ```ts
   const swapSendAllowed =
     lockTilesMap.address !== true &&
@@ -398,7 +398,7 @@ Every constrained caller fails at least one clause, so payment protocol, [FIO](#
 
 Activation is then:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/scenes/SendScene2.tsx)
 ```ts
   const destPluginId = recipientPluginId ?? pluginId
   const sameAsset = destPluginId === pluginId && tokenId == null
@@ -417,7 +417,7 @@ When active, the scene requests a quote instead of building a spend. `makeSpend`
 
 Stealth restricts the request to the privacy provider through a shared helper, `src/util/stealthSwap.ts`, used by both the send scene and the swap scene:
 
-[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/stealthSwap.ts)
+[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/stealthSwap.ts)
 ```ts
 export function makeStealthSwapRequestOptions(
   account: EdgeAccount,
@@ -457,7 +457,7 @@ Both sides open on **fiat**. That is what the Exchange scene's two inputs and th
 
 A destination on another chain cannot go through the source wallet's `parseUri`, so `AddressTile2` takes two hooks. The first, `parseCrossChainAddress`, reads input once the destination chain is known, using that chain's own parser through `EdgeCurrencyConfig.parseUri`:
 
-[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/tiles/AddressTile2.tsx)
+[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/tiles/AddressTile2.tsx)
 ```ts
   parseCrossChainAddress?: (
     text: string
@@ -466,19 +466,29 @@ A destination on another chain cannot go through the source wallet's `parseUri`,
 
 The second, `onUnparsedAddress`, is the one that makes the feature discoverable:
 
-[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/tiles/AddressTile2.tsx)
+[`src/components/tiles/AddressTile2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/tiles/AddressTile2.tsx)
 ```ts
   onUnparsedAddress?: (
     address: string,
     addressEntryMethod: AddressEntryMethod
-  ) => Promise<boolean>
+  ) => Promise<boolean | string>
 ```
 
-It fires when this wallet's chain cannot read the input, immediately before the invalid-address toast. Because it hangs off `changeAddress`, which every entry affordance funnels through, one hook covers Paste, Enter address, and Scan at once.
+It fires when this wallet's chain cannot read the input, immediately before the address is declined. Because it hangs off `changeAddress`, which every entry affordance funnels through, one hook covers Paste, Enter address, and Scan at once.
+
+A declined address leaves the scene exactly as it was, so the tile always says why. The hook resolves `true` when the consumer took ownership (it adopted the address, or the user dismissed the network picker and got a toast saying so), and otherwise resolves the reason as a message. The tile shows that message in a toast of the default three seconds, the same surface the no-network-selected notice uses. A toast expires by itself, so the tile keeps no handle on it and has nothing to retract when the recipient changes or the scene loses focus. `describeAddressRejection` in `src/util/addressRejection.ts` writes the reasons: the text is not an address on the network it was read against, it is an address on another network in a send that cannot become a swap, or no network the send could reach recognizes it (that one names the app from `config.appName`). In a send that cannot become a swap, two checks decide between the first two. `isOwnChainAddressText` in `src/util/houdiniChains.ts` reads text written for the wallet's own network, a bare address in its format or a payment URI that names it, as a bad address there, whatever other networks share the format. `isPayableOnAny` in `src/util/paymentUri.ts` then requires one of the detected networks' own parsers to accept the text before it is called that network's address, because the wallet's network may be one the provider does not serve, and a mistyped `0x` address there fits every served [EVM](#evm) pattern while passing no checksum. The message never repeats the address.
+
+An address on the wallet's own network is not declined for the recipient being set elsewhere. With another network picked under "Recipient receives", the tile reads the text against that network alone and detection leaves out the wallet's own coin. So the wallet's own parser reads the text before any other network is matched, as it does on a plain send: `parseOwnNetworkPayment` in `src/util/paymentUri.ts` tries it with the sent asset's code, and refuses a parse that names a different asset. An accepted parse sets the recipient back to the source asset, whichever other networks share the format. A legacy Bitcoin address also fits Bitcoin Cash, and an Ethereum address fits every [EVM](#evm) network, so matching the other networks first would offer or adopt one of them for an address the wallet itself can pay. `adoptOwnNetworkDestination` clears the picked network, drops the tag and quote held for it as picking the source asset by hand does, and applies the whole parse, so a payment code keeps its amount and [memo](#memo). The scene then shows "Recipient network changed to Bitcoin." with the wallet's network as the name. A token source goes back to the token, although detection offers its chain's coin as a payout. One code is the exception: an [EIP-681](#eip-681) coin payment (`ethereum:<payee>?value=<wei>`) entered on a token send. It asks for the chain's coin, so the switch leaves it to detection, which pays it as a swap to that coin for the amount the code states.
+
+The tile turns down a send to the wallet's own address before it adopts one, and the switch adopts in the tile's place, so it makes the same check first. `isOwnEvmAddress` in `src/util/CurrencyInfoHelpers.ts` holds it for both: an EVM wallet has one address on every EVM network, so on its own network that address pays the sender. The switch declines with "You cannot send to the same wallet" and leaves the recipient where it was. The same address on another network is still a valid destination, which is what "Myself" picks.
+
+The switch happens only when the send can pay the wallet's own network. A plain send always can. With Stealth on, `getOwnNetworkBlock` in `src/util/houdiniChains.ts` asks what the toggle asks: a coin whose chain has no private same-asset route, or a pair this session has learned has none, leaves the recipient where it was and declines with the toggle's own message for that case.
+
+The same toast marks the other direction: an address that matches exactly one other network is adopted, and the scene names the network the recipient moved to. One rule covers both. A network change the user did not choose is announced, and one chosen by name is not, so nothing is shown after the network picker or a "Myself" pick.
 
 `SendScene2`'s handler detects the chain, adopts it as the recipient asset, and applies the address. Chain detection lives in `src/util/houdiniChains.ts`:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/houdiniChains.ts)
 ```ts
 export function detectHoudiniChains(
   text: string,
@@ -495,7 +505,7 @@ export function detectHoudiniChains(
 
 A URI scheme names its chain outright and wins. A bare address is matched against each served chain's regex, as a prefilter only: whichever chain is picked, its own `parseUri` reads the input before anything is adopted; several chains share a format, so every match is returned and the caller disambiguates. The source chain is dropped from the candidates only when the source IS that chain's coin: from a TOKEN it is a real destination, since USDC on Ethereum paying out native ETH is a cross-asset route no plain send can make, and dropping it left a pasted `0x` address offering every other [EVM](#evm) network but not the one the recipient holds. The chain table entry is:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/houdiniChains.ts)
 ```ts
 export interface HoudiniChain {
   pluginId: string
@@ -512,7 +522,7 @@ The intersection is by pluginId, and a matching pluginId is not a matching netwo
 
 Because `setRecipientPluginId` has not re-rendered when the address is applied, the detected chain is threaded through the result object rather than read back from state:
 
-[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/scenes/SendScene2.tsx)
+[`src/components/scenes/SendScene2.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/scenes/SendScene2.tsx)
 ```ts
       // A destination detected from the address itself makes this a cross-asset
       // send. `setRecipientPluginId` has not re-rendered yet, so the routing
@@ -525,7 +535,7 @@ Because `setRecipientPluginId` has not re-rendered when the address is applied, 
 
 A scanned QR carries a payment URI, not a bare address. Reading one is split in two, in `src/util/paymentUri.ts`. `peekPaymentUri` reads only what the code says about its own chain, the scheme and the [EIP-681](#eip-681) `@chainId`, plus bare-address candidates for detection, and loads no chain's parser:
 
-[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/paymentUri.ts)
+[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/paymentUri.ts)
 ```ts
 export interface PaymentUriPeek {
   addressCandidates: string[]
@@ -538,7 +548,7 @@ Candidates are returned in priority order (raw trimmed text, scheme-prefixed pat
 
 Once a chain is picked, `parseCrossChainPayment` hands the text to that chain's own parser, asking for the chain's own coin:
 
-[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/paymentUri.ts)
+[`src/util/paymentUri.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/paymentUri.ts)
 ```ts
     const parsed = await currencyConfig.parseUri(text.trim(), currencyCode)
     const { publicAddress, nativeAmount, tokenId, uniqueIdentifier } = parsed
@@ -550,6 +560,10 @@ Once a chain is picked, `parseCrossChainPayment` hands the text to that chain's 
 The chain's parser covers what a generic reader cannot: its URI dialect, its checksums, its amount units and its memo parameter names. The amount comes back in the chain's native units, so the scene no longer converts a display amount. A code naming one of the chain's tokens is refused, because this flow pays out the chain's own coin.
 
 A URI amount is what the recipient should **receive**, so for a cross-asset destination it sets the receive side as guaranteed and lets the quote price the send side. Same-asset (stealth) sends keep it on the send side, because the provider offers no receive-priced route when source and destination assets match; guaranteeing the receive side there would make every same-asset payment URI unquotable.
+
+A token sent with its own chain's coin as the payout is cross-asset and still stays on the send side. Its payment codes are read by the sending wallet, which states the amount in the token being sent. `isTokenAmount` in `src/util/paymentUri.ts` spots it: the wallet's parse names a token, and no other chain's parser supplied the amount. That amount is what the wallet sends, so it sets the send side as guaranteed. Priced as the payout, five USDT would read as five millionths of a millionth of an ETH.
+
+The wallet's parse names the wrong asset for one code. An [EIP-681](#eip-681) coin payment carries its amount in `value`, in wei of the chain's coin, and names no asset. The wallet stamps the asset it was asked about on a parse that names none, so a token send's parse of that code reports the token with a wei amount: a `value` of 500000000 would read as 500 USDT. `withStatedAsset` in `src/util/paymentUri.ts` reads the text again and corrects the parse to the chain's coin when the code carries a `value` and no function call. The tile and `parseOwnNetworkPayment` both apply it, so `isTokenAmount` sees a coin amount and the receive side is the guaranteed one. A plain token send with no recipient network picked still copies that amount as written, as it does on `develop`.
 
 ### Availability fallbacks
 
@@ -583,7 +597,7 @@ Every surface that decides whether an asset can be a send-to-address destination
 
 The "Recipient receives" row and the picker that edits it name one asset, computed once:
 
-[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/houdiniChains.ts)
+[`src/util/houdiniChains.ts`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/util/houdiniChains.ts)
 ```ts
   return swapSendActive
     ? { pluginId: destPluginId, tokenId: null }
@@ -660,7 +674,7 @@ The terms modal is the pre-existing centralized-provider acknowledgement, keyed 
 
 The swap-send modal is the send scene's own, because the send scene never reaches `SwapConfirmationScene` and so never runs `swapVerifyTerms`. It follows the send scam warning beside it: a disklet key, `runOnce` against a double-fire within one app run, and a `ConfirmContinueModal`. The provider names itself off `account.swapConfig[STEALTH_SWAP_PLUGIN_ID].swapInfo.displayName`, so the copy survives a provider change. Its four bullets cover the routing, the wait, a rare AML/KYC hold, and that a held or failed swap is resolved with the provider. It informs and never gates the quote; the card below is the persistent notice and carries no KYC wording.
 
-[`src/actions/SwapSendWarningActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/actions/SwapSendWarningActions.tsx)
+[`src/actions/SwapSendWarningActions.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/actions/SwapSendWarningActions.tsx)
 ```ts
 export const showSwapSendWarningModal = async (
   disklet: Disklet,
@@ -668,13 +682,22 @@ export const showSwapSendWarningModal = async (
 ): Promise<void> => {
 ```
 
-The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive`. The cluster shows one swap card at a time: an error card (`showErrorCard`, the same test `renderError` uses) hides both swap warnings, and the fixed-to fallback card hides the generic one, since it is the more specific notice and clears on the next amount edit. The user can still send while the fallback card shows, so its body ends with the swap warning's own text: hiding the generic card must not drop the swap-and-delay notice. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about a private swap when Stealth is on.
+The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive`. The cluster shows one swap card at a time: an error card (`showErrorCard`, the same test `renderError` uses) hides both swap warnings, and the fixed-to fallback card hides the generic one, since it is the more specific notice and clears on the next amount edit. The user can still send while the fallback card shows, so its body ends with the swap warning's own text: hiding the generic card must not drop the swap-and-delay notice. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about the Stealth swap when Stealth is on. That copy does not use the word "private": the card is titled "Stealth swap before send" and says the funds are swapped over an obfuscated route.
+
+The scam warning card is held to the same one-card rule. It opens a plain send and goes once an address is entered. `renderScamWarning` returns nothing on a swap-send or under an error card, so a network picked under "Recipient receives" before any address shows the swap card alone.
+
+| Send | Address | Scam warning card | Swap card |
+|---|---|---|---|
+| Plain | none | shown | hidden |
+| Plain | entered | hidden | hidden |
+| Swap | none | hidden | shown |
+| Swap | entered | hidden | shown |
 
 ### Shared price impact
 
 The prototype recreated the price-delta UI. It is instead extracted from the swap confirmation scene into `src/components/themed/PriceImpactText.tsx` and reused by both:
 
-[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/components/themed/PriceImpactText.tsx)
+[`src/components/themed/PriceImpactText.tsx`](https://github.com/EdgeApp/edge-react-gui/blob/81cc891263c34448140d7e5e59126fa5eadcef53/src/components/themed/PriceImpactText.tsx)
 ```ts
 export const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 export function calculateQuotePriceImpact(…)
@@ -691,17 +714,25 @@ Nodes tagged `[API]` are the only ones that reach the network. Everything else i
 flowchart TD
   A[Address entered by\npaste, type, or scan] --> B{Source wallet\nparses it?}
   B -- yes --> C[Same-chain send,\nunchanged behavior]
-  B -- no --> D{Matches a served\ndestination chain?\nHOUDINI_CHAINS, no request}
-  D -- none --> E[Invalid address toast]
-  D -- exactly one --> F[Chain adopted as\nRecipient receives]
+  B -- no --> D0{Another network picked,\nand the wallet's own\nparser accepts it?}
+  D0 -- no --> D{Matches a served\ndestination chain?\nHOUDINI_CHAINS, no request}
+  D -- none --> E[Toast naming\nthe reason]
+  D0 -- yes --> D3{The wallet's own\nEVM address?}
+  D3 -- yes --> E
+  D3 -- no --> D1{Send can pay the\nwallet's own network?\nStealth checks, no request}
+  D1 -- no --> E
+  D1 -- yes --> D2[Recipient set back to\nthe source asset, toast\nnames the network]
+  D2 --> C
+  D -- exactly one --> F0[Toast names the\nnetwork adopted]
+  F0 --> F[Chain adopted as\nRecipient receives]
   D -- several --> G[Network picker modal]
   G -- picks --> F
-  G -- cancels --> H[Entry cancelled]
+  G -- cancels --> H[Entry cancelled,\ntoast says no network\nwas selected]
   F --> I{URI carries\nan amount?}
   I -- no --> J[User enters amount,\nsend side guaranteed]
   I -- yes --> K[Receive side guaranteed,\nfixed to]
-  K --> L{Houdini offers a\nreceive-priced route?\n[API] GET /tokens, GET /quotes}
-  L -- yes --> M[Houdini quote arms,\nreceive amount locked\n[API] POST /exchanges]
+  K --> L{"Houdini offers a\nreceive-priced route?\n[API] GET /tokens, GET /quotes"}
+  L -- yes --> M["Houdini quote arms,\nreceive amount locked\n[API] POST /exchanges"]
   L -- no --> N[Falls back to fixed from:\ntoast, warning card, send\namount seeded from rates]
   N --> O[Card clears when the\nuser edits an amount]
   O --> J
@@ -710,9 +741,9 @@ flowchart TD
   T2 -. user raises amount .-> J
   T -- yes --> P{Cross-asset\ndestination?}
   P -- yes --> P3{Stealth on?}
-  P3 -- yes --> U[Houdini-only forward quote,\nprivacy required\n[API] GET /quotes]
-  P3 -- no --> U2[Houdini-only forward quote,\nstandard routes allowed\n[API] GET /quotes]
-  U -- route exists --> W[Quote arms:\nSlide to Confirm\n[API] POST /exchanges]
+  P3 -- yes --> U["Houdini-only forward quote,\nprivacy required\n[API] GET /quotes"]
+  P3 -- no --> U2["Houdini-only forward quote,\nstandard routes allowed\n[API] GET /quotes"]
+  U -- route exists --> W["Quote arms:\nSlide to Confirm\n[API] POST /exchanges"]
   U2 -- route exists --> W
   U -- no route --> Z[Error card:\nprovider's own message]
   U2 -- no route --> Z
@@ -721,8 +752,8 @@ flowchart TD
   P2 -- no --> V[Plain single-asset send]
   P2 -- yes --> Q0{hasSelfPrivate\nfor this asset?\ntable lookup, no request}
   Q0 -- no --> S2[Toggle refuses to arm,\ntoast names the asset]
-  Q0 -- yes --> Q{Private route\nfor this pair?\n[API] GET /quotes}
-  Q -- yes --> R[Stealth quote arms:\nSlide to send stealthily\n[API] POST /exchanges]
+  Q0 -- yes --> Q{"Private route\nfor this pair?\n[API] GET /quotes"}
+  Q -- yes --> R["Stealth quote arms:\nSlide to send stealthily\n[API] POST /exchanges"]
   Q -- no --> S[Stealth turns itself off:\ntoast, info line under the\ntoggle, pair remembered]
   S --> V
   S -. later toggle taps .-> X[Refuses to arm,\npre-emptive toast]
@@ -759,16 +790,18 @@ Learned capabilities are per pair and per session (`routeCaps` in `SendScene2`),
 
 ### Unit tests
 
-Eleven files across three repos hold 165 tests, all passing.
+Thirteen files across three repos hold 217 tests, all passing.
 
-In the gui, 104 across five files:
+In the gui, 156 across seven files:
 
-1. `src/__tests__/util/paymentUri.test.ts` (15): the peek passing a bare address through, trimming whitespace, reading a [BIP-21](#bip-21) scheme, keeping the [cashaddr](#cashaddr) `prefix:` candidate, stripping the [EIP-681](#eip-681) `pay-` prefix, and keeping the case of a `scheme://` address that url-parse would lowercase; the EIP-681 `@chainId` read in decimal and hex, left unset when absent, and a token-transfer code offering no address; and `parseCrossChainPayment` returning the chain parser's address, native amount and [memo](#memo), asking for the chain's own coin, and refusing a parser rejection, a token code, and an empty address.
-2. `src/__tests__/util/houdiniChains.test.ts` (51): the address-detection cases (EIP-681 chain ids naming Robinhood Chain and Monad, a TON address matching TON alone, single-chain detection, all-[EVM](#evm) fan-out for a bare `0x`, scheme resolution including a scheme differing from the pluginId, source chain never offered from that chain's own coin but offered from a token on it, unsupported chains skipped, Solana and Dogecoin and legacy Bitcoin formats, non-address text rejected, unknown scheme falling back to format matching, a mislabeled scheme not trusted, the Cardano catch-all regression), plus lookup and table invariants: `getHoudiniChain` resolving a served chain, refusing an unserved one, refusing the three chains with no mainnet native, and refusing a token id on a served chain; no duplicate plugin ids or provider chain names; every entry carrying a boolean `hasSelfPrivate`; every address regex rejecting the empty string and free text, which is the shape the Cardano catch-all had; the [memo](#memo)-required set; and the floor constants ordered [dex](#dex) < standard < private, shaped as biggystring-comparable strings, and equal to the values the provider published. The picker cases pin that the first row names the payout its pick gives under each Stealth and token combination, that a token source without Stealth is offered its own chain's native coin, that no payout is listed twice, and that a native source lists every served chain but its own.
+1. `src/__tests__/util/paymentUri.test.ts` (37): the peek passing a bare address through, trimming whitespace, reading a [BIP-21](#bip-21) scheme, keeping the [cashaddr](#cashaddr) `prefix:` candidate, stripping the [EIP-681](#eip-681) `pay-` prefix, and keeping the case of a `scheme://` address that url-parse would lowercase; the EIP-681 `@chainId` read in decimal and hex, left unset when absent, and a token-transfer code offering no address; `parseCrossChainPayment` returning the chain parser's address, native amount and [memo](#memo), asking for the chain's own coin, and refusing a parser rejection, a token code, and an empty address; `isPayableOnAny` holding when one chain's parser accepts the text and failing when every parser rejects it or there is no chain to ask; and `parseOwnNetworkPayment` keeping the wallet's whole parse, asking with the sent asset's code, accepting a parse that names the sent asset or none, and refusing a different asset in either direction, a coin payment code on a token send (kept on a coin send), a parser rejection, and a parse with no address; `withStatedAsset` naming the chain's coin for an EIP-681 `value`, and leaving an `amount`, a token-transfer code, a bare address and a parse with no amount as the wallet reported them; and `isTokenAmount` holding for a wallet parse that names a token and carries an amount, and failing for the chain's coin, a corrected coin payment code, a parse naming no asset, a bare address, and an amount another chain's parser supplied.
+2. `src/__tests__/util/houdiniChains.test.ts` (60): the address-detection cases (EIP-681 chain ids naming Robinhood Chain and Monad, a TON address matching TON alone, single-chain detection, all-[EVM](#evm) fan-out for a bare `0x`, scheme resolution including a scheme differing from the pluginId, source chain never offered from that chain's own coin but offered from a token on it, unsupported chains skipped, Solana and Dogecoin and legacy Bitcoin formats, non-address text rejected, unknown scheme falling back to format matching, a mislabeled scheme not trusted, the Cardano catch-all regression), plus lookup and table invariants: `getHoudiniChain` resolving a served chain, refusing an unserved one, refusing the three chains with no mainnet native, and refusing a token id on a served chain; no duplicate plugin ids or provider chain names; every entry carrying a boolean `hasSelfPrivate`; every address regex rejecting the empty string and free text, which is the shape the Cardano catch-all had; the [memo](#memo)-required set; and the floor constants ordered [dex](#dex) < standard < private, shaped as biggystring-comparable strings, and equal to the values the provider published. The picker cases pin that the first row names the payout its pick gives under each Stealth and token combination, that a token source without Stealth is offered its own chain's native coin, that no payout is listed twice, and that a native source lists every served chain but its own. The own-network cases pin that a bare address and a URI naming the chain count as that chain's text, while a URI naming another chain by scheme or by EIP-681 chain id, another chain's address, and free text do not. The `getOwnNetworkBlock` cases pin that a plain send is never blocked, that a Stealth coin send passes where the coin routes to itself privately and is blocked where it does not, that a pair a probe found no private route for is blocked, and that a token source is judged by the probe alone.
 3. `src/__tests__/util/stealthSwap.test.ts` (13): every other provider disabled, a preferred provider cleared so it cannot fight the restriction, the exchange setting left alone by default, Houdini force-enabled only when the caller asks to ignore that setting, a caller's own `forceEnabled` and `disabled` entries preserved, unrelated options passed through, and an account holding Houdini alone; and the kill-switch predicate matching an entry without a token to the chain's coin alone, a named token alone, `allTokens` to every token but the coin, `allCoins` to both, and nothing on another chain.
 4. `src/__tests__/util/swapErrorDisplay.test.ts` (17): a missing error, minimums and maximums rendered in the units of whichever side was fixed, the limit-free fallback when the bound is zero, both assets named on an unroutable pair including the swap-to-address case where the payout code has to be supplied, insufficient funds from both the typed error and the stringified shape some plugins throw, pending transactions, a geographic restriction, an unrecognized error surfacing the provider's own text, a rate limit never rewritten into a pair error, a thrown non-error stringified, and the original error preserved for the caller to log.
 
-5. `src/__tests__/actions/CategoriesActions.test.ts` (8): the three send titles read off the `swapSend` action's `privacy` flag and its asset pair, a private send's title outranking a stored metadata name shaped like a recipient address, a plain swap-send leaving a stored name alone, and the parent network-fee row keeping both its own title and its own category while still refusing a stored recipient-style name. The fee-row title case fails on the pre-fix code, which is what makes it worth having.
+5. `src/__tests__/actions/CategoriesActions.test.ts` (11): the three send titles read off the `swapSend` action's `privacy` flag and its asset pair, a private send's title outranking a stored metadata name shaped like a recipient address, a plain swap-send leaving a stored name alone, and the parent network-fee row keeping both its own title and its own category while still refusing a stored recipient-style name. The fee-row title case fails on the pre-fix code, which is what makes it worth having. Three more cover `getPluginIdIcon`: a themed provider's logo following the theme with `fit` set, every other provider keeping its one cropped image, and an unknown or missing provider having no logo.
+6. `src/__tests__/util/addressRejection.test.ts` (5): the wording of each reason a declined address shows, the unrecognized reason taking the app name from the app config and no network name, and every reason being distinct and non-empty.
+7. `src/__tests__/scenes/SendScene2.recipientNetwork.ui.test.tsx` (13): the scene rendered on a Bitcoin wallet, and for five cases an Ethereum one, with parsers that accept one address format each (Ethereum and Avalanche share theirs). A lone matching network is adopted with the network-changed toast; a Bitcoin address entered after that sets the recipient back to Bitcoin with the same toast naming Bitcoin, and the next Ethereum address switches again; a Bitcoin payment code keeps its amount through the switch; an Ether send with Bitcoin picked goes back to Ethereum for a bare address Avalanche also fits, with no picker and the toast naming Ethereum; the same send declines the wallet's own address in another letter case and keeps the Bitcoin recipient; a USDT send paying out ETH puts a payment code's amount on the send side as "5 USDT", guaranteed, with the payout estimated; the same send puts a coin payment code's `value` on the receive side as "0.002 ETH", guaranteed; a USDT send with Bitcoin picked pays that coin code as ETH with the network-changed toast, where a plain send of the token would have read it as two billion USDT; a plain send with no address shows the scam warning card and no swap card; a swap-send with no address shows the swap card alone, with no scam warning card; text no network takes returns the unrecognized reason, shows no toast from the scene and leaves the earlier address in place; a network picked in the picker shows no toast; and a dismissed picker shows the no-network-selected toast and adopts nothing.
 
 In edge-core-js, 19: `test/core/synthetic-wallet.test.ts` (5) for the synthetic wallet's shape and bridge survival and its address list (every address returned verbatim, the first paid out to); `test/core/account/account.test.ts` for `parseUri` on a config with no wallet (the chain's coin, a builtin token by currency code, and a custom token the parser has to be told about) and a send request quoted end to end; `test/core/currency/wallet/currency-wallet-cleaners.test.ts` for a `swapSend` action round-tripping through the disk cleaners and one without `privacy` rejected; the plugin-selection truth table in `test/core/swap.test.ts` (8), which pins that a caller can reach a provider the user switched off and can never reach one it disabled itself in the same call, and `test/core/swap-quote-close.test.ts` (2) for the synthetic wallet's reference-counted release, including a double-close that must not free it twice.
 
@@ -1092,6 +1125,21 @@ Not our work, tracked so it is not rediscovered:
 - **Shipped:** `getPluginIdIcon` answers both scenes with the image and a `fit` flag. A provider on the themed allowlist resolves through `getSwapPluginIconUri`, so it gets the same `icon.png` or `icon-light.png` the swap scenes load, with `fit` set: the row and the details tile draw it whole, with no circular mask. Every other provider keeps its one static image from `pluginIdIcons`, drawn for the circle and cropped to it as before. That map is now private to its module so no caller can read it without a theme.
 - **Diverged:** the first cut returned only the image and let both scenes crop it to the thumbnail circle like every other provider. The HoudiniSwap logo is the mark above a wordmark that runs edge to edge, so the circle cut the wordmark down to a fragment. Seen on the simulator, then changed to fit the logo, which is how the swap scenes already draw it.
 - **Held:** a contact or merchant-name match still outranks the provider logo, as it does for every provider. No `MERCHANT_CONTACTS` entry was added: that map holds one static image per name, which cannot follow the theme. On a transaction row the direction arrow still overlaps the logo's lower right corner, as it does on every thumbnail. A mark-only image drawn for the circle would remove both the flag and the overlap; it needs a new asset on the content server, which is outside this change.
+
+### Phase 35: a declined address says why, and an own-network address switches back
+
+- **Sketched:** an address the send scene could not use got one generic invalid-address toast whatever the cause, and with another network picked under "Recipient receives" an address on the wallet's own network was refused the same way.
+- **Shipped:** `onUnparsedAddress` resolves `boolean | string`. `describeAddressRejection` writes the reason and the tile shows it in a toast. An own-network address sets the recipient back to the source asset through `adoptOwnNetworkDestination`, and the scene shows "Recipient network changed to Bitcoin." The same toast follows the adoption of a lone matching network.
+- **Diverged:** the first cut showed the reason in an error dropdown that stayed up until dismissed, and declined an own-network address with a fourth reason telling the user to change the recipient asset. The dropdown lives in the Airship layer above navigation, so it needed code to retract it when the recipient changed by a path that skipped the tile and when the scene lost focus. The fourth reason asked the user to do by hand a step the scene can do. The toast removed the lifetime code, the switch removed the fourth reason, and the unrecognized reason kept only the clause that names the app.
+- **Diverged, in review:** the switch first ran only when no other network matched the text, or the wallet's own chain was the only match. An address format shared with other networks then never switched back: it opened the picker or adopted the lone other match. The wallet's own parser now reads first whenever another network is picked. The switch also skipped the tile's self-send check, which moved into `isOwnEvmAddress` for both callers. And a payment code read by the sending wallet in the token being sent was priced as the coin payout, on the switch and on any token send paying out its chain's coin; `isTokenAmount` keeps that amount on the send side. That rule then misread one code: an EIP-681 coin payment names no asset, so the wallet reported its wei `value` as the token being sent, and the switch adopted it as a plain token send for that integer. `withStatedAsset` corrects the parse to the chain's coin, the switch leaves the code to detection, and the payout is the coin for the amount asked.
+- **Held:** a network the user chose by name, in the network picker or through "Myself", is not announced. With Stealth on, the switch runs the toggle's own checks first and declines with the toggle's message when the send cannot pay the wallet's network privately, even when another network shares the address format. The toast keeps the default duration.
+
+### Phase 36: the scam warning stops stacking, and Stealth copy drops "private"
+
+- **Sketched:** with a network picked under "Recipient receives" and no address yet, the "Scam Warning" card stacked above the "Swap before send" card. Review note: no two warning cards at once. A second note: the Stealth card and the Stealth routing messages cannot say "private".
+- **Shipped:** `renderScamWarning` returns nothing on a swap-send or under an error card ([Saying that a swap is running](#saying-that-a-swap-is-running)). The Stealth card is titled "Stealth swap before send" and says "an obfuscated route". The four routing messages the Stealth toggle shows say "Stealth routing", and the minimum-amount message ends at "Enter a larger amount."
+- **Diverged:** a first cut in this round also cut the scam card down to a two-line note and bulleted the swap cards. That work moved to its own change.
+- **Held:** the scam card keeps its text and its card style, and still goes once an address is entered. The pending-transaction and Nym cards keep their own conditions.
 
 ## 11. Decisions
 

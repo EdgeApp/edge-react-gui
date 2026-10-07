@@ -52,6 +52,8 @@
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
 - fixed: Info server swap disables for mainnet coins not applying
+- fixed: An address the send scene cannot use shows a message naming the reason
+- fixed: An address on the sending wallet's own network switches the recipient network back
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
