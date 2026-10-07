@@ -261,10 +261,15 @@ const asDeviceSettingsInner = asObject({
   keysCache: asMaybe(
     asObject({
       keys: asUnknown,
-      // When the cache was last written. Diagnostic only: the warm path does
-      // not expire; a new signed infoRollup refresh replaces the blob for the next launch.
+      // When the cache was last written. The warm path does not expire; a new
+      // signed infoRollup refresh replaces the blob for the next launch. The
+      // stamp only bounds how long an `attested` entry is kept over an answer
+      // to a request without a token (see `cacheKeys` in `keysStore.ts`).
       fetchedAt: asMaybe(asNumber, 0),
-      assuranceLevel: asMaybe(asString)
+      assuranceLevel: asMaybe(asString),
+      // Whether the request this answer came from carried an attestation
+      // token. Missing on caches written before the field existed.
+      attested: asMaybe(asBoolean)
     })
   )
 })

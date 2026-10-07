@@ -48,23 +48,27 @@ jest.mock(
 
 const mockInitDeviceSettings = jest.fn(async (..._args: unknown[]) => {})
 const mockAwaitDeviceSettingsDisk = jest.fn(async (..._args: unknown[]) => {})
-const mockGetKeysCache = jest.fn(
-  () =>
-    undefined as
-      | undefined
-      | {
-          keys: unknown
-          fetchedAt: number
-          assuranceLevel: string
-        }
-)
-const mockWriteKeysCache = jest.fn(
-  async (_entry: {
-    keys: unknown
-    fetchedAt: number
-    assuranceLevel: string
-  }) => {}
-)
+interface MockCacheEntry {
+  keys: unknown
+  fetchedAt: number
+  assuranceLevel: string
+  attested?: boolean
+}
+const mockGetKeysCache = jest.fn(() => undefined as MockCacheEntry | undefined)
+const mockWriteKeysCache = jest.fn(async (_entry: MockCacheEntry) => {})
+
+// Stands in for the in-memory settings copy, where a write can be read back
+// before it reaches disk:
+const useLiveCache = (
+  initial?: MockCacheEntry
+): { current: MockCacheEntry | undefined } => {
+  const cache = { current: initial }
+  mockGetKeysCache.mockImplementation(() => cache.current)
+  mockWriteKeysCache.mockImplementation(async entry => {
+    cache.current = entry
+  })
+  return cache
+}
 
 jest.mock('../../actions/DeviceSettingsActions', () => ({
   initDeviceSettings: async (...args: unknown[]) => {
@@ -75,15 +79,7 @@ jest.mock('../../actions/DeviceSettingsActions', () => ({
   },
   getKeysCache: () => mockGetKeysCache(),
   writeKeysCache: async (...args: unknown[]) => {
-    await mockWriteKeysCache(
-      ...(args as [
-        {
-          keys: unknown
-          fetchedAt: number
-          assuranceLevel: string
-        }
-      ])
-    )
+    await mockWriteKeysCache(...(args as [MockCacheEntry]))
   }
 }))
 
@@ -118,11 +114,28 @@ const mockGetAttestationToken = jest.fn(
 )
 const mockMaybeWarnClockSkew = jest.fn((_serverTime: unknown) => {})
 
+// Stands in for the engine's token subscription, which replays the current
+// token to a new listener before it returns:
+type MockTokenListener = (token: string | undefined) => void
+const mockTokenListeners = new Set<MockTokenListener>()
+const mockTokenState: { current: string | undefined } = { current: undefined }
+const deliverToken = (token: string | undefined): void => {
+  mockTokenState.current = token
+  for (const listener of [...mockTokenListeners]) listener(token)
+}
+
 jest.mock('../../util/attestation', () => ({
   getAttestationToken: async (...args: unknown[]) =>
     await mockGetAttestationToken(...(args as [number?])),
   maybeWarnClockSkew: (serverTime: unknown) => {
     mockMaybeWarnClockSkew(serverTime)
+  },
+  onAttestationToken: (listener: MockTokenListener) => {
+    mockTokenListeners.add(listener)
+    listener(mockTokenState.current)
+    return () => {
+      mockTokenListeners.delete(listener)
+    }
   }
 }))
 
@@ -160,6 +173,8 @@ const freshModules = (): FreshModules => {
   // @ts-expect-error assigned by the synchronous isolateModules callback
   return { keysStore, config, keys, pluginMaps }
 }
+
+const DAY_MS = 24 * 60 * 60 * 1000
 
 const flushMicrotasks = async (): Promise<void> => {
   for (let i = 0; i < 20; i++) await Promise.resolve()
@@ -246,7 +261,10 @@ describe('initializeKeys', () => {
     mockAwaitDeviceSettingsDisk.mockImplementation(async () => {})
     mockGetKeysCache.mockReturnValue(undefined)
     mockWriteKeysCache.mockImplementation(async () => {})
+    mockGetAttestationToken.mockReset()
     mockGetAttestationToken.mockResolvedValue(undefined)
+    mockTokenListeners.clear()
+    mockTokenState.current = undefined
     mockFetchRemoteKeys.mockReset()
   })
 
@@ -466,6 +484,370 @@ describe('initializeKeys', () => {
     } finally {
       warn.mockRestore()
     }
+  })
+
+  it('fetches again and caches once a token arrives after an unattested fetch', async () => {
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('late-token')
+    mockFetchRemoteKeys
+      .mockResolvedValueOnce({
+        keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+        assuranceLevel: 'default'
+      })
+      .mockResolvedValue({
+        keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+        assuranceLevel: 'hardware'
+      })
+
+    const { keysStore, keys } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(1)
+    expect(mockWriteKeysCache).toHaveBeenCalledTimes(1)
+    expect(mockWriteKeysCache).toHaveBeenLastCalledWith(
+      expect.objectContaining({ assuranceLevel: 'default', attested: false })
+    )
+    expect(mockTokenListeners.size).toBe(1)
+
+    // The handshake fails first and succeeds on a later retry:
+    deliverToken(undefined)
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(1)
+
+    deliverToken('late-token')
+    await flushMicrotasks()
+
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+    expect(mockFetchRemoteKeys).toHaveBeenLastCalledWith(
+      expect.objectContaining({ attestationToken: 'late-token' })
+    )
+    expect(mockWriteKeysCache).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+        assuranceLevel: 'hardware',
+        attested: true
+      })
+    )
+    // The cache is for the next launch. This one keeps the keys it booted on:
+    expect(keysStore.getKeysTier()).toBe('remote')
+    expect(keys.globalKeys.AZTECO_API_KEY).toBe('default-layer')
+
+    // The answer that carried a token is cached, so the wait is over however
+    // often the token rotates afterwards:
+    expect(mockTokenListeners.size).toBe(0)
+    deliverToken('rotated-token')
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+  })
+
+  it('fetches again when the token landed just after the wait gave up', async () => {
+    mockTokenState.current = 'just-landed'
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('just-landed')
+    mockFetchRemoteKeys.mockImplementation(async opts => {
+      const { attestationToken } = opts as { attestationToken?: string }
+      return attestationToken == null
+        ? {
+            keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+            assuranceLevel: 'default'
+          }
+        : {
+            keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+            assuranceLevel: 'hardware'
+          }
+    })
+
+    const cache = useLiveCache()
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+    expect(mockTokenListeners.size).toBe(0)
+    // Whichever of the two answers landed first:
+    expect(cache.current).toEqual(
+      expect.objectContaining({ assuranceLevel: 'hardware', attested: true })
+    )
+  })
+
+  it('does not wait for a token when the fetch went out with one', async () => {
+    mockGetAttestationToken.mockResolvedValue('token')
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+      assuranceLevel: 'hardware'
+    })
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+
+    expect(mockTokenListeners.size).toBe(0)
+    deliverToken('rotated-token')
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(1)
+    expect(mockWriteKeysCache).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps an attested cache entry when the unattested answer lands after it', async () => {
+    // Written before the cache recorded whether the request carried a token,
+    // so nothing but the overlap rule protects what the refetch caches:
+    const cache = useLiveCache({
+      keys: { globalKeys: { AZTECO_API_KEY: 'from-cache' } },
+      fetchedAt: 1,
+      assuranceLevel: 'hardware'
+    })
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('late-token')
+    let resolveUnattested!: (value: {
+      keys: Record<string, unknown>
+      assuranceLevel?: string
+    }) => void
+    mockFetchRemoteKeys
+      .mockImplementationOnce(
+        async () =>
+          await new Promise(resolve => {
+            resolveUnattested = resolve
+          })
+      )
+      .mockResolvedValue({
+        keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+        assuranceLevel: 'hardware'
+      })
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+    expect(keysStore.getKeysTier()).toBe('cache')
+
+    deliverToken('late-token')
+    await flushMicrotasks()
+    expect(mockWriteKeysCache).toHaveBeenCalledTimes(1)
+    expect(mockWriteKeysCache).toHaveBeenLastCalledWith(
+      expect.objectContaining({ assuranceLevel: 'hardware' })
+    )
+
+    resolveUnattested({
+      keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+      assuranceLevel: 'default'
+    })
+    await flushMicrotasks()
+    await flushMicrotasks()
+    expect(mockWriteKeysCache).toHaveBeenCalledTimes(1)
+    expect(cache.current).toEqual(
+      expect.objectContaining({ assuranceLevel: 'hardware', attested: true })
+    )
+  })
+
+  it('keeps a recent attested cache entry when the launch gets no token', async () => {
+    const entry = {
+      keys: { globalKeys: { AZTECO_API_KEY: 'from-cache' } },
+      fetchedAt: Date.now() - DAY_MS,
+      assuranceLevel: 'hardware',
+      attested: true
+    }
+    const cache = useLiveCache(entry)
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+      assuranceLevel: 'default'
+    })
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(keysStore.getKeysTier()).toBe('cache')
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(1)
+    expect(mockWriteKeysCache).not.toHaveBeenCalled()
+    expect(cache.current).toBe(entry)
+    // Still waiting for a token to refresh the entry with:
+    expect(mockTokenListeners.size).toBe(1)
+  })
+
+  it.each([
+    ['older than the hold', -4 * DAY_MS],
+    ['stamped by a clock that has since been set back', 4 * DAY_MS]
+  ])(
+    'replaces an attested cache entry %s when the launch gets no token',
+    async (_name, offset) => {
+      const cache = useLiveCache({
+        keys: { globalKeys: { AZTECO_API_KEY: 'from-cache' } },
+        fetchedAt: Date.now() + offset,
+        assuranceLevel: 'hardware',
+        attested: true
+      })
+      mockFetchRemoteKeys.mockResolvedValue({
+        keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+        assuranceLevel: 'default'
+      })
+
+      const { keysStore } = freshModules()
+      await keysStore.initializeKeys()
+      await flushMicrotasks()
+      await flushMicrotasks()
+
+      expect(keysStore.getKeysTier()).toBe('cache')
+      expect(cache.current).toEqual(
+        expect.objectContaining({
+          keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+          assuranceLevel: 'default',
+          attested: false
+        })
+      )
+    }
+  )
+
+  it('replaces an attested cache entry that will not merge', async () => {
+    const cache = useLiveCache({
+      keys: { guiApiKeys: 'not-an-object' },
+      fetchedAt: Date.now(),
+      assuranceLevel: 'hardware',
+      attested: true
+    })
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+      assuranceLevel: 'default'
+    })
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    try {
+      const { keysStore } = freshModules()
+      await keysStore.initializeKeys()
+      await flushMicrotasks()
+
+      expect(keysStore.getKeysTier()).toBe('remote')
+      expect(cache.current).toEqual(
+        expect.objectContaining({ assuranceLevel: 'default', attested: false })
+      )
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('fetches again on the next token when the refetch fails', async () => {
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('token')
+    mockFetchRemoteKeys
+      .mockResolvedValueOnce({
+        keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+        assuranceLevel: 'default'
+      })
+      .mockRejectedValueOnce(new Error('network down'))
+      .mockResolvedValue({
+        keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+        assuranceLevel: 'hardware'
+      })
+    const cache = useLiveCache()
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    try {
+      const { keysStore } = freshModules()
+      await keysStore.initializeKeys()
+      await flushMicrotasks()
+
+      deliverToken('first-token')
+      await flushMicrotasks()
+      expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+      expect(cache.current?.assuranceLevel).toBe('default')
+      expect(mockTokenListeners.size).toBe(1)
+
+      deliverToken('refreshed-token')
+      await flushMicrotasks()
+      expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(3)
+      expect(cache.current).toEqual(
+        expect.objectContaining({ assuranceLevel: 'hardware', attested: true })
+      )
+      expect(mockTokenListeners.size).toBe(0)
+    } finally {
+      warn.mockRestore()
+    }
+  })
+
+  it('stays subscribed when the token is gone before the refetch is sent', async () => {
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('token')
+    mockFetchRemoteKeys.mockImplementation(async opts => {
+      const { attestationToken } = opts as { attestationToken?: string }
+      return attestationToken == null
+        ? {
+            keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+            assuranceLevel: 'default'
+          }
+        : {
+            keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+            assuranceLevel: 'hardware'
+          }
+    })
+    const cache = useLiveCache()
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+
+    deliverToken('dropped-token')
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+    expect(cache.current?.attested).toBe(false)
+    expect(mockTokenListeners.size).toBe(1)
+
+    deliverToken('token')
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(3)
+    expect(cache.current).toEqual(
+      expect.objectContaining({ assuranceLevel: 'hardware', attested: true })
+    )
+    expect(mockTokenListeners.size).toBe(0)
+  })
+
+  it('does not start a second refetch while one is in flight', async () => {
+    mockGetAttestationToken
+      .mockResolvedValueOnce(undefined)
+      .mockResolvedValue('token')
+    let resolveRefetch!: (value: {
+      keys: Record<string, unknown>
+      assuranceLevel?: string
+    }) => void
+    mockFetchRemoteKeys
+      .mockResolvedValueOnce({
+        keys: { globalKeys: { AZTECO_API_KEY: 'default-layer' } },
+        assuranceLevel: 'default'
+      })
+      .mockImplementationOnce(
+        async () =>
+          await new Promise(resolve => {
+            resolveRefetch = resolve
+          })
+      )
+    const cache = useLiveCache()
+
+    const { keysStore } = freshModules()
+    await keysStore.initializeKeys()
+    await flushMicrotasks()
+
+    deliverToken('first-token')
+    await flushMicrotasks()
+    deliverToken('refreshed-token')
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+
+    resolveRefetch({
+      keys: { globalKeys: { AZTECO_API_KEY: 'hardware-layer' } },
+      assuranceLevel: 'hardware'
+    })
+    await flushMicrotasks()
+    expect(mockFetchRemoteKeys).toHaveBeenCalledTimes(2)
+    expect(cache.current).toEqual(
+      expect.objectContaining({ assuranceLevel: 'hardware', attested: true })
+    )
+    expect(mockTokenListeners.size).toBe(0)
   })
 
   it('never rejects even when awaitDeviceSettingsDisk throws', async () => {
