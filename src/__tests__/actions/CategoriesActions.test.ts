@@ -154,6 +154,79 @@ describe('getTxActionDisplayInfo, send titles', () => {
   })
 })
 
+/**
+ * The spend side of a swap between two of the user's wallets, as a swap plugin
+ * leaves it. `privacy` is absent on every swap saved before the flag existed.
+ */
+const makeSwapTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
+  const { assetActionType = 'swap', metadata, privacy, tokenId = null } = opts
+
+  return {
+    txid: 'txid',
+    tokenId,
+    currencyCode: 'BTC',
+    nativeAmount: '-38693',
+    isSend: true,
+    metadata,
+    assetAction: { assetActionType },
+    spendTargets: [{ publicAddress: DEPOSIT_ADDRESS, nativeAmount: '38693' }],
+    savedAction: {
+      actionType: 'swap',
+      swapInfo: { pluginId: 'houdini', displayName: 'HoudiniSwap' },
+      orderId: '9zdiWHWi2Q4Y7NRPB8k7mL',
+      isEstimate: true,
+      fromAsset: { pluginId: 'bitcoin', tokenId: null, nativeAmount: '38693' },
+      toAsset: { pluginId: 'ethereum', tokenId: null, nativeAmount: '5210' },
+      payoutAddress: '0x1234567890abcdef1234567890abcdef12345678',
+      payoutWalletId: ethereumWallet.id,
+      ...(privacy == null ? {} : { privacy })
+    }
+  } as unknown as EdgeTransaction
+}
+
+describe('getTxActionDisplayInfo, swap titles', () => {
+  it('titles a private swap as a Stealth Swap', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapTx({ privacy: true }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(lstrings.transaction_details_stealth_swap)
+    expect(mergedData.category).toBe('Exchange:To ETH')
+  })
+
+  it('keeps the plain title on a swap that was not private', () => {
+    for (const privacy of [undefined, false]) {
+      const { mergedData } = getTxActionDisplayInfo(
+        makeSwapTx({ privacy }),
+        account,
+        bitcoinWallet
+      )
+      expect(mergedData.name).toBe(lstrings.transaction_details_swap)
+    }
+  })
+
+  it('lets a stored name stand on a private swap', () => {
+    // Both ends are the user's own wallets, so a name the user gave the
+    // transaction reveals nothing the flow conceals.
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapTx({ metadata: { name: 'Rebalance' }, privacy: true }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe('Rebalance')
+  })
+
+  it('keeps the network-fee title on a private swap fee row', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapTx({ assetActionType: 'swapNetworkFee', privacy: true }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(lstrings.transaction_details_swap_network_fee)
+  })
+})
+
 describe('getTxActionDisplayInfo, the parent network-fee row', () => {
   // A token send files its fee under `tokenId: null` with the same send
   // action, so the private-send display rules hold there too, but the row is
