@@ -1,9 +1,9 @@
 # The transaction identity of a completed stealth swap-send.
 #
 # Opens the newest stealth transaction in the source wallet and walks the rows
-# that make it legible without exposing the recipient: the title names the
-# mechanism, the real payout address is suppressed, and the exchange order
-# details are shown so the user can follow their own order.
+# that make it legible: the title names the mechanism, the exchange order
+# details are shown so the user can follow their own order, and the recipient
+# address has its own row above the exchange deposit address.
 #
 # Requires a stealth send to have already completed in the source wallet, so the
 # default matches stealth-execute-send.yaml's source: run that one first and
@@ -52,3 +52,12 @@ tags:
     timeout: 15000
     visibilityPercentage: 30
 - takeScreenshot: maestro/screenshots/stealth-tx-02-order-details
+# The payee is the swap's payout address, not the spend target, which is the
+# provider's deposit address in the row below it.
+- scrollUntilVisible:
+    element:
+      text: 'Recipient Address'
+    direction: DOWN
+    timeout: 15000
+- assertVisible: 'Exchange Deposit Address'
+- takeScreenshot: maestro/screenshots/stealth-tx-03-recipient-address
