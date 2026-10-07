@@ -260,6 +260,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
     // Houdini privacy provider AND demands a private route: restricting the
     // provider alone would still accept that provider's transparent standard
     // routes, which are priced better and would be labelled private here.
+    // The restriction also queries Houdini when it is switched off in Exchange
+    // Settings, a setting only a swap with Stealth off honors.
     const quoteRequest: EdgeSwapRequest = stealth
       ? { ...swapRequest, privacy: 'required' }
       : swapRequest
