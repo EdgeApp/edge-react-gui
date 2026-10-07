@@ -7,7 +7,8 @@ import { openBrowserUri } from '../../util/WebUtils'
 import { showError } from '../services/AirshipInstance'
 import { AlertCardUi4 } from './AlertCard'
 
-const LARGE_UTXO_WALLET_HELP_URI = 'https://support.edge.app/articles/13892386'
+const LARGE_UTXO_WALLET_HELP_URI =
+  'https://support.edge.app/en/articles/17129745-what-does-the-large-wallet-card-mean'
 
 /**
  * Explains the slow sync and the temporarily inflated balance of a UTXO wallet

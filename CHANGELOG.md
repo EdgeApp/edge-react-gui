@@ -8,7 +8,7 @@
 
 - added: Arc wallets
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
-- added: Slow-sync explainer card on Bitcoin-family wallets with a long transaction history.
+- added: Slow-sync explainer card and Learn More article on Bitcoin-family wallets with a long transaction history.
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 - added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
