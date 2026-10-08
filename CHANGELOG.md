@@ -39,6 +39,7 @@
 - changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
 - changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
 - changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
+- changed: Hide the Stealth Send card and Recipient receives row on sends with multiple recipients
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
 - fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
 - fixed: Missing exchange rates when the device clock is set ahead

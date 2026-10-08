@@ -15,6 +15,7 @@ import {
   SendScene2,
   type SendScene2Params
 } from '../../components/scenes/SendScene2'
+import { lstrings } from '../../locales/strings'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
@@ -328,6 +329,42 @@ describe('SendScene2', () => {
     expect(rendered.getByText('13579 sats')).toBeTruthy()
     expect(rendered.queryByText('13579 BTC')).toBeNull()
     rendered.unmount()
+  })
+
+  it('hides the Stealth Send card and Recipient receives row with 2 spendTargets', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    // No pre-filled address, so the scene is eligible for Stealth Send:
+    const params: SendScene2Params = {
+      walletId: btcWallet.id,
+      tokenId: null,
+      spendInfo: { tokenId: null, spendTargets: [{}] },
+      doCheckAndShowGetCryptoModal: false
+    }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
+      </FakeProviders>
+    )
+    expect(rendered.queryByText(lstrings.stealth_send_toggle)).not.toBeNull()
+    expect(
+      rendered.queryByText(lstrings.stealth_recipient_receives)
+    ).not.toBeNull()
+    rendered.unmount()
+
+    params.spendInfo = { tokenId: null, spendTargets: [{}, {}] }
+    const rendered2 = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2 {...fakeEdgeAppSceneProps('send2', params)} />
+      </FakeProviders>
+    )
+    expect(rendered2.queryByText(lstrings.stealth_send_toggle)).toBeNull()
+    expect(
+      rendered2.queryByText(lstrings.stealth_recipient_receives)
+    ).toBeNull()
+    rendered2.unmount()
   })
 })
 
