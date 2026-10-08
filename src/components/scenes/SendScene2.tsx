@@ -1391,6 +1391,7 @@ const SendComponent: React.FC<Props> = props => {
     }
     return (
       <EditableAmountTile
+        key={`addressAmount${index}`}
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
@@ -1504,6 +1505,7 @@ const SendComponent: React.FC<Props> = props => {
 
       return (
         <AddressTile2
+          key={`address${index}`}
           title={title}
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
@@ -1617,6 +1619,7 @@ const SendComponent: React.FC<Props> = props => {
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
+          key={`amount${index}`}
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
@@ -2600,6 +2603,7 @@ const SendComponent: React.FC<Props> = props => {
 
       return (
         <EdgeRow
+          key={`${memoOption.type}:${memoOption.memoName}`}
           rightButtonType="touchable"
           title={memoTitle}
           onPress={handleMemo}
