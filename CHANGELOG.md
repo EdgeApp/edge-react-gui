@@ -35,6 +35,7 @@
 - changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
 - changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
 - changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
+- changed: Hide the Stealth Send card on sends with multiple recipients
 - fixed: A send whose funds are not spendable yet says so instead of reporting a network error
 - fixed: A swap retried after a failure fetches a fresh quote instead of failing with a "closed proxy" error
 - fixed: WalletConnect Bitcoin message signing returns a BIP-322 signature when the dapp requests `bip322`

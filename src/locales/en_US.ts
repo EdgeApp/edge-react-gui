@@ -1697,8 +1697,6 @@ const strings = {
   stealth_quote_rate: 'Exchange Rate',
   stealth_quote_expires: 'Quote Expires',
   stealth_getting_quote: 'Getting quote...',
-  stealth_multi_recipient_unsupported:
-    'Stealth Send and cross-asset recipients are not available when sending to multiple recipients.',
   stealth_route_unavailable_toast:
     'Private routing is not available for this pair right now. Stealth Send has been turned off.',
   stealth_route_unavailable_info:

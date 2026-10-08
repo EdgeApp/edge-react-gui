@@ -638,7 +638,7 @@ The exchange order details themselves stay **visible** for a stealth transaction
 
 ### Multi-recipient gating
 
-Gated in both directions. Stealth on or a mismatched recipient hides "Add Another Address"; with multiple recipients present the stealth toggle is disabled, the card expands with an explanation, and the recipient-asset selector locks. Multi-recipient sends also gained a Total Amount row, which the task had left open.
+Gated in both directions. Stealth on or a mismatched recipient hides "Add Another Address"; with multiple recipients present the Stealth Send card is hidden and the recipient-asset selector locks. The toggle state is untouched while the card is hidden, so it comes back unchanged once the send is down to one recipient. Multi-recipient sends also gained a Total Amount row, which the task had left open.
 
 ### Stealth Swap
 
