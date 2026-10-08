@@ -745,18 +745,17 @@ const SendComponent: React.FC<Props> = props => {
    * can. Ordered most specific first, so the user reads the reason that
    * applies to the send in front of them rather than the first one that fires.
    */
-  const stealthBlockedReason: string | undefined = multipleTargets
-    ? lstrings.stealth_multi_recipient_unsupported
-    : sameAsset && !selfPrivateAvailable
-    ? sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
-    : belowPrivateFloor
-    ? sprintf(
-        lstrings.stealth_below_private_minimum_1s,
-        formatUsdFloor(HOUDINI_MIN_USD.private)
-      )
-    : pairCaps.stealth === false
-    ? lstrings.stealth_route_unavailable_info
-    : undefined
+  const stealthBlockedReason: string | undefined =
+    sameAsset && !selfPrivateAvailable
+      ? sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
+      : belowPrivateFloor
+      ? sprintf(
+          lstrings.stealth_below_private_minimum_1s,
+          formatUsdFloor(HOUDINI_MIN_USD.private)
+        )
+      : pairCaps.stealth === false
+      ? lstrings.stealth_route_unavailable_info
+      : undefined
 
   /** The floor this send must clear for the route it would actually take. */
   const belowActiveFloor = stealth ? belowPrivateFloor : belowStandardFloor
@@ -1912,14 +1911,17 @@ const SendComponent: React.FC<Props> = props => {
 
   const renderRecipientReceives = (): React.ReactElement | null => {
     if (!swapSendAllowed) return null
+    // A multi-recipient send always delivers the source asset, so the row
+    // has nothing to offer there:
+    if (multipleTargets) return null
     const described = describeAsset(account, recipientAsset)
     const recipientCurrencyCode = described?.currencyCode ?? currencyCode
     const recipientDisplayName = described?.displayName ?? recipientCurrencyCode
     return (
       <EdgeRow
-        rightButtonType={multipleTargets ? 'none' : 'editable'}
+        rightButtonType="editable"
         title={lstrings.stealth_recipient_receives}
-        onPress={multipleTargets ? undefined : handlePickRecipientAsset}
+        onPress={handlePickRecipientAsset}
       >
         <View style={styles.swapAssetRow}>
           <CryptoIcon
@@ -2034,13 +2036,16 @@ const SendComponent: React.FC<Props> = props => {
 
   const renderStealthToggle = (): React.ReactElement | null => {
     if (!swapSendAllowed) return null
+    // Stealth takes exactly one recipient, so the card is hidden while the
+    // send has several. The toggle state is left alone, and the card returns
+    // with it once the send is back to a single recipient:
+    if (multipleTargets) return null
     return (
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
         <EdgeCard sections>
           <SettingsSwitchRow
             label={lstrings.stealth_send_toggle}
             value={stealth}
-            disabled={multipleTargets}
             onPress={handleToggleStealth}
           />
           {stealthBlockedReason != null && !stealth ? (

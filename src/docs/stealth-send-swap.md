@@ -11,7 +11,7 @@
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: d4ac8cf100f3bc6cebe3aaa541af9418b4f1f538 -->
+<!-- tdd-code-fingerprint: 27795ea097fc4644ab16cb5be2a9d7d76c61b9b3 -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -638,7 +638,7 @@ The exchange order details render in full for a stealth transaction: order id, p
 
 ### Multi-recipient gating
 
-Gated in both directions. Stealth on or a mismatched recipient hides "Add Another Address"; with multiple recipients present the stealth toggle is disabled, the card expands with an explanation, and the recipient-asset selector locks. Multi-recipient sends also gained a Total Amount row, which the task had left open.
+Gated in both directions. Stealth on or a mismatched recipient hides "Add Another Address"; with multiple recipients present the Stealth Send card and the "Recipient receives" row are both hidden. The toggle state is untouched while the card is hidden, so it comes back unchanged once the send is down to one recipient. Multi-recipient sends also gained a Total Amount row, which the task had left open.
 
 ### Stealth Swap
 
