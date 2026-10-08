@@ -487,6 +487,31 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
 }
 
 /**
+ * Whether text a wallet could not parse is still written for that wallet's own
+ * chain: a bare address in the chain's format, or a payment URI that names the
+ * chain and carries one. Such text is a bad address on this chain (a failed
+ * checksum), whatever other chains share the format.
+ *
+ * A URI is read by what it names, an EIP-681 chain id before the scheme, so
+ * `polygon:0x…` and `ethereum:0x…@137` are not Ethereum's own text even though
+ * the address inside fits Ethereum's format.
+ */
+export function isOwnChainAddressText(
+  chain: HoudiniChain,
+  text: string
+): boolean {
+  const { addressCandidates, scheme, evmChainId } = peekPaymentUri(text)
+  const namesOtherChain =
+    evmChainId != null
+      ? evmChainId !== chain.evmChainId
+      : scheme != null && !schemeNamesChain(scheme, chain)
+  return (
+    !namesOtherChain &&
+    addressCandidates.some(candidate => isValidHoudiniAddress(chain, candidate))
+  )
+}
+
+/**
  * The asset the recipient actually receives.
  *
  * A swap-send always pays out the destination chain's NATIVE asset, because

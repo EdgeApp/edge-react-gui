@@ -254,6 +254,15 @@ const strings = {
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
   send_to_self_error_message: 'You cannot send to the same wallet',
+  send_address_invalid_1s: 'This is not a valid %1$s address.',
+  send_address_other_network_1s:
+    'This address is on another network. This send can only go to an address on %1$s.',
+  send_address_unrecognized_2s:
+    'This is not a valid %1$s address, and it does not match any other network %2$s can send to from this wallet.',
+  send_address_own_network_2s:
+    'This is a %1$s address, but the recipient is set to receive on %2$s. Change what the recipient receives to send to this address.',
+  send_address_no_network_selected:
+    'No network was selected, so the address was not added.',
   fragment_send_subtitle: 'Send',
   fragment_send_myself: 'Myself',
   fragment_send_from_label: 'From',

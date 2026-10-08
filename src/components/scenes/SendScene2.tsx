@@ -60,6 +60,7 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, FioRequest } from '../../types/types'
+import { describeAddressRejection } from '../../util/addressRejection'
 import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -77,6 +78,7 @@ import {
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
+  isOwnChainAddressText,
   recipientAssetKey,
   schemeNamesChain
 } from '../../util/houdiniChains'
@@ -90,6 +92,7 @@ import {
 } from '../../util/memoUtils'
 import {
   type CrossChainPayment,
+  isPayableOnAny,
   parseCrossChainPayment,
   peekPaymentUri
 } from '../../util/paymentUri'
@@ -1103,23 +1106,73 @@ const SendComponent: React.FC<Props> = props => {
    * the recipient's address before touching "Recipient receives". Detect the
    * chain it belongs to, adopt it as the destination, and keep the address.
    *
-   * Returns false to let the tile report an invalid address, which is still
-   * the right answer for a genuine typo.
+   * Every path that does not adopt the address resolves the reason for the
+   * tile to show, since the scene is otherwise left exactly as it was.
    */
   const handleUnparsedAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (
       address: string,
       addressEntryMethod: AddressEntryMethod
-    ): Promise<boolean> => {
-      if (!swapSendAllowed || multipleTargets) return false
+    ): Promise<boolean | string> => {
+      const networkNameOf = (id: string): string =>
+        account.currencyConfig[id].currencyInfo.displayName
 
       const candidates = detectHoudiniChains(address, {
         sourcePluginId: pluginId,
         sourceTokenId: tokenId,
         isSupported: id => account.currencyConfig[id] != null
       })
-      if (candidates.length === 0) return false
+
+      // A send that cannot become a swap only pays the wallet's own network,
+      // so an address from elsewhere is called out as such. Text written for
+      // this network, bare or inside a payment URI, is a bad address here (a
+      // failed checksum), whatever other networks share the format.
+      //
+      // Fitting another network's format is not enough to call it that
+      // network's address either: the wallet's own network may be one the
+      // provider does not serve, and a mistyped `0x` address there fits every
+      // served EVM network. One of them has to accept the text.
+      if (!swapSendAllowed || multipleTargets) {
+        const ownChain = getHoudiniChain(pluginId, null)
+        const isOwnFormat =
+          ownChain != null && isOwnChainAddressText(ownChain, address)
+        const isOtherNetworkAddress =
+          !isOwnFormat &&
+          (await isPayableOnAny(
+            candidates.map(
+              candidate => account.currencyConfig[candidate.pluginId]
+            ),
+            address
+          ))
+        return describeAddressRejection({
+          type: isOtherNetworkAddress ? 'otherNetwork' : 'invalid',
+          networkName: networkNameOf(pluginId)
+        })
+      }
+
+      if (candidates.length === 0) {
+        // With another network picked for the recipient, the tile read the
+        // text against that network alone, and detection leaves out the
+        // wallet's own. An address the wallet's network accepts is one this
+        // send can pay once the recipient asset is set back.
+        if (
+          destPluginId !== pluginId &&
+          (await isPayableOnAny([account.currencyConfig[pluginId]], address))
+        ) {
+          return describeAddressRejection({
+            type: 'ownNetwork',
+            networkName: networkNameOf(pluginId),
+            payoutNetworkName: networkNameOf(destPluginId)
+          })
+        }
+        // A genuine typo, or a network no swap can pay out to. `destPluginId`
+        // is the network the tile just read the text against.
+        return describeAddressRejection({
+          type: 'unrecognized',
+          networkName: networkNameOf(destPluginId)
+        })
+      }
 
       // An address format shared by several chains (any EVM `0x…`) cannot be
       // resolved from the address alone, and guessing would send the funds to
@@ -1156,8 +1209,12 @@ const SendComponent: React.FC<Props> = props => {
         const picked = candidates.find(
           candidate => candidate.pluginId === selected
         )
-        // Dismissing the picker is a deliberate cancel, not a bad address.
-        if (picked == null) return true
+        // Dismissing the picker is a deliberate cancel, not a bad address, so
+        // it is acknowledged rather than reported as an error.
+        if (picked == null) {
+          showToast(lstrings.send_address_no_network_selected)
+          return true
+        }
         chain = picked
       }
 
@@ -1165,7 +1222,14 @@ const SendComponent: React.FC<Props> = props => {
         account.currencyConfig[chain.pluginId],
         address
       )
-      if (payment == null) return false
+      // The format matched but the chain's own parser, which is what checks
+      // a checksum, turned it down.
+      if (payment == null) {
+        return describeAddressRejection({
+          type: 'invalid',
+          networkName: networkNameOf(chain.pluginId)
+        })
+      }
       const { publicAddress, nativeAmount, memo } = payment
 
       // A scanned exchange deposit code carries the tag that credits the

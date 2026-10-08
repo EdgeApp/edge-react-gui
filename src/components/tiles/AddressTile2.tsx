@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
+import { useFocusEffect } from '@react-navigation/native'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
   EdgeCurrencyWallet,
@@ -22,6 +23,7 @@ import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
+import { describeAddressRejection } from '../../util/addressRejection'
 import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { checkPubAddress } from '../../util/FioAddressUtils'
@@ -39,8 +41,9 @@ import {
   WalletListModal,
   type WalletListResult
 } from '../modals/WalletListModal'
+import { AlertDropdown } from '../navigation/AlertDropdown'
 import { EdgeRow } from '../rows/EdgeRow'
-import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { NameServicePrefix } from '../themed/NameServicePrefix'
@@ -122,13 +125,15 @@ interface Props {
    * the currently-picked destination chain). An address for another chain is
    * usually a cross-chain send whose recipient asset has not been picked yet,
    * so the consumer gets a chance to detect that chain and adopt the address.
-   * Return true when it took ownership, false to show the invalid-address
-   * error as before.
+   * Resolve true when it took ownership: it adopted the address, or told the
+   * user itself why it did not. Resolve a message to have this tile show it as
+   * the reason the address was declined, or false for the tile's own message,
+   * which names this wallet's network.
    */
   onUnparsedAddress?: (
     address: string,
     addressEntryMethod: AddressEntryMethod
-  ) => Promise<boolean>
+  ) => Promise<boolean | string>
   /**
    * Opt-in expansion of the "Myself" picker past the source asset. The caller
    * supplies the destination assets this send can route to, derived from route
@@ -239,9 +244,62 @@ export const AddressTile2 = React.forwardRef(
     // Handlers
     // ---------------------------------------------------------------------------
 
+    // Takes down the message for the last declined address, if it is still up.
+    const dismissAddressErrorRef = React.useRef<(() => void) | undefined>(
+      undefined
+    )
+    const dismissAddressError = useHandler((): void => {
+      dismissAddressErrorRef.current?.()
+      dismissAddressErrorRef.current = undefined
+    })
+
+    /**
+     * Tells the user why the entered address was declined. A declined address
+     * leaves the scene exactly as it was, so this message is the only sign
+     * anything happened: it stays up until dismissed, until another address
+     * is tried, or until it stops describing the scene (see the effects
+     * below). Bad input is not an app fault, so it is neither tracked nor
+     * given a report button.
+     */
+    const showAddressError = useHandler((message: string): void => {
+      dismissAddressError()
+      Airship.show(bridge => {
+        dismissAddressErrorRef.current = () => {
+          bridge.resolve()
+        }
+        return <AlertDropdown bridge={bridge} persistent message={message} />
+      }).catch((error: unknown) => {
+        showError(error)
+      })
+    })
+
+    /**
+     * Last stop for text no parser accepted: the consumer may adopt it for
+     * another chain, and otherwise the user is told why it was declined.
+     */
+    const rejectUnparsedAddress = useHandler(
+      async (
+        address: string,
+        addressEntryMethod: AddressEntryMethod
+      ): Promise<void> => {
+        const result =
+          (await onUnparsedAddress?.(address, addressEntryMethod)) ?? false
+        if (result === true) return
+        showAddressError(
+          result === false
+            ? describeAddressRejection({
+                type: 'invalid',
+                networkName: coreWallet.currencyInfo.displayName
+              })
+            : result
+        )
+      }
+    )
+
     const changeAddress = useHandler(
       async (address: string, addressEntryMethod: AddressEntryMethod) => {
         if (address == null || address.trim() === '') return
+        dismissAddressError()
 
         // A cross-chain destination cannot go through this wallet's URI
         // parsing or name services; the consumer parses it on the
@@ -251,14 +309,7 @@ export const AddressTile2 = React.forwardRef(
           if (payment == null) {
             // Not valid on the picked destination either. It may still belong
             // to some other chain the consumer can switch to.
-            const adopted = await onUnparsedAddress?.(
-              address,
-              addressEntryMethod
-            )
-            if (adopted === true) return
-            showToast(
-              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
-            )
+            await rejectUnparsedAddress(address, addressEntryMethod)
             return
           }
           await onChangeAddress({
@@ -486,14 +537,7 @@ export const AddressTile2 = React.forwardRef(
             // invalid, let the consumer check whether it addresses another
             // chain, which turns the send into a cross-chain swap.
             setLoading(false)
-            const adopted = await onUnparsedAddress?.(
-              address,
-              addressEntryMethod
-            )
-            if (adopted === true) return
-            showToast(
-              `${lstrings.scan_invalid_address_error_title} ${lstrings.scan_invalid_address_error_description}`
-            )
+            await rejectUnparsedAddress(address, addressEntryMethod)
           }
 
           setLoading(false)
@@ -633,6 +677,20 @@ export const AddressTile2 = React.forwardRef(
     useMount(() => {
       if (isCameraOpen) handleScan()
     })
+
+    // A recipient can arrive without passing through `changeAddress` (a
+    // "Myself" pick on another asset, a payment link), and the message is
+    // about an address that was not adopted, so any change to the recipient
+    // retires it.
+    React.useEffect(() => {
+      dismissAddressError()
+    }, [dismissAddressError, recipientAddress])
+
+    // The message lives in the Airship layer, above navigation, so it would
+    // otherwise follow the user onto the next scene.
+    useFocusEffect(
+      React.useCallback(() => dismissAddressError, [dismissAddressError])
+    )
 
     React.useImperativeHandle(ref, () => ({
       async onChangeAddress(address: string) {

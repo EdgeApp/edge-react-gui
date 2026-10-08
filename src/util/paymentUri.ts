@@ -113,3 +113,21 @@ export async function parseCrossChainPayment(
     return undefined
   }
 }
+
+/**
+ * Whether any of these chains' own parsers accepts the text as a payment to
+ * its coin. A format shared across chains (any EVM `0x…`) fits all of them by
+ * pattern, so only a parser, which checks the checksum, can say the text is
+ * an address on one of them.
+ */
+export async function isPayableOnAny(
+  currencyConfigs: EdgeCurrencyConfig[],
+  text: string
+): Promise<boolean> {
+  const payments = await Promise.all(
+    currencyConfigs.map(
+      async currencyConfig => await parseCrossChainPayment(currencyConfig, text)
+    )
+  )
+  return payments.some(payment => payment != null)
+}
