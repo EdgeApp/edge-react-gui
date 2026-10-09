@@ -61,6 +61,13 @@ const SLIPPAGE = 0.02 // 2%
 const SLIPPAGE_FACTOR = 1 + SLIPPAGE // A multiplier to get a minimum amount
 const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
+interface WorkflowUtils {
+  gasPrice: BigNumber | undefined
+  txs: ChainableTransaction[]
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
+}
+
 type ChainableTransaction = (
   previousTx?: ethers.providers.TransactionResponse
 ) => Promise<ethers.PopulatedTransaction>
@@ -214,7 +221,7 @@ export const makeTarotPoolAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       let txResponse: ethers.providers.TransactionResponse | undefined
       let nonce: number | undefined
       for (const makeTx of txs) {
@@ -232,7 +239,9 @@ export const makeTarotPoolAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const txs: ChainableTransaction[] = []
 
     const walletSigner = new EdgeWalletSigner(wallet, provider)
