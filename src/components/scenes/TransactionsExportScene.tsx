@@ -11,7 +11,6 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
 import {
   exportTransactionsToBitwave,
   exportTransactionsToCSV,
@@ -28,6 +27,7 @@ import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { getTxActionDisplayInfo } from '../../util/txDisplay'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
