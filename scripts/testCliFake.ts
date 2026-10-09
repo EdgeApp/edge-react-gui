@@ -826,6 +826,57 @@ function main(): void {
     ok('get-num-transactions', 'get-num-transactions', w)
     ok('get-transactions', 'get-transactions', w)
 
+    // Account-wide, so these take no wallet. A fresh fake account has no
+    // transactions, which still exercises the query and the database behind
+    // it — an empty result is a result.
+    const summary = ok('summarize-transactions', 'summarize-transactions')
+    check(
+      'summarize-transactions counts',
+      /"count":\s*0/.test(summary.out),
+      'expected a count field'
+    )
+    // No amount total, ever: summing would mean arithmetic on amounts inside
+    // the database, which it does not do.
+    check(
+      'summarize-transactions has no total',
+      !/nativeAmount|total/i.test(summary.out),
+      'expected no amount total'
+    )
+
+    ok('query-transactions', 'query-transactions', '--limit=5')
+    ok(
+      'query-transactions filtered',
+      'query-transactions',
+      '--plugin-id=bitcoin',
+      '--direction=receive'
+    )
+    // Native units, as an integer string. The previous shape of this API took
+    // an exchange-denomination number, so a query that passes here could not
+    // have been written against it.
+    ok(
+      'query-transactions by native amount',
+      'query-transactions',
+      '--min-amount=150000000',
+      '--wallet-id=' + w
+    )
+    ok(
+      'query-transactions by search',
+      'query-transactions',
+      '--search-string=groceries'
+    )
+    refuses(
+      'query-transactions refuses a display amount',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--min-amount=1.5'
+    )
+    refuses(
+      'query-transactions refuses an unsortable field',
+      'BAD_REQUEST',
+      'query-transactions',
+      '--sort=nativeAmount'
+    )
+
     // A key that is a member of `Object.prototype` is caller input like any
     // other. `wallets['__proto__']` is truthy and
     // `allTokens['__proto__'] == null` is false, so every guard that exists

@@ -75,6 +75,10 @@
       "description": "Reading transaction history, exporting it, and editing its metadata."
     },
     {
+      "name": "Account transactions",
+      "description": "Reading transactions across every wallet at once, out of the core's account-wide transaction database. Each row is one asset of one transaction, so a swap that moved two assets appears twice."
+    },
+    {
       "name": "Object handles",
       "description": "A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them."
     },
@@ -6901,9 +6905,6 @@
                         "description": "EdgeTxActionSwap"
                       },
                       {
-                        "description": "EdgeTxActionSwapSend"
-                      },
-                      {
                         "description": "EdgeTxActionStake"
                       },
                       {
@@ -6927,6 +6928,517 @@
                   "txid",
                   "savedAction"
                 ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/transactions": {
+      "get": {
+        "operationId": "queryAccountTransactions",
+        "summary": "Query transactions across every wallet in the account at once.",
+        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nquery-transactions [--sort=<sort>] [--sort-direction=<sortDirection>] [--limit=<limit>] [--offset=<offset>] [--after=<after>] [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nUnlike `get-transactions`, this reads the account-wide transaction database rather than one wallet's history, so a single call spans every plugin. It requires the engine to be running with the transaction database enabled.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "query-transactions",
+          "flags": [
+            {
+              "name": "wallet-id",
+              "maps": "walletIds",
+              "repeat": true
+            },
+            {
+              "name": "plugin-id",
+              "maps": "pluginIds",
+              "repeat": true
+            },
+            {
+              "name": "token-id",
+              "maps": "tokenIds",
+              "repeat": true
+            },
+            {
+              "name": "txid",
+              "maps": "txids",
+              "repeat": true
+            }
+          ],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.queryTxs",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to date. Anything but date needs the query narrowed by a wallet, asset or date range, since no index orders the whole account by amount.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to desc, newest first.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Defaults to 50, capped at 500.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Prefer `after` for deep paging.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "description": "Cursor from a previous page. Opaque: pass it back unmodified, and only with the sort that produced it.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Defaults to every wallet.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pluginIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Use `null` for the chain asset.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "description": "(string | null)"
+              }
+            }
+          },
+          {
+            "name": "txids",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "description": "Which way funds moved.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "receive",
+                "send"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "required": false,
+            "description": "The chain's smallest unit, as an integer string: 150000000, not 1.5.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minAmount.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minFee",
+            "in": "query",
+            "required": false,
+            "description": "This asset's network fee, same units as minAmount.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxFee",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minFee.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minBlockHeight",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive. Zero matches unconfirmed transactions.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxBlockHeight",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "description": "Free text over the name, notes and category the user wrote. Matches anywhere inside a word.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasMetadata",
+            "in": "query",
+            "required": false,
+            "description": "Only transactions that do, or do not, carry saved metadata.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "includeOrphans",
+            "in": "query",
+            "required": false,
+            "description": "Include transactions the user annotated on another device that this one has not seen.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`{ transactions, cursor }`",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/transactions/summary": {
+      "get": {
+        "operationId": "summarizeAccountTransactions",
+        "summary": "Count and summarize transactions across every wallet.",
+        "description": "**Core call:** `account.transactions.queryTxs`\n\n**Command line**\n\n```\nsummarize-transactions [--wallet-id=<walletIds> …] [--plugin-id=<pluginIds> …] [--token-id=<tokenIds> …] [--txid=<txids> …] [--direction=receive|send] [--start-date=<startDate>] [--end-date=<endDate>] [--min-amount=<minAmount>] [--max-amount=<maxAmount>] [--min-fee=<minFee>] [--max-fee=<maxFee>] [--min-block-height=<minBlockHeight>] [--max-block-height=<maxBlockHeight>] [--search-string=<searchString>] [--has-metadata[=false]] [--include-orphans[=false]]\n```\n\nComputed over the whole matching set rather than by paging through it, so it does not take a `limit`. Takes the same filters as `query-transactions`.",
+        "tags": [
+          "Account transactions"
+        ],
+        "x-cli": {
+          "command": "summarize-transactions",
+          "flags": [
+            {
+              "name": "wallet-id",
+              "maps": "walletIds",
+              "repeat": true
+            },
+            {
+              "name": "plugin-id",
+              "maps": "pluginIds",
+              "repeat": true
+            },
+            {
+              "name": "token-id",
+              "maps": "tokenIds",
+              "repeat": true
+            },
+            {
+              "name": "txid",
+              "maps": "txids",
+              "repeat": true
+            }
+          ],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.transactions.queryTxs",
+        "x-source": "src/cli/engine/routes/accountTransactions.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Defaults to every wallet.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "pluginIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable, such as `--plugin-id=bitcoin --plugin-id=ethereum`.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable. Use `null` for the chain asset.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "description": "(string | null)"
+              }
+            }
+          },
+          {
+            "name": "txids",
+            "in": "query",
+            "required": false,
+            "description": "Repeatable.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "required": false,
+            "description": "Which way funds moved.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "receive",
+                "send"
+              ]
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "description": "ISO-8601, or epoch milliseconds.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "required": false,
+            "description": "The chain's smallest unit, as an integer string: 150000000, not 1.5.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxAmount",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minAmount.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minFee",
+            "in": "query",
+            "required": false,
+            "description": "This asset's network fee, same units as minAmount.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxFee",
+            "in": "query",
+            "required": false,
+            "description": "Upper bound, same units as minFee.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minBlockHeight",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive. Zero matches unconfirmed transactions.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "maxBlockHeight",
+            "in": "query",
+            "required": false,
+            "description": "Inclusive.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "searchString",
+            "in": "query",
+            "required": false,
+            "description": "Free text over the name, notes and category the user wrote. Matches anywhere inside a word.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasMetadata",
+            "in": "query",
+            "required": false,
+            "description": "Only transactions that do, or do not, carry saved metadata.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "includeOrphans",
+            "in": "query",
+            "required": false,
+            "description": "Include transactions the user annotated on another device that this one has not seen.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Counts and the date range of the matching set.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
               }
             }
           }
