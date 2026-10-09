@@ -52,7 +52,9 @@ const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 
-const SCAM_WARNING = 'Scam Warning'
+const IRREVERSIBLE = 'Cryptocurrency transactions are irreversible.'
+const ON_BITCOIN = 'Make sure the recipient is on the Bitcoin network.'
+const ON_ETHEREUM = 'Make sure the recipient is on the Ethereum network.'
 const SWAP_BEFORE_SEND = 'Swap before send'
 
 interface RecipientAssetItem {
@@ -396,36 +398,42 @@ describe('SendScene2 recipient network', () => {
     scene.unmount()
   })
 
-  it('shows the scam warning on a plain send with no address', async () => {
+  it('closes a plain send with the reminders as a note', async () => {
     const scene = renderBitcoinSend()
 
-    expect(scene.count(SCAM_WARNING)).toBe(1)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
+    expect(scene.shows('Scam Warning')).toBe(false)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
 
-    // An entered address retires the card: off to Ethereum and back leaves a
+    // The note outlives address entry: off to Ethereum and back leaves a
     // plain Bitcoin send with its recipient filled in.
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     await scene.enterUnparsedAddress(BTC_ADDRESS)
     expect(scene.recipientAddress()).toBe(BTC_ADDRESS)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
     scene.unmount()
   })
 
-  it('shows the swap card alone on a swap-send with no address', async () => {
+  it('moves the reminders into the swap card on a swap-send', async () => {
     const scene = renderBitcoinSend()
 
     // Picking the recipient's asset makes the send a swap before any address:
     await scene.pickRecipientAsset('Ethereum')
     expect(scene.recipientAddress()).toBe('')
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
+    expect(scene.shows(ON_BITCOIN)).toBe(false)
 
-    // The swap card stays the only one once the address is in:
+    // The card stays the only message once the address is in:
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
     scene.unmount()
   })
 

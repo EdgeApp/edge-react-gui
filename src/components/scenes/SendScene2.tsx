@@ -2684,40 +2684,40 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  // What every send needs said once: the address has to be on the network
+  // the funds are paid out on, and the send cannot be undone.
+  const sendReminders = [
+    sprintf(
+      lstrings.send_check_recipient_network_1s,
+      swapSendActive
+        ? account.currencyConfig[destPluginId].currencyInfo.displayName
+        : coreWallet.currencyInfo.displayName
+    ),
+    lstrings.warning_scam_message_irreversibility
+  ]
+
   /**
-   * The scam warning opens a plain send, until an address is entered. A
-   * swap-send has its own warning card and an error stands alone, so the
-   * scene never stacks this card on either.
+   * The reminders as a quiet note at the foot of a plain send. A swap-send
+   * carries them in its warning card instead, and an error stands alone, so
+   * the scene never shows two message bodies at once.
    */
-  const renderScamWarning = (): React.ReactElement | null => {
+  const renderSendReminders = (): React.ReactElement | null => {
     if (swapSendActive || showErrorCard) return null
-    const { publicAddress } = spendInfo.spendTargets[0]
-
-    if (publicAddress === '' || publicAddress == null) {
-      const scamMessage = sprintf(
-        lstrings.warning_scam_message_financial_advice_s,
-        config.appName
-      )
-      const scamFooter = sprintf(
-        lstrings.warning_scam_footer_s,
-        config.supportEmail
-      )
-
-      return (
-        <AlertCardUi4
-          marginRem={[1.5, 0.5]}
-          title={lstrings.warning_scam_title}
-          type="warning"
-          body={[
-            scamMessage,
-            lstrings.warning_scam_message_irreversibility,
-            lstrings.warning_scam_message_unknown_recipients
-          ]}
-          footer={scamFooter}
-        />
-      )
-    }
-    return null
+    return (
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+        <View style={styles.sendReminders}>
+          {sendReminders.map(reminder => (
+            <EdgeText
+              key={reminder}
+              style={styles.sendReminderText}
+              numberOfLines={0}
+            >
+              {reminder}
+            </EdgeText>
+          ))}
+        </View>
+      </EdgeAnim>
+    )
   }
 
   const handleLearnMore = useHandler(async () => {
@@ -2752,13 +2752,16 @@ const SendComponent: React.FC<Props> = props => {
    * confirms. That wait is the part the scene does not otherwise show, so it
    * sits with the other warning cards for as long as the send stays a swap,
    * giving way to the more specific fallback warning (which repeats it) or an
-   * error.
+   * error. It closes with the send reminders, which have no note of their own
+   * on a swap-send.
    */
-  const swapSendWarningBody = `${
+  const swapSendWarningBody = [
     stealth
       ? lstrings.stealth_swap_send_warning_body_private
-      : lstrings.stealth_swap_send_warning_body
-  } ${lstrings.transaction_may_take_longer}`
+      : lstrings.stealth_swap_send_warning_body,
+    lstrings.transaction_may_take_longer,
+    ...sendReminders
+  ]
 
   const renderSwapSendWarning = (): React.ReactElement | null => {
     if (!swapSendActive || fixedToFallback || showErrorCard) return null
@@ -2798,7 +2801,10 @@ const SendComponent: React.FC<Props> = props => {
         <AlertCardUi4
           type="warning"
           title={lstrings.stealth_fixed_to_fallback_title}
-          body={`${lstrings.stealth_fixed_to_fallback_body} ${swapSendWarningBody}`}
+          body={[
+            lstrings.stealth_fixed_to_fallback_body,
+            ...swapSendWarningBody
+          ]}
           marginRem={0.5}
         />
       </EdgeAnim>
@@ -4087,14 +4093,12 @@ const SendComponent: React.FC<Props> = props => {
                   {renderAuthentication()}
                 </EdgeCard>
               </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-                {renderScamWarning()}
-              </EdgeAnim>
               {renderPendingTransactionWarning()}
               {renderSwapSendWarning()}
               {renderFixedToFallbackWarning()}
               {renderNymWarning()}
               {renderError()}
+              {renderSendReminders()}
               {sliderTopNode}
             </KeyboardAwareScrollView>
             <View style={[styles.sliderView, { bottom: sliderBottom }]}>
@@ -4155,6 +4159,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.375)
   },
   providerHint: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  sendReminders: {
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(1)
+  },
+  sendReminderText: {
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
