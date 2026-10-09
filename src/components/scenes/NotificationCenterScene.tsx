@@ -4,9 +4,9 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions.tsx'
 import {
+  updateLocalAccountSettings,
   useAccountSettings,
-  writeAccountNotifInfo,
-  writeLocalAccountSettings
+  writeAccountNotifInfo
 } from '../../actions/LocalSettingsActions'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions'
 import { useHandler } from '../../hooks/useHandler'
@@ -34,8 +34,7 @@ export const NotificationCenterScene: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const dispatch = useDispatch()
-  const accountSettings = useAccountSettings()
-  const { notifState, accountNotifDismissInfo } = useAccountSettings()
+  const { notifState } = useAccountSettings()
 
   const detectedTokensRedux = useSelector(
     state => state.core.enabledDetectedTokens
@@ -60,13 +59,13 @@ export const NotificationCenterScene: React.FC<Props> = props => {
 
   const handle2FaEnabledPress = useHandler(async () => {
     await openBrowserUri(config.ip2faSite)
-    await writeLocalAccountSettings(account, {
-      ...accountSettings,
+    await updateLocalAccountSettings(account, latest => ({
+      ...latest,
       accountNotifDismissInfo: {
-        ...accountNotifDismissInfo,
+        ...latest.accountNotifDismissInfo,
         ip2FaNotifShown: true
       }
-    })
+    }))
   })
 
   const handleBackupPress = useHandler(async () => {
