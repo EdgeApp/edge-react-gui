@@ -4,6 +4,7 @@
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
+- changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
