@@ -1,7 +1,7 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
-import { getHistoricalCryptoRate } from '../util/exchangeRates'
+import { getHistoricalCryptoRateOrUnavailable } from '../util/exchangeRates'
 import { toIsoFiatCode } from '../util/fiatCode'
 import { fillTxsFiat } from '../util/fillTxsFiat'
 
@@ -18,7 +18,7 @@ import { fillTxsFiat } from '../util/fillTxsFiat'
 const concurrency = { current: 0, peak: 0 }
 
 jest.mock('../util/exchangeRates', () => ({
-  getHistoricalCryptoRate: jest.fn(
+  getHistoricalCryptoRateOrUnavailable: jest.fn(
     async (_pluginId: string, _tokenId: unknown, isoFiat: string) => {
       concurrency.current++
       if (concurrency.current > concurrency.peak) {
@@ -98,7 +98,7 @@ describe('fillTxsFiat', () => {
     // wrote a zero fiat amount indistinguishable from a real one into every
     // CSV, QBO and Bitwave file built from the page. The count is what
     // `get-transactions` refuses an export on.
-    const mocked: any = getHistoricalCryptoRate
+    const mocked: any = getHistoricalCryptoRateOrUnavailable
     mocked.mockImplementationOnce(async () => Number.NaN)
     const tx = makeTx({ nativeAmount: '100000000', metadata: undefined })
     const result = await fillTxsFiat({

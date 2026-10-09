@@ -9,6 +9,7 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { sprintf } from 'sprintf-js'
 
 import { updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
@@ -21,6 +22,7 @@ import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import type { FillTxsFiatResult } from '../../util/fillTxsFiat'
 import {
   EXPORT_TX_INFO_FILE,
   type ExportTxInfo,
@@ -81,7 +83,7 @@ interface DispatchProps {
     wallet: EdgeCurrencyWallet,
     tokenId: EdgeTokenId,
     txs: EdgeTransaction[]
-  ) => Promise<void>
+  ) => Promise<FillTxsFiatResult>
 }
 
 type Props = StateProps & OwnProps & ThemeProps & DispatchProps
@@ -446,8 +448,45 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const files: File[] = []
     const formats: string[] = []
 
+    // A cancelled or blank modal leaves `accountId` as `''`, and
+    // `buildExportFiles` refuses `'bitwave'` without an id. Falling back to
+    // the saved id first — which is what the engine's `get-transactions`
+    // handler does with the same preferences file — and only then dropping
+    // the format: the throw used to escape `handleSubmit` after the whole
+    // rate fetch had run, so the user waited and then got an error
+    // drop-down and *no* files at all, not even the CSV and QBO they had
+    // also selected.
+    const bitwaveAccountId = accountId === '' ? fileAccountId : accountId
+    const wantsBitwave = isExportBitwave && bitwaveAccountId !== ''
+    if (isExportBitwave && !wantsBitwave) {
+      showToast(lstrings.export_transaction_bitwave_accountid_missing)
+    }
+
     // Update the transactions that are missing fiat amounts
-    await this.props.updateTxsFiatDispatch(sourceWallet, tokenId, txs)
+    const fill = await this.props.updateTxsFiatDispatch(
+      sourceWallet,
+      tokenId,
+      txs
+    )
+
+    // An export whose fiat column is partly `0` is worse than no export:
+    // the file looks complete, `total` reports the real count, and the
+    // wrong figures are the oldest transactions — the ones a tax year is
+    // made of. `fillTxsFiat` counts the rates it never got an answer about
+    // (a failed upstream request or a spent query budget, not a date the
+    // server cannot price), and `get-transactions --export-format` refuses
+    // the same way with `RATES_INCOMPLETE`. Retrying is the fix, so this
+    // says so rather than writing the file.
+    if (fill.unavailable > 0) {
+      showToast(
+        sprintf(
+          lstrings.export_transaction_rates_incomplete_2s,
+          String(fill.unavailable),
+          String(fill.asked)
+        )
+      )
+      return
+    }
 
     // One dispatch, shared with `get-transactions --export-format`: which of
     // the resolved values each formatter gets was written out here and again
@@ -465,14 +504,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       formats: [
         'csv',
         ...(isExportQbo ? (['qbo'] as const) : []),
-        ...(isExportBitwave ? (['bitwave'] as const) : [])
+        ...(wantsBitwave ? (['bitwave'] as const) : [])
       ],
       txs,
       currencyCode,
       isoFiat: defaultIsoFiat,
       displayDenom: { multiplier, name: denomName },
       exchangeDenom: { multiplier: exchangeMultiplier },
-      bitwaveAccountId: accountId
+      bitwaveAccountId: bitwaveAccountId
     })
 
     const csvFile = built.find(file => file.format === 'csv')?.contents
@@ -578,8 +617,7 @@ export const TransactionsExportScene = connect<
     ).name
   }),
   dispatch => ({
-    updateTxsFiatDispatch: async (wallet, tokenId, txs) => {
+    updateTxsFiatDispatch: async (wallet, tokenId, txs) =>
       await dispatch(updateTxsFiat(wallet, tokenId, txs))
-    }
   })
 )(withTheme(TransactionsExportSceneComponent))

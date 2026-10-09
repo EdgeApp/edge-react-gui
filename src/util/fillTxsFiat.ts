@@ -7,7 +7,10 @@ import type {
 
 import { errorMessage } from './errorMessage'
 import { getExchangeDenom } from './exchangeDenom'
-import { getHistoricalCryptoRate, isRateUnavailable } from './exchangeRates'
+import {
+  getHistoricalCryptoRateOrUnavailable,
+  isRateUnavailable
+} from './exchangeRates'
 import { DECIMAL_PRECISION } from './fiatConstants'
 import { reportWarning } from './reportWarning'
 
@@ -34,8 +37,8 @@ export interface FillTxsFiatResult {
  * out of Redux and calls this, so there is no parallel implementation to keep
  * in step.
  *
- * Every rate is queued before anything is awaited. `getHistoricalCryptoRate`
- * batches into one request of up to RATES_SERVER_MAX_QUERY_SIZE assets and
+ * Every rate is queued before anything is awaited. The rate queue batches
+ * into one request of up to RATES_SERVER_MAX_QUERY_SIZE assets and
  * debounces by FETCH_FREQUENCY per batch, so awaiting in fixed-size groups
  * instead bought a fresh debounce every group: 1,200 unpriced transactions
  * cost ~120s of pure waiting in groups of ten, past the CLI client's own
@@ -62,7 +65,7 @@ export async function fillTxsFiat(opts: {
       const date = new Date(tx.date * 1000).toISOString()
       ++asked
       promises.push(
-        getHistoricalCryptoRate(
+        getHistoricalCryptoRateOrUnavailable(
           wallet.currencyInfo.pluginId,
           tokenId,
           isoFiat,
