@@ -148,6 +148,25 @@ describe('makeStakingProvider', () => {
     expect(requests.filter(r => r === '0:eth_call').length).toBeLessThan(2)
   })
 
+  it('keeps reading from the first node while it answers', async () => {
+    const { provider, requests } = makeProvider([healthy, healthy, healthy])
+    for (let i = 0; i < 5; ++i) await provider.call(call)
+    expect(requests.filter(r => !r.startsWith('0:'))).toEqual([])
+  })
+
+  it('stays on the node it moved to after a failure', async () => {
+    const { provider, requests } = makeProvider([
+      httpRateLimited,
+      healthy,
+      healthy
+    ])
+    await provider.call(call)
+    const answered = requests[requests.length - 1].split(':')[0]
+    requests.length = 0
+    for (let i = 0; i < 5; ++i) await provider.call(call)
+    expect(requests.every(r => r.startsWith(`${answered}:`))).toBe(true)
+  })
+
   it('never asks a node for the chain id', async () => {
     const { provider, requests } = makeProvider([healthy, healthy])
     await provider.call(call)

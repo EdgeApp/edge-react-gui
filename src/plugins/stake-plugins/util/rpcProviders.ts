@@ -14,13 +14,16 @@ interface StakingRpcChain {
  * key. Every node is listed there as doing no tracking, except the chains' own
  * first-party nodes (mainnet.optimism.io, the Fantom Foundation and GLIF
  * nodes), which chainlist has no tracking label for.
+ *
+ * The first node in each list is the one the provider starts on: the chain's
+ * own node where it has one, otherwise the node the plugins used before.
  */
 const stakingRpcChains: Record<string, StakingRpcChain> = {
   ethereum: {
     chainId: 1,
     urls: [
-      'https://eth.drpc.org',
       'https://ethereum-rpc.publicnode.com',
+      'https://eth.drpc.org',
       'https://rpc.mevblocker.io',
       'https://rpc-eth.blockmachine.io',
       'https://eth.api.pocket.network'
@@ -29,10 +32,10 @@ const stakingRpcChains: Record<string, StakingRpcChain> = {
   fantom: {
     chainId: 250,
     urls: [
-      'https://fantom.drpc.org',
-      'https://fantom.api.pocket.network',
       'https://rpcapi.fantom.network',
-      'https://rpc3.fantom.network'
+      'https://rpc3.fantom.network',
+      'https://fantom.drpc.org',
+      'https://fantom.api.pocket.network'
     ]
   },
   filecoinfevm: {
@@ -57,9 +60,9 @@ const stakingRpcChains: Record<string, StakingRpcChain> = {
   optimism: {
     chainId: 10,
     urls: [
-      'https://optimism.drpc.org',
-      'https://optimism-rpc.publicnode.com',
       'https://mainnet.optimism.io',
+      'https://optimism-rpc.publicnode.com',
+      'https://optimism.drpc.org',
       'https://rpc-optimism.blockmachine.io',
       'https://op.api.pocket.network'
     ]
@@ -259,11 +262,16 @@ const shuffle = <T>(items: T[]): T[] => {
 }
 
 /**
- * A provider over a list of nodes. Each read goes to the nodes in a fresh
- * random order, so the load spreads across the list, with any node that failed
- * in the last `COOLDOWN_MS` moved to the back. It moves to the next node when
- * one fails or stalls. A transaction goes to every node, and the first one to
- * accept it wins.
+ * A provider over a list of nodes. Reads stay on one node, starting with the
+ * first in the list, and move to another only when it fails or stalls. The
+ * node that answers becomes the one later reads use. Keeping to one node means
+ * the several reads behind one quote (reserves, supply, router quotes) come
+ * from the same source and agree with each other, and a healthy chain is read
+ * from one trusted node, as before.
+ *
+ * When the current node fails, the others are tried in a random order, with
+ * any node that failed in the last `COOLDOWN_MS` moved to the back. A
+ * transaction goes to every node, and the first one to accept it wins.
  *
  * This replaces ethers' FallbackProvider, which counts a node that has already
  * failed as busy until its stall timeout ends. With nothing else to wait on,
@@ -274,11 +282,13 @@ class StakingProvider extends ethers.providers.BaseProvider {
   readonly nodes: StakingRpcNode[]
   readonly staticNetwork: ethers.providers.Network
   readonly failedAt = new Map<StakingRpcNode, number>()
+  currentNode: StakingRpcNode | undefined
 
   constructor(urls: string[], network: ethers.providers.Network) {
     super(network)
     this.nodes = urls.map(url => new StakingRpcNode(url, network))
     this.staticNetwork = network
+    this.currentNode = this.nodes[0]
   }
 
   async detectNetwork(): Promise<ethers.providers.Network> {
@@ -294,15 +304,19 @@ class StakingProvider extends ethers.providers.BaseProvider {
     const now = Date.now()
     const isCooling = (node: StakingRpcNode): boolean =>
       now - (this.failedAt.get(node) ?? -Infinity) < COOLDOWN_MS
-    const shuffled = shuffle(this.nodes)
+    const others = shuffle(this.nodes.filter(node => node !== this.currentNode))
+    const candidates =
+      this.currentNode == null ? others : [this.currentNode, ...others]
     const order = [
-      ...shuffled.filter(node => !isCooling(node)),
-      ...shuffled.filter(isCooling)
+      ...candidates.filter(node => !isCooling(node)),
+      ...candidates.filter(isCooling)
     ]
 
     return await raceNodes(order, async node => {
       try {
-        return await node.perform(method, params)
+        const result = await node.perform(method, params)
+        this.currentNode = node
+        return result
       } catch (error: unknown) {
         if (!isAnswerError(error)) this.failedAt.set(node, Date.now())
         throw error
