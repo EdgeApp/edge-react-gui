@@ -9,6 +9,7 @@ import { lstrings } from '../locales/strings'
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState, ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
+import { isAgentTestMode } from '../util/agentTestMode'
 import { isMaestro } from '../util/maestro'
 import { getTotalFiatAmountFromExchangeRates, zeroString } from '../util/utils'
 
@@ -49,6 +50,7 @@ export function checkPasswordRecovery(
     if (account.username == null) return
     if (account.recoveryKey != null) return
     if (isMaestro()) return
+    if (isAgentTestMode()) return
 
     const { passwordRecoveryRemindersShown } = state.ui.settings
 

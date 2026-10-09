@@ -23,6 +23,7 @@ import { CONFIG } from './config'
 import { KEYS } from './keys'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
+import { isAgentTestMode } from './util/agentTestMode'
 import { log, logToServer } from './util/logger'
 import { initCoinrankList, initInfoServer } from './util/network'
 
@@ -66,6 +67,14 @@ if (CONFIG.LOGBOX_DISABLE) {
     'Require cycle:',
     'Attempted to end a Span which has already ended.'
   ])
+}
+
+// Agent test builds send warnings to the plain log, which keeps them out of
+// the LogBox toast. Errors still raise it.
+if (isAgentTestMode()) {
+  console.warn = (...args: unknown[]): void => {
+    console.log(...args)
+  }
 }
 
 // Mute specific console output types.

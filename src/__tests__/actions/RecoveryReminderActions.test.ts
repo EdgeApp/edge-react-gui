@@ -14,6 +14,12 @@ jest.mock('../../util/maestro', () => ({
   isMaestro: () => false
 }))
 
+// `isAgentTestMode` reads the same local config.json. Each test sets it:
+const mockIsAgentTestMode = jest.fn<() => boolean>()
+jest.mock('../../util/agentTestMode', () => ({
+  isAgentTestMode: () => mockIsAgentTestMode()
+}))
+
 const mockShowModal = jest.fn()
 const mockWriteReminders =
   jest.fn<(account: EdgeAccount, levels: string[]) => void>()
@@ -188,6 +194,7 @@ describe('checkPasswordRecovery', () => {
   beforeEach(() => {
     mockShowModal.mockClear()
     mockWriteReminders.mockClear()
+    mockIsAgentTestMode.mockReturnValue(false)
   })
 
   it('does nothing below the lowest level', async () => {
@@ -203,6 +210,15 @@ describe('checkPasswordRecovery', () => {
     expect(levels).toEqual(['20'])
     expect(modalShown).toBe(true)
     expect(mockWriteReminders).toHaveBeenCalledWith(expect.anything(), ['20'])
+  })
+
+  it('stays quiet in agent test mode', async () => {
+    mockIsAgentTestMode.mockReturnValue(true)
+    // 0.0005 BTC at $100k = $50:
+    const { levels, modalShown } = await run(makeState({ balance: '50000' }))
+    expect(levels).toEqual([])
+    expect(modalShown).toBe(false)
+    expect(mockWriteReminders).not.toHaveBeenCalled()
   })
 
   it('marks every crossed level but shows one modal', async () => {
