@@ -13,9 +13,9 @@ import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
 import {
+  updateLocalAccountSettings,
   useAccountSettings,
-  writeAccountNotifInfo,
-  writeLocalAccountSettings
+  writeAccountNotifInfo
 } from '../../actions/LocalSettingsActions'
 import { useAsyncNavigation } from '../../hooks/useAsyncNavigation'
 import { useHandler } from '../../hooks/useHandler'
@@ -59,8 +59,7 @@ const hideBanner = async (
  */
 export const NotificationView: React.FC<Props> = props => {
   const { navigation, hasTabs, footerHeight } = props
-  const accountSettings = useAccountSettings()
-  const { notifState, accountNotifDismissInfo } = useAccountSettings()
+  const { notifState } = useAccountSettings()
   const navigationDebounced = useAsyncNavigation(navigation)
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -111,20 +110,20 @@ export const NotificationView: React.FC<Props> = props => {
 
   const handle2FaEnabledClose = useHandler(async () => {
     // Update both notifState and accountNotifDismissInfo in a single write
-    await writeLocalAccountSettings(account, {
-      ...accountSettings,
+    await updateLocalAccountSettings(account, latest => ({
+      ...latest,
       accountNotifDismissInfo: {
-        ...accountNotifDismissInfo,
+        ...latest.accountNotifDismissInfo,
         ip2FaNotifShown: true
       },
       notifState: {
-        ...accountSettings.notifState,
+        ...latest.notifState,
         ip2FaReminder: {
-          ...(accountSettings.notifState.ip2FaReminder ?? {}),
+          ...(latest.notifState.ip2FaReminder ?? {}),
           isBannerHidden: true
         }
       }
-    })
+    }))
   })
   const handle2FaEnabledPress = useHandler(async () => {
     await handle2FaEnabledClose()
