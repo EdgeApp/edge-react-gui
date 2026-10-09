@@ -33,6 +33,15 @@ script:
   # — so here it is as inert as the gates above, and `docs:api:committed`
   # catches a stale one: `src/cli/generated/npmPackage.json` is under the
   # paths it compares against git.
+  - npm run cli:manifest:check
+  # Beside the manifest check, for the same reason and against a different
+  # input: this one reads the *installed* plugin packages, and its allowlists
+  # fail both on a new breakage and on a known one starting to work — which
+  # is what a routine `edge-currency-accountbased` or `edge-currency-plugins`
+  # bump does. `precommit:cli` and `verify` both run it; without it here a
+  # `git commit --no-verify` by an author who never runs `verify` lands a
+  # broken plugin family on develop with nothing to notice.
+  - npm run cli:plugins:check
   - npm run test:cli:node-safe
   - npm test
   - npm run test:cli:offline
@@ -44,7 +53,9 @@ script:
   - npm run test:cli:offline:built
   # Last, because it is the only check that reads the built bundles' own
   # `require` calls, and `--require-bundles` makes an absent `lib/` a failure
+  # rather than a skip. Run where `cli:manifest:check` is, nine lines above
   # the build, `built` was false and the one direction that matters — a
   # package the bundles require and the manifest does not declare, which a
   # published CLI could not resolve — printed "bundles absent, so the require
   # cross-check did not run" and passed.
+  - npm run cli:manifest -- --check --require-bundles
