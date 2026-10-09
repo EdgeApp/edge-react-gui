@@ -3,7 +3,7 @@ import fs from 'fs'
 import { copySync } from 'fs-extra'
 import { join } from 'path'
 
-import { errorMessage } from '../src/cli/engine/errors'
+import { errorMessage } from '../src/util/errorMessage'
 import { MAX_SECRET_LEN } from './makeApiSigner'
 
 const argv = process.argv

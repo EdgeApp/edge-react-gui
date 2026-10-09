@@ -20,7 +20,7 @@ import { createHash, randomBytes } from 'crypto'
 import fs from 'fs'
 import path from 'path'
 
-import { errorMessage } from '../src/cli/engine/errors'
+import { errorMessage } from '../src/util/errorMessage'
 import { NODE_API_SIGNER_BUNDLE_ID } from '../src/cli/engine/nodeApiSigner'
 import { isPlainObject } from '../src/util/predicates'
 

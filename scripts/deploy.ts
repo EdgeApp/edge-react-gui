@@ -3,7 +3,7 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
-import { errorMessage } from '../src/cli/engine/errors'
+import { errorMessage } from '../src/util/errorMessage'
 import { deepMerge } from '../src/configKeysMerge'
 import { deleteOldDirsSync } from './cleanDirectories'
 
