@@ -14,9 +14,7 @@ import { sprintf } from 'sprintf-js'
 
 import {
   formatCategory,
-  getPluginIdIcon,
-  getTxActionDisplayInfo,
-  splitCategory
+  getPluginIdIcon
 } from '../../actions/CategoriesActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -36,6 +34,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCodeWithAccount } from '../../util/CurrencyInfoHelpers'
 import { matchJson } from '../../util/matchJson'
 import { getMemoTitle } from '../../util/memoUtils'
+import { getTxActionDisplayInfo, splitCategory } from '../../util/txDisplay'
 import {
   convertNativeToExchange,
   darkenHexColor,
