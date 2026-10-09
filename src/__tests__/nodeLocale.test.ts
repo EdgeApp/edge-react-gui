@@ -281,3 +281,39 @@ describe('applyLocale across tags', () => {
     expect(lstrings.fragment_transaction_expense).toBe(inEnglish)
   })
 })
+
+describe('detectNodeLocale cost', () => {
+  it('builds no Intl.NumberFormat until the separators are read', () => {
+    // `bootNodeLocale` runs detection at module scope on every `edge`
+    // invocation, and the client reads only `.languageTag` — the separators
+    // belong to `bootEngineLocale` and `routes/status.ts`, both engine-side.
+    // Constructing the first `Intl.NumberFormat` is what pays V8's ICU
+    // initialisation, about 30ms of the client's ~180ms of user CPU for a
+    // value nobody on that path looks at.
+    const real = Intl.NumberFormat
+    let built = 0
+    // @ts-expect-error replacing a global for the duration of this case
+    Intl.NumberFormat = function (...args: unknown[]) {
+      ++built
+      // @ts-expect-error forwarding to the real constructor
+      return new real(...args)
+    }
+    try {
+      const source = detectNodeLocale({ env: { LANG: 'de_DE.UTF-8' } })
+      expect(source.languageTag).toBe('de-DE')
+      expect(built).toBe(0)
+
+      // And it still answers, once something asks.
+      expect(source.decimalSeparator).toBe(',')
+      expect(source.groupingSeparator).toBe('.')
+      expect(built).toBeGreaterThan(0)
+
+      // Memoized: a second read costs nothing.
+      const after = built
+      expect(source.decimalSeparator).toBe(',')
+      expect(built).toBe(after)
+    } finally {
+      Intl.NumberFormat = real
+    }
+  })
+})

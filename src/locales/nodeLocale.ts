@@ -128,8 +128,29 @@ export function detectNodeLocale(
     nonempty(Intl.DateTimeFormat().resolvedOptions().locale) ??
     'en-US'
   const languageTag = normalizePosixLocale(raw)
+
+  // Lazy, because `bootNodeLocale` runs this at module scope on *every*
+  // `edge` invocation and the client never reads the separators: its only
+  // uses of this value are `spawnEngine`'s two `.languageTag` reads, while
+  // `bootEngineLocale` and `routes/status.ts` — both engine-side — are what
+  // read the marks. `numberSeparators` constructs the process's first
+  // `Intl.NumberFormat`, which is what pays V8's ICU initialisation:
+  // measured at about 30ms of the client's ~180ms of user CPU, on a value
+  // nobody on that path looks at, and `scripts/testCliFake.ts` pays it
+  // another ~128 times a run. This module's own docstring already makes the
+  // argument for the translation tables; the number format is the same case.
+  let separators: { decimalSeparator: string; groupingSeparator: string }
+  const read = (): { decimalSeparator: string; groupingSeparator: string } => {
+    if (separators == null) separators = numberSeparators(languageTag)
+    return separators
+  }
   return {
     languageTag,
-    ...numberSeparators(languageTag)
+    get decimalSeparator() {
+      return read().decimalSeparator
+    },
+    get groupingSeparator() {
+      return read().groupingSeparator
+    }
   }
 }

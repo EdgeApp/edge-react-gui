@@ -2,7 +2,7 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-import { resolveLocaleTableOrEnglish } from '../../locales/strings'
+import { resolveLocaleTableOrEnglish } from '../../locales/localeKeys'
 import { getDetectedLocale } from '../bootNodeLocale'
 import { defaultDirectory } from '../engine/cliConfig'
 import {
