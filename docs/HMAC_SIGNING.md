@@ -19,17 +19,35 @@ appKeys layer matching lives in
 `prepare.sh`) when that file exists. It XOR-shards the secret:
 
 1. Five random pads plus a stored remainder (`SHARD_COUNT = 6`).
-2. A runtime pad of `sha256(bundleId)` (Android `applicationId` and iOS
-   `PRODUCT_BUNDLE_IDENTIFIER` must match).
+2. A runtime pad of `sha256(bundleId)`. The mobile pair share one id (Android
+   `applicationId` and iOS `PRODUCT_BUNDLE_IDENTIFIER` must match); the Node
+   build has its own, `NODE_API_SIGNER_BUNDLE_ID` from
+   `src/cli/engine/nodeApiSigner.ts`. One build's *shards* are therefore
+   useless to the other binary — but the **secret they reconstruct is the
+   same**, and `NODE_API_SIGNER_BUNDLE_ID` is a constant in this public
+   repository. So anyone holding the Node addon can recover the `apiSecret`
+   every mobile release build signs with. That is why
+   `scripts/publishCli.ts` does not put the addon in the published package,
+   and why `--with-signer` refuses without
+   `--signer-secret-is-cli-only`: publishing it is only safe once the CLI has
+   an `apiKey`/`apiSecret` pair of its own. Both ids are hashed into the
+   stamp that decides whether a regeneration is needed.
 3. The C sources reconstruct `secret = s0 ⊕ … ⊕ s5 ⊕ runtimePad`.
 
-Generated (gitignored) outputs:
+Generated (gitignored) outputs — three pairs, one per target:
 
 - `ios/EdgeApiSecret.c` + `ios/EdgeApiSecret.h`
 - `android/app/src/main/cpp/edge_api_secret.c` + `edge_api_secret.h`
+- `native/edge-api-signer/node/edge_api_secret.c` + `edge_api_secret.h`
 
 Native modules (`ios/edge/EdgeApiSigner.m`,
-`android/.../EdgeApiSignerModule.kt`) expose `signMessage` and `getApiKey`.
+`android/.../EdgeApiSignerModule.kt`,
+`native/edge-api-signer/node/edge_api_signer_napi.c`) expose `signMessage`
+and `getApiKey`. The first two are React Native modules; the third is an
+N-API addon built by `npm run build:cli:native` and loaded by
+`src/cli/engine/nodeApiSigner.ts`, which is how the CLI signs without a
+React Native runtime. `npm run build:cli:all` does the generate, the compile
+and the two rollup bundles in one step.
 `src/util/edgeApiSigner.ts` wraps that module as an `EdgeApiSigner` whose
 `signMessage(message)` returns `{ apiKey, signature }` (base64 HMAC-SHA256).
 Every native build (debug, beta, or release) needs a real `edgeKey.json`:

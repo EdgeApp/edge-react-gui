@@ -1,0 +1,29 @@
+import { printJson } from '../client/output'
+import { command, requireSession, UsageError } from '../command'
+import { parseCommandArgs } from '../commandArgs'
+import { accountPath } from './paths'
+
+const deleteRemoteCmd = command(
+  'delete-remote-account',
+  {
+    usage: 'delete-remote-account --yes',
+    needsSession: true
+  },
+  async (ctx, argv) => {
+    const args = parseCommandArgs(deleteRemoteCmd, argv, {
+      flags: { yes: 'boolean' }
+    })
+    // The endpoint has no guard, so the guard lives here: this is
+    // irreversible and takes the account's funds with it.
+    if (!args.boolean('yes')) {
+      throw new UsageError(
+        deleteRemoteCmd,
+        'delete-remote-account is irreversible; pass --yes to confirm'
+      )
+    }
+    const sessionId = requireSession(ctx)
+    await ctx.client.post(accountPath(sessionId, '/delete-remote-account'))
+    ctx.setSessionId(null)
+    printJson({ ok: true })
+  }
+)
