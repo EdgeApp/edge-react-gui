@@ -6,6 +6,7 @@
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
 - fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
+- fixed: `splitCategory` keeps an unrecognised category exactly as stored, where a one-character prefix such as `X:` was dropped and a bare name gained a trailing colon, and opening and saving the transaction wrote either change back.
 
 ## 4.52.0 (staging)
 
