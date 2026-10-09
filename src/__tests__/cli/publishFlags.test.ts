@@ -8,52 +8,51 @@ const ROOT = path.resolve(__dirname, '../../..')
 const source = fs.readFileSync(path.join(ROOT, 'scripts/publishCli.ts'), 'utf8')
 
 /**
- * The two ways `publishCli.ts` could publish something nobody meant to.
+ * That the script still routes its decisions through the tested module.
  *
- * It cannot be driven end to end from a test — it builds, packs and talks
- * to the registry — so these pin the two shapes that made it dangerous.
+ * `publishArgs.test.ts` is where the decisions themselves are asserted, by
+ * running them. These five cases used to assert regexes against this
+ * script's own text — `expect(source).toMatch(/value\.startsWith\('--'\)/)`
+ * — because it does its work at module scope and cannot be imported, so
+ * they passed for a reformat that broke the logic and failed for a prettier
+ * line break that did not. The decisions moved to
+ * `scripts/util/publishArgs.ts`; what is left to check here is that this
+ * shell has not grown a second copy of them, which is the only way the two
+ * could disagree again.
  */
-describe('publishCli argument handling', () => {
-  it('refuses a flag whose value is missing or another flag', () => {
-    // `--out` with the path left off used to answer `undefined`, which made
-    // `if (stageOnly != null)` false and fell through to
-    // `npm publish --access public`: the flag a reader reaches for to
-    // *avoid* publishing was the one whose typo published, irreversibly,
-    // because npm will not replace a version.
-    expect(source).toMatch(/value\.startsWith\('--'\)/)
-    expect(source).toMatch(/needs a value/)
+describe('publishCli delegates its decisions', () => {
+  it('parses its flags through publishArgs', () => {
+    expect(source).toContain("from './util/publishArgs'")
+    expect(source).toContain('parsePublishFlags(argv)')
   })
 
-  it('adds the signer to the packed file list, not just the stage', () => {
-    // npm's `files` is an allowlist, so copying the addon into the stage
-    // without listing it packs everything except the addon — and the
-    // report said "native signer: included" about a tarball that had none.
-    expect(source).toMatch(
-      /manifest\.files = \[\.\.\.CLI_PACKAGE_FILES, CLI_SIGNER_FILE\]/
-    )
+  it('takes the packed file list and the signed decision from it', () => {
+    expect(source).toContain('packedFilesFor({')
+    expect(source).toContain('isSignedPublish({')
+    // The addon is not in the default allowlist, which is what makes
+    // `packedFilesFor` a decision rather than a formality.
     expect(CLI_PACKAGE_FILES).not.toContain(CLI_SIGNER_FILE)
   })
 
-  it('decides "signed" from the manifest rather than the directory', () => {
-    // A reused `--out` directory with a stale addon made `signed` true
-    // with no `--with-signer`, which suppressed the README paragraph that
-    // explains why the installed CLI will not start without a key.
-    expect(source).toMatch(/packedFiles\.includes\(SIGNER\)/)
+  it('asks publishRefusal before building and again before staging', () => {
+    expect(source).toContain('publishRefusal({')
+    // Twice: the three that precede the build, and the allowlist check once
+    // the manifest has been read.
+    expect(source.split('publishRefusal({').length - 1).toBe(2)
   })
 
-  it('refuses to publish a signed package without the signed manifest', () => {
-    // The belt to the braces: `--with-signer` is the path the CLI will use
-    // once it has a key pair of its own, and its failure mode was silent.
-    expect(source).toMatch(
-      /withSigner && !\(manifest\.files as string\[\]\)\.includes\(CLI_SIGNER_FILE\)/
+  it('keeps no second copy of the rules it delegates', () => {
+    // The shapes that used to live here. A reader adding one back locally
+    // is how the script and the module would drift apart.
+    expect(source).not.toMatch(/value\.startsWith\('--'\)/)
+    expect(source).not.toMatch(
+      /manifest\.files = \[\.\.\.CLI_PACKAGE_FILES, CLI_SIGNER_FILE\]/
     )
-    expect(source).toMatch(/would be published as signed/)
   })
 
-  it('spells the signer file once', () => {
-    // `npmMeta.ts` is where the decision lives; a second spelling in the
-    // publisher is what let the manifest and the stage disagree.
-    expect(source).not.toMatch(/'edge_api_signer\.node'/)
-    expect(source).toMatch(/const SIGNER = CLI_SIGNER_FILE/)
+  it('still stops before publishing when --out was given', () => {
+    // The gate the valueless `--out` used to slip past.
+    expect(source).toContain('stopping before publish')
+    expect(source).toMatch(/npm publish|'publish'/)
   })
 })

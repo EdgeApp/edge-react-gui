@@ -32,6 +32,12 @@ import {
   CLI_PACKAGE_META,
   CLI_SIGNER_FILE
 } from '../src/cli/npmMeta'
+import {
+  isSignedPublish,
+  packedFilesFor,
+  parsePublishFlags,
+  publishRefusal
+} from './util/publishArgs'
 
 const ROOT = path.resolve(__dirname, '..')
 const MANIFEST = path.join(ROOT, 'src/cli/generated/npmPackage.json')
@@ -40,50 +46,24 @@ const MANIFEST = path.join(ROOT, 'src/cli/generated/npmPackage.json')
 const SIGNER = CLI_SIGNER_FILE
 
 const argv = process.argv.slice(2)
-const has = (flag: string): boolean => argv.includes(flag)
-/**
- * A flag's value, or a stop.
- *
- * It used to be `argv[i + 1]`, so `npm run publish:cli -- --out` with the
- * path left off answered `undefined`, the `if (stageOnly != null)` gate
- * below was false, and the script fell through to
- * `npm publish --access public` — the flag a reader reaches for to *avoid*
- * publishing was the one whose typo published. That is irreversible by
- * this script's own design: npm will not replace a version, so a mis-fired
- * publish burns the app's current version number and the next CLI fix
- * waits for an app bump. `--out --dry-run` was worse in the other
- * direction: it staged into a directory literally named `--dry-run` and
- * did stop, so two spellings of one mistake behaved oppositely.
- */
-const valueOf = (flag: string): string | undefined => {
-  const i = argv.indexOf(flag)
-  if (i === -1) return undefined
-  const value = argv[i + 1]
-  if (value == null || value.startsWith('--')) {
-    throw new Error(
-      `${flag} needs a value. Nothing has been built or published.`
-    )
-  }
-  return value
-}
 
-const dryRun = has('--dry-run')
-const stageOnly = valueOf('--out')
-const allowUnsigned = has('--allow-unsigned')
 /**
- * Ship the HMAC addon in the package.
+ * Every flag, read by the module that owns the rules.
  *
- * Off by default, and refused without `--signer-secret-is-cli-only`, because
- * the addon's shards reconstruct the same `apiSecret` the mobile release
- * builds use and the runtime pad is a constant in this public repository: a
- * public tarball would hand that secret to anyone with `npm pack` and
- * `strings`. See the note in `src/cli/npmMeta.ts`.
+ * The parsing, the `files` allowlist and the three refusals live in
+ * `scripts/util/publishArgs.ts` so that they can be imported and run by a
+ * test: this script does its work at module scope, so the only thing a test
+ * could reach before was its source text, and a regex over source passes
+ * for a reformat that breaks the logic. `--with-signer` is off by default
+ * and refused without `--signer-secret-is-cli-only`, because the addon's
+ * shards reconstruct the same `apiSecret` the mobile release builds use and
+ * the runtime pad is a constant in this public repository — see the note in
+ * `src/cli/npmMeta.ts`.
  */
-const withSigner = has('--with-signer')
-const signerSecretIsCliOnly = has('--signer-secret-is-cli-only')
-const allowDirty = has('--allow-dirty')
-const skipBuild = has('--no-build')
-const tag = valueOf('--tag')
+const flags = parsePublishFlags(argv)
+// Only the ones this shell still reads for itself; the rest are the
+// refusals' business, and `flags` is passed to them whole.
+const { dryRun, skipBuild, stageOnly, tag, withSigner } = flags
 
 function run(command: string, args: string[], cwd = ROOT): void {
   const result = spawnSync(command, args, { cwd, stdio: 'inherit' })
@@ -100,38 +80,26 @@ function capture(command: string, args: string[]): string {
 // ------------------------------------------------------------ preconditions
 
 // A publish from a dirty tree cannot be reproduced from any commit, and the
-// one artifact nobody can re-derive later is the one in the registry.
-if (!allowDirty && capture('git', ['status', '--porcelain']) !== '') {
-  throw new Error(
-    'The working tree has uncommitted changes. Commit them, or pass ' +
-      '--allow-dirty if this is deliberate.'
-  )
-}
-
-if (withSigner && !signerSecretIsCliOnly) {
-  throw new Error(
-    'Refusing to publish the HMAC addon. Its shards reconstruct the same ' +
-      'apiSecret the iOS and Android release builds sign with, and the ' +
-      'runtime pad (NODE_API_SIGNER_BUNDLE_ID) is a constant in this public ' +
-      'repository — so a public tarball exposes that secret to `npm pack` ' +
-      'plus `strings`. Issue the CLI its own apiKey/apiSecret pair, build ' +
-      'with that edgeKey.json, and pass --signer-secret-is-cli-only to say ' +
-      'so; or publish without the addon, which is the default.'
-  )
-}
-
+// one artifact nobody can re-derive later is the one in the registry. The
+// three refusals before anything is built live in `publishArgs.ts`, where a
+// test can run them: each one is irreversible once npm has the tarball.
+const treeIsDirty = capture('git', ['status', '--porcelain']) !== ''
 const hasKey = fs.existsSync(path.join(ROOT, 'edgeKey.json'))
+const earlyRefusal = publishRefusal({
+  flags,
+  treeIsDirty,
+  hasKey,
+  // The allowlist check is made again once the manifest is read; at this
+  // point the only question is the three that precede the build.
+  packedFiles: withSigner ? [CLI_SIGNER_FILE] : [],
+  signerFile: CLI_SIGNER_FILE
+})
+if (earlyRefusal != null) throw new Error(earlyRefusal)
+
 if (!skipBuild) {
   if (hasKey) {
     run('npm', ['run', 'build:cli:all'])
   } else {
-    if (!allowUnsigned) {
-      throw new Error(
-        'edgeKey.json is absent, so the Node HMAC addon cannot be built and ' +
-          'the published CLI could not sign info-server requests. Put the key ' +
-          'in place, or pass --allow-unsigned to publish without it.'
-      )
-    }
     console.warn(
       '! edgeKey.json absent: building without the native signer. The ' +
         'published CLI makes unsigned info-server requests, cannot read ' +
@@ -169,9 +137,11 @@ const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8')) as Record<
   string,
   unknown
 >
-if (withSigner) {
-  manifest.files = [...CLI_PACKAGE_FILES, CLI_SIGNER_FILE]
-}
+manifest.files = packedFilesFor({
+  withSigner,
+  packageFiles: CLI_PACKAGE_FILES,
+  signerFile: CLI_SIGNER_FILE
+})
 // The in-repo copy carries a "generated, do not edit" marker. Published
 // manifests should not.
 delete manifest.$comment
@@ -230,8 +200,11 @@ fs.chmodSync(path.join(stage, 'edgeCli.js'), 0o755)
 // the README's unsigned warning — the one paragraph that explains why the
 // installed CLI refuses to start without an `edgeApiKey`.
 const packedFiles = manifest.files as string[]
-const signed =
-  packedFiles.includes(SIGNER) && fs.existsSync(path.join(stage, SIGNER))
+const signed = isSignedPublish({
+  packedFiles,
+  signerFile: SIGNER,
+  signerStaged: fs.existsSync(path.join(stage, SIGNER))
+})
 
 // `docs/EDGE_CLI.md` is the CLI's documentation, so it is the README rather
 // than a second description written to drift from it. The header is the part
@@ -338,13 +311,14 @@ fs.writeFileSync(path.join(stage, 'README.md'), header + guide)
 // failed was silent — the addon in the directory, absent from the tarball,
 // and the report saying "included". `files` is npm's allowlist, so this is
 // the one assertion that distinguishes the two.
-if (withSigner && !(manifest.files as string[]).includes(CLI_SIGNER_FILE)) {
-  throw new Error(
-    `--with-signer was given but ${CLI_SIGNER_FILE} is not in the manifest's ` +
-      '`files`, so npm would pack a tarball without it and the package ' +
-      'would be published as signed. Nothing has been published.'
-  )
-}
+const stageRefusal = publishRefusal({
+  flags,
+  treeIsDirty: false,
+  hasKey,
+  packedFiles: manifest.files as string[],
+  signerFile: CLI_SIGNER_FILE
+})
+if (stageRefusal != null) throw new Error(stageRefusal)
 
 fs.writeFileSync(
   path.join(stage, 'package.json'),
