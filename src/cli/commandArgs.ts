@@ -62,8 +62,8 @@ export interface ParsedCommandArgs {
 }
 
 /** A secret flag's value from its own variable, if it has one. */
-function secretFromEnv(flag: string): string | undefined {
-  const name = secretEnvFor(flag)
+function secretFromEnv(command: string, flag: string): string | undefined {
+  const name = secretEnvFor(command, flag)
   return name == null ? undefined : emptyToUndefined(process.env[name])
 }
 
@@ -174,11 +174,11 @@ export function parseCommandArgs(
       if (value == null) throw new UsageError(cmd, `Missing --${name}`)
       return value
     },
-    secret: name => strings[name]?.[0] ?? secretFromEnv(name),
+    secret: name => strings[name]?.[0] ?? secretFromEnv(cmd.name, name),
     requireSecret: name => {
-      const value = strings[name]?.[0] ?? secretFromEnv(name)
+      const value = strings[name]?.[0] ?? secretFromEnv(cmd.name, name)
       if (value == null) {
-        const env = secretEnvFor(name)
+        const env = secretEnvFor(cmd.name, name)
         throw new UsageError(
           cmd,
           env == null

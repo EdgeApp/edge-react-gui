@@ -32,6 +32,7 @@ import { defaultDirectory, loadConfigFrom } from './cliConfig'
 import {
   claimRunFile,
   cleanupStaleLock,
+  ENGINE_EXIT_ALREADY_RUNNING,
   ensureRunDir,
   profileHash,
   readRunFile,
@@ -263,7 +264,10 @@ async function main(): Promise<void> {
         (owner != null ? ` (pid ${owner})` : '') +
         `.\nStop it first (edge-cli engine-stop) or use a different --directory/--app-id.`
     )
-    process.exit(1)
+    // Its own code, not `1`: a client that spawned this engine has to tell
+    // "someone else owns the profile, so keep waiting for them" from "this
+    // engine failed to start".
+    process.exit(ENGINE_EXIT_ALREADY_RUNNING)
   }
 
   // The core data directory holds the login stashes, so the engine creates
@@ -704,7 +708,10 @@ async function main(): Promise<void> {
   if (process.env.EDGE_CLI_TEST_UNHANDLED_REJECTION === '1') {
     unrefTimer(
       setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        // A plain object is the point of this seam, not an oversight: the
+        // defect it reproduces is a plugin rejecting with one, so an
+        // `Error` here would test nothing.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/prefer-promise-reject-errors
         Promise.reject({
           testMarker: 'edge-cli-test-rejection',
           message: 'a plugin rejected with a plain object'

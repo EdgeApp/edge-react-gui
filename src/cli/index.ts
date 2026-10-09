@@ -39,7 +39,11 @@ import {
   listCommands,
   UsageError
 } from './command'
-import { defaultDirectory, loadConfig } from './engine/cliConfig'
+import {
+  CliConfigError,
+  defaultDirectory,
+  loadConfig
+} from './engine/cliConfig'
 import { profileHash, socketPathFor } from './engine/discovery'
 import { errorMessage } from './engine/errors'
 import { parseTcpPort } from './engine/tcpPort'
@@ -47,6 +51,7 @@ import { TESTER_SERVERS } from './engine/testerServers'
 import { emptyToUndefined } from './envValue'
 import { type CliOptions, parseCliArgs, showCliHelp } from './parseArgs'
 import { splitPromptLine, UnterminatedQuoteError } from './promptLine'
+import { MAX_BUDGET_MS } from './requestBudget'
 
 function formatUsage(cmd: {
   name: string
@@ -81,7 +86,24 @@ function clientTimeoutMs(raw: string | undefined): number | undefined {
       `Invalid --timeout "${raw}": expected a positive number of seconds`
     )
   }
-  return seconds * 1000
+  const ms = seconds * 1000
+  // Node holds a timer's delay in a signed 32-bit integer, so
+  // `http.request({ timeout })` above the ceiling warns and *clamps to
+  // 1 ms*: `--timeout=1e9`, which is how a caller asks for "effectively
+  // never" on the `broadcast-tx` this flag exists for, failed instantly
+  // with `REQUEST_TIMEOUT` and exit 6 — the exact opposite. Refused rather
+  // than clamped down, because silently waiting 24 days less than asked is
+  // the same class of surprise. `MAX_BUDGET_MS` is the ceiling the engine
+  // already applies to the budget header this value becomes.
+  if (ms > MAX_BUDGET_MS) {
+    throw new UsageError(
+      undefined,
+      `Invalid --timeout "${raw}": at most ${Math.floor(
+        MAX_BUDGET_MS / 1000
+      )} seconds, Node's timer ceiling`
+    )
+  }
+  return ms
 }
 
 /**
@@ -107,7 +129,17 @@ function clientTcpPort(raw: string | undefined): number | null {
  * global flag, and a field left out of it is simply invisible here.
  */
 async function buildContext(options: CliOptions): Promise<CliContext> {
-  const fileConfig = loadConfig(options.config)
+  // An explicit `-c` that is not there is an argv mistake, reported the way
+  // `clientTimeoutMs` and `clientTcpPort` report theirs: a plain `Error`
+  // here printed an `INTERNAL_ERROR` envelope and exited 1 for a typo in a
+  // path, with no usage line.
+  let fileConfig
+  try {
+    fileConfig = loadConfig(options.config)
+  } catch (error: unknown) {
+    if (!(error instanceof CliConfigError)) throw error
+    throw new UsageError(undefined, error.message)
+  }
   const appId = options['app-id'] ?? fileConfig.appId ?? ''
   const directory =
     options.directory ??

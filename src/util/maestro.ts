@@ -1,4 +1,4 @@
-import { TESTER_SERVERS } from '../cli/engine/testerServers'
+import { TESTER_SERVERS } from './testerServers'
 import { CONFIG } from '../config'
 
 // One declaration of the fleet, in the leaf module that has no imports: the

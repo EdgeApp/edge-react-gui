@@ -57,19 +57,29 @@ export function resolveApiCredentials(
   // Order: an explicit `-k`, then the config file, then keys.json. Only the
   // first is an override.
   const effectiveApiKey = opts.apiKey ?? opts.configApiKey ?? keys.edgeApiKey
-  // An explicit -k replaces the key, so the keys.json secret no longer
-  // belongs to it. Pairing them would sign every request with a mismatched
-  // secret. A key from the config file is *not* an override — it is just
-  // where the key came from — so it keeps the secret and the native signer.
-  // Treating the two alike silently turned off HMAC signing for anyone who
-  // wrote `apiKey` into `edge-cli.conf`, which is the opposite of what
-  // `docs/EDGE_CLI.md` promises.
-  const apiSecretHex =
-    opts.apiKey != null ? undefined : keys.edgeApiSecret ?? undefined
+  // The secret in `keys.json` and the secret the native addon was built
+  // with both belong to `keys.edgeApiKey`, so neither is usable once the
+  // effective key is a different one: signing key B with A's secret fails
+  // the `infoRollup` fetch, and `makeCoreContext` swallows that into a
+  // single warn line, so every plugin quietly boots on the floor `appKeys`
+  // layer. The test is which key is in use, not how it got there — an
+  // explicit `-k` was the only case this checked, and a config-file
+  // `apiKey` that differs from `keys.json` produced exactly the mismatched
+  // pair the check exists to prevent. A config key that *equals* it keeps
+  // both, because then the pair is intact: treating any config key as an
+  // override is what used to turn off HMAC signing for anyone who wrote
+  // their own key into `edge-cli.conf`.
+  const keyOwnsKeysJsonSecret = effectiveApiKey === keys.edgeApiKey
+  const apiSecretHex = keyOwnsKeysJsonSecret
+    ? keys.edgeApiSecret ?? undefined
+    : undefined
   // Explicit -k / EDGE_CLI_FORCE_KEYS_JSON skips the N-API signer so
   // operators can point a native-built engine at alternate keys for
-  // tester/debug.
-  const forceKeysJson = opts.apiKey != null || env.forceKeysJson
+  // tester/debug. A key the addon's secret does not belong to skips it for
+  // the same reason, and with no `keys.json` secret to fall back to the
+  // engine then runs unsigned rather than wrongly signed.
+  const forceKeysJson =
+    opts.apiKey != null || !keyOwnsKeysJsonSecret || env.forceKeysJson
   const useNativeSigner = !forceKeysJson && env.hasSigner
 
   let apiSecret: Uint8Array | undefined

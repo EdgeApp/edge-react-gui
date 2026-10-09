@@ -11,6 +11,7 @@ import os from 'os'
 import path from 'path'
 
 import {
+  CliConfigError,
   defaultConfigPath,
   loadConfig,
   loadConfigFrom
@@ -125,5 +126,20 @@ describe('edge-cli.conf', () => {
     expect(() => loadConfigFrom(path.join(dir, 'nope.conf'))).toThrow(
       /no such file/
     )
+  })
+
+  it('types that refusal, so the client can report argv', () => {
+    // A plain `Error` fell through `printError`'s generic arm, so a typo in
+    // a `-c` path printed `{"code":"INTERNAL_ERROR","status":500}` and
+    // exited 1 — an engine fault, for a mistake in the command line — while
+    // `clientTimeoutMs` and `clientTcpPort` both report a usage error and
+    // exit 2 for theirs.
+    let caught: unknown
+    try {
+      loadConfigFrom(path.join(dir, 'nope.conf'))
+    } catch (error) {
+      caught = error
+    }
+    expect(caught).toBeInstanceOf(CliConfigError)
   })
 })

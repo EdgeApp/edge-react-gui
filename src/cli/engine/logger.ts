@@ -25,6 +25,15 @@ const MAX_LOG_BYTES = 8 * 1024 * 1024
 const LOG_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
 
 /**
+ * How long `reopen` waits before trying the file again after a failure.
+ *
+ * A transient ENOSPC or EMFILE should cost a few seconds of log lines, not
+ * the rest of the daemon's life; a persistent one should cost one `openSync`
+ * per interval, not one per line.
+ */
+const REOPEN_RETRY_MS = 5_000
+
+/**
  * What a part of the engine needs in order to report a failure.
  *
  * `EngineLogger`'s shape, narrowed to the two levels these reports use, so
@@ -67,6 +76,8 @@ export const consoleReporter: EngineReporter = {
 export class EngineLogger {
   private stream: fs.WriteStream | null = null
   private bytesWritten = 0
+  /** When `reopen` last tried, so a persistent failure is not per-line. */
+  private lastReopenAttempt = 0
   /**
    * Every rolled generation's flush, so `close` can wait for them all.
    *
@@ -194,6 +205,7 @@ export class EngineLogger {
     // went read-only mid-run, the one previous generation this class
     // promises to keep was clobbered repeatedly by an empty file: the only
     // record of what the daemon was doing when it ran out of space.
+    if (this.stream == null && !this.reopen()) return
     if (this.stream == null) return
     this.bytesWritten += Buffer.byteLength(text)
     // Written first, then rolled. Rolling first put the line that tripped the
@@ -267,16 +279,43 @@ export class EngineLogger {
         }
       )
     }
+    if (!this.reopen()) {
+      console.error(
+        '[edge-engine] could not roll the log; retrying on the next line'
+      )
+    }
+  }
+
+  /**
+   * Open a fresh stream, reporting failure rather than throwing.
+   *
+   * Tried again on the next line, because a failed reopen used to be
+   * permanent: `roll()` nulls the stream before renaming, so one EMFILE, one
+   * ENOSPC or a logs directory that went read-only for a moment left
+   * `this.stream` null for the life of the daemon — `write` returns early on
+   * a null stream, so `engine-<profile>.log` silently stopped existing while
+   * `logger.logPath` and the `Ready` line still named it, and the only
+   * notice went to a file the next ordinary stop deletes. Rate-limited so a
+   * persistent failure costs one `openSync` per interval rather than one per
+   * line.
+   */
+  private reopen(): boolean {
+    const now = Date.now()
+    if (now - this.lastReopenAttempt < REOPEN_RETRY_MS) return false
+    this.lastReopenAttempt = now
     try {
       this.stream = this.openStream()
       this.watchStream(this.stream)
       this.bytesWritten = 0
+      return true
     } catch (error) {
+      this.stream = null
       console.error(
-        `[edge-engine] could not roll the log: ${String(
+        `[edge-engine] could not open the log: ${String(
           error instanceof Error ? error.message : error
         )}`
       )
+      return false
     }
   }
 

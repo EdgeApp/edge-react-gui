@@ -92,6 +92,32 @@ describe('ApiClient.sendRequest', () => {
     )
   })
 
+  it('names the connection when the engine dies before answering', async () => {
+    // The commonest way an engine dies — `SIGKILL`, the OOM killer, a
+    // container stop — reaches the *request* as a bare `ECONNRESET`, before
+    // any headers exist for `res.on('aborted')` to fire on. Unclassified it
+    // fell through `printError`'s generic arm as
+    // `{"code":"INTERNAL_ERROR","status":500}` and exit 1, telling the
+    // caller the engine answered 500 when it had answered nothing, and
+    // under a code the catalogue declares `origin: 'engine'`.
+    const socketPath = tempSocket()
+    await rawServer(socketPath, socket => {
+      // Gone before any headers exist. Node reports this to the request as
+      // `EPIPE` when it dies during the write and `ECONNRESET` when it dies
+      // after it; both are the same event to a caller.
+      socket.destroy()
+    })
+
+    const client = new ApiClient({ socketPath, timeoutMs: 5000 })
+    const error = await client.get('/engine/status').then(
+      () => undefined,
+      (error: unknown) => error as { code?: string; message?: string }
+    )
+    expect(error?.code).toBe('CONNECTION_CLOSED')
+    expect(error?.message).toMatch(/closed the connection before answering/)
+    expect(error?.message).toMatch(/may or may not have taken effect/)
+  })
+
   it('rejects, rather than hanging, when the response ends with no body', async () => {
     const socketPath = tempSocket()
     await rawServer(socketPath, socket => {

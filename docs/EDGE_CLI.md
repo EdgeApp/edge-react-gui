@@ -112,7 +112,7 @@ commands, and EOF (Ctrl-D) leaves.
 | `--fake` | both | Emulate the login, info and sync servers in-process — no network, no API key. Its own engine profile, so it never shares a socket with a real one |
 | `-d, --directory` | both | Working directory for local Edge data |
 | `-a, --app-id` | both | Application ID |
-| `-k, --api-key` | both | Override API key from `keys.json` — also turns off the keys.json secret and the native HMAC signer. The client forwards it to the engine in the environment, not on the command line. An `apiKey` in the config file supplies the key *without* that override |
+| `-k, --api-key` | both | Override API key from `keys.json` — also turns off the keys.json secret and the native HMAC signer. The client forwards it to the engine in the environment, not on the command line. An `apiKey` in the config file supplies the key without that override while it names the same key |
 | `--locale <tag>` | both | Language tag (BCP 47 or POSIX). Also `EDGE_CLI_LOCALE` or `locale` in the config file |
 | `--tcp=<port>` | both | Bind TCP on `127.0.0.1`, token-authenticated — off by default; bare `--tcp` and `--tcp=` are both errors, and `--tcp=0` picks an ephemeral port. On the client it is forwarded to the engine it spawns |
 | `--idle-timeout=<seconds>` | engine | Self-shutdown once nothing holds the engine open — default `300`, `0` means never, a blank value is an error, and the maximum is `2147483` (about 24.8 days), which is Node's 32-bit timer ceiling in seconds. Above it a timer clamps to 1ms, so "stay up for a month" used to shut the engine down the instant it went idle |
@@ -138,7 +138,7 @@ silently, so a misspelled key is a setting that does nothing:
 
 | Key | Equivalent flag |
 |-----|-----------------|
-| `apiKey` | `-k`, except that it does **not** turn off the `keys.json` secret or the native HMAC signer |
+| `apiKey` | `-k`, except that naming the same key as `keys.json` keeps the `keys.json` secret and the native HMAC signer. A *different* key turns both off, because neither secret belongs to it |
 | `appId` | `-a` |
 | `directory` | `-d` |
 | `workingDir` | a second spelling of `directory`, read only when `directory` is absent. It is **not** a base for relative paths — those resolve against the process's own working directory, which nothing here changes and which `engine-config` reports as `configFiles.cwd` |
@@ -164,13 +164,21 @@ given:
 | Flag | Variable |
 |------|----------|
 | `--password` | `EDGE_CLI_PASSWORD` |
-| `--new-password` | `EDGE_CLI_NEW_PASSWORD` |
+| `--password` on `change-password` | `EDGE_CLI_NEW_PASSWORD` |
 | `--pin` | `EDGE_CLI_PIN` |
-| `--new-pin` | `EDGE_CLI_NEW_PIN` |
+| `--pin` on `change-pin` | `EDGE_CLI_NEW_PIN` |
 | `--login-key` | `EDGE_CLI_LOGIN_KEY` |
 | `--data-key` | `EDGE_CLI_DATA_KEY` |
 | `--otp-key` | `EDGE_CLI_OTP_KEY` |
 | `--recovery-key` | `EDGE_CLI_RECOVERY_KEY` |
+
+The two `change-` rows are not a second spelling of the flag: `--password`
+means "authenticate with this" on `login-with-password`, `check-password`
+and `change-username`, and "the new password" on `change-password`, so each
+meaning reads its own variable. One variable for both would make a
+`change-password` that forgot its flag reset the account to whatever had
+been exported for logging in, and exit 0. With only `EDGE_CLI_PASSWORD` set,
+`change-password` reports `Missing --password (or set EDGE_CLI_NEW_PASSWORD)`.
 
 Beside `-k` / `EDGE_CLI_API_KEY`, which the client already forwards to the
 engine in the environment rather than on its command line, and
@@ -621,7 +629,7 @@ src/cli/
     fetchPluginKeys.ts # Remote plugin keys over the signed infoRollup
     nodeApiSigner.ts   # Node HMAC signer for the Edge API
     apiCredentials.ts  # Which key and which signer every request uses
-    testerServers.ts   # The six -tester hosts
+    testerServers.ts   # Re-export of src/util/testerServers
     routes/            # status, login, account, wallets, …
   client/
     apiClient.ts       # HTTP over the engine’s unix socket
@@ -644,7 +652,10 @@ src/cli/
 Shared, outside `src/cli/`: `src/util/predicates.ts` holds the small
 predicates both halves use, because `src/util/exportTxInfo.ts` needs one and
 that module is reached from the app — the React Native bundle must not import
-out of the daemon's directory.
+out of the daemon's directory. `src/util/testerServers.ts` sits there for the
+same reason, for `src/util/maestro.ts`, and `src/cli/engine/testerServers.ts`
+re-exports it so the daemon's own modules keep reading it from the daemon's
+directory.
 
 Every module in `src/cli/engine/` is listed above, and
 `npm run docs:api:verify` fails on one that is not — the map is the only

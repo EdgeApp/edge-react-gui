@@ -53,19 +53,38 @@ describe('resolveApiCredentials', () => {
     expect(out.forceKeysJson).toBe(true)
   })
 
-  it('keeps the secret and the signer for a config-file key', () => {
+  it('keeps the secret and the signer for a config-file key that matches', () => {
     // A config-file `apiKey` is where the key came from, not an override.
     // Treating it like `-k` silently turned off HMAC signing for anyone who
     // wrote `apiKey` into `edge-cli.conf`, which is the opposite of what
-    // `docs/EDGE_CLI.md` promises.
+    // `docs/EDGE_CLI.md` promises. It names the same key here, so the pair
+    // is intact.
+    const out = resolveApiCredentials(
+      { configApiKey: 'from-keys-json' },
+      keys,
+      { hasSigner: true, forceKeysJson: false }
+    )
+    expect(out.effectiveApiKey).toBe('from-keys-json')
+    expect(out.apiSecret).toStrictEqual(base16.parse(SECRET.toUpperCase()))
+    expect(out.useNativeSigner).toBe(true)
+    expect(out.forceKeysJson).toBe(false)
+  })
+
+  it('drops the secret and the signer for a config-file key that differs', () => {
+    // The pair belongs to `keys.edgeApiKey`. A config file naming a
+    // different key used to keep both, so every request went out as key B
+    // signed with A's secret: the signed `infoRollup` fetch fails,
+    // `makeCoreContext` swallows it into one warn line, and every plugin
+    // boots on the floor `appKeys` layer — the failure this engine is
+    // hardest to trace back. Unsigned is the honest answer.
     const out = resolveApiCredentials({ configApiKey: 'from-conf' }, keys, {
       hasSigner: true,
       forceKeysJson: false
     })
     expect(out.effectiveApiKey).toBe('from-conf')
-    expect(out.apiSecret).toStrictEqual(base16.parse(SECRET.toUpperCase()))
-    expect(out.useNativeSigner).toBe(true)
-    expect(out.forceKeysJson).toBe(false)
+    expect(out.apiSecret).toBeUndefined()
+    expect(out.useNativeSigner).toBe(false)
+    expect(out.forceKeysJson).toBe(true)
   })
 
   it('prefers -k over a config-file key', () => {

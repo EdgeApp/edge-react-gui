@@ -148,6 +148,25 @@ function isNotListening(error: unknown): boolean {
 }
 
 /**
+ * The engine died while this request was in flight, before it answered.
+ *
+ * The response's `aborted` handler covers a connection that dies
+ * *mid-answer*, but an
+ * engine killed before it writes any headers — `SIGKILL`, the OOM killer, a
+ * container stop — reaches the *request* as a bare `ECONNRESET` or `EPIPE`.
+ * Those fell through `printError`'s generic arm as
+ * `{"code":"INTERNAL_ERROR","status":500}` and exit 1, which is the
+ * mis-report `ClientRequestError` exists to prevent, for the commonest way
+ * an engine dies. Not `isNotListening`: there the socket was never
+ * connected, so nothing can have taken effect, and the client spawns an
+ * engine and retries.
+ */
+function isConnectionLost(error: unknown): boolean {
+  const code = (error as { code?: string } | null)?.code
+  return code === 'ECONNRESET' || code === 'EPIPE'
+}
+
+/**
  * The engine is going away, so a fresh one will answer this.
  *
  * `shutdown()` sets `shuttingDown` as its second statement and does not close
@@ -374,7 +393,18 @@ export class ApiClient {
           })
         }
       )
-      req.on('error', reject)
+      req.on('error', (error: unknown) => {
+        if (isConnectionLost(error)) {
+          reject(
+            new ClientRequestError(
+              'CONNECTION_CLOSED',
+              `The engine closed the connection before answering ${method} ${path}. The command may or may not have taken effect.`
+            )
+          )
+          return
+        }
+        reject(error)
+      })
       req.on('timeout', () => {
         req.destroy(
           new ClientRequestError(

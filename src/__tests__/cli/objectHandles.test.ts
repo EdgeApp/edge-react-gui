@@ -421,6 +421,38 @@ describe('hold against a bulk release', () => {
     jest.useFakeTimers()
   })
 
+  it('tears the whole set down at once, not handle after handle', async () => {
+    // `delete` gives every `onExpire` its own `HANDLE_TEARDOWN_WAIT_MS`, so
+    // running them in sequence made `clearAll()` cost N × that ceiling while
+    // `shutdownTiming` counted it once. Six swap quotes against an exchange
+    // that is black-holing requests put the shutdown past the 230s the
+    // client waits on, and a daemon draining exactly as designed was then
+    // reported to the operator as wedged.
+    jest.useRealTimers()
+    const store = new ObjectHandleStore(reporter(() => {}))
+    const slowClose = async (): Promise<void> => {
+      await new Promise<void>(resolve => setTimeout(resolve, 200))
+    }
+    for (let i = 0; i < 4; ++i) {
+      store.create({
+        kind: 'swap',
+        prefix: 'swap_',
+        value: `quote-${i}`,
+        sessionId: 'session-1',
+        onExpire: slowClose
+      })
+    }
+
+    const started = Date.now()
+    await store.clearAll()
+    const elapsed = Date.now() - started
+
+    expect(store.size).toBe(0)
+    // Four 200 ms closes: ~200 ms together, ~800 ms in sequence.
+    expect(elapsed).toBeLessThan(600)
+    jest.useFakeTimers()
+  })
+
   it('re-arms a handle nothing gave up on', async () => {
     const store = new ObjectHandleStore(reporter(() => {}))
     const handle = store.create({

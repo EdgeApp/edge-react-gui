@@ -279,6 +279,13 @@ describe('EngineLogger with a dead stream', () => {
     // What the `'error'` handler does, which is the only way the stream is
     // nulled: a write failure the process must survive.
     ;(logger as unknown as { stream: unknown }).stream = null
+    // And the file stays unwritable, so `reopen` cannot bring it back. That
+    // is the state this case is about: with the file writable again,
+    // reopening and carrying on is the right answer, which the next case
+    // asserts.
+    ;(logger as unknown as { openStream: () => never }).openStream = () => {
+      throw new Error('ENOSPC: no space left on device')
+    }
 
     for (let i = 0; i < 50; i++) {
       logger.info('a line nobody will ever read')
@@ -288,6 +295,30 @@ describe('EngineLogger with a dead stream', () => {
     // No generation was created, and the file that was there is untouched.
     expect(fs.existsSync(`${file}.1`)).toBe(false)
     expect(fs.readFileSync(file, 'utf8')).toBe('x'.repeat(99) + '\n')
+  })
+
+  it('reopens the file rather than going quiet for ever', async () => {
+    // `roll()` nulls the stream before it renames, so a single failed
+    // reopen — EMFILE, a momentary ENOSPC, a logs directory read-only for a
+    // second — used to be permanent: `write` returns early on a null
+    // stream, so `engine-<profile>.log` stopped existing for the life of
+    // the daemon while `logger.logPath` and the `Ready` line still named
+    // it, and the only notice went to `engine-startup.log`, which the next
+    // ordinary stop deletes.
+    const { EngineLogger } = load()
+    fs.mkdirSync(logsDir(), { recursive: true })
+    const file = path.join(logsDir(), 'engine-reopen.log')
+
+    const logger = new EngineLogger('reopen', 1024 * 1024)
+    logger.info('before')
+    ;(logger as unknown as { stream: unknown }).stream = null
+
+    logger.info('after')
+    await logger.close()
+
+    const text = fs.readFileSync(file, 'utf8')
+    expect(text).toContain('before')
+    expect(text).toContain('after')
   })
 
   it('survives an error on the stream a roll left behind', async () => {

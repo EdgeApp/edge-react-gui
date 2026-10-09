@@ -104,9 +104,7 @@ function scanRelativeRequires() {
           try {
             Module.createRequire(full).resolve(match[2])
           } catch {
-            missing.push(
-              `${pkg}: ${path.relative(base, full)} → ${match[2]}`
-            )
+            missing.push(`${pkg}: ${path.relative(base, full)} → ${match[2]}`)
           }
         }
       }
@@ -145,7 +143,9 @@ function loadEveryPluginFamily() {
     }
   }
   if (tools < 15) {
-    problems.push(`only ${tools} plugin Tools modules found — is the package installed?`)
+    problems.push(
+      `only ${tools} plugin Tools modules found — is the package installed?`
+    )
   }
   compare('plugin family that will not load', broken, KNOWN_UNLOADABLE)
   return tools

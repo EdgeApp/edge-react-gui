@@ -7,6 +7,7 @@ import { getDetectedLocale } from '../bootNodeLocale'
 import { defaultDirectory } from '../engine/cliConfig'
 import {
   canonicalDirectory,
+  ENGINE_EXIT_ALREADY_RUNNING,
   ensureRunDir,
   profileHash,
   type ProfileKey,
@@ -134,6 +135,15 @@ export async function warnIfEngineLocaleDiffers(
 
 /** How long to wait for a spawned engine to answer. */
 const SPAWN_TIMEOUT_MS = 30_000
+
+/**
+ * When the appended startup log is trimmed instead of grown.
+ *
+ * `removeRunArtifacts` deletes it on an ordinary stop, so this only bounds a
+ * profile whose engine keeps failing to start — the case where the log is
+ * being read, so it should hold the recent attempts rather than all of them.
+ */
+const STARTUP_LOG_MAX_BYTES = 256 * 1024
 
 /**
  * Make sure an engine is listening for this profile.
@@ -277,7 +287,23 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   const startupLog = path.join(ensureRunDir(profile), 'engine-startup.log')
   // 0600 like its siblings: it captures the engine's stdout/stderr, which
   // includes paths and, on a failure, whatever the engine was doing.
-  const logFd = fs.openSync(startupLog, 'w', 0o600)
+  //
+  // Appended, not truncated. This fd is the engine's stdout and stderr for
+  // its whole life, so `'w'` meant a second client's spawn attempt wiped
+  // the log of an engine that was still booting — and both children then
+  // wrote to one inode through independent fds at independent offsets, so
+  // the surviving engine's startup record was the one record a racing
+  // start could not be diagnosed from. Trimmed first when it has grown
+  // past the cap, since nothing else bounds it between
+  // `removeRunArtifacts` calls.
+  try {
+    if (fs.statSync(startupLog).size > STARTUP_LOG_MAX_BYTES) {
+      fs.truncateSync(startupLog, 0)
+    }
+  } catch {
+    // Not there yet, which is the ordinary first spawn.
+  }
+  const logFd = fs.openSync(startupLog, 'a', 0o600)
   const child = spawn(process.execPath, args, {
     detached: true,
     stdio: ['ignore', logFd, logFd],
@@ -298,6 +324,11 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   // `main().catch` because it never becomes a rejection.
   let spawnError: Error | undefined
   let exitInfo: string | undefined
+  // Someone else won `claimRunFile`, so an engine *is* coming up — just not
+  // this child. Tracked apart from `exitInfo` because the two call for
+  // opposite behaviour: keep polling to the spawn deadline rather than
+  // reporting a startup failure.
+  let anotherEngineOwnsIt = false
   child.once('error', (error: Error) => {
     spawnError = error
   })
@@ -305,6 +336,10 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   // throws, the "already running" exit — otherwise costs the caller the whole
   // spawn timeout before anyone looks at the log.
   child.once('exit', (code, signal) => {
+    if (signal == null && code === ENGINE_EXIT_ALREADY_RUNNING) {
+      anotherEngineOwnsIt = true
+      return
+    }
     exitInfo =
       signal != null ? `killed by ${signal}` : `exited with code ${code ?? 0}`
   })
@@ -334,7 +369,11 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   const tail = readTail(startupLog, 2000)
   throw new EngineUnavailableError(
     `Timed out waiting for engine to start (profile ${profile})${
-      exitInfo != null ? `; the process ${exitInfo}` : ''
+      exitInfo != null
+        ? `; the process ${exitInfo}`
+        : anotherEngineOwnsIt
+        ? '; another engine owns the profile and never bound its socket'
+        : ''
     }.` +
       (tail === ''
         ? ` No engine output; see ${startupLog}.`

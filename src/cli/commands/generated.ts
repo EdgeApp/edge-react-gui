@@ -89,7 +89,7 @@ for (const spec of asCommandsTable(table).commands) {
         const value = args.secret(a.flag)
         if (value == null) {
           if (a.required) {
-            const env = secretEnvFor(a.flag)
+            const env = secretEnvFor(cmd.name, a.flag)
             throw new UsageError(
               cmd,
               env == null

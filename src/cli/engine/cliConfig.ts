@@ -42,6 +42,19 @@ const asCliConfig = asObject({
 export type CliConfig = ReturnType<typeof asCliConfig>
 
 /**
+ * An explicit `-c` naming a file that is not there.
+ *
+ * Typed, because the client has to report it as the argv mistake it is: a
+ * plain `Error` fell through `printError`'s generic arm, so
+ * `edge-cli -c /typo/edge-cli.conf account-list` printed
+ * `{"code":"INTERNAL_ERROR","status":500}` and exited 1 with no usage line,
+ * while every neighbouring bad-argument path — `clientTimeoutMs`,
+ * `clientTcpPort` — reports a usage error and exits 2. The engine has its
+ * own `EngineUsageError` for the same reason.
+ */
+export class CliConfigError extends Error {}
+
+/**
  * The same load, saying which file answered.
  *
  * `engine-config` publishes it. The guide devotes a section to this file and
@@ -63,7 +76,9 @@ export function loadConfigFrom(configPath?: string): {
   const config = readJsonConfig(where, asCliConfig, 'CLI config')
   if (config != null) return { config, path: where }
   if (configPath != null) {
-    throw new Error(`Cannot load config file "${configPath}": no such file`)
+    throw new CliConfigError(
+      `Cannot load config file "${configPath}": no such file`
+    )
   }
   // Through the cleaner, so "no config file" and "an empty config file"
   // are the same value rather than two shapes.

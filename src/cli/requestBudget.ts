@@ -22,7 +22,7 @@ import type { IncomingMessage } from 'http'
 export const REQUEST_BUDGET_HEADER = 'x-edge-timeout-ms'
 
 /** Node's 32-bit timer ceiling, the same one `schemas.ts` refuses above. */
-const MAX_BUDGET_MS = 2 ** 31 - 1
+export const MAX_BUDGET_MS = 2 ** 31 - 1
 
 /**
  * The caller's remaining budget, or undefined when it did not say.
@@ -33,7 +33,8 @@ const MAX_BUDGET_MS = 2 ** 31 - 1
  * is what a `0` or an overflowed timer would do.
  */
 export function readRequestBudgetMs(
-  req: IncomingMessage | undefined
+  req: IncomingMessage | undefined,
+  arrivedAt?: number
 ): number | undefined {
   // `undefined` for a handler driven directly, which is how the jest suites
   // reach these bodies: they hand a route the cleaned value a request would
@@ -43,5 +44,22 @@ export function readRequestBudgetMs(
   if (text == null || text === '') return undefined
   const ms = Number(text)
   if (!Number.isFinite(ms) || ms <= 0 || ms > MAX_BUDGET_MS) return undefined
-  return Math.floor(ms)
+  // Minus what the request has already spent. The header is a duration from
+  // the caller's send, and a route reads it where its slow work starts —
+  // after the settings read, the spam-floor rate query and
+  // `wallet.getTransactions` — so taking it as a fresh budget there set a
+  // deadline strictly later than the caller's. `addToQueue` then adds its
+  // own `FETCH_FREQUENCY` debounce on top. The result was that in the one
+  // case the budget was written for, a long export whose rate chain really
+  // does run out of time, the client had already timed out and destroyed
+  // the socket before the engine settled the remainder and serialised an
+  // answer nobody would read.
+  if (arrivedAt == null) return Math.floor(ms)
+  const left = ms - Math.max(0, Date.now() - arrivedAt)
+  // Not `0` or a negative: the budget is a hint that lets a route finish
+  // sooner, and one that makes it finish *instantly* is the failure this
+  // whole function already refuses a malformed header for. A caller whose
+  // deadline is already spent gets the route's own default instead.
+  if (left <= 0) return undefined
+  return Math.floor(left)
 }

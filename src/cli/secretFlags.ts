@@ -28,7 +28,34 @@ export const SECRET_FLAG_ENV: Record<string, string> = {
   'recovery-key': 'EDGE_CLI_RECOVERY_KEY'
 }
 
-/** The variable a flag falls back to, or undefined for an ordinary flag. */
-export function secretEnvFor(flag: string): string | undefined {
-  return SECRET_FLAG_ENV[flag]
+/**
+ * Flags whose variable depends on the command, because the same flag name
+ * means two different things.
+ *
+ * `--password` is "authenticate with this" on `login-with-password`,
+ * `check-password` and `change-username`, and "**the new** password" on
+ * `change-password`, whose body field is documented as `The new password.`
+ * One variable for both meanings is a credential-overwrite waiting to
+ * happen: with `EDGE_CLI_PASSWORD` exported for a login, a
+ * `change-password` that forgot its `--password` would silently reset the
+ * account to the login password and exit 0, where it has to fail. `--pin`
+ * and `change-pin` have the identical shape, and these are the two
+ * variables `SECRET_FLAG_ENV` already declared for them.
+ */
+const WRITE_CREDENTIAL_ENV: Record<string, Record<string, string>> = {
+  'change-password': { password: 'EDGE_CLI_NEW_PASSWORD' },
+  'change-pin': { pin: 'EDGE_CLI_NEW_PIN' }
+}
+
+/**
+ * The variable a flag falls back to, or undefined for an ordinary flag.
+ *
+ * `command` so that a flag whose value is *written* reads its own variable
+ * and never the one a caller exported to log in with.
+ */
+export function secretEnvFor(
+  command: string,
+  flag: string
+): string | undefined {
+  return WRITE_CREDENTIAL_ENV[command]?.[flag] ?? SECRET_FLAG_ENV[flag]
 }

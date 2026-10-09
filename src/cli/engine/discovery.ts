@@ -127,6 +127,22 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
 }
 
 /**
+/**
+ * The engine's exit code for "another engine already owns this profile".
+ *
+ * Distinct from the `1` every other startup failure uses, because the two
+ * mean opposite things to the client that spawned it. On two racing cold
+ * invocations the loser of `claimRunFile` exits within about a second while
+ * the winner is still loading plugins, so a client that read any exit as
+ * fatal gave up on a profile a healthy engine was about to bind — and said
+ * "Stop it first", about an engine it had started itself.
+ *
+ * Shared by both halves so the number cannot drift, like
+ * `REQUEST_BUDGET_HEADER`.
+ */
+export const ENGINE_EXIT_ALREADY_RUNNING = 3
+
+/**
  * Claim the profile by creating the run file exclusively.
  *
  * `wx` fails when the file already exists, so two engines racing from cold

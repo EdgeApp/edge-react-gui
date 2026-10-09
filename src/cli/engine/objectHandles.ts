@@ -194,15 +194,30 @@ export class ObjectHandleStore {
    *
    * Bounded, because a wedged call must not stop the engine exiting, and the
    * abandonment is logged rather than silent.
+   *
+   * Both phases run across the whole set rather than handle by handle, which
+   * is what makes `this.busyWaitMs` and `HANDLE_TEARDOWN_WAIT_MS` the
+   * ceilings `shutdownTiming` adds them up as. The wait is the same either
+   * way — the deadline is absolute, so a handle only loses its turn once the
+   * whole budget is wall-clock spent — but the teardown was not: `delete`
+   * gives each `onExpire` its own `HANDLE_TEARDOWN_WAIT_MS`, so N quotes
+   * whose exchange is black-holing requests cost N × 5s in sequence. Six of
+   * them put `clearAll()` at 30s, and the session release after it at 30s
+   * again, past the ceiling the client waits on — so a daemon draining
+   * exactly as designed was reported to the operator as wedged.
    */
   private async deleteMany(ids: string[], why: string): Promise<void> {
     const deadline = Date.now() + this.busyWaitMs
+    while (
+      Date.now() <= deadline &&
+      ids.some(id => this.handles.get(id)?.consuming === true)
+    ) {
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+
     const abandoned: string[] = []
+    const releasing: Array<Promise<unknown>> = []
     for (const id of ids) {
-      while (this.handles.get(id)?.consuming === true) {
-        if (Date.now() > deadline) break
-        await new Promise(resolve => setTimeout(resolve, 50))
-      }
       const busy = this.handles.get(id)
       if (busy?.consuming === true) {
         // Marked, so `hold` releases it when its operation finally returns
@@ -214,8 +229,9 @@ export class ObjectHandleStore {
       // One handle's teardown failure must not leave the rest of the set in
       // place: a logout releases every handle the session owned, and a
       // shutdown every handle there is. `delete` logs each one.
-      await this.delete(id).catch(() => {})
+      releasing.push(this.delete(id).catch(() => {}))
     }
+    await Promise.all(releasing)
     if (abandoned.length > 0) {
       // `this.logger`, not `console`: this is the one class that already
       // holds a logger, and it used it eleven lines away while writing the

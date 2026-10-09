@@ -188,6 +188,9 @@ async function handleRequest(
   res: ServerResponse,
   guard?: TcpGuard
 ): Promise<void> {
+  // Before the auth check and the body read, so the budget a route computes
+  // is measured from when the caller's request actually landed.
+  const arrivedAt = Date.now()
   // Authenticate before touching any engine state, which is what the
   // comment below has always claimed and the ordering did not deliver.
   // `idle.touch()` and `idle.beginRequest()` used to run first, so every
@@ -339,7 +342,8 @@ async function handleRequest(
         res,
         params: matched.params,
         query: url.searchParams,
-        body
+        body,
+        arrivedAt
       })
     } finally {
       releaseSession?.()

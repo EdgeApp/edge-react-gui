@@ -48,6 +48,17 @@ export interface RouteContext {
   params: Record<string, string>
   query: URLSearchParams
   body: unknown
+  /**
+   * When this request arrived, as `Date.now()`.
+   *
+   * The caller's budget header is a duration measured from *its* send, so a
+   * route that reads it as a fresh budget at the point its slow work begins
+   * sets a deadline later than the one the client is holding — and in the
+   * only case the budget exists for, the client has already given up and
+   * destroyed the socket. Nothing else in `RouteContext` could stand in for
+   * it: `state.startedAt` is the engine's boot.
+   */
+  arrivedAt: number
 }
 
 export type RouteHandler = (ctx: RouteContext) => Promise<unknown> | unknown
