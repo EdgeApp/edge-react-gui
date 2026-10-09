@@ -47,6 +47,7 @@ const SHARED_MODULES = [
   // load it, because a `react-native` import added to a leaf the CLI runs
   // breaks the published engine on first start.
   'src/util/sleep.ts',
+  'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',
   'src/cli/engine/fetchPluginKeys.ts',

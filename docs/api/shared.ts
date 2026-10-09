@@ -158,6 +158,13 @@ export const errorCodes: ErrorCode[] = [
     doc: 'The handle was read after its TTL but before the 15-second sweeper released it. Once swept it is gone, so a handle past its TTL usually answers `OBJECT_NOT_FOUND` instead.'
   },
   {
+    code: 'QUOTE_EXPIRED',
+    status: 410,
+    origin: 'engine',
+    doc: 'A swap quote was approved after the exchange’s `quoteExpirationDate`. The handle is released; fetch a new quote.',
+    details: '`details.quoteExpirationDate`'
+  },
+  {
     code: 'OBJECT_IN_USE',
     status: 409,
     origin: 'engine',
@@ -337,7 +344,7 @@ export const errorCodes: ErrorCode[] = [
     code: 'SETTINGS_UNREADABLE',
     status: 503,
     origin: 'engine',
-    doc: 'The account\u2019s synced `Settings.json` is present and could not be read, and the call needs what it holds \u2014 the account\u2019s fiat or its display units \u2014 so it refuses rather than answer in defaults the user never chose. A half-synced file is the usual cause, so retry once the account has synced. Exit code 6.'
+    doc: 'The account\u2019s synced `Settings.json` is present and could not be read, and the call needs what it holds \u2014 the account\u2019s fiat or its display units \u2014 so it refuses rather than answer in defaults the user never chose. A half-synced file is the usual cause, so retry once the account has synced. `change-local-settings` answers it too, when its local `Settings.json` could not be read or recovered — a permission or I/O failure, or a failure while moving an unreadable file aside — with nothing written. Exit code 6.'
   },
   {
     code: 'RATES_INCOMPLETE',
