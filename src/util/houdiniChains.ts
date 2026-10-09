@@ -1,9 +1,5 @@
 import { asBoolean, asObject, type Cleaner } from 'cleaners'
-import type {
-  EdgeCurrencyConfig,
-  EdgePluginMap,
-  EdgeTokenId
-} from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgePluginMap } from 'edge-core-js'
 
 import type { DisableAsset } from '../actions/ExchangeInfoActions'
 import type { EdgeAsset } from '../types/types'
@@ -397,13 +393,13 @@ export const HOUDINI_MIN_USD = {
   dex: '5'
 } as const
 
-/** Look up the Houdini destination chain for an Edge asset, if served. */
-export function getHoudiniChain(
-  pluginId: string,
-  tokenId: EdgeTokenId
-): HoudiniChain | undefined {
-  // Only native (chain) assets are offered as destinations for now:
-  if (tokenId != null) return undefined
+/**
+ * Look up the Houdini chain an Edge plugin maps to, if served. The row holds
+ * what is true of every asset on the chain: its address format, memo flag and
+ * EVM chain id. Whether Houdini serves one particular token is a separate
+ * question, answered by `getHoudiniAssetSupport`.
+ */
+export function getHoudiniChain(pluginId: string): HoudiniChain | undefined {
   return HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
 }
 
@@ -462,7 +458,7 @@ export function getHoudiniAssetSupport(opts: {
   const { asset, currencyConfigs, houdiniTokens } = opts
   const { pluginId, tokenId } = asset
 
-  const chain = HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+  const chain = getHoudiniChain(pluginId)
   if (chain == null) return undefined
   if (tokenId == null) return { hasSelfPrivate: chain.hasSelfPrivate }
 
@@ -628,24 +624,19 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
 /**
  * The asset the recipient actually receives.
  *
- * A swap-send always pays out the destination chain's NATIVE asset, because
- * the quote asks for `toTokenId: null` and token destinations are not offered
- * at all. A plain send delivers the source asset verbatim, token included.
- * Both the "Recipient receives" row and that row's picker read this, so the
- * two cannot drift: naming the source token while the order paid out the
- * chain's own coin told a USDT sender their recipient receives USDT.
+ * A swap-send pays out the destination asset the quote asks for, coin or
+ * token. A plain send delivers the source asset verbatim. Both the "Recipient
+ * receives" row and that row's picker read this, so the row always names the
+ * asset the order pays out.
  */
 export function getRecipientAsset(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** `recipientPluginId ?? sourcePluginId`. */
-  destPluginId: string
+  source: EdgeAsset
+  /** The picked destination asset, or the source asset when none is picked. */
+  destination: EdgeAsset
   swapSendActive: boolean
 }): EdgeAsset {
-  const { destPluginId, sourcePluginId, sourceTokenId, swapSendActive } = opts
-  return swapSendActive
-    ? { pluginId: destPluginId, tokenId: null }
-    : { pluginId: sourcePluginId, tokenId: sourceTokenId }
+  const { destination, source, swapSendActive } = opts
+  return swapSendActive ? destination : source
 }
 
 /** One row of the "Recipient receives" picker. */
@@ -653,28 +644,22 @@ export interface RecipientAssetChoice {
   /** The asset this row names, which is what the recipient would receive. */
   asset: EdgeAsset
   /**
-   * What `recipientPluginId` becomes when this row is picked. `undefined`
-   * clears the explicit destination chain, leaving the source chain.
+   * The destination asset the scene adopts when this row is picked.
+   * `undefined` clears the adopted destination, leaving the source asset.
    */
-  recipientPluginId: string | undefined
+  pickedAsset: EdgeAsset | undefined
 }
 
 /**
  * The rows of the "Recipient receives" picker, in display order.
  *
- * Each row names what the recipient gets once THAT row is picked, which is
- * not always what the scene shows now: picking the first row clears the
- * adopted destination, so without Stealth a token source falls back to a
- * plain send of the token. Labelling that row from the current swap state
- * named the chain's native coin while the pick reverted to the token.
- *
- * The first row is the source chain with no destination adopted. The rest are
- * the served destination chains. The source chain appears again only when
- * adopting it pays out something the first row does not, which is a token
- * source without Stealth: the first row is the token, and the chain's native
- * coin is a separate payout. Any other second row for the source chain quotes
- * identically to the first and differs only in whether turning Stealth off
- * degrades to a plain send, which no user can tell apart.
+ * The first row is the source asset with no destination adopted: a plain send,
+ * or a same-asset private send with Stealth on. It is always offered, since a
+ * send of the source asset needs no swap destination. The rest are
+ * `destinationAssets` in the order given, which callers build with
+ * `getHoudiniAssets`: each served chain's coin followed by that chain's
+ * tokens. The source asset is not repeated among them, because adopting it
+ * quotes the same as the first row.
  *
  * Callers must key the rows on the asset rather than on its display name. The
  * POL ERC-20 on Ethereum and the Polygon chain share both their name and their
@@ -682,28 +667,14 @@ export interface RecipientAssetChoice {
  * tap to the same row.
  */
 export function getRecipientAssetChoices(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** Whether Stealth alone makes this a swap-send, with no chain adopted. */
-  stealthActive: boolean
-  /** Served destination chains, already filtered to what the account holds. */
-  servedPluginIds: string[]
+  source: EdgeAsset
+  /** Every asset offered as a swap destination, in picker order. */
+  destinationAssets: EdgeAsset[]
 }): RecipientAssetChoice[] {
-  const { servedPluginIds, sourcePluginId, sourceTokenId, stealthActive } = opts
+  const { destinationAssets, source } = opts
   const choices: RecipientAssetChoice[] = [
-    {
-      asset: getRecipientAsset({
-        sourcePluginId,
-        sourceTokenId,
-        destPluginId: sourcePluginId,
-        swapSendActive: stealthActive
-      }),
-      recipientPluginId: undefined
-    },
-    ...servedPluginIds.map(pluginId => ({
-      asset: { pluginId, tokenId: null },
-      recipientPluginId: pluginId
-    }))
+    { asset: source, pickedAsset: undefined },
+    ...destinationAssets.map(asset => ({ asset, pickedAsset: asset }))
   ]
   const seen = new Set<string>()
   return choices.filter(choice => {

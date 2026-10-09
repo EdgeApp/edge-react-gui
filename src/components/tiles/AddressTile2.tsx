@@ -131,15 +131,14 @@ interface Props {
   ) => Promise<boolean>
   /**
    * Opt-in expansion of the "Myself" picker past the source asset. The caller
-   * supplies the destination assets this send can route to, derived from route
-   * metadata rather than any hardcoded asset shape, and adopts a cross-asset
-   * pick through `onPickCrossAsset`. Same-asset wallets pin to the top of the
-   * modal. Omitting this keeps the source-asset-only picker every other caller
-   * gets.
+   * supplies the destination assets this send can route to, tokens included,
+   * and adopts a cross-asset pick through `onPickCrossAsset`. Same-asset
+   * wallets pin to the top of the modal. Omitting this keeps the
+   * source-asset-only picker every other caller gets.
    */
   selfTransfer?: {
     allowedAssets: EdgeAsset[]
-    onPickCrossAsset: (pluginId: string, address: string) => Promise<boolean>
+    onPickCrossAsset: (asset: EdgeAsset, address: string) => Promise<boolean>
   }
   navigation: NavigationBase
 }
@@ -605,14 +604,17 @@ export const AddressTile2 = React.forwardRef(
           // A wallet on another chain is a cross-asset destination, so the
           // caller adopts it (recipient asset, quote reset) instead of this
           // tile validating the address against the source wallet's chain.
-          // So is the source chain's own coin picked for a token source: the
-          // address is the same chain's, but the payout is a different asset.
+          // So is any other asset on the source chain: the address is the same
+          // chain's, but the payout is a different asset.
           const destPluginId = wallet.currencyInfo.pluginId
           if (
             selfTransfer != null &&
             (destPluginId !== pluginId || pickedTokenId !== tokenId)
           ) {
-            await selfTransfer.onPickCrossAsset(destPluginId, address)
+            await selfTransfer.onPickCrossAsset(
+              { pluginId: destPluginId, tokenId: pickedTokenId },
+              address
+            )
             return
           }
           await changeAddress(address, 'other')
