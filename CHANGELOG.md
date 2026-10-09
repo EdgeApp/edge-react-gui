@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
+- fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)
