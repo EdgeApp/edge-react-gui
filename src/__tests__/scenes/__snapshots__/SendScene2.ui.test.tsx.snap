@@ -1516,7 +1516,63 @@ exports[`SendScene2 1 spendTarget 1`] = `
           }
         }
         nativeID="15"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -3526,7 +3582,63 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           }
         }
         nativeID="25"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -5648,7 +5760,63 @@ exports[`SendScene2 2 spendTargets 1`] = `
           }
         }
         nativeID="36"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -7351,7 +7519,63 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           }
         }
         nativeID="46"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -9034,7 +9258,63 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           }
         }
         nativeID="56"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -10484,7 +10764,63 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           }
         }
         nativeID="65"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -12347,7 +12683,63 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           }
         }
         nativeID="77"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -14161,7 +14553,63 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           }
         }
         nativeID="88"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -15902,7 +16350,63 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           }
         }
         nativeID="99"
-      />
+      >
+        <View
+          style={
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
+            }
+          >
+            Cryptocurrency transactions are irreversible.
+          </Text>
+        </View>
+      </View>
     </View>
   </RCTScrollView>
   <View
@@ -17827,332 +18331,58 @@ exports[`SendScene2 Render SendScene 1`] = `
       >
         <View
           style={
-            [
-              {
-                "alignSelf": "stretch",
-                "borderRadius": 16,
-              },
-              {
-                "marginBottom": 34,
-                "marginLeft": 11,
-                "marginRight": 11,
-                "marginTop": 34,
-              },
-              {
-                "paddingBottom": 11,
-                "paddingLeft": 11,
-                "paddingRight": 11,
-                "paddingTop": 11,
-              },
-              undefined,
-            ]
+            {
+              "marginHorizontal": 22,
+              "marginTop": 22,
+            }
           }
         >
-          <View
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
             style={
-              {
-                "backgroundColor": "rgba(255, 255, 255, .1)",
-                "borderRadius": 16,
-                "bottom": 0,
-                "left": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
             }
           >
-            <BVLinearGradient
-              colors={
-                [
-                  1886857999,
-                  1887591201,
-                  1887591201,
-                  1886857999,
-                ]
-              }
-              endPoint={
-                {
-                  "x": 0.9,
-                  "y": 0,
-                }
-              }
-              locations={null}
-              startPoint={
-                {
-                  "x": 0,
-                  "y": 0.9,
-                }
-              }
-              style={
-                {
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
-              }
-            />
-          </View>
-          <View
+            Make sure the recipient is on the Bitcoin network.
+          </Text>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            numberOfLines={0}
             style={
-              {
-                "margin": 11,
-              }
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                {
+                  "color": "#3dd9f4",
+                  "fontSize": 17,
+                },
+                null,
+              ]
             }
           >
-            <View
-              style={
-                {
-                  "alignItems": "center",
-                  "flexDirection": "row",
-                }
-              }
-            >
-              <Text
-                allowFontScaling={false}
-                selectable={false}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontSize": 28,
-                    },
-                    {
-                      "marginRight": 4,
-                    },
-                    {
-                      "fontFamily": "Ionicons",
-                      "fontStyle": "normal",
-                      "fontWeight": "normal",
-                    },
-                    {},
-                  ]
-                }
-              >
-                
-              </Text>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={0}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "flexShrink": 1,
-                      "fontFamily": "Quicksand-Medium",
-                      "marginLeft": 4,
-                    },
-                    null,
-                  ]
-                }
-              >
-                Scam Warning
-              </Text>
-            </View>
-            <View
-              style={
-                {
-                  "marginTop": 11,
-                }
-              }
-            >
-              <View
-                style={
-                  {
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  • 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={0}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Edge will not give financial advice.
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  • 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={0}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Cryptocurrency transactions are irreversible.
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={1}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  • 
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={0}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "fontSize": 17,
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Do not send money to people or organizations you do not know.
-                </Text>
-              </View>
-            </View>
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              minimumFontScale={0.65}
-              numberOfLines={10}
-              style={
-                [
-                  {
-                    "color": "#FFFFFF",
-                    "fontFamily": "Quicksand-Regular",
-                    "fontSize": 22,
-                    "includeFontPadding": false,
-                  },
-                  {
-                    "fontSize": 17,
-                    "marginHorizontal": 6,
-                    "marginTop": 11,
-                  },
-                  null,
-                ]
-              }
-            >
-              If you have any questions or concerns regarding this send, please contact support@edge.app
-            </Text>
-          </View>
+            Cryptocurrency transactions are irreversible.
+          </Text>
         </View>
       </View>
     </View>

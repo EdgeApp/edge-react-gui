@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: The send scene's scam warning card is a short note on irreversibility and the recipient's network
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)

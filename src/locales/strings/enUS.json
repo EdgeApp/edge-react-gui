@@ -161,6 +161,7 @@
   "send_address_other_network_1s": "This address is on another network. This send can only go to an address on %1$s.",
   "send_address_unrecognized_1s": "This address does not match any network %1$s can send to from this wallet.",
   "send_recipient_network_changed_1s": "Recipient network changed to %1$s.",
+  "send_check_recipient_network_1s": "Make sure the recipient is on the %1$s network.",
   "send_address_no_network_selected": "No network was selected, so the address was not added.",
   "fragment_send_subtitle": "Send",
   "fragment_send_myself": "Myself",
