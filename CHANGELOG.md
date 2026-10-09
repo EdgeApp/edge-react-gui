@@ -54,6 +54,7 @@
 - fixed: Info server swap disables for mainnet coins not applying
 - fixed: An address the send scene cannot use shows a message naming the reason
 - fixed: An address on the sending wallet's own network switches the recipient network back
+- fixed: The send scene no longer stacks the scam warning above the swap-send warning
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)

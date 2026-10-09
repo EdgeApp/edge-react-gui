@@ -2684,7 +2684,13 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * The scam warning opens a plain send, until an address is entered. A
+   * swap-send has its own warning card and an error stands alone, so the
+   * scene never stacks this card on either.
+   */
   const renderScamWarning = (): React.ReactElement | null => {
+    if (swapSendActive || showErrorCard) return null
     const { publicAddress } = spendInfo.spendTargets[0]
 
     if (publicAddress === '' || publicAddress == null) {
