@@ -110,7 +110,7 @@
     "disklet": "^0.6.0",
     "edge-core-js": "^2.51.0",
     "edge-currency-accountbased": "^4.101.1",
-    "edge-currency-plugins": "^3.15.0",
+    "edge-currency-plugins": "^3.16.0",
     "edge-exchange-plugins": "^2.59.0",
     "edge-info-server": "^3.15.0",
     "edge-login-ui-rn": "^3.37.3",
