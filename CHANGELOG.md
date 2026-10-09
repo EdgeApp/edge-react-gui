@@ -5,6 +5,7 @@
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
+- fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
 
 ## 4.53.0 (staging)
 
