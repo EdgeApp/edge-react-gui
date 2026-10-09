@@ -1,7 +1,21 @@
-import { describe, expect, it, jest } from '@jest/globals'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest
+} from '@jest/globals'
 import type { EdgeFetchFunction } from 'edge-core-js'
 
-import { configureNetwork, fetchInfo, fetchWaterfall } from '../../util/network'
+import {
+  configureInfoServer,
+  configureNetwork,
+  fetchInfo,
+  fetchPublicRollup,
+  fetchWaterfall,
+  infoServerData
+} from '../../util/network'
 
 describe('fetchWaterfall', () => {
   it('refuses an empty server list instead of hanging', async () => {
@@ -127,5 +141,164 @@ describe('configureNetwork', () => {
 
     const [uri] = (doFetch as unknown as jest.Mock).mock.calls[0] as [string]
     expect(uri).toMatch(/^https:\/\/info[12]\.edge\.app\//)
+  })
+})
+
+/**
+ * The info-server rework, which no test could reach.
+ *
+ * `configureInfoServer`'s parameter capture, `fetchPublicRollup`'s
+ * "configureInfoServer has not run yet" guard and its error arm were
+ * uncovered by the whole suite, and the CLI harnesses cannot reach them:
+ * only `src/app.ts` and `src/util/keysStore.ts` call these, and the engine
+ * signs its own rollup through `fetchPluginKeys`. The contract they carry is
+ * `keysStore`'s cold-start fallback — when the signed fetch does not fill
+ * `infoServerData.rollup`, this call is what fills it, and a call that
+ * silently does nothing leaves every plugin with no `appKeys`.
+ */
+describe('fetchPublicRollup', () => {
+  const warnings: string[] = []
+  const realWarn = console.warn
+
+  beforeEach(() => {
+    warnings.length = 0
+    console.warn = (...args: unknown[]) => {
+      warnings.push(args.map(String).join(' '))
+    }
+    configureNetwork({ infoServers: ['https://info.example'] })
+  })
+
+  afterEach(() => {
+    console.warn = realWarn
+  })
+
+  // The smallest shape `asInfoRollup` accepts, derived from the cleaner.
+  const rollup = {
+    appIdInfo: {},
+    apyValues: { policies: {} },
+    blockBook: {},
+    networkFees: {}
+  }
+
+  it('does nothing but warn before configureInfoServer has run', async () => {
+    // The state `keysStore`'s cold-start fallback can arrive in. Without a
+    // report this returned having done nothing at all, and the plugins'
+    // missing `appKeys` was the only symptom.
+    let asked = 0
+    const doFetch: any = async () => {
+      ++asked
+      return {
+        ok: true,
+        status: 200,
+        json: async () => rollup,
+        text: async () => ''
+      }
+    }
+    // No `configureInfoServer` call in this case.
+    await fetchPublicRollup(doFetch)
+    expect(asked).toBe(0)
+    expect(warnings.join('\n')).toContain('configureInfoServer has not run')
+  })
+
+  it('fills the rollup from the device fields it captured', async () => {
+    const paths: string[] = []
+    let rolled = 0
+    configureInfoServer({
+      osType: 'ios',
+      osVersion: '18.1',
+      appVersion: '4.52.0',
+      appId: 'edge',
+      onRollup: async () => {
+        ++rolled
+      }
+    })
+    const doFetch: any = async (uri: string) => {
+      paths.push(uri)
+      return {
+        ok: true,
+        status: 200,
+        json: async () => rollup,
+        text: async () => ''
+      }
+    }
+    await fetchPublicRollup(doFetch)
+
+    expect(paths).toHaveLength(1)
+    expect(paths[0]).toContain('v1/infoRollup/edge')
+    expect(paths[0]).toContain('os=ios')
+    expect(paths[0]).toContain('osVersion=18.1')
+    expect(paths[0]).toContain('appVersion=4.52.0')
+    expect(infoServerData.rollup).not.toBeNull()
+    // `onRollup` is the version check, and it runs only on success.
+    expect(rolled).toBe(1)
+    expect(warnings).toStrictEqual([])
+  })
+
+  it('reports the status and the body for a refusal', async () => {
+    configureInfoServer({
+      osType: 'android',
+      osVersion: '15',
+      appVersion: '4.52.0',
+      appId: 'edge'
+    })
+    const doFetch: any = async () => ({
+      ok: false,
+      status: 503,
+      json: async () => ({}),
+      text: async () => 'info server unavailable'
+    })
+    await fetchPublicRollup(doFetch)
+    const text = warnings.join('\n')
+    expect(text).toContain('503')
+    expect(text).toContain('info server unavailable')
+  })
+
+  it('reports the error itself when nothing could be reached', async () => {
+    // With the error, which is the whole point of that arm: "failed to
+    // reach the info server" for what may be a cleaner rejection from
+    // `asInfoRollup`, or "No servers configured", was the one line an
+    // investigator got.
+    configureInfoServer({
+      osType: 'ios',
+      osVersion: '18.1',
+      appVersion: '4.52.0',
+      appId: 'edge'
+    })
+    const doFetch: any = async () => {
+      throw new Error('getaddrinfo ENOTFOUND info.example')
+    }
+    await fetchPublicRollup(doFetch)
+    const text = warnings.join('\n')
+    expect(text).toContain('Failed to reach the info server')
+    expect(text).toContain('ENOTFOUND')
+  })
+
+  it('reports a rollup the cleaner rejects, rather than storing it', async () => {
+    configureInfoServer({
+      osType: 'ios',
+      osVersion: '18.1',
+      appVersion: '4.52.0',
+      appId: 'edge'
+    })
+    let rolled = 0
+    configureInfoServer({
+      osType: 'ios',
+      osVersion: '18.1',
+      appVersion: '4.52.0',
+      appId: 'edge',
+      onRollup: async () => {
+        ++rolled
+      }
+    })
+    const doFetch: any = async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ ...rollup, appIdInfo: 'not an object' }),
+      text: async () => ''
+    })
+    await fetchPublicRollup(doFetch)
+    expect(warnings.join('\n')).toContain('Failed to reach the info server')
+    // And the version check did not run on a rollup that was never stored.
+    expect(rolled).toBe(0)
   })
 })

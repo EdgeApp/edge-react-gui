@@ -247,8 +247,13 @@ let infoServerParams: InitInfoServerParams | undefined
  * that failure is only observable once the signed fetch settles, which is long
  * after `initInfoServer` has already run. Uses the parameters captured by
  * `initInfoServer`, so this module stays Node-safe.
+ *
+ * `doFetch` for the tests, the way `fetchWaterfall` and `cleanMultiFetch`
+ * take one; production callers pass none.
  */
-export const fetchPublicRollup = async (): Promise<void> => {
+export const fetchPublicRollup = async (
+  doFetch?: EdgeFetchFunction
+): Promise<void> => {
   const params = infoServerParams
   if (params == null) {
     console.warn(
@@ -259,7 +264,19 @@ export const fetchPublicRollup = async (): Promise<void> => {
   const { osType, osVersion, appVersion, appId, onRollup } = params
   try {
     const response = await fetchInfo(
-      `v1/infoRollup/${appId}?os=${osType}&osVersion=${osVersion}&appVersion=${appVersion}`
+      `v1/infoRollup/${appId}?os=${osType}&osVersion=${osVersion}&appVersion=${appVersion}`,
+      undefined,
+      undefined,
+      // Injectable, like `fetchWaterfall` and `cleanMultiFetch` beside it.
+      // This was the one function in the file without it, which is what
+      // made the three decisions it carries — the "configureInfoServer has
+      // not run yet" guard, the error arm and `onRollup` — reachable from
+      // no test at all, while the contract they hold is `keysStore`'s
+      // cold-start fallback: when the signed fetch does not fill the
+      // rollup, this call is what fills it, and a call that does nothing
+      // leaves every plugin with no `appKeys` and a `console.warn` as the
+      // only trace.
+      doFetch
     )
     if (!response.ok) {
       console.warn(
@@ -326,11 +343,20 @@ export const initInfoServer = async (
     await fetchPublicRollup()
   }
 
-  infoServerPoll = makePeriodicTask(fetchPublicRollup, INFO_FETCH_INTERVAL, {
-    onError: () => {
-      // Already caught in `fetchPublicRollup`.
+  // Wrapped, not passed by reference: `fetchPublicRollup` now takes an
+  // optional `doFetch`, and handing the function straight to a scheduler
+  // would let whatever that scheduler calls its task with land in that slot.
+  infoServerPoll = makePeriodicTask(
+    async () => {
+      await fetchPublicRollup()
+    },
+    INFO_FETCH_INTERVAL,
+    {
+      onError: () => {
+        // Already caught in `fetchPublicRollup`.
+      }
     }
-  })
+  )
   // `wait: true`, because the launch fetch above has already run — starting
   // in the running state would fire a second one immediately.
   infoServerPoll.start({ wait: true })
