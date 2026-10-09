@@ -68,14 +68,26 @@ export function getMemoError(
 }
 
 export function getMemoLabel(memoName: string = 'memo'): string {
-  return memoLabels[memoName] ?? memoName
+  return memoLabels()[memoName] ?? memoName
 }
 
 export function getMemoTitle(memoName: string = 'memo'): string {
-  return memoTitles[memoName] ?? memoName
+  return memoTitles()[memoName] ?? memoName
 }
 
-const memoLabels: Record<string, string> = {
+/**
+ * The memo labels and titles, read at call time.
+ *
+ * These were module-scope `Record`s, which froze all sixteen strings to
+ * whatever `lstrings` held when this module first evaluated. `applyLocale`
+ * mutates `lstrings` in place, and the module that applies it —
+ * `initLocale`, or `bootNodeLocale` in the CLI — is one nothing here
+ * imports, so the values were right only if that had already run. This
+ * module is on the CLI's own import graph as well as the GUI's, which is two
+ * orders to be right in; read lazily there is no order in which it can be
+ * wrong. `txActionLabels.ts` says the same thing about the same hazard.
+ */
+const memoLabels = (): Record<string, string> => ({
   comment: lstrings.memo_comment_label,
   'destination tag': lstrings.memo_destination_tag_label,
   memo: lstrings.memo_memo_label,
@@ -84,9 +96,9 @@ const memoLabels: Record<string, string> = {
   note: lstrings.memo_note_label,
   op_return: lstrings.memo_op_return_label,
   paymentId: lstrings.memo_payment_id_label
-}
+})
 
-const memoTitles: Record<string, string> = {
+const memoTitles = (): Record<string, string> => ({
   comment: lstrings.memo_comment_title,
   'destination tag': lstrings.memo_destination_tag_title,
   memo: lstrings.memo_memo_title,
@@ -95,4 +107,4 @@ const memoTitles: Record<string, string> = {
   note: lstrings.memo_note_title,
   op_return: lstrings.memo_op_return_title,
   paymentId: lstrings.memo_payment_id_title
-}
+})
