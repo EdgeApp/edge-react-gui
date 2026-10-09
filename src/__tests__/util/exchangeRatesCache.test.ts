@@ -2,12 +2,14 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 
 import {
   clearRateCache,
+  configureExchangeRates,
   getHistoricalCryptoRate,
   getHistoricalCryptoRateOrUnavailable,
   isRateUnavailable,
   RATE_CHAIN_TIMEOUT_MS,
   RATE_QUERY_TIMEOUT_MS,
   rateCacheSize,
+  rateUnpricedCount,
   stopRateQueue,
   UNPRICED_TTL_MS
 } from '../../util/exchangeRates'
@@ -460,24 +462,161 @@ describe('stopping the queue', () => {
     clearRateCache()
     posts = 0
 
-    // A server slow enough that the first pass is still awaiting when the
-    // queue is stopped underneath it. `stopRateQueue` clears `inQuery` but
-    // cannot cancel that pass, so without an epoch the key queued below
-    // armed a second chain that ran alongside the first.
+    // A server slow enough that the first pass is still inside its fetch
+    // when the queue is stopped underneath it. `stopRateQueue` clears
+    // `inQuery` but cannot cancel that pass, so without an epoch the pass
+    // carried on when it woke — recursing into `doQuery` with its own
+    // `doFetch` and its own chain deadline, alongside whatever chain the
+    // stop had made way for.
+    let requested = 0
     const slowFetch: any = async (uri: string, opts: any) => {
-      await new Promise(resolve => setTimeout(resolve, 200))
+      ++requested
+      await new Promise(resolve => setTimeout(resolve, 400))
       return await fakeFetch(uri, opts)
     }
 
     const first = rateFor('2024-03-01T00:00:00.000Z', slowFetch)
-    await new Promise(resolve => setTimeout(resolve, 50))
+    // Past `FETCH_FREQUENCY`, so the pass has fired and is *inside* the
+    // fetch, which is the state this case is about. Stopping before the
+    // debounce fires cancels the timer instead and no pass ever exists —
+    // which is what the 50ms wait this replaces was really doing, so the
+    // arm the case is named for never ran.
+    await new Promise(resolve => setTimeout(resolve, 1200))
+    expect(requested).toBe(1)
     stopRateQueue()
-    // Settled rather than hanging: a stopped queue answers
-    // `RATE_UNAVAILABLE`, because it learned nothing about this date.
-    expect(isRateUnavailable(await first)).toBe(true)
 
-    // And the module still works afterwards.
+    // Whatever that pass answers for its own key, the module is usable
+    // afterwards and the abandoned pass adds no request of its own.
+    await first
+    const postsAfterStop = posts
+
     const second = await rateFor('2024-03-02T00:00:00.000Z')
     expect(second).toBe(30000)
+
+    // Past the rest of the slow fetch and a full debounce, so the
+    // abandoned pass has woken and reached the epoch check. The case used
+    // to return before this point.
+    const postsAfterSecond = posts
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    expect(posts).toBe(postsAfterSecond)
+    expect(postsAfterStop).toBeLessThanOrEqual(postsAfterSecond)
+
+    // And the module still works after all of that.
+    expect(await rateFor('2024-03-03T00:00:00.000Z')).toBe(30000)
   })
+})
+
+/**
+ * A rejection raised outside `doQuery`'s per-group `try`.
+ *
+ * The `.catch` on `doQuery` in `addToQueue` is the fix for exactly that:
+ * `inQuery` is set before the timer is armed, and the only place that
+ * cleared it was `doQuery`'s own terminal branch — so a throw from building
+ * the groups or stringifying the params left it latched for the life of the
+ * process. Every later arrival then took the `!inQuery` false path, armed no
+ * timer, and never settled at all, because `getHistoricalRate` never calls
+ * its own `reject`. In the engine that is a `get-transactions` which hangs
+ * to the client's deadline, for ever, on a daemon documented as long-lived.
+ *
+ * The suite's existing failure case covers the per-group `try` inside
+ * `doQuery`, which is a different arm and does not touch the latch.
+ */
+describe('a pass that rejects outside its own try', () => {
+  it('unlatches the queue, so the next caller is still served', async () => {
+    stopRateQueue()
+    clearRateCache()
+    posts = 0
+    const reported: string[] = []
+    configureExchangeRates({
+      onError: (error: unknown) => {
+        reported.push(String((error as Error)?.message))
+      }
+    })
+    try {
+      // A transport that throws *synchronously* rather than rejecting.
+      const throwing: any = () => {
+        throw new Error('sync boom')
+      }
+      const first = await rateFor('2024-04-01T00:00:00.000Z', throwing)
+      expect(isRateUnavailable(first)).toBe(true)
+      // Reported rather than swallowed, and reported once.
+      expect(reported).toStrictEqual(['sync boom'])
+
+      // The assertion the latch is about: a later caller settles at all.
+      // With `inQuery` left true this never resolved.
+      const second = await rateFor('2024-04-02T00:00:00.000Z')
+      expect(second).toBe(30000)
+    } finally {
+      configureExchangeRates({})
+    }
+  })
+})
+
+/**
+ * Both bounds on the unpriced map.
+ *
+ * Neither was tested: the case above it asserts that `UNPRICED_TTL_MS` is at
+ * most fifteen minutes — the value of a constant, not the behaviour — and
+ * then clears the cache, so nothing showed that an unpriced key is
+ * re-queried once the TTL passes, or that the map stays bounded in a daemon
+ * that never exits. The rate cache's own bound has a real test.
+ */
+describe('the unpriced map', () => {
+  it('re-asks the server once the TTL has passed', async () => {
+    stopRateQueue()
+    clearRateCache()
+    posts = 0
+    const date = '2024-05-01T00:00:00.000Z'
+
+    // The server answers, and prices nothing: that is a fact about the
+    // asset, so it is remembered as `0` and not re-asked.
+    expect(await rateFor(date, unpricedFetch)).toBe(0)
+    expect(posts).toBe(1)
+    expect(await rateFor(date, unpricedFetch)).toBe(0)
+    expect(posts).toBe(1)
+    expect(rateUnpricedCount()).toBe(1)
+
+    // Past the TTL, by moving the clock rather than waiting five minutes.
+    const realNow = Date.now
+    try {
+      Date.now = () => realNow() + UNPRICED_TTL_MS + 1
+      // Asked again, and this time the server has a price.
+      expect(await rateFor(date, fakeFetch)).toBe(30000)
+      expect(posts).toBe(2)
+    } finally {
+      Date.now = realNow
+    }
+
+    // And the expired entry is dropped rather than left to the size bound.
+    expect(rateUnpricedCount()).toBe(0)
+  })
+
+  it('stays bounded, like the rate cache', async () => {
+    stopRateQueue()
+    clearRateCache()
+    expect(rateUnpricedCount()).toBe(0)
+
+    // One entry per unpriceable date is what a daemon that never exits
+    // accumulates, so this map needs the same bound the rate cache has and
+    // had no test for it. Queued before anything is awaited, like the cache
+    // case above: the whole set costs one debounce and then one immediate
+    // pass per batch.
+    const begin = Date.UTC(2001, 0, 1)
+    const day = 86_400_000
+    const pending: Array<Promise<number>> = []
+    for (let i = 0; i < 20_100; i++) {
+      pending.push(
+        rateFor(new Date(begin + i * day).toISOString(), unpricedFetch)
+      )
+    }
+    const rates = await Promise.all(pending)
+    // Every one is the server's own answer about the asset, which is `0`.
+    expect(rates.every(rate => rate === 0)).toBe(true)
+
+    // The exact size the policy produces, not merely "bounded": one
+    // eviction of a quarter fires at the 20,001st key, so 20,100 inserts
+    // leave 15,100. `<= 20_000` passed for an eviction that dropped all but
+    // one of them.
+    expect(rateUnpricedCount()).toBe(20_100 - (20_000 >> 2))
+  }, 180_000)
 })
