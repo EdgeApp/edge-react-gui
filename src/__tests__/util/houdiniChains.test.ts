@@ -2,12 +2,16 @@ import { describe, expect, it } from '@jest/globals'
 import { lt } from 'biggystring'
 
 import {
+  asHoudiniTokens,
   detectHoudiniChains,
+  getHoudiniAssets,
+  getHoudiniAssetSupport,
   getHoudiniChain,
   getRecipientAsset,
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
+  type HoudiniCurrencyConfigs,
   isValidHoudiniAddress,
   recipientAssetKey,
   schemeNamesChain
@@ -614,5 +618,222 @@ describe('recipientAssetKey', () => {
     })
     const keys = choices.map(choice => recipientAssetKey(choice.asset))
     expect(new Set(keys).size).toEqual(keys.length)
+  })
+})
+
+// Contract addresses in the spelling Edge stores (EVM ones carry a checksum),
+// keyed the way the served list is NOT: the list is lowercased on load.
+const USDT_ETHEREUM = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+const USDC_ETHEREUM = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+const USDT_TRON = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+const USDC_SOLANA = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+const CUSTOM_TRON = 'TAt4ufXFaHZAEV44ev7onThjTnF61SEaEM'
+const UNLISTED_ETHEREUM = '0x1111111111111111111111111111111111111111'
+
+const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+const UNLISTED_TOKEN_ID = '1111111111111111111111111111111111111111'
+
+const makeToken = (
+  displayName: string,
+  networkLocation: object | undefined
+): HoudiniCurrencyConfigs[string]['allTokens'][string] => ({
+  currencyCode: displayName,
+  denominations: [],
+  displayName,
+  networkLocation
+})
+
+// What an account's currency configs hold: built-in tokens plus the custom
+// ones the user added, all under `allTokens`. Piratechain stands in for a
+// chain the account has that Houdini does not serve, and litecoin for a
+// served chain with no tokens.
+const currencyConfigs: HoudiniCurrencyConfigs = {
+  ethereum: {
+    allTokens: {
+      [USDT_TOKEN_ID]: makeToken('Tether', { contractAddress: USDT_ETHEREUM }),
+      [USDC_TOKEN_ID]: makeToken('USD Coin', {
+        contractAddress: USDC_ETHEREUM
+      }),
+      [UNLISTED_TOKEN_ID]: makeToken('Unlisted', {
+        contractAddress: UNLISTED_ETHEREUM
+      })
+    }
+  },
+  litecoin: { allTokens: {} },
+  piratechain: { allTokens: {} },
+  solana: {
+    allTokens: {
+      [USDC_SOLANA]: makeToken('USD Coin', { contractAddress: USDC_SOLANA })
+    }
+  },
+  tron: {
+    allTokens: {
+      [USDT_TRON]: makeToken('Tether', { contractAddress: USDT_TRON }),
+      // A custom token the user added, which Houdini happens to list:
+      [CUSTOM_TRON]: makeToken('Bull', { contractAddress: CUSTOM_TRON }),
+      // A token located by something other than a contract address:
+      memoOnly: makeToken('Memo Only', { issuer: 'someone' })
+    }
+  }
+}
+
+// The list as the info server serves it, in Houdini's own spelling. The
+// `fantom` chain is one Houdini lists tokens for that the app does not serve.
+const servedTokens = {
+  ethereum: {
+    [USDT_ETHEREUM.toLowerCase()]: true,
+    [USDC_ETHEREUM.toLowerCase()]: false
+  },
+  fantom: { '0x2222222222222222222222222222222222222222': true },
+  solana: { [USDC_SOLANA]: true },
+  tron: { [USDT_TRON]: true, [CUSTOM_TRON]: false }
+}
+const houdiniTokens = asHoudiniTokens(servedTokens)
+
+describe('asHoudiniTokens', () => {
+  it('lowercases every contract address', () => {
+    expect(houdiniTokens.tron).toEqual({
+      [USDT_TRON.toLowerCase()]: true,
+      [CUSTOM_TRON.toLowerCase()]: false
+    })
+    expect(houdiniTokens.solana).toEqual({
+      [USDC_SOLANA.toLowerCase()]: true
+    })
+  })
+
+  it('keeps the chain names as served', () => {
+    // The names are matched against `houdiniShortName`, which is mixed case
+    // for some chains (`MON`, `Zcash`).
+    expect(Object.keys(asHoudiniTokens({ MON: {}, Zcash: {} }))).toEqual([
+      'MON',
+      'Zcash'
+    ])
+  })
+
+  it('rejects a list of the wrong shape', () => {
+    expect(() => asHoudiniTokens({ tron: [USDT_TRON] })).toThrow()
+    expect(() => asHoudiniTokens({ tron: { [USDT_TRON]: 'yes' } })).toThrow()
+  })
+})
+
+describe('getHoudiniAssetSupport', () => {
+  const getSupport = (
+    pluginId: string,
+    tokenId: string | null
+  ): ReturnType<typeof getHoudiniAssetSupport> =>
+    getHoudiniAssetSupport({
+      asset: { pluginId, tokenId },
+      currencyConfigs,
+      houdiniTokens
+    })
+
+  it('reads a chain coin from the chain table', () => {
+    expect(getSupport('tron', null)).toEqual({ hasSelfPrivate: true })
+    // Rootstock is served, but not to itself:
+    expect(getSupport('rsk', null)).toEqual({ hasSelfPrivate: false })
+    expect(getSupport('piratechain', null)).toBeUndefined()
+  })
+
+  it('matches a token by contract address, whatever its case', () => {
+    // Edge spells an EVM address with a checksum and Houdini in lowercase,
+    // and the base58 addresses arrive in their one true spelling:
+    expect(getSupport('ethereum', USDT_TOKEN_ID)).toEqual({
+      hasSelfPrivate: true
+    })
+    expect(getSupport('tron', USDT_TRON)).toEqual({ hasSelfPrivate: true })
+    expect(getSupport('solana', USDC_SOLANA)).toEqual({ hasSelfPrivate: true })
+  })
+
+  it("reads a token's self-private flag from the list", () => {
+    expect(getSupport('ethereum', USDC_TOKEN_ID)).toEqual({
+      hasSelfPrivate: false
+    })
+  })
+
+  it('matches a custom token the same way', () => {
+    expect(getSupport('tron', CUSTOM_TRON)).toEqual({ hasSelfPrivate: false })
+  })
+
+  it('returns nothing for a token the list does not hold', () => {
+    expect(getSupport('ethereum', UNLISTED_TOKEN_ID)).toBeUndefined()
+    // A token id the account has no token for:
+    expect(getSupport('ethereum', 'ffff')).toBeUndefined()
+    // A token with no contract address to match by:
+    expect(getSupport('tron', 'memoOnly')).toBeUndefined()
+  })
+
+  it('returns nothing for a token before the list loads', () => {
+    expect(
+      getHoudiniAssetSupport({
+        asset: { pluginId: 'tron', tokenId: USDT_TRON },
+        currencyConfigs,
+        houdiniTokens: {}
+      })
+    ).toBeUndefined()
+  })
+
+  it('never resolves an address through the object prototype', () => {
+    const configs: HoudiniCurrencyConfigs = {
+      tron: {
+        allTokens: {
+          odd: makeToken('Odd', { contractAddress: 'constructor' })
+        }
+      }
+    }
+    expect(
+      getHoudiniAssetSupport({
+        asset: { pluginId: 'tron', tokenId: 'odd' },
+        currencyConfigs: configs,
+        houdiniTokens
+      })
+    ).toBeUndefined()
+  })
+})
+
+describe('getHoudiniAssets', () => {
+  it('lists each chain coin followed by its served tokens, by name', () => {
+    expect(getHoudiniAssets({ currencyConfigs, houdiniTokens })).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+      { pluginId: 'ethereum', tokenId: USDC_TOKEN_ID },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'solana', tokenId: null },
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      { pluginId: 'tron', tokenId: null },
+      { pluginId: 'tron', tokenId: CUSTOM_TRON },
+      { pluginId: 'tron', tokenId: USDT_TRON }
+    ])
+  })
+
+  it('lists the chain coins alone before the list loads', () => {
+    expect(getHoudiniAssets({ currencyConfigs, houdiniTokens: {} })).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'solana', tokenId: null },
+      { pluginId: 'tron', tokenId: null }
+    ])
+  })
+
+  it('removes the destinations the info server banned', () => {
+    const assets = getHoudiniAssets({
+      currencyConfigs,
+      houdiniTokens,
+      destinationBans: [
+        // One token:
+        { pluginId: 'tron', tokenId: USDT_TRON },
+        // A chain coin, which leaves its tokens:
+        { pluginId: 'solana', tokenId: undefined },
+        // Every token on a chain, which leaves its coin:
+        { pluginId: 'ethereum', tokenId: 'allTokens' },
+        // A whole chain:
+        { pluginId: 'litecoin', tokenId: 'allCoins' }
+      ]
+    })
+    expect(assets).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      { pluginId: 'tron', tokenId: null },
+      { pluginId: 'tron', tokenId: CUSTOM_TRON }
+    ])
   })
 })

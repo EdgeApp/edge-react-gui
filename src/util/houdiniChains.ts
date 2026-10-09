@@ -1,7 +1,15 @@
-import type { EdgeTokenId } from 'edge-core-js'
+import { asBoolean, asObject, type Cleaner } from 'cleaners'
+import type {
+  EdgeCurrencyConfig,
+  EdgePluginMap,
+  EdgeTokenId
+} from 'edge-core-js'
 
+import type { DisableAsset } from '../actions/ExchangeInfoActions'
 import type { EdgeAsset } from '../types/types'
+import { asMaybeContractLocation } from './cleaners'
 import { peekPaymentUri } from './paymentUri'
+import { disableAssetsCover } from './stealthSwap'
 
 /**
  * A destination chain HoudiniSwap can pay out to, keyed by the Edge currency
@@ -55,12 +63,16 @@ export interface HoudiniChain {
  * can pay a `0x` deposit address or be paid at one, so offering the route
  * would hand the user a destination their own Telos wallet cannot use.
  *
- * This is a snapshot on purpose. Houdini is an aggregator whose per-pair
- * availability fluctuates too fast to track and whose Cloudflare blocks tight
- * probing loops, so nothing here may be discovered at runtime: asset-level
- * capability lives in this table, and pair-level capability is learned only
- * from a real user-initiated quote (`pairCaps`). A follow-up can refresh the
- * table from the API once chain metadata is exposed through the swap plugin.
+ * The chains are a snapshot on purpose. Houdini is an aggregator whose
+ * per-pair availability fluctuates too fast to track and whose Cloudflare
+ * blocks tight probing loops, so the app never probes it: chain-level
+ * capability (address format, memo flag, EVM chain id, the coin's
+ * `hasSelfPrivate`) lives in this table, and pair-level capability is learned
+ * only from a real user-initiated quote (`pairCaps`).
+ *
+ * Tokens are not in this table. The info server polls Houdini's token list
+ * and serves it as `houdiniTokens` (see `HoudiniTokens`), and a token is
+ * offered only on a chain listed here.
  */
 export const HOUDINI_CHAINS: HoudiniChain[] = [
   {
@@ -393,6 +405,133 @@ export function getHoudiniChain(
   // Only native (chain) assets are offered as destinations for now:
   if (tokenId != null) return undefined
   return HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+}
+
+/**
+ * The tokens Houdini can route, as the info server serves them in the
+ * `houdiniTokens` field of its rollup: one `hasSelfPrivate` flag per token,
+ * keyed by Houdini's chain name (a chain's `houdiniShortName`) and then by
+ * contract address.
+ */
+export type HoudiniTokens = Record<string, Record<string, boolean>>
+
+/**
+ * Cleans the served token list and lowercases every contract address. The
+ * server keeps Houdini's own spelling, and Edge spells the same EVM address
+ * with a checksum, so both sides of a match are lowercased.
+ */
+export const asHoudiniTokens: Cleaner<HoudiniTokens> = raw => {
+  const clean = asObject(asObject(asBoolean))(raw)
+  return Object.fromEntries(
+    Object.entries(clean).map(([chain, tokens]) => [
+      chain,
+      Object.fromEntries(
+        Object.entries(tokens).map(([contractAddress, hasSelfPrivate]) => [
+          contractAddress.toLowerCase(),
+          hasSelfPrivate
+        ])
+      )
+    ])
+  )
+}
+
+/** The part of the account's currency configs the token matching reads. */
+export type HoudiniCurrencyConfigs = EdgePluginMap<
+  Pick<EdgeCurrencyConfig, 'allTokens'>
+>
+
+/** What Houdini can do with an asset it serves. */
+export interface HoudiniAssetSupport {
+  /** Whether Houdini can route the asset to itself privately. */
+  hasSelfPrivate: boolean
+}
+
+/**
+ * Look up an Edge asset in what Houdini serves, or get `undefined` when it
+ * does not serve the asset.
+ *
+ * A chain's own coin reads the chain table. A token is matched to the served
+ * list by its contract address, so a custom token the user added matches the
+ * same way a built-in one does.
+ */
+export function getHoudiniAssetSupport(opts: {
+  asset: EdgeAsset
+  currencyConfigs: HoudiniCurrencyConfigs
+  houdiniTokens: HoudiniTokens
+}): HoudiniAssetSupport | undefined {
+  const { asset, currencyConfigs, houdiniTokens } = opts
+  const { pluginId, tokenId } = asset
+
+  const chain = HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+  if (chain == null) return undefined
+  if (tokenId == null) return { hasSelfPrivate: chain.hasSelfPrivate }
+
+  const edgeToken = currencyConfigs[pluginId]?.allTokens[tokenId]
+  if (edgeToken == null) return undefined
+  const hasSelfPrivate = getTokenFlag(
+    houdiniTokens[chain.houdiniShortName],
+    edgeToken.networkLocation
+  )
+  return hasSelfPrivate == null ? undefined : { hasSelfPrivate }
+}
+
+/**
+ * Every asset Houdini serves that this account has a currency plugin for, in
+ * picker order: each chain's coin followed by that chain's tokens, sorted by
+ * name. `destinationBans` removes the assets the info server withdrew as swap
+ * destinations.
+ */
+export function getHoudiniAssets(opts: {
+  currencyConfigs: HoudiniCurrencyConfigs
+  houdiniTokens: HoudiniTokens
+  destinationBans?: DisableAsset[]
+}): EdgeAsset[] {
+  const { currencyConfigs, destinationBans = [], houdiniTokens } = opts
+
+  const assets: EdgeAsset[] = []
+  for (const chain of HOUDINI_CHAINS) {
+    const { houdiniShortName, pluginId } = chain
+    const currencyConfig = currencyConfigs[pluginId]
+    if (currencyConfig == null) continue
+    assets.push({ pluginId, tokenId: null })
+
+    const chainTokens = houdiniTokens[houdiniShortName]
+    if (chainTokens == null) continue
+    const { allTokens } = currencyConfig
+    const tokenIds = Object.keys(allTokens).filter(
+      tokenId =>
+        getTokenFlag(chainTokens, allTokens[tokenId].networkLocation) != null
+    )
+    tokenIds.sort((a, b) => {
+      const byName = allTokens[a].displayName.localeCompare(
+        allTokens[b].displayName
+      )
+      return byName !== 0 ? byName : a.localeCompare(b)
+    })
+    for (const tokenId of tokenIds) assets.push({ pluginId, tokenId })
+  }
+
+  return assets.filter(
+    asset => !disableAssetsCover(destinationBans, asset.pluginId, asset.tokenId)
+  )
+}
+
+/**
+ * The served flag for the token at an Edge `networkLocation`, or `undefined`
+ * when the chain's served tokens do not include it.
+ */
+function getTokenFlag(
+  chainTokens: HoudiniTokens[string] | undefined,
+  networkLocation: unknown
+): boolean | undefined {
+  if (chainTokens == null) return undefined
+  const contractLocation = asMaybeContractLocation(networkLocation)
+  if (contractLocation == null) return undefined
+  const contractAddress = contractLocation.contractAddress.toLowerCase()
+  // The addresses are remote data, so never resolve one through the prototype:
+  return Object.prototype.hasOwnProperty.call(chainTokens, contractAddress)
+    ? chainTokens[contractAddress]
+    : undefined
 }
 
 /**
