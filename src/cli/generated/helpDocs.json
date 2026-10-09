@@ -1,0 +1,946 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliHelp.ts from the route declarations in src/cli/engine/routes. Edit the declaration, then run `npm run prepare` (or `npm run docs:api`).",
+  "commands": {
+    "account-info": {
+      "summary": "Account and session summary.",
+      "method": "GET",
+      "path": "/account/{sessionId}",
+      "usage": "account-info",
+      "description": "Session fields are spread at the top level alongside the account's own properties — there is no nested `session` object.",
+      "returns": {
+        "appId": "string — Application this session logged into.",
+        "created": "string | null — When the account was created, null for accounts predating the field.",
+        "lastLogin": "string — The previous login, not this one.",
+        "loggedIn": "boolean — False once the account has been logged out; the session object outlives it briefly.",
+        "recoveryKey": "string | null — Present only while recovery is configured.",
+        "otpEnabled": "boolean — 2FA is on for this account.",
+        "otpResetPending": "boolean — True while somebody has a reset pending against this account.",
+        "canDuressLogin": "boolean — A duress PIN is configured, so this account can be opened in duress mode.",
+        "isDuressAccount": "boolean — True when this very session is the duress account rather than the real one.",
+        "edgeLogin": "boolean — This account was reached by QR login.",
+        "keyLogin": "boolean — This session was reached with a login key.",
+        "newAccount": "boolean — This session created the account rather than logging into an existing one.",
+        "passwordLogin": "boolean — This session was reached with a password.",
+        "pinLogin": "boolean — This session was reached with a PIN.",
+        "recoveryLogin": "boolean — This session was reached by answering recovery questions."
+      },
+      "notes": [
+        "The `otpEnabled` and `otpResetPending` flags here are derived. For the secret itself use `otp-key`."
+      ],
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "cancel-request": {
+      "summary": "Cancel a pending QR login.",
+      "method": "POST",
+      "path": "/pending-edge-login/cancel-request/{pendingId}",
+      "usage": "cancel-request <pendingId>",
+      "core": "EdgePendingEdgeLogin.cancelRequest",
+      "notes": [
+        "If the login already completed and a session exists, that session is force-logged-out too, so cancelling cannot leave an orphan visible in `engine-sessions`."
+      ],
+      "errors": [
+        "PENDING_LOGIN_NOT_FOUND"
+      ]
+    },
+    "check-password-rules": {
+      "summary": "Score a candidate password.",
+      "method": "POST",
+      "path": "/check-password-rules",
+      "usage": "check-password-rules --password=<password>",
+      "description": "`POST` with the candidate in the body. A query string is the one place a secret is written down by everything that touches it — the engine's own log redacts query values for that reason — and a URL is what a proxy, a crash report and a shell history keep. Nothing reads this route's result from a cache, so the method costs nothing.",
+      "core": "context.checkPasswordRules",
+      "params": {
+        "password": {
+          "pass": "--password=<password>",
+          "doc": "The candidate password to score.",
+          "optional": false
+        }
+      },
+      "returnsDoc": "`EdgePasswordRules` from core: passed, tooShort, noNumber, noLowerCase, noUpperCase, secondsToCrack."
+    },
+    "create-account": {
+      "summary": "Create an account.",
+      "method": "POST",
+      "path": "/create-account",
+      "usage": "create-account [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] [--username=<username>] --password=<password> --pin=<pin>",
+      "description": "Every credential is optional over REST: omitting all three creates a light account with no username.",
+      "core": "context.createAccount",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<otp>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<otpKey>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "[--username=<username>]",
+          "doc": "The name to claim. Omitted over REST alongside `password` and `pin`, this creates a light account with no username; on the command line it is the only one of the three that may be left out.",
+          "optional": true
+        },
+        "password": {
+          "pass": "--password=<password>",
+          "doc": "The account password. Optional over REST — omitting all three credentials creates a light account — and required by the `create-account` command, which refuses without it.",
+          "optional": false
+        },
+        "pin": {
+          "pass": "--pin=<pin>",
+          "doc": "A device PIN to save. Optional over REST, required by the command, like `password`.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"create\"`.",
+      "notes": [
+        "The command requires a password and a PIN; `--username` is optional, and omitting it claims no name. Creating a *light* account — no credentials at all — is REST-only, so the published command form marks the two the command insists on. The reference bracketed all three, the parameter table called them optional, and the command's own refusal printed two of them unbracketed: three descriptions of one program."
+      ],
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "create-currency-wallet": {
+      "summary": "Create a currency wallet.",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallet",
+      "usage": "create-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]",
+      "core": "account.createCurrencyWallet",
+      "params": {
+        "walletType": {
+          "pass": "--wallet-type=<walletType>",
+          "doc": "From `currency-configs`, e.g. `wallet:bitcoin`.",
+          "optional": false
+        },
+        "name": {
+          "pass": "[--name=<name>]",
+          "doc": "Display name.",
+          "optional": true
+        },
+        "importText": {
+          "pass": "[--import-text=<importText>]",
+          "doc": "Seed or key text to import instead of generating.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "walletId": "string — The full wallet id. Commands taking a wallet accept any unique prefix.",
+        "id": "string — Same value as `walletId`, under the name `edge-core-js` uses. Core’s `EdgeCurrencyWallet` has only `id`; `walletId` is the name every route’s parameter takes, so both are published and a caller can use whichever half of the API it is reading.",
+        "type": "string — Key type, such as `wallet:bitcoin`.",
+        "name": "string | null — User-assigned name, null until one is set.",
+        "pluginId": "string — Currency plugin backing this wallet.",
+        "currencyCode": "string — Ticker for the native asset.",
+        "fiatCurrencyCode": "string — Fiat the wallet reports value in, as `iso:USD`.",
+        "blockHeight": "number — Chain height this wallet has seen.",
+        "syncStatus": "unknown — `EdgeWalletSyncStatus` from core.",
+        "syncRatio?": "string — Sync progress as a percentage, for display.",
+        "paused": "boolean — True while the engine is not syncing this wallet.",
+        "imported?": "boolean — True when the keys came from an import rather than being generated here.",
+        "created": "string | null — When the wallet was created, null for wallets predating the field.",
+        "enabledTokenIds": "string[] — Tokens the user turned on.",
+        "detectedTokenIds": "string[] — Tokens found on-chain that are not enabled yet.",
+        "unactivatedTokenIds": "string[] — Enabled tokens still awaiting on-chain activation."
+      },
+      "notes": [
+        "The fiat currency is not set here. Core still accepts it on create, but that path is deprecated — use `set-fiat-currency-code` afterwards, so there is one way to do it."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "create-currency-wallets": {
+      "summary": "Create several wallets at once.",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallets",
+      "usage": "create-currency-wallets --create-wallets='<json>'",
+      "description": "Partial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
+      "core": "account.createCurrencyWallets",
+      "params": {
+        "createWallets": {
+          "pass": "--create-wallets='<json>'",
+          "doc": "`EdgeCreateCurrencyWallet[]`: walletType, plus optional name and fiatCurrencyCode.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "results": "unknown[] — Mirrors core’s EdgeResult[]: `{ ok: true, wallet }`, or `{ ok: false, error, code, status }` with the same code the engine would answer for that failure on its own — and `details` where it has them."
+      },
+      "notes": [
+        "Driven one entry at a time rather than through `account.createCurrencyWallets`. Core's batch resolves every wallet type up front and *throws* for one it cannot find, so a single bad entry abandoned the whole call — `500 INTERNAL_ERROR`, nothing created, and the per-entry envelope this route publishes unreachable, which is the opposite of the promise above. A plugin that fails while building its engine did the same. One wallet per call gives each entry a real outcome, which is what a caller batching ten creates reads `results` for."
+      ],
+      "errors": [
+        "BAD_REQUEST",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "currency-configs": {
+      "summary": "List plugin ids usable for wallet creation.",
+      "method": "GET",
+      "path": "/currency-configs",
+      "usage": "currency-configs",
+      "description": "Currency and accountbased plugins only — swap plugins are excluded.",
+      "returns": {
+        "pluginIds": "string[] — Currency plugins this engine loaded."
+      }
+    },
+    "currency-wallets": {
+      "summary": "List the account's loaded wallets.",
+      "method": "GET",
+      "path": "/account/{sessionId}/currency-wallets",
+      "usage": "currency-wallets",
+      "description": "Every wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nThis took a `filter` of `active`, `archived`, `hidden` or `all`, and three of those four could not work. The handler resolved each id through `account.currencyWallets`, which core builds from `activeWalletIds` **alone**, so the archived and hidden lists were disjoint from the resolvable set by construction: every id mapped to `undefined`, the `filter(wallet != null)` dropped it, and `?filter=archived` answered `{\"currencyWallets\":[]}` on every account, always. `all` concatenated the three lists, so it was `active` with each hidden wallet — which is active and hidden at once, core deriving the two flags independently — listed twice. Nor could the missing wallets be served in this shape: an archived wallet has no loaded API, so `name`, `currencyCode`, `blockHeight`, `syncStatus` and `paused` do not exist for it, and seven required response fields would have had to become nullable for every caller to carry three values that never worked.\n\n`all-keys` is the route for that, and already was: it returns `EdgeWalletInfoFull[]` — id, type, `archived`, `deleted`, `hidden`, `sortIndex` — which is everything knowable about a wallet core has not loaded.",
+      "core": "account.currencyWallets",
+      "returns": {
+        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet core has loaded for this account, including paused ones. Archived, deleted and hidden wallets are not loaded; `all-keys` lists those.",
+        "unloadedWallets": "unknown[] — The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. They used to be filtered out silently, so this list was the difference between `all-keys` and this one and a caller had to compute it — and nothing said why a wallet was missing. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
+      },
+      "notes": [
+        "Wallets load in the background after login, so a list taken straight afterwards can be short. Call `wait-for-all-wallets` first to be sure the account has finished loading.",
+        "Archived, deleted and hidden wallets are not here, because core builds no API for them. Use `all-keys`, which carries their ids and their flags."
+      ],
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "delete-remote-account": {
+      "summary": "Permanently delete the remote account.",
+      "method": "POST",
+      "path": "/account/{sessionId}/delete-remote-account",
+      "usage": "delete-remote-account --yes",
+      "description": "Irreversible. The account is removed from the login server, and funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
+      "core": "account.deleteRemoteAccount",
+      "params": {
+        "yes": {
+          "pass": "--yes",
+          "doc": "Confirms intent. Without it the command refuses to run.",
+          "optional": false
+        }
+      },
+      "notes": [
+        "The engine performs no confirmation check — the call runs as soon as it arrives, so any guard has to live in the caller. The command requires `--yes` for exactly this reason."
+      ],
+      "errors": [
+        "NETWORK_ERROR",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "engine-config": {
+      "summary": "Configured context options.",
+      "method": "GET",
+      "path": "/engine/config",
+      "usage": "engine-config",
+      "description": "What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+      "returns": {
+        "appId": "string — Application ID the engine was started with.",
+        "testMode": "boolean — True when the engine is not pointed at production: the tester fleet, or the in-process fake world under `--fake`. Read `servers` to tell those apart.",
+        "directory": "string — Working directory holding the core data.",
+        "servers": "{ [keys: string]: string | string[]; } — The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet.",
+        "plugins": "string[] — Plugin IDs the engine loaded, sorted.",
+        "configFiles": "{ cwd: string; keys: string[]; appConfig: string | null; cliConfig: string | null; } — Where this engine’s configuration came from. The profile a client hashes covers `appId`, the data directory, test mode and the login server — not these, so two invocations with the same flags from different directories share one daemon, and this is what says which configuration it is running on."
+      },
+      "notes": [
+        "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
+      ]
+    },
+    "engine-sessions": {
+      "summary": "List active sessions.",
+      "method": "GET",
+      "path": "/engine/sessions",
+      "usage": "engine-sessions",
+      "returns": {
+        "": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"edge\" | \"key\" | \"create\" | \"recovery\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; }[]"
+      },
+      "returnsDoc": "A bare array, not wrapped in a key. Each `sessionId` is truncated: this route needs no session, so a usable id here would be a credential anyone who can reach the engine could collect."
+    },
+    "engine-status": {
+      "summary": "Engine liveness and summary.",
+      "method": "GET",
+      "path": "/engine/status",
+      "usage": "engine-status",
+      "description": "The readiness probe the client polls after auto-spawning the engine.",
+      "returns": {
+        "pid": "number — The daemon process, for `kill` when it will not stop.",
+        "apiVersion": "string — The API this engine speaks. A client refusing to talk to an older engine checks this.",
+        "uptimeSeconds": "number — How long the daemon has been running.",
+        "sessionCount": "number — Logged-in accounts held open right now.",
+        "testMode": "boolean — True when the engine is not pointed at production: the tester fleet, or the in-process fake world under `--fake`.",
+        "idleShutdownAt": "string | null — When the engine will exit for want of work. Null while a client is deliberately holding it open — a logged-in session, a live subscription, or a handle that belongs to no session (a pending edge login, or a parked admin lobby) — and null when the timeout is disabled. A request being served also disarms the timer, but is not reported here: the request asking for this field is itself in flight.",
+        "tcpPort": "number | null — The loopback port, null unless started with `--tcp`.",
+        "socketPath": "string — Unix socket the CLI connects to.",
+        "rateCachedCount": "number — Exchange rates held in the engine’s process cache. It is bounded and cleared when the last session goes away, and this is how an operator sees it.",
+        "rateUnpricedCount": "number — Rate keys the server answered without a price, remembered for a few minutes so a repeated listing does not re-ask for every date. A number that stays high means an asset with no feed on the rates server — a hand-added custom token, a long-tail token, or dates predating its market.",
+        "locale": "string — Language tag the engine resolved at boot.",
+        "localeMatched": "boolean — Whether a translation table for that tag was actually found. False means the tag was accepted but the engine is answering in English, which is otherwise indistinguishable from a build that has the language.",
+        "decimalSeparator": "string — Decimal mark for that locale.",
+        "groupingSeparator": "string — Thousands mark for that locale."
+      },
+      "returnsDoc": "Every field is documented on `asEngineStatus`; the two nullable ones, `idleShutdownAt` and `tcpPort`, say there what null means.",
+      "errors": [
+        "ENGINE_SHUTTING_DOWN"
+      ]
+    },
+    "engine-stop": {
+      "summary": "Stop the engine.",
+      "method": "POST",
+      "path": "/engine/stop",
+      "usage": "engine-stop",
+      "description": "Logs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+      "returns": {
+        "ok": "boolean — Always true; a failure arrives as an error envelope."
+      },
+      "notes": [
+        "`503 ENGINE_SHUTTING_DOWN` reaches requests that arrive *after* teardown starts, not ones already in flight: `handleRequest` tests the flag at the top only. A request already past that point is waited for — shutdown drains in-flight work before logging out — so it gets its real response. This route is exempt: a second stop is answered `ok`, because stopping an engine that is already stopping has succeeded."
+      ]
+    },
+    "fetch-challenge": {
+      "summary": "Pre-fetch a CAPTCHA challenge.",
+      "method": "POST",
+      "path": "/fetch-challenge",
+      "usage": "fetch-challenge",
+      "description": "Lets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
+      "core": "context.fetchChallenge",
+      "returns": {
+        "challengeId": "string — Pass to the call that demanded a challenge once the user has solved it.",
+        "challengeUri?": "string — Where to send the user to solve the CAPTCHA. Absent when the server issued a challenge that needs no interaction."
+      },
+      "returnsDoc": "`challengeUri` is absent when the server considers the challenge already satisfied.",
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "fetch-login-messages": {
+      "summary": "Fetch login-server messages for every local user.",
+      "method": "GET",
+      "path": "/fetch-login-messages",
+      "usage": "fetch-login-messages",
+      "core": "context.fetchLoginMessages",
+      "returnsDoc": "An `EdgeLoginMessage[]` from core: one entry per local login, each with its own `loginId`, `otpResetPending`, `pendingVouchers`, `recovery2Corrupt` and, where the stash has one, `username`. `loginId` is base58, like every other login id in this API — core answers it in base64 here, and an id in the wrong alphabet is one `forget-account` and `--use-login-id` reject.",
+      "notes": [
+        "`loginId` is re-encoded to base58. Core answers this one in base64 while every other login id in the API — `local-users`, a login's `rootLoginId`, what `forget-account` and `login-with-key --use-login-id` take — is base58, and this route is the documented way to find which local account has a pending voucher or an OTP reset. So the natural next step was to act on the id it named, which failed with `404 USER_NOT_FOUND` while `local-users` listed the same account under the other spelling."
+      ],
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "fetch-recovery-questions": {
+      "summary": "Fetch a user’s recovery questions.",
+      "method": "POST",
+      "path": "/fetch-recovery-questions",
+      "usage": "fetch-recovery-questions --recovery-key=<recoveryKey> --username=<username>",
+      "core": "context.fetchRecovery2Questions",
+      "params": {
+        "recoveryKey": {
+          "pass": "--recovery-key=<recoveryKey>",
+          "doc": "From `change-recovery`, stored by the user out of band.",
+          "optional": false
+        },
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "Whose questions to fetch.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "questions": "string[] — The questions in the order `login-with-recovery` expects the answers."
+      },
+      "notes": [
+        "`USERNAME_ERROR` here means \"no recovery is set up for this `username`/`recoveryKey` pair\", which the login server reports with the message `Account does not exist on server` — so an account that plainly does exist, and that the same engine may be logged into, is refused with prose that reads as though the username were wrong. Check `account-info`'s `recoveryKey` before acting on it: `null` there means the account has no recovery questions and this call cannot succeed whatever key is sent."
+      ],
+      "errors": [
+        "USERNAME_ERROR",
+        "NETWORK_ERROR"
+      ]
+    },
+    "fix-username": {
+      "summary": "Normalize a username.",
+      "method": "GET",
+      "path": "/fix-username",
+      "usage": "fix-username --username=<username>",
+      "description": "Applies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
+      "core": "context.fixUsername",
+      "params": {
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "The name to normalize.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "username": "string — The normalized value. The input is not echoed."
+      }
+    },
+    "forget-account": {
+      "summary": "Forget an account on this device.",
+      "method": "POST",
+      "path": "/forget-account",
+      "usage": "forget-account --root-login-id=<rootLoginId>",
+      "description": "Removes locally cached credentials. The remote account is untouched.",
+      "core": "context.forgetAccount",
+      "params": {
+        "rootLoginId": {
+          "pass": "--root-login-id=<rootLoginId>",
+          "doc": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it.",
+          "optional": false
+        }
+      },
+      "errors": [
+        "USER_NOT_FOUND",
+        "BAD_REQUEST"
+      ]
+    },
+    "get-login-key": {
+      "summary": "Read the account login key.",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-login-key",
+      "usage": "get-login-key",
+      "description": "The key `login-with-key` takes. It grants full account access, so treat the output as secret.",
+      "core": "account.getLoginKey",
+      "returns": {
+        "loginKey": "string — base58. Full account access — keep it safe."
+      },
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "local-users": {
+      "summary": "List local users on this device.",
+      "method": "GET",
+      "path": "/local-users",
+      "usage": "local-users",
+      "core": "context.localUsers",
+      "returns": {
+        "localUsers": "unknown[] — `EdgeUserInfo[]`: one entry per account cached on this device."
+      },
+      "returnsDoc": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device."
+    },
+    "login-with-key": {
+      "summary": "Log in with an account login key.",
+      "method": "POST",
+      "path": "/login-with-key",
+      "usage": "login-with-key [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --login-key=<loginKey> [--use-login-id[=false]]",
+      "description": "The key comes from `get-login-key` on an already-authenticated session.",
+      "core": "context.loginWithKey",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<otp>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<otpKey>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "usernameOrLoginId": {
+          "pass": "--username-or-login-id=<usernameOrLoginId>",
+          "doc": "A username, or a login id.",
+          "optional": false
+        },
+        "loginKey": {
+          "pass": "--login-key=<loginKey>",
+          "doc": "From `get-login-key`.",
+          "optional": false
+        },
+        "useLoginId": {
+          "pass": "[--use-login-id[=false]]",
+          "doc": "Treat the value as a login id.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"key\"`.",
+      "errors": [
+        "BAD_REQUEST",
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "USER_NOT_FOUND",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-password": {
+      "summary": "Log in with a password.",
+      "method": "POST",
+      "path": "/login-with-password",
+      "usage": "login-with-password [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username=<username> --password=<password>",
+      "core": "context.loginWithPassword",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<otp>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<otpKey>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "The account name.",
+          "optional": false
+        },
+        "password": {
+          "pass": "--password=<password>",
+          "doc": "The account password.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"password\"`.",
+      "notes": [
+        "With `--solve-captcha` the client solves a `CHALLENGE_REQUIRED` response headlessly (ALTCHA proof-of-work) and retries once."
+      ],
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "OTP_REQUIRED",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-pin": {
+      "summary": "Log in with a device PIN.",
+      "method": "POST",
+      "path": "/login-with-pin",
+      "usage": "login-with-pin [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --pin=<pin> [--use-login-id[=false]]",
+      "description": "Only works on a device that has already saved a PIN for the account.",
+      "core": "context.loginWithPIN",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<otp>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<otpKey>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "usernameOrLoginId": {
+          "pass": "--username-or-login-id=<usernameOrLoginId>",
+          "doc": "A username, or a login id.",
+          "optional": false
+        },
+        "pin": {
+          "pass": "--pin=<pin>",
+          "doc": "The device PIN.",
+          "optional": false
+        },
+        "useLoginId": {
+          "pass": "[--use-login-id[=false]]",
+          "doc": "Treat the value as a login id.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"pin\"`.",
+      "errors": [
+        "PASSWORD_ERROR",
+        "PIN_DISABLED",
+        "USERNAME_ERROR",
+        "USER_NOT_FOUND",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "login-with-recovery": {
+      "summary": "Log in with recovery answers.",
+      "method": "POST",
+      "path": "/login-with-recovery",
+      "usage": "login-with-recovery [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --username=<username> --answer=<answers> …",
+      "description": "Needs both the recovery key and the answers; neither works alone.",
+      "core": "context.loginWithRecovery2",
+      "params": {
+        "otp": {
+          "pass": "[--otp=<otp>]",
+          "doc": "A current 2FA code.",
+          "optional": true
+        },
+        "otpKey": {
+          "pass": "[--otp-key=<otpKey>]",
+          "doc": "The 2FA secret itself, instead of a code.",
+          "optional": true
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same request.",
+          "optional": true
+        },
+        "recoveryKey": {
+          "pass": "--recovery-key=<recoveryKey>",
+          "doc": "From `change-recovery`.",
+          "optional": false
+        },
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "The account name.",
+          "optional": false
+        },
+        "answers": {
+          "pass": "--answer=<answers> …",
+          "doc": "In the same order as the questions.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "A session with `loginMethod: \"recovery\"`.",
+      "errors": [
+        "PASSWORD_ERROR",
+        "USERNAME_ERROR",
+        "NETWORK_ERROR"
+      ]
+    },
+    "logout": {
+      "summary": "Log out.",
+      "method": "POST",
+      "path": "/account/{sessionId}/logout",
+      "usage": "logout",
+      "description": "Ends the session and drops it from the engine. Any subscription scoped to this account or its wallets is closed with it.",
+      "core": "account.logout",
+      "notes": [
+        "Also clears the stored id from `session.json`."
+      ],
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "object-delete": {
+      "summary": "Release an object handle.",
+      "method": "POST",
+      "path": "/account/{sessionId}/object/delete/{objectId}",
+      "usage": "object-delete <objectId>",
+      "description": "Runs the handle's cleanup — closing a swap quote, discarding a staged transaction — instead of waiting out the TTL.",
+      "returns": {
+        "ok": "boolean — Always true; a failure arrives as an error envelope.",
+        "objectId": "string — The handle this call consumed. It is now expired."
+      },
+      "errors": [
+        "OBJECT_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_IN_USE",
+        "OBJECT_SESSION_MISMATCH",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "object-get": {
+      "summary": "Inspect an object handle.",
+      "method": "GET",
+      "path": "/account/{sessionId}/object/{objectId}",
+      "usage": "object-get <objectId>",
+      "description": "For the session-scoped kinds: a staged transaction or a swap quote.",
+      "returns": {
+        "value": "unknown — A JSON-safe view of the object, whose shape depends on `kind`: a staged transaction whole, a swap quote summarised, and null for a kind with no scalar projection.",
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "kind": "\"lobby\" | \"pendingLogin\" | \"swap\" | \"transaction\" — What the handle refers to, which decides the calls that accept it.",
+        "createdAt": "string — When the engine took the handle.",
+        "expiresAt": "string — When the engine drops the handle. Handles live 5 minutes.",
+        "sessionId?": "string — Session that created the handle; only that session may use it.",
+        "walletId?": "string — Wallet the handle is bound to, when it belongs to one."
+      },
+      "returnsDoc": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.",
+      "notes": [
+        "Reading does not extend the TTL. Only a step that updates the value does."
+      ],
+      "errors": [
+        "OBJECT_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_IN_USE",
+        "OBJECT_SESSION_MISMATCH",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "poll-edge-login": {
+      "summary": "Poll a pending QR login.",
+      "method": "GET",
+      "path": "/pending-edge-login/{pendingId}",
+      "usage": "poll-edge-login <pendingId>",
+      "description": "Once `state` reaches `done` the engine has already created the session, so the response carries one ready to use.",
+      "returns": {
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "pendingId": "string — Same value as `objectId`, under the name the poll command takes.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
+        "lobbyId": "string — Lobby the phone connects to.",
+        "uri": "string — The `edge://` URI to render as a QR code for the phone to scan.",
+        "state": "string — How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in.",
+        "username": "string | null — Account that approved the login, known once the phone has scanned.",
+        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"edge\" | \"key\" | \"create\" | \"recovery\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null — The session, null until `state` is `done`.",
+        "error": "string | null — Why the login failed, set only when `state` is `error`."
+      },
+      "notes": [
+        "Session creation is attempted once. A failure is sticky, so later polls report the same `error` rather than retrying.",
+        "Polling does not extend the handle TTL; only the original 5 minute window applies."
+      ],
+      "errors": [
+        "PENDING_LOGIN_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_KIND_MISMATCH"
+      ]
+    },
+    "request-edge-login": {
+      "summary": "Start a QR login.",
+      "method": "POST",
+      "path": "/request-edge-login",
+      "usage": "request-edge-login [--no-wait]",
+      "description": "Asks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
+      "core": "context.requestEdgeLogin",
+      "params": {
+        "no-wait": {
+          "pass": "[--no-wait]",
+          "doc": "Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "objectId": "string — Handle for the value the engine is holding. Pass it to the calls that consume it.",
+        "pendingId": "string — Same value as `objectId`, under the name the poll command takes.",
+        "kind": "string — What the handle refers to, which decides the calls that accept it.",
+        "expiresAt": "string | null — When the lobby closes and the QR code stops working.",
+        "lobbyId": "string — Lobby the phone connects to.",
+        "uri": "string — The `edge://` URI to render as a QR code for the phone to scan.",
+        "state": "string — How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in.",
+        "username": "string | null — Account that approved the login, known once the phone has scanned.",
+        "session": "{ sessionId: string; username: string | undefined; rootLoginId: string; loginMethod: \"password\" | \"pin\" | \"edge\" | \"key\" | \"create\" | \"recovery\"; autoLogoutSeconds: number; expiresAt: string | null; lastActivityAt: string; createdAt: string; } | null — The session, null until `state` is `done`.",
+        "error": "string | null — Why the login failed, set only when `state` is `error`."
+      },
+      "notes": [
+        "The pending login is an object handle with a 5 minute TTL. On expiry the engine cancels the request on the login server for you.",
+        "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over."
+      ],
+      "errors": [
+        "NETWORK_ERROR"
+      ]
+    },
+    "request-otp-reset": {
+      "summary": "Request a 2FA reset.",
+      "method": "POST",
+      "path": "/request-otp-reset",
+      "usage": "request-otp-reset --username=<username> --otp-reset-token=<otpResetToken>",
+      "description": "Starts the timed reset a user falls back on after losing their authenticator.",
+      "core": "context.requestOtpReset",
+      "params": {
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "Whose 2FA to reset.",
+          "optional": false
+        },
+        "otpResetToken": {
+          "pass": "--otp-reset-token=<otpResetToken>",
+          "doc": "From `details.resetToken` on an `OTP_REQUIRED` error.",
+          "optional": false
+        }
+      },
+      "returns": {
+        "resetDate": "string — When 2FA will actually come off. The login server enforces a waiting period so the real owner has time to cancel."
+      },
+      "returnsDoc": "When the reset completes if nobody cancels it.",
+      "errors": [
+        "USERNAME_ERROR",
+        "BAD_REQUEST",
+        "NETWORK_ERROR"
+      ]
+    },
+    "subscribe": {
+      "summary": "Subscribe to engine events.",
+      "method": "GET",
+      "path": "/engine/events",
+      "usage": "subscribe [--session-id=<sessionId>] [--wallet-id=<walletId>] [--type=<type> …]",
+      "description": "Holds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.\n\nA live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.\n\nScope comes from the query string. With no `sessionId` the stream is context-scoped and nothing but the engine stopping ends it, which is what the `subscribe` command asks for. With `sessionId` it is account-scoped: a logout closes it, and the session events of *other* accounts are filtered out. `walletId` narrows it further *within* that account, for whenever a wallet-scoped event exists: no event carries a wallet scope today, so it changes nothing a caller receives, and a wallet-scoped stream gets exactly what the same stream without `walletId` would have got. It is accepted now so a caller's URL does not have to change when the first such event arrives.",
+      "params": {
+        "sessionId": {
+          "pass": "[--session-id=<sessionId>]",
+          "doc": "Scope the stream to one account, so a logout closes it. Omitted, the stream is context-scoped and only the engine stopping ends it.",
+          "optional": true
+        },
+        "walletId": {
+          "pass": "[--wallet-id=<walletId>]",
+          "doc": "With `sessionId`, narrow the stream to one wallet. No event carries a wallet scope yet, so today this changes nothing you receive — the stream still carries every account event the same `sessionId` alone would carry. Ignored on its own.",
+          "optional": true
+        },
+        "type": {
+          "pass": "[--type=<type> …]",
+          "doc": "Only these event types. Applied by the engine, so an unwanted type never crosses the socket; the client filters again for the types the engine sends regardless, like `subscription.closed`.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "type": "string — The event name.",
+        "data": "unknown — Payload, shaped by the event type."
+      },
+      "returnsDoc": "One frame per event, as `event:` then `data:` lines.",
+      "notes": [
+        "Frame types: `core.log`, `session.created`, `session.expired`, `engine.shutdown`, and `subscription.closed` when the engine ends it.",
+        "The `subscribe` command prints one further frame of its own once the stream is over, `subscription.ended`, carrying the close reason. It comes from the client, so `--type` does not filter it.",
+        "`sessionId` in event payloads is truncated to its first 10 characters.",
+        "A client more than 1 MiB behind is disconnected rather than buffered.",
+        "Served directly by the HTTP handler rather than through the router, because the response never ends.",
+        "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT and 7 when the engine ends the stream. `subscribe` opens an unscoped stream, which only the engine stopping ends; a stream opened with `sessionId` is closed by that session logging out."
+      ]
+    },
+    "sync": {
+      "summary": "Force an account data sync.",
+      "method": "POST",
+      "path": "/account/{sessionId}/sync",
+      "usage": "sync",
+      "description": "Pushes and pulls the account repos immediately rather than waiting for the next scheduled sync.",
+      "core": "account.sync",
+      "notes": [
+        "Named `sync` for the account; the wallet one is `wallet-sync`."
+      ],
+      "errors": [
+        "NETWORK_ERROR",
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "touch": {
+      "summary": "Keepalive.",
+      "method": "POST",
+      "path": "/account/{sessionId}/touch",
+      "usage": "touch",
+      "description": "Resets the idle auto-logout timer without doing any other work.",
+      "returns": {
+        "sessionId": "string — Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it.",
+        "username?": "string — Absent for a light account, which has no username.",
+        "rootLoginId": "string — The account root, stable across appIds. Two sessions sharing it are the same account.",
+        "loginMethod": "\"create\" | \"edge\" | \"key\" | \"password\" | \"pin\" | \"recovery\" — How this session was established.",
+        "autoLogoutSeconds": "number — Idle time before the engine logs the account out. 0 disables it.",
+        "expiresAt": "string | null — When auto-logout will fire, or null when it is disabled.",
+        "lastActivityAt": "string — Last call on this session, which is what auto-logout measures from.",
+        "createdAt": "string — When the login completed."
+      },
+      "returnsDoc": "The session, with a refreshed `expiresAt`.",
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    },
+    "username-available": {
+      "summary": "Check whether a username is free.",
+      "method": "GET",
+      "path": "/username-available",
+      "usage": "username-available --username=<username> [--challenge-id=<challengeId>]",
+      "core": "context.usernameAvailable",
+      "params": {
+        "username": {
+          "pass": "--username=<username>",
+          "doc": "The name to check.",
+          "optional": false
+        },
+        "challengeId": {
+          "pass": "[--challenge-id=<challengeId>]",
+          "doc": "Supply after solving a CAPTCHA to retry the same check.",
+          "optional": true
+        }
+      },
+      "returns": {
+        "username": "string — The name that was checked, echoed back.",
+        "available": "boolean — True when nobody holds this name. It is not reserved by asking."
+      },
+      "errors": [
+        "USERNAME_ERROR",
+        "CHALLENGE_REQUIRED",
+        "NETWORK_ERROR"
+      ]
+    },
+    "wait-for-all-wallets": {
+      "summary": "Wait for every wallet to finish loading.",
+      "method": "POST",
+      "path": "/account/{sessionId}/wait-for-all-wallets",
+      "usage": "wait-for-all-wallets",
+      "description": "Wallets load in the background after login, so a list taken straight afterwards can be short. This resolves once each active wallet has either loaded or failed — balances may still be syncing afterwards.",
+      "core": "account.waitForAllWallets",
+      "returns": {
+        "unloadedWallets": "unknown[] — The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer. This call used to return nothing, so an account with a wallet the CLI cannot load got `ok` and a short `currency-wallets` list with no explanation. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well."
+      },
+      "notes": [
+        "There is no timeout: a wallet that never resolves holds this open. The engine's own idle shutdown does not fire while a request is in flight, so give the client one."
+      ],
+      "errors": [
+        "INVALID_SESSION",
+        "SESSION_EXPIRED"
+      ]
+    }
+  }
+}

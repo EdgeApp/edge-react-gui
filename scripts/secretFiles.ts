@@ -3,6 +3,7 @@ import fs from 'fs'
 import { copySync } from 'fs-extra'
 import { join } from 'path'
 
+import { errorMessage } from '../src/cli/engine/errors'
 import { MAX_SECRET_LEN } from './makeApiSigner'
 
 const argv = process.argv
@@ -95,11 +96,7 @@ async function main(): Promise<void> {
   try {
     edgeKey = JSON.parse(fs.readFileSync(edgeKeyDest, 'utf8'))
   } catch (error: unknown) {
-    throw new Error(
-      `edgeKey.json is not valid JSON: ${
-        error instanceof Error ? error.message : String(error)
-      }`
-    )
+    throw new Error(`edgeKey.json is not valid JSON: ${errorMessage(error)}`)
   }
   if (typeof edgeKey.apiKey !== 'string' || edgeKey.apiKey === '') {
     throw new Error('edgeKey.json apiKey must be a non-empty string')
@@ -144,6 +141,6 @@ function call(cmdstring: string): void {
 }
 
 main().catch((e: unknown) => {
-  console.error(e instanceof Error ? e.message : String(e))
+  console.error(errorMessage(e))
   process.exit(1)
 })
