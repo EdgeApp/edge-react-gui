@@ -119,6 +119,21 @@ describe('readLocalAccountSettingsFromDisk', () => {
     await expect(readLocalAccountSettingsFromDisk(account)).rejects.toThrow()
   })
 
+  it('throws for valid JSON that is not a settings object', async () => {
+    // The gap the strict reader had. `asLocalAccountSettings` is
+    // `asMaybe(inner, () => inner({}))`, so only `asJSON`'s *parse* could
+    // fail: each of these cleaned to all thirteen defaults, reported
+    // `trusted: true`, and was then written back over the user's
+    // `spendingLimits`. `asObject` accepts an array, so `[]` is the one a
+    // half-synced file is likeliest to produce.
+    for (const local of ['[]', '"x"', '42', 'null', '[1,2,3]']) {
+      const account = makeFakeDiskletAccount({ local })
+      await expect(
+        readLocalAccountSettingsFromDisk(account)
+      ).rejects.toThrow()
+    }
+  })
+
   it('keeps the other fields when one value is unreadable', async () => {
     // Per-field tolerance is deliberate — every field is `asMaybe` with its
     // own default, so one setting this version cannot read costs that

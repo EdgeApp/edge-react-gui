@@ -3,10 +3,11 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import {
   asLocalAccountSettings,
+  asLocalAccountSettingsInner,
   type LocalAccountSettings
 } from '../types/types'
 import { errorMessage } from './errorMessage'
-import { isMissingFile } from './predicates'
+import { isMissingFile, isPlainObject } from './predicates'
 import { reportWarning } from './reportWarning'
 
 const uncleanLocalAccountSettings = uncleaner(asLocalAccountSettings)
@@ -51,7 +52,26 @@ export async function readLocalAccountSettingsFromDisk(
   // `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown`.
   // `readLocalAccountSettingsOrDefaults` is the lenient door, and it reports
   // the failure as `trusted: false`.
-  return asJSON(asLocalAccountSettings)(text)
+  //
+  // The *inner* cleaner, because `asLocalAccountSettings` is
+  // `asMaybe(inner, () => inner({}))`: it cannot fail, so the strictness
+  // here reached only `asJSON`'s parse. A file that is valid JSON and not a
+  // settings object — `[]`, which `asObject` accepts, `"x"`, `42` — was
+  // answered with the thirteen defaults, reported `trusted: true`, and
+  // written back. The per-field tolerance is inside the inner cleaner, so
+  // this still answers one unreadable field with that field's default.
+  //
+  // `isPlainObject` first, because `asObject` accepts an array — and an
+  // array is what a half-synced or hand-edited `Settings.json` is likeliest
+  // to be when it is valid JSON and not these settings.
+  return asJSON((raw: unknown) => {
+    if (!isPlainObject(raw)) {
+      throw new TypeError(
+        `${LOCAL_SETTINGS_FILENAME} is not a settings object`
+      )
+    }
+    return asLocalAccountSettingsInner(raw)
+  })(text)
 }
 
 /**

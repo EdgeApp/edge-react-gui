@@ -230,7 +230,22 @@ export const asReviewTriggerData = asObject({
   daysSinceUpgrade: asMaybe(asArray(asString), [])
 })
 
-const asLocalAccountSettingsInner = asObject({
+/**
+ * The settings shape itself, which fails for a file that is not one.
+ *
+ * Exported for `readLocalAccountSettingsFromDisk`, the strict reader a
+ * read-modify-write uses. `asLocalAccountSettings` below wraps this in
+ * `asMaybe`, so the only thing that could fail there was `asJSON`'s parse:
+ * a `Settings.json` that is valid JSON and not a settings object — `[]`,
+ * which `asObject` accepts, `"x"`, `42` — came back as all thirteen
+ * defaults and was then written over the user's `spendingLimits`,
+ * `passwordReminder`, `notifState`, `reviewTrigger`, `developerModeOn`,
+ * `isAccountBalanceVisible` and `tokenWarningsShown`, which is the exact
+ * destruction that reader and its `trusted` flag exist to prevent. The
+ * per-field `asMaybe` tolerance inside stays: one unreadable *field* is
+ * still answered with that field's default.
+ */
+export const asLocalAccountSettingsInner = asObject({
   cameraScamWarningShown: asMaybe(asBoolean, false),
   contactsPermissionShown: asMaybe(asBoolean, false),
   developerModeOn: asMaybe(asBoolean, false),
