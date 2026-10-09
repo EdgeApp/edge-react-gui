@@ -49,8 +49,11 @@ npm run docs:api
 # and pins every dependency its module graph reaches to the exact version
 # `package-lock.json` resolved. Here as well as in `precommit:cli`, because the
 # commits that stale it are the routine ones — "Bump version to v4.52.0",
-# in CI. An install self-heals it, the same way it heals the documentation
-# artifacts above.
+# "Upgrade edge-core-js@^2.51.0" — and `cli:manifest:check` runs on `develop`
+# in CI. `npm run prepare` heals it, the same way it heals the documentation
+# artifacts above — by hand, since `.npmrc` sets `ignore-scripts=true` and no
+# install runs this script.
+npm run cli:manifest
 
 # Create contract type definitions:
 npm run typechain
