@@ -9,15 +9,20 @@ import {
   type GlobalKeys,
   type RuntimeKeys
 } from './configKeysSchema'
+import { isPlainObject } from './util/predicates'
 
 /** Open string-keyed object; fails closed on non-objects (unlike a soft coerce). */
 const asUnknownMap = asObject(asUnknown)
 
-export function isPlainObject(
-  value: unknown
-): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
+/**
+ * Re-exported, not re-declared.
+ *
+ * This module exported a byte-equivalent second copy, and
+ * `src/util/keysStore.ts` imports it from here — so the repo had two
+ * exported `isPlainObject` functions and a hand-written third test inside
+ * `requireBodyObject`, which is what `predicates.ts` was created to end.
+ */
+export { isPlainObject }
 
 /** Maps inside a keys payload that must stay objects to merge safely. */
 const KEYS_PAYLOAD_MAP_FIELDS = [
