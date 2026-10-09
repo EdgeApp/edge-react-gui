@@ -4,13 +4,10 @@ import type { AirshipBridge } from 'react-native-airship'
 import { FlatList } from 'react-native-gesture-handler'
 
 import {
-  type Category,
   displayCategories,
   formatCategory,
   getSubcategories,
-  joinCategory,
-  setNewSubcategory,
-  splitCategory
+  setNewSubcategory
 } from '../../actions/CategoriesActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
@@ -18,6 +15,11 @@ import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import { scale } from '../../util/scaling'
+import {
+  type Category,
+  joinCategory,
+  splitCategory
+} from '../../util/txDisplay'
 import { MinimalButton } from '../buttons/MinimalButton'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { showError } from '../services/AirshipInstance'
@@ -56,6 +58,12 @@ export function CategoryModal(props: Props) {
   const [subcategory, setSubcategory] = React.useState(split.subcategory)
 
   const categories = useSelector(state => state.ui.subcategories)
+  // Read at render time, not at module load: `applyLocale` mutates
+  // `lstrings` in place, so a module-scope capture of these four names is
+  // right only if the locale boot happened to run first. All four, because
+  // the button row below shows all four; everything on a per-row path uses
+  // `categoryName` instead.
+  const categoryNames = displayCategories()
 
   // Load the categories from disk:
   useAsyncEffect(
@@ -160,7 +168,7 @@ export function CategoryModal(props: Props) {
           <MinimalButton
             key={item}
             highlighted={category === item}
-            label={displayCategories[item]}
+            label={categoryNames[item]}
             onPress={() => {
               setCategory(item)
             }}
