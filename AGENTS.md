@@ -18,6 +18,19 @@
 - `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
 - `tsc` - TypeScript type checking (via package.json script)
 
+### Edge CLI
+
+The repository also builds `edge-cli` and `edge-engine` from `src/cli/`.
+[`docs/EDGE_CLI.md`](docs/EDGE_CLI.md) is the guide; `docs/api/README.md`
+covers the route declarations the reference is generated from.
+
+- `npm run cli -- <command>` / `npm run engine` - run either half from source
+- `npm run build:cli` - the single-file bundles in `lib/`
+- `npm run docs:api` - regenerate the committed reference and command table
+- `npm run docs:api:gates` - the five read-only checks that it is in step
+- `npm run test:cli:offline` - the fake-world suites, no network
+- `npm run test:cli:network` - the suites that need the tester servers
+
 ## Swap Provider Integration
 
 The plugin itself lives in `edge-exchange-plugins`; this repo only wires it up, and every wiring point below fails SILENTLY when missed (no error, just a blank icon or a provider that never initializes). Registering a new swap `pluginId` means all of:
