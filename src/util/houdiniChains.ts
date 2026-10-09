@@ -1,38 +1,57 @@
-import { asBoolean, asObject, type Cleaner } from 'cleaners'
+import {
+  asBoolean,
+  asMaybe,
+  asObject,
+  asOptional,
+  asString,
+  type Cleaner
+} from 'cleaners'
 import type {
+  EdgeAddress,
   EdgeCurrencyConfig,
+  EdgeCurrencyWallet,
+  EdgeMemo,
+  EdgeParsedUri,
   EdgePluginMap,
+  EdgeSwapSendRequest,
   EdgeTokenId
 } from 'edge-core-js'
 
 import type { DisableAsset } from '../actions/ExchangeInfoActions'
 import type { EdgeAsset } from '../types/types'
-import { asMaybeContractLocation } from './cleaners'
 import { peekPaymentUri } from './paymentUri'
 import { disableAssetsCover } from './stealthSwap'
 
+/** What Houdini can do with one asset it serves. */
+export interface HoudiniAssetSupport {
+  /**
+   * Whether Houdini can route the asset to ITSELF privately. Same-asset
+   * private is their dominant flow, and it is an asset capability rather than
+   * a per-pair verdict, so it reads off the served list with no quote and no
+   * probing.
+   */
+  hasSelfPrivate: boolean
+}
+
 /**
- * A destination chain HoudiniSwap can pay out to, keyed by the Edge currency
- * pluginId. `addressValidation` is Houdini's own per-chain regex, used to
- * prefilter which chain a pasted address could belong to; the chosen chain's
- * own `parseUri` is what validates it. The Send scene also reads it as the
- * payout rule: a shown Zcash address it rejects gets the transparent-payout
- * warning, so widening the Zcash pattern (say, to accept a u1) would hide that
- * warning for a picked wallet's unified address. `memoNeeded` chains
- * show a destination-tag row whose value rides the send request's `toMemos`
- * to the plugin and onward as `destinationTag` on order creation.
+ * A chain HoudiniSwap can pay out on, keyed by the Edge currency pluginId.
+ *
+ * Everything but `evmChainId` comes from the info server's `houdiniAssets`
+ * rollup field, which mirrors Houdini's own asset list keyed by Edge
+ * `pluginId` and `tokenId`. `addressValidation` is Houdini's per-chain regex,
+ * used to prefilter which chain a pasted address could belong to; the chosen
+ * chain's own `parseUri` is what validates it. The Send scene also reads it as
+ * the payout rule: a shown Zcash address it rejects gets the
+ * transparent-payout warning, so widening the Zcash pattern (say, to accept a
+ * u1) would hide that warning for a picked wallet's unified address.
+ * `memoNeeded` chains show a destination-tag row whose value rides the send
+ * request's `toMemos` to the plugin and onward as `destinationTag` on order
+ * creation.
  */
 export interface HoudiniChain {
   pluginId: string
-  houdiniShortName: string
   memoNeeded: boolean
-  /**
-   * Whether Houdini can route this asset to ITSELF privately, from the
-   * `hasSelfPrivate` flag on their token query. Same-asset private is their
-   * dominant flow, and it is an asset capability rather than a per-pair
-   * verdict, so it reads off the token metadata with no quote and no probing.
-   */
-  hasSelfPrivate: boolean
+  addressValidation: RegExp
 
   /**
    * The chain's EVM network id, for the chains that have one. A payment code
@@ -40,341 +59,168 @@ export interface HoudiniChain {
    * scheme names only the family and this is what names the chain. Absent for
    * everything that is not an EVM network, which is why a chain id matching
    * nothing here resolves to nothing rather than to Ethereum.
-   *
-   * Values come from each chain's own currency plugin (`chainParams.chainId`),
-   * which the GUI cannot read at runtime: `EdgeCurrencyInfo.defaultSettings` is
-   * deprecated and always empty.
    */
   evmChainId?: number
-  addressValidation: RegExp
+
+  /** The chain's own coin, absent when Houdini serves only its tokens. */
+  coin?: HoudiniAssetSupport
+  /** The tokens Houdini serves on the chain, by Edge `tokenId`. */
+  tokens: Map<string, HoudiniAssetSupport>
 }
 
 /**
- * Snapshot of Houdini's mainnet native tokens (v2 partner API, re-fetched
- * 2026-09-10) intersected with Edge's currency pluginIds, mirroring the
- * edge-exchange-plugins Houdini chain mapping. IBC-family chains are excluded
- * there (no trustworthy memo metadata), so they are absent here too.
- *
- * Every chain listed here resolves to a native token Houdini actually serves.
- * `celo`, `fantom` and `polkadot` are not listed: the API returns no mainnet
- * native for them, so offering them would add destinations whose every quote
- * throws.
- *
- * `telos` is not listed either, though the names match. Houdini's `telos` is
- * the Telos EVM network (`0x` addresses, chain id 40); Edge's `telos` plugin is
- * the EOSIO-based native chain, whose accounts are names. No Edge Telos wallet
- * can pay a `0x` deposit address or be paid at one, so offering the route
- * would hand the user a destination their own Telos wallet cannot use.
- *
- * The chains are a snapshot on purpose. Houdini is an aggregator whose
- * per-pair availability fluctuates too fast to track and whose Cloudflare
- * blocks tight probing loops, so the app never probes it: chain-level
- * capability (address format, memo flag, EVM chain id, the coin's
- * `hasSelfPrivate`) lives in this table, and pair-level capability is learned
- * only from a real user-initiated quote (`pairCaps`).
- *
- * Tokens are not in this table. The info server polls Houdini's token list
- * and serves it as `houdiniTokens` (see `HoudiniTokens`), and a token is
- * offered only on a chain listed here.
+ * Every chain Houdini serves, by Edge pluginId, in pluginId order. Empty until
+ * the first info server rollup carrying a Houdini list loads, which leaves no
+ * Houdini destination and both Stealth toggles hidden. Once loaded, a later
+ * rollup without the list keeps it (see `updateHoudiniChains`).
  */
-export const HOUDINI_CHAINS: HoudiniChain[] = [
-  {
-    pluginId: 'algorand',
-    houdiniShortName: 'algorand',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^[A-Z0-9]{58,58}$/
-  },
-  {
-    pluginId: 'arbitrum',
-    houdiniShortName: 'arbitrum',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 42161,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'avalanche',
-    houdiniShortName: 'avalanche',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 43114,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'base',
-    houdiniShortName: 'base',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 8453,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'binancesmartchain',
-    houdiniShortName: 'bsc',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 56,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'bitcoin',
-    houdiniShortName: 'bitcoin',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation:
-      /^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39}|bc1[a-z0-9]{59})$/
-  },
-  {
-    pluginId: 'bitcoincash',
-    houdiniShortName: 'bitcoincash',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation:
-      /^([13][a-km-zA-HJ-NP-Z1-9]{25,34})$|^((bitcoincash:)?(q|p)[a-z0-9]{41})$|^((BITCOINCASH:)?(Q|P)[A-Z0-9]{41})$/
-  },
-  {
-    pluginId: 'bitcoinsv',
-    houdiniShortName: 'bsv',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/
-  },
-  {
-    pluginId: 'cardano',
-    houdiniShortName: 'cardano',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    // Houdini's own regex ends in `|^[a-zA-z0-9]*|[0-9A-Za-z]{45,65}$`, whose
-    // first alternative is unanchored and zero-length and so matches EVERY
-    // string, including empty. Those two catch-alls are dropped here: they
-    // would accept any typo as a Cardano address, and they make any pasted
-    // address look like it could be paying Cardano.
+export type HoudiniChains = Map<string, HoudiniChain>
+
+/**
+ * Edge's own data about the chains Houdini serves, which Houdini's list does
+ * not carry.
+ *
+ * `evmChainId` values come from each chain's own currency plugin
+ * (`chainParams.chainId`), which the GUI cannot read at runtime:
+ * `EdgeCurrencyInfo.defaultSettings` is deprecated and always empty.
+ *
+ * `addressValidation` replaces a served pattern that is known to be wrong:
+ *
+ * - cardano: Houdini's ends in `|^[a-zA-z0-9]*|[0-9A-Za-z]{45,65}$`, whose
+ *   first alternative is unanchored and zero-length and so matches EVERY
+ *   string. The two catch-alls are dropped: they would accept any typo as a
+ *   Cardano address and make any pasted address look like a Cardano one.
+ * - dash, monero: a `|` inside a character class is a literal pipe, not an
+ *   alternative, so the served patterns accept a pipe in an address.
+ * - ecash: the prefix-less cashaddr form is spelled `[0-9A-Za-z]{42}`, which
+ *   claims every `0x` EVM address. Narrowed to the bech32 charset cashaddr
+ *   uses, with its `q`/`p` type prefix.
+ * - hedera: unescaped dots are wildcards, and the four-digit floor rejects
+ *   early account ids, which are genuinely short (0.0.98).
+ * - pivx: the served class admits `0`, `O`, `I` and `l`, which base58 leaves
+ *   out. Edge's pattern is base58 and, as before, omits the `EXM` form.
+ * - solana: the served floor of 32 reaches into the 33-34 character band of
+ *   the Bitcoin-family legacy forms. A Solana address is a base58 32-byte key,
+ *   43-44 characters and 42 for about one key in a thousand. The 42-character
+ *   band is also the length of a Bitcoin P2WPKH `bc1` address and a cashaddr
+ *   without its prefix, both single-case bech32, and about one in twelve of
+ *   those uses only base58 characters. Edge's pattern therefore also requires
+ *   both letter cases, which a random 42-character base58 key lacks about once
+ *   in four billion.
+ *
+ * `memoNeeded: true` keeps the destination-tag row on the chains whose
+ * deposits are credited only by tag, whatever the served flag says. A served
+ * `false` there would drop the tag and pay a deposit that cannot be
+ * attributed, so the served flag can add a memo chain but never remove one.
+ */
+const EDGE_CHAIN_DATA: Record<
+  string,
+  { evmChainId?: number; addressValidation?: RegExp; memoNeeded?: true }
+> = {
+  arbitrum: { evmChainId: 42161 },
+  avalanche: { evmChainId: 43114 },
+  base: { evmChainId: 8453 },
+  binancesmartchain: { evmChainId: 56 },
+  cardano: {
     addressValidation:
       /^([1-9A-HJ-NP-Za-km-z]{59}|[0-9A-Za-z]{100,104}|[0-9a-fA-F]{64}|addr[0-9A-Za-z]{45,65})$/
   },
-  {
-    pluginId: 'cosmoshub',
-    houdiniShortName: 'cosmoshub-4',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    addressValidation: /^(cosmos1)[0-9a-z]{38}$/
-  },
-  {
-    pluginId: 'dash',
-    houdiniShortName: 'dash',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^[X7][0-9A-Za-z]{33}$/
-  },
-  {
-    pluginId: 'dogecoin',
-    houdiniShortName: 'doge',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^(D|A|9)[a-km-zA-HJ-NP-Z1-9]{33,34}$/
-  },
-  {
-    pluginId: 'ecash',
-    houdiniShortName: 'eCash',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    // The provider's published pattern spells the prefix-less cashaddr forms as
-    // `[0-9A-Za-z]`, which matches EVERY 42-character alphanumeric string and so
-    // claims every `0x` EVM address as a candidate eCash destination. Narrowed
-    // to the bech32 charset cashaddr actually uses (lowercase, no `1bio`) with
-    // its `q`/`p` type prefix, which is strictly narrowing and leaves real eCash
-    // addresses matching. Same class of defect as the Cardano catch-all above.
+  celo: { evmChainId: 42220 },
+  cosmoshub: { memoNeeded: true },
+  dash: { addressValidation: /^[X7][0-9A-Za-z]{33}$/ },
+  ecash: {
     addressValidation:
       /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{41}$|^ecash:[qp][qpzry9x8gf2tvdw0s3jn54khce6mua7l]{29,69}$/
   },
-  {
-    pluginId: 'ethereum',
-    houdiniShortName: 'ethereum',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 1,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
+  ethereum: { evmChainId: 1 },
+  fantom: { evmChainId: 250 },
+  hedera: { addressValidation: /^0\.0\.[0-9]{1,20}$/, memoNeeded: true },
+  hyperevm: { evmChainId: 999 },
+  monad: { evmChainId: 143 },
+  monero: { addressValidation: /^[48][a-zA-Z\d]{94}([a-zA-Z\d]{11})?$/ },
+  opbnb: { evmChainId: 204 },
+  optimism: { evmChainId: 10 },
+  pivx: { addressValidation: /^D[1-9A-HJ-NP-Za-km-z]{33}$/ },
+  polygon: { evmChainId: 137 },
+  pulsechain: { evmChainId: 369 },
+  ripple: { memoNeeded: true },
+  robinhood: { evmChainId: 4663 },
+  rsk: { evmChainId: 30 },
+  solana: {
+    addressValidation:
+      /^(?=.*[A-HJ-NP-Z])(?=.*[a-km-z])[1-9A-HJ-NP-Za-km-z]{42,44}$/
   },
-  {
-    pluginId: 'hedera',
-    houdiniShortName: 'hedera',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    // Dots escaped: unescaped they are wildcards, so the pattern accepted
-    // anything shaped like 0X0Y12345 as a Hedera account id. The length bound
-    // is 1 and not the provider's 4: account ids are assigned sequentially, so
-    // early ones are genuinely short (0.0.98) and a four-digit floor rejects
-    // real destinations.
-    addressValidation: /^0\.0\.[0-9]{1,20}$/
-  },
-  {
-    pluginId: 'hyperevm',
-    houdiniShortName: 'hyperevm',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 999,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'litecoin',
-    houdiniShortName: 'litecoin',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^(L|M|3)[A-Za-z0-9]{33}$|^(ltc1)[0-9A-Za-z]{39}$/
-  },
-  {
-    pluginId: 'monad',
-    houdiniShortName: 'MON',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 143,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'monero',
-    houdiniShortName: 'monero',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^[48][a-zA-Z\d]{94}([a-zA-Z\d]{11})?$/
-  },
-  {
-    pluginId: 'opbnb',
-    houdiniShortName: 'opbnb',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 204,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'optimism',
-    houdiniShortName: 'optimism',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 10,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'pivx',
-    houdiniShortName: 'pivx',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    // Houdini writes `[0-9A-za-z]`, where `A-z` also spans `[ \ ] ^ _ \``.
-    // PIVX addresses are base58, so the strict class is used instead.
-    addressValidation: /^D[1-9A-HJ-NP-Za-km-z]{33}$/
-  },
-  {
-    pluginId: 'polygon',
-    houdiniShortName: 'polygon',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 137,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'pulsechain',
-    houdiniShortName: 'pulsechain',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 369,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'ripple',
-    houdiniShortName: 'ripple',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    addressValidation: /^r[1-9A-HJ-NP-Za-km-z]{25,34}$/
-  },
-  {
-    pluginId: 'robinhood',
-    houdiniShortName: 'Robinhood',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 4663,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'rsk',
-    houdiniShortName: 'rootstock',
-    memoNeeded: false,
-    hasSelfPrivate: false,
-    evmChainId: 30,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'solana',
-    houdiniShortName: 'solana',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    // The provider's published lower bound of 32 reaches down into the length
-    // band the Bitcoin-family legacy forms occupy (P2PKH and P2SH are 33-34
-    // base58 characters, as are Dogecoin, Litecoin and PIVX), so a legacy UTXO
-    // address offered Solana as a destination it is not an account on. A Solana
-    // address is a base58 32-byte ed25519 public key, which is 43-44 characters
-    // and 42 only for a value small enough to be vanishingly unlikely, so the
-    // floor moves to 42: strictly narrowing, and clear of every UTXO form.
-    addressValidation: /^[1-9A-HJ-NP-Za-km-z]{42,44}$/
-  },
-  {
-    pluginId: 'sonic',
-    houdiniShortName: 'sonic',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 146,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
-  },
-  {
-    pluginId: 'stellar',
-    houdiniShortName: 'xlm',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    addressValidation: /^G[A-D]{1}[A-Z2-7]{54}$/
-  },
-  {
-    pluginId: 'sui',
-    houdiniShortName: 'sui',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^(0x)[0-9A-Za-z]{64}$/
-  },
-  {
-    pluginId: 'thorchainrune',
-    houdiniShortName: 'thorchain',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    addressValidation: /^(thor1)[0-9a-z]{38}$/
-  },
-  {
-    pluginId: 'ton',
-    houdiniShortName: 'ton',
-    memoNeeded: true,
-    hasSelfPrivate: true,
-    addressValidation: /^(EQ|UQ)[A-Za-z0-9_-]{46}$/
-  },
-  {
-    pluginId: 'tron',
-    houdiniShortName: 'tron',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^T[1-9A-HJ-NP-Za-km-z]{33}$/
-  },
-  {
-    pluginId: 'zcash',
-    houdiniShortName: 'Zcash',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    addressValidation: /^t1[1-9A-HJ-NP-Za-km-z]{33}$/
-  },
-  {
-    pluginId: 'zksync',
-    houdiniShortName: 'zksync-era',
-    memoNeeded: false,
-    hasSelfPrivate: true,
-    evmChainId: 324,
-    addressValidation: /^(0x)[0-9A-Za-z]{40}$/
+  sonic: { evmChainId: 146 },
+  stellar: { memoNeeded: true },
+  thorchainrune: { memoNeeded: true },
+  ton: { memoNeeded: true },
+  zksync: { evmChainId: 324 }
+}
+
+/**
+ * Text no address format should accept. A served pattern that matches one is
+ * a catch-all (Houdini serves `^.*$` for some chains), which would claim every
+ * pasted address for its chain.
+ */
+const NON_ADDRESSES = ['', ' ', 'not an address']
+
+/**
+ * The regex a chain's addresses are prefiltered with: Edge's replacement when
+ * one exists, otherwise the served pattern. `undefined` when the served
+ * pattern does not compile or accepts text that is no address, which leaves
+ * the chain out rather than letting it claim every paste.
+ */
+function getAddressValidation(
+  pluginId: string,
+  pattern: string
+): RegExp | undefined {
+  const replacement = EDGE_CHAIN_DATA[pluginId]?.addressValidation
+  if (replacement != null) return replacement
+  let regex: RegExp
+  try {
+    regex = new RegExp(pattern)
+  } catch (error: unknown) {
+    return undefined
   }
-]
+  return NON_ADDRESSES.some(text => regex.test(text)) ? undefined : regex
+}
+
+const asServedAsset = asObject({ hasSelfPrivate: asBoolean })
+const asServedChain = asObject({
+  memoNeeded: asBoolean,
+  addressValidation: asString,
+  coin: asOptional(asServedAsset),
+  tokens: asObject(asServedAsset)
+})
+
+/**
+ * Cleans the info server's `houdiniAssets` field into `HoudiniChains`. A
+ * chain entry of the wrong shape, or with an unusable address pattern, is
+ * left out on its own, so one bad entry does not cost the other chains.
+ */
+export const asHoudiniChains: Cleaner<HoudiniChains> = raw => {
+  const served = asObject(asMaybe(asServedChain))(raw)
+  const chains: HoudiniChains = new Map()
+  for (const pluginId of Object.keys(served).sort()) {
+    const chain = served[pluginId]
+    if (chain == null) continue
+    const addressValidation = getAddressValidation(
+      pluginId,
+      chain.addressValidation
+    )
+    if (addressValidation == null) continue
+    chains.set(pluginId, {
+      pluginId,
+      memoNeeded:
+        chain.memoNeeded || EDGE_CHAIN_DATA[pluginId]?.memoNeeded === true,
+      addressValidation,
+      evmChainId: EDGE_CHAIN_DATA[pluginId]?.evmChainId,
+      coin: chain.coin,
+      tokens: new Map(Object.entries(chain.tokens))
+    })
+  }
+  return chains
+}
 
 /**
  * Houdini's own minimum order sizes, in USD. Their guidance, verbatim: "on your
@@ -400,110 +246,62 @@ export const HOUDINI_MIN_USD = {
   dex: '5'
 } as const
 
-/** Look up the Houdini destination chain for an Edge asset, if served. */
+/**
+ * Look up the Houdini chain an Edge plugin maps to, if served. The chain holds
+ * what is true of every asset on it: its address format, memo flag and EVM
+ * chain id. Whether Houdini serves one particular asset there is answered by
+ * `getHoudiniAssetSupport`.
+ */
 export function getHoudiniChain(
-  pluginId: string,
-  tokenId: EdgeTokenId
+  houdiniChains: HoudiniChains,
+  pluginId: string
 ): HoudiniChain | undefined {
-  // Only native (chain) assets are offered as destinations for now:
-  if (tokenId != null) return undefined
-  return HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+  return houdiniChains.get(pluginId)
 }
 
-/**
- * The tokens Houdini can route, as the info server serves them in the
- * `houdiniTokens` field of its rollup: one `hasSelfPrivate` flag per token,
- * keyed by Houdini's chain name (a chain's `houdiniShortName`) and then by
- * contract address.
- */
-export type HoudiniTokens = Record<string, Record<string, boolean>>
-
-/**
- * Cleans the served token list and lowercases every contract address. The
- * server keeps Houdini's own spelling, and Edge spells the same EVM address
- * with a checksum, so both sides of a match are lowercased.
- */
-export const asHoudiniTokens: Cleaner<HoudiniTokens> = raw => {
-  const clean = asObject(asObject(asBoolean))(raw)
-  return Object.fromEntries(
-    Object.entries(clean).map(([chain, tokens]) => [
-      chain,
-      Object.fromEntries(
-        Object.entries(tokens).map(([contractAddress, hasSelfPrivate]) => [
-          contractAddress.toLowerCase(),
-          hasSelfPrivate
-        ])
-      )
-    ])
-  )
-}
-
-/** The part of the account's currency configs the token matching reads. */
+/** The part of the account's currency configs the asset listing reads. */
 export type HoudiniCurrencyConfigs = EdgePluginMap<
   Pick<EdgeCurrencyConfig, 'allTokens'>
 >
 
-/** What Houdini can do with an asset it serves. */
-export interface HoudiniAssetSupport {
-  /** Whether Houdini can route the asset to itself privately. */
-  hasSelfPrivate: boolean
-}
-
 /**
  * Look up an Edge asset in what Houdini serves, or get `undefined` when it
- * does not serve the asset.
- *
- * A chain's own coin reads the chain table. A token is matched to the served
- * list by its contract address, so a custom token the user added matches the
- * same way a built-in one does.
+ * does not serve the asset. The served list is keyed by Edge `tokenId`, so a
+ * custom token the user added matches the same way a built-in one does.
  */
 export function getHoudiniAssetSupport(opts: {
   asset: EdgeAsset
-  currencyConfigs: HoudiniCurrencyConfigs
-  houdiniTokens: HoudiniTokens
+  houdiniChains: HoudiniChains
 }): HoudiniAssetSupport | undefined {
-  const { asset, currencyConfigs, houdiniTokens } = opts
-  const { pluginId, tokenId } = asset
-
-  const chain = HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+  const { asset, houdiniChains } = opts
+  const chain = houdiniChains.get(asset.pluginId)
   if (chain == null) return undefined
-  if (tokenId == null) return { hasSelfPrivate: chain.hasSelfPrivate }
-
-  const edgeToken = currencyConfigs[pluginId]?.allTokens[tokenId]
-  if (edgeToken == null) return undefined
-  const hasSelfPrivate = getTokenFlag(
-    houdiniTokens[chain.houdiniShortName],
-    edgeToken.networkLocation
-  )
-  return hasSelfPrivate == null ? undefined : { hasSelfPrivate }
+  return asset.tokenId == null ? chain.coin : chain.tokens.get(asset.tokenId)
 }
 
 /**
- * Every asset Houdini serves that this account has a currency plugin for, in
- * picker order: each chain's coin followed by that chain's tokens, sorted by
- * name. `destinationBans` removes the assets the info server withdrew as swap
- * destinations.
+ * Every asset Houdini serves that this account has a currency plugin and a
+ * token definition for, in picker order: each chain's coin, when served,
+ * followed by that chain's tokens sorted by name. `destinationBans` removes
+ * the assets the info server withdrew as swap destinations.
  */
 export function getHoudiniAssets(opts: {
   currencyConfigs: HoudiniCurrencyConfigs
-  houdiniTokens: HoudiniTokens
+  houdiniChains: HoudiniChains
   destinationBans?: DisableAsset[]
 }): EdgeAsset[] {
-  const { currencyConfigs, destinationBans = [], houdiniTokens } = opts
+  const { currencyConfigs, destinationBans = [], houdiniChains } = opts
 
   const assets: EdgeAsset[] = []
-  for (const chain of HOUDINI_CHAINS) {
-    const { houdiniShortName, pluginId } = chain
+  for (const chain of houdiniChains.values()) {
+    const { pluginId } = chain
     const currencyConfig = currencyConfigs[pluginId]
     if (currencyConfig == null) continue
-    assets.push({ pluginId, tokenId: null })
+    if (chain.coin != null) assets.push({ pluginId, tokenId: null })
 
-    const chainTokens = houdiniTokens[houdiniShortName]
-    if (chainTokens == null) continue
     const { allTokens } = currencyConfig
-    const tokenIds = Object.keys(allTokens).filter(
-      tokenId =>
-        getTokenFlag(chainTokens, allTokens[tokenId].networkLocation) != null
+    const tokenIds = [...chain.tokens.keys()].filter(tokenId =>
+      Object.prototype.hasOwnProperty.call(allTokens, tokenId)
     )
     tokenIds.sort((a, b) => {
       const byName = allTokens[a].displayName.localeCompare(
@@ -517,24 +315,6 @@ export function getHoudiniAssets(opts: {
   return assets.filter(
     asset => !disableAssetsCover(destinationBans, asset.pluginId, asset.tokenId)
   )
-}
-
-/**
- * The served flag for the token at an Edge `networkLocation`, or `undefined`
- * when the chain's served tokens do not include it.
- */
-function getTokenFlag(
-  chainTokens: HoudiniTokens[string] | undefined,
-  networkLocation: unknown
-): boolean | undefined {
-  if (chainTokens == null) return undefined
-  const contractLocation = asMaybeContractLocation(networkLocation)
-  if (contractLocation == null) return undefined
-  const contractAddress = contractLocation.contractAddress.toLowerCase()
-  // The addresses are remote data, so never resolve one through the prototype:
-  return Object.prototype.hasOwnProperty.call(chainTokens, contractAddress)
-    ? chainTokens[contractAddress]
-    : undefined
 }
 
 /**
@@ -562,6 +342,8 @@ export function isValidHoudiniAddress(
 export function detectHoudiniChains(
   text: string,
   opts: {
+    /** Every chain Houdini serves. */
+    houdiniChains: HoudiniChains
     /** The sending wallet's chain. */
     sourcePluginId: string
     /**
@@ -580,11 +362,14 @@ export function detectHoudiniChains(
     isSupported: (pluginId: string) => boolean
   }
 ): HoudiniChain[] {
-  const { sourcePluginId, sourceTokenId, isSupported } = opts
+  const { houdiniChains, sourcePluginId, sourceTokenId, isSupported } = opts
   const { addressCandidates, scheme, evmChainId } = peekPaymentUri(text)
 
-  const served = HOUDINI_CHAINS.filter(
+  // A pasted address resolves to the chain's coin, so a chain Houdini serves
+  // only tokens on (Celo, Fantom) has no destination to offer for it:
+  const served = [...houdiniChains.values()].filter(
     chain =>
+      chain.coin != null &&
       (chain.pluginId !== sourcePluginId || sourceTokenId != null) &&
       isSupported(chain.pluginId)
   )
@@ -610,8 +395,8 @@ export function detectHoudiniChains(
 }
 
 /**
- * Whether a payment URI's scheme names this chain, by either the Edge plugin id
- * or the provider's own chain name (`ethereum:`, `bitcoincash:`).
+ * Whether a payment URI's scheme names this chain, by its Edge plugin id
+ * (`ethereum:`, `bitcoincash:`).
  *
  * A scheme is the one part of a scanned code that states its chain outright, so
  * it has to be checked even when a destination is already picked: chains that
@@ -621,11 +406,7 @@ export function detectHoudiniChains(
  * wrong asset.
  */
 export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
-  const schemeLower = scheme.toLowerCase()
-  return (
-    chain.pluginId === schemeLower ||
-    chain.houdiniShortName.toLowerCase() === schemeLower
-  )
+  return chain.pluginId === scheme.toLowerCase()
 }
 
 /**
@@ -656,24 +437,19 @@ export function isOwnChainAddressText(
 /**
  * The asset the recipient actually receives.
  *
- * A swap-send always pays out the destination chain's NATIVE asset, because
- * the quote asks for `toTokenId: null` and token destinations are not offered
- * at all. A plain send delivers the source asset verbatim, token included.
- * Both the "Recipient receives" row and that row's picker read this, so the
- * two cannot drift: naming the source token while the order paid out the
- * chain's own coin told a USDT sender their recipient receives USDT.
+ * A swap-send pays out the destination asset the quote asks for, coin or
+ * token. A plain send delivers the source asset verbatim. Both the "Recipient
+ * receives" row and that row's picker read this, so the row always names the
+ * asset the order pays out.
  */
 export function getRecipientAsset(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** `recipientPluginId ?? sourcePluginId`. */
-  destPluginId: string
+  source: EdgeAsset
+  /** The picked destination asset, or the source asset when none is picked. */
+  destination: EdgeAsset
   swapSendActive: boolean
 }): EdgeAsset {
-  const { destPluginId, sourcePluginId, sourceTokenId, swapSendActive } = opts
-  return swapSendActive
-    ? { pluginId: destPluginId, tokenId: null }
-    : { pluginId: sourcePluginId, tokenId: sourceTokenId }
+  const { destination, source, swapSendActive } = opts
+  return swapSendActive ? destination : source
 }
 
 /**
@@ -691,30 +467,22 @@ export type OwnNetworkBlock =
  * before it arms.
  */
 export function getOwnNetworkBlock(opts: {
-  sourceTokenId: EdgeTokenId
   /** Stealth is on and the send can be routed as a swap. */
   stealthActive: boolean
   /** The source asset's `hasSelfPrivate`. */
   selfPrivateAvailable: boolean
   /**
-   * The probed verdict for a private route from the source asset to the
-   * wallet's own network. `undefined` while no probe has answered.
+   * The probed verdict for a private route from the source asset to itself.
+   * `undefined` while no probe has answered.
    */
   privateRouteOffered: boolean | undefined
 }): OwnNetworkBlock | undefined {
-  const {
-    privateRouteOffered,
-    selfPrivateAvailable,
-    sourceTokenId,
-    stealthActive
-  } = opts
+  const { privateRouteOffered, selfPrivateAvailable, stealthActive } = opts
   if (!stealthActive) return
-  // A coin sent to its own network is a same-asset send, which only the
-  // asset's own capability flag allows. A token source pays out the chain's
-  // coin instead, an ordinary pair that the route probe answers for:
-  if (sourceTokenId == null && !selfPrivateAvailable) {
-    return 'selfPrivateUnsupported'
-  }
+  // Paying the wallet's own network pays out the source asset itself, a coin
+  // or a token alike, which is a same-asset send that only the asset's own
+  // capability flag allows:
+  if (!selfPrivateAvailable) return 'selfPrivateUnsupported'
   if (privateRouteOffered === false) return 'privateRouteUnavailable'
 }
 
@@ -723,28 +491,22 @@ export interface RecipientAssetChoice {
   /** The asset this row names, which is what the recipient would receive. */
   asset: EdgeAsset
   /**
-   * What `recipientPluginId` becomes when this row is picked. `undefined`
-   * clears the explicit destination chain, leaving the source chain.
+   * The destination asset the scene adopts when this row is picked.
+   * `undefined` clears the adopted destination, leaving the source asset.
    */
-  recipientPluginId: string | undefined
+  pickedAsset: EdgeAsset | undefined
 }
 
 /**
  * The rows of the "Recipient receives" picker, in display order.
  *
- * Each row names what the recipient gets once THAT row is picked, which is
- * not always what the scene shows now: picking the first row clears the
- * adopted destination, so without Stealth a token source falls back to a
- * plain send of the token. Labelling that row from the current swap state
- * named the chain's native coin while the pick reverted to the token.
- *
- * The first row is the source chain with no destination adopted. The rest are
- * the served destination chains. The source chain appears again only when
- * adopting it pays out something the first row does not, which is a token
- * source without Stealth: the first row is the token, and the chain's native
- * coin is a separate payout. Any other second row for the source chain quotes
- * identically to the first and differs only in whether turning Stealth off
- * degrades to a plain send, which no user can tell apart.
+ * The first row is the source asset with no destination adopted: a plain send,
+ * or a same-asset private send with Stealth on. It is always offered, since a
+ * send of the source asset needs no swap destination. The rest are
+ * `destinationAssets` in the order given, which callers build with
+ * `getHoudiniAssets`: each served chain's coin followed by that chain's
+ * tokens. The source asset is not repeated among them, because adopting it
+ * quotes the same as the first row.
  *
  * Callers must key the rows on the asset rather than on its display name. The
  * POL ERC-20 on Ethereum and the Polygon chain share both their name and their
@@ -752,28 +514,14 @@ export interface RecipientAssetChoice {
  * tap to the same row.
  */
 export function getRecipientAssetChoices(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** Whether Stealth alone makes this a swap-send, with no chain adopted. */
-  stealthActive: boolean
-  /** Served destination chains, already filtered to what the account holds. */
-  servedPluginIds: string[]
+  source: EdgeAsset
+  /** Every asset offered as a swap destination, in picker order. */
+  destinationAssets: EdgeAsset[]
 }): RecipientAssetChoice[] {
-  const { servedPluginIds, sourcePluginId, sourceTokenId, stealthActive } = opts
+  const { destinationAssets, source } = opts
   const choices: RecipientAssetChoice[] = [
-    {
-      asset: getRecipientAsset({
-        sourcePluginId,
-        sourceTokenId,
-        destPluginId: sourcePluginId,
-        swapSendActive: stealthActive
-      }),
-      recipientPluginId: undefined
-    },
-    ...servedPluginIds.map(pluginId => ({
-      asset: { pluginId, tokenId: null },
-      recipientPluginId: pluginId
-    }))
+    { asset: source, pickedAsset: undefined },
+    ...destinationAssets.map(asset => ({ asset, pickedAsset: asset }))
   ]
   const seen = new Set<string>()
   return choices.filter(choice => {
@@ -793,4 +541,248 @@ export function recipientAssetKey(asset: EdgeAsset): string {
   return asset.tokenId == null
     ? asset.pluginId
     : `${asset.pluginId}:${asset.tokenId}`
+}
+
+/**
+ * Whether picking a "Recipient receives" row keeps the entered recipient. An
+ * asset on the destination chain already selected is paid at the same address,
+ * so the address and its tag stay; an asset on another chain makes both
+ * unusable.
+ */
+export function pickKeepsRecipient(opts: {
+  source: EdgeAsset
+  /** The destination asset before the pick. */
+  destination: EdgeAsset
+  /** The picked row's destination, or `undefined` for the source asset. */
+  picked: EdgeAsset | undefined
+}): boolean {
+  const { destination, picked, source } = opts
+  return (picked ?? source).pluginId === destination.pluginId
+}
+
+/**
+ * Which way a memo moves when the send changes mode. A plain send reads its
+ * memo from the memo rows and a swap-send reads its tag from the tag row
+ * alone. Only one of the two shows at a time, so a value left on the hidden
+ * side is dropped from the send.
+ *
+ * - `toTag`: entering a swap-send to a memo-required destination with the tag
+ *   row empty and a plain memo already held, scanned or typed.
+ * - `toPlainMemo`: leaving a swap-send with a tag entered, on a source chain
+ *   that takes a memo. The tag is the newer entry, so it replaces the plain
+ *   memo.
+ * - `none`: the mode did not change, or there is nothing to move.
+ */
+export function getMemoCarry(opts: {
+  swapBefore: boolean
+  swapAfter: boolean
+  tag: string | undefined
+  plainMemo: string | undefined
+  /** Whether the swap destination requires a memo (`memoNeeded`). */
+  tagNeeded: boolean
+  /** Whether the source chain has a memo option to hold the tag. */
+  plainMemoSupported: boolean
+}): 'toTag' | 'toPlainMemo' | 'none' {
+  const { plainMemo, plainMemoSupported, swapAfter, swapBefore, tag } = opts
+  const hasTag = tag != null && tag !== ''
+  const hasPlainMemo = plainMemo != null && plainMemo !== ''
+  if (!swapBefore && swapAfter) {
+    return opts.tagNeeded && !hasTag && hasPlainMemo ? 'toTag' : 'none'
+  }
+  if (swapBefore && !swapAfter) {
+    return plainMemoSupported && hasTag ? 'toPlainMemo' : 'none'
+  }
+  return 'none'
+}
+
+/**
+ * What a source-wallet switch clears.
+ *
+ * - `none`: the same wallet and asset were picked again.
+ * - `destination`: a different wallet holding the same asset, with the
+ *   recipient entered for that asset. The picked destination asset and the
+ *   quote go, since a held order names the old wallet's refund address, but
+ *   the address is still payable.
+ * - `destinationAndRecipient`: a different source asset, or a recipient that
+ *   was entered for another asset (a swap-send destination or a token payout).
+ *   The address goes with the destination asset, or the scene would fall back
+ *   to a plain send still showing an address for an asset it no longer sends.
+ */
+export function getWalletSwitchReset(opts: {
+  walletChanged: boolean
+  assetChanged: boolean
+  /** Whether the destination asset was the source asset before the switch. */
+  sameAsset: boolean
+}): 'none' | 'destination' | 'destinationAndRecipient' {
+  const { assetChanged, sameAsset, walletChanged } = opts
+  if (!walletChanged && !assetChanged) return 'none'
+  return assetChanged || !sameAsset ? 'destinationAndRecipient' : 'destination'
+}
+
+/**
+ * The memo move a source-wallet switch makes. Every switch that resets
+ * anything disarms Stealth and drops the picked destination, so it leaves any
+ * swap-send for a plain send. A `destination` reset keeps the address, so a
+ * typed tag moves to the plain memo, as `getMemoCarry` moves it when Stealth
+ * is turned off. A `destinationAndRecipient` reset clears the memos along with
+ * the address, so there is nothing to keep.
+ */
+export function getWalletSwitchMemoCarry(opts: {
+  reset: 'none' | 'destination' | 'destinationAndRecipient'
+  /** Whether the send was a swap-send before the switch. */
+  swapBefore: boolean
+  tag: string | undefined
+  plainMemo: string | undefined
+  /** Whether the source chain has a memo option to hold the tag. */
+  plainMemoSupported: boolean
+}): 'toPlainMemo' | 'none' {
+  const { plainMemo, plainMemoSupported, reset, swapBefore, tag } = opts
+  if (reset !== 'destination') return 'none'
+  const carry = getMemoCarry({
+    swapBefore,
+    swapAfter: false,
+    tag,
+    plainMemo,
+    tagNeeded: false,
+    plainMemoSupported
+  })
+  return carry === 'toPlainMemo' ? 'toPlainMemo' : 'none'
+}
+
+/**
+ * What a "Myself" pick does.
+ *
+ * - `adopt`: another asset becomes the swap destination, with the picked
+ *   wallet's address.
+ * - `plainSend`: the source asset with no other destination picked. The
+ *   address tile enters the address as a plain send.
+ * - `endSwapSend`: the source asset while a cross-asset destination is
+ *   picked. The scene clears that destination and enters the address itself,
+ *   parsed by the sending wallet, since the tile's handlers still belong to
+ *   the render that showed the old destination and would route the address
+ *   as a swap on that chain.
+ */
+export function getSelfTransferPick(opts: {
+  source: EdgeAsset
+  picked: EdgeAsset
+  /** Whether the destination is the source asset before the pick. */
+  sameAsset: boolean
+}): 'adopt' | 'plainSend' | 'endSwapSend' {
+  const { picked, sameAsset, source } = opts
+  if (picked.pluginId !== source.pluginId || picked.tokenId !== source.tokenId)
+    return 'adopt'
+  return sameAsset ? 'plainSend' : 'endSwapSend'
+}
+
+/**
+ * Whether an entered address prices the receive side, which a cross-asset
+ * send does: a payment code's amount is what the recipient should get.
+ *
+ * A destination detected from the address makes the send cross-asset even
+ * though the render-time state has not caught up. `destinationCleared` is the
+ * reverse: the caller just cleared the picked destination, so the send is
+ * same-asset although the render-time state still shows a cross-asset
+ * swap-send.
+ */
+export function isReceiveSideGuaranteed(opts: {
+  detectedDestPluginId: string | undefined
+  destinationCleared: boolean
+  swapSendActive: boolean
+  sameAsset: boolean
+}): boolean {
+  const {
+    destinationCleared,
+    detectedDestPluginId,
+    sameAsset,
+    swapSendActive
+  } = opts
+  return (
+    detectedDestPluginId != null ||
+    (!destinationCleared && swapSendActive && !sameAsset)
+  )
+}
+
+/**
+ * A parsed address with the amount the user already entered, for an address
+ * re-entered when a destination is cleared or a new one is adopted. A bare
+ * address carries no amount, and the entered one is in the source asset's
+ * units on both sides of the switch, so it stays. An amount the address does
+ * carry wins. A parse that names the source asset by `tokenId` places the
+ * kept amount on the send side (see `getUriAmountSide`).
+ */
+export function keepEnteredAmount(
+  parsedUri: EdgeParsedUri,
+  enteredNativeAmount: string | undefined
+): EdgeParsedUri {
+  return {
+    ...parsedUri,
+    nativeAmount: parsedUri.nativeAmount ?? enteredNativeAmount
+  }
+}
+
+/**
+ * The swap request for a swap-send: the source asset paid out as the
+ * destination asset at the recipient's address. The quote and its error
+ * message both build their request here, so the two name the same pair.
+ */
+export function makeSwapSendRequest(opts: {
+  fromWallet: EdgeCurrencyWallet
+  fromTokenId: EdgeTokenId
+  destination: EdgeAsset
+  toAddress: string
+  /**
+   * Every address of the user's own wallet when it was picked as the
+   * recipient, so the provider can pay out to the address type it supports.
+   */
+  walletAddresses?: EdgeAddress[]
+  toMemos?: EdgeMemo[]
+  nativeAmount: string
+  /** The side the entered amount fixes. */
+  guaranteedSide: 'send' | 'receive'
+  /** Whether the route must be private, as a Stealth send requires. */
+  stealth?: boolean
+}): EdgeSwapSendRequest {
+  const {
+    destination,
+    fromTokenId,
+    fromWallet,
+    guaranteedSide,
+    nativeAmount,
+    stealth = false,
+    toAddress,
+    toMemos,
+    walletAddresses
+  } = opts
+  return {
+    fromWallet,
+    fromTokenId,
+    toTokenId: destination.tokenId,
+    toPluginId: destination.pluginId,
+    toAddresses: makeSwapToAddresses(toAddress, walletAddresses),
+    toMemos,
+    nativeAmount,
+    quoteFor: guaranteedSide === 'send' ? 'from' : 'to',
+    privacy: stealth ? 'required' : undefined
+  }
+}
+
+/**
+ * The destination addresses for a swap-to-address quote. The payout address
+ * comes first. When the recipient is one of the user's own wallets, its other
+ * addresses follow, so the provider can pick the address type it supports.
+ */
+function makeSwapToAddresses(
+  toAddress: string,
+  walletAddresses: EdgeAddress[] | undefined
+): EdgeAddress[] {
+  const payoutAddress = walletAddresses?.find(
+    address => address.publicAddress === toAddress
+  )
+  if (walletAddresses == null || payoutAddress == null) {
+    return [{ addressType: 'publicAddress', publicAddress: toAddress }]
+  }
+  return [
+    payoutAddress,
+    ...walletAddresses.filter(address => address !== payoutAddress)
+  ]
 }

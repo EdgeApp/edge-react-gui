@@ -35,7 +35,7 @@ import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
-import type * as HoudiniChains from '../../util/houdiniChains'
+import { asHoudiniChains, type HoudiniChains } from '../../util/houdiniChains'
 
 jest.useRealTimers()
 
@@ -50,25 +50,31 @@ jest.mock('../../actions/SettingsActions', () => ({
   }
 }))
 
+const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+
 /**
- * Chains whose `getHoudiniChain` entry reports no private route to itself, so
- * a test can make a wallet ineligible for a same-asset Stealth Send.
+ * Houdini's served list, without which the scene offers no "Recipient
+ * receives" row and no Stealth toggle. Each chain named in `noSelfPrivate`
+ * reports no private route from its coin to itself, so a test can make a
+ * wallet ineligible for a same-asset Stealth Send.
  */
-const mockNoSelfPrivate = new Set<string>()
-jest.mock('../../util/houdiniChains', () => {
-  const actual = jest.requireActual<typeof HoudiniChains>(
-    '../../util/houdiniChains'
-  )
-  return {
-    ...actual,
-    getHoudiniChain: (...args: Parameters<typeof actual.getHoudiniChain>) => {
-      const chain = actual.getHoudiniChain(...args)
-      return chain != null && mockNoSelfPrivate.has(chain.pluginId)
-        ? { ...chain, hasSelfPrivate: false }
-        : chain
+const makeHoudiniChains = (noSelfPrivate: string[] = []): HoudiniChains =>
+  asHoudiniChains({
+    bitcoin: {
+      memoNeeded: false,
+      addressValidation:
+        '^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39}|bc1[a-z0-9]{59})$',
+      coin: { hasSelfPrivate: !noSelfPrivate.includes('bitcoin') },
+      tokens: {}
+    },
+    ethereum: {
+      memoNeeded: false,
+      addressValidation: '^(0x)[0-9A-Za-z]{40}$',
+      coin: { hasSelfPrivate: !noSelfPrivate.includes('ethereum') },
+      tokens: { [USDT_TOKEN_ID]: { hasSelfPrivate: true } }
     }
-  }
-})
+  })
+const houdiniChains = makeHoudiniChains()
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
@@ -145,7 +151,11 @@ describe('SendScene2', () => {
   it('Render SendScene', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -165,7 +175,11 @@ describe('SendScene2', () => {
   it('1 spendTarget', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -191,7 +205,11 @@ describe('SendScene2', () => {
   it('1 spendTarget with info tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -221,7 +239,11 @@ describe('SendScene2', () => {
   it('2 spendTargets', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -249,7 +271,11 @@ describe('SendScene2', () => {
   it('2 spendTargets hide tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const params: SendScene2Params = {
       hiddenFeaturesMap: { address: true },
@@ -295,7 +321,11 @@ describe('SendScene2', () => {
   it('2 spendTargets lock tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
     const params: SendScene2Params = {
       lockTilesMap: { address: true },
       walletId: btcWallet.id,
@@ -345,6 +375,7 @@ describe('SendScene2', () => {
       core: { account },
       ui: {
         ...fakeRootState.ui,
+        houdiniChains,
         settings: {
           ...fakeRootState.ui?.settings,
           denominationSettings: {
@@ -383,7 +414,11 @@ describe('SendScene2', () => {
   it('hides the Stealth Send card and Recipient receives row with 2 spendTargets', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
     // No pre-filled address, so the scene is eligible for Stealth Send:
     const params: SendScene2Params = {
       walletId: btcWallet.id,
@@ -418,7 +453,11 @@ describe('SendScene2', () => {
   it('arms Stealth Send from the stealth param', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -441,7 +480,11 @@ describe('SendScene2', () => {
   it('leaves Stealth Send off when the stealth param is absent', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -464,7 +507,11 @@ describe('SendScene2', () => {
   it('arms nothing from the stealth param on an address-prefilled send', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     // The toggle is not offered for a send that arrives with an address:
     const rendered = render(
@@ -540,15 +587,22 @@ describe('SendScene2', () => {
 describe('SendScene2 saved Stealth Send choice', () => {
   beforeEach(() => {
     mockSetStealthSendEnabled.mockReset()
-    mockNoSelfPrivate.clear()
   })
 
-  /** A root state whose account saved `stealthSendEnabled`. */
-  const savedState = (stealthSendEnabled: boolean): FakeState => ({
+  /**
+   * A root state whose account saved `stealthSendEnabled`, with the served
+   * list reporting no private route to itself for each coin in
+   * `noSelfPrivate`.
+   */
+  const savedState = (
+    stealthSendEnabled: boolean,
+    noSelfPrivate: string[] = []
+  ): FakeState => ({
     ...fakeRootState,
     core: { account },
     ui: {
       ...fakeRootState.ui,
+      houdiniChains: makeHoudiniChains(noSelfPrivate),
       settings: { ...fakeRootState.ui?.settings, stealthSendEnabled }
     }
   })
@@ -579,6 +633,36 @@ describe('SendScene2 saved Stealth Send choice', () => {
       rendered.getByText(lstrings.stealth_send_info, { exact: false })
     ).toBeTruthy()
     // Seeding is not a tap, so it saves nothing:
+    expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+    rendered.unmount()
+  })
+
+  it('arms Stealth Send from the saved choice once the served list lands', () => {
+    if (btcWallet == null) return
+
+    const props = fakeEdgeAppSceneProps('send2', {
+      walletId: btcWallet.id,
+      tokenId: null,
+      doCheckAndShowGetCryptoModal: false
+    })
+    const scene = (state: FakeState): React.JSX.Element => (
+      <FakeProviders initialState={state}>
+        <SendScene2 {...props} />
+      </FakeProviders>
+    )
+    const loaded = savedState(true)
+
+    // Before the rollup the scene offers no toggle, so the mount seed arms
+    // nothing:
+    const rendered = render(
+      scene({ ...loaded, ui: { ...loaded.ui, houdiniChains: new Map() } })
+    )
+    expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
+
+    rendered.rerender(scene(loaded))
+    expect(
+      rendered.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
     expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
     rendered.unmount()
   })
@@ -685,8 +769,6 @@ describe('SendScene2 saved Stealth Send choice', () => {
     rendered.unmount()
   })
   describe('on a wallet that cannot go private', () => {
-    const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
-
     /** The reason a refused tap toasts. A plain send shows no inline line. */
     const reasonFor = (currencyCode: string): string =>
       sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
@@ -696,10 +778,9 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     it('opens off without a reason line, a toast or a save', () => {
       if (btcWallet == null) return
-      mockNoSelfPrivate.add('bitcoin')
       const showSpy = jest.spyOn(Airship, 'show')
 
-      const rendered = renderSend(savedState(true))
+      const rendered = renderSend(savedState(true, ['bitcoin']))
 
       expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
       expect(infoShown(rendered)).toBe(false)
@@ -714,10 +795,9 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     it('toasts a refused tap and saves nothing', () => {
       if (btcWallet == null) return
-      mockNoSelfPrivate.add('bitcoin')
       const showSpy = jest.spyOn(Airship, 'show').mockResolvedValue(undefined)
 
-      const rendered = renderSend(savedState(false))
+      const rendered = renderSend(savedState(false, ['bitcoin']))
       fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
 
       expect(showSpy).toHaveBeenCalledTimes(1)
@@ -729,9 +809,8 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     it('arms from the saved choice on the next wallet that can', async () => {
       if (btcWallet == null || ethWallet == null) return
-      mockNoSelfPrivate.add('bitcoin')
 
-      const rendered = renderSend(savedState(true))
+      const rendered = renderSend(savedState(true, ['bitcoin']))
       expect(infoShown(rendered)).toBe(false)
       await switchWallet(rendered, ethWallet.id)
 
@@ -743,9 +822,10 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     it('arms from the stealth param on the next wallet that can', async () => {
       if (btcWallet == null || ethWallet == null) return
-      mockNoSelfPrivate.add('bitcoin')
 
-      const rendered = renderSend(savedState(false), { stealth: true })
+      const rendered = renderSend(savedState(false, ['bitcoin']), {
+        stealth: true
+      })
       expect(infoShown(rendered)).toBe(false)
       expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
       await switchWallet(rendered, ethWallet.id)
@@ -757,11 +837,11 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     it('re-seeds on a token switch within one wallet', async () => {
       if (ethWallet == null) return
-      // ETH to itself is refused, while a token source swaps to the chain's
-      // coin and can go private:
-      mockNoSelfPrivate.add('ethereum')
-
-      const rendered = renderSend(savedState(true), { walletId: ethWallet.id })
+      // ETH to itself is refused, while USDT has its own private route to
+      // itself:
+      const rendered = renderSend(savedState(true, ['ethereum']), {
+        walletId: ethWallet.id
+      })
       expect(infoShown(rendered)).toBe(false)
       expect(rendered.queryByText(reasonFor('ETH'))).toBeNull()
       await switchWallet(rendered, ethWallet.id, USDT_TOKEN_ID)

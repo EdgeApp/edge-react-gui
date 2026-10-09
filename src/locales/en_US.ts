@@ -1704,6 +1704,7 @@ const strings = {
   stealth_you_send: 'You send',
   stealth_recipient_gets: 'Recipient gets',
   stealth_recipient_receives: 'Recipient receives',
+  stealth_recipient_network_1s: '%1$s Network',
   stealth_guaranteed: 'Guaranteed',
   stealth_estimated: 'Estimated',
   stealth_slide_send: 'Slide to send stealthily',
