@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import {
   readSyncedSettings,
-  writeSyncedSettings
+  updateSyncedSettings
 } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -354,10 +354,12 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
       for (const migration of migrationPromises) {
         await migration()
       }
-      await writeSyncedSettings(account, {
-        ...settings,
+      // Only the field this scene changed, onto a fresh strict read: the
+      // read above is lenient and minutes old by now.
+      await updateSyncedSettings(account, latest => ({
+        ...latest,
         securityCheckedWallets
-      })
+      }))
 
       setDone(true)
       return () => {}

@@ -35,6 +35,12 @@ import {
   asMostRecentWallet,
   type MostRecentWallet
 } from '../types/types'
+import { errorMessage } from '../util/errorMessage'
+import { reportWarning } from '../util/reportWarning'
+import {
+  readSyncedSettingsObjectOrThrow,
+  SYNCED_SETTINGS_FILENAME
+} from '../util/syncedSettingsFile'
 import { DECIMAL_PRECISION } from '../util/utils'
 import { validatePassword } from './AccountActions'
 import { updateExchangeRates } from './ExchangeRateActions'
@@ -266,13 +272,19 @@ export function showUnlockSettingsModal(): ThunkAction<
 export const toggleUserPausedWallet =
   (account: EdgeAccount, walletId: string): ThunkAction<Promise<void>> =>
   async dispatch => {
-    const settings = await readSyncedSettings(account)
-    const { userPausedWallets } = settings
-
-    const isPaused = userPausedWallets.includes(walletId)
-    const newPausedWallets = isPaused
-      ? [...userPausedWallets.filter(id => id !== walletId)]
-      : [...userPausedWallets, walletId]
+    let isPaused = false
+    const { userPausedWallets } = await updateSyncedSettings(
+      account,
+      settings => {
+        isPaused = settings.userPausedWallets.includes(walletId)
+        return {
+          ...settings,
+          userPausedWallets: isPaused
+            ? settings.userPausedWallets.filter(id => id !== walletId)
+            : [...settings.userPausedWallets, walletId]
+        }
+      }
+    )
 
     showToast(
       isPaused ? lstrings.unpause_wallet_toast : lstrings.pause_wallet_toast
@@ -280,12 +292,7 @@ export const toggleUserPausedWallet =
 
     dispatch({
       type: 'UI/SETTINGS/SET_USER_PAUSED_WALLETS',
-      data: { userPausedWallets: newPausedWallets }
-    })
-
-    await writeSyncedSettings(account, {
-      ...settings,
-      userPausedWallets: [...newPausedWallets]
+      data: { userPausedWallets: [...userPausedWallets] }
     })
   }
 
@@ -295,13 +302,10 @@ export const setRampFiatCurrencyCode =
     rampLastFiatCurrencyCode: string
   ): ThunkAction<Promise<void>> =>
   async dispatch => {
-    const settings = await readSyncedSettings(account)
-    const updatedSettings: SyncedAccountSettings = {
+    await updateSyncedSettings(account, settings => ({
       ...settings,
       rampLastFiatCurrencyCode
-    }
-
-    await writeSyncedSettings(account, updatedSettings)
+    }))
     dispatch(updateOneSetting({ rampLastFiatCurrencyCode }))
   }
 
@@ -311,13 +315,10 @@ export const setRampCryptoSelection =
     rampLastCryptoSelection: RampLastCryptoSelection | undefined
   ): ThunkAction<Promise<void>> =>
   async dispatch => {
-    const settings = await readSyncedSettings(account)
-    const updatedSettings: SyncedAccountSettings = {
+    await updateSyncedSettings(account, settings => ({
       ...settings,
       rampLastCryptoSelection
-    }
-
-    await writeSyncedSettings(account, updatedSettings)
+    }))
     dispatch(updateOneSetting({ rampLastCryptoSelection }))
   }
 
@@ -398,94 +399,152 @@ export type SyncedAccountSettings = ReturnType<typeof asSyncedAccountSettings>
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
 
-const SYNCED_SETTINGS_FILENAME = 'Settings.json'
+/**
+ * Whether Redux's copy of the synced settings is the user's own.
+ *
+ * `state.ui.settings.defaultIsoFiat` and `.denominationSettings` are filled
+ * once, at `initializeAccount`, by the lenient reader, and nothing refreshes
+ * them afterwards — so a `Settings.json` that was present and unreadable at
+ * login puts `'iso:USD'` and `{}` there for the whole session, and the export
+ * derivation cannot tell that from an account that has chosen nothing. A
+ * BTC wallet the user set to `bits` then exports `0.0005` and
+ * `DENOMINATION=BTC` instead of `50000` and `bits`, with every row priced
+ * and labelled `iso:USD`, while `edge-cli get-transactions --export-format`
+ * on the same wallet refuses, because the engine reads the file strictly.
+ *
+ * So this records the outcome of *that* read and nothing else. It used to
+ * follow whichever lenient read ran last anywhere in the app, which
+ * described the file rather than Redux: a gift-card list opening after the
+ * sync caught up flipped it to trusted while Redux still held the defaults,
+ * and one failed read after a good login blocked every export while Redux
+ * was correct. Reset on logout, because the next account's login sets it.
+ */
+let loginSyncedSettingsTrusted = true
+
+/** Called on logout, so one account's login read is not another's. */
+export const resetSyncedSettingsTrust = (): void => {
+  loginSyncedSettingsTrusted = true
+}
+
+export const syncedSettingsAreTrusted = (): boolean =>
+  loginSyncedSettingsTrusted
+
+/**
+ * The login's read: the lenient answer, with whether it can be trusted
+ * recorded for `syncedSettingsAreTrusted`.
+ */
+export async function readSyncedSettingsForLogin(
+  account: EdgeAccount
+): Promise<SyncedAccountSettings> {
+  try {
+    const settings = await readSyncedSettingsStrict(account)
+    loginSyncedSettingsTrusted = true
+    return settings
+  } catch (error: unknown) {
+    loginSyncedSettingsTrusted = false
+    reportReadFailure(error)
+    return SYNCED_ACCOUNT_DEFAULTS
+  }
+}
+
+/**
+ * The synced settings, failing for a file that is there and unreadable.
+ *
+ * What counts as unreadable is `syncedSettingsFile`'s decision, shared with
+ * the engine; this applies the GUI's full cleaner on top.
+ */
+async function readSyncedSettingsStrict(
+  account: EdgeAccount
+): Promise<SyncedAccountSettings> {
+  if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
+  return asSyncedAccountSettings(await readSyncedSettingsObjectOrThrow(account))
+}
+
+function reportReadFailure(error: unknown): void {
+  reportWarning(
+    `Could not read synced ${SYNCED_SETTINGS_FILENAME}, using defaults: ${errorMessage(
+      error
+    )}`
+  )
+}
 
 // Account Settings
 const writeAutoLogoutTimeInSeconds = async (
   account: EdgeAccount,
   autoLogoutTimeInSeconds: number
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, autoLogoutTimeInSeconds }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    autoLogoutTimeInSeconds
+  }))
 }
 
 const writeDefaultFiatSetting = async (
   account: EdgeAccount,
   defaultFiat: string
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = {
-      ...settings,
-      defaultFiat,
-      defaultIsoFiat: `iso:${defaultFiat}`
-    }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    defaultFiat,
+    defaultIsoFiat: `iso:${defaultFiat}`
+  }))
 }
 
 const writePreferredSwapPluginId = async (
   account: EdgeAccount,
   pluginId: string | undefined
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = {
-      ...settings,
-      preferredSwapPluginId: pluginId ?? '',
-      preferredSwapPluginType: undefined
-    }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    preferredSwapPluginId: pluginId ?? '',
+    preferredSwapPluginType: undefined
+  }))
 }
 
 const writePreferredSwapPluginType = async (
   account: EdgeAccount,
   swapPluginType: EdgeSwapPluginType | undefined
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = {
-      ...settings,
-      preferredSwapPluginType: swapPluginType,
-      preferredSwapPluginId: ''
-    }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    preferredSwapPluginType: swapPluginType,
+    preferredSwapPluginId: ''
+  }))
 }
 
 export const writeMostRecentWalletsSelected = async (
   account: EdgeAccount,
   mostRecentWallets: MostRecentWallet[]
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, mostRecentWallets }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    mostRecentWallets
+  }))
 }
 
 export const writeWalletsSort = async (
   account: EdgeAccount,
   walletsSort: SortOption
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, walletsSort }
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings => ({
+    ...settings,
+    walletsSort
+  }))
 }
 
 export async function writePasswordRecoveryReminders(
   account: EdgeAccount,
   levels: PasswordReminderTime[]
 ): Promise<void> {
-  const settings = await readSyncedSettings(account)
-  const passwordRecoveryRemindersShown = {
-    ...settings.passwordRecoveryRemindersShown
-  }
-  for (const level of levels) {
-    passwordRecoveryRemindersShown[level] = true
-  }
-  const updatedSettings = { ...settings, passwordRecoveryRemindersShown }
-  await writeSyncedSettings(account, updatedSettings)
+  await updateSyncedSettings(account, settings => {
+    const passwordRecoveryRemindersShown = {
+      ...settings.passwordRecoveryRemindersShown
+    }
+    for (const level of levels) {
+      passwordRecoveryRemindersShown[level] = true
+    }
+    return { ...settings, passwordRecoveryRemindersShown }
+  })
 }
 
 // Currency Settings
@@ -495,40 +554,63 @@ const writeDenominationKeySetting = async (
   currencyCode: string,
   denomination: EdgeDenomination
 ): Promise<void> => {
-  await readSyncedSettings(account).then(async settings => {
-    const updatedSettings = updateCurrencySettings(
-      settings,
-      pluginId,
-      currencyCode,
-      denomination
-    )
-    await writeSyncedSettings(account, updatedSettings)
-  })
+  await updateSyncedSettings(account, settings =>
+    updateCurrencySettings(settings, pluginId, currencyCode, denomination)
+  )
 }
 
 // Helper Functions
+/**
+ * The lenient door: defaults for anything that could not be read.
+ *
+ * Right for a read-only caller — a `Settings.json` that is present and
+ * unreadable must not stop a scene from rendering. Never the base of a
+ * write: `updateSyncedSettings` reads for itself.
+ */
 export async function readSyncedSettings(
   account: EdgeAccount
 ): Promise<SyncedAccountSettings> {
   try {
-    if (account?.disklet?.getText == null) return SYNCED_ACCOUNT_DEFAULTS
-    const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
-    const settingsFromFile = JSON.parse(text)
-    return asSyncedAccountSettings(settingsFromFile)
+    return await readSyncedSettingsStrict(account)
   } catch (error: unknown) {
-    // If Settings.json doesn't exist yet, return defaults without writing.
-    // Defaults can be derived from cleaners. Only write when values change.
+    reportReadFailure(error)
     return SYNCED_ACCOUNT_DEFAULTS
   }
 }
 
-export async function writeSyncedSettings(
+/**
+ * Change the synced settings, starting from what the file really holds.
+ *
+ * The one write door, and it takes the change rather than a finished
+ * object. Every writer used to read leniently, spread its one field over
+ * the result and hand the whole object back — so a read that failed
+ * produced `SYNCED_ACCOUNT_DEFAULTS`, and the write put `defaultIsoFiat`,
+ * `denominationSettings`, `walletsSort`, `mostRecentWallets` and the rest
+ * back to their defaults on the synced repo, for every device.
+ * `migrateDenominationSettings` did it at every login with no user action,
+ * and set the flag that stops a later login retrying. Guarding the write
+ * with a trust flag did not close it: a re-read that succeeded proved the
+ * file readable and then wrote the stale, defaults-based object anyway.
+ *
+ * Here the base is a strict read made for this write and nothing else, so
+ * the change always lands on the real file. A file that cannot be read
+ * stops the write and the caller's error path reports it. There is no
+ * quarantine door, unlike the local copy: this file lives on the synced
+ * repo, so moving it aside would propagate the removal to every device, and
+ * a sync that has not finished may still bring a good copy.
+ */
+export async function updateSyncedSettings(
   account: EdgeAccount,
-  settings: SyncedAccountSettings
-): Promise<void> {
-  const text = JSON.stringify(settings)
-  if (account?.disklet?.setText == null) return
-  await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
+  update: (settings: SyncedAccountSettings) => SyncedAccountSettings
+): Promise<SyncedAccountSettings> {
+  const prev = await readSyncedSettingsStrict(account)
+  const next = update(prev)
+  // An update that changes nothing hands back the same object, and nothing
+  // is written: a sync round trip for no change is the cost a once-per-login
+  // migration would otherwise pay every login.
+  if (next === prev || account?.disklet?.setText == null) return next
+  await account.disklet.setText(SYNCED_SETTINGS_FILENAME, JSON.stringify(next))
+  return next
 }
 
 const updateCurrencySettings = (
@@ -554,23 +636,47 @@ const updateCurrencySettings = (
  * Only runs once per account - tracked via denominationSettingsOptimized flag.
  */
 export async function migrateDenominationSettings(
+  account: EdgeAccount
+): Promise<void> {
+  // Through the strict write door, rather than on the object the login's
+  // lenient read produced. Taking that object meant a `Settings.json` that
+  // was merely unreadable arrived here as `SYNCED_ACCOUNT_DEFAULTS`, which
+  // takes the "nothing to clean, just set the flag" branch below and writes
+  // the whole file out as defaults — and sets the flag, so no later login
+  // retries. The throw reaches the `.catch` the caller already has.
+  let needsCleanup = false
+  await updateSyncedSettings(account, syncedSettings => {
+    const result = optimizeDenominationSettings(account, syncedSettings)
+    needsCleanup = result.needsCleanup
+    return result.settings
+  })
+
+  if (needsCleanup) {
+    console.log('Denomination settings cleaned up - removed default values')
+  }
+}
+
+/** The migration's decision, given the file it applies to. */
+function optimizeDenominationSettings(
   account: EdgeAccount,
   syncedSettings: SyncedAccountSettings
-): Promise<void> {
+): { settings: SyncedAccountSettings; needsCleanup: boolean } {
   const { denominationSettings, denominationSettingsOptimized } = syncedSettings
 
-  // Already migrated or no settings to clean
-  if (denominationSettingsOptimized) return
+  // Already migrated: the same object, which `updateSyncedSettings` does not
+  // write back.
+  if (denominationSettingsOptimized) {
+    return { settings: syncedSettings, needsCleanup: false }
+  }
   if (
     denominationSettings == null ||
     Object.keys(denominationSettings).length === 0
   ) {
     // No denomination settings to clean, just set the flag
-    await writeSyncedSettings(account, {
-      ...syncedSettings,
-      denominationSettingsOptimized: true
-    })
-    return
+    return {
+      settings: { ...syncedSettings, denominationSettingsOptimized: true },
+      needsCleanup: false
+    }
   }
 
   // Clean up denomination settings by removing entries that match defaults
@@ -626,14 +732,13 @@ export async function migrateDenominationSettings(
     }
   }
 
-  // Write cleaned settings with optimization flag
-  await writeSyncedSettings(account, {
-    ...syncedSettings,
-    denominationSettings: cleanedSettings,
-    denominationSettingsOptimized: true
-  })
-
-  if (needsCleanup) {
-    console.log('Denomination settings cleaned up - removed default values')
+  // Cleaned settings with the optimization flag
+  return {
+    settings: {
+      ...syncedSettings,
+      denominationSettings: cleanedSettings,
+      denominationSettingsOptimized: true
+    },
+    needsCleanup
   }
 }

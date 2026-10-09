@@ -14,8 +14,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   readSyncedSettings,
-  writeMostRecentWalletsSelected,
-  writeSyncedSettings
+  updateSyncedSettings,
+  writeMostRecentWalletsSelected
 } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import {
@@ -476,6 +476,10 @@ export function checkCompromisedKeys(
       }
     }
 
-    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
+    // Only the field this check changed, onto a fresh strict read.
+    await updateSyncedSettings(account, latest => ({
+      ...latest,
+      securityCheckedWallets
+    }))
   }
 }

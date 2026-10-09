@@ -689,6 +689,8 @@ const strings = {
     'New accounts will have wallets for: %s',
   settings_promotion_account_normal: 'This account was created normally.',
   settings_promotion_account_installer: 'This account was created via %s.',
+  settings_not_saved_unreadable_file:
+    'Your settings could not be saved, because this device’s settings storage could not be read or written. The values shown are the defaults rather than yours.',
   settings_notifications: 'Notifications',
   settings_currency_notifications_percent_change_hour:
     '%1$s%% change within 1 hour',
