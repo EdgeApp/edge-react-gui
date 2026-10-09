@@ -843,6 +843,24 @@ function main(): void {
       'expected no amount total'
     )
 
+    // Fiat settings, and the amounts they govern.
+    const settings = ok('get-transaction-settings', 'get-transaction-settings')
+    check(
+      'fiat is unset until chosen',
+      !/"defaultIsoFiat":\s*"/.test(settings.out),
+      'expected no currency yet'
+    )
+    ok('set-default-fiat', 'set-default-fiat', '--default-iso-fiat=iso:USD')
+    const after = ok(
+      'get-transaction-settings after',
+      'get-transaction-settings'
+    )
+    check(
+      'fiat is remembered',
+      /"defaultIsoFiat":\s*"iso:USD"/.test(after.out),
+      'expected iso:USD'
+    )
+
     ok('query-transactions', 'query-transactions', '--limit=5')
     ok(
       'query-transactions filtered',
