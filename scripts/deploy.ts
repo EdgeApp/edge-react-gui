@@ -3,6 +3,7 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
+import { errorMessage } from '../src/cli/engine/errors'
 import { deepMerge } from '../src/configKeysMerge'
 import { deleteOldDirsSync } from './cleanDirectories'
 
@@ -896,7 +897,7 @@ function callRedacted(cmdstring: string, secrets: string[]): void {
   try {
     execCommand(cmdstring)
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
+    const message = errorMessage(error)
     throw new Error(redact(message))
   }
 }

@@ -9,6 +9,7 @@
 - fixed: `splitCategory` keeps an unrecognised category prefix as part of the subcategory rather than discarding it, so opening and saving such a transaction no longer writes the prefix away.
 - fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
 - fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
+- added: Every secret the CLI takes also reads from its own environment variable — `EDGE_CLI_PASSWORD`, `EDGE_CLI_PIN`, `EDGE_CLI_LOGIN_KEY`, `EDGE_CLI_DATA_KEY` and the rest — because `ps` shows a command line to every user on the host. `check-password-rules`, `admin-repo-list` and `admin-repo-get` take their secret in a POST body rather than a query string.
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)
