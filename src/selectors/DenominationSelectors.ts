@@ -5,48 +5,27 @@ import type {
 } from 'edge-core-js'
 
 import type { RootState } from '../types/reduxTypes'
+import { getDisplayDenom } from '../util/exchangeDenom'
 
-export const emptyEdgeDenomination: EdgeDenomination = Object.freeze({
-  name: '',
-  multiplier: '1',
-  symbol: ''
-})
+// `getExchangeDenom` only: `emptyEdgeDenomination` had no importer here,
+// and its own module is where the two tests that use it read it from.
+export { getExchangeDenom } from '../util/exchangeDenom'
 
+/**
+ * The units an asset is shown in, from Redux.
+ *
+ * The derivation itself is `getDisplayDenom` in `util/exchangeDenom`, which
+ * the CLI engine calls with the same `denominationSettings` read out of the
+ * synced `Settings.json` — so the GUI's rows, the GUI's export and the
+ * CLI's export divide by the same multiplier.
+ */
 export const selectDisplayDenom = (
   state: RootState,
   currencyConfig: EdgeCurrencyConfig,
   tokenId: EdgeTokenId
-): EdgeDenomination => {
-  const exchangeDenomination = getExchangeDenom(currencyConfig, tokenId)
-
-  let { currencyCode } = currencyConfig.currencyInfo
-  if (tokenId != null) {
-    const token = currencyConfig.allTokens[tokenId]
-    if (token == null) return exchangeDenomination
-    currencyCode = token.currencyCode
-  }
-
-  const { pluginId } = currencyConfig.currencyInfo
-  const pluginSettings = state.ui.settings.denominationSettings[pluginId]
-  if (pluginSettings?.[currencyCode] != null) {
-    return pluginSettings[currencyCode] ?? emptyEdgeDenomination
-  }
-  return exchangeDenomination
-}
-
-/**
- * Looks up the denomination for a tokenId.
- * Pass either `account.currencyConfig[pluginId]` or `wallet.currencyConfig`,
- * whichever you have.
- */
-export function getExchangeDenom(
-  currencyConfig: EdgeCurrencyConfig,
-  tokenId: EdgeTokenId
-): EdgeDenomination {
-  if (tokenId == null) return currencyConfig.currencyInfo.denominations[0]
-
-  const token = currencyConfig.allTokens[tokenId]
-  if (token != null) return token.denominations[0]
-
-  return emptyEdgeDenomination
-}
+): EdgeDenomination =>
+  getDisplayDenom(
+    state.ui.settings.denominationSettings,
+    currencyConfig,
+    tokenId
+  )
