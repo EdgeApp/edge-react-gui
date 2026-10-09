@@ -87,6 +87,42 @@ export default [
     }
   },
 
+  // A module-scope `lstrings.` read freezes that string to whatever the
+  // tables held when the module first evaluated. `applyLocale` mutates
+  // `lstrings` in place, and the module that calls it — `initLocale` in the
+  // app, `bootNodeLocale` in the CLI — is one these files do not import, so
+  // the value is correct only if that happened to run first. It used to be
+  // correct by construction: `strings.ts` applied the locale as part of its
+  // own evaluation, so importing `lstrings` forced it.
+  //
+  // These three trees are the ones the CLI loads without the app's boot, so
+  // they have two import orders to be right in; `src/util/txDisplay/
+  // txActionLabels.ts` is the pattern — read the table in a function and
+  // there is no order in which it can be wrong. The rest of the app has
+  // around 200 such captures, ordered today by one import line in
+  // `src/app.ts`; converting those is its own change.
+  //
+  // `edge/no-module-scope-lstrings` rather than a `no-restricted-syntax`
+  // selector here: flat config replaces a rule's options instead of merging
+  // them, so this block used to drop the base config's `styled()`
+  // restriction from all three trees, and the next selector added to either
+  // place would have dropped the other with nothing to notice.
+  //
+  // `.tsx` as well as `.ts`, because `src/util` has five of them —
+  // `otpReminder.tsx` and `versionCheck.tsx` render `lstrings` directly —
+  // and the comment above claims the trees, not a file extension.
+  {
+    files: [
+      'src/cli/**/*.{ts,tsx}',
+      'src/locales/**/*.{ts,tsx}',
+      'src/util/**/*.{ts,tsx}'
+    ],
+    ignores: ['src/locales/strings.ts', 'src/locales/strings/**'],
+    rules: {
+      'edge/no-module-scope-lstrings': 'error'
+    }
+  },
+
   // `showScanModal` is the sanctioned entry point, so it is the one place
   // allowed to import ScanModal:
   {
