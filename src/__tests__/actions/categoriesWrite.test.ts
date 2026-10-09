@@ -1,7 +1,10 @@
 import { describe, expect, it, jest } from '@jest/globals'
 import type { EdgeAccount } from 'edge-core-js'
 
-import { setNewSubcategory } from '../../actions/CategoriesActions'
+import {
+  getSubcategories,
+  setNewSubcategory
+} from '../../actions/CategoriesActions'
 import { missingFileError } from '../../util/fake/fakeDisklet'
 
 jest.mock('../../components/services/AirshipInstance', () => ({
@@ -141,5 +144,63 @@ describe('setNewSubcategory', () => {
     const { done } = run(account, [])
     await done
     expect(JSON.parse(written[0]).categories).toStrictEqual(['Expense:Beans'])
+  })
+})
+
+/**
+ * The mount read and the add are ordered against each other.
+ *
+ * `getSubcategories` read and dispatched outside the serialization key, so
+ * the two dispatches were unordered. `CategoryModal` fires it on mount and
+ * leaves the rows tappable for the whole disklet round trip, so a mount read
+ * that resolved after the add had written overwrote Redux with the pre-add
+ * list: the row the user just created vanished from `state.ui.subcategories`
+ * while the synced file held it, and the next open wrote the same entry
+ * again because `handleCategoryUpdate`'s `includes` gate failed.
+ */
+describe('getSubcategories against a concurrent add', () => {
+  it('dispatches the post-add list, not the list it started reading', async () => {
+    let stored = '{"categories":["Expense:Rent"]}'
+    // A read slow enough to finish after the add — the modal-mount window.
+    let releaseRead: () => void = () => {}
+    const held = new Promise<void>(resolve => {
+      releaseRead = resolve
+    })
+    let reads = 0
+    const account = {
+      rootLoginId: 'login-1',
+      disklet: {
+        getText: async () => {
+          if (++reads === 1) await held
+          return stored
+        },
+        setText: async (_path: string, text: string) => {
+          stored = text
+        }
+      }
+    } as unknown as EdgeAccount
+
+    const read = run(account, [], getSubcategories())
+    // Let the read reach its `await`, then start the add behind it.
+    await Promise.resolve()
+    const add = run(account, [], setNewSubcategory('Expense:Beans'))
+
+    releaseRead()
+    await read.done
+    await add.done
+
+    const lists = [...read.dispatched, ...add.dispatched].map(
+      (action: any) => action.data.subcategories
+    )
+    // Whatever order the dispatches land in, the last one is the file's
+    // current contents — which is only true if the read runs inside the key.
+    expect(JSON.parse(stored).categories).toStrictEqual([
+      'Expense:Beans',
+      'Expense:Rent'
+    ])
+    expect(lists[lists.length - 1]).toStrictEqual([
+      'Expense:Beans',
+      'Expense:Rent'
+    ])
   })
 })

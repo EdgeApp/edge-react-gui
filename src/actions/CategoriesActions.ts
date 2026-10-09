@@ -71,10 +71,27 @@ export const displayCategories = (): Record<Category, string> => ({
 
 const CATEGORIES_FILENAME = 'Categories.json'
 
+/**
+ * Load the account's synced subcategory list into Redux.
+ *
+ * Inside the same serialization key as `setNewSubcategory`, so the two
+ * dispatches are ordered against each other. `CategoryModal` fires this on
+ * mount and leaves its rows tappable for the whole disklet round trip, so a
+ * mount read that resolved *after* an add had written and dispatched
+ * overwrote Redux with the pre-add list: the row the user had just created
+ * disappeared from `state.ui.subcategories` while the synced file held it,
+ * and on the next open `handleCategoryUpdate`'s `categories.includes` gate
+ * failed and wrote the same entry again. The file was right and the Redux
+ * copy stale — the same "one update silently discards another's" the
+ * serialization was added for, arriving on the read side.
+ */
 export function getSubcategories(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const { account } = getState().core
-    const subcategories = await readSyncedSubcategories(account)
+    const subcategories = await serializeByKey(
+      `categories:${account.rootLoginId}`,
+      async () => await readSyncedSubcategories(account)
+    )
     dispatch({
       type: 'SET_TRANSACTION_SUBCATEGORIES',
       data: { subcategories }
