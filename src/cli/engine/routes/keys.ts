@@ -284,8 +284,37 @@ export const listSplittableWalletTypes = route({
   }
 })
 
-/** The only keys `EdgeWalletStates` carries, and the ones the route takes. */
-const WALLET_STATE_FLAGS = ['archived', 'deleted', 'hidden', 'sortIndex']
+/**
+ * `EdgeWalletState`, declared rather than restated.
+ *
+ * All five fields core carries. `migratedFromWalletId` was the one left out,
+ * and because the object is `.withRest` a caller could still send it: a
+ * wrong-typed one went through `account.changeWalletStates` into
+ * `asWalletStateFile`'s uncleaner, which threw inside core — a `500
+ * INTERNAL_ERROR` on a route whose declared errors are `BAD_REQUEST` plus
+ * the wallet ones, where the declaration should have answered a 400 naming
+ * the field. `.withRest` stays, so an unrecognised key is visible to
+ * `onlyNamedFlags` and refused rather than silently dropped.
+ *
+ * Exported for the test, which kept its own copy of these four fields and
+ * so could not notice the fifth going missing.
+ */
+export const asWalletStateEntry = asObject({
+  archived: asOptional(asBoolean),
+  deleted: asOptional(asBoolean),
+  hidden: asOptional(asBoolean),
+  migratedFromWalletId: asOptional(asString),
+  sortIndex: asOptional(asNumber)
+}).withRest
+
+/** The keys that cleaner names, so the two cannot drift. */
+const WALLET_STATE_FLAGS = [
+  'archived',
+  'deleted',
+  'hidden',
+  'migratedFromWalletId',
+  'sortIndex'
+]
 
 /**
  * The flags the caller actually named, with the absent ones removed.
@@ -316,12 +345,9 @@ const WALLET_STATE_FLAGS = ['archived', 'deleted', 'hidden', 'sortIndex']
  * Exported for its test: the destruction is in the account's synced repo and
  * `JSON.stringify` cannot see it.
  */
-export function onlyNamedFlags(states: {
-  archived?: boolean
-  deleted?: boolean
-  hidden?: boolean
-  sortIndex?: number
-}): EdgeWalletStates[string] {
+export function onlyNamedFlags(
+  states: ReturnType<typeof asWalletStateEntry>
+): EdgeWalletStates[string] {
   const unknown = Object.keys(states).filter(
     key => !WALLET_STATE_FLAGS.includes(key)
   )
@@ -371,14 +397,7 @@ export const changeWalletStates = route({
   },
   body: asObject({
     walletStates: doc(
-      asObject(
-        asObject({
-          archived: asOptional(asBoolean),
-          deleted: asOptional(asBoolean),
-          hidden: asOptional(asBoolean),
-          sortIndex: asOptional(asNumber)
-        }).withRest
-      ),
+      asObject(asWalletStateEntry),
       '`EdgeWalletStates`: wallet ids to the flags being changed.'
     )
   }).withRest,

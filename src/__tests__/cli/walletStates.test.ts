@@ -1,7 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
-import { asBoolean, asNumber, asObject, asOptional } from 'cleaners'
+import type { EdgeWalletState } from 'edge-core-js'
 
-import { onlyNamedFlags } from '../../cli/engine/routes/keys'
+import {
+  asWalletStateEntry,
+  onlyNamedFlags
+} from '../../cli/engine/routes/keys'
 import { asEdgeMetadata, withoutUndefined } from '../../cli/engine/schemas'
 
 /**
@@ -14,13 +17,16 @@ import { asEdgeMetadata, withoutUndefined } from '../../cli/engine/schemas'
  * along with it and wiped both, in the account's *synced* repo.
  */
 
-/** The route's own inner cleaner, so the test starts where the route does. */
-const asStates = asObject({
-  archived: asOptional(asBoolean),
-  deleted: asOptional(asBoolean),
-  hidden: asOptional(asBoolean),
-  sortIndex: asOptional(asNumber)
-}).withRest
+/**
+ * The route's own inner cleaner, so the test starts where the route does.
+ *
+ * Imported rather than restated. The copy that used to live here named four
+ * fields where core's `EdgeWalletState` has five, which is how
+ * `migratedFromWalletId` went missing from the declaration without any test
+ * noticing — and `.withRest` meant a caller could still send it, wrongly
+ * typed, into core's own uncleaner as a 500.
+ */
+const asStates = asWalletStateEntry
 
 describe('onlyNamedFlags', () => {
   it('drops the flags the caller did not name', () => {
@@ -30,6 +36,7 @@ describe('onlyNamedFlags', () => {
       'archived',
       'deleted',
       'hidden',
+      'migratedFromWalletId',
       'sortIndex'
     ])
     expect(Object.keys(onlyNamedFlags(cleaned))).toStrictEqual(['archived'])
@@ -56,7 +63,9 @@ describe('onlyNamedFlags', () => {
     expect(caught.code).toBe('BAD_REQUEST')
     expect(caught.status).toBe(400)
     expect(caught.message).toContain('"archvied"')
-    expect(caught.message).toContain('archived, deleted, hidden, sortIndex')
+    expect(caught.message).toContain(
+      'archived, deleted, hidden, migratedFromWalletId, sortIndex'
+    )
   })
 
   it('leaves the existing state intact through core’s merge', () => {
@@ -136,5 +145,28 @@ describe('withoutUndefined over cleaned metadata', () => {
     const cleared = withoutUndefined(asEdgeMetadata({ notes: '' }))
     expect(cleared).toStrictEqual({ notes: '' })
     expect({ ...{ notes: 'old' }, ...cleared }).toStrictEqual({ notes: '' })
+  })
+})
+
+describe('the wallet-state cleaner against core', () => {
+  it('declares every field EdgeWalletState carries', () => {
+    // `migratedFromWalletId` was missing, and `.withRest` meant a caller
+    // could still send it: a wrong-typed one went through
+    // `account.changeWalletStates` into `asWalletStateFile`'s uncleaner and
+    // threw inside core, so the route answered `500 INTERNAL_ERROR` where
+    // its declaration should have given a 400 naming the field.
+    const typed: EdgeWalletState = {
+      archived: true,
+      deleted: false,
+      hidden: false,
+      migratedFromWalletId: 'old-wallet',
+      sortIndex: 3
+    }
+    const cleaned = asWalletStateEntry(typed)
+    expect(onlyNamedFlags(cleaned)).toStrictEqual(typed)
+  })
+
+  it('refuses a wrong-typed migratedFromWalletId at the boundary', () => {
+    expect(() => asWalletStateEntry({ migratedFromWalletId: 42 })).toThrow()
   })
 })
