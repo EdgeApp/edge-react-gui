@@ -1,0 +1,332 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliCommands.ts from the route declarations in src/cli/engine/routes. Commands marked `custom: true` in a declaration are hand-written instead; see src/cli/commands/.",
+  "commands": [
+    {
+      "command": "account-info",
+      "method": "GET",
+      "path": "/account/{sessionId}",
+      "usage": "account-info",
+      "help": "Account and session summary.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "cancel-request",
+      "method": "POST",
+      "path": "/pending-edge-login/cancel-request/{pendingId}",
+      "usage": "cancel-request <pendingId>",
+      "help": "Cancel a pending QR login.",
+      "needsSession": false,
+      "pathPositional": "pendingId",
+      "args": []
+    },
+    {
+      "command": "check-password-rules",
+      "method": "POST",
+      "path": "/check-password-rules",
+      "usage": "check-password-rules --password=<password>",
+      "help": "Score a candidate password.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "password",
+          "field": "password",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "create-currency-wallet",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallet",
+      "usage": "create-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]",
+      "help": "Create a currency wallet.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "wallet-type",
+          "field": "walletType",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "name",
+          "field": "name",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        },
+        {
+          "flag": "import-text",
+          "field": "importText",
+          "target": "body",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "create-currency-wallets",
+      "method": "POST",
+      "path": "/account/{sessionId}/create-currency-wallets",
+      "usage": "create-currency-wallets --create-wallets='<json>'",
+      "help": "Create several wallets at once.",
+      "needsSession": true,
+      "args": [
+        {
+          "flag": "create-wallets",
+          "field": "createWallets",
+          "target": "body",
+          "kind": "json",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "currency-configs",
+      "method": "GET",
+      "path": "/currency-configs",
+      "usage": "currency-configs",
+      "help": "List plugin ids usable for wallet creation.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "currency-wallets",
+      "method": "GET",
+      "path": "/account/{sessionId}/currency-wallets",
+      "usage": "currency-wallets",
+      "help": "List the account's loaded wallets.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "engine-config",
+      "method": "GET",
+      "path": "/engine/config",
+      "usage": "engine-config",
+      "help": "Configured context options.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-sessions",
+      "method": "GET",
+      "path": "/engine/sessions",
+      "usage": "engine-sessions",
+      "help": "List active sessions.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-status",
+      "method": "GET",
+      "path": "/engine/status",
+      "usage": "engine-status",
+      "help": "Engine liveness and summary.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "engine-stop",
+      "method": "POST",
+      "path": "/engine/stop",
+      "usage": "engine-stop",
+      "help": "Stop the engine.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-challenge",
+      "method": "POST",
+      "path": "/fetch-challenge",
+      "usage": "fetch-challenge",
+      "help": "Pre-fetch a CAPTCHA challenge.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-login-messages",
+      "method": "GET",
+      "path": "/fetch-login-messages",
+      "usage": "fetch-login-messages",
+      "help": "Fetch login-server messages for every local user.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "fetch-recovery-questions",
+      "method": "POST",
+      "path": "/fetch-recovery-questions",
+      "usage": "fetch-recovery-questions --recovery-key=<recoveryKey> --username=<username>",
+      "help": "Fetch a user’s recovery questions.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "recovery-key",
+          "field": "recoveryKey",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "fix-username",
+      "method": "GET",
+      "path": "/fix-username",
+      "usage": "fix-username --username=<username>",
+      "help": "Normalize a username.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "forget-account",
+      "method": "POST",
+      "path": "/forget-account",
+      "usage": "forget-account --root-login-id=<rootLoginId>",
+      "help": "Forget an account on this device.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "root-login-id",
+          "field": "rootLoginId",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "get-login-key",
+      "method": "GET",
+      "path": "/account/{sessionId}/get-login-key",
+      "usage": "get-login-key",
+      "help": "Read the account login key.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "local-users",
+      "method": "GET",
+      "path": "/local-users",
+      "usage": "local-users",
+      "help": "List local users on this device.",
+      "needsSession": false,
+      "args": []
+    },
+    {
+      "command": "object-delete",
+      "method": "POST",
+      "path": "/account/{sessionId}/object/delete/{objectId}",
+      "usage": "object-delete <objectId>",
+      "help": "Release an object handle.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "object-get",
+      "method": "GET",
+      "path": "/account/{sessionId}/object/{objectId}",
+      "usage": "object-get <objectId>",
+      "help": "Inspect an object handle.",
+      "needsSession": true,
+      "pathPositional": "objectId",
+      "args": []
+    },
+    {
+      "command": "request-otp-reset",
+      "method": "POST",
+      "path": "/request-otp-reset",
+      "usage": "request-otp-reset --username=<username> --otp-reset-token=<otpResetToken>",
+      "help": "Request a 2FA reset.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "otp-reset-token",
+          "field": "otpResetToken",
+          "target": "body",
+          "kind": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "command": "sync",
+      "method": "POST",
+      "path": "/account/{sessionId}/sync",
+      "usage": "sync",
+      "help": "Force an account data sync.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "touch",
+      "method": "POST",
+      "path": "/account/{sessionId}/touch",
+      "usage": "touch",
+      "help": "Keepalive.",
+      "needsSession": true,
+      "args": []
+    },
+    {
+      "command": "username-available",
+      "method": "GET",
+      "path": "/username-available",
+      "usage": "username-available --username=<username> [--challenge-id=<challengeId>]",
+      "help": "Check whether a username is free.",
+      "needsSession": false,
+      "args": [
+        {
+          "flag": "username",
+          "field": "username",
+          "target": "query",
+          "kind": "string",
+          "required": true
+        },
+        {
+          "flag": "challenge-id",
+          "field": "challengeId",
+          "target": "query",
+          "kind": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "command": "wait-for-all-wallets",
+      "method": "POST",
+      "path": "/account/{sessionId}/wait-for-all-wallets",
+      "usage": "wait-for-all-wallets",
+      "help": "Wait for every wallet to finish loading.",
+      "needsSession": true,
+      "args": []
+    }
+  ]
+}

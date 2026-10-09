@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: Every secret the CLI takes also reads from its own environment variable — `EDGE_CLI_PASSWORD`, `EDGE_CLI_PIN`, `EDGE_CLI_LOGIN_KEY`, `EDGE_CLI_DATA_KEY` and the rest — because `ps` shows a command line to every user on the host. `check-password-rules`, `admin-repo-list` and `admin-repo-get` take their secret in a POST body rather than a query string.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
