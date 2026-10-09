@@ -22,8 +22,14 @@ env:
     times: ${output.ASSET_NAMES.length}
     commands:
       - evalScript: ${output.assetName = output.ASSET_NAMES[output.index]}
-      - tapOn:
-          id: "undefined.clearIcon"
+      # The first search starts empty. Clear only between array entries, when
+      # the previous search term is still present and the clear icon is visible.
+      - runFlow:
+          when:
+            true: ${output.index > 0}
+          commands:
+            - tapOn:
+                id: "createWalletSearch.clearIcon"
       - inputText: ${output.assetName}
       
       # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
