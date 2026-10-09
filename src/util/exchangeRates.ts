@@ -184,10 +184,15 @@ export const RATE_CHAIN_TIMEOUT_MS = 90_000
  * amount for an arbitrary tail of the oldest transactions while `total`
  * reported the real count.
  *
- * `NaN`, because every consumer already has to guard a non-finite rate —
- * `resolveListSpamThreshold` does `if (!Number.isFinite(rate)) rate = 0`,
- * which is the safe direction there — so an unguarded caller degrades to the
- * old behaviour rather than to a plausible-looking figure.
+ * `NaN`, so that no arithmetic on it can produce a plausible-looking figure.
+ * That makes it unsafe to publish: `mul`, `div` and `add` take strings, and
+ * `String(NaN)` is `'NaN'`, which biggystring rejects — so a sentinel
+ * reaching a GUI consumer written against the old `0` throws out of a render
+ * or a ramp quote rather than degrading. It therefore never leaves this module: only
+ * `getHistoricalCryptoRateOrUnavailable` and
+ * `getHistoricalFiatRateOrUnavailable` return it, and
+ * `getHistoricalCryptoRate` / `getHistoricalFiatRate` fold it to `0` for
+ * everyone else.
  */
 export const RATE_UNAVAILABLE = Number.NaN
 
@@ -629,7 +634,15 @@ const createRateKey = (
   return `${asset}_${targetFiat}${dateString}`
 }
 
-export const getHistoricalCryptoRate = async (
+/**
+ * A historical crypto rate, or `RATE_UNAVAILABLE` when the queue gave up.
+ *
+ * For the two callers that must tell "the server says it cannot price this"
+ * from "we never got an answer": an accounting export, which refuses rather
+ * than write a wrong fiat column, and `rates-query`, which publishes which
+ * of the two happened. Every other caller wants `getHistoricalCryptoRate`.
+ */
+export const getHistoricalCryptoRateOrUnavailable = async (
   pluginId: string,
   tokenId: EdgeTokenId,
   targetFiat: string,
@@ -664,7 +677,12 @@ export const getHistoricalCryptoRate = async (
     chainTimeoutMs
   )
 }
-export const getHistoricalFiatRate = async (
+/**
+ * A historical fiat rate, or `RATE_UNAVAILABLE` when the queue gave up.
+ *
+ * The fiat half of `getHistoricalCryptoRateOrUnavailable`, on the same terms.
+ */
+export const getHistoricalFiatRateOrUnavailable = async (
   fiatCode: string,
   targetFiat: string,
   date: string,
@@ -692,6 +710,54 @@ export const getHistoricalFiatRate = async (
     maxQuerySize,
     doFetch
   )
+}
+
+/**
+ * A historical crypto rate, with `0` for "no price".
+ *
+ * The long-standing contract, and the one every GUI consumer is written
+ * against: a rate the server cannot supply, and now also one the queue never
+ * got an answer about, both arrive as `0`. Callers that divide by it already
+ * check for zero; what they cannot survive is `RATE_UNAVAILABLE`, which is
+ * `NaN` and reaches biggystring as the string `'NaN'`.
+ */
+export const getHistoricalCryptoRate = async (
+  pluginId: string,
+  tokenId: EdgeTokenId,
+  targetFiat: string,
+  date: string,
+  maxQuerySize: number = RATES_SERVER_MAX_QUERY_SIZE,
+  doFetch?: EdgeFetchFunction,
+  chainTimeoutMs?: number
+): Promise<number> => {
+  const rate = await getHistoricalCryptoRateOrUnavailable(
+    pluginId,
+    tokenId,
+    targetFiat,
+    date,
+    maxQuerySize,
+    doFetch,
+    chainTimeoutMs
+  )
+  return isRateUnavailable(rate) ? 0 : rate
+}
+
+/** A historical fiat rate, with `0` for "no price". */
+export const getHistoricalFiatRate = async (
+  fiatCode: string,
+  targetFiat: string,
+  date: string,
+  maxQuerySize: number = RATES_SERVER_MAX_QUERY_SIZE,
+  doFetch?: EdgeFetchFunction
+): Promise<number> => {
+  const rate = await getHistoricalFiatRateOrUnavailable(
+    fiatCode,
+    targetFiat,
+    date,
+    maxQuerySize,
+    doFetch
+  )
+  return isRateUnavailable(rate) ? 0 : rate
 }
 
 const getHistoricalRate = async (

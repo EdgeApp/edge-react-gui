@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
 import {
   clearRateCache,
   getHistoricalCryptoRate,
+  getHistoricalCryptoRateOrUnavailable,
   isRateUnavailable,
   RATE_CHAIN_TIMEOUT_MS,
   RATE_QUERY_TIMEOUT_MS,
@@ -74,7 +75,14 @@ const rateFor = async (
   doFetch: any = fakeFetch,
   pluginId = 'bitcoin'
 ): Promise<number> =>
-  await getHistoricalCryptoRate(pluginId, null, 'iso:USD', date, 100, doFetch)
+  await getHistoricalCryptoRateOrUnavailable(
+    pluginId,
+    null,
+    'iso:USD',
+    date,
+    100,
+    doFetch
+  )
 
 describe('the module-level rate cache', () => {
   it('caches a rate, serves it without a second request, and clears', async () => {
@@ -142,6 +150,40 @@ describe('the module-level rate cache', () => {
     // arbitrary tail of its range with nothing logged.
     expect(rates.every(rate => isRateUnavailable(rate))).toBe(true)
     expect(rateCacheSize()).toBe(0)
+  })
+
+  it('folds the sentinel to 0 for the plain accessor', async () => {
+    // `RATE_UNAVAILABLE` is `NaN`, and the GUI consumers are all written
+    // against the `0` this has always answered: `useHistoricalRate` defaults
+    // only `undefined`, so `NaN` reached `displayFiatAmount` and
+    // `add(NaN, '0')` threw out of `TransactionListRow`'s render, taking the
+    // transaction list down whenever the rates server was failing. The
+    // Paybis and ramp paths reach biggystring's `mul`/`div` with
+    // `String(rate)` and throw the same way. So the sentinel belongs to
+    // `…OrUnavailable`, and never leaves the module by any other door.
+    clearRateCache()
+    const date = '2019-05-01T04:00:00.000Z'
+    const sentinel = await getHistoricalCryptoRateOrUnavailable(
+      'bitcoin',
+      null,
+      'iso:USD',
+      date,
+      100,
+      failingFetch
+    )
+    expect(isRateUnavailable(sentinel)).toBe(true)
+
+    clearRateCache()
+    const folded = await getHistoricalCryptoRate(
+      'bitcoin',
+      null,
+      'iso:USD',
+      date,
+      100,
+      failingFetch
+    )
+    expect(folded).toBe(0)
+    expect(Number.isFinite(folded)).toBe(true)
   })
 
   it('prices a key queued while a request is already in flight', async () => {
@@ -275,7 +317,7 @@ describe('a rates server that never answers', () => {
     const hangingThenFine: any = async () => {
       throw new Error('the rates server did not answer within 30000ms')
     }
-    const rate = await getHistoricalCryptoRate(
+    const rate = await getHistoricalCryptoRateOrUnavailable(
       'bitcoin',
       null,
       'iso:USD',
@@ -291,7 +333,7 @@ describe('a rates server that never answers', () => {
 
     // And the next pass works, rather than the queue staying latched: the
     // recovery existed for a rejection and a hang never reached it.
-    const after = await getHistoricalCryptoRate(
+    const after = await getHistoricalCryptoRateOrUnavailable(
       'bitcoin',
       null,
       'iso:USD',
@@ -325,7 +367,7 @@ describe('a rates server that never answers', () => {
           return await new Promise<unknown>(() => {})
         }
       })
-      const pending = getHistoricalCryptoRate(
+      const pending = getHistoricalCryptoRateOrUnavailable(
         'bitcoin',
         null,
         'iso:USD',
@@ -371,7 +413,7 @@ describe('a caller with more keys than one request holds', () => {
         const month = String((Math.floor(i / 28) % 12) + 1).padStart(2, '0')
         const year = 2000 + Math.floor(i / (28 * 12))
         pending.push(
-          getHistoricalCryptoRate(
+          getHistoricalCryptoRateOrUnavailable(
             'bitcoin',
             null,
             'iso:USD',
