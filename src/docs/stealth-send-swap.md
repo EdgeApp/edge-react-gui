@@ -5,7 +5,7 @@
 | Status | Implemented (pending dependency publishes) |
 | Author | Jon Tzeng |
 | Reviewer | - |
-| Last updated | 2026-10-05 |
+| Last updated | 2026-10-07 |
 | Repos | [edge-react-gui](https://github.com/EdgeApp/edge-react-gui), [edge-core-js](https://github.com/EdgeApp/edge-core-js), [edge-exchange-plugins](https://github.com/EdgeApp/edge-exchange-plugins) |
 | Implementation | [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066), [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730), [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) |
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
@@ -417,31 +417,27 @@ When active, the scene requests a quote instead of building a spend. `makeSpend`
 
 Stealth restricts the request to the privacy provider through a shared helper, `src/util/stealthSwap.ts`, used by both the send scene and the swap scene:
 
-[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/6f1714cd2fb4f2def44da1a92e7de545b19e896f/src/util/stealthSwap.ts)
+[`src/util/stealthSwap.ts`](https://github.com/EdgeApp/edge-react-gui/blob/1def6fec2ddac8edc67a35d6c3a987a2d96431fb/src/util/stealthSwap.ts)
 ```ts
 export function makeStealthSwapRequestOptions(
   account: EdgeAccount,
-  opts: EdgeSwapRequestOptions = {},
-  flags: StealthSwapFlags = {}
+  opts: EdgeSwapRequestOptions = {}
 ): EdgeSwapRequestOptions {
   const disabled: EdgePluginMap<true> = { ...opts.disabled }
   for (const swapPluginId of Object.keys(account.swapConfig)) {
-    if (swapPluginId !== 'houdini') disabled[swapPluginId] = true
+    if (swapPluginId !== STEALTH_SWAP_PLUGIN_ID) disabled[swapPluginId] = true
   }
   return {
     ...opts,
     disabled,
-    forceEnabled:
-      flags.ignoreProviderSetting === true
-        ? { ...opts.forceEnabled, houdini: true }
-        : opts.forceEnabled,
+    forceEnabled: { ...opts.forceEnabled, [STEALTH_SWAP_PLUGIN_ID]: true },
     preferPluginId: undefined,
     preferType: undefined
   }
 }
 ```
 
-Clearing `preferPluginId`/`preferType` matters: a user's saved provider preference would otherwise fight the restriction. `ignoreProviderSetting` is how the send path opts out of the account's exchange settings, per [Provider availability versus exchange settings](#provider-availability-versus-exchange-settings); the Exchange scene leaves it unset.
+Clearing `preferPluginId`/`preferType` matters: a user's saved provider preference would otherwise fight the restriction. The `forceEnabled` entry is how a stealth request opts out of the account's exchange settings, per [Provider availability versus exchange settings](#provider-availability-versus-exchange-settings). It is unconditional, so the send scene and the Exchange scene build the same request.
 
 Every send-to-address quote goes through these options, stealth toggle on or off: send-to-any is a privacy feature and is Houdini-exclusive by operator direction. Making the restriction conditional on the toggle (`stealth ? ... : undefined`) breaks that guarantee, whatever a stale description elsewhere may say; the reasoning is in [Decision: send-to-any is Houdini-exclusive, toggle or no toggle](#send-to-any-is-houdini-exclusive-toggle-or-no-toggle).
 
@@ -610,11 +606,13 @@ This is Houdini's dominant flow, around 60% of their traffic, which is why it ge
 
 ### Provider availability versus exchange settings
 
-The send-scene stealth and swap-send path **ignores** the global exchange-settings enable flag for HoudiniSwap. The Exchange scene keeps honoring it. That setting governs which providers the swap aggregator is allowed to use, so it is the user's answer about swapping, not about sending: a private send is a send feature that happens to be powered by Houdini, and switching off a swap provider should not silently remove it.
+Every request built by `makeStealthSwapRequestOptions` **ignores** the global exchange-settings enable flag for HoudiniSwap. That covers Stealth Send and swap-send on the send scene, and Stealth Swap on the Exchange scene. A swap with Stealth off keeps honoring the flag.
 
-Mechanically the core skips any plugin whose `swapSettings[pluginId].enabled` is false, so the scene opts out of that check for one request through `EdgeSwapRequestOptions.forceEnabled`, set by `makeStealthSwapRequestOptions` only when the caller passes `ignoreProviderSetting`. An explicit `disabled` entry still wins, so the same helper's provider restriction cannot be defeated by it.
+The setting governs which providers the swap aggregator may pick among. A stealth request has nothing for it to govern: turning Stealth on names the one provider, and a private send is a send feature that happens to be powered by Houdini. Switching off a swap provider should not silently remove either.
 
-Ignoring the enable flag does not extend to the info server's swap kill switch. The Exchange scene refuses a pair whose source or destination asset is listed in `disableAssets`, and the send scene applies the same check before it requests a swap-send quote: `disableAssetsCover` matches an entry naming the chain's own coin, one token, `allTokens`, or `allCoins`, and a covered pair shows the Exchange scene's own "no enabled exchanges support" error instead of a quote. The enable flag is the user's preference about swapping; the kill switch is Edge withdrawing an asset from every swap, which binds a send powered by a swap too.
+Mechanically the core skips any plugin whose `swapSettings[pluginId].enabled` is false, so the helper opts out of that check for one request through `EdgeSwapRequestOptions.forceEnabled`, which it sets for Houdini on every request it builds. An explicit `disabled` entry still wins, so the same helper's provider restriction cannot be defeated by it.
+
+Ignoring the enable flag does not extend to the info server's swap kill switches. Its `disablePlugins` list and its `disableAssetsByPlugin` matches reach the request as `disabled` entries, which beat `forceEnabled`. The Exchange scene refuses a pair whose source or destination asset is listed in `disableAssets` before it requests a quote, Stealth on or off, and the send scene applies the same check before it requests a swap-send quote: `disableAssetsCover` matches an entry naming the chain's own coin, one token, `allTokens`, or `allCoins`, and a covered pair shows the Exchange scene's own "no enabled exchanges support" error instead of a quote. The enable flag is the user's preference about swapping; the kill switch is Edge withdrawing an asset from every swap, which binds a send powered by a swap too.
 
 ### Transaction identity
 
@@ -644,6 +642,8 @@ Gated in both directions. Stealth on or a mismatched recipient hides "Add Anothe
 
 `SwapCreateScene` gets the same treatment at a smaller scale: a toggle that adds `privacy: 'required'` to the quote request and `makeStealthSwapRequestOptions` to its options. The confirmation scene receives that request and those options as route params and re-quotes an expired quote with them verbatim, so the restriction survives re-quotes without the scene rebuilding it from a flag. `quote.request` is not reused for this, because it is the plugin's copy, with a `'max'` quote already resolved to a fixed amount. `PoweredByCard.onPress` became optional so the provider renders as fixed (no chevron, no "tap to change provider") whenever the request carries `privacy: 'required'`.
 
+The request reaches Houdini whatever the provider's switch in Exchange Settings says, per [Provider availability versus exchange settings](#provider-availability-versus-exchange-settings). The create scene also hands the confirmation scene an `onStealthTermsDeclined` callback as a route param, and the confirmation scene carries it through its own re-quote. Declining the provider's terms on a Stealth Swap calls it, which turns the create scene's Stealth toggle off, and then returns to the create scene with no re-quote. The return passes the wallet pair back as route params, because the create scene reads its pair from them and a navigate without params would clear the selection. [Saying that a swap is running](#saying-that-a-swap-is-running) covers what a decline saves.
+
 A Stealth Swap whose pair has no private route shows the error and leaves the toggle on. The request asked for privacy, and quietly re-quoting a transparent swap is the substitution the plugin is told never to make; the user turns the toggle off if a transparent swap is acceptable.
 
 ### Saying that a swap is running
@@ -656,7 +656,9 @@ A send routed through Houdini looks like a send and behaves like a swap: the wal
 | Swap-send modal | `SendScene2`, through `showSwapSendWarningModal` | the send scene first becomes a swap | `swapSendWarning.json` in the account disklet |
 | Warning card | `SendScene2`, in the warning cluster | `swapSendActive`, while no error card or fixed-to fallback card is shown | none, it is scene state |
 
-The terms modal is the pre-existing centralized-provider acknowledgement, keyed by pluginId in `SwapVerifyTermsModal`'s `pluginData` table. Houdini's entry gives it the same three links every other centralized provider gets. Declining calls `changeEnabled(false)` on the provider, which stops Houdini quoting on the swap scene, Stealth Swap included. The send scene is unaffected: it passes `ignoreProviderSetting`, and the core's `forceEnabled` reaches a provider the user switched off.
+The terms modal is the pre-existing centralized-provider acknowledgement, keyed by pluginId in `SwapVerifyTermsModal`'s `pluginData` table. Houdini's entry gives it the same three links every other centralized provider gets. Accepting saves `agreedToTerms: true`, and `swapVerifyTerms` returns early on that value without reading the provider's enable flag, so a user who accepted is never asked again, switch on or off.
+
+What a decline does depends on the request. On a swap with Stealth off it saves `agreedToTerms: false`, calls `changeEnabled(false)` on the provider, and the scene re-quotes. Switching the provider off is what lets that re-quote settle on another one. A Stealth Swap cannot take that path: its request force-enables Houdini, so the re-quote would return the same quote and reopen the modal without end. The confirmation scene therefore passes `declineIsCancelOnly` for a request carrying `privacy: 'required'`. The decline then saves nothing, the Stealth toggle goes off, and the user is back on the create scene. The provider's switch in Exchange Settings is not written. Turning Stealth back on and swapping again shows the same modal, on every attempt until it is accepted. The send scene never reaches this modal.
 
 The swap-send modal is the send scene's own, because the send scene never reaches `SwapConfirmationScene` and so never runs `swapVerifyTerms`. It follows the send scam warning beside it: a disklet key, `runOnce` against a double-fire within one app run, and a `ConfirmContinueModal`. The provider names itself off `account.swapConfig[STEALTH_SWAP_PLUGIN_ID].swapInfo.displayName`, so the copy survives a provider change. Its four bullets cover the routing, the wait, a rare AML/KYC hold, and that a held or failed swap is resolved with the provider. It informs and never gates the quote; the card below is the persistent notice and carries no KYC wording.
 
@@ -759,16 +761,19 @@ Learned capabilities are per pair and per session (`routeCaps` in `SendScene2`),
 
 ### Unit tests
 
-Eleven files across three repos hold 165 tests, all passing.
+Fourteen files across three repos hold 183 tests, all passing.
 
-In the gui, 104 across five files:
+In the gui, 122 across eight files:
 
 1. `src/__tests__/util/paymentUri.test.ts` (15): the peek passing a bare address through, trimming whitespace, reading a [BIP-21](#bip-21) scheme, keeping the [cashaddr](#cashaddr) `prefix:` candidate, stripping the [EIP-681](#eip-681) `pay-` prefix, and keeping the case of a `scheme://` address that url-parse would lowercase; the EIP-681 `@chainId` read in decimal and hex, left unset when absent, and a token-transfer code offering no address; and `parseCrossChainPayment` returning the chain parser's address, native amount and [memo](#memo), asking for the chain's own coin, and refusing a parser rejection, a token code, and an empty address.
 2. `src/__tests__/util/houdiniChains.test.ts` (51): the address-detection cases (EIP-681 chain ids naming Robinhood Chain and Monad, a TON address matching TON alone, single-chain detection, all-[EVM](#evm) fan-out for a bare `0x`, scheme resolution including a scheme differing from the pluginId, source chain never offered from that chain's own coin but offered from a token on it, unsupported chains skipped, Solana and Dogecoin and legacy Bitcoin formats, non-address text rejected, unknown scheme falling back to format matching, a mislabeled scheme not trusted, the Cardano catch-all regression), plus lookup and table invariants: `getHoudiniChain` resolving a served chain, refusing an unserved one, refusing the three chains with no mainnet native, and refusing a token id on a served chain; no duplicate plugin ids or provider chain names; every entry carrying a boolean `hasSelfPrivate`; every address regex rejecting the empty string and free text, which is the shape the Cardano catch-all had; the [memo](#memo)-required set; and the floor constants ordered [dex](#dex) < standard < private, shaped as biggystring-comparable strings, and equal to the values the provider published. The picker cases pin that the first row names the payout its pick gives under each Stealth and token combination, that a token source without Stealth is offered its own chain's native coin, that no payout is listed twice, and that a native source lists every served chain but its own.
-3. `src/__tests__/util/stealthSwap.test.ts` (13): every other provider disabled, a preferred provider cleared so it cannot fight the restriction, the exchange setting left alone by default, Houdini force-enabled only when the caller asks to ignore that setting, a caller's own `forceEnabled` and `disabled` entries preserved, unrelated options passed through, and an account holding Houdini alone; and the kill-switch predicate matching an entry without a token to the chain's coin alone, a named token alone, `allTokens` to every token but the coin, `allCoins` to both, and nothing on another chain.
+3. `src/__tests__/util/stealthSwap.test.ts` (12): every other provider disabled, a preferred provider cleared so it cannot fight the restriction, Houdini force-enabled on every stealth request, a caller's own `forceEnabled` and `disabled` entries preserved, unrelated options passed through, and an account holding Houdini alone; and the kill-switch predicate matching an entry without a token to the chain's coin alone, a named token alone, `allTokens` to every token but the coin, `allCoins` to both, and nothing on another chain.
 4. `src/__tests__/util/swapErrorDisplay.test.ts` (17): a missing error, minimums and maximums rendered in the units of whichever side was fixed, the limit-free fallback when the bound is zero, both assets named on an unroutable pair including the swap-to-address case where the payout code has to be supplied, insufficient funds from both the typed error and the stringified shape some plugins throw, pending transactions, a geographic restriction, an unrecognized error surfacing the provider's own text, a rate limit never rewritten into a pair error, a thrown non-error stringified, and the original error preserved for the caller to log.
 
-5. `src/__tests__/actions/CategoriesActions.test.ts` (8): the three send titles read off the `swapSend` action's `privacy` flag and its asset pair, a private send's title outranking a stored metadata name shaped like a recipient address, a plain swap-send leaving a stored name alone, and the parent network-fee row keeping both its own title and its own category while still refusing a stored recipient-style name. The fee-row title case fails on the pre-fix code, which is what makes it worth having.
+5. `src/__tests__/actions/CategoriesActions.test.ts` (11): the three send titles read off the `swapSend` action's `privacy` flag and its asset pair, a private send's title outranking a stored metadata name shaped like a recipient address, a plain swap-send leaving a stored name alone, and the parent network-fee row keeping both its own title and its own category while still refusing a stored recipient-style name. The fee-row title case fails on the pre-fix code, which is what makes it worth having. Three more cover the provider logo lookup: a themed provider's logo following the theme, every other provider keeping its one cropped image, and an unknown provider having none.
+6. `src/__tests__/util/stealthSwapQuotes.test.ts` (6): the request options run through the core's own `fetchSwapQuotes`, in a fake account holding Houdini and one other provider, once with Houdini switched on in the exchange settings and once with it off. In both states a Stealth request is quoted by Houdini alone, and a Stealth request whose caller disabled Houdini is rejected. A request with Stealth off gets a Houdini quote only while the switch is on.
+7. `src/__tests__/modals/SwapVerifyTermsModal.test.tsx` (8): a provider with no terms passing, an accepted user never asked again with the provider enabled or switched off, an accept saved under both decline modes, the default decline switching the provider off, a cancel-only decline saving nothing, and the modal shown again on the next attempt after one.
+8. `src/__tests__/scenes/SwapConfirmationScene.test.tsx` (2 of its 16): a declined Stealth Swap calling the toggle-off callback and returning to the create scene with its wallet pair and no re-quote, and a declined swap with Stealth off re-quoting as before.
 
 In edge-core-js, 19: `test/core/synthetic-wallet.test.ts` (5) for the synthetic wallet's shape and bridge survival and its address list (every address returned verbatim, the first paid out to); `test/core/account/account.test.ts` for `parseUri` on a config with no wallet (the chain's coin, a builtin token by currency code, and a custom token the parser has to be told about) and a send request quoted end to end; `test/core/currency/wallet/currency-wallet-cleaners.test.ts` for a `swapSend` action round-tripping through the disk cleaners and one without `privacy` rejected; the plugin-selection truth table in `test/core/swap.test.ts` (8), which pins that a caller can reach a provider the user switched off and can never reach one it disabled itself in the same call, and `test/core/swap-quote-close.test.ts` (2) for the synthetic wallet's reference-counted release, including a double-close that must not free it twice.
 
@@ -1093,6 +1098,13 @@ Not our work, tracked so it is not rediscovered:
 - **Diverged:** the first cut returned only the image and let both scenes crop it to the thumbnail circle like every other provider. The HoudiniSwap logo is the mark above a wordmark that runs edge to edge, so the circle cut the wordmark down to a fragment. Seen on the simulator, then changed to fit the logo, which is how the swap scenes already draw it.
 - **Held:** a contact or merchant-name match still outranks the provider logo, as it does for every provider. No `MERCHANT_CONTACTS` entry was added: that map holds one static image per name, which cannot follow the theme. On a transaction row the direction arrow still overlaps the logo's lower right corner, as it does on every thumbnail. A mark-only image drawn for the circle would remove both the flag and the overlap; it needs a new asset on the content server, which is outside this change.
 
+### Phase 35: Stealth Swap stops honoring the provider switch
+
+- **Sketched:** the Exchange scene honored the HoudiniSwap switch in Exchange Settings while the send scene ignored it, so a Stealth Swap with the provider switched off got no quote. The Exchange scene should ignore the switch for a Stealth Swap as the send scene does, the kill switches should keep binding, and a declined terms modal should cancel that swap without prompting in a loop.
+- **Shipped:** `makeStealthSwapRequestOptions` force-enables Houdini for every caller, and the `ignoreProviderSetting` flag that only the send scene passed is gone ([Provider availability versus exchange settings](#provider-availability-versus-exchange-settings)). A terms decline on a Stealth Swap saves nothing, turns the Stealth toggle off, and returns to the create scene ([Saying that a swap is running](#saying-that-a-swap-is-running)). New tests run both switch states through the core's own quote selection.
+- **Diverged:** the first cut of the decline backed out and left the Stealth toggle on, one tap from the same modal. The shipped decline turns the toggle off and still writes nothing to the provider's switch, and the modal returns on each later Stealth attempt until it is accepted. On the simulator that decline also came back to an empty create scene, because the navigate carried no params; it now passes the pair.
+- **Held:** a swap with Stealth off honors the switch as before, and its decline still switches the provider off and re-quotes. The "no exchanges available" notice the create scene shows on focus when every provider is off is unchanged.
+
 ## 11. Decisions
 
 ### Let a plain send take a dex route
@@ -1109,7 +1121,7 @@ Reopen if the provider starts serving Monad over an exchange route, or if a toke
 
 The send scene and the dedicated swap scene each get their own one-time modal, with their own persistence.
 
-The alternative was to call `swapVerifyTerms` from the send scene too, so one `agreedToTerms` covered both. It loses on what the two modals are for. The terms modal is a provider consent gate: it names the provider, links its terms, privacy and know-your-customer pages, and disables the provider on a decline. The send-scene modal answers a different question, which is why this send now takes two transactions and longer than the user expects, and it must not disable anything, because a user who dismisses it still wants to send. Folding them would have meant one of the two texts always being wrong for the scene it appeared on.
+The alternative was to call `swapVerifyTerms` from the send scene too, so one `agreedToTerms` covered both. It loses on what the two modals are for. The terms modal is a provider consent gate: it names the provider, links its terms, privacy and know-your-customer pages, and disables the provider when a swap with Stealth off declines it. The send-scene modal answers a different question, which is why this send now takes two transactions and longer than the user expects, and it must not disable anything, because a user who dismisses it still wants to send. Folding them would have meant one of the two texts always being wrong for the scene it appeared on.
 
 A second alternative was to show only the card and drop the send modal. The card is passive and lives beneath the amounts, so it can be scrolled past on the one send where the shape is genuinely new to the user. Reopen either if the two-modal sequence turns out to fire back to back for a user who reaches the swap scene and the send scene in the same session.
 
@@ -1265,15 +1277,25 @@ Rejected: **hiding the whole card for stealth transactions**, which is the outco
 
 Reopen if: order ids themselves become privacy-sensitive, which would argue for masking them in screenshots rather than removing them.
 
-### Scope the exchange-provider setting to the Exchange scene
+### Scope the exchange-provider setting to swaps with Stealth off
 
-Chosen: the send-scene stealth and swap-send path ignores the global HoudiniSwap enable flag; the Exchange scene keeps honoring it.
+Chosen: every stealth request ignores the global HoudiniSwap enable flag, on the send scene and on the Exchange scene. A swap with Stealth off keeps honoring it.
 
-Evidence: the setting lives in Exchange settings and reads as a list of providers the swap aggregator may use. A private send is a send that happens to be powered by Houdini, so a user turning off a swap provider is not asking for private sends to disappear, and would have no way to connect the two if they did.
+Evidence: the setting lives in Exchange settings and reads as a list of providers the swap aggregator may use. A stealth request involves no aggregation, because turning Stealth on names the one provider. A user turning off a swap provider is not asking for private sends or Stealth Swap to disappear, and would have no way to connect the two if they did.
 
-Rejected: **honoring the flag on both paths**, which makes a send feature vanish with no explanation reachable from the send scene. **A second, send-specific toggle**, which is a settings row asking users to understand our provider topology.
+Rejected: **honoring the flag on every path**, which makes a send feature vanish with no explanation reachable from the send scene. **Honoring it on the Exchange scene alone**, which is what shipped first: the same toggle worked on one scene and returned no quote on the other. **A second, stealth-specific toggle**, which is a settings row asking users to understand our provider topology.
 
 Reopen if: Houdini becomes one of several privacy providers, at which point the send path needs its own notion of which to use and the question changes shape.
+
+### Turn Stealth off on a declined terms modal, not the provider
+
+Chosen: declining the terms modal on a Stealth Swap saves nothing, turns the create scene's Stealth toggle off, and returns there.
+
+Evidence: a stealth request force-enables Houdini, so the decline path every other swap takes (switch the provider off, re-quote) returns the same Houdini quote and reopens the modal in a loop. The provider switch is also the wrong thing to write, because it is the user's answer about swaps with Stealth off and the decline was about one Stealth Swap.
+
+Rejected: **switching the provider off anyway**, which writes a setting the stealth request ignores and so stops nothing. **Saving the decline as `agreedToTerms: false`**, which the modal already reads as "ask", so it adds a write and changes no behavior. **Leaving Stealth on after backing out**, which puts the user one tap from the same modal with nothing on screen saying what to change.
+
+Reopen if: a second privacy provider exists, at which point a decline could fall through to it instead of ending the swap.
 
 ### Match the pre-existing spending-limit arithmetic
 

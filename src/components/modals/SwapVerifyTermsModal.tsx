@@ -70,9 +70,23 @@ const pluginData: Record<string, TermsUri> = {
   }
 }
 
+interface SwapVerifyTermsOptions {
+  /**
+   * What a decline does besides failing the check. By default it switches the
+   * provider off in the exchange settings, which is what keeps a re-quote from
+   * returning the same provider and asking again. A request that queries the
+   * provider whatever that setting says (a Stealth Swap) gains nothing from
+   * the switch, so it passes `true`: the decline is then not saved at all, and
+   * the caller cancels the swap instead of re-quoting.
+   */
+  declineIsCancelOnly?: boolean
+}
+
 export async function swapVerifyTerms(
-  swapConfig: EdgeSwapConfig
+  swapConfig: EdgeSwapConfig,
+  opts: SwapVerifyTermsOptions = {}
 ): Promise<boolean> {
+  const { declineIsCancelOnly = false } = opts
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
@@ -90,7 +104,7 @@ export async function swapVerifyTerms(
 
   if (result) {
     await swapConfig.changeUserSettings({ agreedToTerms: true })
-  } else {
+  } else if (!declineIsCancelOnly) {
     await swapConfig.changeUserSettings({ agreedToTerms: false })
     await swapConfig.changeEnabled(false)
   }

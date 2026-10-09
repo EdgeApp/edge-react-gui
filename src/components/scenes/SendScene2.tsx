@@ -3552,11 +3552,9 @@ const SendComponent: React.FC<Props> = props => {
             quoteFor: guaranteedSide === 'send' ? 'from' : 'to',
             privacy: stealth ? 'required' : undefined
           },
-          makeStealthSwapRequestOptions(
-            account,
-            { disabled: swapDisablePlugins },
-            { ignoreProviderSetting: true }
-          )
+          makeStealthSwapRequestOptions(account, {
+            disabled: swapDisablePlugins
+          })
         )
         const [quote, ...unusedQuotes] = quotes
 

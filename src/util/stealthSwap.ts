@@ -28,28 +28,23 @@ export const STEALTH_SWAP_PLUGIN_ID = 'houdini'
 export const STEALTH_LEARN_MORE_URI =
   'https://gist.github.com/j0ntz/b3f8101f0a1f79539150fc73511bff8b'
 
-interface StealthSwapFlags {
-  /**
-   * Query Houdini even when the user switched it off in their exchange
-   * settings. That setting governs which providers the swap aggregator may
-   * use, so it is the user's answer about swapping, not about sending: a send
-   * feature that happens to be powered by Houdini must not disappear because a
-   * swap provider was turned off. Set on the send scene only; the Exchange
-   * scene keeps honoring the setting.
-   */
-  ignoreProviderSetting?: boolean
-}
-
 /**
  * Restricts a swap request to the Houdini privacy provider, for Stealth Swap
  * and Stealth Send. Every other enabled swap provider is disabled for the
  * request, and any preferred-provider override is cleared so it cannot fight
  * the restriction.
+ *
+ * Houdini is queried even when the user switched it off in their exchange
+ * settings. That setting governs which providers the swap aggregator may pick
+ * among for an ordinary swap. A Stealth request has no aggregation to govern:
+ * the user asked for the one provider by turning Stealth on, so the feature
+ * must not disappear because a swap provider was turned off. The core's
+ * `disabled` still beats `forceEnabled`, so a kill switch the caller passes in
+ * `opts.disabled` keeps stopping the request.
  */
 export function makeStealthSwapRequestOptions(
   account: EdgeAccount,
-  opts: EdgeSwapRequestOptions = {},
-  flags: StealthSwapFlags = {}
+  opts: EdgeSwapRequestOptions = {}
 ): EdgeSwapRequestOptions {
   const disabled: EdgePluginMap<true> = { ...opts.disabled }
   for (const swapPluginId of Object.keys(account.swapConfig)) {
@@ -58,10 +53,7 @@ export function makeStealthSwapRequestOptions(
   return {
     ...opts,
     disabled,
-    forceEnabled:
-      flags.ignoreProviderSetting === true
-        ? { ...opts.forceEnabled, [STEALTH_SWAP_PLUGIN_ID]: true }
-        : opts.forceEnabled,
+    forceEnabled: { ...opts.forceEnabled, [STEALTH_SWAP_PLUGIN_ID]: true },
     preferPluginId: undefined,
     preferType: undefined
   }

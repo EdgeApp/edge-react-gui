@@ -260,6 +260,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
     // Houdini privacy provider AND demands a private route: restricting the
     // provider alone would still accept that provider's transparent standard
     // routes, which are priced better and would be labelled private here.
+    // The restriction also queries Houdini when it is switched off in Exchange
+    // Settings, a setting only a swap with Stealth off honors.
     const quoteRequest: EdgeSwapRequest = stealth
       ? { ...swapRequest, privacy: 'required' }
       : swapRequest
@@ -277,6 +279,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
           selectedQuote: quotes[0],
           quotes,
           onApprove: resetState,
+          onStealthTermsDeclined: handleStealthTermsDeclined,
           swapRequest: quoteRequest,
           swapRequestOptions: quoteRequestOptions
         })
@@ -444,6 +447,14 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const handleToggleStealth = useHandler(() => {
     setStealth(value => !value)
+  })
+
+  // Declining the stealth provider's terms backs out to this scene with the
+  // toggle off, so the next tap on the button asks for an ordinary swap
+  // instead of walking straight back into the same terms modal. Turning the
+  // toggle back on brings the modal back, until the terms are accepted.
+  const handleStealthTermsDeclined = useHandler(() => {
+    setStealth(false)
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {

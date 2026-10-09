@@ -37,29 +37,19 @@ describe('makeStealthSwapRequestOptions', () => {
     expect(options.preferType).toBeUndefined()
   })
 
-  it('leaves the exchange setting alone by default', () => {
-    // The Exchange scene keeps honoring the user's provider settings, so a
-    // stealth swap started there must not force-enable anything.
+  it('force-enables Houdini for every stealth request', () => {
+    // Both callers, the Exchange scene and the send scene, ignore the user's
+    // exchange setting for Houdini: that setting governs which providers the
+    // aggregator may pick among, so it must not switch off a feature that is
+    // powered by one named provider.
     const options = makeStealthSwapRequestOptions(account)
-    expect(options.forceEnabled).toBeUndefined()
-  })
-
-  it('force-enables Houdini when the caller ignores the provider setting', () => {
-    // The send scene's path: the swap setting governs which providers the
-    // aggregator may pick among, so it must not switch off a send feature that
-    // happens to be powered by one of them.
-    const options = makeStealthSwapRequestOptions(account, undefined, {
-      ignoreProviderSetting: true
-    })
     expect(options.forceEnabled).toEqual({ houdini: true })
   })
 
   it('keeps a caller force-enabling other plugins', () => {
-    const options = makeStealthSwapRequestOptions(
-      account,
-      { forceEnabled: { changenow: true } },
-      { ignoreProviderSetting: true }
-    )
+    const options = makeStealthSwapRequestOptions(account, {
+      forceEnabled: { changenow: true }
+    })
     expect(options.forceEnabled).toEqual({ changenow: true, houdini: true })
   })
 
@@ -75,11 +65,9 @@ describe('makeStealthSwapRequestOptions', () => {
   it('keeps a caller own disabled entries alongside its own', () => {
     // `disabled` wins over `forceEnabled` in the core, so a caller that
     // disabled Houdini itself still gets no Houdini quote.
-    const options = makeStealthSwapRequestOptions(
-      account,
-      { disabled: { houdini: true } },
-      { ignoreProviderSetting: true }
-    )
+    const options = makeStealthSwapRequestOptions(account, {
+      disabled: { houdini: true }
+    })
     expect(options.disabled?.houdini).toEqual(true)
   })
 
