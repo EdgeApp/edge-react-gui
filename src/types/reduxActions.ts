@@ -24,6 +24,7 @@ import type {
   SettingsState
 } from '../reducers/scenes/SettingsReducer'
 import type { StakingAction } from '../reducers/StakingReducer'
+import type { HoudiniTokens } from '../util/houdiniChains'
 import type { TweakSource } from '../util/ReferralHelpers'
 import type {
   AccountReferral,
@@ -162,6 +163,7 @@ export type Action =
     }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_GIFT_CARD_INFO'; data: GiftCardInfo }
+  | { type: 'UPDATE_HOUDINI_TOKENS'; data: HoudiniTokens }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | {
       type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
