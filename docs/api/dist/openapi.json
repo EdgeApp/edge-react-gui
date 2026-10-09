@@ -9365,7 +9365,7 @@
       "post": {
         "operationId": "ratesQuery",
         "summary": "Batch crypto and fiat rate lookups.",
-        "description": "**Core call:** _none — GUI code (src/util/exchangeRates): getHistoricalCryptoRate and getHistoricalFiatRate._\n\n**Command line**\n\n```\nrates-query [--crypto='<json>'] [--fiat='<json>']\n```\n\nConcurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
+        "description": "**Core call:** _none — GUI code (src/util/exchangeRates): getHistoricalCryptoRateOrUnavailable and getHistoricalFiatRateOrUnavailable._\n\n**Command line**\n\n```\nrates-query [--crypto='<json>'] [--fiat='<json>']\n```\n\nConcurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.",
         "tags": [
           "Exchange rates"
         ],
@@ -9377,7 +9377,7 @@
           "preset": {}
         },
         "x-core-call": null,
-        "x-core-note": "GUI code (src/util/exchangeRates): getHistoricalCryptoRate and getHistoricalFiatRate.",
+        "x-core-note": "GUI code (src/util/exchangeRates): getHistoricalCryptoRateOrUnavailable and getHistoricalFiatRateOrUnavailable.",
         "x-source": "src/cli/engine/routes/rates.ts",
         "parameters": [],
         "responses": {
@@ -9414,6 +9414,9 @@
                           },
                           "rate": {
                             "type": "number"
+                          },
+                          "unavailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -9421,7 +9424,8 @@
                           "tokenId",
                           "targetFiat",
                           "date",
-                          "rate"
+                          "rate",
+                          "unavailable"
                         ]
                       },
                       "description": "Always present; empty when no crypto rates were requested."
@@ -9442,13 +9446,17 @@
                           },
                           "rate": {
                             "type": "number"
+                          },
+                          "unavailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
                           "fiatCode",
                           "targetFiat",
                           "date",
-                          "rate"
+                          "rate",
+                          "unavailable"
                         ]
                       },
                       "description": "Always present; empty when no fiat rates were requested."

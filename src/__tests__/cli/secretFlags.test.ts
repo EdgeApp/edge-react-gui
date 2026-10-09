@@ -81,6 +81,52 @@ describe('secret flags', () => {
     expect(message).toContain('EDGE_CLI_PIN')
   })
 
+  it('never writes the login credential as the new one', () => {
+    // The hazard the per-command table exists for. `--password` means
+    // "authenticate with this" on five commands and "the new password" on
+    // `change-password`, so one variable for both meanings turns a
+    // forgotten flag into a silent credential reset: with
+    // `EDGE_CLI_PASSWORD` exported for a login, `change-password` with no
+    // `--password` used to resolve it, send it as the new password and exit
+    // 0. It has to fail instead, and name its own variable when it does.
+    setEnv('EDGE_CLI_PASSWORD', 'the-login-password')
+    setEnv('EDGE_CLI_NEW_PASSWORD', '')
+    setEnv('EDGE_CLI_PIN', '1234')
+    setEnv('EDGE_CLI_NEW_PIN', '')
+
+    const write = (name: string, flag: string): string => {
+      const args = parseCommandArgs(findCommand(name), [], {
+        flags: { [flag]: 'string' }
+      })
+      try {
+        args.requireSecret(flag)
+      } catch (error) {
+        if (!(error instanceof UsageError)) throw error
+        return error.message
+      }
+      return 'resolved a value'
+    }
+
+    expect(write('change-password', 'password')).toContain(
+      'EDGE_CLI_NEW_PASSWORD'
+    )
+    expect(write('change-pin', 'pin')).toContain('EDGE_CLI_NEW_PIN')
+
+    // And the authenticating commands still read the login variable.
+    const login = parseCommandArgs(findCommand('check-password'), [], {
+      flags: { password: 'string' }
+    })
+    expect(login.requireSecret('password')).toBe('the-login-password')
+  })
+
+  it('reads the new-credential variable when it is set', () => {
+    setEnv('EDGE_CLI_NEW_PIN', '9999')
+    const args = parseCommandArgs(findCommand('change-pin'), [], {
+      flags: { pin: 'string' }
+    })
+    expect(args.requireSecret('pin')).toBe('9999')
+  })
+
   it('covers every flag a command takes a secret through', () => {
     // The published usage is the registry: a flag whose name says it carries
     // a credential must be in the table, or it has argv and nothing else.

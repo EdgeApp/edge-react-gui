@@ -35,6 +35,30 @@ describe('onlyNamedFlags', () => {
     expect(Object.keys(onlyNamedFlags(cleaned))).toStrictEqual(['archived'])
   })
 
+  it('refuses a misspelled flag rather than writing it', () => {
+    // The inner cleaner is `.withRest`, so a typo survives cleaning and
+    // core wrote it verbatim into the account's synced `Keys/<hash>.json`:
+    // `--wallet-states='{"<id>":{"archvied":true}}'` answered 204, archived
+    // nothing, and synced a junk key to every device. Dropping `.withRest`
+    // would have answered 204 and changed nothing, which is the failure the
+    // route's wallet-id resolution exists to prevent.
+    const cleaned = asStates({ archvied: true })
+    // `.withRest`'s own output type does not name the rest keys, so this is
+    // the cast the route itself does not need: the point is that the key is
+    // there, which is why core received it.
+    expect((cleaned as Record<string, unknown>).archvied).toBe(true)
+    let caught: { code?: string; status?: number; message?: string } = {}
+    try {
+      onlyNamedFlags(cleaned)
+    } catch (error) {
+      caught = error as { code?: string; status?: number; message?: string }
+    }
+    expect(caught.code).toBe('BAD_REQUEST')
+    expect(caught.status).toBe(400)
+    expect(caught.message).toContain('"archvied"')
+    expect(caught.message).toContain('archived, deleted, hidden, sortIndex')
+  })
+
   it('leaves the existing state intact through core’s merge', () => {
     // Core's own expression, with the values a wallet really has.
     const existing = { archived: false, hidden: true, sortIndex: 7 }

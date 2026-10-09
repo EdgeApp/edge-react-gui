@@ -1,4 +1,11 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest
+} from '@jest/globals'
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
@@ -22,11 +29,33 @@ import * as exchangeRates from '../../util/exchangeRates'
  * multiplier, `--fiat` moving the spam floor, and `offset` truncating an
  * export while `total` reported the full count.
  */
-// Real timers: `jestSetup.js` fakes them globally, and this handler awaits
-// the rates queue's own scheduling even when every transaction is already
-// priced — a faked timer never fires, so the await never settles.
-beforeAll(() => {
-  jest.useRealTimers()
+// No test in this file reaches the rates server. The handler prices
+// transactions through `fillTxsFiat` and computes the spam floor through
+// `resolveListSpamThreshold`, and both of those call into the rate queue,
+// which falls back to `globalThis.fetch` against the production
+// `rates3.edge.app` — so `npm test`, the first step of `verify` and of the
+// precommit chain, made live requests to a production service. Measured:
+// 9.8s for this file with network, and with `fetch` made to throw, 42.4s
+// and seven failures. Both entry points are stubbed instead, the way
+// `fillTxsFiat.test.ts` and `spamThreshold.test.ts` already do it. The
+// individual case that wants an unpriceable rate re-spies.
+//
+// That also removes the need for real timers: `jestSetup.js` fakes them
+// globally and the queue's `FETCH_FREQUENCY` debounce never fires under a
+// faked timer, which is why this file used to opt out.
+const STUB_RATE = 40000
+
+beforeEach(() => {
+  jest
+    .spyOn(exchangeRates, 'getHistoricalCryptoRate')
+    .mockResolvedValue(STUB_RATE)
+  jest
+    .spyOn(exchangeRates, 'getHistoricalCryptoRateOrUnavailable')
+    .mockResolvedValue(STUB_RATE)
+})
+
+afterEach(() => {
+  jest.restoreAllMocks()
 })
 
 const BTC_DENOM = { name: 'BTC', multiplier: '100000000', symbol: '₿' }
@@ -350,8 +379,8 @@ describe('get-transactions as an export', () => {
     // count and nothing logged. A listing answers instead, with
     // `unpricedCount` set.
     const spy = jest
-      .spyOn(exchangeRates, 'getHistoricalCryptoRate')
-      .mockResolvedValue(Number.NaN)
+      .spyOn(exchangeRates, 'getHistoricalCryptoRateOrUnavailable')
+      .mockResolvedValue(exchangeRates.RATE_UNAVAILABLE)
     try {
       const txs = [tx({ txid: 'a', metadata: undefined })]
       await expect(run({ exportFormat: 'csv' }, { txs })).rejects.toMatchObject(

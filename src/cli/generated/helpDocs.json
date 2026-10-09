@@ -2573,11 +2573,11 @@
         }
       },
       "returns": {
-        "crypto": "{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no crypto rates were requested.",
-        "fiat": "{ fiatCode: string; targetFiat: string; date: string; rate: number; }[] — Always present; empty when no fiat rates were requested."
+        "crypto": "{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; unavailable: boolean; }[] — Always present; empty when no crypto rates were requested.",
+        "fiat": "{ fiatCode: string; targetFiat: string; date: string; rate: number; unavailable: boolean; }[] — Always present; empty when no fiat rates were requested."
       },
       "notes": [
-        "A rate the server cannot supply comes back as `0` rather than an error, so check for zero before dividing."
+        "A rate the server cannot supply comes back as `0` rather than an error, so check for zero before dividing. `unavailable` tells the two cases apart: `false` is the server's own answer about the asset, `true` means the engine never got one — a failed upstream request or a spent query budget — and the `0` beside it is a placeholder, not a price."
       ],
       "errors": [
         "BAD_REQUEST",

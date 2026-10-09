@@ -385,7 +385,7 @@ export const getTransactions = route({
       // The client sends its own `--timeout`; a request without the header
       // falls back to the module constant, which is what every direct REST
       // caller gets.
-      chainTimeoutMs: readRequestBudgetMs(ctx.req)
+      chainTimeoutMs: readRequestBudgetMs(ctx.req, ctx.arrivedAt)
     })
 
     if (formats.length === 0) {

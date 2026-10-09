@@ -1,9 +1,18 @@
 import { floor, mul } from 'biggystring'
-import { asArray, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asBoolean,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 
 import {
   getHistoricalCryptoRate,
-  getHistoricalFiatRate
+  getHistoricalCryptoRateOrUnavailable,
+  getHistoricalFiatRateOrUnavailable,
+  isRateUnavailable
 } from '../../../util/exchangeRates'
 import { doc } from '../doc'
 import { engineError } from '../errors'
@@ -64,9 +73,13 @@ const asFiatQuery = asObject({
  * once costs a single upstream request.
  *
  * @note A rate the server cannot supply comes back as `0` rather than an
- *   error, so check for zero before dividing.
- * @coreNote GUI code (src/util/exchangeRates): getHistoricalCryptoRate and
- *   getHistoricalFiatRate.
+ *   error, so check for zero before dividing. `unavailable` tells the two
+ *   cases apart: `false` is the server's own answer about the asset, `true`
+ *   means the engine never got one — a failed upstream request or a spent
+ *   query budget — and the `0` beside it is a placeholder, not a price.
+ * @coreNote GUI code (src/util/exchangeRates):
+ *   getHistoricalCryptoRateOrUnavailable and
+ *   getHistoricalFiatRateOrUnavailable.
  */
 export const ratesQuery = route({
   core: null,
@@ -88,7 +101,11 @@ export const ratesQuery = route({
           tokenId: asTokenId,
           targetFiat: asString,
           date: doc(asString, 'The timestamp actually queried.'),
-          rate: asNumber
+          rate: asNumber,
+          unavailable: doc(
+            asBoolean,
+            'True when the engine never got an answer about this key, so `rate` is a placeholder `0` rather than a price.'
+          )
         })
       ),
       'Always present; empty when no crypto rates were requested.'
@@ -99,7 +116,11 @@ export const ratesQuery = route({
           fiatCode: asString,
           targetFiat: asString,
           date: asString,
-          rate: asNumber
+          rate: asNumber,
+          unavailable: doc(
+            asBoolean,
+            'True when the engine never got an answer about this key, so `rate` is a placeholder `0` rather than a price.'
+          )
         })
       ),
       'Always present; empty when no fiat rates were requested.'
@@ -138,26 +159,46 @@ export const ratesQuery = route({
       const targetFiat = item.targetFiat ?? 'iso:USD'
       // One canonical spelling, because it is also the rate cache's key.
       const date = item.date?.toISOString() ?? now
-      const rate = await getHistoricalCryptoRate(
+      const queried = await getHistoricalCryptoRateOrUnavailable(
         item.pluginId,
         tokenId,
         targetFiat,
         date,
         undefined
       )
-      return { pluginId: item.pluginId, tokenId, targetFiat, date, rate }
+      // `rate` is declared a number and `RATE_UNAVAILABLE` is `NaN`, which
+      // `JSON.stringify` writes as `null` — a cleaner built from the
+      // published shape dies on it, and `asNumber` cannot catch it because
+      // `typeof NaN` is `'number'`. So the sentinel becomes the `0` this
+      // route has always documented, and `unavailable` carries the fact.
+      const unavailable = isRateUnavailable(queried)
+      return {
+        pluginId: item.pluginId,
+        tokenId,
+        targetFiat,
+        date,
+        rate: unavailable ? 0 : queried,
+        unavailable
+      }
     })
 
     const fiatPending = (fiatRaw ?? []).map(async item => {
       const targetFiat = item.targetFiat ?? 'iso:USD'
       const date = item.date?.toISOString() ?? now
-      const rate = await getHistoricalFiatRate(
+      const queried = await getHistoricalFiatRateOrUnavailable(
         item.fiatCode,
         targetFiat,
         date,
         undefined
       )
-      return { fiatCode: item.fiatCode, targetFiat, date, rate }
+      const unavailable = isRateUnavailable(queried)
+      return {
+        fiatCode: item.fiatCode,
+        targetFiat,
+        date,
+        rate: unavailable ? 0 : queried,
+        unavailable
+      }
     })
 
     const [crypto, fiat] = await Promise.all([

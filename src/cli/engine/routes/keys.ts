@@ -284,6 +284,9 @@ export const listSplittableWalletTypes = route({
   }
 })
 
+/** The only keys `EdgeWalletStates` carries, and the ones the route takes. */
+const WALLET_STATE_FLAGS = ['archived', 'deleted', 'hidden', 'sortIndex']
+
 /**
  * The flags the caller actually named, with the absent ones removed.
  *
@@ -302,6 +305,14 @@ export const listSplittableWalletTypes = route({
  * over JSON, so "the key is present and undefined" means exactly "the caller
  * did not name it".
  *
+ * A flag the caller misspelled is refused rather than forwarded. The inner
+ * cleaner is `.withRest`, so `{"archvied": true}` survives cleaning and core
+ * writes it verbatim into the same synced file — the request answered `204`,
+ * nothing was archived, and the account carried a junk key to every device.
+ * Dropping `.withRest` would silently ignore it instead, which is the
+ * "answered 204 while nothing changed" failure the handler below says it
+ * fixed for wallet ids; this is the same answer for flags.
+ *
  * Exported for its test: the destruction is in the account's synced repo and
  * `JSON.stringify` cannot see it.
  */
@@ -311,6 +322,18 @@ export function onlyNamedFlags(states: {
   hidden?: boolean
   sortIndex?: number
 }): EdgeWalletStates[string] {
+  const unknown = Object.keys(states).filter(
+    key => !WALLET_STATE_FLAGS.includes(key)
+  )
+  if (unknown.length > 0) {
+    throw engineError(
+      'BAD_REQUEST',
+      `Unknown wallet state flag${unknown.length > 1 ? 's' : ''} ${unknown
+        .map(key => `"${key}"`)
+        .join(', ')}; expected ${WALLET_STATE_FLAGS.join(', ')}`,
+      400
+    )
+  }
   return withoutUndefined(states)
 }
 

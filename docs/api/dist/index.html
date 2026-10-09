@@ -7540,7 +7540,7 @@ h5.alt code {
       <h3><a href="#ratesQuery">Batch crypto and fiat rate lookups.</a></h3>
       <div class="ids"><code class="cmdname">rates-query</code><span class="src" title="Declared in">src/cli/engine/routes/rates.ts</span></div>
     </header>
-    <p class="core none"><span class="lbl">core</span><em>GUI code (src/util/exchangeRates): getHistoricalCryptoRate and getHistoricalFiatRate.</em></p>
+    <p class="core none"><span class="lbl">core</span><em>GUI code (src/util/exchangeRates): getHistoricalCryptoRateOrUnavailable and getHistoricalFiatRateOrUnavailable.</em></p>
     <div class="desc"><p>Concurrent lookups share one rates-server queue, so asking for many rates at once costs a single upstream request.</p>
 </div>
     <div class="panes"><div class="pane cli">
@@ -7606,13 +7606,15 @@ h5.alt code {
     tokenId: string | null;
     targetFiat: string;
     date: string;
-    rate: number
+    rate: number;
+    unavailable: boolean
   }[]
   fiat: {
     fiatCode: string;
     targetFiat: string;
     date: string;
-    rate: number
+    rate: number;
+    unavailable: boolean
   }[]
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
@@ -7625,18 +7627,18 @@ h5.alt code {
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>crypto</code></td>
-  <td class="ty"><span class="t">{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; }[]</span></td>
+  <td class="ty"><span class="t">{ pluginId: string; tokenId: string | null; targetFiat: string; date: string; rate: number; unavailable: boolean; }[]</span></td>
   <td class="doc">Always present; empty when no crypto rates were requested.</td>
 </tr>
 <tr>
   <td class="k"><code>fiat</code></td>
-  <td class="ty"><span class="t">{ fiatCode: string; targetFiat: string; date: string; rate: number; }[]</span></td>
+  <td class="ty"><span class="t">{ fiatCode: string; targetFiat: string; date: string; rate: number; unavailable: boolean; }[]</span></td>
   <td class="doc">Always present; empty when no fiat rates were requested.</td>
 </tr></tbody></table>
   </div>
     <h5>Errors</h5><p class="errs"><a href="#err-BAD_REQUEST" class="err" title="Malformed JSON, or a missing / wrongly typed field."><span class="st">400</span>BAD_REQUEST</a> <a href="#err-NETWORK_ERROR" class="err" title="Could not reach an Edge server."><span class="st">503</span>NETWORK_ERROR</a></p>
   </div>
-    <div class="pane notes"><h4>Notes</h4><ul><li>A rate the server cannot supply comes back as <code>0</code> rather than an error, so check for zero before dividing.</li></ul></div>
+    <div class="pane notes"><h4>Notes</h4><ul><li>A rate the server cannot supply comes back as <code>0</code> rather than an error, so check for zero before dividing. <code>unavailable</code> tells the two cases apart: <code>false</code> is the server&#39;s own answer about the asset, <code>true</code> means the engine never got one — a failed upstream request or a spent query budget — and the <code>0</code> beside it is a placeholder, not a price.</li></ul></div>
   </section><section class="endpoint" id="ratesUsdToNative">
     <header>
       <h3><a href="#ratesUsdToNative">Convert a USD amount into native units.</a></h3>

@@ -1,10 +1,34 @@
 import { asObject, asOptional, asString } from 'cleaners'
 
+import { errorMessage } from '../../../util/errorMessage'
 import { doc } from '../doc'
+import { engineError } from '../errors'
 import { findWallet } from '../resolve'
 import { route } from '../route'
 import { asCoreValue, asIntegerString, asWalletId } from '../schemas'
 import { getAccount } from './helpers'
+
+/**
+ * Turn a plugin's refusal into the `BAD_REQUEST` these routes declare.
+ *
+ * A currency plugin throws a plain `Error` for an unparseable URI or an
+ * address it cannot encode, `mapCoreError` has no arm for a plain `Error`,
+ * and `toErrorBody` therefore answered `500 INTERNAL_ERROR` — an engine
+ * fault — for a string the caller got wrong, on routes whose declared
+ * errors say `BAD_REQUEST`. `spend` wraps the same `parseUri` call this way,
+ * so `spend --to=notanaddress` and `parse-uri --uri=notanaddress` used to
+ * report differently for identical input.
+ */
+async function asBadRequest<T>(
+  what: string,
+  run: () => Promise<T>
+): Promise<T> {
+  try {
+    return await run()
+  } catch (error: unknown) {
+    throw engineError('BAD_REQUEST', `${what}: ${errorMessage(error)}`, 400)
+  }
+}
 
 const CURRENCY_CODE_DOC = 'Disambiguates on chains that carry several assets.'
 
@@ -34,7 +58,10 @@ export const parseUri = route({
 
   async handler(ctx) {
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
-    return await wallet.parseUri(ctx.body.uri, ctx.body.currencyCode)
+    return await asBadRequest(
+      'Could not parse URI',
+      async () => await wallet.parseUri(ctx.body.uri, ctx.body.currencyCode)
+    )
   }
 })
 
@@ -73,13 +100,17 @@ export const encodeUri = route({
   async handler(ctx) {
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     return {
-      uri: await wallet.encodeUri({
-        publicAddress: ctx.body.publicAddress,
-        nativeAmount: ctx.body.nativeAmount,
-        label: ctx.body.label,
-        message: ctx.body.message,
-        currencyCode: ctx.body.currencyCode
-      })
+      uri: await asBadRequest(
+        'Could not encode URI',
+        async () =>
+          await wallet.encodeUri({
+            publicAddress: ctx.body.publicAddress,
+            nativeAmount: ctx.body.nativeAmount,
+            label: ctx.body.label,
+            message: ctx.body.message,
+            currencyCode: ctx.body.currencyCode
+          })
+      )
     }
   }
 })

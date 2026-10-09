@@ -2,10 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import type { EdgeAccount, EdgeSwapQuote } from 'edge-core-js'
 
 import { ObjectHandleStore } from '../../cli/engine/objectHandles'
-import {
-  approveSwapQuote,
-  closeSwapQuote
-} from '../../cli/engine/routes/swap'
+import { approveSwapQuote, closeSwapQuote } from '../../cli/engine/routes/swap'
 
 /**
  * The last step of the swap flow, which nothing could drive.
