@@ -498,7 +498,6 @@ export default [
       'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
-      'src/util/utils.ts',
 
       'src/util/withWatchableProps.ts'
     ],
