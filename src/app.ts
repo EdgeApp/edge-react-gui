@@ -15,6 +15,7 @@ import './locales/initLocale'
 // Metro's default `inlineRequires` can defer the whole module — so the one
 // wiring that decides how rate-query failures are reported was the one whose
 // evaluation point depended on a bundler transform.
+import './util/exchangeRatesGui'
 
 import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
