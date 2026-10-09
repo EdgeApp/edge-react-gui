@@ -140,7 +140,7 @@ function call(cmdstring: string): void {
   })
 }
 
-main().catch((e: unknown) => {
-  console.error(errorMessage(e))
+main().catch((error: unknown) => {
+  console.error(errorMessage(error))
   process.exit(1)
 })

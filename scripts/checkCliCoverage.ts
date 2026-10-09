@@ -35,9 +35,8 @@ const NETWORK_ONLY: Record<string, string> = {}
  * A refusal is not coverage of the handler: `refuses('…', 'INSUFFICIENT_FUNDS',
  * 'spend', …)` proves the route rejects a request, and the body past that
  * rejection never runs. This gate counted the two the same way and printed
- * "118/118 commands run offline", which is the figure the CHANGELOG and
- * `AGENTS.md` quote — over a surface a quarter of which no handler ever ran
- * for.
+ * "118/118 commands run offline" — a figure quoted elsewhere at the time,
+ * over a surface a quarter of which no handler ever ran for.
  *
  * In the fake world `makeFakeCoreContext` builds the real currency plugins,
  * so a wallet there has no funds and no network: the commands below cannot

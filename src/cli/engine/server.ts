@@ -275,7 +275,9 @@ async function handleRequest(
 
     const matched = router.match(req.method ?? 'GET', pathname)
     if (matched == null) {
-      // Check if path exists with different method
+      // A wrong method on a real path answers `405 METHOD_NOT_ALLOWED`
+      // rather than `404`, so a client that posted to a GET route is told
+      // which of the two mistakes it made.
       const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       const other = methods.find(
         m =>

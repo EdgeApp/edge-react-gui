@@ -16,7 +16,7 @@ jest.mock('../../components/services/AirshipInstance', () => ({
 /**
  * `Categories.json` is on the *synced* repo, so a bad read is expensive.
  *
- * The reader caught every failure and answered it by writing the 400-entry
+ * The reader caught every failure and answered it by writing the 116-entry
  * default array back — so one decryption or I/O failure on a file that is
  * there replaced the user's own subcategories, on every device. The two
  * readers beside it (`localAccountSettings.ts`, `exportTxInfo.ts`) both test
@@ -44,7 +44,7 @@ describe('readSyncedSubcategories', () => {
   it('still answers the defaults when the repo cannot be written', async () => {
     // The seed write was awaited and `writeSyncedSubcategories` no longer
     // swallows a failure, so this threw out of a *read* — and
-    // `CategoryModal` rendered an empty list, offering none of the 400
+    // `CategoryModal` rendered an empty list, offering none of the 116
     // standard categories on the screen whose purpose is to offer them.
     const account = makeFakeDiskletAccount({
       writeError: new Error('EACCES: the synced repo is read-only')

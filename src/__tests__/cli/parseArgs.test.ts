@@ -1,5 +1,6 @@
-// The generated command table, so `isCommandName` has a registry to read:
-// the "value is a command" guard is the whole point of one of these cases.
+// The generated command table, so `hasCommand` has a registry to read: it
+// is what supplies `takeFlagValue`'s `isCommand` option, and the "value is
+// a command" guard is the whole point of one of these cases.
 import '../../cli/commands/all'
 
 import { describe, expect, it } from '@jest/globals'

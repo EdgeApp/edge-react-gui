@@ -10,7 +10,8 @@ const ROOT = path.resolve(__dirname, '../../..')
 /**
  * A request line in the engine log must not carry a usable session id.
  *
- * 74 of the 117 routes are `/account/{sessionId}/…`, and a `sessionId` is a
+ * Most of the surface — 82 of the 118 routes — is
+ * `/account/{sessionId}/…`, and a `sessionId` is a
  * bearer token: holding one is full account authority. Every other site in
  * the engine routes through `redactSessionId`; the 4xx/5xx log line did not,
  * so one mistyped `--wallet-id` wrote a live credential into

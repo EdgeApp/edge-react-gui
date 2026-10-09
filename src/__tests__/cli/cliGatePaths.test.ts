@@ -80,8 +80,9 @@ describe('CLI gate paths', () => {
   })
 
   it('does not match a sibling by prefix', () => {
-    // `src/cli` must not swallow `src/client.ts`, which `startsWith` alone
-    // would.
+    // One case per gate entry whose name is a prefix of a real sibling:
+    // `src/cli` must not swallow `src/clipboard.ts`, and `src/util` must
+    // not swallow `src/utilities.ts`. `startsWith` alone would take both.
     expect(gate.isGatedPath('src/clipboard.ts')).toBe(false)
     expect(gate.isGatedPath('src/utilities.ts')).toBe(false)
   })

@@ -634,3 +634,44 @@ describe('the unpriced map', () => {
     expect(rateUnpricedCount()).toBe(20_100 - (20_000 >> 2))
   }, 180_000)
 })
+
+/**
+ * The per-group "chain budget spent" pre-check, which nothing entered.
+ *
+ * `doQuery` states the rule twice: once before each group's request, so a
+ * group that finds the chain spent settles rather than opening a request
+ * nobody waits for, and once after the loop. Only the post-loop twin had a
+ * test, so one of two spellings of one rule was unasserted — and the thing
+ * both have to agree about is settling at `RATE_UNAVAILABLE` rather than
+ * `0`: `0` is the answer for an asset the server cannot price, and these
+ * keys were never asked about.
+ */
+describe('a chain whose budget is spent before the request', () => {
+  it('settles the group as unavailable rather than asking', async () => {
+    stopRateQueue()
+    clearRateCache()
+    posts = 0
+
+    // A budget shorter than the queue's own debounce, so the group is
+    // reached with `chainEndsAt` already in the past and the pre-check is
+    // the arm that runs. `chainTimeoutMs` is the parameter `--timeout`
+    // threads through for exactly this reason.
+    const rate = await getHistoricalCryptoRateOrUnavailable(
+      'bitcoin',
+      null,
+      'iso:USD',
+      '2024-06-01T00:00:00.000Z',
+      100,
+      fakeFetch,
+      1
+    )
+
+    expect(isRateUnavailable(rate)).toBe(true)
+    // Nothing was asked, which is the point of checking before the request.
+    expect(posts).toBe(0)
+    // And nothing was cached or remembered as unpriceable: the server said
+    // nothing about this date.
+    expect(rateCacheSize()).toBe(0)
+    expect(rateUnpricedCount()).toBe(0)
+  })
+})

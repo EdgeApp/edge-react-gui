@@ -399,6 +399,27 @@ export const getTotalFiatAmountFromExchangeRates = (
 
 type AsyncFunction = () => Promise<any>
 
+/**
+ * One server's failure, with the slot it came from.
+ *
+ * The index used to be written onto the rejected value, which is only
+ * possible when that value is an object; a server or plugin that rejects
+ * with a string took the loop's bookkeeping with it. Carrying both in a
+ * wrapper works whatever was thrown, and the wrapper never escapes:
+ * `asyncWaterfall` unwraps it before rethrowing.
+ */
+class WaterfallFailure extends Error {
+  readonly index: number
+  readonly error: unknown
+
+  constructor(index: number, error: unknown) {
+    super('asyncWaterfall server failed')
+    this.name = 'WaterfallFailure'
+    this.index = index
+    this.error = error
+  }
+}
+
 export async function asyncWaterfall(
   asyncFuncs: AsyncFunction[],
   timeoutMs: number = 5000
@@ -416,9 +437,19 @@ export async function asyncWaterfall(
     for (const func of asyncFuncs) {
       const index = promises.length
       promises.push(
-        func().catch((e: unknown) => {
-          ;(e as any).index = index
-          throw e
+        // The index travels in a wrapper, not on the thrown value. Tagging
+        // the rejection itself — `;(e as any).index = index` — only works
+        // when it is an object: a plugin or server that rejects with a
+        // string or a number made that assignment throw a `TypeError` under
+        // strict mode, or quietly no-op in the loose CLI bundle. Either way
+        // the `catch` below read `undefined`, `promises.splice(undefined, 1)`
+        // removed `promises[0]` instead of the entry that failed, the
+        // `pop()` after it removed a second, and on the last server the
+        // error rethrown was the `TypeError` rather than the real failure.
+        // This function is now behind the daemon's rates and `infoRollup`
+        // paths, where the mis-splice costs a still-pending server its turn.
+        func().catch((error: unknown) => {
+          throw new WaterfallFailure(index, error)
         })
       )
       if (pending > 1) {
@@ -441,15 +472,19 @@ export async function asyncWaterfall(
         } else {
           return result
         }
-      } catch (e: any) {
-        const i = e.index
+      } catch (failure: unknown) {
+        // Anything that is not one of ours is not a server's answer — a
+        // bug in this loop, say — and must not be turned into one.
+        if (!(failure instanceof WaterfallFailure)) throw failure
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        promises.splice(i, 1)
+        promises.splice(failure.index, 1)
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         promises.pop()
         --pending
         if (pending === 0) {
-          throw e
+          // The server's own error, unwrapped: the caller asked for a
+          // rate, not for this function's bookkeeping.
+          throw failure.error
         }
       }
     }

@@ -11,7 +11,7 @@
 - fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
 - fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
 - added: Every secret the CLI takes also reads from its own environment variable — `EDGE_CLI_PASSWORD`, `EDGE_CLI_PIN`, `EDGE_CLI_LOGIN_KEY`, `EDGE_CLI_DATA_KEY` and the rest — because `ps` shows a command line to every user on the host. `check-password-rules`, `admin-repo-list` and `admin-repo-get` take their secret in a POST body rather than a query string.
-- added: Edge CLI (`edge-cli`) and its engine daemon: a long-lived process owning an `EdgeContext`, a JSON REST API over a Unix socket with an optional loopback TCP listener, and a thin client that spawns the engine on demand. 117 routes, generated command table, help text and OpenAPI reference.
+- added: Edge CLI (`edge-cli`) and its engine daemon: a long-lived process owning an `EdgeContext`, a JSON REST API over a Unix socket with an optional loopback TCP listener, and a thin client that spawns the engine on demand. 118 routes, generated command table, help text and OpenAPI reference.
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)

@@ -77,7 +77,7 @@ for which paths those are):
 | `docs:api:verify` | the surface matches: no route without the command it claims, no command nobody declares, no flag on one side missing from the other, no `core` naming a member `edge-core-js` does not have |
 | `docs:api:contracts` | the contract holds: every field a caller can send is described, nothing described has gone away, and no handler reads a field its cleaner would strip |
 | `docs:api:core` | each route's request matches the real signature of the core call it fronts, or records why it differs in `coreExtra` |
-| `docs:api:coverage` | every command's *handler* is reached by an automated test, or the command is listed with the suite that drives it or the reason it cannot run offline. A refusal — a request the route rejects before the handler body — is counted apart, because it proves the rejection and not the command. 90 of the 118 commands reach a handler offline; the other 28 are listed in `scripts/checkCliCoverage.ts` with the suite that drives each one |
+| `docs:api:coverage` | every command's *handler* is reached by an automated test, or the command is listed with the suite that drives it or the reason it cannot run offline. A refusal — a request the route rejects before the handler body — is counted apart, because it proves the rejection and not the command. the gate prints the current split (today 89 of 119 commands reach a handler offline and 30 are refusal-only); the exceptions are listed in `scripts/checkCliCoverage.ts` with the suite that drives each one |
 
 Two more run on the same generated artifacts — `cli:manifest:check` in CI and
 in `precommit:cli`, `docs:api:committed` in CI only:

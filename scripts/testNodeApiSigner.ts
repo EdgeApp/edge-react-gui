@@ -119,7 +119,7 @@ async function main(): Promise<void> {
   await bundle.context.close()
 }
 
-main().catch((err: unknown) => {
-  console.error(err)
+main().catch((error: unknown) => {
+  console.error(error)
   process.exit(1)
 })

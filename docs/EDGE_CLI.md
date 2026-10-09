@@ -210,7 +210,7 @@ locale; the client warns on mismatch and continues.
 ## Which assets work
 
 `currency-configs` lists every plugin the engine registered — 87 ids — and
-registration is not the same as being able to carry a wallet. Three groups
+registration is not the same as being able to carry a wallet. Four groups
 behave differently, and nothing in the API distinguishes them, so this is the
 list:
 
@@ -577,7 +577,7 @@ exit code. Two codes are deliberately generic: `INTERNAL_ERROR`, which is the
 unmapped failure by definition, and `OBSOLETE_API`, which means this build is
 too old for the login server and has no exit code of its own.
 
-Three rules sit outside the catalogue, and the reference states them with the
+Four rules sit outside the catalogue, and the reference states them with the
 codes they belong to:
 
 - An unlisted error code arriving with HTTP `503` exits `6` (network), not

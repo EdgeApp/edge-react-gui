@@ -110,6 +110,55 @@ describe('fetchWaterfall', () => {
     }
   })
 
+  it('survives a server that rejects with something that is not an object', async () => {
+    // The index used to be written onto the rejected value, which only
+    // works when it is an object: a string rejection made that assignment
+    // throw a `TypeError` under strict mode — so `promises.splice(undefined,
+    // 1)` removed the wrong entry, the `pop()` after it removed a second,
+    // and on the last server the error rethrown was the `TypeError` rather
+    // than the real failure. Behind the daemon's rates and `infoRollup`
+    // paths that costs a still-pending server its turn.
+    let asked = 0
+    const doFetch = jest.fn(async (uri: string) => {
+      // A bare string, which is the shape this case is about.
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      if (++asked === 1) throw 'first server said no'
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true }),
+        text: async () => ''
+      }
+    }) as unknown as EdgeFetchFunction
+
+    // The second server still gets its turn, and answers.
+    const response = await fetchWaterfall(
+      ['https://info1.example', 'https://info2.example'],
+      'v1/thing',
+      undefined,
+      5000,
+      doFetch
+    )
+    expect(response.status).toBe(200)
+    expect(asked).toBe(2)
+  })
+
+  it('rethrows the server’s own error, not its bookkeeping', async () => {
+    const doFetch = jest.fn(async () => {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      throw 'every server said no'
+    }) as unknown as EdgeFetchFunction
+    await expect(
+      fetchWaterfall(
+        ['https://info1.example'],
+        'v1/thing',
+        undefined,
+        5000,
+        doFetch
+      )
+    ).rejects.toBe('every server said no')
+  })
+
   it('throws the last error when every server rejects', async () => {
     const doFetch = jest.fn(async (uri: string) => {
       throw new Error(`down: ${uri}`)

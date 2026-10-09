@@ -47,7 +47,7 @@ const CATEGORY_KEYS: Record<Category, keyof typeof lstrings> = {
  * What the readers on a render path want, and all they want:
  * `formatCategory` is called once per visible transaction row while a list
  * scrolls, and `CategoryModal`'s subcategory memo calls it once per entry of
- * `state.ui.subcategories` — 400 of them on an account that has never edited
+ * `state.ui.subcategories` — 116 of them on an account that has never edited
  * the list — on every keystroke in the field. Rebuilding a four-key literal
  * and reading all four strings to hand back one of them was that work times
  * four.
@@ -195,7 +195,7 @@ async function writeSyncedSubcategories(
  */
 const asCategoriesFile = asJSON(
   asObject({
-    categories: asOptional(asArray(asString), () => defaultCategories)
+    categories: asOptional(asArray(asString), () => [...defaultCategories])
   })
 )
 const wasCategoriesFile = uncleaner(asCategoriesFile)
@@ -209,15 +209,15 @@ const wasCategoriesFile = uncleaner(asCategoriesFile)
  * was *not* serialized was the one in the shared path: `CategoryModal`
  * dispatches `getSubcategories` on mount, a tap in the window before it
  * resolves runs `setNewSubcategory`, which takes the key, re-reads (still
- * absent), seeds, merges and writes 401 — and the mount's unlocked write
- * of the bare 400 lands last, on the *synced* repo, while Redux has
- * already been told 401.
+ * absent), seeds, merges and writes 117 — and the mount's unlocked write
+ * of the bare 116 lands last, on the *synced* repo, while Redux has
+ * already been told 117.
  *
  * Removing the write also stops a read failing for a write's reason. The
  * seed was awaited, and `writeSyncedSubcategories` deliberately no longer
  * swallows a failure, so on a fresh account whose repo could not be
  * written this threw out of a function whose job is to read — and
- * `CategoryModal` rendered an empty list, offering none of the 400
+ * `CategoryModal` rendered an empty list, offering none of the 116
  * standard categories, on the screen whose whole purpose is to offer them.
  * The defaults need no file to produce.
  *
@@ -239,12 +239,19 @@ export async function readSyncedSubcategories(
   } catch (error: unknown) {
     // Only an absent file may be answered by writing the defaults back.
     // This caught everything, so a decryption or I/O failure on a file that
-    // is *there* rewrote the user's subcategory list from the 400-entry
+    // is *there* rewrote the user's subcategory list from the 116-entry
     // default array — on the synced repo, for every device.
     // `isMissingFile` exists for this; `localAccountSettings.ts` and
     // `exportTxInfo.ts` both make this exact check.
     if (!isMissingFile(error)) throw error
-    return defaultCategories
+    // A copy, not the module constant itself. `getSubcategories` dispatches
+    // whatever this returns straight into `state.ui.subcategories`, so
+    // returning the array would make Redux state an alias of a constant
+    // every other importer shares: one in-place `.sort()` or `.push()` on a
+    // selector result, now or later, would rewrite the defaults for the rest
+    // of the process. Nothing mutates it today; the hazard is free to
+    // remove.
+    return [...defaultCategories]
   }
   // Cleaned, not `JSON.parse(text).categories`: a file that parses without
   // the key — `{}` — returned `undefined` into `SET_TRANSACTION_SUBCATEGORIES`

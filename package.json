@@ -66,7 +66,6 @@
     "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts",
     "cli": "node -r sucrase/register src/cli/index.ts",
     "engine": "node -r sucrase/register src/cli/engine/index.ts",
-    "build": "npm run build:cli",
     "build:cli": "rollup -c rollup.config.cli.mjs",
     "build:cli:all": "npm run build:cli:native && npm run build:cli && npm run build:cli:copy-native",
     "build:cli:native": "bash ./scripts/buildNodeApiSigner.sh",
@@ -220,6 +219,7 @@
     "url": "^0.11.0",
     "url-parse": "^1.5.2",
     "use-context-selector": "^2.0.0",
+    "uuid": "^8.3.2",
     "yaob": "^0.4.0",
     "yavent": "^0.1.5",
     "zcashname-sdk": "^0.7.2"

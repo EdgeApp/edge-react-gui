@@ -297,7 +297,7 @@ async function main(): Promise<void> {
   if (failed.length > 0) process.exit(1)
 }
 
-main().catch((err: unknown) => {
-  console.error(err)
+main().catch((error: unknown) => {
+  console.error(error)
   process.exit(1)
 })

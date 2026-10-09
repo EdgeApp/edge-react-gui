@@ -154,7 +154,7 @@ function countLstringReads(fn: () => unknown): number {
  * The same property, for the category table.
  *
  * `categoryName` is reached by `formatCategory`, so by `TransactionListRow`
- * once per visible row and by `CategoryModal`'s 400-entry memo on every
+ * once per visible row and by `CategoryModal`'s 116-entry memo on every
  * keystroke — and it had no allocation test at all, only a comment in
  * `CategoriesActions.ts` pointing at the one above that held nothing.
  */

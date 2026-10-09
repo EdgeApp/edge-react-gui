@@ -3017,9 +3017,7 @@ const SendComponent: React.FC<Props> = props => {
   ourReceiveAddresses: ${JSON.stringify(ourReceiveAddresses)}`)
 
         await saveTxAndMetadata(coreWallet, broadcastedTx, {
-          onMetadataError: (error: unknown) => {
-            showError(error)
-          }
+          onMetadataError: showError
         })
 
         for (const target of spendInfo.spendTargets) {

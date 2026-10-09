@@ -96,7 +96,8 @@ console.log('OK ' + ${JSON.stringify(relPath)})
  * `--help` because requiring an entry runs its `main`, and help is the one
  * argument that makes both of them print and exit 0 without touching the
  * network, a socket or the account directory. Loading it is the point: it
- * pulls the whole value-import graph — 138 modules, 53 of them outside
+ * pulls the whole value-import graph — every module either entry point
+ * reaches, most of them outside
  * `src/cli` — so a `react-native` import anywhere in it fails here, whether
  * or not `SHARED_MODULES` happens to name the file.
  */

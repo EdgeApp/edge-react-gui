@@ -137,19 +137,20 @@ function makeBitwaveDateTime(date: number): string {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`
 }
 
-//
-// Check if tx is
-// 1. A transfer
-// 2. Outgoing spend
-// 3. Has a network fee
-// If so:
-//  1. Modify transaction to reduce the nativeAmount by the networkFee
-//  2. Set networkFee to 0
-//  3. Return a new transaction that has:
-//      1. nativeAmount and networkFee set to original tx fee
-//      2. category set to 'Expense:Network Fee'
-//      3. txid set to old txid + '-TRANSFER_TX'
-
+/**
+ * Split an outgoing transfer's fee into a row of its own.
+ *
+ * An accounting export treats a transfer between the user's own wallets as
+ * non-taxable — nothing was disposed of — while the network fee *is* an
+ * expense. So the transfer row is reduced to the amount that actually moved
+ * and its fee is zeroed, and the fee comes back as a second transaction
+ * categorised `Expense:Network Fee`, with the original txid plus
+ * `-TRANSFER_TX` so the two can be traced to one chain event.
+ *
+ * Only for an outgoing transfer that has a fee: an incoming transfer paid
+ * no fee on this side, and a spend to someone else is a disposal whose fee
+ * is already part of it.
+ */
 export function getTransferTx(
   oldEdgeTransaction: EdgeTransaction,
   fiatCurrencyCode: string

@@ -6,6 +6,7 @@ import type {
 } from 'edge-core-js'
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 
+import { errorMessage } from './errorMessage'
 import { makePeriodicTask, type PeriodicTask } from './PeriodicTask'
 import { unrefTimer } from './raceTimeout'
 import { asyncWaterfall, shuffleArray } from './utils'
@@ -296,7 +297,7 @@ export const fetchPublicRollup = async (
     // below has done it this way all along.
     console.warn(
       'fetchPublicRollup: Failed to reach the info server',
-      String(error)
+      errorMessage(error)
     )
   }
 }

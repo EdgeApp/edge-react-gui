@@ -4,8 +4,8 @@
  *
  * One list, because there were nearly three. `package.json`'s `precommit:cli`
  * had its own hand-written pathspec — `src/cli scripts docs/EDGE_CLI.md
- * docs/api` — and the smoke test below it loads 18 modules under `src/util`
- * and `src/locales`, none of which that pathspec named. So a developer who
+ * docs/api` — and the smoke test below it loads twenty modules under
+ * `src/util` and `src/locales`, none of which that pathspec named. So a developer who
  * re-added a `react-native` import to `src/util/utils.ts`, or edited
  * `src/util/txDisplay/displayInfo.ts`, committed with the Node-safety smoke
  * test and both offline suites skipped — the one regression the gate exists
