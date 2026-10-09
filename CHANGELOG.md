@@ -5,6 +5,7 @@
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
+- fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
 
 ## 4.52.0 (staging)
 
