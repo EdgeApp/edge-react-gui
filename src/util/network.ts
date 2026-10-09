@@ -6,6 +6,7 @@ import type {
 } from 'edge-core-js'
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 
+import { makePeriodicTask, type PeriodicTask } from './PeriodicTask'
 import { asyncWaterfall, shuffleArray } from './utils'
 
 export const DEFAULT_INFO_SERVERS = [
@@ -21,6 +22,21 @@ let infoServers: string[] = DEFAULT_INFO_SERVERS
 let referralServers: string[] = []
 let notificationServers: string[] = []
 let infoServerPollStarted = false
+/**
+ * The info-server poll, kept so it can be stopped and cannot overlap.
+ *
+ * `makePeriodicTask` rather than `setInterval`, which is the one rule the
+ * async brief states flatly. Two things followed from the raw interval.
+ * `fetchPublicRollup` has no ceiling of its own — `fetchWaterfall`'s
+ * `timeoutMs` is `asyncWaterfall`'s per-server *stagger*, armed only when
+ * more than one server is pending — so against a stalled info server the
+ * polls overlapped and accumulated one pending request every five minutes
+ * for the life of the app, where this measures its gap after the task
+ * finishes. And the interval handle was discarded, so nothing could stop
+ * the poll; `src/cli/engine/fetchPluginKeys.ts` notes that as one reason
+ * the engine never calls `initInfoServer`.
+ */
+let infoServerPoll: PeriodicTask | undefined
 
 /**
  * GUI wires referral/push/info server lists from appConfig/ENV at startup.
@@ -310,11 +326,27 @@ export const initInfoServer = async (
     await fetchPublicRollup()
   }
 
-  setInterval(() => {
-    fetchPublicRollup().catch(() => {
-      // Already caught in `fetchPublicRollup`
-    })
-  }, INFO_FETCH_INTERVAL)
+  infoServerPoll = makePeriodicTask(fetchPublicRollup, INFO_FETCH_INTERVAL, {
+    onError: () => {
+      // Already caught in `fetchPublicRollup`.
+    }
+  })
+  // `wait: true`, because the launch fetch above has already run — starting
+  // in the running state would fire a second one immediately.
+  infoServerPoll.start({ wait: true })
+}
+
+/**
+ * Stop the info-server poll.
+ *
+ * Nothing in the app calls this today; it exists because a ticker whose
+ * handle is thrown away cannot be stopped at all, and the engine's
+ * `fetchPluginKeys` names that as a reason it keeps away from this module.
+ */
+export const stopInfoServerPoll = (): void => {
+  infoServerPoll?.stop()
+  infoServerPoll = undefined
+  infoServerPollStarted = false
 }
 
 const asCoinrankList = asObject(asString)
