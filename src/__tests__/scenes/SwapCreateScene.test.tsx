@@ -19,12 +19,15 @@ import {
   makeFakeEdgeWorld
 } from 'edge-core-js'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import type { SwapConfirmationParams } from '../../components/scenes/SwapConfirmationScene'
 import { SwapCreateScene } from '../../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../../components/scenes/SwapProcessingScene'
+import { showToast } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
+import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
 import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
@@ -34,6 +37,12 @@ import {
   fakeSwapTabSceneProps
 } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import { asHoudiniChains } from '../../util/houdiniChains'
+
+jest.mock('../../components/services/AirshipInstance', () => ({
+  ...jest.requireActual<object>('../../components/services/AirshipInstance'),
+  showToast: jest.fn()
+}))
 
 jest.useRealTimers()
 
@@ -91,11 +100,33 @@ jest.mock('../../actions/SettingsActions', () => ({
   }
 }))
 
+// Houdini's served list, without which the scene hides the toggle:
+const houdiniChains = asHoudiniChains({
+  bitcoin: {
+    memoNeeded: false,
+    addressValidation: '^bc1[a-z0-9]{39}$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  },
+  ethereum: {
+    memoNeeded: false,
+    addressValidation: '^0x[0-9A-Fa-f]{40}$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  }
+})
+
+/** A root state with Houdini's served list loaded. */
+const servedState: FakeState = {
+  ...fakeRootState,
+  ui: { ...fakeRootState.ui, houdiniChains }
+}
+
 /** A root state whose account saved `stealthSwapEnabled`. */
 const savedState = (stealthSwapEnabled: boolean): FakeState => ({
-  ...fakeRootState,
+  ...servedState,
   ui: {
-    ...fakeRootState.ui,
+    ...servedState.ui,
     settings: { ...fakeRootState.ui?.settings, stealthSwapEnabled }
   }
 })
@@ -106,7 +137,7 @@ describe('SwapCreateScene', () => {
   })
 
   it('should render with loading props', () => {
-    const rootState: FakeState = { ...fakeRootState }
+    const rootState: FakeState = servedState
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -121,7 +152,7 @@ describe('SwapCreateScene', () => {
   it('asks for an ordinary swap after the Stealth terms are declined', async () => {
     if (btcWallet == null || ethWallet == null) throw new Error('No wallets')
     mockSetStealthSwapEnabled.mockReset()
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = { ...servedState, core: { account } }
     const navigate = jest
       .spyOn(fakeNavigation, 'navigate')
       .mockImplementation(() => undefined)
@@ -183,7 +214,7 @@ describe('SwapCreateScene', () => {
   })
 
   it('offers the Stealth Swap toggle before any wallet is picked', () => {
-    const rootState: FakeState = { ...fakeRootState }
+    const rootState: FakeState = servedState
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -198,8 +229,25 @@ describe('SwapCreateScene', () => {
     rendered.unmount()
   })
 
+  it('hides the Stealth Swap toggle until Houdini serves its list', () => {
+    const rendered = render(
+      <FakeProviders initialState={{ ...fakeRootState }}>
+        <SwapCreateScene
+          {...fakeSwapTabSceneProps('swapCreate', { stealth: true })}
+        />
+      </FakeProviders>
+    )
+
+    // A stealth param or saved choice cannot arm a swap Houdini cannot route:
+    expect(rendered.queryByText(lstrings.stealth_swap_toggle)).toBeNull()
+    expect(
+      rendered.queryByText(lstrings.stealth_swap_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
+
   it('turns Stealth Swap on from the stealth param', () => {
-    const rootState: FakeState = { ...fakeRootState }
+    const rootState: FakeState = servedState
     const sceneProps = fakeSwapTabSceneProps('swapCreate', { stealth: true })
     const setParams = jest.spyOn(sceneProps.navigation, 'setParams')
 
@@ -331,5 +379,144 @@ describe('SwapCreateScene', () => {
       rendered.unmount()
       setParams.mockRestore()
     })
+  })
+})
+
+describe('SwapCreateScene Stealth Swap bans', () => {
+  const btcConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
+  const ethConfig = makeFakeCurrencyConfig(ethCurrencyInfo)
+  const makeWallet = (
+    id: string,
+    currencyConfig: typeof btcConfig
+  ): EdgeCurrencyWallet =>
+    ({
+      balanceMap: new Map([[null, '100000000']]),
+      balances: { [currencyConfig.currencyInfo.currencyCode]: '100000000' },
+      currencyConfig,
+      currencyInfo: currencyConfig.currencyInfo,
+      enabledTokenIds: [],
+      fiatCurrencyCode: 'iso:USD',
+      id,
+      name: id,
+      type: currencyConfig.currencyInfo.walletType,
+      watch: () => () => {}
+    } as unknown as EdgeCurrencyWallet)
+
+  const renderScene = (houdiniBans: {
+    source: Array<{ pluginId: string }>
+    destination: Array<{ pluginId: string }>
+  }): {
+    navigate: ReturnType<typeof jest.spyOn>
+    pressMax: () => void
+    toggleStealth: () => void
+    unmount: () => void
+  } => {
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: {
+        account: {
+          currencyConfig: { bitcoin: btcConfig, ethereum: ethConfig },
+          currencyWallets: {
+            btc: makeWallet('btc', btcConfig),
+            eth: makeWallet('eth', ethConfig)
+          },
+          watch: () => () => {}
+        }
+      },
+      ui: {
+        ...fakeRootState.ui,
+        houdiniChains,
+        exchangeInfo: {
+          swap: {
+            disableAssets: { source: [], destination: [] },
+            disableAssetsByPlugin: { houdini: houdiniBans },
+            disablePlugins: {}
+          }
+        }
+      }
+    }
+    const props = fakeSwapTabSceneProps('swapCreate', {
+      fromWalletId: 'btc',
+      toWalletId: 'eth'
+    })
+    const navigate = jest.spyOn(props.navigation, 'navigate')
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SwapCreateScene {...props} />
+      </FakeProviders>
+    )
+    return {
+      navigate,
+      pressMax: () => {
+        fireEvent.press(rendered.getByText(lstrings.string_max_cap))
+      },
+      toggleStealth: () => {
+        fireEvent.press(rendered.getByText(lstrings.stealth_swap_toggle))
+      },
+      unmount: () => {
+        rendered.unmount()
+        navigate.mockRestore()
+      }
+    }
+  }
+
+  beforeEach(() => {
+    jest.mocked(showToast).mockClear()
+  })
+
+  it('quotes a Houdini-banned source when Stealth Swap is off', () => {
+    const scene = renderScene({
+      source: [{ pluginId: 'bitcoin' }],
+      destination: []
+    })
+    scene.pressMax()
+    expect(showToast).not.toHaveBeenCalled()
+    expect(scene.navigate).toHaveBeenCalledWith(
+      'swapProcessing',
+      expect.anything()
+    )
+    scene.unmount()
+  })
+
+  it('refuses a Houdini-banned source with Stealth Swap on', () => {
+    const scene = renderScene({
+      source: [{ pluginId: 'bitcoin' }],
+      destination: []
+    })
+    scene.toggleStealth()
+    scene.pressMax()
+    expect(showToast).toHaveBeenCalledWith(
+      sprintf(
+        lstrings.swap_token_no_enabled_exchanges_2s,
+        'BTC',
+        btcCurrencyInfo.displayName
+      )
+    )
+    expect(scene.navigate).not.toHaveBeenCalledWith(
+      'swapProcessing',
+      expect.anything()
+    )
+    scene.unmount()
+  })
+
+  it('refuses a Houdini-banned destination with Stealth Swap on', () => {
+    const scene = renderScene({
+      source: [],
+      destination: [{ pluginId: 'ethereum' }]
+    })
+    scene.toggleStealth()
+    scene.pressMax()
+    expect(showToast).toHaveBeenCalledWith(
+      sprintf(
+        lstrings.swap_token_no_enabled_exchanges_2s,
+        'ETH',
+        ethCurrencyInfo.displayName
+      )
+    )
+    expect(scene.navigate).not.toHaveBeenCalledWith(
+      'swapProcessing',
+      expect.anything()
+    )
+    scene.unmount()
   })
 })

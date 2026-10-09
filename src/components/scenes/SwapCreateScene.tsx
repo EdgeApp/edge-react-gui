@@ -30,7 +30,11 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
+import { getHoudiniAssets } from '../../util/houdiniChains'
+import {
+  getStealthDisableAssets,
+  makeStealthSwapRequestOptions
+} from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -117,7 +121,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const [stealthOverride, setStealthOverride] = useState<boolean | undefined>(
     stealthParam
   )
-  const stealth = stealthOverride ?? stealthSwapEnabled
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -127,6 +130,11 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const houdiniChains = useSelector(state => state.ui.houdiniChains)
+  // Until the info server serves Houdini's list there is nothing a Stealth
+  // Swap could route, so the toggle stays hidden and reads as off:
+  const stealthAvailable = houdiniChains.size > 0
+  const stealth = (stealthOverride ?? stealthSwapEnabled) && stealthAvailable
 
   const toWallet: EdgeCurrencyWallet | undefined =
     toWalletId == null ? undefined : currencyWallets[toWalletId]
@@ -251,8 +259,17 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
+      // A Stealth Swap asks Houdini alone, so Houdini's own bans refuse the
+      // pair here too. Left to the core, a pair no enabled provider can quote
+      // fails with an internal error rather than this message:
+      const disableAssets = stealth
+        ? getStealthDisableAssets(
+            exchangeInfo.swap.disableAssets,
+            exchangeInfo.swap.disableAssetsByPlugin
+          )
+        : exchangeInfo.swap.disableAssets
       const disableSrc = isAssetDisabled(
-        exchangeInfo.swap.disableAssets.source,
+        disableAssets.source,
         swapRequest.fromWallet.currencyInfo.pluginId,
         fromTokenId
       )
@@ -268,7 +285,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
       }
 
       const disableDest = isAssetDisabled(
-        exchangeInfo.swap.disableAssets.destination,
+        disableAssets.destination,
         swapRequest.toWallet.currencyInfo.pluginId,
         toTokenId
       )
@@ -328,6 +345,24 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const showWalletListModal = async (
     whichWallet: 'from' | 'to'
   ): Promise<void> => {
+    // A Stealth Swap asks the Houdini provider alone, so its pickers offer
+    // only what that provider serves: each served chain's coin and the tokens
+    // on its list. The receiving side also drops the destinations the info
+    // server withdrew. The quote still refuses a banned or unserved asset
+    // that was selected before the toggle went on.
+    const allowedAssets = stealth
+      ? getHoudiniAssets({
+          currencyConfigs: account.currencyConfig,
+          houdiniChains,
+          destinationBans:
+            whichWallet === 'to'
+              ? getStealthDisableAssets(
+                  exchangeInfo.swap.disableAssets,
+                  exchangeInfo.swap.disableAssetsByPlugin
+                ).destination
+              : undefined
+        })
+      : undefined
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -339,6 +374,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
         }
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
+        allowedAssets={allowedAssets}
         filterActivation
       />
     ))
@@ -662,21 +698,23 @@ export const SwapCreateScene: React.FC<Props> = props => {
               />
             )}
           </EdgeAnim>
-          <EdgeAnim enter={fadeInDown60}>
-            <EdgeCard sections>
-              <SettingsSwitchRow
-                label={lstrings.stealth_swap_toggle}
-                value={stealth}
-                onPress={handleToggleStealth}
-              />
-              {stealth ? (
-                <StealthInfoText
-                  message={lstrings.stealth_swap_info}
-                  showLearnMore
+          {stealthAvailable ? (
+            <EdgeAnim enter={fadeInDown60}>
+              <EdgeCard sections>
+                <SettingsSwitchRow
+                  label={lstrings.stealth_swap_toggle}
+                  value={stealth}
+                  onPress={handleToggleStealth}
                 />
-              ) : null}
-            </EdgeCard>
-          </EdgeAnim>
+                {stealth ? (
+                  <StealthInfoText
+                    message={lstrings.stealth_swap_info}
+                    showLearnMore
+                  />
+                ) : null}
+              </EdgeCard>
+            </EdgeAnim>
+          ) : null}
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (
