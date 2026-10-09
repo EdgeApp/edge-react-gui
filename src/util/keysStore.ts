@@ -34,8 +34,8 @@ import {
 import { debugLog } from './logger'
 import { fetchPublicRollup, infoServerData } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
+import { getOsVersion } from './rnUtils'
 import { runOnce } from './runOnce'
-import { getOsVersion } from './utils'
 import { checkAppVersion } from './versionCheck'
 
 export type KeysTier = 'remote' | 'cache' | 'baked-in'
