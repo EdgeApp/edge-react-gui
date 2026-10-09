@@ -145,16 +145,17 @@ interface Props {
   ) => Promise<boolean | string>
   /**
    * Opt-in expansion of the "Myself" picker past the source asset. The caller
-   * supplies the destination assets this send can route to, derived from route
-   * metadata rather than any hardcoded asset shape, and adopts a cross-asset
-   * pick through `onPickCrossAsset`. Same-asset wallets pin to the top of the
-   * modal. Omitting this keeps the source-asset-only picker every other caller
-   * gets.
+   * supplies the destination assets this send can route to, tokens included,
+   * and receives every pick through `onPickAsset`, so a same-asset pick can
+   * clear a destination asset picked earlier. Returning `true` means the
+   * caller adopted the pick; `false` hands the address back to this tile to
+   * enter as a plain send. Same-asset wallets pin to the top of the modal.
+   * Omitting this keeps the source-asset-only picker every other caller gets.
    */
   selfTransfer?: {
     allowedAssets: EdgeAsset[]
-    onPickCrossAsset: (
-      pluginId: string,
+    onPickAsset: (
+      asset: EdgeAsset,
       address: string,
       walletAddresses: EdgeAddress[]
     ) => Promise<boolean>
@@ -625,8 +626,11 @@ export const AddressTile2 = React.forwardRef(
 
           // Show the segwit address if the selected wallet has one, as its
           // receive address would. Taking it from the same list the quote
-          // reads keeps the shown address in that list.
-          const walletAddresses = await wallet.getAddresses({ tokenId: null })
+          // reads keeps the shown address in that list. A token pick asks for
+          // the token's own addresses:
+          const walletAddresses = await wallet.getAddresses({
+            tokenId: pickedTokenId
+          })
           const shownAddress =
             walletAddresses.find(
               entry => entry.addressType === 'segwitAddress'
@@ -638,22 +642,21 @@ export const AddressTile2 = React.forwardRef(
           if (shownAddress == null) return
           const address = shownAddress.publicAddress
 
-          // A wallet on another chain is a cross-asset destination, so the
-          // caller adopts it (recipient asset, quote reset) instead of this
-          // tile validating the address against the source wallet's chain.
-          // So is the source chain's own coin picked for a token source: the
-          // address is the same chain's, but the payout is a different asset.
-          const destPluginId = wallet.currencyInfo.pluginId
-          if (
-            selfTransfer != null &&
-            (destPluginId !== pluginId || pickedTokenId !== tokenId)
-          ) {
-            await selfTransfer.onPickCrossAsset(
-              destPluginId,
+          // The caller sees every pick: a wallet on another chain or another
+          // asset on the source chain is a destination it adopts, and a
+          // same-asset pick drops any destination asset picked before it.
+          // Only a pick the caller hands back is entered here, validated
+          // against the source wallet's chain:
+          if (selfTransfer != null) {
+            const adopted = await selfTransfer.onPickAsset(
+              {
+                pluginId: wallet.currencyInfo.pluginId,
+                tokenId: pickedTokenId
+              },
               address,
               walletAddresses
             )
-            return
+            if (adopted) return
           }
           await changeAddress(address, 'other', walletAddresses)
         })
