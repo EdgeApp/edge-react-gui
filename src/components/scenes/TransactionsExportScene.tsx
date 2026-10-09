@@ -1,4 +1,3 @@
-import { asBoolean, asObject, asString } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
@@ -11,13 +10,7 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
-import { getTxActionDisplayInfo } from '../../actions/CategoriesActions'
-import {
-  exportTransactionsToBitwave,
-  exportTransactionsToCSV,
-  exportTransactionsToQBO,
-  updateTxsFiat
-} from '../../actions/TransactionExportActions'
+import { updateTxsFiat } from '../../actions/TransactionExportActions'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import {
@@ -28,6 +21,18 @@ import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import {
+  EXPORT_TX_INFO_FILE,
+  type ExportTxInfo,
+  exportTxInfoKey,
+  mergeExportTxInfo,
+  readExportTxInfoMap
+} from '../../util/exportTxInfo'
+import {
+  fillTxMetadataForDisplay,
+  getTxActionDisplayInfo
+} from '../../util/txDisplay'
+import { buildExportFiles, TX_EXPORT_FORMAT_INFO } from '../../util/txExport'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { DateModal } from '../modals/DateModal'
 import { TextInputModal } from '../modals/TextInputModal'
@@ -58,13 +63,23 @@ interface StateProps {
   defaultIsoFiat: string
   exchangeMultiplier: string
   multiplier: string
+  /**
+   * The display denomination's own name, for the CSV's `DENOMINATION` column.
+   *
+   * Not derived from the multiplier: `exportTransactionsToCSV` used to match
+   * it against `wallet.currencyInfo.denominations`, which is the *chain's*
+   * list. Every 18-decimal ERC-20 matched ETH there, so a DAI export said
+   * `CURRENCY_CODE=DAI` with `DENOMINATION=ETH`, and a 6-decimal token
+   * matched nothing and got `''`. The engine passes the name it resolved;
+   * this does the same.
+   */
+  denomName: string
 }
 
 interface DispatchProps {
   updateTxsFiatDispatch: (
     wallet: EdgeCurrencyWallet,
     tokenId: EdgeTokenId,
-    currencyCode: string,
     txs: EdgeTransaction[]
   ) => Promise<void>
 }
@@ -78,20 +93,6 @@ interface State {
   isExportCsv: boolean
   isExportBitwave: boolean
 }
-
-const EXPORT_TX_INFO_FILE = 'exportTxInfo.json'
-
-const asExportTxInfo = asObject({
-  bitwaveAccountId: asString,
-  isExportQbo: asBoolean,
-  isExportCsv: asBoolean,
-  isExportBitwave: asBoolean
-})
-
-const asExportTxInfoMap = asObject(asExportTxInfo)
-
-type ExportTxInfoMap = ReturnType<typeof asExportTxInfoMap>
-type ExportTxInfo = ReturnType<typeof asExportTxInfo>
 
 class TransactionsExportSceneComponent extends React.PureComponent<
   Props,
@@ -165,13 +166,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
   loadInfoFile = async (): Promise<void> => {
     const { sourceWallet, tokenId } = this.props.route.params
-    const { disklet } = sourceWallet
-    const result = await disklet.getText(EXPORT_TX_INFO_FILE)
-    const exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
-    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+    const exportTxInfoMap = await readExportTxInfoMap(sourceWallet)
+    const tokenCurrencyCode = exportTxInfoKey(sourceWallet, tokenId)
+    const info = exportTxInfoMap[tokenCurrencyCode]
+    if (info == null) return
 
-    const { isExportBitwave, isExportCsv, isExportQbo } =
-      exportTxInfoMap[tokenCurrencyCode]
+    const { isExportBitwave, isExportCsv, isExportQbo } = info
 
     this.setState({
       isExportBitwave,
@@ -300,6 +300,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       account,
       currencyCode,
       defaultIsoFiat,
+      denomName,
       exchangeMultiplier,
       multiplier,
       route
@@ -307,17 +308,17 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const { sourceWallet, tokenId } = route.params
     const { isExportBitwave, isExportQbo, isExportCsv, startDate, endDate } =
       this.state
-    const tokenCurrencyCode = tokenId ?? sourceWallet.currencyInfo.currencyCode
+    const tokenCurrencyCode = exportTxInfoKey(sourceWallet, tokenId)
 
     let exportTxInfo: ExportTxInfo | undefined
-    let exportTxInfoMap: ExportTxInfoMap | undefined
     try {
-      const result = await sourceWallet.disklet.getText(EXPORT_TX_INFO_FILE)
-      exportTxInfoMap = asExportTxInfoMap(JSON.parse(result))
+      const exportTxInfoMap = await readExportTxInfoMap(sourceWallet)
       exportTxInfo = exportTxInfoMap[tokenCurrencyCode]
-    } catch (e) {
+    } catch (error: unknown) {
+      // Failure is ok: the saved preferences only pre-fill the Bitwave
+      // account id below. The export itself does not need them.
       console.log(
-        `Could not read ${EXPORT_TX_INFO_FILE} ${String(e)}. Failure is ok`
+        `Could not read ${EXPORT_TX_INFO_FILE} ${String(error)}. Failure is ok`
       )
     }
 
@@ -351,23 +352,47 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       accountId = rawAccountId.trim()
     }
 
+    // The id is only part of the comparison when it was asked for; otherwise
+    // the check fired on every CSV-only export of an account that had one
+    // saved, and the write below then cleared it.
+    // `''` is the cancelled modal, which says nothing about the id either.
+    const savedAccountId = accountId === '' ? undefined : accountId
+    const idChanged =
+      savedAccountId != null && exportTxInfo?.bitwaveAccountId !== accountId
     if (
-      exportTxInfo?.bitwaveAccountId !== accountId ||
+      idChanged ||
       exportTxInfo?.isExportBitwave !== isExportBitwave ||
       exportTxInfo?.isExportCsv !== isExportCsv ||
       exportTxInfo?.isExportQbo !== isExportQbo
     ) {
-      exportTxInfoMap ??= {}
-      exportTxInfoMap[tokenCurrencyCode] = {
-        bitwaveAccountId: accountId,
-        isExportBitwave,
-        isExportQbo,
-        isExportCsv
+      try {
+        await mergeExportTxInfo(sourceWallet, tokenId, {
+          // `undefined`, not `''`, when the Bitwave switch is off *or* the
+          // id modal was cancelled. `mergeExportTxInfo` reads every field as
+          // `patch.x ?? prev?.x` so that a caller who never mentioned
+          // bitwave keeps whatever was saved — and `''` is not nullish, so
+          // it won the `??` and erased a saved account id the user would
+          // have to retype.
+          bitwaveAccountId: isExportBitwave ? savedAccountId : undefined,
+          isExportBitwave,
+          isExportQbo,
+          isExportCsv
+        })
+      } catch (error: unknown) {
+        // Saving the preferences is a side errand, not a precondition.
+        // `mergeExportTxInfo` refuses to write over a file it could not read
+        // — rightly, since that would lose every asset's saved record — and
+        // an unguarded call let that refusal out of `handleSubmit`, into
+        // `usePendingPress`'s `showError`: the user got an error drop-down
+        // and no CSV, QBO or Bitwave file at all, because this runs before
+        // `getTransactions`. The read above tolerates the same failure for
+        // the same reason.
+        console.log(
+          `Could not save ${EXPORT_TX_INFO_FILE} ${String(
+            error
+          )}. The export continues`
+        )
       }
-      await sourceWallet.disklet.setText(
-        EXPORT_TX_INFO_FILE,
-        JSON.stringify(exportTxInfoMap)
-      )
     }
 
     if (startDate.getTime() > endDate.getTime()) {
@@ -405,67 +430,66 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
     const txs = rawTxs.map(tx => {
       const { mergedData } = getTxActionDisplayInfo(tx, account, sourceWallet)
-      const out: EdgeTransaction = { ...tx, metadata: mergedData }
-      return out
+      // Not `{ ...tx, metadata: mergedData }`: `mergedData` carries only
+      // `name`, `category` and `notes`, so the spread replaced `tx.metadata`
+      // and dropped `exchangeAmount` — the fiat figure the user may have
+      // edited by hand on the transaction details scene. `updateTxsFiatDispatch`
+      // below then saw `amountFiat === 0`, re-queried the rates server for
+      // that date and wrote the market rate instead, or `0` for every
+      // transaction it could not price. `fillTxMetadataForDisplay` overlays
+      // the three fields this derivation owns and keeps the rest, which is
+      // what the CLI's `get-transactions --export-format` already does, so
+      // the two exports of one wallet and range agree.
+      return fillTxMetadataForDisplay(tx, mergedData)
     })
 
     const files: File[] = []
     const formats: string[] = []
 
     // Update the transactions that are missing fiat amounts
-    await this.props.updateTxsFiatDispatch(
-      sourceWallet,
-      tokenId,
-      currencyCode,
-      txs
-    )
+    await this.props.updateTxsFiatDispatch(sourceWallet, tokenId, txs)
 
-    // The non-string result appears to be a bug in the core,
-    // which we are relying on to determine if the date range is empty:
-    const csvFile = await exportTransactionsToCSV(
-      sourceWallet,
-      defaultIsoFiat,
+    // One dispatch, shared with `get-transactions --export-format`: which of
+    // the resolved values each formatter gets was written out here and again
+    // in the engine handler, and four rounds of review found the two
+    // disagreeing about it — the fiat column, the CSV/QBO denomination, the
+    // Bitwave denomination, the `DENOMINATION` name. Nothing could compare
+    // them, because this component is not exported and no test can reach
+    // `handleSubmit`.
+    //
+    // CSV is always rendered, selected or not: the non-string result appears
+    // to be a bug in the core, which we are relying on to determine if the
+    // date range is empty, and that check has to run whichever formats the
+    // user picked.
+    const built = await buildExportFiles({
+      formats: [
+        'csv',
+        ...(isExportQbo ? (['qbo'] as const) : []),
+        ...(isExportBitwave ? (['bitwave'] as const) : [])
+      ],
       txs,
       currencyCode,
-      multiplier
-    )
+      isoFiat: defaultIsoFiat,
+      displayDenom: { multiplier, name: denomName },
+      exchangeDenom: { multiplier: exchangeMultiplier },
+      bitwaveAccountId: accountId
+    })
+
+    const csvFile = built.find(file => file.format === 'csv')?.contents
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showToast(lstrings.export_transaction_export_error)
       return
     }
 
-    if (isExportCsv) {
+    for (const file of built) {
+      if (file.format === 'csv' && !isExportCsv) continue
+      const info = TX_EXPORT_FORMAT_INFO[file.format]
       files.push({
-        contents: csvFile,
-        mimeType: 'text/comma-separated-values',
-        fileName: fileName + '.csv'
+        contents: file.contents,
+        mimeType: info.mimeType,
+        fileName: fileName + info.suffix
       })
-      formats.push('CSV')
-    }
-
-    if (isExportQbo) {
-      const qboFile = exportTransactionsToQBO(txs, defaultIsoFiat, multiplier)
-      files.push({
-        contents: qboFile,
-        mimeType: 'application/vnd.intu.qbo',
-        fileName: fileName + '.qbo'
-      })
-      formats.push('QBO')
-    }
-
-    if (isExportBitwave) {
-      const bitwaveFile = await exportTransactionsToBitwave(
-        accountId,
-        txs,
-        currencyCode,
-        exchangeMultiplier
-      )
-      files.push({
-        contents: bitwaveFile,
-        mimeType: 'text/comma-separated-values',
-        fileName: fileName + '.bitwave.csv'
-      })
-      formats.push('Bitwave CSV')
+      formats.push(info.label)
     }
 
     const title = 'Share Transactions ' + formats.join(', ')
@@ -546,11 +570,16 @@ export const TransactionsExportScene = connect<
       state,
       params.sourceWallet.currencyConfig,
       params.tokenId
-    ).multiplier
+    ).multiplier,
+    denomName: selectDisplayDenom(
+      state,
+      params.sourceWallet.currencyConfig,
+      params.tokenId
+    ).name
   }),
   dispatch => ({
-    updateTxsFiatDispatch: async (wallet, tokenId, currencyCode, txs) => {
-      await dispatch(updateTxsFiat(wallet, tokenId, currencyCode, txs))
+    updateTxsFiatDispatch: async (wallet, tokenId, txs) => {
+      await dispatch(updateTxsFiat(wallet, tokenId, txs))
     }
   })
 )(withTheme(TransactionsExportSceneComponent))
