@@ -126,6 +126,9 @@ export const asConfigJson = asObject({
     ),
     []
   ),
+  // Builds driven by automated agents: skips the post-login modals, hides
+  // the notification cards, and keeps warnings out of the LogBox toast.
+  AGENT_TEST_MODE: asOptional(asBoolean, false),
   ENABLE_FIAT_SANDBOX: asOptional(asBoolean, false),
   ENABLE_MAESTRO_BUILD: asOptional(asBoolean, false),
   ENABLE_TEST_SERVERS: asOptional(asBoolean),

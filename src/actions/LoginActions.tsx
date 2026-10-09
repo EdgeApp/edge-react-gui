@@ -28,6 +28,7 @@ import type {
   NavigationBase,
   RootSceneProps
 } from '../types/routerTypes'
+import { isAgentTestMode } from '../util/agentTestMode'
 import { allPlugins } from '../util/corePlugins'
 import {
   currencyCodesToEdgeAssets,
@@ -144,6 +145,9 @@ export function initializeAccount(
     // We don't want to pester the user with too many interrupting flows.
     let hideSurvey = false
 
+    // Agent test builds skip every interrupting flow below:
+    const agentTestMode = isAgentTestMode()
+
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
     for (const pluginId in account.currencyConfig) {
@@ -162,16 +166,20 @@ export function initializeAccount(
     }
     if (pluginIdsNeedingUserAction.length > 0) {
       hideSurvey = true
-      await Airship.show<boolean>(bridge => (
-        <ConfirmContinueModal
-          bridge={bridge}
-          title={lstrings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(
-            lstrings.update_notice_deprecate_electrum_servers_message,
-            config.appName
-          )}
-        />
-      ))
+      // The settings write below runs whether or not the notice shows:
+      const noticePromise = agentTestMode
+        ? Promise.resolve(true)
+        : Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              title={lstrings.update_notice_deprecate_electrum_servers_title}
+              body={sprintf(
+                lstrings.update_notice_deprecate_electrum_servers_message,
+                config.appName
+              )}
+            />
+          ))
+      await noticePromise
         .finally(() => {
           for (const pluginId of pluginIdsNeedingUserAction) {
             const currencyConfig = account.currencyConfig[pluginId]
@@ -189,7 +197,7 @@ export function initializeAccount(
     }
 
     // Check for security alerts:
-    if (hasSecurityAlerts(account)) {
+    if (!agentTestMode && hasSecurityAlerts(account)) {
       // This is not the normal security alerts scene!
       // Since we only have access to the root navigator,
       // this scene exists as a peer of the main app:
@@ -220,7 +228,8 @@ export function initializeAccount(
     })
 
     if (
-      await showNotificationPermissionReminder({
+      !agentTestMode &&
+      (await showNotificationPermissionReminder({
         appName: config.appName,
         onLogEvent(event, values) {
           dispatch(logEvent(event, values))
@@ -233,13 +242,14 @@ export function initializeAccount(
             }
           )
         }
-      })
+      }))
     ) {
       hideSurvey = true
     }
 
     // Post login stuff: Survey modal (existing accounts only)
     if (
+      !agentTestMode &&
       !newAccount &&
       !hideSurvey &&
       !getDeviceSettings().isSurveyDiscoverShown &&

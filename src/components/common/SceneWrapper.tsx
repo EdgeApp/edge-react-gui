@@ -42,6 +42,7 @@ import {
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import type { OverrideDots } from '../../types/Theme'
+import { isAgentTestMode } from '../../util/agentTestMode'
 import { styled } from '../hoc/styled'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SceneContainer } from '../layout/SceneContainer'
@@ -158,13 +159,15 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     children,
     footerHeight = 0,
     hasHeader = true,
-    hasNotifications = false,
     hasTabs = false,
     padding = 0,
     renderFooter,
     scroll = false,
     dockProps
   } = props
+
+  // Agent test builds never show the notification cards:
+  const hasNotifications = props.hasNotifications === true && !isAgentTestMode()
 
   const notificationHeight = useSelector(state => state.ui.notificationHeight)
 
