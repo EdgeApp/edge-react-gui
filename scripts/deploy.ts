@@ -4,6 +4,7 @@ import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
 import { deepMerge } from '../src/configKeysMerge'
+import { errorMessage } from '../src/util/errorMessage'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6
@@ -896,7 +897,7 @@ function callRedacted(cmdstring: string, secrets: string[]): void {
   try {
     execCommand(cmdstring)
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
+    const message = errorMessage(error)
     throw new Error(redact(message))
   }
 }
