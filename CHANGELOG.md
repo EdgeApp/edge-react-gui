@@ -2,6 +2,9 @@
 
 ## Unreleased (develop)
 
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
+- fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
+
 ## 4.53.0 (2026-11-20)
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
