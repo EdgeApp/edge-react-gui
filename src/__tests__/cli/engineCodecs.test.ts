@@ -22,9 +22,10 @@ describe('jsonReplacer', () => {
       [2, 'b']
     ])
     expect(jsonReplacer('k', map)).toStrictEqual({ a: 1, '2': 'b' })
-    // The wallet balance maps core hands back are keyed by tokenId or null.
+    // The wallet balance maps core hands back are keyed by tokenId or null,
+    // and null, the chain's own currency, is the empty key, as in core:
     expect(stringifyJson({ balanceMap: new Map([[null, '100']]) })).toBe(
-      '{"balanceMap":{"null":"100"}}'
+      '{"balanceMap":{"":"100"}}'
     )
   })
 

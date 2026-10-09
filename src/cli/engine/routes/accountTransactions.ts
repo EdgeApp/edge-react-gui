@@ -282,3 +282,58 @@ export const summarizeAccountTransactions = route({
     return page.summary
   }
 })
+
+/**
+ * Read this device's transaction settings.
+ *
+ * `defaultIsoFiat` is undefined until something sets it, which is a real
+ * state rather than a missing default: an account with no currency chosen has
+ * no correct amount to show.
+ *
+ * @returns `{ defaultIsoFiat }`.
+ */
+export const getTransactionSettings = route({
+  core: 'account.transactions.localSettings',
+  method: 'GET',
+  path: '/account/{sessionId}/transactions/settings',
+  cli: { command: 'get-transaction-settings' },
+  returns: doc(asCoreValue, 'This device transaction settings.'),
+
+  async handler(ctx) {
+    return getAccount(ctx).transactions.localSettings
+  }
+})
+
+/**
+ * Change the currency every stored fiat amount is in.
+ *
+ * A real change empties every stored fiat amount at once, instantly and
+ * locally, and the backfill refills them in the background. Queries carry on
+ * returning blanks in the meantime, which mean "not yet known" and never
+ * zero.
+ *
+ * @note Setting it to its current value does nothing at all. A setter that is
+ *   not a no-op would re-rate the whole account on every boot.
+ * @note It takes the user's own figures with it. `exchangeAmount` is keyed by
+ *   fiat code, so a figure typed in dollars is not a figure in euros.
+ * @returns `{ ok: true }`.
+ */
+export const setDefaultIsoFiat = route({
+  core: 'account.transactions.changeLocalSettings',
+  method: 'POST',
+  path: '/account/{sessionId}/transactions/settings',
+  cli: { command: 'set-default-fiat' },
+  body: asObject({
+    defaultIsoFiat: doc(asString, 'An ISO code, such as `iso:USD`.')
+  }).withRest,
+  returns: doc(asCoreValue, '`{ ok: true }`'),
+  errors: ['BAD_REQUEST'],
+
+  async handler(ctx) {
+    const store = getAccount(ctx).transactions
+    await store.changeLocalSettings({
+      defaultIsoFiat: ctx.body.defaultIsoFiat
+    })
+    return { ok: true }
+  }
+})
