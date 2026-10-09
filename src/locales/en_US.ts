@@ -958,6 +958,7 @@ const strings = {
     'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_error_invalid: 'Invalid Transaction',
   sub_category_label: 'Sub-category',
+  transaction_details_recipient_address: 'Recipient Address',
   transaction_details_recipient_addresses: 'Recipient Addresses',
   transaction_details_exchange_deposit_address: 'Exchange Deposit Address',
   transaction_details_advance_details_header: 'Advanced Details',
@@ -1714,7 +1715,6 @@ const strings = {
   stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
   stealth_fixed_to_fallback_body:
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
-  stealth_recipient_hidden: 'Hidden for privacy',
   stealth_swap_send_warning_title: 'Swap before send',
   stealth_swap_send_warning_title_private: 'Private swap before send',
   stealth_swap_send_warning_body:
