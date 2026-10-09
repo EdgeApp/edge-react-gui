@@ -11,6 +11,7 @@
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - added: Banxa VietQR payment method for VND buys
 - added: Developer option that replaces confirmation sliders with buttons, for BrowserStack and other swipe-less test tools
+- changed: The send scene's scam warning card is a short note on irreversibility and the recipient's network
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Ask for contacts access only inside the transaction payee modal, not on receiving a transaction
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
