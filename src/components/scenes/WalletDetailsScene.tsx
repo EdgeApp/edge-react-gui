@@ -42,11 +42,8 @@ import type {
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import { getOsVersion } from '../../util/rnUtils'
-import {
-  calculateSpamThreshold,
-  convertNativeToDenomination,
-  darkenHexColor
-} from '../../util/utils'
+import { calculateSpamThreshold } from '../../util/spamThreshold'
+import { convertNativeToDenomination, darkenHexColor } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
