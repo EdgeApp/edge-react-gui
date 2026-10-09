@@ -1,0 +1,3507 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Edge CLI",
+    "version": "1.0.0",
+    "description": "The `edge-cli` command line and the `edge-engine` JSON REST API, generated from the route declarations in `src/cli/engine/routes/`."
+  },
+  "servers": [
+    {
+      "url": "http://localhost",
+      "description": "Unix socket at ~/.edge-cli/run/<profile>/engine.sock"
+    },
+    {
+      "url": "http://127.0.0.1:9008",
+      "description": "Loopback TCP, when started with --tcp=9008. Requires the X-Edge-Token header; see securitySchemes."
+    }
+  ],
+  "security": [
+    {},
+    {
+      "edgeTcpToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Lifecycle",
+      "description": "Lifecycle and configuration of the `edge-engine` daemon. None of these have an `edge-core-js` equivalent — they describe the daemon itself — and none need a session."
+    },
+    {
+      "name": "Device and usernames",
+      "description": "Calls on the shared `EdgeContext`: local device state and login-server queries that do not need a session."
+    },
+    {
+      "name": "Login methods",
+      "description": "Every successful login returns a [Session](#schema-Session) and registers it in the engine, so later calls need only the `sessionId`. The CLI writes that id to `session.json` automatically."
+    },
+    {
+      "name": "Session",
+      "description": "Calls on a logged-in `EdgeAccount`, addressed by `sessionId`. All of these can also return `401 INVALID_SESSION` or `401 SESSION_EXPIRED`."
+    },
+    {
+      "name": "Object handles",
+      "description": "A core value with methods on it — a staged transaction, a swap quote, a pending login — cannot cross JSON, so the engine keeps it and hands back an id. These read and release any of them."
+    },
+    {
+      "name": "Event stream",
+      "description": "A Server-Sent Events feed of engine activity, served outside the router because the response never ends."
+    }
+  ],
+  "paths": {
+    "/engine/status": {
+      "get": {
+        "operationId": "engineStatus",
+        "summary": "Engine liveness and summary.",
+        "description": "**Core call:** _none — Engine lifecycle; the daemon is not part of the core API._\n\n**Command line**\n\n```\nengine-status\n```\n\nThe readiness probe the client polls after auto-spawning the engine.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-status",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine lifecycle; the daemon is not part of the core API.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Every field is documented on `asEngineStatus`; the two nullable ones, `idleShutdownAt` and `tcpPort`, say there what null means.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pid": {
+                      "type": "number",
+                      "description": "The daemon process, for `kill` when it will not stop."
+                    },
+                    "apiVersion": {
+                      "type": "string",
+                      "description": "The API this engine speaks. A client refusing to talk to an older engine checks this."
+                    },
+                    "uptimeSeconds": {
+                      "type": "number",
+                      "description": "How long the daemon has been running."
+                    },
+                    "sessionCount": {
+                      "type": "number",
+                      "description": "Logged-in accounts held open right now."
+                    },
+                    "testMode": {
+                      "type": "boolean",
+                      "description": "True when the engine is not pointed at production: the tester fleet, or the in-process fake world under `--fake`."
+                    },
+                    "idleShutdownAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the engine will exit for want of work. Null while a client is deliberately holding it open — a logged-in session, a live subscription, or a handle that belongs to no session (a pending edge login, or a parked admin lobby) — and null when the timeout is disabled. A request being served also disarms the timer, but is not reported here: the request asking for this field is itself in flight."
+                    },
+                    "tcpPort": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The loopback port, null unless started with `--tcp`."
+                    },
+                    "socketPath": {
+                      "type": "string",
+                      "description": "Unix socket the CLI connects to."
+                    },
+                    "rateCachedCount": {
+                      "type": "number",
+                      "description": "Exchange rates held in the engine’s process cache. It is bounded and cleared when the last session goes away, and this is how an operator sees it."
+                    },
+                    "rateUnpricedCount": {
+                      "type": "number",
+                      "description": "Rate keys the server answered without a price, remembered for a few minutes so a repeated listing does not re-ask for every date. A number that stays high means an asset with no feed on the rates server — a hand-added custom token, a long-tail token, or dates predating its market."
+                    },
+                    "locale": {
+                      "type": "string",
+                      "description": "Language tag the engine resolved at boot."
+                    },
+                    "localeMatched": {
+                      "type": "boolean",
+                      "description": "Whether a translation table for that tag was actually found. False means the tag was accepted but the engine is answering in English, which is otherwise indistinguishable from a build that has the language."
+                    },
+                    "decimalSeparator": {
+                      "type": "string",
+                      "description": "Decimal mark for that locale."
+                    },
+                    "groupingSeparator": {
+                      "type": "string",
+                      "description": "Thousands mark for that locale."
+                    }
+                  },
+                  "required": [
+                    "pid",
+                    "apiVersion",
+                    "uptimeSeconds",
+                    "sessionCount",
+                    "testMode",
+                    "idleShutdownAt",
+                    "tcpPort",
+                    "socketPath",
+                    "rateCachedCount",
+                    "rateUnpricedCount",
+                    "locale",
+                    "localeMatched",
+                    "decimalSeparator",
+                    "groupingSeparator"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "ENGINE_SHUTTING_DOWN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/config": {
+      "get": {
+        "operationId": "engineConfig",
+        "summary": "Configured context options.",
+        "description": "**Core call:** _none — Reflects the EdgeContextOptions the engine supplied at startup._\n\n**Command line**\n\n```\nengine-config\n```\n\nWhat the engine passed to `makeEdgeContext`. Contains no secrets. Use it to assert tester hosts before a test run.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-config",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Reflects the EdgeContextOptions the engine supplied at startup.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "appId": {
+                      "type": "string",
+                      "description": "Application ID the engine was started with."
+                    },
+                    "testMode": {
+                      "type": "boolean",
+                      "description": "True when the engine is not pointed at production: the tester fleet, or the in-process fake world under `--fake`. Read `servers` to tell those apart."
+                    },
+                    "directory": {
+                      "type": "string",
+                      "description": "Working directory holding the core data."
+                    },
+                    "servers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "string"
+                            }
+                          ]
+                        }
+                      },
+                      "description": "The URLs this engine talks to, keyed by role. `syncServer` is a list, since core rotates across the sync fleet."
+                    },
+                    "plugins": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Plugin IDs the engine loaded, sorted."
+                    },
+                    "configFiles": {
+                      "type": "object",
+                      "properties": {
+                        "cwd": {
+                          "type": "string"
+                        },
+                        "keys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "appConfig": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "cliConfig": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "cwd",
+                        "keys",
+                        "appConfig",
+                        "cliConfig"
+                      ],
+                      "description": "Where this engine’s configuration came from. The profile a client hashes covers `appId`, the data directory, test mode and the login server — not these, so two invocations with the same flags from different directories share one daemon, and this is what says which configuration it is running on."
+                    }
+                  },
+                  "required": [
+                    "appId",
+                    "testMode",
+                    "directory",
+                    "servers",
+                    "plugins",
+                    "configFiles"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/stop": {
+      "post": {
+        "operationId": "engineStop",
+        "summary": "Stop the engine.",
+        "description": "**Core call:** _none — Engine lifecycle. Internally calls `context.close()`._\n\n**Command line**\n\n```\nengine-stop\n```\n\nLogs out every session, closes the context, unlinks the socket and run-file, then exits. The engine answers before it starts tearing down, so a response is not proof the process is gone.",
+        "tags": [
+          "Lifecycle"
+        ],
+        "x-cli": {
+          "command": "engine-stop",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine lifecycle. Internally calls `context.close()`.",
+        "x-source": "src/cli/engine/routes/status.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    }
+                  },
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/local-users": {
+      "get": {
+        "operationId": "localUsers",
+        "summary": "List local users on this device.",
+        "description": "**Core call:** `context.localUsers`\n\n**Command line**\n\n```\nlocal-users\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "local-users",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.localUsers",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Everything `context.localUsers` reports, including which login methods each user has enabled on this device.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "localUsers": {
+                      "type": "array",
+                      "items": {},
+                      "description": "`EdgeUserInfo[]`: one entry per account cached on this device."
+                    }
+                  },
+                  "required": [
+                    "localUsers"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forget-account": {
+      "post": {
+        "operationId": "forgetAccount",
+        "summary": "Forget an account on this device.",
+        "description": "**Core call:** `context.forgetAccount`\n\n**Command line**\n\n```\nforget-account --root-login-id=<rootLoginId>\n```\n\nRemoves locally cached credentials. The remote account is untouched.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "forget-account",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.forgetAccount",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "USER_NOT_FOUND, BAD_REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rootLoginId": {
+                    "type": "string",
+                    "description": "Core takes a `rootLoginId`. A username is also accepted and resolved against `localUsers` first, so callers need not hash it."
+                  }
+                },
+                "required": [
+                  "rootLoginId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/username-available": {
+      "get": {
+        "operationId": "usernameAvailable",
+        "summary": "Check whether a username is free.",
+        "description": "**Core call:** `context.usernameAvailable`\n\n**Command line**\n\n```\nusername-available --username=<username> [--challenge-id=<challengeId>]\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "username-available",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.usernameAvailable",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "description": "The name to check.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "challengeId",
+            "in": "query",
+            "required": false,
+            "description": "Supply after solving a CAPTCHA to retry the same check.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "The name that was checked, echoed back."
+                    },
+                    "available": {
+                      "type": "boolean",
+                      "description": "True when nobody holds this name. It is not reserved by asking."
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "available"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, CHALLENGE_REQUIRED, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fix-username": {
+      "get": {
+        "operationId": "fixUsername",
+        "summary": "Normalize a username.",
+        "description": "**Core call:** `context.fixUsername`\n\n**Command line**\n\n```\nfix-username --username=<username>\n```\n\nApplies the same rules the login server does, so a caller can show the user what their name will actually be before creating an account.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "fix-username",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.fixUsername",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "description": "The name to normalize.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "description": "The normalized value. The input is not echoed."
+                    }
+                  },
+                  "required": [
+                    "username"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-password-rules": {
+      "post": {
+        "operationId": "checkPasswordRules",
+        "summary": "Score a candidate password.",
+        "description": "**Core call:** `context.checkPasswordRules`\n\n**Command line**\n\n```\ncheck-password-rules --password=<password>\n```\n\n`POST` with the candidate in the body. A query string is the one place a secret is written down by everything that touches it — the engine's own log redacts query values for that reason — and a URL is what a proxy, a crash report and a shell history keep. Nothing reads this route's result from a cache, so the method costs nothing.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "check-password-rules",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.checkPasswordRules",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "`EdgePasswordRules` from core: passed, tooShort, noNumber, noLowerCase, noUpperCase, secondsToCrack.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "The candidate password to score."
+                  }
+                },
+                "required": [
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetch-login-messages": {
+      "get": {
+        "operationId": "fetchLoginMessages",
+        "summary": "Fetch login-server messages for every local user.",
+        "description": "**Core call:** `context.fetchLoginMessages`\n\n**Command line**\n\n```\nfetch-login-messages\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "fetch-login-messages",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.fetchLoginMessages",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "An `EdgeLoginMessage[]` from core: one entry per local login, each with its own `loginId`, `otpResetPending`, `pendingVouchers`, `recovery2Corrupt` and, where the stash has one, `username`. `loginId` is base58, like every other login id in this API — core answers it in base64 here, and an id in the wrong alphabet is one `forget-account` and `--use-login-id` reject.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "default": {
+            "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-otp-reset": {
+      "post": {
+        "operationId": "requestOtpReset",
+        "summary": "Request a 2FA reset.",
+        "description": "**Core call:** `context.requestOtpReset`\n\n**Command line**\n\n```\nrequest-otp-reset --username=<username> --otp-reset-token=<otpResetToken>\n```\n\nStarts the timed reset a user falls back on after losing their authenticator.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "request-otp-reset",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.requestOtpReset",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "When the reset completes if nobody cancels it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "resetDate": {
+                      "type": "string",
+                      "description": "When 2FA will actually come off. The login server enforces a waiting period so the real owner has time to cancel."
+                    }
+                  },
+                  "required": [
+                    "resetDate"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Whose 2FA to reset."
+                  },
+                  "otpResetToken": {
+                    "type": "string",
+                    "description": "From `details.resetToken` on an `OTP_REQUIRED` error."
+                  }
+                },
+                "required": [
+                  "username",
+                  "otpResetToken"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetch-recovery-questions": {
+      "post": {
+        "operationId": "fetchRecoveryQuestions",
+        "summary": "Fetch a user’s recovery questions.",
+        "description": "**Core call:** `context.fetchRecovery2Questions`\n\n**Command line**\n\n```\nfetch-recovery-questions --recovery-key=<recoveryKey> --username=<username>\n```\n\n",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "fetch-recovery-questions",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.fetchRecovery2Questions",
+        "x-core-note": "Our surface drops the `2` from the path, command and `recoveryKey` parameter; a future Recovery1 would be suffixed `V1`.",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The questions in the order `login-with-recovery` expects the answers."
+                    }
+                  },
+                  "required": [
+                    "questions"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "recoveryKey": {
+                    "type": "string",
+                    "description": "From `change-recovery`, stored by the user out of band."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "Whose questions to fetch."
+                  }
+                },
+                "required": [
+                  "recoveryKey",
+                  "username"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fetch-challenge": {
+      "post": {
+        "operationId": "fetchChallenge",
+        "summary": "Pre-fetch a CAPTCHA challenge.",
+        "description": "**Core call:** `context.fetchChallenge`\n\n**Command line**\n\n```\nfetch-challenge\n```\n\nLets a client solve a challenge before it hits `403 CHALLENGE_REQUIRED` mid-flow.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "fetch-challenge",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "context.fetchChallenge",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "`challengeUri` is absent when the server considers the challenge already satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "challengeId": {
+                      "type": "string",
+                      "description": "Pass to the call that demanded a challenge once the user has solved it."
+                    },
+                    "challengeUri": {
+                      "type": "string",
+                      "description": "Where to send the user to solve the CAPTCHA. Absent when the server issued a challenge that needs no interaction."
+                    }
+                  },
+                  "required": [
+                    "challengeId"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/currency-configs": {
+      "get": {
+        "operationId": "currencyConfigs",
+        "summary": "List plugin ids usable for wallet creation.",
+        "description": "**Core call:** _none — Engine view of the enabled plugin set; core exposes `account.currencyConfig` per plugin instead._\n\n**Command line**\n\n```\ncurrency-configs\n```\n\nCurrency and accountbased plugins only — swap plugins are excluded.",
+        "tags": [
+          "Device and usernames"
+        ],
+        "x-cli": {
+          "command": "currency-configs",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine view of the enabled plugin set; core exposes `account.currencyConfig` per plugin instead.",
+        "x-source": "src/cli/engine/routes/context.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pluginIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Currency plugins this engine loaded."
+                    }
+                  },
+                  "required": [
+                    "pluginIds"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login-with-password": {
+      "post": {
+        "operationId": "loginWithPassword",
+        "summary": "Log in with a password.",
+        "description": "**Core call:** `context.loginWithPassword`\n\n**Command line**\n\n```\nlogin-with-password [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username=<username> --password=<password>\n```\n\n",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "login-with-password",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.loginWithPassword",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"password\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PASSWORD_ERROR, USERNAME_ERROR, OTP_REQUIRED, CHALLENGE_REQUIRED, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The account name."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The account password."
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login-with-pin": {
+      "post": {
+        "operationId": "loginWithPin",
+        "summary": "Log in with a device PIN.",
+        "description": "**Core call:** `context.loginWithPIN`\n\n**Command line**\n\n```\nlogin-with-pin [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --pin=<pin> [--use-login-id[=false]]\n```\n\nOnly works on a device that has already saved a PIN for the account.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "login-with-pin",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.loginWithPIN",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"pin\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PASSWORD_ERROR, PIN_DISABLED, USERNAME_ERROR, USER_NOT_FOUND, BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "usernameOrLoginId": {
+                    "type": "string",
+                    "description": "A username, or a login id."
+                  },
+                  "pin": {
+                    "type": "string",
+                    "description": "The device PIN."
+                  },
+                  "useLoginId": {
+                    "type": "boolean",
+                    "description": "Treat the value as a login id."
+                  }
+                },
+                "required": [
+                  "usernameOrLoginId",
+                  "pin"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login-with-key": {
+      "post": {
+        "operationId": "loginWithKey",
+        "summary": "Log in with an account login key.",
+        "description": "**Core call:** `context.loginWithKey`\n\n**Command line**\n\n```\nlogin-with-key [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --username-or-login-id=<usernameOrLoginId> --login-key=<loginKey> [--use-login-id[=false]]\n```\n\nThe key comes from `get-login-key` on an already-authenticated session.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "login-with-key",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.loginWithKey",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"key\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, PASSWORD_ERROR, USERNAME_ERROR, USER_NOT_FOUND, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "usernameOrLoginId": {
+                    "type": "string",
+                    "description": "A username, or a login id."
+                  },
+                  "loginKey": {
+                    "type": "string",
+                    "description": "From `get-login-key`."
+                  },
+                  "useLoginId": {
+                    "type": "boolean",
+                    "description": "Treat the value as a login id."
+                  }
+                },
+                "required": [
+                  "usernameOrLoginId",
+                  "loginKey"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login-with-recovery": {
+      "post": {
+        "operationId": "loginWithRecovery",
+        "summary": "Log in with recovery answers.",
+        "description": "**Core call:** `context.loginWithRecovery2`\n\n**Command line**\n\n```\nlogin-with-recovery [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] --recovery-key=<recoveryKey> --username=<username> --answer=<answers> …\n```\n\nNeeds both the recovery key and the answers; neither works alone.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "login-with-recovery",
+          "flags": [
+            {
+              "name": "answer",
+              "maps": "answers",
+              "repeat": true
+            }
+          ],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.loginWithRecovery2",
+        "x-core-note": "Our surface drops the `2` from core's recovery2 naming, and calls the key `recoveryKey` to match what `change-recovery` returns.",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"recovery\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PASSWORD_ERROR, USERNAME_ERROR, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "recoveryKey": {
+                    "type": "string",
+                    "description": "From `change-recovery`."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The account name."
+                  },
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "In the same order as the questions."
+                  }
+                },
+                "required": [
+                  "recoveryKey",
+                  "username",
+                  "answers"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-account": {
+      "post": {
+        "operationId": "createAccount",
+        "summary": "Create an account.",
+        "description": "**Core call:** `context.createAccount`\n\n**Command line**\n\n```\ncreate-account [--otp=<otp>] [--otp-key=<otpKey>] [--challenge-id=<challengeId>] [--username=<username>] --password=<password> --pin=<pin>\n```\n\nEvery credential is optional over REST: omitting all three creates a light account with no username.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "create-account",
+          "flags": [
+            {
+              "name": "password",
+              "maps": "password",
+              "repeat": false,
+              "cliRequired": true
+            },
+            {
+              "name": "pin",
+              "maps": "pin",
+              "repeat": false,
+              "cliRequired": true
+            }
+          ],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "context.createAccount",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A session with `loginMethod: \"create\"`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "USERNAME_ERROR, CHALLENGE_REQUIRED, BAD_REQUEST, NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "otp": {
+                    "type": "string",
+                    "description": "A current 2FA code."
+                  },
+                  "otpKey": {
+                    "type": "string",
+                    "description": "The 2FA secret itself, instead of a code."
+                  },
+                  "challengeId": {
+                    "type": "string",
+                    "description": "Supply after solving a CAPTCHA to retry the same request."
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The name to claim. Omitted over REST alongside `password` and `pin`, this creates a light account with no username; on the command line it is the only one of the three that may be left out."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The account password. Optional over REST — omitting all three credentials creates a light account — and required by the `create-account` command, which refuses without it."
+                  },
+                  "pin": {
+                    "type": "string",
+                    "description": "A device PIN to save. Optional over REST, required by the command, like `password`."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/request-edge-login": {
+      "post": {
+        "operationId": "requestEdgeLogin",
+        "summary": "Start a QR login.",
+        "description": "**Core call:** `context.requestEdgeLogin`\n\n**Command line**\n\n```\nrequest-edge-login [--no-wait]\n```\n\nAsks the login server for a lobby another logged-in Edge device can approve. The returned `lobbyId` is what goes in the QR code.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "request-edge-login",
+          "flags": [],
+          "extra": [
+            {
+              "name": "no-wait",
+              "kind": "boolean",
+              "required": false,
+              "doc": "Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process."
+            }
+          ],
+          "custom": true,
+          "preset": {},
+          "notes": "Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over."
+        },
+        "x-core-call": "context.requestEdgeLogin",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "pendingId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the phone connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `edge://` URI to render as a QR code for the phone to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in."
+                    },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Account that approved the login, known once the phone has scanned."
+                    },
+                    "session": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sessionId": {
+                              "type": "string"
+                            },
+                            "username": {
+                              "type": "string"
+                            },
+                            "rootLoginId": {
+                              "type": "string"
+                            },
+                            "loginMethod": {
+                              "type": "string",
+                              "enum": [
+                                "password",
+                                "pin",
+                                "key",
+                                "recovery",
+                                "edge",
+                                "create"
+                              ]
+                            },
+                            "autoLogoutSeconds": {
+                              "type": "number"
+                            },
+                            "autoLogoutRead": {
+                              "type": "boolean"
+                            },
+                            "expiresAt": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "lastActivityAt": {
+                              "type": "string"
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "sessionId",
+                            "rootLoginId",
+                            "loginMethod",
+                            "autoLogoutSeconds",
+                            "autoLogoutRead",
+                            "expiresAt",
+                            "lastActivityAt",
+                            "createdAt"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The session, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the login failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "pendingId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "username",
+                    "session",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "NETWORK_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pending-edge-login/{pendingId}": {
+      "get": {
+        "operationId": "pollEdgeLogin",
+        "summary": "Poll a pending QR login.",
+        "description": "**Core call:** _none — Engine state for an in-flight requestEdgeLogin; core exposes it as EdgePendingEdgeLogin properties._\n\n**Command line**\n\n```\npoll-edge-login <pendingId>\n```\n\nOnce `state` reaches `done` the engine has already created the session, so the response carries one ready to use.",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "poll-edge-login",
+          "positional": "pendingId",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine state for an in-flight requestEdgeLogin; core exposes it as EdgePendingEdgeLogin properties.",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [
+          {
+            "name": "pendingId",
+            "in": "path",
+            "required": true,
+            "description": "The `pendingId` returned when the QR login was requested.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "pendingId": {
+                      "type": "string",
+                      "description": "Same value as `objectId`, under the name the poll command takes."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the lobby closes and the QR code stops working."
+                    },
+                    "lobbyId": {
+                      "type": "string",
+                      "description": "Lobby the phone connects to."
+                    },
+                    "uri": {
+                      "type": "string",
+                      "description": "The `edge://` URI to render as a QR code for the phone to scan."
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "How far the login has got: `pending` before the phone scans, `started` once it has, and `done` when `session` is filled in."
+                    },
+                    "username": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Account that approved the login, known once the phone has scanned."
+                    },
+                    "session": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "sessionId": {
+                              "type": "string"
+                            },
+                            "username": {
+                              "type": "string"
+                            },
+                            "rootLoginId": {
+                              "type": "string"
+                            },
+                            "loginMethod": {
+                              "type": "string",
+                              "enum": [
+                                "password",
+                                "pin",
+                                "key",
+                                "recovery",
+                                "edge",
+                                "create"
+                              ]
+                            },
+                            "autoLogoutSeconds": {
+                              "type": "number"
+                            },
+                            "autoLogoutRead": {
+                              "type": "boolean"
+                            },
+                            "expiresAt": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "lastActivityAt": {
+                              "type": "string"
+                            },
+                            "createdAt": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "sessionId",
+                            "rootLoginId",
+                            "loginMethod",
+                            "autoLogoutSeconds",
+                            "autoLogoutRead",
+                            "expiresAt",
+                            "lastActivityAt",
+                            "createdAt"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "The session, null until `state` is `done`."
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Why the login failed, set only when `state` is `error`."
+                    }
+                  },
+                  "required": [
+                    "objectId",
+                    "pendingId",
+                    "kind",
+                    "expiresAt",
+                    "lobbyId",
+                    "uri",
+                    "state",
+                    "username",
+                    "session",
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "PENDING_LOGIN_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pending-edge-login/cancel-request/{pendingId}": {
+      "post": {
+        "operationId": "cancelEdgeLogin",
+        "summary": "Cancel a pending QR login.",
+        "description": "**Core call:** `EdgePendingEdgeLogin.cancelRequest`\n\n**Command line**\n\n```\ncancel-request <pendingId>\n```\n\n",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "cancel-request",
+          "positional": "pendingId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "EdgePendingEdgeLogin.cancelRequest",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [
+          {
+            "name": "pendingId",
+            "in": "path",
+            "required": true,
+            "description": "The `pendingId` returned when the QR login was requested.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "PENDING_LOGIN_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/sessions": {
+      "get": {
+        "operationId": "engineSessions",
+        "summary": "List active sessions.",
+        "description": "**Core call:** _none — The session registry is an engine construct; core has no multi-account session concept._\n\n**Command line**\n\n```\nengine-sessions\n```\n\n",
+        "tags": [
+          "Login methods"
+        ],
+        "x-cli": {
+          "command": "engine-sessions",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "The session registry is an engine construct; core has no multi-account session concept.",
+        "x-source": "src/cli/engine/routes/login.ts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "A bare array, not wrapped in a key. Each `sessionId` is truncated: this route needs no session, so a usable id here would be a credential anyone who can reach the engine could collect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sessionId": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "rootLoginId": {
+                        "type": "string"
+                      },
+                      "loginMethod": {
+                        "type": "string",
+                        "enum": [
+                          "password",
+                          "pin",
+                          "key",
+                          "recovery",
+                          "edge",
+                          "create"
+                        ]
+                      },
+                      "autoLogoutSeconds": {
+                        "type": "number"
+                      },
+                      "autoLogoutRead": {
+                        "type": "boolean"
+                      },
+                      "expiresAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "lastActivityAt": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "sessionId",
+                      "rootLoginId",
+                      "loginMethod",
+                      "autoLogoutSeconds",
+                      "autoLogoutRead",
+                      "expiresAt",
+                      "lastActivityAt",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}": {
+      "get": {
+        "operationId": "accountInfo",
+        "summary": "Account and session summary.",
+        "description": "**Core call:** _none — Engine composite of the session record plus EdgeAccount properties._\n\n**Command line**\n\n```\naccount-info\n```\n\nSession fields are spread at the top level alongside the account's own properties — there is no nested `session` object.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "account-info",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine composite of the session record plus EdgeAccount properties.",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "appId": {
+                      "type": "string",
+                      "description": "Application this session logged into."
+                    },
+                    "created": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the account was created, null for accounts predating the field."
+                    },
+                    "lastLogin": {
+                      "type": "string",
+                      "description": "The previous login, not this one."
+                    },
+                    "loggedIn": {
+                      "type": "boolean",
+                      "description": "False once the account has been logged out; the session object outlives it briefly."
+                    },
+                    "recoveryKey": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Present only while recovery is configured."
+                    },
+                    "otpEnabled": {
+                      "type": "boolean",
+                      "description": "2FA is on for this account."
+                    },
+                    "otpResetPending": {
+                      "type": "boolean",
+                      "description": "True while somebody has a reset pending against this account."
+                    },
+                    "canDuressLogin": {
+                      "type": "boolean",
+                      "description": "A duress PIN is configured, so this account can be opened in duress mode."
+                    },
+                    "isDuressAccount": {
+                      "type": "boolean",
+                      "description": "True when this very session is the duress account rather than the real one."
+                    },
+                    "edgeLogin": {
+                      "type": "boolean",
+                      "description": "This account was reached by QR login."
+                    },
+                    "keyLogin": {
+                      "type": "boolean",
+                      "description": "This session was reached with a login key."
+                    },
+                    "newAccount": {
+                      "type": "boolean",
+                      "description": "This session created the account rather than logging into an existing one."
+                    },
+                    "passwordLogin": {
+                      "type": "boolean",
+                      "description": "This session was reached with a password."
+                    },
+                    "pinLogin": {
+                      "type": "boolean",
+                      "description": "This session was reached with a PIN."
+                    },
+                    "recoveryLogin": {
+                      "type": "boolean",
+                      "description": "This session was reached by answering recovery questions."
+                    }
+                  },
+                  "required": [
+                    "appId",
+                    "created",
+                    "lastLogin",
+                    "loggedIn",
+                    "recoveryKey",
+                    "otpEnabled",
+                    "otpResetPending",
+                    "canDuressLogin",
+                    "isDuressAccount",
+                    "edgeLogin",
+                    "keyLogin",
+                    "newAccount",
+                    "passwordLogin",
+                    "pinLogin",
+                    "recoveryLogin"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/logout": {
+      "post": {
+        "operationId": "logout",
+        "summary": "Log out.",
+        "description": "**Core call:** `account.logout`\n\n**Command line**\n\n```\nlogout\n```\n\nEnds the session and drops it from the engine. Any subscription scoped to this account or its wallets is closed with it.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "logout",
+          "flags": [],
+          "extra": [],
+          "custom": true,
+          "preset": {},
+          "notes": "Also clears the stored id from `session.json`."
+        },
+        "x-core-call": "account.logout",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/touch": {
+      "post": {
+        "operationId": "touchSession",
+        "summary": "Keepalive.",
+        "description": "**Core call:** _none — Engine auto-logout timer; core has no idle concept._\n\n**Command line**\n\n```\ntouch\n```\n\nResets the idle auto-logout timer without doing any other work.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "touch",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine auto-logout timer; core has no idle concept.",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session, with a refreshed `expiresAt`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Identifies this login. Every account-scoped call carries it, and the CLI stores the most recent one so commands can omit it."
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "Absent for a light account, which has no username."
+                    },
+                    "rootLoginId": {
+                      "type": "string",
+                      "description": "The account root, stable across appIds. Two sessions sharing it are the same account."
+                    },
+                    "loginMethod": {
+                      "type": "string",
+                      "enum": [
+                        "create",
+                        "edge",
+                        "key",
+                        "password",
+                        "pin",
+                        "recovery"
+                      ],
+                      "description": "How this session was established."
+                    },
+                    "autoLogoutSeconds": {
+                      "type": "number",
+                      "description": "Idle time before the engine logs the account out. 0 disables it."
+                    },
+                    "autoLogoutRead": {
+                      "type": "boolean",
+                      "description": "False when the account’s `Settings.json` could not be read, so `autoLogoutSeconds` is the default (3600) rather than the account’s choice. The engine reads the file again on every sweep."
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When auto-logout will fire, or null when it is disabled."
+                    },
+                    "lastActivityAt": {
+                      "type": "string",
+                      "description": "Last call on this session, which is what auto-logout measures from."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the login completed."
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "rootLoginId",
+                    "loginMethod",
+                    "autoLogoutSeconds",
+                    "autoLogoutRead",
+                    "expiresAt",
+                    "lastActivityAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/get-login-key": {
+      "get": {
+        "operationId": "getLoginKey",
+        "summary": "Read the account login key.",
+        "description": "**Core call:** `account.getLoginKey`\n\n**Command line**\n\n```\nget-login-key\n```\n\nThe key `login-with-key` takes. It grants full account access, so treat the output as secret.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "get-login-key",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.getLoginKey",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loginKey": {
+                      "type": "string",
+                      "description": "base58. Full account access — keep it safe."
+                    }
+                  },
+                  "required": [
+                    "loginKey"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/sync": {
+      "post": {
+        "operationId": "accountSync",
+        "summary": "Force an account data sync.",
+        "description": "**Core call:** `account.sync`\n\n**Command line**\n\n```\nsync\n```\n\nPushes and pulls the account repos immediately rather than waiting for the next scheduled sync.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "sync",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {},
+          "notes": "Named `sync` for the account; the wallet one is `wallet-sync`."
+        },
+        "x-core-call": "account.sync",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "NETWORK_ERROR, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/delete-remote-account": {
+      "post": {
+        "operationId": "deleteRemoteAccount",
+        "summary": "Permanently delete the remote account.",
+        "description": "**Core call:** `account.deleteRemoteAccount`\n\n**Command line**\n\n```\ndelete-remote-account --yes\n```\n\nIrreversible. The account is removed from the login server, and funds in its wallets are unrecoverable without the keys. The session is logged out afterwards.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "delete-remote-account",
+          "flags": [],
+          "extra": [
+            {
+              "name": "yes",
+              "kind": "boolean",
+              "required": true,
+              "doc": "Confirms intent. Without it the command refuses to run."
+            }
+          ],
+          "custom": true,
+          "preset": {}
+        },
+        "x-core-call": "account.deleteRemoteAccount",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content."
+          },
+          "default": {
+            "description": "NETWORK_ERROR, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/wait-for-all-wallets": {
+      "post": {
+        "operationId": "waitForAllWallets",
+        "summary": "Wait for every wallet to finish loading.",
+        "description": "**Core call:** `account.waitForAllWallets`\n\n**Command line**\n\n```\nwait-for-all-wallets\n```\n\nWallets load in the background after login, so a list taken straight afterwards can be short. This resolves once each active wallet has either loaded or failed — balances may still be syncing afterwards.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "wait-for-all-wallets",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.waitForAllWallets",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "unloadedWallets": {
+                      "type": "array",
+                      "items": {},
+                      "description": "The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer. This call used to return nothing, so an account with a wallet the CLI cannot load got `ok` and a short `currency-wallets` list with no explanation. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well."
+                    }
+                  },
+                  "required": [
+                    "unloadedWallets"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/currency-wallets": {
+      "get": {
+        "operationId": "currencyWallets",
+        "summary": "List the account's loaded wallets.",
+        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets\n```\n\nEvery wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nThis took a `filter` of `active`, `archived`, `hidden` or `all`, and three of those four could not work. The handler resolved each id through `account.currencyWallets`, which core builds from `activeWalletIds` **alone**, so the archived and hidden lists were disjoint from the resolvable set by construction: every id mapped to `undefined`, the `filter(wallet != null)` dropped it, and `?filter=archived` answered `{\"currencyWallets\":[]}` on every account, always. `all` concatenated the three lists, so it was `active` with each hidden wallet — which is active and hidden at once, core deriving the two flags independently — listed twice. Nor could the missing wallets be served in this shape: an archived wallet has no loaded API, so `name`, `currencyCode`, `blockHeight`, `syncStatus` and `paused` do not exist for it, and seven required response fields would have had to become nullable for every caller to carry three values that never worked.\n\n`all-keys` is the route for that, and already was: it returns `EdgeWalletInfoFull[]` — id, type, `archived`, `deleted`, `hidden`, `sortIndex` — which is everything knowable about a wallet core has not loaded.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "currency-wallets",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.currencyWallets",
+        "x-core-note": "account.currencyWallets is keyed by activeWalletIds.",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "currencyWallets": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "walletId": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "pluginId": {
+                            "type": "string"
+                          },
+                          "currencyCode": {
+                            "type": "string"
+                          },
+                          "fiatCurrencyCode": {
+                            "type": "string"
+                          },
+                          "blockHeight": {
+                            "type": "number"
+                          },
+                          "syncStatus": {},
+                          "syncRatio": {
+                            "type": "string"
+                          },
+                          "paused": {
+                            "type": "boolean"
+                          },
+                          "imported": {
+                            "type": "boolean"
+                          },
+                          "created": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "enabledTokenIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "detectedTokenIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "unactivatedTokenIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "walletId",
+                          "id",
+                          "type",
+                          "name",
+                          "pluginId",
+                          "currencyCode",
+                          "fiatCurrencyCode",
+                          "blockHeight",
+                          "syncStatus",
+                          "paused",
+                          "created",
+                          "enabledTokenIds",
+                          "detectedTokenIds",
+                          "unactivatedTokenIds"
+                        ]
+                      },
+                      "description": "Every wallet core has loaded for this account, including paused ones. Archived, deleted and hidden wallets are not loaded; `all-keys` lists those."
+                    },
+                    "unloadedWallets": {
+                      "type": "array",
+                      "items": {},
+                      "description": "The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. They used to be filtered out silently, so this list was the difference between `all-keys` and this one and a caller had to compute it — and nothing said why a wallet was missing. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
+                    }
+                  },
+                  "required": [
+                    "currencyWallets",
+                    "unloadedWallets"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/create-currency-wallet": {
+      "post": {
+        "operationId": "createCurrencyWallet",
+        "summary": "Create a currency wallet.",
+        "description": "**Core call:** `account.createCurrencyWallet`\n\n**Command line**\n\n```\ncreate-currency-wallet --wallet-type=<walletType> [--name=<name>] [--import-text=<importText>]\n```\n\n",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "create-currency-wallet",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.createCurrencyWallet",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "walletId": {
+                      "type": "string",
+                      "description": "The full wallet id. Commands taking a wallet accept any unique prefix."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "Same value as `walletId`, under the name `edge-core-js` uses. Core’s `EdgeCurrencyWallet` has only `id`; `walletId` is the name every route’s parameter takes, so both are published and a caller can use whichever half of the API it is reading."
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Key type, such as `wallet:bitcoin`."
+                    },
+                    "name": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "User-assigned name, null until one is set."
+                    },
+                    "pluginId": {
+                      "type": "string",
+                      "description": "Currency plugin backing this wallet."
+                    },
+                    "currencyCode": {
+                      "type": "string",
+                      "description": "Ticker for the native asset."
+                    },
+                    "fiatCurrencyCode": {
+                      "type": "string",
+                      "description": "Fiat the wallet reports value in, as `iso:USD`."
+                    },
+                    "blockHeight": {
+                      "type": "number",
+                      "description": "Chain height this wallet has seen."
+                    },
+                    "syncStatus": {
+                      "description": "`EdgeWalletSyncStatus` from core."
+                    },
+                    "syncRatio": {
+                      "type": "string",
+                      "description": "Sync progress as a percentage, for display."
+                    },
+                    "paused": {
+                      "type": "boolean",
+                      "description": "True while the engine is not syncing this wallet."
+                    },
+                    "imported": {
+                      "type": "boolean",
+                      "description": "True when the keys came from an import rather than being generated here."
+                    },
+                    "created": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the wallet was created, null for wallets predating the field."
+                    },
+                    "enabledTokenIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Tokens the user turned on."
+                    },
+                    "detectedTokenIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Tokens found on-chain that are not enabled yet."
+                    },
+                    "unactivatedTokenIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Enabled tokens still awaiting on-chain activation."
+                    }
+                  },
+                  "required": [
+                    "walletId",
+                    "id",
+                    "type",
+                    "name",
+                    "pluginId",
+                    "currencyCode",
+                    "fiatCurrencyCode",
+                    "blockHeight",
+                    "syncStatus",
+                    "paused",
+                    "created",
+                    "enabledTokenIds",
+                    "detectedTokenIds",
+                    "unactivatedTokenIds"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "walletType": {
+                    "type": "string",
+                    "description": "From `currency-configs`, e.g. `wallet:bitcoin`."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Display name."
+                  },
+                  "importText": {
+                    "type": "string",
+                    "description": "Seed or key text to import instead of generating."
+                  }
+                },
+                "required": [
+                  "walletType"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/create-currency-wallets": {
+      "post": {
+        "operationId": "createCurrencyWallets",
+        "summary": "Create several wallets at once.",
+        "description": "**Core call:** `account.createCurrencyWallets`\n\n**Command line**\n\n```\ncreate-currency-wallets --create-wallets='<json>'\n```\n\nPartial success is normal: each entry reports its own outcome, and one failure does not roll back the others.",
+        "tags": [
+          "Session"
+        ],
+        "x-cli": {
+          "command": "create-currency-wallets",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": "account.createCurrencyWallets",
+        "x-source": "src/cli/engine/routes/account.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {},
+                      "description": "Mirrors core’s EdgeResult[]: `{ ok: true, wallet }`, or `{ ok: false, error, code, status }` with the same code the engine would answer for that failure on its own — and `details` where it has them."
+                    }
+                  },
+                  "required": [
+                    "results"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "BAD_REQUEST, NETWORK_ERROR, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "createWallets": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "walletType": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "fiatCurrencyCode": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "walletType"
+                      ]
+                    },
+                    "description": "`EdgeCreateCurrencyWallet[]`: walletType, plus optional name and fiatCurrencyCode."
+                  }
+                },
+                "required": [
+                  "createWallets"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/object/{objectId}": {
+      "get": {
+        "operationId": "getObject",
+        "summary": "Inspect an object handle.",
+        "description": "**Core call:** _none — Engine handle store; core identifies these values by object reference._\n\n**Command line**\n\n```\nobject-get <objectId>\n```\n\nFor the session-scoped kinds: a staged transaction or a swap quote.",
+        "tags": [
+          "Object handles"
+        ],
+        "x-cli": {
+          "command": "object-get",
+          "positional": "objectId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine handle store; core identifies these values by object reference.",
+        "x-source": "src/cli/engine/routes/objects.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "objectId",
+            "in": "path",
+            "required": true,
+            "description": "An ephemeral object handle id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The handle fields, plus a `value` holding a JSON-safe view of the object. A staged transaction is returned whole; a swap quote is summarised, because the value behind it is a live core object whose properties are getters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "description": "A JSON-safe view of the object, whose shape depends on `kind`: a staged transaction whole, a swap quote summarised, and null for a kind with no scalar projection."
+                    },
+                    "objectId": {
+                      "type": "string",
+                      "description": "Handle for the value the engine is holding. Pass it to the calls that consume it."
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "lobby",
+                        "pendingLogin",
+                        "swap",
+                        "transaction"
+                      ],
+                      "description": "What the handle refers to, which decides the calls that accept it."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "description": "When the engine took the handle."
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "description": "When the engine drops the handle. Handles live 5 minutes."
+                    },
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Session that created the handle; only that session may use it."
+                    },
+                    "walletId": {
+                      "type": "string",
+                      "description": "Wallet the handle is bound to, when it belongs to one."
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "objectId",
+                    "kind",
+                    "createdAt",
+                    "expiresAt"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_IN_USE, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/{sessionId}/object/delete/{objectId}": {
+      "post": {
+        "operationId": "deleteObject",
+        "summary": "Release an object handle.",
+        "description": "**Core call:** _none — Engine handle store._\n\n**Command line**\n\n```\nobject-delete <objectId>\n```\n\nRuns the handle's cleanup — closing a swap quote, discarding a staged transaction — instead of waiting out the TTL.",
+        "tags": [
+          "Object handles"
+        ],
+        "x-cli": {
+          "command": "object-delete",
+          "positional": "objectId",
+          "flags": [],
+          "extra": [],
+          "custom": false,
+          "preset": {}
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine handle store.",
+        "x-source": "src/cli/engine/routes/objects.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "From a successful login. The CLI supplies this from `session.json`, `--session`, or `EDGE_CLI_SESSION`.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "objectId",
+            "in": "path",
+            "required": true,
+            "description": "An ephemeral object handle id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "Always true; a failure arrives as an error envelope."
+                    },
+                    "objectId": {
+                      "type": "string",
+                      "description": "The handle this call consumed. It is now expired."
+                    }
+                  },
+                  "required": [
+                    "ok",
+                    "objectId"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_IN_USE, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/engine/events": {
+      "get": {
+        "operationId": "engineEvents",
+        "summary": "Subscribe to engine events.",
+        "description": "**Core call:** _none — Engine-side fan-out; `core.log` frames carry core's onLog output._\n\n**Command line**\n\n```\nsubscribe [--session-id=<sessionId>] [--wallet-id=<walletId>] [--type=<type> …]\n```\n\nHolds a Server-Sent Events stream open until the caller disconnects or the engine closes it. Runs concurrently with one-shot calls, so a subscriber in one terminal watches what another terminal does.\n\nA live subscription holds the engine open past its idle timeout. It does not hold an account logged in: the auto-logout timer still fires, and closes any subscription scoped to that account or one of its wallets. Context-scoped subscriptions survive, because the context outlives every account.\n\nScope comes from the query string. With no `sessionId` the stream is context-scoped and nothing but the engine stopping ends it, which is what the `subscribe` command asks for. With `sessionId` it is account-scoped: a logout closes it, and the session events of *other* accounts are filtered out. `walletId` narrows it further *within* that account, for whenever a wallet-scoped event exists: no event carries a wallet scope today, so it changes nothing a caller receives, and a wallet-scoped stream gets exactly what the same stream without `walletId` would have got. It is accepted now so a caller's URL does not have to change when the first such event arrives.",
+        "tags": [
+          "Event stream"
+        ],
+        "x-cli": {
+          "command": "subscribe",
+          "flags": [],
+          "extra": [
+            {
+              "name": "type",
+              "kind": "repeat",
+              "required": false,
+              "doc": "Only these event types. Applied by the engine, so an unwanted type never crosses the socket; the client filters again for the types the engine sends regardless, like `subscription.closed`."
+            }
+          ],
+          "custom": true,
+          "preset": {},
+          "notes": "Prints newline-delimited JSON and runs until interrupted. Exits 0 on SIGINT and 7 when the engine ends the stream. `subscribe` opens an unscoped stream, which only the engine stopping ends; a stream opened with `sessionId` is closed by that session logging out."
+        },
+        "x-core-call": null,
+        "x-core-note": "Engine-side fan-out; `core.log` frames carry core's onLog output.",
+        "x-source": "src/cli/engine/routes/events.ts",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "query",
+            "required": false,
+            "description": "Scope the stream to one account, so a logout closes it. Omitted, the stream is context-scoped and only the engine stopping ends it.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletId",
+            "in": "query",
+            "required": false,
+            "description": "With `sessionId`, narrow the stream to one wallet. No event carries a wallet scope yet, so today this changes nothing you receive — the stream still carries every account event the same `sessionId` alone would carry. Ignored on its own.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One frame per event, as `event:` then `data:` lines.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "The event name."
+                    },
+                    "data": {
+                      "description": "Payload, shaped by the event type."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "edgeTcpToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Edge-Token",
+        "description": "The bearer token the engine mints for its loopback TCP listener, written to the `0600` run file at ~/.edge-cli/run/<profile>/engine.json as `tcpToken`. Required on the TCP transport and ignored on the unix socket. A TCP request that also carries `Origin`, or a `Host` other than the bound address, is refused with 403 whatever token it presents."
+      }
+    },
+    "schemas": {
+      "ErrorEnvelope": {
+        "type": "object",
+        "description": "Every failure, on both transports.",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "status": {
+                "type": "number"
+              },
+              "details": {}
+            },
+            "required": [
+              "code",
+              "message",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  }
+}

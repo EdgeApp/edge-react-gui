@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: Every secret the CLI takes also reads from its own environment variable — `EDGE_CLI_PASSWORD`, `EDGE_CLI_PIN`, `EDGE_CLI_LOGIN_KEY`, `EDGE_CLI_DATA_KEY` and the rest — because `ps` shows a command line to every user on the host. `check-password-rules`, `admin-repo-list` and `admin-repo-get` take their secret in a POST body rather than a query string.
 - changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
