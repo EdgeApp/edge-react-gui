@@ -426,6 +426,19 @@ export const getTxActionDisplayInfo = (
               )
             }
             direction = txSrcSameAsset ? 'send' : 'receive'
+
+            // A swap the provider routed privately is titled by its flow, the
+            // way a private send is. The provider alone cannot say so, since
+            // it serves transparent routes too. The flag is read without
+            // naming it on the type, because the installed edge-core-js
+            // predates `EdgeTxActionSwap.privacy`.
+            if (
+              assetActionType === 'swap' &&
+              'privacy' in action &&
+              action.privacy === true
+            ) {
+              payeeText = lstrings.transaction_details_stealth_swap
+            }
             break
           }
 
