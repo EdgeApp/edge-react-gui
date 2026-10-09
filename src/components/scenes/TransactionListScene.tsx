@@ -33,7 +33,8 @@ import type {
   WalletsTabSceneProps
 } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { calculateSpamThreshold, unixToLocaleDateTime } from '../../util/utils'
+import { calculateSpamThreshold } from '../../util/spamThreshold'
+import { unixToLocaleDateTime } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { promptForContactsPermission } from '../modals/ContactsPermissionModal'
