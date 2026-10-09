@@ -43,6 +43,55 @@ export interface TarotContractGroups {
   [TarotPoolTokenType.Collateral]: TarotCollateralContracts
 }
 
+interface TarotValues {
+  valueCollateral: number
+  valueA: number
+  valueB: number
+}
+
+export interface TarotUtils {
+  getAccruedBalance: (
+    contract: TarotBorrowable,
+    walletAddress: string
+  ) => Promise<BigNumber>
+  getReserves: () => Promise<[number, number]>
+  NO_CHANGES: {
+    readonly changeBorrowedA: 0
+    readonly changeBorrowedB: 0
+    readonly changeCollateral: 0
+  }
+  getLPTotalSupply: () => Promise<number>
+  getMarketPriceDenomLP: () => Promise<[number, number]>
+  getContracts: (
+    poolTokenType: TarotPoolTokenType
+  ) => Promise<TarotBorrowableContracts | TarotCollateralContracts>
+  getExchangeRate: (poolTokenType: TarotPoolTokenType) => Promise<BigNumber>
+  getDeposited: (poolTokenType: TarotPoolTokenType) => Promise<BigAmount>
+  getBorrowed: (poolTokenType: TarotPoolTokenType) => Promise<BigAmount>
+  parseNumber: (bigAmount: BigAmount | undefined) => number
+  getValuesFromPrice: (
+    changes: TarotUtils['NO_CHANGES'],
+    priceA: number,
+    priceB: number
+  ) => Promise<TarotValues>
+  getMarketValues: (changes: TarotUtils['NO_CHANGES']) => Promise<TarotValues>
+  getMaxDeleverage: () => Promise<number>
+  getDeleverageAmounts: (changeCollateralValue: number) => Promise<{
+    bAmountA: number
+    bAmountB: number
+    cAmount: number
+    bAmountAMin: number
+    bAmountBMin: number
+  }>
+  getNewLeverage: (changes: TarotUtils['NO_CHANGES']) => Promise<number>
+  getLeverage: () => Promise<number>
+  getValues: (changes: TarotUtils['NO_CHANGES']) => Promise<TarotValues>
+  getPriceDenomLP: () => Promise<[number, number]>
+  formatToDecimals: (n: number, decimals?: number) => string
+  decimalToBalance: (d: string | number, decimals?: number) => BigNumber
+  parse18: (amount: BigNumberish) => number
+}
+
 /**
  * These utils have been copied from tarot.to and minimally changed to work in the stake plugin.
  * To avoid math errors and interoperability between utils, no code cleanups were attempted.
@@ -52,7 +101,7 @@ export const tarotUtils = (
   config: TarotPoolAdapterConfig,
   provider: ethers.providers.FallbackProvider,
   walletAddress: string
-) => {
+): TarotUtils => {
   const poolContract = VelodromePoolV2__factory.connect(
     config.poolContractAddress,
     provider
@@ -222,7 +271,7 @@ export const tarotUtils = (
     },
 
     parseNumber(bigAmount: BigAmount | undefined): number {
-      if (!bigAmount) {
+      if (bigAmount == null) {
         return 0
       }
       return parseFloat(formatUnits(bigAmount.amount, bigAmount.decimals))
