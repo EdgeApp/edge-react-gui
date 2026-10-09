@@ -2038,8 +2038,8 @@ const SendComponent: React.FC<Props> = props => {
     }
     if (swapQuote == null) return null
 
-    // Rate in exchange (standard) units, plus the provider that quoted and
-    // the shared price-delta indicator:
+    // Rate in exchange (standard) units, plus the shared price-delta
+    // indicator:
     const fromExchangeAmount = div(
       swapQuote.fromNativeAmount,
       cryptoExchangeDenomination.multiplier,
@@ -2056,9 +2056,6 @@ const SendComponent: React.FC<Props> = props => {
     const rate = zeroString(fromExchangeAmount)
       ? '0'
       : div(toExchangeAmount, fromExchangeAmount, 8)
-    const providerName =
-      account.swapConfig[swapQuote.pluginId]?.swapInfo.displayName ??
-      swapQuote.pluginId
     const priceImpact = calculateQuotePriceImpact(
       swapQuote,
       exchangeRates,
@@ -2068,13 +2065,10 @@ const SendComponent: React.FC<Props> = props => {
     return (
       <>
         <EdgeRow title={lstrings.stealth_quote_rate}>
-          <View style={styles.swapAmountRow}>
-            <EdgeText style={styles.swapAmountText}>
-              {`1 ${currencyCode} = ${rate} ${destCurrencyCode ?? ''}`}
-              <PriceImpactText priceImpact={priceImpact} />
-            </EdgeText>
-            <EdgeText style={styles.providerHint}>{providerName}</EdgeText>
-          </View>
+          <EdgeText style={styles.swapAmountText}>
+            {`1 ${currencyCode} = ${rate} ${destCurrencyCode ?? ''}`}
+            <PriceImpactText priceImpact={priceImpact} />
+          </EdgeText>
         </EdgeRow>
         {swapQuote.expirationDate == null ? null : (
           <CountdownTile
@@ -4036,9 +4030,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   calcFeeView: {
     flexDirection: 'row'
   },
-  swapAmountRow: {
-    alignItems: 'flex-start'
-  },
   swapAmountText: {
     fontSize: theme.rem(1)
   },
@@ -4055,10 +4046,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   swapAssetNetwork: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75)
-  },
-  providerHint: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
   },
   calcFeeSpinner: {
     marginLeft: theme.rem(1)
