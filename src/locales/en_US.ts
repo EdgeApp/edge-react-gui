@@ -1522,6 +1522,10 @@ const strings = {
   export_transaction_bitwave_accountid_modal_message:
     'Please enter the Bitwave account ID for this wallet',
   export_transaction_bitwave_accountid_modal_input_label: 'Account ID',
+  export_transaction_bitwave_accountid_missing:
+    'No Bitwave account ID, so the Bitwave CSV was skipped',
+  export_transaction_rates_incomplete_2s:
+    'Could not get exchange rates for %s of %s transactions. Please try again.',
   string_export: 'Export',
   string_status: 'Status',
   string_fee: 'Fee',
