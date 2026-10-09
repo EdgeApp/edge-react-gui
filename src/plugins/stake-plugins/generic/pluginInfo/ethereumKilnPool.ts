@@ -26,11 +26,7 @@ const kilnPolicyConfig: Array<
       },
       baseUrl: 'https://api.testnet.kiln.fi',
       contractAddress: '0xb9b3b83daaaadd3866de311ffefec80dbcb048b1',
-      pluginId: 'holesky',
-      rpcProviderUrls: [
-        `https://ethereum-holesky-rpc.publicnode.com`,
-        'https://1rpc.io/holesky'
-      ]
+      pluginId: 'holesky'
     },
     mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,
@@ -54,11 +50,7 @@ const kilnPolicyConfig: Array<
       },
       baseUrl: 'https://api.kiln.fi',
       contractAddress: '0xEb4d67DBa18b3bE04484dFC7B7c2780E8D32A79d',
-      pluginId: 'ethereum',
-      rpcProviderUrls: [
-        `https://ethereum-rpc.publicnode.com`,
-        'https://1rpc.io/eth'
-      ]
+      pluginId: 'ethereum'
     },
     mustMaxUnstake: true, // TODO: This can be removed once engines have LP token balances
     hideUnstakeAndClaimAction: true,

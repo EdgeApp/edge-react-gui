@@ -18,7 +18,6 @@ const filecoinPolicyConfig: Array<
     parentCurrencyCode: 'FIL',
     adapterConfig: {
       type: 'glif-infinity-pool',
-      rpcProviderUrls: [`https://api.node.glif.io/rpc/v0`],
       poolContractAddress: '0xe764Acf02D8B7c21d2B6A8f0a96C78541e0DC3fd', // Pool 0
       simpleRampContractAddress: '0xe764Acf02D8B7c21d2B6A8f0a96C78541e0DC3fd'
     },

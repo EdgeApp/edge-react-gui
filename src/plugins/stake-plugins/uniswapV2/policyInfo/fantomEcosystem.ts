@@ -1,4 +1,3 @@
-import { pluginMaps } from '../../../../pluginMaps'
 import ANYSWAP_V5_ERC20_ABI from '../../../abi/ANYSWAP_V5_ERC20_ABI.json'
 import MASONRY_ABI from '../../../abi/MASONRY_ABI.json'
 import TOMB_TREASURY_ABI from '../../../abi/TOMB_TREASURY_ABI.json'
@@ -268,27 +267,4 @@ export const fantomContractInfoMap = {
 // Ecosystem
 // -----------------------------------------------------------------------------
 
-// Built on first use rather than at module scope: these URLs embed secrets that
-// the keys store may still be fetching when this module is evaluated.
-const getRpcProviderUrls = (): string[] => {
-  const fantomInit = pluginMaps.corePlugins.fantom
-  const { quiknodeApiKey = '', poktPortalApiKey = '' } =
-    typeof fantomInit === 'object' && fantomInit != null
-      ? (fantomInit as { quiknodeApiKey?: string; poktPortalApiKey?: string })
-      : {}
-  return [
-    `https://fantom-mainnet.gateway.pokt.network/v1/lb/${poktPortalApiKey}`,
-    `https://polished-empty-cloud.fantom.quiknode.pro/${quiknodeApiKey}/`,
-    'https://rpc.ftm.tools'
-    // 'https://rpc.fantom.network',
-    // 'https://rpc2.fantom.network',
-    // 'https://rpc3.fantom.network',
-    // 'https://rpcapi.fantom.network',
-    // 'https://rpc.ankr.com/fantom'
-  ]
-}
-
-export const fantomEcosystem = makeEcosystem(
-  fantomContractInfoMap,
-  getRpcProviderUrls
-)
+export const fantomEcosystem = makeEcosystem(fantomContractInfoMap, 'fantom')
