@@ -3,7 +3,7 @@ import { ScrollView, View } from 'react-native'
 
 import {
   readLocalAccountSettings,
-  writeLocalAccountSettings
+  updateLocalAccountSettings
 } from '../../actions/LocalSettingsActions'
 import {
   ACCOUNT_UPGRADE_DAYS_THRESHOLD,
@@ -158,10 +158,10 @@ export const ReviewTriggerTestScene: React.FC<Props> = () => {
 
       // Remove review trigger data if it exists
       if (settings.reviewTrigger != null) {
-        await writeLocalAccountSettings(account, {
-          ...settings,
+        await updateLocalAccountSettings(account, latest => ({
+          ...latest,
           reviewTrigger: asReviewTriggerData({})
-        })
+        }))
         showToast('Reset review trigger data')
         await refreshReviewData()
       } else {
@@ -197,9 +197,17 @@ export const ReviewTriggerTestScene: React.FC<Props> = () => {
           return
         }
 
-        settings.reviewTrigger.nextTriggerDate = date
-
-        await writeLocalAccountSettings(account, settings)
+        await updateLocalAccountSettings(account, latest =>
+          latest.reviewTrigger == null
+            ? latest
+            : {
+                ...latest,
+                reviewTrigger: {
+                  ...latest.reviewTrigger,
+                  nextTriggerDate: date
+                }
+              }
+        )
 
         showToast('Set next trigger date')
         await refreshReviewData()

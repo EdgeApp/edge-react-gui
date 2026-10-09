@@ -267,21 +267,6 @@ export function fixFiatCurrencyCode(currencyCode: string): string {
 // `utils → spamThreshold → exchangeRates → network → utils`. Sparing three
 // call sites an import path is not worth a cycle; they name the real module.
 
-/**
- * The dust floor, in this module until `spamThreshold.ts` exists.
- *
- * `ReceiveDropdown`, `TransactionListScene` and `WalletDetailsScene` import
- * it from here, and the module it moves to is Node-safe code that arrives
- * with the denominations extraction.
- */
-export const calculateSpamThreshold = (
-  rate: number,
-  denom: EdgeDenomination
-): string => {
-  if (rate === 0) return '0'
-  return div(div(denom.multiplier, rate.toString()), '1000')
-}
-
 export interface PrecisionAdjustParams {
   exchangeSecondaryToPrimaryRatio: number
   secondaryExchangeMultiplier: string
