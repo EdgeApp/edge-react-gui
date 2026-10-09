@@ -31,6 +31,7 @@
 - added: MoonPay Trade swap provider
 - added: Per-provider swap asset disables from the info server
 - added: Copy button for the master private key or seed, cleared from the clipboard after one minute
+- added: Token destinations, like USDT on Tron, for Stealth Send and swap-to-address sends
 - changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
@@ -43,6 +44,10 @@
 - changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
 - changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
 - changed: Hide the Stealth Send card and Recipient receives row on sends with multiple recipients
+- changed: The "Recipient receives" list shows each asset's name over its network
+- changed: Stealth Swap wallet lists show only the assets the Houdini provider supports
+- changed: The send scene's exchange rate row no longer names the swap provider
+- changed: Stealth Send from a token source pays out that token, when Houdini serves it, instead of the chain coin
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
 - fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
 - fixed: Missing exchange rates when the device clock is set ahead
