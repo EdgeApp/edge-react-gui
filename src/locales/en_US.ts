@@ -1708,13 +1708,13 @@ const strings = {
   stealth_multi_recipient_unsupported:
     'Stealth Send and cross-asset recipients are not available when sending to multiple recipients.',
   stealth_route_unavailable_toast:
-    'Private routing is not available for this pair right now. Stealth Send has been turned off.',
+    'Stealth routing is not available for this pair right now. Stealth Send has been turned off.',
   stealth_route_unavailable_info:
-    'Private routing is not available for this pair right now.',
+    'Stealth routing is not available for this pair right now.',
   stealth_self_private_unsupported_1s:
-    'Private routing is not available when sending %1$s to itself.',
+    'Stealth routing is not available when sending %1$s to itself.',
   stealth_below_private_minimum_1s:
-    'Private routing needs at least %1$s. Enter a larger amount to send privately.',
+    'Stealth routing needs at least %1$s. Enter a larger amount.',
   stealth_below_standard_minimum_1s:
     'The provider needs at least %1$s to route this send. Enter a larger amount.',
   stealth_fixed_to_unavailable_toast:
@@ -1724,11 +1724,11 @@ const strings = {
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
   stealth_recipient_hidden: 'Hidden for privacy',
   stealth_swap_send_warning_title: 'Swap before send',
-  stealth_swap_send_warning_title_private: 'Private swap before send',
+  stealth_swap_send_warning_title_private: 'Stealth swap before send',
   stealth_swap_send_warning_body:
     'Your funds are swapped before they reach the recipient.',
   stealth_swap_send_warning_body_private:
-    'Your funds are swapped over a private route before they reach the recipient.',
+    'Your funds are swapped over an obfuscated route before they reach the recipient.',
   transaction_may_take_longer:
     'This transaction may take longer than usual to complete.',
   stealth_swap_send_modal_title: 'This send uses a swap provider',
