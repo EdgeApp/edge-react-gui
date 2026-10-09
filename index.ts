@@ -5,6 +5,10 @@
 // no-ops and the home screen shortcuts never appear.
 import 'expo-modules-core'
 import 'react-native-gesture-handler'
+// Locale selection must precede ./src/app, whose import graph evaluates
+// locales/strings: anything capturing lstrings at module scope would otherwise
+// be frozen in English.
+import './src/locales/initLocale'
 import './src/app'
 import './src/perf'
 
