@@ -151,7 +151,6 @@ export default [
       'src/actions/SoundActions.ts',
       'src/actions/TokenTermsActions.tsx',
 
-      'src/app.ts',
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
       'src/components/buttons/IconButton.tsx',
