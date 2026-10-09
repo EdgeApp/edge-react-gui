@@ -4,6 +4,7 @@ import { asSyncedAccountSettings } from '../../actions/SettingsActions'
 import { makeFakeDiskletAccount } from '../../util/fake/fakeDisklet'
 import {
   asSyncedSettingsSubset,
+  readSyncedSettings,
   readSyncedSettingsOrThrow,
   SYNCED_SETTINGS_FILENAME
 } from '../../util/syncedSettingsFile'
@@ -103,11 +104,30 @@ describe('readSyncedSettingsOrThrow', () => {
     )
   })
 
-  it('still answers the defaults for a file this version cannot parse', async () => {
-    // Deliberately lenient: the file was read, and no version could make
-    // anything but the defaults out of it.
+  it('throws for a file that is there and cannot be read', async () => {
+    // "As good as absent" was true of the value and false of the
+    // consequence. This reader exists so that "present but unreadable"
+    // means one thing, and a truncated or half-synced `Settings.json` is
+    // the case it was written for: swallowed into the cleaner's defaults,
+    // `autoLogoutTimeInSeconds` silently became 3600 for an account that
+    // had set `0` to disable it and `engine-sessions` reported the
+    // substituted value as the user's own choice, while `defaultIsoFiat`
+    // silently became `iso:USD` in an accounting export. Every caller of
+    // this door is one that must not substitute — the spam floor, the
+    // export's fiat, the denomination settings, the auto-logout window —
+    // and `readSyncedSettings` is the lenient one, with a stated fallback.
+    //
+    // `[]` among them, because `asObject` accepts an array, so that case
+    // reached the defaults without `asMaybe` being involved at all.
+    for (const synced of ['{"defaultIsoFiat":', '[]', '"x"', '42']) {
+      const account = makeFakeDiskletAccount({ synced })
+      await expect(readSyncedSettingsOrThrow(account)).rejects.toThrow()
+    }
+  })
+
+  it('still answers the defaults through the lenient door', async () => {
     const account = makeFakeDiskletAccount({ synced: '{"defaultIsoFiat":' })
-    const settings = await readSyncedSettingsOrThrow(account)
+    const settings = await readSyncedSettings(account)
     expect(settings.defaultIsoFiat).toBe('iso:USD')
   })
 

@@ -31,9 +31,16 @@ describe('readDefaultIsoFiat', () => {
     expect(await readDefaultIsoFiat(makeFakeDiskletAccount({}))).toBe('iso:USD')
   })
 
-  it('defaults to iso:USD when Settings.json is not JSON', async () => {
+  it('throws when Settings.json is there and cannot be read', async () => {
+    // This function's own docblock: "a `Settings.json` that is *there* and
+    // cannot be read is not answered the way an absent one is", because the
+    // value labels and prices a whole `get-transactions` response and every
+    // CSV, QBO and Bitwave file written from it. The strict reader swallowed
+    // a parse failure into the defaults, so the promise did not hold and a
+    // truncated file priced the lot in `iso:USD` while reporting USD back as
+    // the account's own default.
     const account = makeFakeDiskletAccount({ synced: '{not json' })
-    expect(await readDefaultIsoFiat(account)).toBe('iso:USD')
+    await expect(readDefaultIsoFiat(account)).rejects.toThrow()
   })
 
   it('defaults to iso:USD when defaultIsoFiat is empty', async () => {

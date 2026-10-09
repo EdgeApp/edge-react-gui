@@ -18,7 +18,7 @@ import {
   asString
 } from 'cleaners'
 
-import { isMissingFile } from './predicates'
+import { isMissingFile, isPlainObject } from './predicates'
 
 /** The synced account settings file, on `account.disklet`. */
 export const SYNCED_SETTINGS_FILENAME = 'Settings.json'
@@ -101,7 +101,7 @@ export async function readSyncedSettings(account: {
 }
 
 /**
- * The same read, letting an I/O or decryption failure out.
+ * The same read, letting a file that is there and unreadable out.
  *
  * The engine's auto-logout ticker re-reads this file every sweep and has a
  * `catch` whose stated job is to keep the last known window. That `catch`
@@ -109,6 +109,15 @@ export async function readSyncedSettings(account: {
  * so one unreadable read silently replaced a live `autoLogoutTimeInSeconds`
  * with the cleaner's 3600, and an account that had set `0` to disable
  * auto-logout was logged out an hour later, mid-script.
+ *
+ * "Unreadable" means the I/O, the decryption *and* the parse. Only the
+ * first was let out at first, so the commonest shape of the failure — a
+ * truncated or half-synced `Settings.json`, which reads fine and does not
+ * parse — still came back as the defaults on the very path written to
+ * refuse them. Every caller of this door is one that must not substitute:
+ * the spam floor, an export's `defaultIsoFiat`, the denomination settings
+ * and the auto-logout window. `readSyncedSettings` is the lenient door and
+ * says so.
  */
 export async function readSyncedSettingsOrThrow(account: {
   disklet: { getText: (path: string) => Promise<string> }
@@ -123,11 +132,28 @@ export async function readSyncedSettingsOrThrow(account: {
     if (!isMissingFile(error)) throw error
     return asSyncedSettingsSubset({})
   }
-  // A file this version cannot parse is as good as absent: the defaults are
-  // the only thing it could become. Only the read itself is allowed to fail.
-  return (
-    asMaybe(asJSON(asSyncedSettingsSubset))(text) ?? asSyncedSettingsSubset({})
-  )
+  // A file that is there and cannot be read means one thing on both halves
+  // of this read. "As good as absent" was true of the value and false of
+  // the consequence: `asMaybe` here swallowed a truncated or half-synced
+  // `Settings.json` into the cleaner's defaults, which is exactly what this
+  // function exists to refuse — `autoLogoutTimeInSeconds` silently became
+  // 3600 for an account that had set `0` to disable it, and
+  // `engine-sessions` reported the substituted value as though the user had
+  // chosen it, on the path written to prevent that. The tolerance belongs to
+  // `readSyncedSettings`, which has a stated fallback.
+  //
+  // `isPlainObject` before the cleaner, because `asObject` accepts an array
+  // — so `[]`, which is what a half-written file is likeliest to be when it
+  // is valid JSON and not these settings, would otherwise clean to the same
+  // defaults without `asMaybe` being involved at all.
+  return asJSON((raw: unknown) => {
+    if (!isPlainObject(raw)) {
+      throw new TypeError(
+        `${SYNCED_SETTINGS_FILENAME} is not a settings object`
+      )
+    }
+    return asSyncedSettingsSubset(raw)
+  })(text)
 }
 
 export type SyncedSettingsSubset = ReturnType<typeof asSyncedSettingsSubset>
