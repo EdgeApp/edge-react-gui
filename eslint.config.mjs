@@ -490,8 +490,6 @@ export default [
       'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
 
-      'src/util/exchangeRates.ts',
-
       'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
@@ -507,7 +505,7 @@ export default [
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
-      'src/util/WebUtils.ts',
+
       'src/util/withWatchableProps.ts'
     ],
     languageOptions: {
