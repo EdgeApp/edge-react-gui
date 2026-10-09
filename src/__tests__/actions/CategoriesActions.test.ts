@@ -7,13 +7,11 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 
-import {
-  getPluginIdIcon,
-  getTxActionDisplayInfo
-} from '../../actions/CategoriesActions'
+import { getPluginIdIcon } from '../../actions/CategoriesActions'
 import { lstrings } from '../../locales/strings'
 import { edgeDark } from '../../theme/variables/edgeDark'
 import { edgeLight } from '../../theme/variables/edgeLight'
+import { getTxActionDisplayInfo } from '../../util/txDisplay'
 
 const BITCOIN_WALLET_ID = 'bitcoin-wallet-id'
 const RECIPIENT_ADDRESS = 'bc1qrecipientaddressthepayeecontrols'
