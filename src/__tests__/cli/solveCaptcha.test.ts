@@ -1,11 +1,18 @@
-import { describe, expect, it } from '@jest/globals'
+import { afterEach, describe, expect, it, jest } from '@jest/globals'
 import fs from 'fs'
+import http from 'http'
+import type { AddressInfo } from 'net'
 import path from 'path'
 
 import {
+  httpsRequest,
   parseAltchaChallenge,
   solveAltcha
 } from '../../cli/client/solveCaptcha'
+
+// Real timers: these cases drive a real socket, and the 30s request
+// timeout is a real one. `jestSetup` fakes timers globally.
+jest.useRealTimers()
 
 /** A page shaped like login-tester's, carrying `challenge`. */
 function page(challenge: string): string {
@@ -121,5 +128,105 @@ describe('https response handlers', () => {
       const text = read(name)
       expect(count(text, "res.on('aborted'")).toBe(count(text, "res.on('end'"))
     }
+  })
+})
+
+/**
+ * The two response handlers, run rather than grepped.
+ *
+ * The case above counts occurrences of `res.on('error'`, `res.on('aborted'`
+ * and `res.on('end'` in two files' source, and says in its own comment that
+ * testing them for real would need a TLS server. The sibling this code is
+ * modelled on is tested for real — `apiClient.test.ts` runs a server and
+ * asserts "rejects when the engine dies mid-response" — and the same branch
+ * injects `doFetch` into `fetchWaterfall` and `cleanMultiFetch` for exactly
+ * this reason. `httpsRequest` now takes a request function, so a plain HTTP
+ * server is enough and the string counts become a backstop rather than the
+ * only check.
+ */
+describe('httpsRequest against a server that misbehaves', () => {
+  const servers: http.Server[] = []
+
+  afterEach(async () => {
+    for (const server of servers.splice(0)) {
+      await new Promise<void>(resolve =>
+        server.close(() => {
+          resolve()
+        })
+      )
+    }
+  })
+
+  /** A plain HTTP server, and a `request` that reaches it. */
+  async function serve(
+    onRequest: (req: http.IncomingMessage, res: http.ServerResponse) => void
+  ): Promise<{ url: string; request: any }> {
+    const server = http.createServer(onRequest)
+    servers.push(server)
+    await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve))
+    const address = server.address() as AddressInfo
+    return {
+      url: `https://127.0.0.1:${address.port}/challenge`,
+      // The same signature `https.request` has, pointed at plain HTTP.
+      request: (options: any, callback: any) =>
+        http.request({ ...options, protocol: 'http:' }, callback)
+    }
+  }
+
+  it('answers the status and the body for an ordinary reply', async () => {
+    const { url, request } = await serve((_req, res) => {
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end('{"ok":true}')
+    })
+    const answer = await httpsRequest('GET', url, undefined, request)
+    expect(answer.status).toBe(200)
+    expect(answer.data).toBe('{"ok":true}')
+  })
+
+  it('sends the body and the headers a POST needs', async () => {
+    let seen: { method?: string; type?: string; body?: string } = {}
+    const { url, request } = await serve((req, res) => {
+      const chunks: Buffer[] = []
+      req.on('data', (c: Buffer) => chunks.push(c))
+      req.on('end', () => {
+        seen = {
+          method: req.method,
+          type: req.headers['content-type'],
+          body: Buffer.concat(chunks).toString('utf8')
+        }
+        res.writeHead(200)
+        res.end('done')
+      })
+    })
+    await httpsRequest('POST', url, { answer: 42 }, request)
+    expect(seen.method).toBe('POST')
+    expect(seen.type).toBe('application/json')
+    expect(seen.body).toBe('{"answer":42}')
+  })
+
+  it('names the server when the connection drops mid-body', async () => {
+    // The hang this pair of handlers exists for: once headers have arrived
+    // Node routes a socket close to the *response*, not the request, and
+    // clears the request timer — so without them `--solve-captcha` waited
+    // for ever with no output and no recovery but Ctrl-C.
+    const { url, request } = await serve((_req, res) => {
+      res.writeHead(200, { 'Content-Length': '120' })
+      res.write('{"challenge":"abc"')
+      setTimeout(() => res.socket?.destroy(), 20)
+    })
+    await expect(httpsRequest('GET', url, undefined, request)).rejects.toThrow(
+      /CAPTCHA server closed the connection: GET/
+    )
+  })
+
+  it('gives up rather than waiting for a server that says nothing', async () => {
+    // `req.setTimeout` does cover this half — before any headers exist —
+    // and nothing asserted it either. A short deadline rather than the
+    // real 30 seconds, which is the other reason the deadline is a
+    // parameter: the whole suite is not going to wait half a minute.
+    const { url, request } = await serve(() => {})
+    await expect(
+      httpsRequest('GET', url, undefined, request, 120)
+    ).rejects.toThrow(/timed out after 120ms/)
   })
 })

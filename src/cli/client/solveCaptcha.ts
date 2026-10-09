@@ -43,17 +43,30 @@ const MAX_CHALLENGE_NUMBER = 10_000_000
  * `--solve-captcha` hung for ever, with no output and no recovery but
  * Ctrl-C. `req.setTimeout` cannot cover it. Same gap and same fix as
  * `apiClient`'s.
+ *
+ * `request` is injectable so the two handlers can be asserted by running
+ * them. The only check they had was `solveCaptcha.test.ts` counting
+ * occurrences of `res.on('error'`, `res.on('aborted'` and `res.on('end'` in
+ * this file's *source*, which its own comment explained by saying that
+ * testing them for real would need a TLS server — while the sibling this is
+ * modelled on, `apiClient`, is tested against a real server, and the same
+ * branch threads a `doFetch` into `fetchWaterfall` and `cleanMultiFetch`
+ * for exactly this reason. Production passes none and gets `https.request`.
  */
-async function httpsRequest(
+export type HttpsRequestFn = typeof https.request
+
+export async function httpsRequest(
   method: 'GET' | 'POST',
   url: string,
-  body?: object
+  body?: object,
+  request: HttpsRequestFn = https.request,
+  timeoutMs: number = REQUEST_TIMEOUT_MS
 ): Promise<{ status: number; data: string }> {
   const parsedUrl = new URL(url)
   const payload =
     body == null ? undefined : Buffer.from(JSON.stringify(body), 'utf8')
   return await new Promise((resolve, reject) => {
-    const req = https.request(
+    const req = request(
       {
         hostname: parsedUrl.hostname,
         port: parsedUrl.port !== '' ? Number(parsedUrl.port) : 443,
@@ -88,9 +101,9 @@ async function httpsRequest(
         })
       }
     )
-    req.setTimeout(REQUEST_TIMEOUT_MS, () => {
+    req.setTimeout(timeoutMs, () => {
       req.destroy(
-        new Error(`CAPTCHA ${method} timed out after ${REQUEST_TIMEOUT_MS}ms`)
+        new Error(`CAPTCHA ${method} timed out after ${timeoutMs}ms`)
       )
     })
     req.on('error', reject)
