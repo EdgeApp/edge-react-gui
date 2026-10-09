@@ -1,3 +1,6 @@
+// Re-exported from the Node-safe module that owns it: the GUI and the CLI feed
+// the same user-visible subcategory string from this, so two implementations
+// is one divergence away from describing a transaction two ways.
 import type {
   EdgeAccount,
   EdgeCurrencyConfig,
@@ -17,6 +20,7 @@ import {
 } from '../constants/WalletAndCurrencyConstants'
 import type { EdgeAsset } from '../types/types'
 import { asMaybeContractLocation } from './cleaners'
+export { getCurrencyCodeWithAccount } from './txDisplay/currencyCodes'
 
 /**
  * Returns true if this currency supports existing wallets,
@@ -108,50 +112,15 @@ export const getTokenId = (
 
 /**
  * Get the currencyCode associated with a tokenId
+ *
+ * Re-exported from `util/txDisplay/currencyCodes`, exactly as
+ * `getCurrencyCodeWithAccount` is. The body has to live there because
+ * `src/util/utils.ts` needs it and loads under plain Node, where this
+ * module's Airship imports cannot follow — and two bodies for "the currency
+ * code for a tokenId on this wallet" is two different answers for a token
+ * the plugin no longer carries.
  */
-export const getCurrencyCode = (
-  wallet: EdgeCurrencyWallet,
-  tokenId: EdgeTokenId
-): string => {
-  if (tokenId == null) {
-    return wallet.currencyInfo.currencyCode
-  } else {
-    if (wallet.currencyConfig.allTokens[tokenId] == null) {
-      // Fail gracefully if we don't have the token for some reason
-      console.warn(
-        `getCurrencyCode: tokenId: '${tokenId}' not found for wallet pluginId: '${wallet.currencyInfo.pluginId}'`
-      )
-      return ''
-    }
-    return wallet.currencyConfig.allTokens[tokenId].currencyCode
-  }
-}
-
-/**
- * Get the currencyCode associated with a tokenId
- */
-export const getCurrencyCodeWithAccount = (
-  account: EdgeAccount,
-  pluginId: string,
-  tokenId: EdgeTokenId
-): string | undefined => {
-  if (account.currencyConfig[pluginId] == null) {
-    return
-  }
-
-  if (tokenId == null) {
-    return account.currencyConfig[pluginId].currencyInfo.currencyCode
-  } else {
-    if (account.currencyConfig[pluginId].allTokens[tokenId] == null) {
-      // Fail gracefully if we don't have the token for some reason
-      console.warn(
-        `getCurrencyCodeWithAccount: tokenId: '${tokenId}' not found for pluginId: '${pluginId}'`
-      )
-      return ''
-    }
-    return account.currencyConfig[pluginId].allTokens[tokenId].currencyCode
-  }
-}
+export { currencyCodeForToken as getCurrencyCode } from './txDisplay/currencyCodes'
 
 export const getToken = (
   wallet: EdgeCurrencyWallet,

@@ -34,9 +34,24 @@ export const stringifyQuery = (query: UriQueryMap): string => {
 export const parseQuery = (query?: string): UriQueryMap => {
   if (query == null) return {}
   const dummyUrl = new URL('https://dummyurl.com?' + query, true)
-  const test = dummyUrl.query
-  // @ts-expect-error
-  return test
+  // `url-parse` types `query` as `string | Record<string, string>` depending
+  // on its `parseQuery` flag, which it cannot narrow from the `true` above.
+  // Narrowed rather than suppressed, which is the point of the change here.
+  //
+  // The `?? null` below is defensive, not a fix for an observed bug: the
+  // library's querystring parser yields `''` for a value-less flag, never
+  // `undefined` — `new URL('https://x?flag', true).query` is
+  // `{ flag: '' }`, which is why `cleanQueryFlags` above exists at all — but
+  // its types say `string | undefined`, and `UriQueryMap` promises
+  // `string | null`, so this keeps the two honest without claiming the
+  // `null` arm is reachable today.
+  const parsed = dummyUrl.query
+  if (typeof parsed === 'string') return {}
+  const out: UriQueryMap = {}
+  for (const [key, value] of Object.entries(parsed)) {
+    out[key] = value ?? null
+  }
+  return out
 }
 
 /**
