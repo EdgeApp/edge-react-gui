@@ -1,0 +1,50 @@
+{
+  "$comment": "GENERATED FILE — DO NOT EDIT. Produced by scripts/buildCliManifest.ts from src/cli/npmMeta.ts and the module graph under src/cli. `scripts/publishCli.ts` strips this key before publishing. Run `npm run cli:manifest` to regenerate.",
+  "name": "@edgeapp/cli",
+  "version": "4.52.0",
+  "description": "Command-line access to an Edge account: wallets, balances, transactions and swaps.",
+  "keywords": [
+    "edge",
+    "cryptocurrency",
+    "wallet",
+    "cli",
+    "bitcoin",
+    "ethereum"
+  ],
+  "homepage": "https://edge.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdgeApp/edge-react-gui.git",
+    "directory": "src/cli"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Edge, Inc.",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "edge-cli": "edgeCli.js"
+  },
+  "files": [
+    "edgeCli.js",
+    "edgeEngine.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "base-x": "4.0.1",
+    "biggystring": "4.3.0",
+    "cleaners": "0.3.17",
+    "csv-stringify": "5.6.2",
+    "date-fns": "2.29.3",
+    "edge-core-js": "2.51.0",
+    "edge-currency-accountbased": "4.99.0",
+    "edge-currency-plugins": "3.15.0",
+    "edge-exchange-plugins": "2.58.1",
+    "edge-info-server": "3.15.0",
+    "hash.js": "1.1.7",
+    "rfc4648": "1.5.4",
+    "sha.js": "2.4.12",
+    "sprintf-js": "1.1.2"
+  }
+}

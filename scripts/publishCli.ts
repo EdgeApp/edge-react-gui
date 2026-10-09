@@ -1,0 +1,394 @@
+/**
+ * Stages and publishes the CLI as its own npm package.
+ *
+ * Nothing about this needs the CLI to move out of this repository. Rollup has
+ * already inlined every module it uses from `src/`, so the published package
+ * is two bundles, an optional native addon, a README and a licence — the app's
+ * sources are not part of it and the published manifest is not the app's.
+ * That is also why the app's own `package.json` stays `private: true`: the
+ * thing published here is assembled in a temporary directory and the app
+ * itself can never be pushed to npm by accident.
+ *
+ * Usage:
+ *
+ *   npm run publish:cli -- --dry-run         # pack and report, publish nothing
+ *   npm run publish:cli -- --out /tmp/pkg    # stage for inspection, then stop
+ *   npm run publish:cli                      # publish
+ *   npm run publish:cli -- --tag next        # publish under a dist-tag
+ *
+ * A build server needs `edgeKey.json` and nothing else: with it,
+ * `build:cli:all` generates the XOR-split secret shards, compiles the Node
+ * HMAC addon and rolls up both bundles. Without it the addon cannot be built
+ * at all, so publishing then needs `--allow-unsigned` said out loud rather
+ * than quietly shipping a CLI that cannot sign.
+ */
+import { spawnSync } from 'child_process'
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+
+import {
+  CLI_PACKAGE_FILES,
+  CLI_PACKAGE_META,
+  CLI_SIGNER_FILE
+} from '../src/cli/npmMeta'
+
+const ROOT = path.resolve(__dirname, '..')
+const MANIFEST = path.join(ROOT, 'src/cli/generated/npmPackage.json')
+// From `npmMeta.ts`, which is where the decision lives. A second spelling
+// here is what let the manifest and the staging directory disagree.
+const SIGNER = CLI_SIGNER_FILE
+
+const argv = process.argv.slice(2)
+const has = (flag: string): boolean => argv.includes(flag)
+/**
+ * A flag's value, or a stop.
+ *
+ * It used to be `argv[i + 1]`, so `npm run publish:cli -- --out` with the
+ * path left off answered `undefined`, the `if (stageOnly != null)` gate
+ * below was false, and the script fell through to
+ * `npm publish --access public` — the flag a reader reaches for to *avoid*
+ * publishing was the one whose typo published. That is irreversible by
+ * this script's own design: npm will not replace a version, so a mis-fired
+ * publish burns the app's current version number and the next CLI fix
+ * waits for an app bump. `--out --dry-run` was worse in the other
+ * direction: it staged into a directory literally named `--dry-run` and
+ * did stop, so two spellings of one mistake behaved oppositely.
+ */
+const valueOf = (flag: string): string | undefined => {
+  const i = argv.indexOf(flag)
+  if (i === -1) return undefined
+  const value = argv[i + 1]
+  if (value == null || value.startsWith('--')) {
+    throw new Error(
+      `${flag} needs a value. Nothing has been built or published.`
+    )
+  }
+  return value
+}
+
+const dryRun = has('--dry-run')
+const stageOnly = valueOf('--out')
+const allowUnsigned = has('--allow-unsigned')
+/**
+ * Ship the HMAC addon in the package.
+ *
+ * Off by default, and refused without `--signer-secret-is-cli-only`, because
+ * the addon's shards reconstruct the same `apiSecret` the mobile release
+ * builds use and the runtime pad is a constant in this public repository: a
+ * public tarball would hand that secret to anyone with `npm pack` and
+ * `strings`. See the note in `src/cli/npmMeta.ts`.
+ */
+const withSigner = has('--with-signer')
+const signerSecretIsCliOnly = has('--signer-secret-is-cli-only')
+const allowDirty = has('--allow-dirty')
+const skipBuild = has('--no-build')
+const tag = valueOf('--tag')
+
+function run(command: string, args: string[], cwd = ROOT): void {
+  const result = spawnSync(command, args, { cwd, stdio: 'inherit' })
+  if (result.status !== 0) {
+    throw new Error(`${command} ${args.join(' ')} failed (${result.status})`)
+  }
+}
+
+function capture(command: string, args: string[]): string {
+  const result = spawnSync(command, args, { cwd: ROOT, encoding: 'utf8' })
+  return result.status === 0 ? result.stdout.trim() : ''
+}
+
+// ------------------------------------------------------------ preconditions
+
+// A publish from a dirty tree cannot be reproduced from any commit, and the
+// one artifact nobody can re-derive later is the one in the registry.
+if (!allowDirty && capture('git', ['status', '--porcelain']) !== '') {
+  throw new Error(
+    'The working tree has uncommitted changes. Commit them, or pass ' +
+      '--allow-dirty if this is deliberate.'
+  )
+}
+
+if (withSigner && !signerSecretIsCliOnly) {
+  throw new Error(
+    'Refusing to publish the HMAC addon. Its shards reconstruct the same ' +
+      'apiSecret the iOS and Android release builds sign with, and the ' +
+      'runtime pad (NODE_API_SIGNER_BUNDLE_ID) is a constant in this public ' +
+      'repository — so a public tarball exposes that secret to `npm pack` ' +
+      'plus `strings`. Issue the CLI its own apiKey/apiSecret pair, build ' +
+      'with that edgeKey.json, and pass --signer-secret-is-cli-only to say ' +
+      'so; or publish without the addon, which is the default.'
+  )
+}
+
+const hasKey = fs.existsSync(path.join(ROOT, 'edgeKey.json'))
+if (!skipBuild) {
+  if (hasKey) {
+    run('npm', ['run', 'build:cli:all'])
+  } else {
+    if (!allowUnsigned) {
+      throw new Error(
+        'edgeKey.json is absent, so the Node HMAC addon cannot be built and ' +
+          'the published CLI could not sign info-server requests. Put the key ' +
+          'in place, or pass --allow-unsigned to publish without it.'
+      )
+    }
+    console.warn(
+      '! edgeKey.json absent: building without the native signer. The ' +
+        'published CLI makes unsigned info-server requests, cannot read ' +
+        'gated plugin keys, and needs an `edgeApiKey` of its own before it ' +
+        'will start at all.'
+    )
+    run('npm', ['run', 'build:cli'])
+  }
+}
+
+// After the build, not before it. The manifest is generated and committed, so
+// a stale one would publish the wrong dependency list — and its one real
+// check reads the *built* bundles for the packages they require. Run first,
+// as it was, it inspected whatever `lib/` happened to hold: absent on a fresh
+// clone, where the check silently skipped, or left over from an older build.
+// `--require-bundles` makes an absent `lib/` a failure rather than a skip,
+// which is only safe to demand here, after the build that creates it.
+run('node', [
+  '-r',
+  'sucrase/register',
+  'scripts/buildCliManifest.ts',
+  '--check',
+  '--require-bundles'
+])
+
+// ----------------------------------------------------------------- staging
+
+// `files` in the generated manifest lists the unsigned set, and npm's
+// `files` is an allowlist — so `--with-signer` has to add the addon to it,
+// not merely copy the file into the stage. It did only the latter: a
+// package.json with the unsigned four and an `edge_api_signer.node` beside
+// the bundles packs the four and drops the addon, so the flag published a
+// tarball that could not sign while the report said it had shipped.
+const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8')) as Record<
+  string,
+  unknown
+>
+if (withSigner) {
+  manifest.files = [...CLI_PACKAGE_FILES, CLI_SIGNER_FILE]
+}
+// The in-repo copy carries a "generated, do not edit" marker. Published
+// manifests should not.
+delete manifest.$comment
+
+const stage =
+  stageOnly ?? fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-publish-'))
+fs.mkdirSync(stage, { recursive: true })
+
+interface Staged {
+  from: string
+  to: string
+  required: boolean
+}
+// Derived from the manifest's own `files`, so the staged directory and the
+// allowlist npm packs by cannot name different sets. They did: this list
+// was hand-written beside `CLI_PACKAGE_FILES` with the same four names, and
+// `--with-signer` added the addon to this one only.
+const STAGED_FROM: Record<string, string> = {
+  'edgeCli.js': 'lib/edgeCli.js',
+  'edgeEngine.js': 'lib/edgeEngine.js',
+  LICENSE: 'LICENSE',
+  // Written from `docs/EDGE_CLI.md` further down rather than copied.
+  'README.md': '',
+  [CLI_SIGNER_FILE]: `lib/${CLI_SIGNER_FILE}`
+}
+const files: Staged[] = (manifest.files as string[])
+  .filter(to => STAGED_FROM[to] !== '')
+  .map(to => ({
+    from: STAGED_FROM[to],
+    to,
+    // The addon is the one entry whose absence is not fatal: `build:cli`
+    // produces the bundles, `build:cli:native` the addon, and the
+    // precondition above has already refused `--with-signer` without the
+    // secret it needs.
+    required: to !== CLI_SIGNER_FILE
+  }))
+
+for (const file of files) {
+  const source = path.join(ROOT, file.from)
+  if (!fs.existsSync(source)) {
+    if (file.required) {
+      throw new Error(`${file.from} is missing. Run \`npm run build:cli\`.`)
+    }
+    continue
+  }
+  fs.copyFileSync(source, path.join(stage, file.to))
+}
+
+// The bin needs the execute bit. npm infers it from the shebang on install,
+// but a packed tarball that already has it behaves the same way everywhere.
+fs.chmodSync(path.join(stage, 'edgeCli.js'), 0o755)
+
+// From the manifest the tarball will carry, not from a file's presence in
+// a directory `--out` may have left behind: a reused stage with a stale
+// addon made this true with no `--with-signer` at all, which suppressed
+// the README's unsigned warning — the one paragraph that explains why the
+// installed CLI refuses to start without an `edgeApiKey`.
+const packedFiles = manifest.files as string[]
+const signed =
+  packedFiles.includes(SIGNER) && fs.existsSync(path.join(stage, SIGNER))
+
+// `docs/EDGE_CLI.md` is the CLI's documentation, so it is the README rather
+// than a second description written to drift from it. The header is the part
+// that only makes sense once the thing has a package name.
+// `--omit=peer`, in the generated half as well as in the guide below it.
+// `edge-currency-accountbased` declares four React Native modules as
+// non-optional peers, so a plain `npm install -g` pulls React Native into a
+// command-line tool — and the first code block on a registry page is the one
+// a reader copies. The precondition below refuses a header that disagrees
+// with the guide about this. `npx` resolves the same peers, so it takes the
+// flag too — before the package name, which is where npm reads its own
+// options rather than passing them to the command.
+const INSTALL_FLAGS = '--omit=peer'
+const header = [
+  `# ${CLI_PACKAGE_META.name}`,
+  '',
+  CLI_PACKAGE_META.description,
+  '',
+  '```sh',
+  `npm install -g ${CLI_PACKAGE_META.name} ${INSTALL_FLAGS}`,
+  `${CLI_PACKAGE_META.binName} --help`,
+  '```',
+  '',
+  'Or without installing:',
+  '',
+  '```sh',
+  `npx --omit=peer ${CLI_PACKAGE_META.name} --help`,
+  '```',
+  '',
+  signed
+    ? ''
+    : 'This build carries no native HMAC signer, so it makes unsigned ' +
+      'info-server requests and cannot read gated plugin keys. It needs an ' +
+      '`edgeApiKey` of its own — in `./keys.json`, in ' +
+      '`~/.edge-cli/keys.json`, or passed with `-k` — or the engine refuses ' +
+      'to start. `--fake` needs none.\n',
+  '---',
+  ''
+].join('\n')
+/**
+ * The guide, with its links rewritten for a registry page.
+ *
+ * npm resolves a README's relative links against `repository.url` plus
+ * `repository.directory`, which is `src/cli` — so `](./api/dist/index.html)`
+ * pointed at `tree/HEAD/src/cli/api/dist/index.html`, which does not exist,
+ * and the installed package ships none of those files either. The first of
+ * them is the document's own pointer at the generated reference.
+ */
+const GITHUB_DOCS =
+  'https://github.com/EdgeApp/edge-react-gui/blob/master/docs/'
+const guide = fs
+  .readFileSync(path.join(ROOT, 'docs/EDGE_CLI.md'), 'utf8')
+  .replace(/\]\(\.\//g, `](${GITHUB_DOCS}`)
+
+// Two preconditions over the text about to be staged, beside the dirty-tree
+// and unsigned-build checks above.
+//
+// The links, because the rewrite above is one pass over prose and a new link
+// spelled `](../x)` or `](docs/x)` would slip past it.
+const leftoverLinks = [...guide.matchAll(/\]\((\.\.?\/|docs\/)[^)]*\)/g)]
+if (leftoverLinks.length > 0) {
+  throw new Error(
+    'The staged README still has repository-relative links, which are dead ' +
+      `on the registry page: ${leftoverLinks
+        .map(m => m[0])
+        .join(', ')}. Make them absolute in docs/EDGE_CLI.md.`
+  )
+}
+
+// And the claim, because the README is the registry page: it used to say
+// "Published (npm): not yet … there is nothing for `npx` to fetch", nine
+// lines under a header telling the reader to `npm install -g` it.
+const DENIALS = [
+  'not yet',
+  'Until a package is published',
+  'it is not an npm package name'
+]
+// The install line the header writes has to be the one the guide endorses.
+// 2.review-repo.4's `--omit=peer` landed on the appended half only, so the
+// registry page's first code block was the one the document then called
+// wrong.
+const guideInstall = `npm install -g ${CLI_PACKAGE_META.name} ${INSTALL_FLAGS}`
+if (!guide.includes(guideInstall)) {
+  throw new Error(
+    `The guide does not contain the install line the header writes ` +
+      `("${guideInstall}"), so the staged README would contradict itself ` +
+      'about installing. Make docs/EDGE_CLI.md and INSTALL_FLAGS agree.'
+  )
+}
+
+const denial = DENIALS.find(text => guide.includes(text))
+if (denial != null) {
+  throw new Error(
+    `The staged README says the package is not published ("${denial}"), ` +
+      'which is the first thing a registry reader is there to find out. ' +
+      'Fix docs/EDGE_CLI.md.'
+  )
+}
+
+fs.writeFileSync(path.join(stage, 'README.md'), header + guide)
+
+// Last check before the stage is final: `--with-signer` is the publish path
+// the CLI is meant to use once it has a key pair of its own, and the way it
+// failed was silent — the addon in the directory, absent from the tarball,
+// and the report saying "included". `files` is npm's allowlist, so this is
+// the one assertion that distinguishes the two.
+if (withSigner && !(manifest.files as string[]).includes(CLI_SIGNER_FILE)) {
+  throw new Error(
+    `--with-signer was given but ${CLI_SIGNER_FILE} is not in the manifest's ` +
+      '`files`, so npm would pack a tarball without it and the package ' +
+      'would be published as signed. Nothing has been published.'
+  )
+}
+
+fs.writeFileSync(
+  path.join(stage, 'package.json'),
+  JSON.stringify(manifest, null, 2) + '\n'
+)
+
+// ----------------------------------------------------------------- report
+
+const staged = fs.readdirSync(stage).sort()
+console.log(`\nStaged ${manifest.name as string}@${manifest.version as string}`)
+console.log(`  ${stage}`)
+let total = 0
+for (const name of staged) {
+  const size = fs.statSync(path.join(stage, name)).size
+  total += size
+  console.log(`  ${(size / 1024).toFixed(0).padStart(7)} KB  ${name}`)
+}
+console.log(`  ${(total / 1024).toFixed(0).padStart(7)} KB  total (unpacked)`)
+console.log(
+  `  native signer: ${
+    signed ? `included (${process.platform}-${process.arch})` : 'ABSENT'
+  }`
+)
+
+if (stageOnly != null) {
+  console.log('\n--out given, so stopping before publish.')
+  process.exit(0)
+}
+
+// ---------------------------------------------------------------- publish
+
+const publishArgs = ['publish']
+// A scoped package is restricted unless this says otherwise, and the first
+// publish is the one that decides.
+publishArgs.push('--access', 'public')
+if (tag != null) publishArgs.push('--tag', tag)
+if (dryRun) publishArgs.push('--dry-run')
+console.log(`\n$ npm ${publishArgs.join(' ')}\n`)
+run('npm', publishArgs, stage)
+
+if (dryRun) {
+  console.log('\nDry run: nothing was published.')
+} else {
+  console.log(
+    `\nPublished ${manifest.name as string}@${manifest.version as string}.`
+  )
+}

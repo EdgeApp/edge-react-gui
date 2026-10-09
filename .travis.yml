@@ -33,6 +33,7 @@ script:
   # — so here it is as inert as the gates above, and `docs:api:committed`
   # catches a stale one: `src/cli/generated/npmPackage.json` is under the
   # paths it compares against git.
+  - npm run cli:manifest:check
   - npm run test:cli:node-safe
   - npm test
   - npm run test:cli:offline
@@ -44,7 +45,9 @@ script:
   - npm run test:cli:offline:built
   # Last, because it is the only check that reads the built bundles' own
   # `require` calls, and `--require-bundles` makes an absent `lib/` a failure
+  # rather than a skip. Run where `cli:manifest:check` is, nine lines above
   # the build, `built` was false and the one direction that matters — a
   # package the bundles require and the manifest does not declare, which a
   # published CLI could not resolve — printed "bundles absent, so the require
   # cross-check did not run" and passed.
+  - npm run cli:manifest -- --check --require-bundles
