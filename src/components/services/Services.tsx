@@ -10,7 +10,7 @@ import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { updateGiftCardInfo } from '../../actions/GiftCardInfoActions'
-import { updateHoudiniTokens } from '../../actions/HoudiniTokensActions'
+import { updateHoudiniChains } from '../../actions/HoudiniChainsActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
@@ -178,7 +178,7 @@ export const Services: React.FC<Props> = props => {
       dispatch(updateGiftCardInfo()).catch((error: unknown) => {
         console.warn(error)
       })
-      dispatch(updateHoudiniTokens()).catch((error: unknown) => {
+      dispatch(updateHoudiniChains()).catch((error: unknown) => {
         console.warn(error)
       })
     },
