@@ -5386,6 +5386,9 @@
                         "hidden": {
                           "type": "boolean"
                         },
+                        "migratedFromWalletId": {
+                          "type": "string"
+                        },
                         "sortIndex": {
                           "type": "number"
                         }
@@ -5393,7 +5396,10 @@
                     },
                     "description": "`EdgeWalletStates`: wallet ids to the flags being changed."
                   }
-                }
+                },
+                "required": [
+                  "walletStates"
+                ]
               }
             }
           }

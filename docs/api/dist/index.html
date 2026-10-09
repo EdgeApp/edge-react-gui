@@ -4287,11 +4287,12 @@ h5.alt code {
     <div class="shape">
     <div class="shape-h">Request body</div>
     <pre class="ts"><code>{
-  walletStates?: {
+  walletStates: {
     [keys: string]: {
       archived: boolean | undefined;
       deleted: boolean | undefined;
       hidden: boolean | undefined;
+      migratedFromWalletId: string | undefined;
       sortIndex: number | undefined
     }
   }
@@ -4301,7 +4302,7 @@ h5.alt code {
 }</code></pre></details>
     <table class="fields"><tbody><tr>
   <td class="k"><code>walletStates</code></td>
-  <td class="ty"><span class="t">{ [keys: string]: { archived: boolean | undefined; deleted: boolean | undefined; hidden: boolean | undefined; sortIndex: number | undefined; }; }</span> <span class="flag opt">optional</span></td>
+  <td class="ty"><span class="t">{ [keys: string]: { archived: boolean | undefined; deleted: boolean | undefined; hidden: boolean | undefined; migratedFromWalletId: string | undefined; sortIndex: number | undefined; }; }</span></td>
   <td class="doc"><code>EdgeWalletStates</code>: wallet ids to the flags being changed.</td>
 </tr></tbody></table>
   </div>

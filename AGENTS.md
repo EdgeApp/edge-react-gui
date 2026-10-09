@@ -20,7 +20,8 @@
   built bundle
 - `npm run precommit` - Pre-commit check: localize, update-eslint-warnings,
   lint-staged, tsc and Jest on every commit. The documentation gates, the
-  manifest check, the Node-safety smoke test and the CLI's offline suites run
+  manifest check, the plugin-package check, the Node-safety smoke test and
+  the CLI's offline suites run
   only when the commit stages a path in `GATE_PATHS`
   (`scripts/util/cliGatePaths.js`, which is the list) — about two and a half
   minutes that a commit elsewhere has no reason to pay, and a hook people skip

@@ -228,13 +228,17 @@ while building the engine, which is why the EVM failure appears in neither
 log on the login path — so this table is the explanation for the two groups
 above.
 
-`src/__tests__/cli/pluginPackages.test.ts` holds both rows. It scans the
-bundled plugin packages for a relative `require` whose file is not in the
-package, and it `require`s every plugin's `*Tools.js` — which is what loads
-the module graph an engine needs — recording the three that fail today as an
-allowlist. Anything else fails the suite, **and so does one of these starting
-to work**, which is the signal to delete a row above. The two checks catch
-different things: the first a file the package forgot to ship, the second a
+`scripts/checkPluginPackages.js` holds both rows, run as
+`npm run cli:plugins:check` from `precommit:cli`, `verify` and CI. A script
+rather than a jest case, because `require`ing these packages inside jest
+trips `ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING_FLAG`. It scans the bundled
+plugin packages for a relative `require` whose file is not in the package,
+it `require`s every plugin's `*Tools.js` — which is what loads the module
+graph an engine needs — recording the three that fail today as an
+allowlist, and it checks that this table names what those allowlists hold.
+Anything else fails the gate, **and so does one of these starting to
+work**, which is the signal to delete a row above. The first two checks
+catch different things: one a file the package forgot to ship, the other a
 bare dependency whose version does not match.
 
 ## Tester servers
@@ -645,6 +649,7 @@ src/cli/
   flagTable.ts         # Every global flag, once; both help texts render it
   bootNodeLocale.ts    # Locale detection, before anything reads a string
   bootEngineLocale.ts  # Applies it; engine only, so the client ships no tables
+                       # (src/__tests__/cli/clientBundleTables.test.ts checks that)
   generatedSchemas.ts  # Cleaners for the files scripts/build* generate
   index.ts             # One-shot and interactive front-end
 ```
@@ -670,15 +675,21 @@ trusted.
 | `npm run test:cli:offline:built` | The same suites against `lib/edgeCli.js`, the bundle `build:cli` produces — which is how the CLI is run until a package is published. Part of `verify` and of Travis's `script`. |
 | `npm run test:cli:node-safe` | Loads the GUI modules the CLI shares under plain Node, then runs both CLI entry points — `src/cli/index.ts` and `src/cli/engine/index.ts` — with `--help` under the same poison hook, so a `react-native` import at module scope fails here on either half's graph. |
 | `npm run test:cli:network` | One-shot, CAPTCHA and Edge-login suites. Needs the network and an Edge API key. |
-| `npm run docs:api:gates` | The five documentation gates: `check`, `verify`, `contracts`, `core` and `coverage`. `cli:manifest:check` runs beside them in both CI and `precommit:cli`; `docs:api:committed` only in CI. |
+| `npm run docs:api:gates` | The five documentation gates: `check`, `verify`, `contracts`, `core` and `coverage`. `cli:manifest:check` and `cli:plugins:check` run beside them in both CI and `precommit:cli`; `docs:api:committed` only in CI. |
 | `npm run test:cli:node-hmac` | The Node HMAC addon against a JS reference, and `makeCoreContext` signing a real `infoRollup` fetch. Needs `npm run build:cli:all` first, so it is in neither hook nor CI. |
 
 The husky `precommit` hook runs the gates, `cli:manifest:check`,
-`test:cli:node-safe` and `test:cli:offline` only when the commit stages one
-of the paths `scripts/util/cliGatePaths.js` names — `src/cli`, `scripts`,
-`docs/api`, `docs/EDGE_CLI.md`, `src/util`, `src/locales` and
-`package.json`, the last two trees because the CLI shares them and the last
-file because the manifest mirrors it — about two and a half minutes
+`cli:plugins:check`, `test:cli:node-safe` and `test:cli:offline` only when
+the commit stages one of the paths `scripts/util/cliGatePaths.js` names —
+`src/cli`, `scripts`, `docs/api`, `docs/EDGE_CLI.md`, `src/util`,
+`src/locales`, `package.json`, `package-lock.json` and the four single
+modules outside those trees that the CLI's graph reaches
+(`src/configKeysMerge.ts`, `src/configKeysSchema.ts`,
+`src/selectors/WalletSelectors.ts`, `src/types/types.ts`); the two trees
+because the CLI shares them, the manifest files because the manifest mirrors
+them, and the four because `ungatedCliModules()` walks the CLI's own entry
+points and fails on any module no gate path covers — about two and a half
+minutes
 that the great majority of commits in this repository have no reason to pay,
 and a hook people skip with `--no-verify` also skips the `tsc` and `jest` that
 were there before the CLI existed. Travis runs all of them unconditionally.

@@ -757,9 +757,9 @@
       "core": "account.changeWalletStates",
       "params": {
         "walletStates": {
-          "pass": "[--wallet-states='<json>']",
+          "pass": "--wallet-states='<json>'",
           "doc": "`EdgeWalletStates`: wallet ids to the flags being changed.",
-          "optional": true
+          "optional": false
         },
         "wallet-id": {
           "pass": "--wallet-id=<wallet-id>",

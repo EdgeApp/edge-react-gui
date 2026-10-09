@@ -83,7 +83,19 @@ const GATE_PATHS = [
   // a commit skipped `cli:manifest:check`, left
   // `src/cli/generated/npmPackage.json` stale, and turned `develop` red at
   // `docs:api:committed` with nothing local having warned.
-  'package-lock.json'
+  'package-lock.json',
+  // Four modules the CLI's own value-import graph reaches that none of the
+  // directory entries above covers. `uncoveredModules()` only proved
+  // `GATE_PATHS` reaches the hand-written `SHARED_MODULES`, and
+  // `unwatchedCliModules()` checks smoke coverage, so neither saw that a
+  // commit staging only one of these printed "no CLI changes" and skipped
+  // every gate — on `src/configKeysMerge.ts`, which this branch edits.
+  // `ungatedCliModules()` below now checks the graph directly, so the list
+  // cannot drift again.
+  'src/configKeysMerge.ts',
+  'src/configKeysSchema.ts',
+  'src/selectors/WalletSelectors.ts',
+  'src/types/types.ts'
 ]
 
 /** Whether a repo-relative path is one the gates watch. */
@@ -136,10 +148,31 @@ function unwatchedCliModules() {
     .filter(mod => !covered.has(mod))
 }
 
+/**
+ * Modules the CLI loads that no gate path watches.
+ *
+ * The check the other two do not make. `uncoveredModules()` proves
+ * `GATE_PATHS` covers `SHARED_MODULES` — a hand-written list against a
+ * hand-written list — and `unwatchedCliModules()` proves the smoke test
+ * reaches the graph. Neither asks the question the gate's own header
+ * answers "cannot happen again": is every module the CLI imports under a
+ * path that makes the gate run? It was not, for four of them, so a commit
+ * staging only `src/configKeysMerge.ts` skipped `docs:api:gates`,
+ * `cli:manifest:check`, `cli:plugins:check`, `test:cli:node-safe` and
+ * `test:cli:offline`.
+ *
+ * Lazy `require` for the same reason as `unwatchedCliModules`.
+ */
+function ungatedCliModules() {
+  const { CLI_ENTRIES, walkGraph } = require('./moduleGraph')
+  return walkGraph(CLI_ENTRIES).modules.filter(mod => !isGatedPath(mod))
+}
+
 module.exports = {
   GATE_PATHS,
   SHARED_MODULES,
   isGatedPath,
   uncoveredModules,
+  ungatedCliModules,
   unwatchedCliModules
 }

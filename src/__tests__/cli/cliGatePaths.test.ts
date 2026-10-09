@@ -9,6 +9,7 @@ interface GatePaths {
   SHARED_MODULES: string[]
   isGatedPath: (file: string) => boolean
   uncoveredModules: () => string[]
+  ungatedCliModules: () => string[]
   unwatchedCliModules: () => string[]
 }
 
@@ -38,6 +39,19 @@ describe('CLI gate paths', () => {
     // a value import of `src/cli/engine/sweepTicker.ts`, which `SessionStore`
     // and `ObjectHandleStore` both run — if that entry is taken back out.
     expect(gate.unwatchedCliModules()).toStrictEqual([])
+  })
+
+  it('gates every module the CLI imports', () => {
+    // The question the other two do not ask. Both of them compare a
+    // hand-written list against something; this one walks the CLI's own
+    // entry points and asks whether every module they reach is under a path
+    // that makes the gate run. Four were not —
+    // `src/configKeysMerge.ts`, `src/configKeysSchema.ts`,
+    // `src/selectors/WalletSelectors.ts` and `src/types/types.ts` — so a
+    // commit staging only one of them printed "no CLI changes" and skipped
+    // `docs:api:gates`, `cli:manifest:check`, `cli:plugins:check`,
+    // `test:cli:node-safe` and `test:cli:offline`.
+    expect(gate.ungatedCliModules()).toStrictEqual([])
   })
 
   it('watches the shared GUI trees the old pathspec missed', () => {
