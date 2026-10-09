@@ -33,6 +33,8 @@
 
 import * as fs from 'fs'
 
+import { firstJsonObject } from './util/cliHarness'
+
 // Mirrors RATES_SERVER_MAX_QUERY_SIZE in ExchangeRateActions.ts:
 const RATES_SERVER_MAX_QUERY_SIZE = 100
 // Default v3 rate server (see RATES_SERVERS in src/util/network.ts):
@@ -141,29 +143,14 @@ function cacheToQueries(blob: RateCacheBlob, isoNow: string): RatesQuery[] {
 /**
  * Pull the first complete JSON object out of arbitrary text, so a pasted log
  * excerpt (with surrounding lines) works as well as bare JSON.
+ *
+ * `firstJsonObject` in the shared harness is the scanner; this caller wants
+ * an input it cannot read to stop the script rather than answer undefined.
  */
 function extractFirstJsonObject(text: string): string {
-  const start = text.indexOf('{')
-  if (start < 0) throw new Error('No JSON object found in input')
-  let depth = 0
-  let inString = false
-  let escaped = false
-  for (let i = start; i < text.length; i++) {
-    const ch = text[i]
-    if (inString) {
-      if (escaped) escaped = false
-      else if (ch === '\\') escaped = true
-      else if (ch === '"') inString = false
-      continue
-    }
-    if (ch === '"') inString = true
-    else if (ch === '{') depth++
-    else if (ch === '}') {
-      depth--
-      if (depth === 0) return text.slice(start, i + 1)
-    }
-  }
-  throw new Error('Unbalanced JSON object in input')
+  const found = firstJsonObject(text)
+  if (found == null) throw new Error('No balanced JSON object found in input')
+  return found
 }
 
 /**
