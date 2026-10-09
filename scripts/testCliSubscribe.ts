@@ -26,6 +26,8 @@ import os from 'os'
 import path from 'path'
 
 import { TCP_TOKEN_HEADER } from '../src/cli/engine/transportAuth'
+import { errorMessage } from '../src/util/errorMessage'
+import { sleep } from '../src/util/sleep'
 import { rawRequest } from './engineRequest'
 import { CLI, parseLeadingJson, readTcpToken } from './util/cliHarness'
 
@@ -93,10 +95,6 @@ function cli(...args: string[]): { status: number; out: string } {
     }
   }
   return { status: result.status ?? -1, out }
-}
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 /**
@@ -432,7 +430,7 @@ async function main(): Promise<void> {
     } catch (error: unknown) {
       return {
         status: 0,
-        raw: `ERROR ${error instanceof Error ? error.message : String(error)}`
+        raw: `ERROR ${errorMessage(error)}`
       }
     }
   }

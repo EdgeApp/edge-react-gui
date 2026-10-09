@@ -4,7 +4,12 @@ import net from 'net'
 import { basename, dirname, join, resolve } from 'path'
 
 import { cliLogsDir, cliRunRoot } from './cliHome'
-import { type EngineRunFile, readRunFileAt, runFileText } from './runFile'
+import {
+  type EngineRunFile,
+  readRunFileAt,
+  RUN_FILE_NAME,
+  runFileText
+} from './runFile'
 
 // The run file's own declaration lives in `runFile.ts`, so the log sweep can
 // read it with the same cleaner without pulling `net` into the startup path.
@@ -90,7 +95,7 @@ export function socketPathFor(profile: string): string {
 }
 
 export function runFilePath(profile: string): string {
-  return join(runDir(profile), 'engine.json')
+  return join(runDir(profile), RUN_FILE_NAME)
 }
 
 export function sessionFilePath(profile: string): string {

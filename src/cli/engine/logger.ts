@@ -8,7 +8,7 @@ import path from 'path'
 
 import { cliLogsDir, cliRunRoot } from './cliHome'
 import { errorMessage } from './errors'
-import { readRunFileAt } from './runFile'
+import { readRunFileAt, RUN_FILE_NAME } from './runFile'
 
 /**
  * How large one engine log may grow before it rolls.
@@ -311,9 +311,7 @@ export class EngineLogger {
     } catch (error) {
       this.stream = null
       console.error(
-        `[edge-engine] could not open the log: ${String(
-          error instanceof Error ? error.message : error
-        )}`
+        `[edge-engine] could not open the log: ${errorMessage(error)}`
       )
       return false
     }
@@ -421,7 +419,7 @@ function liveLogProfiles(): Set<string> {
       // `typeof` test: a truncated or hand-edited `engine.json` would
       // otherwise reach `process.kill` as an object whose `pid` is
       // undefined, which is the reason `asEngineRunFile` exists.
-      const run = readRunFileAt(path.join(runRoot, profile, 'engine.json'))
+      const run = readRunFileAt(path.join(runRoot, profile, RUN_FILE_NAME))
       if (run == null) continue
       process.kill(run.pid, 0)
       live.add(profile)

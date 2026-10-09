@@ -19,10 +19,11 @@
  */
 import type { IncomingMessage } from 'http'
 
-export const REQUEST_BUDGET_HEADER = 'x-edge-timeout-ms'
+// Node's 32-bit timer ceiling, from the leaf both halves read rather than a
+// second copy of the number here.
+import { MAX_TIMER_MS } from './timerCeiling'
 
-/** Node's 32-bit timer ceiling, the same one `schemas.ts` refuses above. */
-export const MAX_BUDGET_MS = 2 ** 31 - 1
+export const REQUEST_BUDGET_HEADER = 'x-edge-timeout-ms'
 
 /**
  * The caller's remaining budget, or undefined when it did not say.
@@ -43,7 +44,7 @@ export function readRequestBudgetMs(
   const text = Array.isArray(raw) ? raw[0] : raw
   if (text == null || text === '') return undefined
   const ms = Number(text)
-  if (!Number.isFinite(ms) || ms <= 0 || ms > MAX_BUDGET_MS) return undefined
+  if (!Number.isFinite(ms) || ms <= 0 || ms > MAX_TIMER_MS) return undefined
   // Minus what the request has already spent. The header is a duration from
   // the caller's send, and a route reads it where its slow work starts —
   // after the settings read, the spam-floor rate query and

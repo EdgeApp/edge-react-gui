@@ -10,7 +10,12 @@ import { doc } from '../doc'
 import { EngineError, engineError, errorMessage } from '../errors'
 import { route } from '../route'
 import type { RouteContext } from '../router'
-import { asPendingEdgeLogin, asSession, asSessionListing } from '../schemas'
+import {
+  asPendingEdgeLogin,
+  asSession,
+  asSessionListing,
+  type PendingEdgeLogin
+} from '../schemas'
 import type { SessionInfo } from '../sessions'
 
 interface PendingRecord {
@@ -125,7 +130,7 @@ function pendingSummary(
   record: PendingRecord,
   sessions: EdgeSessionApi,
   expiresAt?: string
-): Record<string, unknown> {
+): PendingEdgeLogin {
   const { pending } = record
   // Reporting the session *is* handing it over: from here the caller can
   // name it, so the handle stops being its only owner.

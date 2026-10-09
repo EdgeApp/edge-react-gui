@@ -249,16 +249,15 @@ const txListCmd = command(
   }
 )
 
-function resolveUserPath(out: string): string {
-  return path.isAbsolute(out) ? out : path.resolve(process.cwd(), out)
-}
-
 function exportFilePath(
   out: string,
   format: TxExportFormat,
   count: number
 ): string {
-  const resolved = resolveUserPath(out)
+  // `path.resolve` already ignores the cwd for an absolute input, so the
+  // `isAbsolute` branch the helper here used to take only skipped
+  // normalising a path that was already absolute.
+  const resolved = path.resolve(out)
   if (count <= 1) return resolved
   // The suffixes come from `TX_EXPORT_FORMAT_INFO`, which is keyed by
   // `TxExportFormat`: this used to strip three of them in an `else if` chain

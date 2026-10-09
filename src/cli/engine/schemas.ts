@@ -36,6 +36,23 @@ import type {
 
 import { asBiggystring } from '../../util/cleaners'
 import { hasOwn } from '../../util/predicates'
+/**
+ * The largest delay Node's timer can hold, in milliseconds.
+ *
+ * `setTimeout` keeps its delay in a 32-bit signed integer, and anything
+ * larger is clamped to **1** after a `TimeoutOverflowWarning` — so a
+ * seconds field converted with `* 1000` inverts at the top of its range
+ * into the shortest possible interval. Both places that convert had a
+ * floor and no ceiling: `--idle-timeout=2592000` ("keep it up for a
+ * month", when the documented way to say never is `0`) shut the engine
+ * down the instant it went idle, and `admin-make-lobby
+ * --period-seconds=30000000` polled Edge's production login server every
+ * millisecond — which is the defect the floor was added to prevent,
+ * reached from the other end of the range. The only notice either way is a
+ * Node warning on a stderr that goes to a startup log a clean stop
+ * deletes.
+ */
+import { MAX_TIMER_MS } from '../timerCeiling'
 import { doc } from './doc'
 import {
   OBJECT_EXPIRES_DOC,
@@ -214,23 +231,7 @@ export const asMinSeconds =
     return seconds
   }
 
-/**
- * The largest delay Node's timer can hold, in milliseconds.
- *
- * `setTimeout` keeps its delay in a 32-bit signed integer, and anything
- * larger is clamped to **1** after a `TimeoutOverflowWarning` — so a
- * seconds field converted with `* 1000` inverts at the top of its range
- * into the shortest possible interval. Both places that convert had a
- * floor and no ceiling: `--idle-timeout=2592000` ("keep it up for a
- * month", when the documented way to say never is `0`) shut the engine
- * down the instant it went idle, and `admin-make-lobby
- * --period-seconds=30000000` polled Edge's production login server every
- * millisecond — which is the defect the floor was added to prevent,
- * reached from the other end of the range. The only notice either way is a
- * Node warning on a stderr that goes to a startup log a clean stop
- * deletes.
- */
-export const MAX_TIMER_MS = 2 ** 31 - 1
+export { MAX_TIMER_MS }
 
 /**
  * A date written out in a query string, as ISO-8601 or epoch milliseconds.
@@ -1127,3 +1128,36 @@ export const asSpendShorthandBody = asObject({
 
 /** Plugin key material for `create-wallet`. */
 export const asWalletKeys = asObject(asUnknown)
+
+/**
+ * The published shapes, derived from their cleaners.
+ *
+ * The engine's response builders were typed `Record<string, unknown>` —
+ * `pendingSummary`, `summarizeQuote`, `summarizeWallet` — so nothing
+ * compiled the object against the shape the API publishes. The only check
+ * was `checkResponse`, and `EDGE_CLI_CHECK_RESPONSES` defaults to `warn`, so
+ * a renamed or dropped field logged one line and still shipped. Every other
+ * declaration in the CLI states the opposite rule in as many words:
+ * "Derived from the cleaner, so the two cannot drift."
+ */
+export type Session = ReturnType<typeof asSession>
+export type WalletSummary = ReturnType<typeof asWalletSummary>
+export type SwapQuote = ReturnType<typeof asSwapQuote>
+export type PendingEdgeLogin = ReturnType<typeof asPendingEdgeLogin>
+
+/**
+ * The `subscription.closed` frame's payload.
+ *
+ * Declared beside the other published shapes because the *client* acts on
+ * it: `reason` decides `edge-cli subscribe`'s exit code through
+ * `exitCodeForClose`. It used to be a hand-written interface and a cast on
+ * the client side, over a payload that arrives from `emitFrame`'s bare
+ * `JSON.parse`, so nothing held the two halves to one spelling.
+ *
+ * `sessionId` is the redacted form `closeScope` writes — a `sessionId` is a
+ * bearer token, and this frame goes to every scoped subscriber.
+ */
+export const asSubscriptionClosed = asObject({
+  reason: asOptional(asString),
+  sessionId: asOptional(asString)
+}).withRest

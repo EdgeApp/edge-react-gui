@@ -17,6 +17,7 @@ import path from 'path'
 
 import { solveCaptcha } from '../../src/cli/client/solveCaptcha'
 import { cliRunRoot } from '../../src/cli/engine/cliHome'
+import { RUN_FILE_NAME } from '../../src/cli/engine/runFile'
 
 /**
  * Enough of `engineRequest`'s answer for the CAPTCHA retry.
@@ -86,7 +87,7 @@ export function readTcpToken(port: number): string | null {
   }
   for (const name of names) {
     try {
-      const raw = fs.readFileSync(path.join(root, name, 'engine.json'), 'utf8')
+      const raw = fs.readFileSync(path.join(root, name, RUN_FILE_NAME), 'utf8')
       const parsed = JSON.parse(raw)
       if (parsed?.tcpPort === port && typeof parsed?.tcpToken === 'string') {
         return parsed.tcpToken

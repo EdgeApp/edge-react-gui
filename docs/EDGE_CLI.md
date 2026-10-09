@@ -634,6 +634,7 @@ src/cli/
     nodeApiSigner.ts   # Node HMAC signer for the Edge API
     apiCredentials.ts  # Which key and which signer every request uses
     testerServers.ts   # Re-export of src/util/testerServers
+    fakeServers.ts     # The in-process --fake server URLs
     routes/            # status, login, account, wallets, …
   client/
     apiClient.ts       # HTTP over the engine’s unix socket
@@ -660,7 +661,12 @@ that module is reached from the app — the React Native bundle must not import
 out of the daemon's directory. `src/util/testerServers.ts` sits there for the
 same reason, for `src/util/maestro.ts`, and `src/cli/engine/testerServers.ts`
 re-exports it so the daemon's own modules keep reading it from the daemon's
-directory.
+directory. `src/util/sleep.ts` and `src/locales/localeKeys.ts` are leaves on
+the same terms: one `sleep` instead of three private copies, and the
+locale-tag resolution without the eleven translation tables, which is what
+keeps them out of the client bundle. `src/cli/timerCeiling.ts` holds Node's
+32-bit timer ceiling for the three places that refuse against it, including
+the client-safe `requestBudget.ts`.
 
 Every module in `src/cli/engine/` is listed above, and
 `npm run docs:api:verify` fails on one that is not — the map is the only

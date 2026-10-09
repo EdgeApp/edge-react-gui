@@ -9013,7 +9013,7 @@
             }
           },
           "default": {
-            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, OBJECT_IN_USE, INVALID_SESSION, SESSION_EXPIRED",
             "content": {
               "application/json": {
                 "schema": {
@@ -9176,7 +9176,7 @@
             }
           },
           "default": {
-            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
+            "description": "OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_SESSION_MISMATCH, OBJECT_IN_USE, INVALID_SESSION, SESSION_EXPIRED",
             "content": {
               "application/json": {
                 "schema": {

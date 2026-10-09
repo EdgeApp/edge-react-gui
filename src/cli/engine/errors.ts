@@ -41,7 +41,9 @@ import {
  * must not import the engine's error contract to get it. Every engine call
  * site still imports it from here.
  */
-export { errorMessage } from '../../util/errorMessage'
+import { errorMessage } from '../../util/errorMessage'
+
+export { errorMessage }
 
 export class EngineError extends Error {
   code: string
@@ -148,7 +150,7 @@ export function toErrorBody(error: unknown): ErrorResponse {
   const mapped = mapCoreError(error)
   if (mapped != null) return mapped
 
-  const message = error instanceof Error ? error.message : String(error)
+  const message = errorMessage(error)
   return {
     status: 500,
     body: {

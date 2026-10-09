@@ -1,12 +1,10 @@
 import type { ServerResponse } from 'http'
 
-import { API_VERSION } from './apiVersion'
+import { API_VERSION, API_VERSION_HEADER } from './apiVersion'
 import { errorMessage } from './errors'
 import { stringifyJson } from './json'
 import { consoleReporter, type EngineReporter } from './logger'
 import { redactSessionId } from './sessions'
-
-type Listener = (event: string, data: unknown) => void
 
 /**
  * Drop an SSE client once this much data is queued for it. A subscriber that
@@ -43,7 +41,6 @@ interface SseClient {
 
 /** Simple SSE hub. Clients connect via GET /engine/events. */
 export class EventHub {
-  private readonly listeners = new Set<Listener>()
   private readonly clients = new Set<SseClient>()
   private readonly report: EngineReporter
 
@@ -126,25 +123,17 @@ export class EventHub {
   }
 
   emit(event: string, data: unknown, scope?: SubscriptionScope): void {
-    // Nothing is listening, so nothing below can have an effect. `core.log`
-    // is a firehose — around 8 MB an hour — and every one of those used to
-    // pay an array allocation for the client spread and an object literal
-    // for the payload with zero listeners and zero clients.
-    if (this.listeners.size === 0 && this.clients.size === 0) return
-
-    for (const listener of this.listeners) {
-      try {
-        listener(event, data)
-      } catch (error: unknown) {
-        // A listener is an in-process hook this engine registered, so a throw
-        // from one is an engine bug. Dropping the rest of the loop over it
-        // would cost every other subscriber the event; dropping the *line*,
-        // which is what `// ignore` did, cost the only evidence it happened
-        // — on the path `core.log` drives thousands of times an hour.
-        const message = errorMessage(error)
-        this.report.warn(`event listener for ${event} threw: ${message}`)
-      }
-    }
+    // No subscriber, so nothing below can have an effect. `core.log` is a
+    // firehose — around 8 MB an hour — and every one of those used to pay an
+    // array allocation for the client spread and an object literal for the
+    // payload with nobody connected.
+    //
+    // There was an in-process `subscribe(listener)` path here as well, with
+    // its own fan-out loop, try/catch and warn. Nothing in `src/` or
+    // `scripts/` ever called it — the `subscribe` *command* is an SSE client
+    // and never touches the hub — so it was unreachable scaffolding whose
+    // comments described behaviour that could not happen. Git history has it
+    // for the day the engine wants an internal hook.
     if (this.clients.size === 0) return
 
     const frame = this.buildFrame(event, data)
@@ -159,13 +148,6 @@ export class EventHub {
     }
   }
 
-  subscribe(listener: Listener): () => void {
-    this.listeners.add(listener)
-    return () => {
-      this.listeners.delete(listener)
-    }
-  }
-
   addSseClient(
     res: ServerResponse,
     scope: SubscriptionScope = { kind: 'context' },
@@ -175,7 +157,7 @@ export class EventHub {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache',
       Connection: 'keep-alive',
-      'X-Edge-Api-Version': API_VERSION
+      [API_VERSION_HEADER]: API_VERSION
     })
     res.write(': ok\n\n')
     const client: SseClient = { res, scope, types }

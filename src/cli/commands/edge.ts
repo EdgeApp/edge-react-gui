@@ -1,3 +1,4 @@
+import { sleep } from '../../util/sleep'
 import { printJson } from '../client/output'
 import { readPendingEdgeLogin } from '../clientResponses'
 import { command } from '../command'
@@ -5,10 +6,6 @@ import { parseCommandArgs } from '../commandArgs'
 
 const POLL_INTERVAL_MS = 2000
 const TIMEOUT_MS = 5 * 60 * 1000
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise(resolve => setTimeout(resolve, ms))
-}
 
 const requestCmd = command(
   'request-edge-login',

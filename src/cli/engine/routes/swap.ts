@@ -24,7 +24,8 @@ import {
   asIntegerString,
   asOkObject,
   asRequestTokenId,
-  asSwapQuote
+  asSwapQuote,
+  type SwapQuote
 } from '../schemas'
 import { getAccount, requireOwnedHandle } from './helpers'
 
@@ -32,7 +33,7 @@ function summarizeQuote(
   objectId: string,
   expiresAt: string,
   quote: EdgeSwapQuote
-): Record<string, unknown> {
+): SwapQuote {
   return {
     objectId,
     kind: 'swap',
@@ -215,7 +216,12 @@ export const getSwapQuote = route({
     'OBJECT_NOT_FOUND',
     'OBJECT_EXPIRED',
     'OBJECT_KIND_MISMATCH',
-    'OBJECT_SESSION_MISMATCH'
+    'OBJECT_SESSION_MISMATCH',
+    // `requireOwnedHandle` throws this for a handle that is mid-call, which
+    // a second shell closing a quote while `approve-swap-quote` runs will
+    // hit. `approveSwapQuote` declares it; these did not, so the generated
+    // reference omitted a status a caller meets.
+    'OBJECT_IN_USE'
   ],
 
   async handler(ctx) {
@@ -310,7 +316,12 @@ export const closeSwapQuote = route({
     'OBJECT_NOT_FOUND',
     'OBJECT_EXPIRED',
     'OBJECT_KIND_MISMATCH',
-    'OBJECT_SESSION_MISMATCH'
+    'OBJECT_SESSION_MISMATCH',
+    // `requireOwnedHandle` throws this for a handle that is mid-call, which
+    // a second shell closing a quote while `approve-swap-quote` runs will
+    // hit. `approveSwapQuote` declares it; these did not, so the generated
+    // reference omitted a status a caller meets.
+    'OBJECT_IN_USE'
   ],
 
   async handler(ctx) {

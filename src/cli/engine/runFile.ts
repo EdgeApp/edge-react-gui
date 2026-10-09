@@ -70,6 +70,17 @@ const uncleanRunFile = uncleaner(asEngineRunFile)
 export type EngineRunFile = ReturnType<typeof asEngineRunFile>
 
 /**
+ * The run file's name.
+ *
+ * Here because this is the module that owns the file's *shape*, and it had
+ * three homes: `discovery.ts`, `logger.ts`'s sweep and
+ * `scripts/util/cliHarness.ts`. `logger.ts` has a stated reason not to
+ * import `discovery.ts` — its `net` probe — which does not apply to a
+ * filename, and it already imports this module for `readRunFileAt`.
+ */
+export const RUN_FILE_NAME = 'engine.json'
+
+/**
  * Serialize a run file, through the cleaner's uncleaner, so a shape change is
  * a compile error rather than a file the reader rejects.
  *

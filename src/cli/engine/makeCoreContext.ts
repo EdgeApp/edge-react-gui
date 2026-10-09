@@ -20,6 +20,7 @@ import { defaultDirectory } from './cliConfig'
 import { cliHomeFile } from './cliHome'
 import { errorMessage } from './errors'
 import type { EventHub } from './events'
+import { FAKE_SERVERS } from './fakeServers'
 import { fetchPluginKeys } from './fetchPluginKeys'
 import { keysSearchPaths, loadKeysFrom, mergePluginApiKeys } from './keysConfig'
 import type { EngineLogger } from './logger'
@@ -253,7 +254,10 @@ async function makeFakeCoreContext(
     appId,
     testMode: true,
     directory,
-    servers: { loginServer: 'fake://login', syncServer: 'fake://sync' },
+    servers: {
+      loginServer: FAKE_SERVERS.loginServer,
+      syncServer: FAKE_SERVERS.syncServer
+    },
     pluginsInit,
     currencyPluginIds: Object.keys(currencyPlugins),
     // The fake world reads no `keys.json` and no app `config.json`; `--fake`

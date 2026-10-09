@@ -43,6 +43,10 @@ const SHARED_MODULES = [
   'src/util/txExport/index.ts',
   'src/util/exportTxInfo.ts',
   'src/util/memoUtils.ts',
+  // One `sleep`, replacing three private copies — and the smoke test has to
+  // load it, because a `react-native` import added to a leaf the CLI runs
+  // breaks the published engine on first start.
+  'src/util/sleep.ts',
   'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',

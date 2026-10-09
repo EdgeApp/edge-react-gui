@@ -485,11 +485,25 @@ describe('stopping the queue', () => {
     expect(requested).toBe(1)
     stopRateQueue()
 
-    // Whatever that pass answers for its own key, the module is usable
-    // afterwards and the abandoned pass adds no request of its own.
+    // Whatever that pass answers for its own key, the abandoned pass adds no
+    // request of its own.
     await first
     const postsAfterStop = posts
 
+    // A stopped queue stays stopped: an arrival after the stop is settled at
+    // once rather than arming a fresh chain. `stopRateQueue` used to clear
+    // `inQuery` and record nothing, so the next date started a new chain —
+    // and the engine calls it from `shutdown` precisely so a debounce cannot
+    // fire against a closing context.
+    expect(isRateUnavailable(await rateFor('2024-03-09T00:00:00.000Z'))).toBe(
+      true
+    )
+    expect(posts).toBe(postsAfterStop)
+
+    // And `clearRateCache` brings it back, which is the one thing a caller
+    // that wants rates again always calls. Nothing in the engine restarts
+    // it: the stop happens in `shutdown`.
+    clearRateCache()
     const second = await rateFor('2024-03-02T00:00:00.000Z')
     expect(second).toBe(30000)
 

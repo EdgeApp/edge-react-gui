@@ -1,10 +1,7 @@
 import { EXIT, printJsonLine } from '../client/output'
+import { readSubscriptionClosed } from '../clientResponses'
 import { command, UsageError } from '../command'
 import { parseCommandArgs } from '../commandArgs'
-
-interface ClosedData {
-  reason?: string
-}
 
 /**
  * Reasons a scoped stream ends because its *session* ended.
@@ -131,7 +128,11 @@ const subscribeCmd = command(
         path,
         (type, data) => {
           if (type === 'subscription.closed') {
-            closeReason = (data as ClosedData)?.reason
+            // Through the cleaner, like the five other responses the
+            // client acts on: this one decides the exit code, and it
+            // arrives from `emitFrame`'s bare `JSON.parse` with no cleaner
+            // anywhere else on the path.
+            closeReason = readSubscriptionClosed(data)?.reason
           }
           if (wanted.size > 0 && !wanted.has(type)) return
           // One JSON object per line, so the stream pipes into jq or a log.
@@ -148,7 +149,18 @@ const subscribeCmd = command(
       process.off('SIGTERM', stop)
     }
 
-    if (interrupted) return
+    if (interrupted) {
+      // 130 for the first signal too, the same `128 + SIGINT` convention
+      // `stop` cites for the second. Falling out with `process.exitCode`
+      // untouched exited **0**, so a supervisor or a
+      // `while edge-cli subscribe …; do` loop could not tell an operator's
+      // Ctrl-C from the engine ending the stream normally. Scoped to a
+      // non-interactive run, like the ordinary exit below: `exitCode` is a
+      // global, so one interrupted subscription must not decide the exit
+      // code of a whole interactive session.
+      if (ctx.interactive !== true) process.exitCode = 130
+      return
+    }
     // The engine ended the stream. Say why, and exit accordingly.
     printJsonLine({ type: 'subscription.ended', data: { reason: closeReason } })
     // Not `process.exit`: this command is documented as newline-delimited

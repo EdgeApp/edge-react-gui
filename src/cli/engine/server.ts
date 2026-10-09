@@ -15,7 +15,7 @@
 import fs from 'fs'
 import http, { type IncomingMessage, type ServerResponse } from 'http'
 
-import { API_VERSION } from './apiVersion'
+import { API_VERSION, API_VERSION_HEADER } from './apiVersion'
 import { EngineError, engineError, errorMessage, toErrorBody } from './errors'
 import { readJsonBody, stringifyJson } from './json'
 import { consoleReporter, type EngineReporter } from './logger'
@@ -30,7 +30,7 @@ const HEADERS_TIMEOUT_MS = 20_000
 const REQUEST_TIMEOUT_MS = 120_000
 
 function setCommonHeaders(res: ServerResponse): void {
-  res.setHeader('X-Edge-Api-Version', API_VERSION)
+  res.setHeader(API_VERSION_HEADER, API_VERSION)
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
 }
 
@@ -217,7 +217,12 @@ async function handleRequest(
   state.idle.beginRequest()
 
   try {
-    const host = req.headers.host ?? 'localhost'
+    // `== null || === ''`, not `??`: Node reports a present-but-empty
+    // `Host:` as the empty string, so `??` let `new URL('/', 'http://')`
+    // through — which throws, and the catch-all answered the caller's
+    // malformed header as `500 INTERNAL_ERROR` with a stack in the log.
+    const rawHost = req.headers.host
+    const host = rawHost == null || rawHost === '' ? 'localhost' : rawHost
     const url = new URL(req.url ?? '/', `http://${host}`)
     const pathname = url.pathname
 
@@ -483,7 +488,10 @@ export async function listenUnix(
 export async function listenTcp(
   handler: (req: IncomingMessage, res: ServerResponse) => void,
   port: number,
-  host = '127.0.0.1',
+  // Required, not defaulted: the sole caller always passes
+  // `args.tcpHost`, and a second literal here meant the bind address had
+  // two defaults — `engineArgs.ts` owns the one that is read.
+  host: string,
   report: EngineReporter = consoleReporter
 ): Promise<{ server: http.Server; port: number }> {
   const server = await listenOn(handler, 'tcp', report, (s, onListening) =>

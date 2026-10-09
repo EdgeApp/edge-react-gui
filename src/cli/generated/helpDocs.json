@@ -878,6 +878,7 @@
         "OBJECT_EXPIRED",
         "OBJECT_KIND_MISMATCH",
         "OBJECT_SESSION_MISMATCH",
+        "OBJECT_IN_USE",
         "INVALID_SESSION",
         "SESSION_EXPIRED"
       ]
@@ -3309,6 +3310,7 @@
         "OBJECT_EXPIRED",
         "OBJECT_KIND_MISMATCH",
         "OBJECT_SESSION_MISMATCH",
+        "OBJECT_IN_USE",
         "INVALID_SESSION",
         "SESSION_EXPIRED"
       ]

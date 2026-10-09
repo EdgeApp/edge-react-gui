@@ -12,6 +12,7 @@ import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { engineError, toErrorBody } from '../errors'
 import type { HandleRecord, ObjectHandleKind } from '../objectHandles'
 import type { RouteContext } from '../router'
+import type { WalletSummary } from '../schemas'
 import type { SessionRecord } from '../sessions'
 
 /**
@@ -73,9 +74,7 @@ export function requireOwnedHandle<T>(
 }
 
 /** The wallet fields every listing and creation route returns. */
-export function summarizeWallet(
-  wallet: EdgeCurrencyWallet
-): Record<string, unknown> {
+export function summarizeWallet(wallet: EdgeCurrencyWallet): WalletSummary {
   return {
     walletId: wallet.id,
     id: wallet.id,

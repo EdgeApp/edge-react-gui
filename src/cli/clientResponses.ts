@@ -31,14 +31,26 @@ import {
   asBalance,
   asEnabledTokens,
   asPendingEdgeLogin,
-  asSession
+  asSession,
+  asSubscriptionClosed,
+  type PendingEdgeLogin,
+  type Session
 } from './engine/schemas'
 
 /** The `balance-map` 200, which the engine declares field by field. */
 const asBalanceList = asObject({ balances: asArray(asBalance) })
 
-export type Session = ReturnType<typeof asSession>
-export type PendingEdgeLogin = ReturnType<typeof asPendingEdgeLogin>
+/**
+ * The published shapes, from the one place that derives them.
+ *
+ * Re-exported rather than derived a second time: `schemas.ts` now carries
+ * the `ReturnType` for each of these beside the cleaner, so the client and
+ * the engine cannot end up with two spellings of a session.
+ */
+export type { PendingEdgeLogin, Session }
+
+/** What `subscription.closed` carries, and the exit code reads. */
+export type SubscriptionClosed = ReturnType<typeof asSubscriptionClosed>
 
 /**
  * Clean one response, naming the route when it does not fit.
@@ -131,4 +143,26 @@ export function readExportedFiles(
   what: string
 ): ReturnType<typeof asExportedFiles> {
   return cleanResponse(asMaybe(asExportedFiles), raw, what)
+}
+
+/**
+ * The `subscription.closed` frame, cleaned rather than cast.
+ *
+ * It is acted on, which is this module's whole criterion: `reason` decides
+ * the process exit code through `exitCodeForClose`. It was read through a
+ * hand-written interface and a cast — `(data as ClosedData)?.reason` — on a
+ * payload that arrives from `emitFrame`'s bare `JSON.parse` with no cleaner
+ * anywhere on the path, so the client and the engine could describe a close
+ * reason differently with nothing to notice.
+ *
+ * `asMaybe` with no throw, unlike the five above: an unrecognised or absent
+ * reason already means "the engine ended this for a reason this client does
+ * not know", which `exitCodeForClose` answers with `EXIT.ENGINE`. Failing
+ * the command instead would turn a frame it cannot read into a worse
+ * outcome than the one it is reporting.
+ */
+export function readSubscriptionClosed(
+  raw: unknown
+): SubscriptionClosed | undefined {
+  return asMaybe(asSubscriptionClosed)(raw)
 }

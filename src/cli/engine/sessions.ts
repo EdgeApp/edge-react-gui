@@ -370,9 +370,10 @@ export class SessionStore {
     // already gone.
     this.events.closeScope(sessionId, reason)
     // Drained *before* the handles are released, not after. `deleteMany`
-    // gives a `consuming` handle `HANDLE_BUSY_WAIT_MS` (10 s) and then
-    // abandons it — "left in place" — while this wait allows the request
-    // holding it `LOGOUT_WAIT_MS` (30 s). Releasing first therefore gave up
+    // gives the `consuming` handles `HANDLE_BUSY_WAIT_MS` (10 s) between
+    // them — one absolute deadline for the whole release, not 10 s each —
+    // and then abandons whatever is still in a call, "left in place", while
+    // this wait allows the request holding one `LOGOUT_WAIT_MS` (30 s). Releasing first therefore gave up
     // on the handle twenty seconds before the request that owned it
     // finished, and `hold`'s `finally` pushed its TTL out again, so a
     // `broadcast-tx` on a congested chain left a signed-transaction or

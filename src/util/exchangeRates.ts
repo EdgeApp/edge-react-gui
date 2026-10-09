@@ -229,6 +229,16 @@ let lastQueryEndedAt = 0
  * armed a second chain that ran concurrently with the first.
  */
 let queueEpoch = 0
+/**
+ * Set by `stopRateQueue`, so a stopped queue stays stopped.
+ *
+ * The epoch tells a pass in flight that its work is unwanted; this tells the
+ * *next arrival* that there is no queue to join. Cleared by
+ * `clearRateCache`, which is the one thing a caller that wants the queue
+ * back always calls — the engine never restarts it, so the only such caller
+ * is a test moving between cases.
+ */
+let queueStopped = false
 let queryTimer: ReturnType<typeof setTimeout> | undefined
 
 /** One upstream request: its parameters, and the queue keys it speaks for. */
@@ -449,6 +459,21 @@ const addToQueue = (
    */
   chainTimeoutMs?: number
 ): void => {
+  // A stopped queue stays stopped. `stopRateQueue` cleared `inQuery`, bumped
+  // the epoch and settled what was queued, but nothing recorded that it had
+  // been stopped — so the very next arrival took the `!inQuery` branch,
+  // armed a fresh timer and started a new chain whose epoch the guard in
+  // `doQuery` then accepted. The engine calls `stopRateQueue` from
+  // `shutdown` precisely so "a debounce armed just before shutdown" cannot
+  // fire against a closing context, and a debounce armed just *after* it
+  // still did: `drainRequests` is bounded and gives up, so a
+  // `get-transactions` that outlived the drain is still inside
+  // `fillTxsFiat`, still queueing dates, and those dates fired rates
+  // requests during `context.close()`.
+  if (queueStopped) {
+    resolve(RATE_UNAVAILABLE)
+    return
+  }
   const rateKeyResolver = resolverMap.get(rateKey)
   if (rateKeyResolver == null) {
     // Create a new entry in the map for this pair/date
@@ -551,6 +576,10 @@ function cacheRate(key: string, rate: number): void {
 export function clearRateCache(): void {
   rateMap.clear()
   unpricedMap.clear()
+  // A cleared cache means someone wants rates again, which is the only
+  // signal this module gets that a stopped queue should take work. Nothing
+  // in the engine restarts it: `stopRateQueue` runs in `shutdown`.
+  queueStopped = false
 }
 
 /**
@@ -568,6 +597,7 @@ export function stopRateQueue(): void {
     queryTimer = undefined
   }
   inQuery = false
+  queueStopped = true
   // So a pass already in flight does not recurse into another one after the
   // queue has been stopped. It cannot be cancelled, but it can be told its
   // work is no longer wanted: `doQuery` compares the epoch it started with.

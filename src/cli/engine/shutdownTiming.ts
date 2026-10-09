@@ -84,8 +84,11 @@ export const HANDLE_TEARDOWN_WAIT_MS = 5_000
  *
  *   1. `drainRequests`                              SHUTDOWN_DRAIN_MS
  *   2. `objects.clearAll()` → `deleteMany`, which
- *      waits for a call in flight and then
- *      bounds each handle's own teardown        HANDLE_BUSY_WAIT_MS
+ *      waits for the calls in flight and then
+ *      bounds the teardowns — both across the
+ *      whole set at once, which is what makes
+ *      these two terms right rather than
+ *      per-handle                              HANDLE_BUSY_WAIT_MS
  *                                            + HANDLE_TEARDOWN_WAIT_MS
  *   3. `forceLogout`'s `waitForQuiet`               LOGOUT_WAIT_MS
  *   4. `releaseHandles` → a *second* `deleteMany`   HANDLE_BUSY_WAIT_MS

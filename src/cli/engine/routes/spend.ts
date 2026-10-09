@@ -1047,9 +1047,7 @@ export const signBytes = route({
     } catch (error) {
       throw engineError(
         'BAD_REQUEST',
-        `bytes must be valid base64: ${String(
-          error instanceof Error ? error.message : error
-        )}`,
+        `bytes must be valid base64: ${errorMessage(error)}`,
         400
       )
     }

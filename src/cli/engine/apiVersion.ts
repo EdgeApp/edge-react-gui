@@ -11,3 +11,13 @@
  * It lived in `router.ts`, which is URL matching, not versioning.
  */
 export const API_VERSION = '1.0.0'
+
+/**
+ * The header's own name, beside the value it carries.
+ *
+ * A literal in `server.ts` and again in `events.ts`, which is the drift this
+ * module exists to end — and the docblock above already records that "the
+ * SSE header was a literal". `transportAuth.ts` sets the precedent with
+ * `TCP_TOKEN_HEADER`.
+ */
+export const API_VERSION_HEADER = 'X-Edge-Api-Version'

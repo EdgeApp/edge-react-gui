@@ -45,6 +45,7 @@ import {
 import { EngineUsageError, parseEngineArgs } from './engineArgs'
 import { errorMessage } from './errors'
 import { EventHub } from './events'
+import { FAKE_SERVERS } from './fakeServers'
 import { IdleShutdown } from './idleShutdown'
 import { EngineLogger, type EngineReporter, sweepOldLogs } from './logger'
 import { makeCoreContext } from './makeCoreContext'
@@ -150,7 +151,7 @@ async function main(): Promise<void> {
     directory,
     testMode,
     loginServer: args.fake
-      ? 'fake://login'
+      ? FAKE_SERVERS.loginServer
       : testMode
       ? TESTER_SERVERS.loginServer
       : undefined

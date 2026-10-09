@@ -46,12 +46,13 @@ import {
 } from './engine/cliConfig'
 import { profileHash, socketPathFor } from './engine/discovery'
 import { errorMessage } from './engine/errors'
+import { FAKE_SERVERS } from './engine/fakeServers'
 import { parseTcpPort } from './engine/tcpPort'
 import { TESTER_SERVERS } from './engine/testerServers'
 import { emptyToUndefined } from './envValue'
 import { type CliOptions, parseCliArgs, showCliHelp } from './parseArgs'
 import { splitPromptLine, UnterminatedQuoteError } from './promptLine'
-import { MAX_BUDGET_MS } from './requestBudget'
+import { MAX_TIMER_MS } from './timerCeiling'
 
 function formatUsage(cmd: {
   name: string
@@ -95,11 +96,11 @@ function clientTimeoutMs(raw: string | undefined): number | undefined {
   // than clamped down, because silently waiting 24 days less than asked is
   // the same class of surprise. `MAX_BUDGET_MS` is the ceiling the engine
   // already applies to the budget header this value becomes.
-  if (ms > MAX_BUDGET_MS) {
+  if (ms > MAX_TIMER_MS) {
     throw new UsageError(
       undefined,
       `Invalid --timeout "${raw}": at most ${Math.floor(
-        MAX_BUDGET_MS / 1000
+        MAX_TIMER_MS / 1000
       )} seconds, Node's timer ceiling`
     )
   }
@@ -160,7 +161,7 @@ async function buildContext(options: CliOptions): Promise<CliContext> {
   // engine to start" with a healthy engine running — so this is load-bearing,
   // not cosmetic.
   const loginServer = fake
-    ? 'fake://login'
+    ? FAKE_SERVERS.loginServer
     : testMode
     ? TESTER_SERVERS.loginServer
     : undefined

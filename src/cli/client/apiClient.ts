@@ -21,8 +21,6 @@ import { REQUEST_BUDGET_HEADER } from '../requestBudget'
  */
 export const asApiErrorBody = asErrorBody
 
-export type ApiErrorBody = ReturnType<typeof asApiErrorBody>
-
 /**
  * A failure of the *call*, not of the engine.
  *
@@ -611,17 +609,9 @@ export class ApiClient {
     return await this.request<T>('POST', path, body)
   }
 
-  async put<T = unknown>(path: string, body?: unknown): Promise<T> {
-    return await this.request<T>('PUT', path, body)
-  }
-
-  async patch<T = unknown>(path: string, body?: unknown): Promise<T> {
-    return await this.request<T>('PATCH', path, body)
-  }
-
-  async delete<T = unknown>(path: string, body?: unknown): Promise<T> {
-    return await this.request<T>('DELETE', path, body)
-  }
+  // No `put`, `patch` or `delete`: no route declares anything but GET or
+  // POST, nothing in `src/` or `scripts/` called them, and `request` takes
+  // the verb, so git history is enough for the day one is needed.
 }
 
 /** Parse one `event:` / `data:` frame. Comment lines (`: ok`) are ignored. */

@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { resolveLocaleTableOrEnglish } from '../../locales/localeKeys'
+import { sleep } from '../../util/sleep'
 import { getDetectedLocale } from '../bootNodeLocale'
 import { defaultDirectory } from '../engine/cliConfig'
 import {
@@ -80,10 +81,6 @@ export interface EnsureEngineOpts extends ProfileKey {
   configPath?: string
   noSpawn?: boolean
   tcpPort?: number | null
-}
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function pingEngine(socketPath: string): Promise<boolean> {
