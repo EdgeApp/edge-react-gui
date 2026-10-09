@@ -12,7 +12,12 @@ import {
 } from '../../util/spamThreshold'
 
 jest.mock('../../util/exchangeRates', () => ({
-  getHistoricalCryptoRate: jest.fn()
+  getHistoricalCryptoRate: jest.fn(),
+  // The real predicate, not a stub: `resolveListSpamThreshold` uses it to
+  // tell the queue's "gave up" answer from a price, and a mock module that
+  // leaves it out makes every lookup throw. `fillTxsFiat.test.ts` says the
+  // same about its own mock.
+  isRateUnavailable: (rate: number) => !Number.isFinite(rate)
 }))
 
 const rateMock = getHistoricalCryptoRate as unknown as jest.Mock<

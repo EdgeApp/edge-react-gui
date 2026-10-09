@@ -29,7 +29,7 @@ export function parseJsonFlag(
   }
 }
 
-export interface ParseSpec {
+interface ParseSpec {
   /**
    * Defaults to `'none'`; set `'required'` or `'optional'` for a command
    * that takes one.

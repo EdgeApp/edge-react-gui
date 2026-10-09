@@ -6,10 +6,6 @@ import { showFullScreenSpinner } from '../components/modals/AirshipFullScreenSpi
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
 import { lstrings } from '../locales/strings'
 import { getFioStakingBalances } from './stakeUtils'
-// Re-exported, so the GUI's existing importers keep working while one
-// module owns the implementation.
-export { cleanFiatCurrencyCode } from './fiatCode'
-
 /**
  * Safely get a wallet name, returning a fallback when the name is null.
  * See `useWalletName` for a hook version of this.

@@ -98,7 +98,7 @@ export function withoutUndefined<T extends object>(value: T): Partial<T> {
 export const asTokenId = asEither(asString, asValue(null))
 
 /** A string with something in it. */
-export const asNonEmptyString: Cleaner<string> = raw => {
+const asNonEmptyString: Cleaner<string> = raw => {
   const value = asString(raw)
   if (value === '') throw new TypeError('Expected a non-empty string')
   return value

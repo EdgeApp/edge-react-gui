@@ -57,7 +57,7 @@ function readTail(file: string, maxBytes: number): string {
   }
 }
 
-export interface EnsureEngineOpts extends ProfileKey {
+interface EnsureEngineOpts extends ProfileKey {
   /** Serve an in-process fake world instead of a login server. */
   fake?: boolean
   /**

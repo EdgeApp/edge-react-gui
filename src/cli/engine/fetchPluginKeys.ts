@@ -12,7 +12,7 @@ import { configureNetwork, DEFAULT_INFO_SERVERS } from '../../util/network'
 import { isPlainObject } from '../../util/predicates'
 import { TESTER_SERVERS } from './testerServers'
 
-export interface FetchPluginKeysOpts {
+interface FetchPluginKeysOpts {
   apiSigner?: EdgeApiSigner
   apiKey?: string
   apiSecret?: Uint8Array
@@ -29,7 +29,7 @@ export interface FetchPluginKeysOpts {
   fetchKeys?: typeof fetchRemoteKeys
 }
 
-export interface FetchedPluginKeys {
+interface FetchedPluginKeys {
   pluginApiKeys: Record<string, unknown>
   assuranceLevel?: string
 }

@@ -125,3 +125,38 @@ export const SHUTDOWN_WAIT_MS =
   LOGOUT_WAIT_MS +
   2 * CORE_TEARDOWN_WAIT_MS +
   4 * LISTENER_CLOSE_WAIT_MS
+
+/**
+ * Wait for a counter to reach a floor, bounded, and say what was abandoned.
+ *
+ * `drainRequests` in `index.ts` and `waitForQuiet` in `sessions.ts` were the
+ * same block in two files — a deadline, a `while` polling a counter every
+ * 25 ms, then a warn reading "… request(s) still in flight after <budget>ms"
+ * — so the polling interval and the wording could drift between two phases
+ * of one shutdown. Bounded in both cases for the same reason: a wedged
+ * request must not stop the engine exiting, and must not make a logout
+ * impossible, because logout is a security control. What was abandoned is
+ * logged rather than passed over in silence.
+ *
+ * Returns how many were still in flight when it gave up, so a caller that
+ * wants to say more than the warn line can.
+ */
+export async function drainToFloor(opts: {
+  inFlight: () => number
+  floor: number
+  budgetMs: number
+  describe: (stuck: number) => string
+  warn: (message: string) => void
+}): Promise<number> {
+  const { inFlight, floor, budgetMs, describe, warn } = opts
+  const deadline = Date.now() + budgetMs
+  while (inFlight() > floor && Date.now() < deadline) {
+    await new Promise<void>(resolve => setTimeout(resolve, DRAIN_POLL_MS))
+  }
+  const stuck = inFlight() - floor
+  if (stuck > 0) warn(describe(stuck))
+  return stuck > 0 ? stuck : 0
+}
+
+/** How often `drainToFloor` looks again. One interval, not two. */
+const DRAIN_POLL_MS = 25

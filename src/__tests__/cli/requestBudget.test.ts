@@ -68,9 +68,7 @@ describe('readRequestBudgetMs', () => {
   it('falls back to the default when the caller’s deadline is spent', () => {
     // Not `0` and not a negative: a budget that makes the work give up
     // instantly is the failure every other rejected spelling here avoids.
-    expect(
-      readRequestBudgetMs(req('1000'), Date.now() - 5000)
-    ).toBeUndefined()
+    expect(readRequestBudgetMs(req('1000'), Date.now() - 5000)).toBeUndefined()
   })
 
   it('ignores the arrival stamp when there is no header', () => {

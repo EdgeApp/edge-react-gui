@@ -17,7 +17,7 @@ interface EdgeLobby {
   close: () => void
 }
 
-export interface SyncResult {
+interface SyncResult {
   changes: Record<string, unknown>
   status: {
     lastHash?: string | null
@@ -25,7 +25,7 @@ export interface SyncResult {
   }
 }
 
-export interface EdgeInternalStuff {
+interface EdgeInternalStuff {
   authRequest: (method: string, path: string, body?: object) => Promise<unknown>
   hashUsername: (username: string) => Promise<Uint8Array>
   makeLobby: (lobbyRequest: LobbyRequest, period?: number) => Promise<EdgeLobby>

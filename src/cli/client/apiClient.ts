@@ -76,7 +76,7 @@ export class ApiClientError extends Error {
   }
 }
 
-export interface ApiClientOptions {
+interface ApiClientOptions {
   /**
    * The engine's unix socket. The only transport this client speaks.
    *

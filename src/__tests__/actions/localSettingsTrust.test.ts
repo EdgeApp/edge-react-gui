@@ -128,9 +128,7 @@ describe('readLocalAccountSettingsFromDisk', () => {
     // half-synced file is likeliest to produce.
     for (const local of ['[]', '"x"', '42', 'null', '[1,2,3]']) {
       const account = makeFakeDiskletAccount({ local })
-      await expect(
-        readLocalAccountSettingsFromDisk(account)
-      ).rejects.toThrow()
+      await expect(readLocalAccountSettingsFromDisk(account)).rejects.toThrow()
     }
   })
 

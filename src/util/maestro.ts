@@ -1,5 +1,5 @@
-import { TESTER_SERVERS } from './testerServers'
 import { CONFIG } from '../config'
+import { TESTER_SERVERS } from './testerServers'
 
 // One declaration of the fleet, in the leaf module that has no imports: the
 // app's three constants and the CLI engine's `TESTER_SERVERS` named the same

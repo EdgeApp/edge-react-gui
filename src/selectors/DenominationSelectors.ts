@@ -7,7 +7,9 @@ import type {
 import type { RootState } from '../types/reduxTypes'
 import { getDisplayDenom } from '../util/exchangeDenom'
 
-export { emptyEdgeDenomination, getExchangeDenom } from '../util/exchangeDenom'
+// `getExchangeDenom` only: `emptyEdgeDenomination` had no importer here,
+// and its own module is where the two tests that use it read it from.
+export { getExchangeDenom } from '../util/exchangeDenom'
 
 /**
  * The units an asset is shown in, from Redux.

@@ -19,7 +19,12 @@ import {
   asRequestTokenId,
   asWalletId
 } from '../schemas'
-import { getAccount, summarizeWallet, summarizeWalletResults } from './helpers'
+import {
+  getAccount,
+  pluginIdsByWalletType,
+  summarizeWallet,
+  summarizeWalletResults
+} from './helpers'
 
 /**
  * Wallet detail.
@@ -218,14 +223,12 @@ export const splitWallet = route({
     const account = getAccount(ctx)
     const wallet = findWallet(account, ctx.body.walletId)
     // Each type checked against the plugins that are actually here, which is
-    // the same set `list-splittable-wallet-types` filters.
+    // the same set `list-splittable-wallet-types` filters. The map is built
+    // once rather than re-walking the whole plugin table per requested
+    // split, and it is the same derivation `unloadedWallets` uses.
+    const pluginIds = pluginIdsByWalletType(account)
     for (const split of ctx.body.splitWallets) {
-      const known = Object.keys(account.currencyConfig).some(
-        id =>
-          account.currencyConfig[id].currencyInfo.walletType ===
-          split.walletType
-      )
-      if (!known) {
+      if (!pluginIds.has(split.walletType)) {
         throw engineError(
           'BAD_REQUEST',
           `No plugin claims wallet type "${split.walletType}". ` +

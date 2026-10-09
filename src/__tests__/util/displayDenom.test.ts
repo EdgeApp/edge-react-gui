@@ -4,6 +4,7 @@ import type { EdgeCurrencyConfig } from 'edge-core-js'
 import { selectDisplayDenom } from '../../selectors/DenominationSelectors'
 import { getDisplayDenom, getExchangeDenom } from '../../util/exchangeDenom'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
+import { BTC_DENOM, USDC_DENOM, USDC_TOKENS } from '../../util/fake/fakeDisklet'
 
 /**
  * One derivation for both exports.
@@ -17,21 +18,17 @@ import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
  * settings read out of Redux, and the engine passes the same records from the
  * synced `Settings.json`.
  */
-const BTC_DENOM = { name: 'BTC', multiplier: '100000000', symbol: '₿' }
+// `BTC_DENOM`, `USDC_DENOM` and the token map come from the shared fakes,
+// which `exchangeDenom.test.ts` already imports under a comment saying "not
+// a third near-copy of the same shape". `BITS_DENOM` is this suite's own —
+// it is the *custom* denomination the settings select, which is what these
+// cases are about.
 const BITS_DENOM = { name: 'bits', multiplier: '100', symbol: 'ƀ' }
-const USDC_DENOM = { name: 'USDC', multiplier: '1000000', symbol: '' }
 
 const config = (): EdgeCurrencyConfig =>
   makeFakeCurrencyConfig(
     { pluginId: 'bitcoin', currencyCode: 'BTC', denominations: [BTC_DENOM] },
-    {
-      deadbeef: {
-        currencyCode: 'USDC',
-        displayName: 'USD Coin',
-        denominations: [USDC_DENOM],
-        networkLocation: {}
-      }
-    }
+    USDC_TOKENS
   )
 
 describe('getDisplayDenom', () => {

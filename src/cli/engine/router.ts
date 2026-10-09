@@ -61,9 +61,9 @@ export interface RouteContext {
   arrivedAt: number
 }
 
-export type RouteHandler = (ctx: RouteContext) => Promise<unknown> | unknown
+type RouteHandler = (ctx: RouteContext) => Promise<unknown> | unknown
 
-export interface CompiledRoute {
+interface CompiledRoute {
   method: string
   regex: RegExp
   keys: string[]

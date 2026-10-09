@@ -139,6 +139,32 @@ export function summarizeWalletResults(
 }
 
 /**
+ * Which plugin claims each wallet type.
+ *
+ * Built once, because the question was answered by two near-identical scans
+ * of `Object.keys(account.currencyConfig)` — a `.find` in `unloadedWallets`
+ * and a `.some` in `split-wallet` — and each sat *inside* a loop, so the
+ * whole plugin table was re-walked per wallet and per requested split. The
+ * table is around twenty-five entries and this function's own docblock
+ * measures fourteen unloaded wallets.
+ *
+ * Through `currencyConfig` rather than by stripping the `wallet:` prefix,
+ * because a plugin's id and its wallet type are not always the same word.
+ */
+export function pluginIdsByWalletType(
+  account: EdgeAccount
+): Map<string, string> {
+  const byType = new Map<string, string>()
+  for (const pluginId of Object.keys(account.currencyConfig)) {
+    byType.set(
+      account.currencyConfig[pluginId].currencyInfo.walletType,
+      pluginId
+    )
+  }
+  return byType
+}
+
+/**
  * The active wallets core did not build an API for.
  *
  * `account.activeWalletIds` is every non-archived, non-deleted wallet, and
@@ -183,18 +209,15 @@ export function unloadedWallets(account: EdgeAccount): Array<{
     const wallet = account.currencyWallets[walletId]
     if (wallet != null) loadedTypes.add(wallet.currencyInfo.walletType)
   }
+  // Hoisted like `loadedTypes` above it, and for the same reason: the lookup
+  // below runs once per unloaded wallet.
+  const pluginIds = pluginIdsByWalletType(account)
   const out = []
   for (const walletId of account.activeWalletIds) {
     if (account.currencyWallets[walletId] != null) continue
     const info = account.allKeys.find(key => key.id === walletId)
     const walletType = info?.type ?? ''
-    // `wallet:bitcoin` → `bitcoin`, which is how a plugin is keyed. Resolved
-    // through `currencyConfig` rather than by stripping the prefix, because a
-    // plugin's id and its wallet type are not always the same word.
-    const pluginId =
-      Object.keys(account.currencyConfig).find(
-        id => account.currencyConfig[id].currencyInfo.walletType === walletType
-      ) ?? null
+    const pluginId = pluginIds.get(walletType) ?? null
     out.push({
       walletId,
       walletType,

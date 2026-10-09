@@ -19,10 +19,7 @@ export interface CliContext {
   challengeId?: string
 }
 
-export type CommandHandler = (
-  ctx: CliContext,
-  argv: string[]
-) => Promise<void> | void
+type CommandHandler = (ctx: CliContext, argv: string[]) => Promise<void> | void
 
 export interface Command {
   name: string

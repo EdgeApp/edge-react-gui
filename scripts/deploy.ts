@@ -3,8 +3,8 @@ import fs from 'fs'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
-import { errorMessage } from '../src/util/errorMessage'
 import { deepMerge } from '../src/configKeysMerge'
+import { errorMessage } from '../src/util/errorMessage'
 import { deleteOldDirsSync } from './cleanDirectories'
 
 const BUILD_ARCHIVE_MONTHS = 6

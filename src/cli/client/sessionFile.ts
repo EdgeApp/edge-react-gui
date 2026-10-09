@@ -27,7 +27,7 @@ const asSessionFile = asJSON(
 
 const uncleanSessionFile = uncleaner(asSessionFile)
 
-export type SessionFile = ReturnType<typeof asSessionFile>
+type SessionFile = ReturnType<typeof asSessionFile>
 
 export function readSessionFile(profile: string): SessionFile | null {
   try {

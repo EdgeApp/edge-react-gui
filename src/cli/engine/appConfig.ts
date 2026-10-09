@@ -11,7 +11,7 @@ const asAppConfigFile = asObject({
 })
 
 /** Derived from the cleaner, so the two cannot drift. */
-export type AppConfigFile = ReturnType<typeof asAppConfigFile>
+type AppConfigFile = ReturnType<typeof asAppConfigFile>
 
 /** Where `loadAppConfig` looks, in order. */
 function appConfigSearchPaths(): string[] {

@@ -290,13 +290,13 @@ describe('detectNodeLocale cost', () => {
     // Constructing the first `Intl.NumberFormat` is what pays V8's ICU
     // initialisation, about 30ms of the client's ~180ms of user CPU for a
     // value nobody on that path looks at.
-    const real = Intl.NumberFormat
+    const RealNumberFormat = Intl.NumberFormat
     let built = 0
     // @ts-expect-error replacing a global for the duration of this case
     Intl.NumberFormat = function (...args: unknown[]) {
       ++built
       // @ts-expect-error forwarding to the real constructor
-      return new real(...args)
+      return new RealNumberFormat(...args)
     }
     try {
       const source = detectNodeLocale({ env: { LANG: 'de_DE.UTF-8' } })
@@ -313,7 +313,7 @@ describe('detectNodeLocale cost', () => {
       expect(source.decimalSeparator).toBe(',')
       expect(built).toBe(after)
     } finally {
-      Intl.NumberFormat = real
+      Intl.NumberFormat = RealNumberFormat
     }
   })
 })

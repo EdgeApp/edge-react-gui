@@ -15,7 +15,7 @@ const asKeysConfig = asObject({
  * it is always present, which the interface happened to agree with only by
  * hand.
  */
-export type KeysConfig = ReturnType<typeof asKeysConfig>
+type KeysConfig = ReturnType<typeof asKeysConfig>
 
 /**
  * The keys a run has when no `keys.json` was found.

@@ -14,7 +14,7 @@ const REQUEST_TIMEOUT_MS = 30_000
  * capped: an unbounded value blocks the process with no timeout — the two
  * HTTPS calls are the only thing `REQUEST_TIMEOUT_MS` covers.
  */
-export type AltchaChallenge = ReturnType<typeof asAltchaChallenge>
+type AltchaChallenge = ReturnType<typeof asAltchaChallenge>
 
 const asAltchaChallenge = asJSON(
   asObject({
@@ -102,9 +102,7 @@ export async function httpsRequest(
       }
     )
     req.setTimeout(timeoutMs, () => {
-      req.destroy(
-        new Error(`CAPTCHA ${method} timed out after ${timeoutMs}ms`)
-      )
+      req.destroy(new Error(`CAPTCHA ${method} timed out after ${timeoutMs}ms`))
     })
     req.on('error', reject)
     if (payload != null) req.write(payload)

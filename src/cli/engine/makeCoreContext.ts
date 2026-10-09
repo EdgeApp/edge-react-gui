@@ -13,6 +13,7 @@ import currencyPluginsImport from 'edge-currency-plugins'
 import exchangePluginsImport from 'edge-exchange-plugins'
 
 import { mergePluginInit } from '../../configKeysMerge'
+import { isPlainObject } from '../../util/predicates'
 import { withDeadline } from '../../util/withDeadline'
 import { resolveApiCredentials } from './apiCredentials'
 import { loadAppConfigFrom } from './appConfig'
@@ -45,13 +46,11 @@ let pluginsLocked = false
  */
 function unwrapPlugins(mod: Record<string, unknown>): Record<string, unknown> {
   const inner = mod.default
-  if (
-    inner != null &&
-    typeof inner === 'object' &&
-    !Array.isArray(inner) &&
-    Object.keys(mod).length <= 2
-  ) {
-    return inner as Record<string, unknown>
+  // `isPlainObject` rather than its body a fourth time: that helper exists
+  // to end this triplication, and `keysConfig.ts` and `router.ts` already
+  // use it. Only the `<= 2` clause is this function's own.
+  if (isPlainObject(inner) && Object.keys(mod).length <= 2) {
+    return inner
   }
   return mod
 }
@@ -166,7 +165,7 @@ function ensurePlugins(): void {
   pluginsLocked = true
 }
 
-export interface MakeCoreContextOpts {
+interface MakeCoreContextOpts {
   /**
    * An API key the operator supplied explicitly, with `-k`.
    *

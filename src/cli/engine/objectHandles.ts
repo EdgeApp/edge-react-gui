@@ -174,7 +174,11 @@ export class ObjectHandleStore {
     const ids = [...this.handles.entries()]
       .filter(([, record]) => record.sessionId === sessionId)
       .map(([id]) => id)
-    await this.deleteMany(ids, `session ${sessionId.slice(0, 10)}`)
+    // `redactSessionId`, which this module already imports and uses: a
+    // `sessionId` is a bearer token, and its own docblock says the
+    // redaction "was spelled out at four call sites, which is three too
+    // many". This was the fifth.
+    await this.deleteMany(ids, `session ${redactSessionId(sessionId)}`)
   }
 
   async clearAll(): Promise<void> {

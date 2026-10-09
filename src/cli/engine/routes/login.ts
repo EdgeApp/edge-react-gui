@@ -206,12 +206,14 @@ export const loginWithPassword = route({
   ],
 
   async handler(ctx) {
-    const account: EdgeAccount = await ctx.state.core.context.loginWithPassword(
-      ctx.body.username,
-      ctx.body.password,
-      accountOptions(ctx.body)
+    return await ctx.state.sessions.create(
+      await ctx.state.core.context.loginWithPassword(
+        ctx.body.username,
+        ctx.body.password,
+        accountOptions(ctx.body)
+      ),
+      'password'
     )
-    return await ctx.state.sessions.create(account, 'password')
   }
 })
 
@@ -391,14 +393,15 @@ export const loginWithRecovery = route({
   errors: ['PASSWORD_ERROR', 'USERNAME_ERROR', 'NETWORK_ERROR'],
 
   async handler(ctx) {
-    const account: EdgeAccount =
+    return await ctx.state.sessions.create(
       await ctx.state.core.context.loginWithRecovery2(
         ctx.body.recoveryKey,
         ctx.body.username,
         ctx.body.answers,
         accountOptions(ctx.body)
-      )
-    return await ctx.state.sessions.create(account, 'recovery')
+      ),
+      'recovery'
+    )
   }
 })
 
@@ -459,13 +462,15 @@ export const createAccount = route({
   ],
 
   async handler(ctx) {
-    const account: EdgeAccount = await ctx.state.core.context.createAccount({
-      ...accountOptions(ctx.body),
-      username: ctx.body.username,
-      password: ctx.body.password,
-      pin: ctx.body.pin
-    })
-    return await ctx.state.sessions.create(account, 'create')
+    return await ctx.state.sessions.create(
+      await ctx.state.core.context.createAccount({
+        ...accountOptions(ctx.body),
+        username: ctx.body.username,
+        password: ctx.body.password,
+        pin: ctx.body.pin
+      }),
+      'create'
+    )
   }
 })
 

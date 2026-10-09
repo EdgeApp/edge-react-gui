@@ -19,7 +19,7 @@ const MAX_SSE_BUFFER_BYTES = 1024 * 1024
  * logout. Anything reading an account or a wallet cannot outlive the session
  * that owns it, and is torn down when that session goes away.
  */
-export type SubscriptionScope =
+type SubscriptionScope =
   | { kind: 'context' }
   | { kind: 'session'; sessionId: string }
   | { kind: 'wallet'; sessionId: string; walletId: string }

@@ -298,10 +298,11 @@ async function handleRequest(
       req.method === 'PUT' ||
       req.method === 'PATCH'
     ) {
-      const ct = String(req.headers['content-type'] ?? '')
-      const len = Number(req.headers['content-length'] ?? '0')
-      const hasBody = len > 0 || req.headers['transfer-encoding'] != null
-      if (hasBody && !ct.includes('application/json')) {
+      const contentType = String(req.headers['content-type'] ?? '')
+      const declaredLength = Number(req.headers['content-length'] ?? '0')
+      const hasBody =
+        declaredLength > 0 || req.headers['transfer-encoding'] != null
+      if (hasBody && !contentType.includes('application/json')) {
         throw engineError(
           'UNSUPPORTED_MEDIA_TYPE',
           'Content-Type must be application/json',

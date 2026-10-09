@@ -37,7 +37,11 @@ import type { EventHub } from './events'
 import { consoleReporter, type EngineReporter } from './logger'
 import type { ObjectHandleStore } from './objectHandles'
 import type { asLoginMethod, asSession } from './schemas'
-import { CORE_TEARDOWN_WAIT_MS, LOGOUT_WAIT_MS } from './shutdownTiming'
+import {
+  CORE_TEARDOWN_WAIT_MS,
+  drainToFloor,
+  LOGOUT_WAIT_MS
+} from './shutdownTiming'
 import { makeSweepTicker } from './sweepTicker'
 
 /**
@@ -66,7 +70,7 @@ export const DISABLED_RECHECK_MS = 60_000
  * `EDGE_CLI_CHECK_RESPONSES=strict`, which the fake suite runs in — and one
  * added to the cleaner alone published a value nothing can return.
  */
-export type LoginMethod = ReturnType<typeof asLoginMethod>
+type LoginMethod = ReturnType<typeof asLoginMethod>
 
 /**
  * A session as `engine-sessions` publishes it: the id is truncated.
@@ -81,7 +85,7 @@ export type LoginMethod = ReturnType<typeof asLoginMethod>
  * brand is `string & …`, so the remaining rule is a convention: `list()` is
  * the only redaction point and nothing reads an id back out of a listing.
  */
-export interface SessionListing extends Omit<SessionInfo, 'sessionId'> {
+interface SessionListing extends Omit<SessionInfo, 'sessionId'> {
   sessionId: RedactedSessionId
 }
 
@@ -441,17 +445,17 @@ export class SessionStore {
     sessionId: string,
     ownRequests: number
   ): Promise<void> {
-    const deadline = Date.now() + LOGOUT_WAIT_MS
-    while (record.inFlight > ownRequests && Date.now() < deadline) {
-      await new Promise(resolve => setTimeout(resolve, 25))
-    }
-    const stuck = record.inFlight - ownRequests
-    if (stuck > 0) {
-      this.report.warn(
+    await drainToFloor({
+      inFlight: () => record.inFlight,
+      floor: ownRequests,
+      budgetMs: LOGOUT_WAIT_MS,
+      describe: stuck =>
         `logging ${redactSessionId(sessionId)} out with ` +
-          `${stuck} request(s) still in flight after ${LOGOUT_WAIT_MS}ms`
-      )
-    }
+        `${stuck} request(s) still in flight after ${LOGOUT_WAIT_MS}ms`,
+      warn: message => {
+        this.report.warn(message)
+      }
+    })
   }
 
   /**

@@ -66,9 +66,7 @@ export async function readLocalAccountSettingsFromDisk(
   // to be when it is valid JSON and not these settings.
   return asJSON((raw: unknown) => {
     if (!isPlainObject(raw)) {
-      throw new TypeError(
-        `${LOCAL_SETTINGS_FILENAME} is not a settings object`
-      )
+      throw new TypeError(`${LOCAL_SETTINGS_FILENAME} is not a settings object`)
     }
     return asLocalAccountSettingsInner(raw)
   })(text)

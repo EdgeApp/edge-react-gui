@@ -56,6 +56,7 @@ import { createRequestHandler, listenTcp, listenUnix } from './server'
 import { SessionStore } from './sessions'
 import {
   CORE_TEARDOWN_WAIT_MS,
+  drainToFloor,
   LISTENER_CLOSE_WAIT_MS,
   SHUTDOWN_DRAIN_MS
 } from './shutdownTiming'
@@ -297,16 +298,16 @@ async function main(): Promise<void> {
 
   /** Wait for in-flight requests to finish, up to SHUTDOWN_DRAIN_MS. */
   const drainRequests = async (): Promise<void> => {
-    const deadline = Date.now() + SHUTDOWN_DRAIN_MS
-    while (idle.requestsInFlight > 0 && Date.now() < deadline) {
-      await new Promise<void>(resolve => setTimeout(resolve, 25))
-    }
-    const stuck = idle.requestsInFlight
-    if (stuck > 0) {
-      logger.warn(
-        `Shutting down with ${stuck} request(s) still in flight after ${SHUTDOWN_DRAIN_MS}ms`
-      )
-    }
+    await drainToFloor({
+      inFlight: () => idle.requestsInFlight,
+      floor: 0,
+      budgetMs: SHUTDOWN_DRAIN_MS,
+      describe: stuck =>
+        `Shutting down with ${stuck} request(s) still in flight after ${SHUTDOWN_DRAIN_MS}ms`,
+      warn: message => {
+        logger.warn(message)
+      }
+    })
   }
 
   /**

@@ -167,9 +167,13 @@ export const fetchSwapQuotes = route({
       quoteFor
     }
 
-    const opts = preferPluginId != null ? { preferPluginId } : undefined
-
-    const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(request, opts)
+    // `undefined` rather than `{ preferPluginId: undefined }`: core reads
+    // the key's presence, so an object with the field unset is not the same
+    // as no options at all.
+    const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(
+      request,
+      preferPluginId != null ? { preferPluginId } : undefined
+    )
 
     const results = []
     for (const quote of quotes) {

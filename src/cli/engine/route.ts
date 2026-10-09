@@ -15,7 +15,7 @@ import type { Cleaner } from 'cleaners'
 import { engineError, errorMessage } from './errors'
 import { requireBodyObject, type RouteContext, type Router } from './router'
 
-export type HttpMethod = 'GET' | 'POST'
+type HttpMethod = 'GET' | 'POST'
 
 /** How a CLI flag differs from the field it carries. */
 export interface CliFlagSpec {
@@ -55,7 +55,7 @@ export interface CliFlagSpec {
 }
 
 /** A flag with no request counterpart — purely client-side behaviour. */
-export interface CliExtraSpec {
+interface CliExtraSpec {
   kind: 'string' | 'boolean' | 'boolstr' | 'repeat'
   required?: boolean
   /** Required whenever this request field is present. */

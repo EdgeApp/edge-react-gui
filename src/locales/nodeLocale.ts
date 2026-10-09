@@ -141,7 +141,7 @@ export function detectNodeLocale(
   // argument for the translation tables; the number format is the same case.
   let separators: { decimalSeparator: string; groupingSeparator: string }
   const read = (): { decimalSeparator: string; groupingSeparator: string } => {
-    if (separators == null) separators = numberSeparators(languageTag)
+    separators ??= numberSeparators(languageTag)
     return separators
   }
   return {

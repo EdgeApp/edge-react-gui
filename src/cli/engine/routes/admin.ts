@@ -336,8 +336,7 @@ export const adminSyncRepo = route({
   errors: ['BAD_REQUEST', 'NETWORK_ERROR'],
 
   async handler(ctx) {
-    const body = ctx.body
-    const { syncKey } = body
+    const { syncKey } = ctx.body
     const internal = getInternalStuff(ctx.state.core.context)
     return await internal.syncRepo(parseKey(syncKey, 'syncKey'))
   }
@@ -429,8 +428,7 @@ export const adminRepoSet = route({
   errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
-    const body = ctx.body
-    const { syncKey, dataKey, path, text } = body
+    const { syncKey, dataKey, path, text } = ctx.body
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       parseKey(syncKey, 'syncKey'),
@@ -456,8 +454,7 @@ export const adminRepoDelete = route({
   errors: ['BAD_REQUEST'],
 
   async handler(ctx) {
-    const body = ctx.body
-    const { syncKey, dataKey, path } = body
+    const { syncKey, dataKey, path } = ctx.body
     const internal = getInternalStuff(ctx.state.core.context)
     const disklet = await internal.getRepoDisklet(
       parseKey(syncKey, 'syncKey'),

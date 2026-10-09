@@ -408,7 +408,7 @@ export async function cleanupStaleLock(
  * only needs to know whether the previous owner is still there. A socket
  * *file* proves nothing, because a SIGKILLed engine leaves one behind.
  */
-export async function isEngineListening(socketPath: string): Promise<boolean> {
+async function isEngineListening(socketPath: string): Promise<boolean> {
   return await new Promise<boolean>(resolve => {
     let settled = false
     const done = (answer: boolean): void => {

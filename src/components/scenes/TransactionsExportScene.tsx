@@ -1,6 +1,7 @@
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
+  EdgeDenomination,
   EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
@@ -22,7 +23,6 @@ import { connect } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import type { FillTxsFiatResult } from '../../util/fillTxsFiat'
 import {
   EXPORT_TX_INFO_FILE,
   type ExportTxInfo,
@@ -30,6 +30,7 @@ import {
   mergeExportTxInfo,
   readExportTxInfoMap
 } from '../../util/exportTxInfo'
+import type { FillTxsFiatResult } from '../../util/fillTxsFiat'
 import {
   fillTxMetadataForDisplay,
   getTxActionDisplayInfo
@@ -64,18 +65,23 @@ interface StateProps {
   currencyCode: string
   defaultIsoFiat: string
   exchangeMultiplier: string
-  multiplier: string
   /**
-   * The display denomination's own name, for the CSV's `DENOMINATION` column.
+   * The display denomination, as one prop rather than two.
    *
-   * Not derived from the multiplier: `exportTransactionsToCSV` used to match
-   * it against `wallet.currencyInfo.denominations`, which is the *chain's*
-   * list. Every 18-decimal ERC-20 matched ETH there, so a DAI export said
+   * `mapStateToProps` called `selectDisplayDenom` twice with identical
+   * arguments, once for `.multiplier` and once for `.name`, so one
+   * denomination arrived as two props and the lookup ran twice on every
+   * store change.
+   *
+   * The *name* matters on its own and is not derived from the multiplier:
+   * `exportTransactionsToCSV` used to match it against
+   * `wallet.currencyInfo.denominations`, which is the *chain's* list. Every
+   * 18-decimal ERC-20 matched ETH there, so a DAI export said
    * `CURRENCY_CODE=DAI` with `DENOMINATION=ETH`, and a 6-decimal token
    * matched nothing and got `''`. The engine passes the name it resolved;
    * this does the same.
    */
-  denomName: string
+  displayDenom: EdgeDenomination
 }
 
 interface DispatchProps {
@@ -302,9 +308,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       account,
       currencyCode,
       defaultIsoFiat,
-      denomName,
+      displayDenom,
       exchangeMultiplier,
-      multiplier,
       route
     } = this.props
     const { sourceWallet, tokenId } = route.params
@@ -509,9 +514,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<
       txs,
       currencyCode,
       isoFiat: defaultIsoFiat,
-      displayDenom: { multiplier, name: denomName },
+      displayDenom,
       exchangeDenom: { multiplier: exchangeMultiplier },
-      bitwaveAccountId: bitwaveAccountId
+      bitwaveAccountId
     })
 
     const csvFile = built.find(file => file.format === 'csv')?.contents
@@ -605,16 +610,11 @@ export const TransactionsExportScene = connect<
       params.sourceWallet.currencyConfig,
       params.tokenId
     ).multiplier,
-    multiplier: selectDisplayDenom(
+    displayDenom: selectDisplayDenom(
       state,
       params.sourceWallet.currencyConfig,
       params.tokenId
-    ).multiplier,
-    denomName: selectDisplayDenom(
-      state,
-      params.sourceWallet.currencyConfig,
-      params.tokenId
-    ).name
+    )
   }),
   dispatch => ({
     updateTxsFiatDispatch: async (wallet, tokenId, txs) =>

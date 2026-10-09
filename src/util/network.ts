@@ -7,6 +7,7 @@ import type {
 import { asInfoRollup, type InfoRollup } from 'edge-info-server'
 
 import { makePeriodicTask, type PeriodicTask } from './PeriodicTask'
+import { unrefTimer } from './raceTimeout'
 import { asyncWaterfall, shuffleArray } from './utils'
 
 export const DEFAULT_INFO_SERVERS = [
@@ -94,13 +95,10 @@ export async function cleanMultiFetch<T>(
   timeout: number = 5000,
   doFetch?: EdgeFetchFunction
 ): Promise<T> {
-  const response = await fetchWaterfall(
-    shuffleArray(servers),
-    path,
-    options,
-    timeout,
-    doFetch
-  )
+  // `multiFetch`, whose body this used to repeat verbatim: the shuffle and
+  // the waterfall are its job, and only the `ok` check and the cleaner below
+  // are this function's own.
+  const response = await multiFetch(servers, path, options, timeout, doFetch)
   if (!response.ok) {
     const text = await response.text()
     console.error(text)
@@ -189,9 +187,10 @@ export function abortingFetch(ms: number): EdgeFetchFunction {
     const timer = setTimeout(() => {
       controller.abort()
     }, ms)
-    if (typeof timer === 'object' && typeof timer.unref === 'function') {
-      timer.unref()
-    }
+    // `unrefTimer`, not its body a second time: that helper was added by
+    // this change so "both helpers share one timer policy", and it imports
+    // nothing.
+    unrefTimer(timer)
     // Deliberately not cleared when `fetch` resolves: under Node a response
     // resolves at the *headers*, so clearing here would disarm the timer
     // just before the body read it exists to bound. Once the body is

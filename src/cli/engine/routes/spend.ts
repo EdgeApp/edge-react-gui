@@ -5,12 +5,12 @@ import type {
   EdgeMetadata,
   EdgeSpendInfo,
   EdgeSpendTarget,
-  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import { base64 } from 'rfc4648'
 
 import { createEdgeMemo, getMemoError } from '../../../util/memoUtils'
+import { currencyCodeForToken } from '../../../util/txDisplay/currencyCodes'
 import { saveTxAndMetadata } from '../../../util/txTagging'
 import { doc } from '../doc'
 import { HANDLE_ERRORS, WALLET_ERRORS } from '../errorGroups'
@@ -131,21 +131,6 @@ function assertSpendAmounts(
 }
 
 /**
- * The currency code of the asset a request spends.
- *
- * `parseUri`'s second argument, so a URI amount is scaled by the
- * denomination of the asset actually being sent. Safe to index because
- * `assertTokenId` has already run.
- */
-function currencyCodeFor(
-  wallet: EdgeCurrencyWallet,
-  tokenId: EdgeTokenId
-): string {
-  if (tokenId == null) return wallet.currencyInfo.currencyCode
-  return wallet.currencyConfig.allTokens[tokenId].currencyCode
-}
-
-/**
  * A URI's `uniqueIdentifier` as a memo of the kind the chain expects.
  *
  * `createEdgeMemo` reads the type off the wallet's first non-hidden
@@ -262,7 +247,12 @@ export async function buildSpendInfo(
   // unknown tokenId is the `TypeError` `assertTokenId` exists to turn into a
   // 404.
   assertTokenId(wallet, tokenId)
-  const currencyCode = currencyCodeFor(wallet, tokenId)
+  // The shared derivation, not a third copy of it: `transactions.ts`
+  // already calls this one under the comment "The shared body, not a third
+  // derivation", which made the local copy here the third. It also answers
+  // a token the plugin no longer carries with `''` and a warning, rather
+  // than indexing `allTokens` unguarded.
+  const currencyCode = currencyCodeForToken(wallet, tokenId)
 
   if (to != null) {
     let parsed

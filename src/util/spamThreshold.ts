@@ -18,7 +18,7 @@ import type {
 } from 'edge-core-js'
 
 import { getExchangeDenom } from './exchangeDenom'
-import { getHistoricalCryptoRate } from './exchangeRates'
+import { getHistoricalCryptoRate, isRateUnavailable } from './exchangeRates'
 import {
   LOCAL_SETTINGS_FILENAME,
   readLocalAccountSettingsOrDefaults
@@ -165,6 +165,9 @@ export async function resolveListSpamThreshold(opts: {
   } catch {
     rate = 0
   }
-  if (!Number.isFinite(rate)) rate = 0
+  // `isRateUnavailable`, whose own docblock cites this call site as its
+  // reason for existing, and which `fillTxsFiat` already uses. `0` is the
+  // safe direction here: no floor rather than a wrong one.
+  if (isRateUnavailable(rate)) rate = 0
   return calculateSpamThreshold(rate, denom)
 }
