@@ -99,7 +99,7 @@ export interface TarotUtils {
 
 export const tarotUtils = (
   config: TarotPoolAdapterConfig,
-  provider: ethers.providers.FallbackProvider,
+  provider: ethers.providers.BaseProvider,
   walletAddress: string
 ): TarotUtils => {
   const poolContract = VelodromePoolV2__factory.connect(

@@ -21,6 +21,7 @@ import type {
   StakeAssetInfo,
   StakePosition
 } from '../../types'
+import { getStakingProvider } from '../../util/rpcProviders'
 import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
@@ -28,7 +29,6 @@ import type { StakePolicyAdapter } from './types'
 
 export interface TarotPoolAdapterConfig {
   type: 'tarot-velodrome-pool'
-  rpcProviderUrls: string[]
   poolContractAddress: string
   token0: {
     contractAddress: string
@@ -92,7 +92,6 @@ export const makeTarotPoolAdapter = (
 
   const { adapterConfig, stakePolicyId } = policyConfig
   const {
-    rpcProviderUrls,
     poolContractAddress,
     token0,
     token1,
@@ -115,9 +114,7 @@ export const makeTarotPoolAdapter = (
   const metadataName = `Tarot LP Token ${leverage}X Leveraged Pool`
   const metadataPoolAssetName = `${policyConfig.stakeAssets[0].currencyCode}/${policyConfig.stakeAssets[1].currencyCode}`
 
-  const provider = new ethers.providers.FallbackProvider(
-    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
-  )
+  const provider = getStakingProvider(policyConfig.parentPluginId)
 
   // L1 fee utils ported from edge-currency-accountbased:
 
