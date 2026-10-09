@@ -11,6 +11,7 @@ import type * as ConfigModule from '../../config'
 import type * as KeysModule from '../../keys'
 import type * as PluginMapsModule from '../../pluginMaps'
 import type * as KeysStore from '../../util/keysStore'
+import type * as NetworkModule from '../../util/network'
 
 // Controlled baked-in halves so isolateModules gets deterministic KEYS/CONFIG.
 jest.mock(
@@ -87,6 +88,7 @@ const mockFetchRemoteKeys = jest.fn<
   (opts: unknown) => Promise<{
     keys: Record<string, unknown>
     assuranceLevel?: string
+    rollup?: unknown
   }>
 >()
 
@@ -311,6 +313,59 @@ describe('initializeKeys', () => {
     expect(keys.globalKeys.AZTECO_API_KEY).toBe('from-old-cache')
     // Warm path still schedules a background refresh for the next launch.
     expect(mockFetchRemoteKeys).toHaveBeenCalled()
+  })
+
+  it('tells rollup listeners when the warm refresh lands a rollup', async () => {
+    mockGetKeysCache.mockReturnValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'from-cache' } },
+      fetchedAt: Date.now(),
+      assuranceLevel: 'attested'
+    })
+    // The smallest rollup `asInfoRollup` accepts, with one Houdini chain:
+    const rollup = {
+      appIdInfo: {},
+      apyValues: { policies: {} },
+      blockBook: {},
+      networkFees: {},
+      houdiniAssets: {
+        ethereum: {
+          memoNeeded: false,
+          addressValidation: '^(0x)[0-9A-Za-z]{40}$',
+          coin: { hasSelfPrivate: true },
+          tokens: {}
+        }
+      }
+    }
+    mockFetchRemoteKeys.mockResolvedValue({
+      keys: { globalKeys: { AZTECO_API_KEY: 'bg-refresh' } },
+      assuranceLevel: 'attested',
+      rollup
+    })
+
+    let keysStore: typeof KeysStore | undefined
+    let network: typeof NetworkModule | undefined
+    jest.isolateModules(() => {
+      keysStore = require('../../util/keysStore')
+      network = require('../../util/network')
+    })
+    if (keysStore == null || network == null) throw new Error('no modules')
+    const { infoServerData } = network
+    const seen: unknown[] = []
+    const notified = new Promise<void>(resolve => {
+      network?.onInfoRollup(() => {
+        seen.push(infoServerData.rollupRaw)
+        resolve()
+      })
+    })
+
+    // The warm start returns before the refresh settles, which is how a
+    // consumer that read the rollup at mount can miss it:
+    await keysStore.initializeKeys()
+    expect(keysStore.getKeysTier()).toBe('cache')
+    expect(seen).toEqual([])
+
+    await notified
+    expect(seen).toEqual([rollup])
   })
 
   it('falls through an unmergeable cache to a remote fetch', async () => {
