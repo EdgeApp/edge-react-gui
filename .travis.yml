@@ -35,11 +35,13 @@ script:
   # paths it compares against git.
   - npm run test:cli:node-safe
   - npm test
+  - npm run test:cli:offline
   # And again against the rollup bundle. Three transforms produce a working
   # CLI — `sucrase` above, `@react-native/babel-preset` for jest,
   # `@babel/preset-env` for the bundle — so a defect can exist in only one of
   # them, and two severity-0 defects have existed in the bundle alone.
   # `build:cli` is a two-second rollup.
+  - npm run test:cli:offline:built
   # Last, because it is the only check that reads the built bundles' own
   # `require` calls, and `--require-bundles` makes an absent `lib/` a failure
   # the build, `built` was false and the one direction that matters — a

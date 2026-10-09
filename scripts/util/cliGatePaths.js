@@ -43,6 +43,7 @@ const SHARED_MODULES = [
   'src/util/txExport/index.ts',
   'src/util/exportTxInfo.ts',
   'src/util/memoUtils.ts',
+  'src/cli/engine/routes/rates.ts',
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',
   'src/cli/engine/fetchPluginKeys.ts',
