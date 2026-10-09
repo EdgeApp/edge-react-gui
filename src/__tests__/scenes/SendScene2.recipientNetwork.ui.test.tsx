@@ -23,6 +23,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 
+import type { RecipientAssetRow } from '../../components/modals/RecipientAssetListModal'
 import { EdgeRow } from '../../components/rows/EdgeRow'
 import { SendScene2 } from '../../components/scenes/SendScene2'
 import type * as AirshipInstance from '../../components/services/AirshipInstance'
@@ -37,6 +38,7 @@ import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import { asHoudiniChains } from '../../util/houdiniChains'
 import { withStatedAsset } from '../../util/paymentUri'
 
 jest.useRealTimers()
@@ -52,13 +54,32 @@ const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 
+// The networks the provider pays out to. Fantom is left out, as an EVM
+// network the provider does not serve:
+const houdiniChains = asHoudiniChains({
+  bitcoin: {
+    memoNeeded: false,
+    addressValidation:
+      '^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39}|bc1[a-z0-9]{59})$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  },
+  ethereum: {
+    memoNeeded: false,
+    addressValidation: '^(0x)[0-9A-Za-z]{40}$',
+    coin: { hasSelfPrivate: true },
+    tokens: { [USDT_TOKEN_ID]: { hasSelfPrivate: true } }
+  },
+  avalanche: {
+    memoNeeded: false,
+    addressValidation: '^(0x)[0-9A-Za-z]{40}$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  }
+})
+
 const SCAM_WARNING = 'Scam Warning'
 const SWAP_BEFORE_SEND = 'Swap before send'
-
-interface RecipientAssetItem {
-  value: string
-  name: string
-}
 
 /**
  * A fake plugin whose parser accepts one address format, bare or inside a
@@ -183,7 +204,11 @@ describe('SendScene2 recipient network', () => {
     tokenId: EdgeTokenId = null
   ): RenderedSend => {
     if (wallet == null) throw new Error('No wallet')
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
     const rendered = render(
       <FakeProviders initialState={rootState}>
         <SendScene2
@@ -229,9 +254,9 @@ describe('SendScene2 recipient network', () => {
             const modal = renderModal(
               undefined as never
             ) as React.ReactElement<{
-              items: RecipientAssetItem[]
+              rows: RecipientAssetRow[]
             }>
-            return modal.props.items.find(item => item.name === name)?.value
+            return modal.props.rows.find(row => row.name === name)?.value
           }
         )
         const row = rendered

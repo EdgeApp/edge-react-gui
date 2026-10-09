@@ -182,25 +182,38 @@ export async function parseOwnNetworkPayment(
 }
 
 /**
- * Whether a payment code's amount is written in one of the sending chain's
- * tokens, as opposed to a chain's own coin.
+ * Which side of a cross-asset send a payment code's amount prices, by the
+ * asset the code states it in. `undefined` when it states neither side's
+ * asset, or carries no amount.
  *
  * A code read by another chain's parser states that chain's coin, and arrives
- * as `crossChainNativeAmount`. A code read by the sending wallet states the
- * asset its parse names once `withStatedAsset` has corrected it: a `tokenId`
- * of `null` is the chain's coin, and any other is a token, with the amount in
- * that token's units. A swap-send pays out a chain's coin, so only a token
- * amount is not the amount the recipient receives.
+ * as `crossChainNativeAmount`: the payout, so the receive side. A code read
+ * by the sending wallet states the asset its parse names once
+ * `withStatedAsset` has corrected it, a `tokenId` of `null` or none being the
+ * chain's coin. An amount in the asset being sent is what the wallet sends,
+ * and one in the payout asset, on the same chain, is what the recipient gets.
+ * Any other asset prices neither: 5 SOL in lamports is 5,000 USDC.
  */
-export function isTokenAmount(
-  parsedUri: EdgeParsedUri,
+export function getUriAmountSide(opts: {
+  parsedUri: EdgeParsedUri
   crossChainNativeAmount: string | undefined
-): boolean {
-  return (
-    crossChainNativeAmount == null &&
-    parsedUri.nativeAmount != null &&
-    parsedUri.tokenId != null
-  )
+  sourceTokenId: EdgeTokenId
+  /** The payout's `tokenId` when it is on the sending chain, or `undefined`. */
+  sameChainDestTokenId: EdgeTokenId | undefined
+}): { side: 'send' | 'receive'; nativeAmount: string } | undefined {
+  const { crossChainNativeAmount, parsedUri, sameChainDestTokenId } = opts
+  if (crossChainNativeAmount != null) {
+    return { side: 'receive', nativeAmount: crossChainNativeAmount }
+  }
+  const { nativeAmount } = parsedUri
+  if (nativeAmount == null) return
+  const statedTokenId = parsedUri.tokenId ?? null
+  if (statedTokenId === sameChainDestTokenId) {
+    return { side: 'receive', nativeAmount }
+  }
+  if (statedTokenId === opts.sourceTokenId) {
+    return { side: 'send', nativeAmount }
+  }
 }
 
 /** A chain whose own parser accepted the text, with what it read. */

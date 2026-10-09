@@ -4,7 +4,7 @@ import type { EdgeCurrencyConfig, EdgeParsedUri } from 'edge-core-js'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import {
   findPayableChains,
-  isTokenAmount,
+  getUriAmountSide,
   parseCrossChainPayment,
   parseOwnNetworkPayment,
   peekPaymentUri,
@@ -336,42 +336,105 @@ describe('withStatedAsset', () => {
   })
 })
 
-describe('isTokenAmount', () => {
+describe('getUriAmountSide', () => {
   const tokenId = 'dac17f958d2ee523a2206206994597c13d831ec7'
   const publicAddress = '0x1f36BF25aE6c07Ae5B6cB6BF6b0b13B1B4d1B372'
+  const tokenToCoin = { sourceTokenId: tokenId, sameChainDestTokenId: null }
 
-  it("reads a token parse's amount as the token's", () => {
+  it("sends a token parse's amount when the token is being sent", () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(true)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'send', nativeAmount: '5000000' })
   })
 
-  it("reads a coin parse's amount as the coin's", () => {
+  it("receives a coin parse's amount when the coin is paid out", () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId: null }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
   })
 
   it('reads a parse naming no asset as the coin', () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000' }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
+  })
+
+  it("receives a token parse's amount when that token is paid out", () => {
+    const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        sourceTokenId: null,
+        sameChainDestTokenId: tokenId
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
+  })
+
+  it('prices neither side for an asset neither side holds', () => {
+    // A coin code read on a token send paying out another chain:
+    const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId: null }
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        sourceTokenId: tokenId,
+        sameChainDestTokenId: undefined
+      })
+    ).toBeUndefined()
   })
 
   it('has no amount to place for a bare address', () => {
-    expect(isTokenAmount({ publicAddress, tokenId }, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri: { publicAddress, tokenId },
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toBeUndefined()
   })
 
-  it("reads a corrected coin code's amount as the coin's", () => {
+  it("receives a corrected coin code's amount as the coin's", () => {
     const parsedUri = withStatedAsset(
       { publicAddress, nativeAmount: '500000000', tokenId },
       `ethereum:${publicAddress}?value=5e8`
     )
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '500000000' })
   })
 
-  it("leaves another chain's amount in that chain's coin", () => {
+  it("receives another chain's amount in that chain's coin", () => {
     // The destination chain's parser read the amount. The sending wallet's
     // parse carries only the address, whatever asset it names.
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
-    expect(isTokenAmount(parsedUri, '1000000000000000000')).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: '1000000000000000000',
+        sourceTokenId: tokenId,
+        sameChainDestTokenId: undefined
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '1000000000000000000' })
   })
 })
 
