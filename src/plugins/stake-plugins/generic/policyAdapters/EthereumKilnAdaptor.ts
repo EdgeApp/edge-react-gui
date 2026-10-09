@@ -29,6 +29,14 @@ export interface EthereumPooledKilnAdapterConfig {
   rpcProviderUrls: string[]
 }
 
+interface WorkflowUtils {
+  maxFeePerGas: BigNumber | undefined
+  maxPriorityFeePerGas: BigNumber | undefined
+  nextNonce: () => Promise<number>
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
+}
+
 export const makeEthereumKilnAdapter = (
   policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>
 ): StakePolicyAdapter => {
@@ -80,7 +88,7 @@ export const makeEthereumKilnAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       await walletSigner.sendTransaction(tx)
     }
 
@@ -90,7 +98,9 @@ export const makeEthereumKilnAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const walletSigner = new EdgeWalletSigner(wallet, provider)
     const walletAddress = await walletSigner.getAddress()
 

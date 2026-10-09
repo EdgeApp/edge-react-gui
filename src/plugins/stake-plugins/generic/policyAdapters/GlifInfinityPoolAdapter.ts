@@ -29,6 +29,15 @@ export interface GlifInfinityPoolAdapterConfig {
   simpleRampContractAddress: string
 }
 
+interface WorkflowUtils {
+  maxFeePerGas: BigNumber | undefined
+  maxPriorityFeePerGas: BigNumber | undefined
+  nextNonce: () => Promise<number>
+  txs: ethers.PopulatedTransaction[]
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
+}
+
 export const makeGlifInfinityPoolAdapter = (
   policyConfig: StakePolicyConfig<GlifInfinityPoolAdapterConfig>
 ): StakePolicyAdapter => {
@@ -96,7 +105,7 @@ export const makeGlifInfinityPoolAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       for (const tx of txs) {
         await walletSigner.sendTransaction(tx)
       }
@@ -108,7 +117,9 @@ export const makeGlifInfinityPoolAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const txs: ethers.PopulatedTransaction[] = []
 
     const walletSigner = new EdgeWalletSigner(wallet, provider)
@@ -325,7 +336,7 @@ export const makeGlifInfinityPoolAdapter = (
       const poolTokenBalance = await poolTokenContract
         .connect(walletSigner)
         .balanceOf(walletAddress)
-        .catch(err => {
+        .catch((err: unknown) => {
           if (
             String(err).includes('Transaction reverted without a reason string')
           ) {
@@ -338,7 +349,7 @@ export const makeGlifInfinityPoolAdapter = (
       const redemptionValue = await poolContract
         .connect(walletSigner)
         .previewRedeem(poolTokenBalance)
-        .catch(err => {
+        .catch((err: unknown) => {
           if (
             String(err).includes('Transaction reverted without a reason string')
           ) {
