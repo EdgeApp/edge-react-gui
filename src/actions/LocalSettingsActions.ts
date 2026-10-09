@@ -15,9 +15,15 @@ import {
   type PasswordReminder,
   type SpendingLimits
 } from '../types/types'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  readLocalAccountSettingsFromDisk,
+  readLocalAccountSettingsOrDefaults,
+  writeLocalAccountSettingsToDisk
+} from '../util/localAccountSettings'
 import { logActivity } from '../util/logger'
 
-export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+export { LOCAL_SETTINGS_FILENAME }
 
 // Long enough to read the instructions in the balance-hidden toast:
 const TOAST_HIDE_MS = 5000
@@ -29,21 +35,37 @@ watchAccountSettings(s => {
   localAccountSettings = s
 })
 
-let readSettingsFromDisk = false
+/**
+ * How much the cached settings can be trusted.
+ *
+ * Three states, not a boolean, because the write path has to tell "nothing
+ * has read the file yet" from "the read ran and could not read the file".
+ * The second is the dangerous one: the lenient reader answers it with the 13
+ * defaults, and a read-modify-write built on those persists them over a
+ * `Settings.json` that is present and merely unreadable — losing
+ * `spendingLimits`, `passwordReminder`, `notifState`, `reviewTrigger`,
+ * `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown`.
+ *
+ * `untrusted` forces a re-read on every read, so a transient failure heals
+ * itself; and it refuses the write, so a persistent one cannot overwrite the
+ * file it could not read.
+ */
+type SettingsTrust = 'unread' | 'trusted' | 'untrusted'
+let settingsTrust: SettingsTrust = 'unread'
 
 /**
  * Resets the local account settings cache. Must be called on logout to prevent
  * one account's settings from persisting to a subsequent account's session.
  */
 export const resetLocalAccountSettingsCache = (): void => {
-  readSettingsFromDisk = false
+  settingsTrust = 'unread'
   localAccountSettings = asLocalAccountSettings({})
 }
 
 export const getLocalAccountSettings = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
-  if (readSettingsFromDisk) return localAccountSettings
+  if (settingsTrust === 'trusted') return localAccountSettings
   const settings = await readLocalAccountSettings(account)
   return settings
 }
@@ -312,36 +334,67 @@ export const readLocalAccountSettings = async (
   // If we've already read from disk, return the cached settings.
   // This prevents stale disk reads from overwriting newer in-memory writes
   // that may not have been persisted to disk yet.
-  if (readSettingsFromDisk) {
+  if (settingsTrust === 'trusted') {
     return localAccountSettings
   }
 
-  try {
-    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
-    const json = JSON.parse(text)
-    const settings = asLocalAccountSettings(json)
-    emitAccountSettings(settings)
-    readSettingsFromDisk = true
-    return settings
-  } catch (error: unknown) {
-    // If Settings.json doesn't exist yet, return defaults without writing.
-    // Defaults can be derived from cleaners. Only write when values change.
-    const defaults = asLocalAccountSettings({})
-    emitAccountSettings(defaults)
-    readSettingsFromDisk = true
-    return defaults
-  }
+  // Lenient: this is the GUI's read-only cached reader, reached from
+  // `initializeAccount`, and before this branch it could not fail. A
+  // `Settings.json` that is present but unreadable must not stop the login.
+  // The trust state records that it could not be read, which does two
+  // things: this reader tries again on the next call, and
+  // `writeLocalAccountSettings` refuses to persist anything built on these
+  // defaults — the loss the strict reader exists to prevent.
+  const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
+    account
+  )
+  emitAccountSettings(settings)
+  settingsTrust = trusted ? 'trusted' : 'untrusted'
+  return settings
 }
 
 export const writeLocalAccountSettings = async (
   account: EdgeAccount,
   settings: LocalAccountSettings
 ): Promise<LocalAccountSettings> => {
+  // Every value written here is a read-modify-write: a caller takes the
+  // whole settings object, changes one field and hands it back. So a base
+  // that came from a file this version could not read means the other
+  // twelve fields are the defaults, and writing it is the data loss, not
+  // the symptom of it. Fail instead, where `writeLocalAccountSettingsToDisk`
+  // can already fail, so every caller's existing error path carries it.
+  if (settingsTrust === 'untrusted') {
+    // Translated, because this one reaches the user: every writer in this
+    // module funnels through here, `SpendingLimitsScene` hands the rejection
+    // to `showError`, and `translateError` has no arm for a bare `Error`, so
+    // it renders `message` verbatim in the drop-down. A hardcoded English
+    // paragraph would be what a German device shows.
+    //
+    // And it says only what the user can act on. It used to name
+    // `Settings.json` and tell them to move it aside, which is an
+    // instruction no user of the shipped app can carry out: the file is on
+    // `account.localDisklet` — core's `encryptDisklet`, inside the app's
+    // private container — and `ios/edge/Info.plist` sets neither
+    // `UIFileSharingEnabled` nor `LSSupportsOpeningDocumentsInPlace`, so it
+    // is not in the Files app, and on Android it is app-private. "Try again"
+    // genuinely heals it: `writeSpendingLimits` calls
+    // `getLocalAccountSettings` first, which re-reads from disk while the
+    // trust state is `untrusted`. The file name belongs in the
+    // `reportWarning` at `localAccountSettings.ts`, which is what support
+    // reads and where the other eight disklet filename constants already
+    // live.
+    throw new Error(lstrings.settings_not_saved_unreadable_file)
+  }
+  if (settingsTrust === 'unread') {
+    // Nothing has read the file. Strictly, because this is a write path:
+    // an unreadable file must stop it, and an absent one is answered with
+    // the cleaner's defaults exactly as the lenient reader would.
+    const onDisk = await readLocalAccountSettingsFromDisk(account)
+    emitAccountSettings(onDisk)
+    settingsTrust = 'trusted'
+  }
   // Refresh cache, notify callers
   emitAccountSettings(settings)
-
-  const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
-
+  await writeLocalAccountSettingsToDisk(account, settings)
   return settings
 }
