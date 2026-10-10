@@ -1,7 +1,16 @@
 import { lstrings } from '../locales/strings'
 
-// Payment type display name mapping based on plugin configurations
-const paymentTypeDisplayNames: Record<string, string> = {
+/**
+ * Payment type display names, read at call time.
+ *
+ * A module-scope `Record` froze all twenty-eight strings to whatever
+ * `lstrings` held when this module first evaluated, and `applyLocale`
+ * mutates `lstrings` in place — so they were correct only if the locale boot
+ * had already run, which is an ordering dependency on a module nothing here
+ * imports. Read lazily there is no order in which it can be wrong, which is
+ * what `txActionLabels.ts` says about the same hazard.
+ */
+const paymentTypeDisplayNames = (): Record<string, string> => ({
   ach: lstrings.ach_bank_transfer,
   applepay: lstrings.apple_pay,
   bank: lstrings.bank_transfer,
@@ -29,7 +38,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
   turkishbank: lstrings.turkish_bank_transfer,
   venmo: lstrings.venmo,
   wire: lstrings.bank_wire_transfer
-}
+})
 
 /**
  * Get the display name for a payment type
@@ -37,7 +46,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
  * @returns The human-readable display name
  */
 export const getPaymentTypeDisplayName = (paymentType: string): string => {
-  return paymentTypeDisplayNames[paymentType] ?? paymentType
+  return paymentTypeDisplayNames()[paymentType] ?? paymentType
 }
 
 /**

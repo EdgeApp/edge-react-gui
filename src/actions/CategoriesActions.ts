@@ -1,48 +1,122 @@
-import { eq } from 'biggystring'
-import type {
-  EdgeAccount,
-  EdgeAssetAction,
-  EdgeAssetAmount,
-  EdgeCurrencyWallet,
-  EdgeMetadata,
-  EdgeTransaction,
-  EdgeTxAction
-} from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
+import {
+  asArray,
+  asJSON,
+  asObject,
+  asOptional,
+  asString,
+  uncleaner
+} from 'cleaners'
+import type { EdgeAccount } from 'edge-core-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
-import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { Theme } from '../types/Theme'
 import { getSwapPluginIconUri, hasThemedSwapPluginIcon } from '../util/CdnUris'
-import { getCurrencyCodeWithAccount } from '../util/CurrencyInfoHelpers'
-import { cleanFiatCurrencyCode } from '../util/CurrencyWalletHelpers'
+import { errorMessage } from '../util/errorMessage'
+import {
+  isContentFailure,
+  isMissingFile,
+  isPlainObject
+} from '../util/predicates'
+import { reportWarning } from '../util/reportWarning'
+import { serializeByKey } from '../util/serializeByKey'
+import type { Category, EdgeCategory } from '../util/txDisplay'
 
-export type Category = 'transfer' | 'exchange' | 'expense' | 'income'
+// No re-exports of the Node-safe helpers. This module imports `showError`
+// from Airship, so re-exporting them made it the public door to code that
+// exists precisely so it can load without react-native. Callers import from
+// `util/txDisplay` directly.
 
-export interface EdgeCategory {
-  category: Category
-  subcategory: string
+/**
+ * Which string key names each category, by name rather than by value.
+ *
+ * The keys are static and only the values must be read late: `applyLocale`
+ * mutates `lstrings` in place, so a module-scope capture of the four
+ * *strings* is right only if the locale boot happened to run first, and the
+ * module that runs it is one nothing here imports. A table of key names is
+ * both — one static object, and an indexed read that happens at call time.
+ * `src/util/txDisplay/txActionLabels.ts` holds the same shape for the same
+ * reason, with the measurement that chose it.
+ */
+const CATEGORY_KEYS: Record<Category, keyof typeof lstrings> = {
+  transfer: 'fragment_transaction_transfer',
+  exchange: 'fragment_transaction_exchange',
+  expense: 'fragment_transaction_expense',
+  income: 'fragment_transaction_income'
 }
 
 /**
- * Use these strings to show categories in a user's language.
+ * One category's name in the user's language.
+ *
+ * What the readers on a render path want, and all they want:
+ * `formatCategory` is called once per visible transaction row while a list
+ * scrolls, and `CategoryModal`'s subcategory memo calls it once per entry of
+ * `state.ui.subcategories` — 116 of them on an account that has never edited
+ * the list — on every keystroke in the field. Rebuilding a four-key literal
+ * and reading all four strings to hand back one of them was that work times
+ * four.
  */
-export const displayCategories = {
-  transfer: lstrings.fragment_transaction_transfer,
-  exchange: lstrings.fragment_transaction_exchange,
-  expense: lstrings.fragment_transaction_expense,
-  income: lstrings.fragment_transaction_income
+export function categoryName(category: Category): string {
+  return lstrings[CATEGORY_KEYS[category]]
 }
+
+/**
+ * All four names, for a caller that shows all four.
+ *
+ * `CategoryModal`'s row of buttons, once per render. Still a function, not a
+ * module-scope object, for the `applyLocale` reason above.
+ */
+export const displayCategories = (): Record<Category, string> => ({
+  transfer: categoryName('transfer'),
+  exchange: categoryName('exchange'),
+  expense: categoryName('expense'),
+  income: categoryName('income')
+})
 
 const CATEGORIES_FILENAME = 'Categories.json'
 
+/**
+ * Load the account's synced subcategory list into Redux.
+ *
+ * Inside the same serialization key as `setNewSubcategory`, so the two
+ * dispatches are ordered against each other. `CategoryModal` fires this on
+ * mount and leaves its rows tappable for the whole disklet round trip, so a
+ * mount read that resolved *after* an add had written and dispatched
+ * overwrote Redux with the pre-add list: the row the user had just created
+ * disappeared from `state.ui.subcategories` while the synced file held it,
+ * and on the next open `handleCategoryUpdate`'s `categories.includes` gate
+ * failed and wrote the same entry again. The file was right and the Redux
+ * copy stale — the same "one update silently discards another's" the
+ * serialization was added for, arriving on the read side.
+ */
 export function getSubcategories(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const { account } = getState().core
-    const subcategories = await readSyncedSubcategories(account)
+    const subcategories = await serializeByKey(
+      `categories:${account.rootLoginId}`,
+      async () =>
+        await readSyncedSubcategories(account).catch((error: unknown) => {
+          // A file that will not parse still leaves the modal its 116
+          // standard rows; refusing left it empty, on every device, with
+          // nothing that would ever repair it. The first add moves the
+          // unreadable file aside (`readSubcategoriesForWrite`).
+          if (!isContentFailure(error)) throw error
+          reportWarning(
+            `Could not read ${CATEGORIES_FILENAME}, showing the defaults: ${errorMessage(
+              error
+            )}`
+          )
+          return [...defaultCategories]
+        })
+    )
+    // Only when the list changed. Every `CategoryModal` mount reads the
+    // file, and the common answer is the list Redux already holds — a fresh
+    // array each time, which re-rendered the modal and rebuilt its 116
+    // sorted rows for nothing. The brief's rule: no dispatch when the
+    // derived state has not changed.
+    if (sameStrings(getState().ui.subcategories, subcategories)) return
     dispatch({
       type: 'SET_TRANSACTION_SUBCATEGORIES',
       data: { subcategories }
@@ -50,120 +124,218 @@ export function getSubcategories(): ThunkAction<Promise<void>> {
   }
 }
 
+/** Element-wise equality, order included: the list's order is its own. */
+function sameStrings(a: readonly string[], b: readonly string[]): boolean {
+  return a.length === b.length && a.every((item, i) => item === b[i])
+}
+
+/**
+ * Add one subcategory to the account's synced list.
+ *
+ * Re-reads `Categories.json` and merges into what is on disk, rather than
+ * into `state.ui.subcategories`. The redux copy is only as good as the read
+ * that filled it, and a read that *failed* leaves it at the reducer's
+ * initial `[]` — `getSubcategories` rejects, `useAsyncEffect` turns that
+ * into a toast, and the modal stays open on an empty list. Writing that back
+ * replaced the user's whole synced list with one entry, which is the loss
+ * the strict read was added to prevent, arriving through the other door.
+ *
+ * A present-but-unreadable file is not written over: its bytes are copied
+ * to `Categories.json.unreadable-<ms>` first, on the same synced repo, and
+ * the list starts again from the defaults — the way out
+ * `LocalSettingsActions.ts` takes for `Settings.json`. Refusing instead was
+ * a one-way door: nothing rewrote the file, so every add failed and every
+ * device showed an empty list for good.
+ */
 export function setNewSubcategory(
   newSubcategory: string
 ): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-    const oldSubcats = state.ui.subcategories
-    const newSubcategories = [...oldSubcats, newSubcategory]
-    await writeSyncedSubcategories(account, {
-      categories: newSubcategories.sort()
-    })
-      .then(() => {
-        dispatch({
-          type: 'SET_TRANSACTION_SUBCATEGORIES',
-          data: { subcategories: newSubcategories.sort() }
-        })
+    const { account } = getState().core
+    try {
+      // Serialized, because the re-read above is only half the fix: two of
+      // these interleave and both see the same on-disk list, each merges
+      // its own entry, and the later `setText` wins. `CategoryModal`'s rows
+      // have no in-flight guard and the modal stays tappable for a whole
+      // disklet round trip, so a second tap loses one of the two entries
+      // from the user's synced list with nothing shown — the same
+      // whole-file read-modify-write `exportTxInfo.json` and `Settings.json`
+      // already go through this for.
+      const merged = await serializeByKey(
+        `categories:${account.rootLoginId}`,
+        async () => {
+          const onDisk = await readSubcategoriesForWrite(account)
+          const next = [...new Set([...onDisk, newSubcategory])].sort()
+          await writeSyncedSubcategories(account, { categories: next })
+          return next
+        }
+      )
+      dispatch({
+        type: 'SET_TRANSACTION_SUBCATEGORIES',
+        data: { subcategories: merged }
       })
-      .catch((error: unknown) => {
-        showError(error)
-      })
-  }
-}
-
-/**
- * Splits a string into its category and subcategory strings.
- * The category must fit our enum type, or we will use a fallback.
- * The subcategory can be localized and freely edited.
- */
-export function splitCategory(
-  fullCategory: string = '',
-  defaultCategory: Category = 'income'
-): EdgeCategory {
-  if (fullCategory.length > 0 && !fullCategory.includes(':')) {
-    fullCategory += ':'
-  }
-  for (const [category, test, n] of tests) {
-    if (test.test(fullCategory)) {
-      return {
-        category,
-        subcategory: fullCategory.slice(n)
-      }
+    } catch (error: unknown) {
+      showError(error)
     }
   }
-
-  // We can't guarantee that data on disk is correct,
-  // but this should usually never happen:
-  return {
-    category: defaultCategory,
-    subcategory: fullCategory.replace(/^[^:]:/, '')
-  }
-}
-
-/**
- * Combine the category and subcategory into a single string,
- * with the correct capitalization.
- */
-export function joinCategory(split: EdgeCategory): string {
-  return prefixes[split.category] + split.subcategory
 }
 
 /**
  * Localizes a category string for display.
  */
 export function formatCategory(split: EdgeCategory): string {
-  if (split.subcategory === '') return displayCategories[split.category]
-  return `${displayCategories[split.category]}:${split.subcategory}`
+  const name = categoryName(split.category)
+  if (split.subcategory === '') return name
+  return `${name}:${split.subcategory}`
 }
 
 /**
- * Internal prefixes used on disk.
+ * The file's shape, from the cleaner that reads it.
+ *
+ * Declared rather than derived, a hand-written interface beside the cleaner
+ * described the same file twice; a shape change is a compile error now.
  */
-const prefixes = {
-  transfer: 'Transfer:',
-  exchange: 'Exchange:',
-  expense: 'Expense:',
-  income: 'Income:'
-}
-
-const tests: Array<[Category, RegExp, number]> = [
-  ['transfer', /^Transfer:/i, 9],
-  ['exchange', /^Exchange:/i, 9],
-  ['expense', /^Expense:/i, 8],
-  ['income', /^Income:/i, 7]
-]
-
-export interface CategoriesFile {
-  categories: string[]
-}
+export type CategoriesFile = ReturnType<typeof asCategoriesFile>
 
 async function writeSyncedSubcategories(
   account: EdgeAccount,
   subcategories: CategoriesFile
 ): Promise<void> {
-  const stringifiedSubcategories = JSON.stringify(subcategories)
-  try {
-    await account.disklet.setText(CATEGORIES_FILENAME, stringifiedSubcategories)
-  } catch (error: any) {
-    showError(error)
-  }
+  // Through the uncleaner, like every other file this CLI writes — an
+  // `asJSON` cleaner's uncleaner returns the JSON text, so this is the
+  // `JSON.stringify` and the shape check in one.
+  //
+  // No `catch`. It had one, which called `showError` and resolved, so the
+  // caller dispatched `SET_TRANSACTION_SUBCATEGORIES` whether or not
+  // anything reached the synced repo: the new subcategory showed as saved,
+  // survived the session, and was gone at the next login and on every other
+  // device. The thunk's own `catch` shows the error exactly once.
+  await account.disklet.setText(
+    CATEGORIES_FILENAME,
+    wasCategoriesFile(subcategories)
+  )
 }
 
-async function readSyncedSubcategories(
+/**
+ * `Categories.json`, with a list this version cannot read refused.
+ *
+ * Not `asMaybe(asArray(asString), defaultCategories)`: substituting the
+ * defaults for a list with one bad entry is the same loss as substituting
+ * them for an unreadable file, and it happened silently. A `categories` that
+ * is absent is the one case the defaults are right for, because that is what
+ * a fresh account has.
+ */
+const asCategoriesInner = asObject({
+  categories: asOptional(asArray(asString), () => [...defaultCategories])
+})
+
+/**
+ * `isPlainObject` before the shape, because `asObject` accepts an array.
+ *
+ * The third reader of this pattern, and the one the guard was not added to.
+ * `'[]'` and `'["Expense:Mine"]'` cleaned to the 116 defaults and reported a
+ * successful read, so `setNewSubcategory` merged its one entry into those
+ * defaults and `writeSyncedSubcategories` put them on `account.disklet` —
+ * the user's whole subcategory list replaced by the defaults plus one
+ * entry, on the *synced* repo, on every device. An array is the likeliest
+ * shape for a half-synced file that is valid JSON and not these settings,
+ * which is why `localAccountSettings.ts` and `syncedSettingsFile.ts` both
+ * guard against it.
+ */
+const asCategoriesFile = asJSON((raw: unknown) => {
+  if (!isPlainObject(raw)) {
+    throw new TypeError(`${CATEGORIES_FILENAME} is not a categories object`)
+  }
+  return asCategoriesInner(raw)
+})
+const wasCategoriesFile = uncleaner(asCategoriesFile)
+
+/**
+ * The account's synced subcategory list. A read, and only a read.
+ *
+ * It used to seed the file with the defaults when it was absent, which put
+ * a `setText` inside the one function both callers funnel through — and
+ * only one of them holds the `serializeByKey` key. So the single write that
+ * was *not* serialized was the one in the shared path: `CategoryModal`
+ * dispatches `getSubcategories` on mount, a tap in the window before it
+ * resolves runs `setNewSubcategory`, which takes the key, re-reads (still
+ * absent), seeds, merges and writes 117 — and the mount's unlocked write
+ * of the bare 116 lands last, on the *synced* repo, while Redux has
+ * already been told 117.
+ *
+ * Removing the write also stops a read failing for a write's reason. The
+ * seed was awaited, and `writeSyncedSubcategories` deliberately no longer
+ * swallows a failure, so on a fresh account whose repo could not be
+ * written this threw out of a function whose job is to read — and
+ * `CategoryModal` rendered an empty list, offering none of the 116
+ * standard categories, on the screen whose whole purpose is to offer them.
+ * The defaults need no file to produce.
+ *
+ * The file is still created the first time there is something to put in
+ * it: `setNewSubcategory` reads this, merges its entry and writes, inside
+ * the key. `mergeExportTxInfo` is the same shape — its reader never
+ * writes, and the absent-file arm lives inside the serialized block.
+ *
+ * Exported for its test: the loss this guards against — a rewrite of the
+ * synced list from the defaults on a file that is present and unreadable —
+ * is invisible to the caller, which gets a plausible list either way.
+ */
+export async function readSyncedSubcategories(
+  account: EdgeAccount
+): Promise<string[]> {
+  let text: string
+  try {
+    text = await account.disklet.getText(CATEGORIES_FILENAME)
+  } catch (error: unknown) {
+    // Only an absent file may be answered by writing the defaults back.
+    // This caught everything, so a decryption or I/O failure on a file that
+    // is *there* rewrote the user's subcategory list from the 116-entry
+    // default array — on the synced repo, for every device.
+    // `isMissingFile` exists for this; `localAccountSettings.ts` and
+    // `exportTxInfo.ts` both make this exact check.
+    if (!isMissingFile(error)) throw error
+    // A copy, not the module constant itself. `getSubcategories` dispatches
+    // whatever this returns straight into `state.ui.subcategories`, so
+    // returning the array would make Redux state an alias of a constant
+    // every other importer shares: one in-place `.sort()` or `.push()` on a
+    // selector result, now or later, would rewrite the defaults for the rest
+    // of the process. Nothing mutates it today; the hazard is free to
+    // remove.
+    return [...defaultCategories]
+  }
+  // Cleaned, not `JSON.parse(text).categories`: a file that parses without
+  // the key — `{}` — returned `undefined` into `SET_TRANSACTION_SUBCATEGORIES`
+  // and so into `state.ui.subcategories`, which `uiReducer.ts` types
+  // `string[]`; `CategoryModal` then did `categories.map(...)` and threw on
+  // open, with nothing in between to notice.
+  return asCategoriesFile(text).categories
+}
+
+/**
+ * The base a write starts from: the file, or the defaults once an
+ * unreadable file has been copied aside.
+ *
+ * Only a content failure is recovered from; an I/O failure says nothing
+ * about the bytes, so it is rethrown and the file stays.
+ */
+async function readSubcategoriesForWrite(
   account: EdgeAccount
 ): Promise<string[]> {
   try {
-    const text = await account.disklet.getText(CATEGORIES_FILENAME)
-    const categoriesJson = JSON.parse(text)
-    return categoriesJson.categories
-  } catch (error) {
-    // If Categories.json doesn't exist yet, create it, and return it
-    await writeSyncedSubcategories(account, {
-      categories: defaultCategories
-    })
-    return defaultCategories
+    return await readSyncedSubcategories(account)
+  } catch (error: unknown) {
+    if (!isContentFailure(error)) throw error
+    const keptAs = `${CATEGORIES_FILENAME}.unreadable-${Date.now()}`
+    const text = await account.disklet
+      .getText(CATEGORIES_FILENAME)
+      .catch(() => undefined)
+    if (text != null) await account.disklet.setText(keptAs, text)
+    reportWarning(
+      `${CATEGORIES_FILENAME} could not be read (${errorMessage(error)})${
+        text == null ? '' : `; kept as ${keptAs}`
+      }; starting again from the defaults`
+    )
+    return [...defaultCategories]
   }
 }
 
@@ -285,472 +457,6 @@ export const defaultCategories = [
   'Transfer:Mycelium',
   'Transfer:Dark Wallet'
 ]
-
-/**
- * Given an EdgeTxAction, returns the display value for pre-filling the
- * 'Category' and 'Notes' tiles, if they are not already user-modified.
- */
-
-export interface ActionDisplayInfo {
-  direction: 'send' | 'receive'
-  iconPluginId?: string
-  userData: EdgeMetadata
-  savedData: EdgeMetadata
-  mergedData: EdgeMetadata
-  action?: EdgeTxAction
-  assetAction?: EdgeAssetAction
-}
-
-export const getTxActionDisplayInfo = (
-  tx: EdgeTransaction,
-  account: EdgeAccount,
-  wallet: EdgeCurrencyWallet
-): ActionDisplayInfo => {
-  const {
-    assetAction,
-    chainAction,
-    chainAssetAction,
-    metadata,
-    savedAction,
-    swapData,
-    tokenId
-  } = tx
-  const { currencyConfig, currencyInfo } = wallet
-
-  const displayName =
-    tokenId == null
-      ? currencyInfo.assetDisplayName
-      : currencyConfig.allTokens[tokenId]?.displayName ?? ''
-
-  const action = savedAction ?? chainAction
-  const assetAct = assetAction ?? chainAssetAction
-
-  const getCurrencyCodes = (assets: EdgeAssetAmount[]): string[] =>
-    assets
-      .map(asset =>
-        getCurrencyCodeWithAccount(account, asset.pluginId, asset.tokenId)
-      )
-      .filter((currencyCode): currencyCode is string => currencyCode != null)
-
-  const isSentTransaction =
-    tx.nativeAmount.startsWith('-') || (eq(tx.nativeAmount, '0') && tx.isSend)
-
-  let payeeText: string | undefined
-  let edgeCategory: EdgeCategory
-  let direction: 'send' | 'receive'
-  let notes: string | undefined
-  let iconPluginId: string | undefined
-
-  // Default text for send or receive
-  if (isSentTransaction) {
-    payeeText = sprintf(lstrings.transaction_sent_1s, displayName)
-    direction = 'send'
-    edgeCategory = {
-      category: 'expense',
-      subcategory: ''
-    }
-  } else {
-    payeeText = sprintf(lstrings.transaction_received_1s, displayName)
-    direction = 'receive'
-    edgeCategory = {
-      category: 'income',
-      subcategory: ''
-    }
-  }
-
-  // Override with swapData
-  if (swapData != null) {
-    const { payoutCurrencyCode } = swapData
-    payeeText = sprintf(
-      lstrings.transaction_details_swap_to_subcat_1s,
-      payoutCurrencyCode
-    )
-  }
-
-  if (action != null && assetAct != null) {
-    const { actionType } = action
-    const { assetActionType } = assetAct
-    payeeText = TX_ACTION_LABEL_MAP[assetActionType]
-
-    let unsupported = false
-
-    switch (actionType) {
-      case 'swap': {
-        iconPluginId = action.swapInfo.pluginId
-        switch (assetActionType) {
-          case 'transfer': {
-            const txSrc = action.payoutWalletId !== wallet.id
-            const toFromStr = txSrc
-              ? lstrings.transaction_details_swap_to_subcat_1s
-              : lstrings.transaction_details_swap_from_subcat_1s
-            const walletName =
-              account.currencyWallets[action.payoutWalletId]?.name ??
-              displayName
-            edgeCategory = {
-              category: 'transfer',
-              subcategory: sprintf(toFromStr, walletName)
-            }
-            break
-          }
-          case 'transferNetworkFee':
-          case 'swapNetworkFee': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.wc_smartcontract_network_fee
-            }
-            break
-          }
-          case 'swap':
-          case 'swapOrderFill': {
-            // Determine if the swap destination was to a different asset or if the
-            // swap source was from a different asset.
-            const txSrcSameAsset =
-              action.fromAsset.tokenId === tokenId &&
-              action.fromAsset.pluginId === wallet.currencyInfo.pluginId
-            const toFromStr = txSrcSameAsset
-              ? lstrings.transaction_details_swap_to_subcat_1s
-              : lstrings.transaction_details_swap_from_subcat_1s
-            const otherAsset = txSrcSameAsset
-              ? action.toAsset
-              : action.fromAsset
-
-            edgeCategory = {
-              category: 'exchange',
-              subcategory: sprintf(
-                toFromStr,
-                getCurrencyCodeWithAccount(
-                  account,
-                  otherAsset.pluginId,
-                  otherAsset.tokenId
-                )
-              )
-            }
-            direction = txSrcSameAsset ? 'send' : 'receive'
-            break
-          }
-
-          case 'swapOrderPost': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: sprintf(lstrings.transaction_details_swap_order_post)
-            }
-            direction = 'send'
-            break
-          }
-          case 'swapOrderCancel': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: sprintf(
-                lstrings.transaction_details_swap_order_cancel
-              )
-            }
-            direction = 'send'
-            break
-          }
-          default:
-            unsupported = true
-        }
-        break
-      }
-      case 'swapSend': {
-        iconPluginId = action.swapInfo.pluginId
-        switch (assetActionType) {
-          case 'transferNetworkFee':
-          case 'swapNetworkFee': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.wc_smartcontract_network_fee
-            }
-            break
-          }
-          default: {
-            // A send is titled by the flow the user ran, so the three are
-            // distinguishable in the list. The private flavors name no
-            // recipient; the payout address stays on the action for support.
-            const { fromAsset, toAsset } = action
-            const sameAsset =
-              fromAsset.pluginId === toAsset.pluginId &&
-              fromAsset.tokenId === toAsset.tokenId
-            payeeText = !action.privacy
-              ? lstrings.transaction_details_swap_and_send
-              : sameAsset
-              ? lstrings.transaction_details_stealth_send
-              : lstrings.transaction_details_stealth_swap_and_send
-            edgeCategory = {
-              category: 'exchange',
-              subcategory: sprintf(
-                lstrings.transaction_details_swap_to_subcat_1s,
-                getCurrencyCodeWithAccount(
-                  account,
-                  toAsset.pluginId,
-                  toAsset.tokenId
-                )
-              )
-            }
-            direction = 'send'
-          }
-        }
-        break
-      }
-      case 'stake': {
-        iconPluginId = action.pluginId
-        switch (assetActionType) {
-          case 'stake': {
-            let subcategory
-            if (action.stakeAssets.length === 1)
-              subcategory = sprintf(
-                lstrings.transaction_details_stake_subcat_1s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(
-                lstrings.transaction_details_stake_subcat_2s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else {
-              console.warn(
-                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
-              )
-              break
-            }
-            edgeCategory = { category: 'transfer', subcategory }
-            direction = 'send'
-            break
-          }
-          case 'stakeOrder': {
-            if (action.stakeAssets.length === 1)
-              notes = sprintf(
-                lstrings.transaction_details_unstake_order_notes_1s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else if (action.stakeAssets.length === 2)
-              notes = sprintf(
-                lstrings.transaction_details_unstake_order_notes_2s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else {
-              console.error(
-                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
-              )
-              break
-            }
-
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.transaction_details_stake_order_subcat
-            }
-            direction = 'send'
-            break
-          }
-          case 'claim': {
-            let subcategory
-            if (action.stakeAssets.length === 1)
-              subcategory = sprintf(
-                lstrings.transaction_details_unstake_subcat_1s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(
-                lstrings.transaction_details_unstake_subcat_2s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else {
-              console.error(
-                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
-              )
-              break
-            }
-            edgeCategory = { category: 'transfer', subcategory }
-            if (
-              action.stakeAssets.every(
-                asset => asset.pluginId === currencyInfo.pluginId
-              )
-            ) {
-              direction = 'receive'
-            } else {
-              direction = 'send'
-            }
-            break
-          }
-          case 'unstake': {
-            let subcategory
-            if (action.stakeAssets.length === 1)
-              subcategory = sprintf(
-                lstrings.transaction_details_unstake_subcat_1s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else if (action.stakeAssets.length === 2)
-              subcategory = sprintf(
-                lstrings.transaction_details_unstake_subcat_2s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else {
-              console.error(
-                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
-              )
-              break
-            }
-            edgeCategory = { category: 'transfer', subcategory }
-            direction = 'receive'
-            break
-          }
-          case 'claimOrder':
-          case 'unstakeOrder': {
-            if (action.stakeAssets.length === 1)
-              notes = sprintf(
-                lstrings.transaction_details_unstake_order_notes_1s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else if (action.stakeAssets.length === 2)
-              notes = sprintf(
-                lstrings.transaction_details_unstake_order_notes_2s,
-                ...getCurrencyCodes(action.stakeAssets)
-              )
-            else {
-              console.error(
-                `Unsupported number of assets for '${assetActionType}' EdgeTxActionSwapType`
-              )
-              break
-            }
-
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.transaction_details_unstake_order
-            }
-            direction = 'send'
-            break
-          }
-          case 'unstakeNetworkFee':
-          case 'stakeNetworkFee': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.wc_smartcontract_network_fee
-            }
-            break
-          }
-
-          default:
-            unsupported = true
-        }
-        break
-      }
-      case 'fiat': {
-        iconPluginId = action.fiatPlugin.providerId
-        switch (assetActionType) {
-          case 'buy': {
-            payeeText = sprintf(payeeText, displayName)
-            const { fiatAsset } = action
-            const { fiatCurrencyCode } = cleanFiatCurrencyCode(
-              fiatAsset.fiatCurrencyCode
-            )
-            edgeCategory = {
-              category: 'exchange',
-              subcategory: sprintf(
-                lstrings.transaction_details_swap_from_subcat_1s,
-                fiatCurrencyCode
-              )
-            }
-            direction = 'receive'
-            break
-          }
-          case 'sell': {
-            payeeText = sprintf(payeeText, displayName)
-            const { fiatAsset } = action
-            const { fiatCurrencyCode } = cleanFiatCurrencyCode(
-              fiatAsset.fiatCurrencyCode
-            )
-            edgeCategory = {
-              category: 'exchange',
-              subcategory: sprintf(
-                lstrings.transaction_details_swap_to_subcat_1s,
-                fiatCurrencyCode
-              )
-            }
-            direction = 'send'
-            break
-          }
-          case 'sellNetworkFee': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.wc_smartcontract_network_fee
-            }
-            direction = 'send'
-            break
-          }
-          default:
-            unsupported = true
-        }
-        break
-      }
-      case 'tokenApproval': {
-        switch (assetActionType) {
-          case 'tokenApproval': {
-            edgeCategory = {
-              category: 'expense',
-              subcategory: lstrings.wc_smartcontract_network_fee
-            }
-            break
-          }
-          default:
-            unsupported = true
-        }
-        break
-      }
-      case 'giftCard': {
-        iconPluginId = action.provider.providerId
-        payeeText = lstrings.gift_card_recipient_name
-        edgeCategory = {
-          category: 'expense',
-          subcategory: action.card.name
-        }
-        direction = 'send'
-        break
-      }
-      default:
-        unsupported = true
-    }
-
-    if (unsupported)
-      console.error(
-        `Unsupported EdgeTxAction assetAction:assetActionType '${assetActionType}'`
-      )
-  }
-  const savedData: EdgeMetadata = {
-    name: payeeText,
-    category: joinCategory(edgeCategory),
-    notes
-  }
-
-  // A private send exists to keep the recipient off the screen, so its title
-  // outranks any stored name: a recipient-style name reaching the transaction
-  // by any route would otherwise display exactly what the flow conceals.
-  const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
-
-  const mergedData: EdgeMetadata = {
-    name:
-      !isPrivateSend && metadata?.name != null && metadata.name.length > 0
-        ? metadata.name
-        : savedData.name,
-    category:
-      metadata?.category != null && metadata.category.length > 0
-        ? metadata.category
-        : savedData.category,
-    notes:
-      metadata?.notes != null && metadata.notes.length > 0
-        ? metadata.notes
-        : savedData.notes
-  }
-
-  return {
-    action,
-    assetAction,
-    direction,
-    iconPluginId,
-    savedData,
-    userData: metadata ?? {},
-    mergedData
-  }
-}
 
 const pluginIdIcons: Record<string, string> = {
   '0xgasless': EDGE_CONTENT_SERVER_URI + '/0xgasless.png',

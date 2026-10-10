@@ -5,11 +5,23 @@
  * rerenders
  */
 // import './wdyr'
+// First, and before anything that can read `lstrings`. ES module imports
+// evaluate in source order, so this makes the ordering `index.ts` describes
+// self-enforcing from *this* entry too: the extraction left it resting on a
+// comment plus one import line in one file, which nothing checks.
+import './locales/initLocale'
+// Then the app-boot wiring, beside its two siblings below. This one rode on
+// a binding-free side-effect import in `src/components/App.tsx`, where
+// Metro's default `inlineRequires` can defer the whole module — so the one
+// wiring that decides how rate-query failures are reported was the one whose
+// evaluation point depended on a bundler transform.
+import './util/exchangeRatesGui'
+
 import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { Buffer } from 'buffer'
 import { asObject, asString } from 'cleaners'
-import { Appearance, InteractionManager, LogBox } from 'react-native'
+import { Appearance, InteractionManager, LogBox, Platform } from 'react-native'
 import { getVersion } from 'react-native-device-info'
 import RNFS from 'react-native-fs'
 
@@ -24,8 +36,56 @@ import { KEYS } from './keys'
 import { config } from './theme/appConfig'
 import type { NumberMap } from './types/types'
 import { isAgentTestMode } from './util/agentTestMode'
+import { initAttestation } from './util/attestation'
+import { willSignInfoRollup } from './util/edgeApiSigner'
 import { log, logToServer } from './util/logger'
-import { initCoinrankList, initInfoServer } from './util/network'
+import { INFO_TEST_SERVER, shouldUseTestServers } from './util/maestro'
+import {
+  configureInfoServer,
+  configureNetwork,
+  initInfoServer,
+  refreshCoinrankList
+} from './util/network'
+import { getOsVersion } from './util/rnUtils'
+import { runOnce } from './util/runOnce'
+import { checkAppVersion } from './util/versionCheck'
+
+// `CONFIG.INFO_SERVER` overrides the production info servers,
+// e.g. to point a debug build at a local info server. Absent in production
+// builds.
+configureNetwork({
+  infoServers:
+    CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
+      ? CONFIG.INFO_SERVER
+      : shouldUseTestServers()
+      ? [INFO_TEST_SERVER]
+      : undefined,
+  referralServers: config.referralServers ?? [],
+  notificationServers: config.notificationServers
+})
+
+// `keysStore` falls back to `fetchPublicRollup` on the cold-start path, which
+// runs from the first render — before the NetInfo listener below reaches
+// `initInfoServer`. Capturing the parameters here, synchronously, keeps that
+// fallback working whichever lands first.
+/**
+ * The device and app fields the info server is told about.
+ *
+ * One object, because `configureInfoServer` and `initInfoServer` take the
+ * same five and they were written out twice with an identical `onRollup`
+ * closure — the kind of pair that drifts in one place and not the other.
+ */
+const infoServerParams = {
+  osType: Platform.OS.toLowerCase(),
+  osVersion: getOsVersion(),
+  appVersion: getVersion(),
+  appId: config.appId ?? 'edge',
+  onRollup: async () => {
+    await runOnce('checkAppVersion', checkAppVersion)
+  }
+}
+
+configureInfoServer(infoServerParams)
 
 export type Environment = 'development' | 'testing' | 'production'
 
@@ -349,10 +409,31 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    initInfoServer().catch((err: unknown) => {
-      console.log(err)
-    })
-    initCoinrankList().catch((err: unknown) => {
+    // Start attestation at reconnect (idempotent); previously lived in
+    // initInfoServer before network.ts was made Node-safe.
+    initAttestation()
+    // `willSignInfoRollup` reads the native signer, so it is awaited here
+    // rather than inside `network.ts`, which has to stay Node-safe. Its
+    // failure must not skip the refresh: a rejection used to be swallowed by
+    // the outer catch, so the reconnect rollup fetch never ran at all, where
+    // before this branch it always did. `false` means "do not skip the
+    // unsigned fetch", which is the safe reading of "we could not tell".
+    willSignInfoRollup()
+      .catch((error: unknown) => {
+        console.log(error)
+        return false
+      })
+      .then(async skipUnsignedLaunchFetch => {
+        await initInfoServer({ ...infoServerParams, skipUnsignedLaunchFetch })
+      })
+      .catch((error: unknown) => {
+        console.log(error)
+      })
+    // Through the in-flight guard, like the rollup fetch above: this arm
+    // fires once per connectivity transition and writes shared module
+    // state, so a flapping link used to start an independent fetch several
+    // times a second and let whichever answered last decide the list.
+    refreshCoinrankList().catch((err: unknown) => {
       console.log(err)
     })
   }

@@ -17,7 +17,7 @@ import {
 } from '../types/types'
 import {
   readLocalAccountSettings,
-  writeLocalAccountSettings
+  updateLocalAccountSettings
 } from './LocalSettingsActions'
 
 // Legacy file for backward compatibility
@@ -439,14 +439,11 @@ export const writeReviewTriggerData = async (
   account: EdgeAccount,
   reviewTriggerData: Partial<ReviewTriggerData>
 ): Promise<LocalAccountSettings> => {
-  const settings = await readLocalAccountSettings(account)
-
-  const updatedSettings: LocalAccountSettings = {
+  return await updateLocalAccountSettings(account, settings => ({
     ...settings,
     reviewTrigger: asReviewTriggerData({
       ...settings.reviewTrigger,
       ...reviewTriggerData
     })
-  }
-  return await writeLocalAccountSettings(account, updatedSettings)
+  }))
 }

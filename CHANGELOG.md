@@ -3,6 +3,16 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: Every secret the CLI takes also reads from its own environment variable — `EDGE_CLI_PASSWORD`, `EDGE_CLI_PIN`, `EDGE_CLI_LOGIN_KEY`, `EDGE_CLI_DATA_KEY` and the rest — because `ps` shows a command line to every user on the host. `check-password-rules`, `admin-repo-list` and `admin-repo-get` take their secret in a POST body rather than a query string.
+- added: Edge CLI (`edge-cli`) and its engine daemon: a long-lived process owning an `EdgeContext`, a JSON REST API over a Unix socket with an optional loopback TCP listener, and a thin client that spawns the engine on demand. 118 routes, generated command table, help text and OpenAPI reference.
+- changed: `npm run precommit`, `npm run verify` and CI gained the CLI's gates. The husky hook runs the five documentation gates, `cli:manifest:check`, `cli:plugins:check`, `test:cli:node-safe` and `test:cli:offline` only when a commit stages one of the paths `scripts/util/cliGatePaths.js` lists, so a commit elsewhere pays nothing. `verify` adds those plus `test:all`, which builds the rollup bundle and runs the offline suites against it. Travis runs all of them unconditionally, plus `docs:api:committed`, which fails on a stale committed artifact. The offline suites spawn a real engine daemon on a Unix socket under a temporary data directory; they need no network and no API key.
+- changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
+- fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
+- fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
+- fixed: `splitCategory` keeps an unrecognised category exactly as stored, where a one-character prefix such as `X:` was dropped and a bare name gained a trailing colon, and opening and saving the transaction wrote either change back.
+- fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
+- fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)

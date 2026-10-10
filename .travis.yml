@@ -5,8 +5,12 @@ branches:
 if: head_branch !~ ^dependabot/
 dist: jammy
 language: node_js
+# 22, not 18: `cli:plugins:check` loads every plugin family the CLI bundles,
+# and Solana's tools reach an ESM-only `uuid` through `rpc-websockets`, which
+# Node can `require()` only from 20.19 / 22.12. Every step below was run on
+# 22.23.3 before the change.
 node_js:
-  - 18
+  - 22
 before_install:
   - node scripts/hack-travis.mjs
 install:
@@ -15,4 +19,47 @@ install:
 script:
   - npm run lint
   - npx tsc
+  # The five documentation gates. Read-only and seconds between them, but
+  # inert on their own here: `npm run prepare` above has already regenerated
+  # the committed artifacts, so the first gate compares fresh output against
+  # fresh output and passes whatever was committed. Demonstrated by editing
+  # one JSDoc summary — the gates fail locally and exit 0 after a prepare.
+  - npm run docs:api:gates
+  # So this is the gate that actually catches a stale artifact in CI: prepare
+  # skips a write when nothing changed, so a dirty generated path *is* the
+  # staleness, and git is the oracle. The husky hook is the only other live
+  # check and `git commit --no-verify` skips it.
+  - npm run docs:api:committed
+  # The published CLI's dependency list, derived from the module graph: a new
+  # import that did not reach the manifest is an `npm install` that succeeds
+  # and a CLI that cannot resolve a module. `npm run prepare` regenerates
+  # this too — a routine version bump used to stale it and turn `develop` red
+  # — so here it is as inert as the gates above, and `docs:api:committed`
+  # catches a stale one: `src/cli/generated/npmPackage.json` is under the
+  # paths it compares against git.
+  - npm run cli:manifest:check
+  # Beside the manifest check, for the same reason and against a different
+  # input: this one reads the *installed* plugin packages, and its allowlists
+  # fail both on a new breakage and on a known one starting to work — which
+  # is what a routine `edge-currency-accountbased` or `edge-currency-plugins`
+  # bump does. `precommit:cli` and `verify` both run it; without it here a
+  # `git commit --no-verify` by an author who never runs `verify` lands a
+  # broken plugin family on develop with nothing to notice.
+  - npm run cli:plugins:check
+  - npm run test:cli:node-safe
   - npm test
+  - npm run test:cli:offline
+  # And again against the rollup bundle. Three transforms produce a working
+  # CLI — `sucrase` above, `@react-native/babel-preset` for jest,
+  # `@babel/preset-env` for the bundle — so a defect can exist in only one of
+  # them, and two severity-0 defects have existed in the bundle alone.
+  # `build:cli` is a two-second rollup.
+  - npm run test:cli:offline:built
+  # Last, because it is the only check that reads the built bundles' own
+  # `require` calls, and `--require-bundles` makes an absent `lib/` a failure
+  # rather than a skip. Run where `cli:manifest:check` is, nine lines above
+  # the build, `built` was false and the one direction that matters — a
+  # package the bundles require and the manifest does not declare, which a
+  # published CLI could not resolve — printed "bundles absent, so the require
+  # cross-check did not run" and passed.
+  - npm run cli:manifest -- --check --require-bundles
