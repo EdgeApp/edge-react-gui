@@ -492,6 +492,7 @@
   "settings_modal_clear_logs_success": "Os Logs foram apagados",
   "settings_modal_send_logs_success": "Logs foram enviados",
   "settings_modal_send_logs_failure": "Envio de logs falhou",
+  "settings_modal_send_logs_clock_error": "Logs could not be sent because your device clock is wrong. Turn on automatic date & time in your system settings and try again.",
   "settings_modal_share_logs_failure": "O compartilhamento de logs falhou",
   "settings_modal_send_unsafe": "Esses logs parecem conter informações sensíveis, como private keys e endereços, que poderiam resultar na perda de fundos. Portanto, não é seguro enviar esses registros para os servidores da Edge.",
   "settings_modal_send_logs_label": "Escreva as notas aqui",
