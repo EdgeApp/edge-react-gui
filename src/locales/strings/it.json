@@ -190,7 +190,7 @@
   "fragment_wallets_resync_wallet": "Sincronizza il portafoglio",
   "fragment_wallets_split_wallet": "Dividi il portafoglio",
   "fragment_wallets_copy_seed": "Copia i seed",
-  "fragment_wallets_copied_seed": "Seed copiati",
+  "fragment_wallets_copied_seed_clears": "Copied seed. The clipboard will clear in 1 minute.",
   "fragment_wallets_get_seed_wallet": "Ottieni i seed",
   "fragment_wallets_pause_wallet": "Metti in pausa il portafoglio",
   "fragment_wallets_unpause_wallet": "Riprendi sincronizzazione",
