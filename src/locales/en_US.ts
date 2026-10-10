@@ -291,7 +291,8 @@ const strings = {
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_copy_seed: 'Copy Seed',
-  fragment_wallets_copied_seed: 'Copied Seed',
+  fragment_wallets_copied_seed_clears:
+    'Copied seed. The clipboard will clear in 1 minute.',
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_pause_wallet: 'Pause Wallet',
   fragment_wallets_unpause_wallet: 'Unpause Wallet',
