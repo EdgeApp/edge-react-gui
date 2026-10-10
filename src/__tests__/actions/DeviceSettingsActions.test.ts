@@ -77,7 +77,8 @@ describe('patchDeviceSettings', () => {
     const written = writeKeysCache({
       keys: { EDGE_API_KEY: 'k' },
       fetchedAt: 1,
-      assuranceLevel: 'default'
+      assuranceLevel: 'default',
+      attested: false
     })
 
     openGate()
@@ -87,6 +88,7 @@ describe('patchDeviceSettings', () => {
     expect(file.themeMode).toBe('light')
     expect(file.defaultScreen).toBe('assets')
     expect(file.keysCache?.assuranceLevel).toBe('default')
+    expect(file.keysCache?.attested).toBe(false)
   })
 
   it('boots on defaults when the read hangs, then applies the late read', async () => {

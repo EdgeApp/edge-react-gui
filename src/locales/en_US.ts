@@ -666,6 +666,8 @@ const strings = {
   settings_modal_clear_logs_success: 'Logs have been cleared',
   settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
+  settings_modal_send_logs_clock_error:
+    'Logs could not be sent because your device clock is wrong. Turn on automatic date & time in your system settings and try again.',
   settings_modal_share_logs_failure: 'Sharing logs has failed',
   settings_modal_send_unsafe:
     'These logs appear to contain sensitive information, such as private keys and addresses, that could result in the loss of funds. Therefore, it is not safe to send these logs to Edge servers.',

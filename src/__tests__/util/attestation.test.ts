@@ -66,6 +66,7 @@ const {
   attestedJsonHeaders,
   getAttestationToken,
   initAttestation,
+  maybeWarnClockSkew,
   onAttestationToken,
   resetAttestationForTests
 } = require('../../util/attestation')
@@ -673,6 +674,25 @@ describe('attestation engine', () => {
       600 * 1000 - attestationTimingForTests.REFRESH_LEAD_MS
     )
     await flush()
+    expect(mockShowButtonsModal.mock.calls.length).toBe(0)
+  })
+
+  it('warns from an HTTP Date header, with no handshake involved', () => {
+    const serverDate = new Date(Date.now() - 2 * 86_400_000).toUTCString()
+
+    maybeWarnClockSkew(serverDate)
+    expect(mockShowButtonsModal.mock.calls.length).toBe(1)
+    expect(mockFetchInfo.mock.calls.length).toBe(0)
+
+    // Same once-per-day latch as the handshake's own readings.
+    maybeWarnClockSkew(serverDate)
+    expect(mockShowButtonsModal.mock.calls.length).toBe(1)
+  })
+
+  it('ignores a server time it cannot read', () => {
+    maybeWarnClockSkew(undefined)
+    maybeWarnClockSkew('not a date')
+    maybeWarnClockSkew(new Date(Date.now() - 5000).toUTCString())
     expect(mockShowButtonsModal.mock.calls.length).toBe(0)
   })
 

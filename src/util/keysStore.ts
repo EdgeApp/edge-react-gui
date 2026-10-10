@@ -19,10 +19,18 @@ import { applyRuntimeKeys, bakedKeys, globalKeys, KEYS } from '../keys'
 import { LOCAL_ONLY_PREFIXES, LOCAL_ONLY_TOP_LEVEL } from '../localOnlyKeys'
 import { rebuildPluginMaps } from '../pluginMaps'
 import { config } from '../theme/appConfig'
-import { getAttestationToken } from './attestation'
+import {
+  getAttestationToken,
+  maybeWarnClockSkew,
+  onAttestationToken
+} from './attestation'
 import { rebuildAllPlugins } from './corePlugins'
 import { getNativeApiSigner, isUsableApiKey } from './edgeApiSigner'
-import { type FetchCredentials, fetchRemoteKeys } from './keysServer'
+import {
+  type FetchCredentials,
+  fetchRemoteKeys,
+  RemoteKeysError
+} from './keysServer'
 import { debugLog } from './logger'
 import { fetchPublicRollup, infoServerData } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
@@ -58,6 +66,13 @@ const SETTINGS_READ_TIMEOUT_MS = 2000
 const SETTINGS_SALVAGE_TIMEOUT_MS = SETTINGS_READ_TIMEOUT_MS
 /** Cap on a hung background refresh so it does not linger forever. */
 const BACKGROUND_CACHE_TIMEOUT_MS = COLD_TOTAL_TIMEOUT_MS
+/**
+ * How long a cached answer to a request that carried an attestation token is
+ * kept over the answer to a request without one. Long enough to ride out
+ * launches where the handshake is slow, failing, or rate limited; short enough
+ * that a device which can no longer attest stops serving old attested keys.
+ */
+const ATTESTED_CACHE_HOLD_MS = 3 * 24 * 60 * 60 * 1000
 
 /**
  * Secrets the info server must never serve, so a remote payload can never
@@ -74,6 +89,8 @@ const KEYS_JSON_FIELDS = new Set(Object.keys(asKeysJson.shape))
 
 let keysTier: KeysTier = 'baked-in'
 let initPromise: Promise<void> | undefined
+/** True once this launch has subscribed for its late-token refresh. */
+let lateTokenRefreshArmed = false
 
 function isLocalOnlyTopLevel(key: string): boolean {
   return (
@@ -164,6 +181,8 @@ function applyKeys(keys: unknown): boolean {
 interface FetchedKeys {
   keys: unknown
   assuranceLevel: string
+  /** Whether the request carried an attestation token. */
+  attested: boolean
 }
 
 function applyPublicRollup(raw: unknown): void {
@@ -236,6 +255,7 @@ async function fetchKeysInner(): Promise<FetchedKeys | null> {
   try {
     const attestationToken = await getAttestationToken(ATTESTATION_BUDGET_MS)
     const attested = attestationToken != null && attestationToken !== ''
+    if (!attested) refreshWhenAttested()
     const result = await fetchRemoteKeys({
       ...credentials,
       appId: config.appId ?? 'edge',
@@ -250,15 +270,97 @@ async function fetchKeysInner(): Promise<FetchedKeys | null> {
       // The server reports the layer it actually served; fall back to what we
       // asked for when talking to an older server that omits the field.
       assuranceLevel:
-        result.assuranceLevel ?? (attested ? 'attested' : 'unattested')
+        result.assuranceLevel ?? (attested ? 'attested' : 'unattested'),
+      attested
     }
   } catch (error: unknown) {
+    // The server signs off on a request only when its timestamp is inside a
+    // few minutes of server time, so a wrong device clock fails every launch
+    // here with a 401. An error response is never served from an HTTP cache,
+    // which makes its `Date` header a current reading of the server clock.
+    if (error instanceof RemoteKeysError && error.status === 401) {
+      maybeWarnClockSkew(error.serverDate)
+    }
     console.warn('initializeKeys: remote keys fetch failed', String(error))
     return null
   }
 }
 
-async function cacheKeys(result: FetchedKeys): Promise<void> {
+/**
+ * A request that went out with no attestation token is answered from the
+ * `default` layer, which lacks the partner keys an attested device is served.
+ * The handshake can still deliver a token later in the same launch: it ran past
+ * the budget, or it failed and a retry succeeded. Fetch once more when that
+ * happens and cache the answer, so the next launch starts on the full payload
+ * instead of the reduced one.
+ *
+ * Subscribes at most once per launch, and stays subscribed until the answer to
+ * a request that carried a token is in the cache: a refetch that fails is tried
+ * again when the engine next hands out a token. Only writes the cache: the keys
+ * a running core was built with are never swapped.
+ */
+function refreshWhenAttested(): void {
+  if (lateTokenRefreshArmed) return
+  lateTokenRefreshArmed = true
+
+  const subscription: { busy: boolean; stop?: () => void } = { busy: false }
+  const refresh = async (): Promise<void> => {
+    const result = await fetchKeysInner()
+    if (result == null) return
+    const cached = await cacheKeys(result)
+    // The token can be gone again by the time the request is built, so only an
+    // answer to a request that carried one ends the wait:
+    if (cached && result.attested) subscription.stop?.()
+  }
+  const handleToken = (token: string | undefined): void => {
+    if (token == null || token === '') return
+    // One refetch at a time. The engine can hand out its next token while the
+    // request for this one is still in flight:
+    if (subscription.busy) return
+    subscription.busy = true
+    refresh()
+      .catch((error: unknown) => {
+        console.warn('initializeKeys: attested refresh failed', String(error))
+      })
+      .finally(() => {
+        subscription.busy = false
+      })
+  }
+  // The subscription replays the current token before it returns, so a token
+  // that landed since the wait above gave up starts a refetch from in here:
+  subscription.stop = onAttestationToken(handleToken)
+}
+
+/**
+ * True when the cache holds a usable answer to a request that carried a token,
+ * recent enough to be kept over the answer to a request without one.
+ */
+function isHoldingAttestedCache(): boolean {
+  const cache = getKeysCache()
+  if (cache?.attested !== true) return false
+  // Measured in both directions, so a stamp left by a clock that has since
+  // been set back is not held until the clock catches up with it:
+  const age = Math.abs(Date.now() - cache.fetchedAt)
+  if (age >= ATTESTED_CACHE_HOLD_MS) return false
+  // An entry that will not merge counts as no cache, and any answer repairs it:
+  return asMaybe(asMergeableKeys)(cache.keys) != null
+}
+
+/**
+ * Write a fetched payload to the cache for the next launch. Resolves `true`
+ * when the payload was written.
+ */
+async function cacheKeys(result: FetchedKeys): Promise<boolean> {
+  // The cached entry decides whether the answer to a request without a token
+  // may replace it. A launch can miss the attestation budget while the device
+  // is still good (slow handshake, rate limit), and the `default` layer that
+  // request is answered from would strip the partner keys from the next
+  // launch. Two requests can also be in flight at once (see
+  // `refreshWhenAttested`): `writeKeysCache` updates the entry in memory before
+  // it touches disk, so this check sees the other answer as soon as it is
+  // written, whichever order the two land in.
+  if (!result.attested && isHoldingAttestedCache()) return false
+
   let overlay: Record<string, unknown>
   try {
     overlay = nestGlobalKeys(
@@ -269,13 +371,15 @@ async function cacheKeys(result: FetchedKeys): Promise<void> {
       'initializeKeys: refusing to cache unusable keys payload',
       String(error)
     )
-    return
+    return false
   }
   await writeKeysCache({
     keys: overlay,
     fetchedAt: Date.now(),
-    assuranceLevel: result.assuranceLevel
+    assuranceLevel: result.assuranceLevel,
+    attested: result.attested
   })
+  return true
 }
 
 /**

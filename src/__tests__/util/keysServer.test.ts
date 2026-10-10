@@ -2,7 +2,7 @@ import { describe, expect, it, jest } from '@jest/globals'
 import type { EdgeFetchFunction } from 'edge-core-js'
 
 import { signHmacAuthorization } from '../../util/hmacAuth'
-import { fetchRemoteKeys } from '../../util/keysServer'
+import { fetchRemoteKeys, RemoteKeysError } from '../../util/keysServer'
 
 const apiKey = 'test-api-key'
 const secret = new Uint8Array(
@@ -26,6 +26,19 @@ const makeOkResponse = (body: unknown): Response =>
     status: 200,
     json: async () => body,
     text: async () => JSON.stringify(body)
+  } as unknown as Response)
+
+const makeErrorResponse = (
+  status: number,
+  text: string,
+  headers: Record<string, string> = {}
+): Response =>
+  ({
+    ok: false,
+    status,
+    headers: { get: (name: string) => headers[name.toLowerCase()] ?? null },
+    json: async () => ({}),
+    text: async () => text
   } as unknown as Response)
 
 describe('fetchRemoteKeys', () => {
@@ -153,19 +166,47 @@ describe('fetchRemoteKeys', () => {
   })
 
   it('throws with the status on a non-OK response', async () => {
-    const infoFetch = jest.fn<EdgeFetchFunction>(
-      async () =>
-        ({
-          ok: false,
-          status: 503,
-          json: async () => ({}),
-          text: async () => 'unavailable'
-        } as unknown as Response)
+    const infoFetch = jest.fn<EdgeFetchFunction>(async () =>
+      makeErrorResponse(503, 'unavailable')
     )
 
     await expect(
       fetchRemoteKeys({ apiKey, secret, appId: 'edge', infoFetch, ...query })
     ).rejects.toThrow('fetchRemoteKeys 503: unavailable')
+  })
+
+  it('carries the status and the server Date header on a refusal', async () => {
+    const serverDate = 'Wed, 07 Oct 2026 19:55:14 GMT'
+    const infoFetch = jest.fn<EdgeFetchFunction>(async () =>
+      makeErrorResponse(401, 'Unauthorized', { date: serverDate })
+    )
+
+    const error: unknown = await fetchRemoteKeys({
+      apiKey,
+      secret,
+      appId: 'edge',
+      infoFetch,
+      ...query
+    }).catch((e: unknown) => e)
+
+    expect(error).toBeInstanceOf(RemoteKeysError)
+    expect(error).toMatchObject({ status: 401, serverDate })
+  })
+
+  it('leaves the server date unset when the response has no Date header', async () => {
+    const infoFetch = jest.fn<EdgeFetchFunction>(async () =>
+      makeErrorResponse(401, 'Unauthorized')
+    )
+
+    const error: unknown = await fetchRemoteKeys({
+      apiKey,
+      secret,
+      appId: 'edge',
+      infoFetch,
+      ...query
+    }).catch((e: unknown) => e)
+
+    expect(error).toMatchObject({ status: 401, serverDate: undefined })
   })
 
   it('rejects a malformed body where appKeys is a string', async () => {

@@ -235,8 +235,13 @@ export const resetAttestationForTests = (): void => {
  * Warn once per day of app uptime when the device wall clock disagrees with the
  * server by more than `CLOCK_WARN_MS`. `serverTime` is a UX signal only - it
  * never feeds lifetimes, backoff, or refresh math.
+ *
+ * Accepts any date string `Date.parse` understands: the ISO `serverTime` of an
+ * attestation response, or the HTTP `Date` header of a signed request the
+ * server refused (see `keysStore`). The second source covers a launch that runs
+ * no handshake, where the first never arrives.
  */
-const maybeWarnClockSkew = (serverTime: unknown): void => {
+export const maybeWarnClockSkew = (serverTime: unknown): void => {
   if (typeof serverTime !== 'string') return
   const parsed = Date.parse(serverTime)
   if (Number.isNaN(parsed)) return
