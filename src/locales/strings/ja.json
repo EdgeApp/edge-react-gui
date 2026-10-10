@@ -492,6 +492,7 @@
   "settings_modal_clear_logs_success": "ログを消去しました",
   "settings_modal_send_logs_success": "記録が送信されました",
   "settings_modal_send_logs_failure": "記録の送信に失敗しました",
+  "settings_modal_send_logs_clock_error": "Logs could not be sent because your device clock is wrong. Turn on automatic date & time in your system settings and try again.",
   "settings_modal_share_logs_failure": "ログの共有に失敗しました",
   "settings_modal_send_unsafe": "これらのログには、秘密鍵やアドレスなどの機密情報が含まれており、資金損失のリスクがあります。 したがって、これらのログを Edge サーバーに送信することは安全ではありません。",
   "settings_modal_send_logs_label": "ここにメモを入力",
