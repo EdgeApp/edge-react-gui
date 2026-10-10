@@ -492,6 +492,7 @@
   "settings_modal_clear_logs_success": "Los registros han sido borrados",
   "settings_modal_send_logs_success": "Los registros han sido enviados",
   "settings_modal_send_logs_failure": "El envío de registros ha fallado",
+  "settings_modal_send_logs_clock_error": "Logs could not be sent because your device clock is wrong. Turn on automatic date & time in your system settings and try again.",
   "settings_modal_share_logs_failure": "Fallo al compartir registros",
   "settings_modal_send_unsafe": "Estos registros parecen contener información confidencial, como claves privadas y direcciones, que podrían provocar la pérdida de fondos. Por lo tanto, no es seguro enviar estos registros a servidores Edge.",
   "settings_modal_send_logs_label": "Escribe notas aquí",
