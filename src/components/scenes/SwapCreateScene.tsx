@@ -26,7 +26,11 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
-import { makeStealthSwapRequestOptions } from '../../util/stealthSwap'
+import { getHoudiniAssets } from '../../util/houdiniChains'
+import {
+  getStealthDisableAssets,
+  makeStealthSwapRequestOptions
+} from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
@@ -111,6 +115,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const houdiniTokens = useSelector(state => state.ui.houdiniTokens)
 
   const toWallet: EdgeCurrencyWallet | undefined =
     toWalletId == null ? undefined : currencyWallets[toWalletId]
@@ -293,6 +298,24 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const showWalletListModal = async (
     whichWallet: 'from' | 'to'
   ): Promise<void> => {
+    // A Stealth Swap asks the Houdini provider alone, so its pickers offer
+    // only what that provider serves: each served chain's coin and the tokens
+    // on its list. The receiving side also drops the destinations the info
+    // server withdrew. The quote still refuses a banned or unserved asset
+    // that was selected before the toggle went on.
+    const allowedAssets = stealth
+      ? getHoudiniAssets({
+          currencyConfigs: account.currencyConfig,
+          houdiniTokens,
+          destinationBans:
+            whichWallet === 'to'
+              ? getStealthDisableAssets(
+                  exchangeInfo.swap.disableAssets,
+                  exchangeInfo.swap.disableAssetsByPlugin
+                ).destination
+              : undefined
+        })
+      : undefined
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -304,6 +327,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
         }
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
+        allowedAssets={allowedAssets}
         filterActivation
       />
     ))

@@ -2,12 +2,16 @@ import { describe, expect, it } from '@jest/globals'
 import { lt } from 'biggystring'
 
 import {
+  asHoudiniTokens,
   detectHoudiniChains,
+  getHoudiniAssets,
+  getHoudiniAssetSupport,
   getHoudiniChain,
   getRecipientAsset,
   getRecipientAssetChoices,
   HOUDINI_CHAINS,
   HOUDINI_MIN_USD,
+  type HoudiniCurrencyConfigs,
   isValidHoudiniAddress,
   recipientAssetKey,
   schemeNamesChain
@@ -285,12 +289,12 @@ describe('detectHoudiniChains', () => {
 
 describe('getHoudiniChain', () => {
   it('finds a served chain by its Edge plugin id', () => {
-    const chain = getHoudiniChain('litecoin', null)
+    const chain = getHoudiniChain('litecoin')
     expect(chain?.houdiniShortName).toEqual('litecoin')
   })
 
   it('returns nothing for a chain Houdini does not serve', () => {
-    expect(getHoudiniChain('piratechain', null)).toBeUndefined()
+    expect(getHoudiniChain('piratechain')).toBeUndefined()
   })
 
   it('returns nothing for the chains with no mainnet native coin', () => {
@@ -299,22 +303,23 @@ describe('getHoudiniChain', () => {
     // them out of this table is about not OFFERING a destination the provider
     // cannot pay out to.
     for (const pluginId of ['celo', 'fantom', 'polkadot']) {
-      expect(getHoudiniChain(pluginId, null)).toBeUndefined()
+      expect(getHoudiniChain(pluginId)).toBeUndefined()
     }
   })
 
   it('returns nothing for Telos, whose Houdini route is a different network', () => {
     // Houdini's `telos` is Telos EVM, paid at `0x` addresses. Edge's `telos`
     // wallets are EOSIO accounts, so they can neither fund nor receive it.
-    expect(getHoudiniChain('telos', null)).toBeUndefined()
+    expect(getHoudiniChain('telos')).toBeUndefined()
   })
 
-  it('returns nothing for a token, even on a served chain', () => {
-    // Only chain-native assets are offered as destinations today. A token id
-    // must not silently resolve to its parent chain and pay out the wrong
-    // asset.
-    expect(getHoudiniChain('ethereum', 'a0b8...eb48')).toBeUndefined()
-    expect(getHoudiniChain('ethereum', null)).toBeDefined()
+  it('describes the chain, not one asset on it', () => {
+    // The row holds the address format, memo flag and EVM chain id, which a
+    // token shares with its chain's coin. Whether a token is served is
+    // `getHoudiniAssetSupport`'s answer.
+    const chain = getHoudiniChain('tron')
+    expect(chain?.pluginId).toEqual('tron')
+    expect(chain?.memoNeeded).toEqual(false)
   })
 })
 
@@ -369,7 +374,7 @@ describe('HOUDINI_CHAINS table', () => {
   it('accepts a short Hedera account id', () => {
     // Hedera ids are assigned sequentially, so the early ones are genuinely
     // short. The provider's own pattern demands four digits and rejects them.
-    const hedera = getHoudiniChain('hedera', null)
+    const hedera = getHoudiniChain('hedera')
     expect(hedera).toBeDefined()
     if (hedera == null) return
     expect(isValidHoudiniAddress(hedera, '0.0.98')).toEqual(true)
@@ -380,8 +385,8 @@ describe('HOUDINI_CHAINS table', () => {
   it('rejects a pipe in a Dash or Monero address', () => {
     // Inside a character class `|` is a literal, not alternation, so a
     // provider pattern written `[X|7]` accepts it as an address character.
-    const dash = getHoudiniChain('dash', null)
-    const monero = getHoudiniChain('monero', null)
+    const dash = getHoudiniChain('dash')
+    const monero = getHoudiniChain('monero')
     expect(dash).toBeDefined()
     expect(monero).toBeDefined()
     if (dash == null || monero == null) return
@@ -401,7 +406,7 @@ describe('HOUDINI_CHAINS table', () => {
   })
 
   it('accepts and rejects addresses on a chain that needs a memo', () => {
-    const ripple = getHoudiniChain('ripple', null)
+    const ripple = getHoudiniChain('ripple')
     expect(ripple).toBeDefined()
     if (ripple == null) return
     expect(
@@ -411,7 +416,7 @@ describe('HOUDINI_CHAINS table', () => {
   })
 
   it('trims surrounding whitespace before validating', () => {
-    const litecoin = getHoudiniChain('litecoin', null)
+    const litecoin = getHoudiniChain('litecoin')
     expect(litecoin).toBeDefined()
     if (litecoin == null) return
     expect(
@@ -475,75 +480,62 @@ const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 const POL_TOKEN_ID = '455e53cbb86018ac2b8092fdcd39d8444affc3f6'
 
 describe('getRecipientAsset', () => {
+  const source = { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID }
+
   it('gives the source asset for a plain send, token included', () => {
     expect(
       getRecipientAsset({
-        sourcePluginId: 'ethereum',
-        sourceTokenId: USDT_TOKEN_ID,
-        destPluginId: 'ethereum',
+        source,
+        destination: { pluginId: 'litecoin', tokenId: null },
         swapSendActive: false
       })
-    ).toEqual({ pluginId: 'ethereum', tokenId: USDT_TOKEN_ID })
+    ).toEqual(source)
   })
 
-  it('gives the destination chain native for a swap-send', () => {
-    // The quote asks for `toTokenId: null`, so a USDT source pays out ETH even
-    // with no destination chain picked. Naming the source token here told a
-    // USDT sender their recipient receives USDT.
-    expect(
-      getRecipientAsset({
-        sourcePluginId: 'ethereum',
-        sourceTokenId: USDT_TOKEN_ID,
-        destPluginId: 'ethereum',
-        swapSendActive: true
-      })
-    ).toEqual({ pluginId: 'ethereum', tokenId: null })
+  it('gives the destination asset for a swap-send', () => {
+    for (const destination of [
+      { pluginId: 'litecoin', tokenId: null },
+      // The source chain's own coin, picked for a token source:
+      { pluginId: 'ethereum', tokenId: null },
+      // A token on another chain:
+      { pluginId: 'tron', tokenId: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t' }
+    ]) {
+      expect(
+        getRecipientAsset({ source, destination, swapSendActive: true })
+      ).toEqual(destination)
+    }
+  })
 
+  it('gives a token source its own token for a same-asset private send', () => {
+    // Stealth with nothing picked sends the source asset privately, so the
+    // destination the scene passes is the source itself.
     expect(
-      getRecipientAsset({
-        sourcePluginId: 'ethereum',
-        sourceTokenId: USDT_TOKEN_ID,
-        destPluginId: 'litecoin',
-        swapSendActive: true
-      })
-    ).toEqual({ pluginId: 'litecoin', tokenId: null })
+      getRecipientAsset({ source, destination: source, swapSendActive: true })
+    ).toEqual(source)
   })
 })
 
 describe('getRecipientAssetChoices', () => {
-  const servedPluginIds = ['bitcoin', 'ethereum', 'litecoin', 'polygon']
+  const destinationAssets = [
+    { pluginId: 'bitcoin', tokenId: null },
+    { pluginId: 'ethereum', tokenId: null },
+    { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+    { pluginId: 'litecoin', tokenId: null },
+    { pluginId: 'polygon', tokenId: null }
+  ]
 
-  it('names what picking the first row pays out', () => {
-    // Picking the first row clears the adopted chain, so the swap state that
-    // matters is the one Stealth alone gives. Labelling it from the current
-    // state named ETH for a USDT sender whose pick reverted to a USDT send.
-    for (const stealthActive of [false, true]) {
-      for (const sourceTokenId of [null, USDT_TOKEN_ID]) {
-        const [first] = getRecipientAssetChoices({
-          sourcePluginId: 'ethereum',
-          sourceTokenId,
-          stealthActive,
-          servedPluginIds
-        })
-        expect(first.recipientPluginId).toEqual(undefined)
-        expect(first.asset).toEqual(
-          getRecipientAsset({
-            sourcePluginId: 'ethereum',
-            sourceTokenId,
-            destPluginId: 'ethereum',
-            swapSendActive: stealthActive
-          })
-        )
-      }
+  it('leads with the source asset, which adopts nothing', () => {
+    for (const tokenId of [null, USDT_TOKEN_ID]) {
+      const source = { pluginId: 'ethereum', tokenId }
+      const [first] = getRecipientAssetChoices({ source, destinationAssets })
+      expect(first).toEqual({ asset: source, pickedAsset: undefined })
     }
   })
 
-  it('offers a token source its own chain native without Stealth', () => {
+  it('offers a token source its own chain coin', () => {
     const choices = getRecipientAssetChoices({
-      sourcePluginId: 'ethereum',
-      sourceTokenId: USDT_TOKEN_ID,
-      stealthActive: false,
-      servedPluginIds
+      source: { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+      destinationAssets
     })
     expect(choices.map(choice => choice.asset)).toEqual([
       { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
@@ -552,39 +544,45 @@ describe('getRecipientAssetChoices', () => {
       { pluginId: 'litecoin', tokenId: null },
       { pluginId: 'polygon', tokenId: null }
     ])
-    expect(choices[2].recipientPluginId).toEqual('ethereum')
+    expect(choices[2].pickedAsset).toEqual({
+      pluginId: 'ethereum',
+      tokenId: null
+    })
   })
 
   it('never lists one payout twice', () => {
-    // Two rows for the same payout quote identically and differ only in
-    // `crossAssetPicked`, which decides whether turning Stealth off degrades
-    // to a plain send. No user can tell them apart.
-    for (const stealthActive of [false, true]) {
-      for (const sourceTokenId of [null, USDT_TOKEN_ID]) {
-        const keys = getRecipientAssetChoices({
-          sourcePluginId: 'ethereum',
-          sourceTokenId,
-          stealthActive,
-          servedPluginIds
-        }).map(choice => recipientAssetKey(choice.asset))
-        expect(new Set(keys).size).toEqual(keys.length)
-      }
+    // The source asset is also a destination asset. Two rows for it would
+    // quote identically and differ only in whether turning Stealth off
+    // degrades to a plain send, and no user can tell them apart.
+    for (const tokenId of [null, USDT_TOKEN_ID]) {
+      const keys = getRecipientAssetChoices({
+        source: { pluginId: 'ethereum', tokenId },
+        destinationAssets
+      }).map(choice => recipientAssetKey(choice.asset))
+      expect(new Set(keys).size).toEqual(keys.length)
     }
   })
 
-  it('offers every served chain but the source to a native source', () => {
+  it('adopts every row but the first as its own asset', () => {
     const choices = getRecipientAssetChoices({
-      sourcePluginId: 'ethereum',
-      sourceTokenId: null,
-      stealthActive: true,
-      servedPluginIds
+      source: { pluginId: 'ethereum', tokenId: null },
+      destinationAssets
     })
-    expect(choices.map(choice => choice.recipientPluginId)).toEqual([
+    expect(choices.map(choice => choice.pickedAsset)).toEqual([
       undefined,
-      'bitcoin',
-      'litecoin',
-      'polygon'
+      { pluginId: 'bitcoin', tokenId: null },
+      { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'polygon', tokenId: null }
     ])
+  })
+
+  it('keeps a source the destination list does not hold', () => {
+    // A banned or unserved source asset still has its plain-send row.
+    const source = { pluginId: 'piratechain', tokenId: null }
+    const choices = getRecipientAssetChoices({ source, destinationAssets })
+    expect(choices[0].asset).toEqual(source)
+    expect(choices).toHaveLength(destinationAssets.length + 1)
   })
 })
 
@@ -605,14 +603,335 @@ describe('recipientAssetKey', () => {
     expect(polToken).not.toEqual(polygonChain)
   })
 
+  it('separates one token contract deployed on two chains', () => {
+    // An EVM token can sit at the same address on two chains, so the token id
+    // alone does not name an asset.
+    expect(
+      recipientAssetKey({ pluginId: 'ethereum', tokenId: USDT_TOKEN_ID })
+    ).not.toEqual(
+      recipientAssetKey({ pluginId: 'polygon', tokenId: USDT_TOKEN_ID })
+    )
+  })
+
   it('gives every row of a picker a distinct key', () => {
     const choices = getRecipientAssetChoices({
-      sourcePluginId: 'ethereum',
-      sourceTokenId: POL_TOKEN_ID,
-      stealthActive: false,
-      servedPluginIds: HOUDINI_CHAINS.map(chain => chain.pluginId)
+      source: { pluginId: 'ethereum', tokenId: POL_TOKEN_ID },
+      destinationAssets: HOUDINI_CHAINS.map(chain => ({
+        pluginId: chain.pluginId,
+        tokenId: null
+      }))
     })
     const keys = choices.map(choice => recipientAssetKey(choice.asset))
     expect(new Set(keys).size).toEqual(keys.length)
+  })
+})
+
+// Contract addresses in the spelling Edge stores (EVM ones carry a checksum),
+// keyed the way the served list is NOT: the list is lowercased on load.
+const USDT_ETHEREUM = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+const USDC_ETHEREUM = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+const USDT_TRON = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'
+const USDC_SOLANA = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
+const CUSTOM_TRON = 'TAt4ufXFaHZAEV44ev7onThjTnF61SEaEM'
+const UNLISTED_ETHEREUM = '0x1111111111111111111111111111111111111111'
+
+const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+const UNLISTED_TOKEN_ID = '1111111111111111111111111111111111111111'
+
+const makeToken = (
+  displayName: string,
+  networkLocation: object | undefined
+): HoudiniCurrencyConfigs[string]['allTokens'][string] => ({
+  currencyCode: displayName,
+  denominations: [],
+  displayName,
+  networkLocation
+})
+
+// What an account's currency configs hold: built-in tokens plus the custom
+// ones the user added, all under `allTokens`. Piratechain stands in for a
+// chain the account has that Houdini does not serve, and litecoin for a
+// served chain with no tokens.
+const currencyConfigs: HoudiniCurrencyConfigs = {
+  ethereum: {
+    allTokens: {
+      [USDT_TOKEN_ID]: makeToken('Tether', { contractAddress: USDT_ETHEREUM }),
+      [USDC_TOKEN_ID]: makeToken('USD Coin', {
+        contractAddress: USDC_ETHEREUM
+      }),
+      [UNLISTED_TOKEN_ID]: makeToken('Unlisted', {
+        contractAddress: UNLISTED_ETHEREUM
+      })
+    }
+  },
+  litecoin: { allTokens: {} },
+  piratechain: { allTokens: {} },
+  solana: {
+    allTokens: {
+      [USDC_SOLANA]: makeToken('USD Coin', { contractAddress: USDC_SOLANA })
+    }
+  },
+  tron: {
+    allTokens: {
+      [USDT_TRON]: makeToken('Tether', { contractAddress: USDT_TRON }),
+      // A custom token the user added, which Houdini happens to list:
+      [CUSTOM_TRON]: makeToken('Bull', { contractAddress: CUSTOM_TRON }),
+      // A token located by something other than a contract address:
+      memoOnly: makeToken('Memo Only', { issuer: 'someone' })
+    }
+  }
+}
+
+// The list as the info server serves it, in Houdini's own spelling. The
+// `fantom` chain is one Houdini lists tokens for that the app does not serve.
+const servedTokens = {
+  ethereum: {
+    [USDT_ETHEREUM.toLowerCase()]: true,
+    [USDC_ETHEREUM.toLowerCase()]: false
+  },
+  fantom: { '0x2222222222222222222222222222222222222222': true },
+  solana: { [USDC_SOLANA]: true },
+  tron: { [USDT_TRON]: true, [CUSTOM_TRON]: false }
+}
+const houdiniTokens = asHoudiniTokens(servedTokens)
+
+describe('asHoudiniTokens', () => {
+  it('lowercases every contract address', () => {
+    expect(houdiniTokens.tron).toEqual({
+      [USDT_TRON.toLowerCase()]: true,
+      [CUSTOM_TRON.toLowerCase()]: false
+    })
+    expect(houdiniTokens.solana).toEqual({
+      [USDC_SOLANA.toLowerCase()]: true
+    })
+  })
+
+  it('keeps the chain names as served', () => {
+    // The names are matched against `houdiniShortName`, which is mixed case
+    // for some chains (`MON`, `Zcash`).
+    expect(Object.keys(asHoudiniTokens({ MON: {}, Zcash: {} }))).toEqual([
+      'MON',
+      'Zcash'
+    ])
+  })
+
+  it('rejects a list of the wrong shape', () => {
+    expect(() => asHoudiniTokens({ tron: [USDT_TRON] })).toThrow()
+    expect(() => asHoudiniTokens({ tron: { [USDT_TRON]: 'yes' } })).toThrow()
+  })
+})
+
+describe('getHoudiniAssetSupport', () => {
+  const getSupport = (
+    pluginId: string,
+    tokenId: string | null
+  ): ReturnType<typeof getHoudiniAssetSupport> =>
+    getHoudiniAssetSupport({
+      asset: { pluginId, tokenId },
+      currencyConfigs,
+      houdiniTokens
+    })
+
+  it('reads a chain coin from the chain table', () => {
+    expect(getSupport('tron', null)).toEqual({ hasSelfPrivate: true })
+    // Rootstock is served, but not to itself:
+    expect(getSupport('rsk', null)).toEqual({ hasSelfPrivate: false })
+    expect(getSupport('piratechain', null)).toBeUndefined()
+  })
+
+  it('matches a token by contract address, whatever its case', () => {
+    // Edge spells an EVM address with a checksum and Houdini in lowercase,
+    // and the base58 addresses arrive in their one true spelling:
+    expect(getSupport('ethereum', USDT_TOKEN_ID)).toEqual({
+      hasSelfPrivate: true
+    })
+    expect(getSupport('tron', USDT_TRON)).toEqual({ hasSelfPrivate: true })
+    expect(getSupport('solana', USDC_SOLANA)).toEqual({ hasSelfPrivate: true })
+  })
+
+  it("reads a token's self-private flag from the list", () => {
+    expect(getSupport('ethereum', USDC_TOKEN_ID)).toEqual({
+      hasSelfPrivate: false
+    })
+  })
+
+  it('matches a custom token the same way', () => {
+    expect(getSupport('tron', CUSTOM_TRON)).toEqual({ hasSelfPrivate: false })
+  })
+
+  it('returns nothing for a token the list does not hold', () => {
+    expect(getSupport('ethereum', UNLISTED_TOKEN_ID)).toBeUndefined()
+    // A token id the account has no token for:
+    expect(getSupport('ethereum', 'ffff')).toBeUndefined()
+    // A token with no contract address to match by:
+    expect(getSupport('tron', 'memoOnly')).toBeUndefined()
+  })
+
+  it('returns nothing for a token before the list loads', () => {
+    expect(
+      getHoudiniAssetSupport({
+        asset: { pluginId: 'tron', tokenId: USDT_TRON },
+        currencyConfigs,
+        houdiniTokens: {}
+      })
+    ).toBeUndefined()
+  })
+
+  it('never resolves an address through the object prototype', () => {
+    const configs: HoudiniCurrencyConfigs = {
+      tron: {
+        allTokens: {
+          odd: makeToken('Odd', { contractAddress: 'constructor' })
+        }
+      }
+    }
+    expect(
+      getHoudiniAssetSupport({
+        asset: { pluginId: 'tron', tokenId: 'odd' },
+        currencyConfigs: configs,
+        houdiniTokens
+      })
+    ).toBeUndefined()
+  })
+})
+
+describe('getHoudiniAssets', () => {
+  it('lists each chain coin followed by its served tokens, by name', () => {
+    expect(getHoudiniAssets({ currencyConfigs, houdiniTokens })).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+      { pluginId: 'ethereum', tokenId: USDC_TOKEN_ID },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'solana', tokenId: null },
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      { pluginId: 'tron', tokenId: null },
+      { pluginId: 'tron', tokenId: CUSTOM_TRON },
+      { pluginId: 'tron', tokenId: USDT_TRON }
+    ])
+  })
+
+  it('lists the chain coins alone before the list loads', () => {
+    expect(getHoudiniAssets({ currencyConfigs, houdiniTokens: {} })).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'solana', tokenId: null },
+      { pluginId: 'tron', tokenId: null }
+    ])
+  })
+
+  it('removes the destinations the info server banned', () => {
+    const assets = getHoudiniAssets({
+      currencyConfigs,
+      houdiniTokens,
+      destinationBans: [
+        // One token:
+        { pluginId: 'tron', tokenId: USDT_TRON },
+        // A chain coin, which leaves its tokens:
+        { pluginId: 'solana', tokenId: undefined },
+        // Every token on a chain, which leaves its coin:
+        { pluginId: 'ethereum', tokenId: 'allTokens' },
+        // A whole chain:
+        { pluginId: 'litecoin', tokenId: 'allCoins' }
+      ]
+    })
+    expect(assets).toEqual([
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      { pluginId: 'tron', tokenId: null },
+      { pluginId: 'tron', tokenId: CUSTOM_TRON }
+    ])
+  })
+})
+
+describe('the "Recipient receives" picker rows', () => {
+  const getRows = (
+    source: { pluginId: string; tokenId: string | null },
+    destinationBans?: Parameters<typeof getHoudiniAssets>[0]['destinationBans']
+  ): Array<{ pluginId: string; tokenId: string | null }> =>
+    getRecipientAssetChoices({
+      source,
+      destinationAssets: getHoudiniAssets({
+        currencyConfigs,
+        houdiniTokens,
+        destinationBans
+      })
+    }).map(choice => choice.asset)
+
+  it('follows each chain coin with the tokens Houdini serves on it', () => {
+    expect(getRows({ pluginId: 'tron', tokenId: null })).toEqual([
+      { pluginId: 'tron', tokenId: null },
+      { pluginId: 'ethereum', tokenId: null },
+      { pluginId: 'ethereum', tokenId: USDT_TOKEN_ID },
+      { pluginId: 'ethereum', tokenId: USDC_TOKEN_ID },
+      { pluginId: 'litecoin', tokenId: null },
+      { pluginId: 'solana', tokenId: null },
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      { pluginId: 'tron', tokenId: CUSTOM_TRON },
+      { pluginId: 'tron', tokenId: USDT_TRON }
+    ])
+  })
+
+  it('lists a token source once, as the first row', () => {
+    // USDT to USDT is the same asset, so the row adopts nothing and the send
+    // stays a plain or same-asset private one.
+    const source = { pluginId: 'tron', tokenId: USDT_TRON }
+    const choices = getRecipientAssetChoices({
+      source,
+      destinationAssets: getHoudiniAssets({ currencyConfigs, houdiniTokens })
+    })
+    expect(choices[0]).toEqual({ asset: source, pickedAsset: undefined })
+    expect(
+      choices.filter(
+        choice => recipientAssetKey(choice.asset) === recipientAssetKey(source)
+      )
+    ).toHaveLength(1)
+    // Its chain coin is a row of its own, and a cross-asset pick:
+    expect(choices.map(choice => choice.pickedAsset)).toContainEqual({
+      pluginId: 'tron',
+      tokenId: null
+    })
+  })
+
+  it('treats the same token on another chain as a different asset', () => {
+    const rows = getRows({ pluginId: 'tron', tokenId: USDT_TRON })
+    expect(rows).toContainEqual({
+      pluginId: 'ethereum',
+      tokenId: USDT_TOKEN_ID
+    })
+  })
+
+  it('leaves out an unlisted token and an unserved chain', () => {
+    const rows = getRows({ pluginId: 'tron', tokenId: null })
+    expect(rows).not.toContainEqual({
+      pluginId: 'ethereum',
+      tokenId: UNLISTED_TOKEN_ID
+    })
+    expect(rows.map(row => row.pluginId)).not.toContain('piratechain')
+  })
+
+  it('removes a banned destination row and keeps the source row', () => {
+    const source = { pluginId: 'tron', tokenId: USDT_TRON }
+    const rows = getRows(source, [
+      { pluginId: 'solana', tokenId: USDC_SOLANA },
+      // The source asset itself, which stays as the plain-send row:
+      { pluginId: 'tron', tokenId: USDT_TRON }
+    ])
+    expect(rows[0]).toEqual(source)
+    expect(rows).not.toContainEqual({
+      pluginId: 'solana',
+      tokenId: USDC_SOLANA
+    })
+    expect(rows).toContainEqual({ pluginId: 'solana', tokenId: null })
+  })
+
+  it('offers chain coins alone before the list loads', () => {
+    const rows = getRecipientAssetChoices({
+      source: { pluginId: 'tron', tokenId: null },
+      destinationAssets: getHoudiniAssets({
+        currencyConfigs,
+        houdiniTokens: {}
+      })
+    }).map(choice => choice.asset)
+    expect(rows.every(row => row.tokenId == null)).toEqual(true)
   })
 })

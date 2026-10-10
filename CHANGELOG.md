@@ -3,7 +3,12 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: Token destinations, like USDT on Tron, for Stealth Send and swap-to-address sends
+- changed: The "Recipient receives" list shows each asset's name over its network
+- changed: Stealth Swap wallet lists show only the assets the Houdini provider supports
+- changed: The send scene's exchange rate row no longer names the swap provider
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
+- fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
 
 ## 4.52.0 (staging)
 

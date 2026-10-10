@@ -1,7 +1,11 @@
-import type { EdgeTokenId } from 'edge-core-js'
+import { asBoolean, asObject, type Cleaner } from 'cleaners'
+import type { EdgeCurrencyConfig, EdgePluginMap } from 'edge-core-js'
 
+import type { DisableAsset } from '../actions/ExchangeInfoActions'
 import type { EdgeAsset } from '../types/types'
+import { asMaybeContractLocation } from './cleaners'
 import { peekPaymentUri } from './paymentUri'
+import { disableAssetsCover } from './stealthSwap'
 
 /**
  * A destination chain HoudiniSwap can pay out to, keyed by the Edge currency
@@ -55,12 +59,16 @@ export interface HoudiniChain {
  * can pay a `0x` deposit address or be paid at one, so offering the route
  * would hand the user a destination their own Telos wallet cannot use.
  *
- * This is a snapshot on purpose. Houdini is an aggregator whose per-pair
- * availability fluctuates too fast to track and whose Cloudflare blocks tight
- * probing loops, so nothing here may be discovered at runtime: asset-level
- * capability lives in this table, and pair-level capability is learned only
- * from a real user-initiated quote (`pairCaps`). A follow-up can refresh the
- * table from the API once chain metadata is exposed through the swap plugin.
+ * The chains are a snapshot on purpose. Houdini is an aggregator whose
+ * per-pair availability fluctuates too fast to track and whose Cloudflare
+ * blocks tight probing loops, so the app never probes it: chain-level
+ * capability (address format, memo flag, EVM chain id, the coin's
+ * `hasSelfPrivate`) lives in this table, and pair-level capability is learned
+ * only from a real user-initiated quote (`pairCaps`).
+ *
+ * Tokens are not in this table. The info server polls Houdini's token list
+ * and serves it as `houdiniTokens` (see `HoudiniTokens`), and a token is
+ * offered only on a chain listed here.
  */
 export const HOUDINI_CHAINS: HoudiniChain[] = [
   {
@@ -385,14 +393,141 @@ export const HOUDINI_MIN_USD = {
   dex: '5'
 } as const
 
-/** Look up the Houdini destination chain for an Edge asset, if served. */
-export function getHoudiniChain(
-  pluginId: string,
-  tokenId: EdgeTokenId
-): HoudiniChain | undefined {
-  // Only native (chain) assets are offered as destinations for now:
-  if (tokenId != null) return undefined
+/**
+ * Look up the Houdini chain an Edge plugin maps to, if served. The row holds
+ * what is true of every asset on the chain: its address format, memo flag and
+ * EVM chain id. Whether Houdini serves one particular token is a separate
+ * question, answered by `getHoudiniAssetSupport`.
+ */
+export function getHoudiniChain(pluginId: string): HoudiniChain | undefined {
   return HOUDINI_CHAINS.find(chain => chain.pluginId === pluginId)
+}
+
+/**
+ * The tokens Houdini can route, as the info server serves them in the
+ * `houdiniTokens` field of its rollup: one `hasSelfPrivate` flag per token,
+ * keyed by Houdini's chain name (a chain's `houdiniShortName`) and then by
+ * contract address.
+ */
+export type HoudiniTokens = Record<string, Record<string, boolean>>
+
+/**
+ * Cleans the served token list and lowercases every contract address. The
+ * server keeps Houdini's own spelling, and Edge spells the same EVM address
+ * with a checksum, so both sides of a match are lowercased.
+ */
+export const asHoudiniTokens: Cleaner<HoudiniTokens> = raw => {
+  const clean = asObject(asObject(asBoolean))(raw)
+  return Object.fromEntries(
+    Object.entries(clean).map(([chain, tokens]) => [
+      chain,
+      Object.fromEntries(
+        Object.entries(tokens).map(([contractAddress, hasSelfPrivate]) => [
+          contractAddress.toLowerCase(),
+          hasSelfPrivate
+        ])
+      )
+    ])
+  )
+}
+
+/** The part of the account's currency configs the token matching reads. */
+export type HoudiniCurrencyConfigs = EdgePluginMap<
+  Pick<EdgeCurrencyConfig, 'allTokens'>
+>
+
+/** What Houdini can do with an asset it serves. */
+export interface HoudiniAssetSupport {
+  /** Whether Houdini can route the asset to itself privately. */
+  hasSelfPrivate: boolean
+}
+
+/**
+ * Look up an Edge asset in what Houdini serves, or get `undefined` when it
+ * does not serve the asset.
+ *
+ * A chain's own coin reads the chain table. A token is matched to the served
+ * list by its contract address, so a custom token the user added matches the
+ * same way a built-in one does.
+ */
+export function getHoudiniAssetSupport(opts: {
+  asset: EdgeAsset
+  currencyConfigs: HoudiniCurrencyConfigs
+  houdiniTokens: HoudiniTokens
+}): HoudiniAssetSupport | undefined {
+  const { asset, currencyConfigs, houdiniTokens } = opts
+  const { pluginId, tokenId } = asset
+
+  const chain = getHoudiniChain(pluginId)
+  if (chain == null) return undefined
+  if (tokenId == null) return { hasSelfPrivate: chain.hasSelfPrivate }
+
+  const edgeToken = currencyConfigs[pluginId]?.allTokens[tokenId]
+  if (edgeToken == null) return undefined
+  const hasSelfPrivate = getTokenFlag(
+    houdiniTokens[chain.houdiniShortName],
+    edgeToken.networkLocation
+  )
+  return hasSelfPrivate == null ? undefined : { hasSelfPrivate }
+}
+
+/**
+ * Every asset Houdini serves that this account has a currency plugin for, in
+ * picker order: each chain's coin followed by that chain's tokens, sorted by
+ * name. `destinationBans` removes the assets the info server withdrew as swap
+ * destinations.
+ */
+export function getHoudiniAssets(opts: {
+  currencyConfigs: HoudiniCurrencyConfigs
+  houdiniTokens: HoudiniTokens
+  destinationBans?: DisableAsset[]
+}): EdgeAsset[] {
+  const { currencyConfigs, destinationBans = [], houdiniTokens } = opts
+
+  const assets: EdgeAsset[] = []
+  for (const chain of HOUDINI_CHAINS) {
+    const { houdiniShortName, pluginId } = chain
+    const currencyConfig = currencyConfigs[pluginId]
+    if (currencyConfig == null) continue
+    assets.push({ pluginId, tokenId: null })
+
+    const chainTokens = houdiniTokens[houdiniShortName]
+    if (chainTokens == null) continue
+    const { allTokens } = currencyConfig
+    const tokenIds = Object.keys(allTokens).filter(
+      tokenId =>
+        getTokenFlag(chainTokens, allTokens[tokenId].networkLocation) != null
+    )
+    tokenIds.sort((a, b) => {
+      const byName = allTokens[a].displayName.localeCompare(
+        allTokens[b].displayName
+      )
+      return byName !== 0 ? byName : a.localeCompare(b)
+    })
+    for (const tokenId of tokenIds) assets.push({ pluginId, tokenId })
+  }
+
+  return assets.filter(
+    asset => !disableAssetsCover(destinationBans, asset.pluginId, asset.tokenId)
+  )
+}
+
+/**
+ * The served flag for the token at an Edge `networkLocation`, or `undefined`
+ * when the chain's served tokens do not include it.
+ */
+function getTokenFlag(
+  chainTokens: HoudiniTokens[string] | undefined,
+  networkLocation: unknown
+): boolean | undefined {
+  if (chainTokens == null) return undefined
+  const contractLocation = asMaybeContractLocation(networkLocation)
+  if (contractLocation == null) return undefined
+  const contractAddress = contractLocation.contractAddress.toLowerCase()
+  // The addresses are remote data, so never resolve one through the prototype:
+  return Object.prototype.hasOwnProperty.call(chainTokens, contractAddress)
+    ? chainTokens[contractAddress]
+    : undefined
 }
 
 /**
@@ -489,24 +624,19 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
 /**
  * The asset the recipient actually receives.
  *
- * A swap-send always pays out the destination chain's NATIVE asset, because
- * the quote asks for `toTokenId: null` and token destinations are not offered
- * at all. A plain send delivers the source asset verbatim, token included.
- * Both the "Recipient receives" row and that row's picker read this, so the
- * two cannot drift: naming the source token while the order paid out the
- * chain's own coin told a USDT sender their recipient receives USDT.
+ * A swap-send pays out the destination asset the quote asks for, coin or
+ * token. A plain send delivers the source asset verbatim. Both the "Recipient
+ * receives" row and that row's picker read this, so the row always names the
+ * asset the order pays out.
  */
 export function getRecipientAsset(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** `recipientPluginId ?? sourcePluginId`. */
-  destPluginId: string
+  source: EdgeAsset
+  /** The picked destination asset, or the source asset when none is picked. */
+  destination: EdgeAsset
   swapSendActive: boolean
 }): EdgeAsset {
-  const { destPluginId, sourcePluginId, sourceTokenId, swapSendActive } = opts
-  return swapSendActive
-    ? { pluginId: destPluginId, tokenId: null }
-    : { pluginId: sourcePluginId, tokenId: sourceTokenId }
+  const { destination, source, swapSendActive } = opts
+  return swapSendActive ? destination : source
 }
 
 /** One row of the "Recipient receives" picker. */
@@ -514,28 +644,22 @@ export interface RecipientAssetChoice {
   /** The asset this row names, which is what the recipient would receive. */
   asset: EdgeAsset
   /**
-   * What `recipientPluginId` becomes when this row is picked. `undefined`
-   * clears the explicit destination chain, leaving the source chain.
+   * The destination asset the scene adopts when this row is picked.
+   * `undefined` clears the adopted destination, leaving the source asset.
    */
-  recipientPluginId: string | undefined
+  pickedAsset: EdgeAsset | undefined
 }
 
 /**
  * The rows of the "Recipient receives" picker, in display order.
  *
- * Each row names what the recipient gets once THAT row is picked, which is
- * not always what the scene shows now: picking the first row clears the
- * adopted destination, so without Stealth a token source falls back to a
- * plain send of the token. Labelling that row from the current swap state
- * named the chain's native coin while the pick reverted to the token.
- *
- * The first row is the source chain with no destination adopted. The rest are
- * the served destination chains. The source chain appears again only when
- * adopting it pays out something the first row does not, which is a token
- * source without Stealth: the first row is the token, and the chain's native
- * coin is a separate payout. Any other second row for the source chain quotes
- * identically to the first and differs only in whether turning Stealth off
- * degrades to a plain send, which no user can tell apart.
+ * The first row is the source asset with no destination adopted: a plain send,
+ * or a same-asset private send with Stealth on. It is always offered, since a
+ * send of the source asset needs no swap destination. The rest are
+ * `destinationAssets` in the order given, which callers build with
+ * `getHoudiniAssets`: each served chain's coin followed by that chain's
+ * tokens. The source asset is not repeated among them, because adopting it
+ * quotes the same as the first row.
  *
  * Callers must key the rows on the asset rather than on its display name. The
  * POL ERC-20 on Ethereum and the Polygon chain share both their name and their
@@ -543,28 +667,14 @@ export interface RecipientAssetChoice {
  * tap to the same row.
  */
 export function getRecipientAssetChoices(opts: {
-  sourcePluginId: string
-  sourceTokenId: EdgeTokenId
-  /** Whether Stealth alone makes this a swap-send, with no chain adopted. */
-  stealthActive: boolean
-  /** Served destination chains, already filtered to what the account holds. */
-  servedPluginIds: string[]
+  source: EdgeAsset
+  /** Every asset offered as a swap destination, in picker order. */
+  destinationAssets: EdgeAsset[]
 }): RecipientAssetChoice[] {
-  const { servedPluginIds, sourcePluginId, sourceTokenId, stealthActive } = opts
+  const { destinationAssets, source } = opts
   const choices: RecipientAssetChoice[] = [
-    {
-      asset: getRecipientAsset({
-        sourcePluginId,
-        sourceTokenId,
-        destPluginId: sourcePluginId,
-        swapSendActive: stealthActive
-      }),
-      recipientPluginId: undefined
-    },
-    ...servedPluginIds.map(pluginId => ({
-      asset: { pluginId, tokenId: null },
-      recipientPluginId: pluginId
-    }))
+    { asset: source, pickedAsset: undefined },
+    ...destinationAssets.map(asset => ({ asset, pickedAsset: asset }))
   ]
   const seen = new Set<string>()
   return choices.filter(choice => {
