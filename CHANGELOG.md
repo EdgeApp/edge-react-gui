@@ -3,7 +3,6 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
-- fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)
 
@@ -59,11 +58,13 @@
 - fixed: Paybis sell Max now quotes the wallet's full spendable amount.
 - fixed: A failed confirmation slide shows the error instead of a stuck spinner.
 - fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+- fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 - fixed: Info server swap disables for mainnet coins not applying
 - fixed: Send totals for multiple recipients show the wallet's display unit, such as sats, instead of the currency code
 - fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
 - fixed: Backing out of the send scene in a MoonPay sell returns to the MoonPay order instead of an error and QR code page
 - removed: LetsExchange swap provider
+
 ## 4.51.3 (2026-09-30)
 
 - added: (Changelly) TON, BNB Smart Chain BNB and Avalanche C-Chain AVAX swaps
