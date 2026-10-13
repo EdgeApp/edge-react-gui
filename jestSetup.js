@@ -260,3 +260,10 @@ jest.mock('react-native-reorderable-list', () => ({
   ...jest.requireActual('react-native-reorderable-list'),
   useReorderableDrag: () => jest.fn()
 }))
+
+// `isAgentTestMode` reads the developer's local config.json. Read it as off
+// in every test, so a machine with AGENT_TEST_MODE on renders the same scenes
+// as one without it. A test that needs the flag on mocks the module itself:
+jest.mock('./src/util/agentTestMode', () => ({
+  isAgentTestMode: () => false
+}))
