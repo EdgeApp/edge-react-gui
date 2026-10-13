@@ -174,4 +174,25 @@ describe('SwapCreateScene', () => {
     ).toBeNull()
     rendered.unmount()
   })
+
+  it('turns Stealth Swap on from the stealth param', () => {
+    const rootState: FakeState = { ...fakeRootState }
+    const sceneProps = fakeSwapTabSceneProps('swapCreate', { stealth: true })
+    const setParams = jest.spyOn(sceneProps.navigation, 'setParams')
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SwapCreateScene {...sceneProps} />
+      </FakeProviders>
+    )
+
+    expect(
+      rendered.getByText(lstrings.stealth_swap_info, { exact: false })
+    ).toBeTruthy()
+    // The param is consumed, so later param merges cannot re-apply it:
+    expect(setParams).toHaveBeenCalledWith({ stealth: undefined })
+    rendered.unmount()
+    // The fake navigation is shared by every test in the file:
+    setParams.mockRestore()
+  })
 })
