@@ -39,5 +39,5 @@ tags:
 
 - runFlow:
     file: ../common/stealth-toggle.yaml
-- assertVisible: 'Private routing needs at least.*'
+- assertVisible: 'Stealth routing needs at least.*'
 - takeScreenshot: maestro/screenshots/stealth-below-min-01-toggle-refused

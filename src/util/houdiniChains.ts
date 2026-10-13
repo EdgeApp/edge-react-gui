@@ -622,6 +622,31 @@ export function schemeNamesChain(scheme: string, chain: HoudiniChain): boolean {
 }
 
 /**
+ * Whether text a wallet could not parse is still written for that wallet's own
+ * chain: a bare address in the chain's format, or a payment URI that names the
+ * chain and carries one. Such text is a bad address on this chain (a failed
+ * checksum), whatever other chains share the format.
+ *
+ * A URI is read by what it names, an EIP-681 chain id before the scheme, so
+ * `polygon:0x…` and `ethereum:0x…@137` are not Ethereum's own text even though
+ * the address inside fits Ethereum's format.
+ */
+export function isOwnChainAddressText(
+  chain: HoudiniChain,
+  text: string
+): boolean {
+  const { addressCandidates, scheme, evmChainId } = peekPaymentUri(text)
+  const namesOtherChain =
+    evmChainId != null
+      ? evmChainId !== chain.evmChainId
+      : scheme != null && !schemeNamesChain(scheme, chain)
+  return (
+    !namesOtherChain &&
+    addressCandidates.some(candidate => isValidHoudiniAddress(chain, candidate))
+  )
+}
+
+/**
  * The asset the recipient actually receives.
  *
  * A swap-send pays out the destination asset the quote asks for, coin or
@@ -637,6 +662,39 @@ export function getRecipientAsset(opts: {
 }): EdgeAsset {
   const { destination, source, swapSendActive } = opts
   return swapSendActive ? destination : source
+}
+
+/**
+ * Why a send cannot go back to paying the wallet's own network: the send is
+ * private, and the provider has no private route for it.
+ */
+export type OwnNetworkBlock =
+  | 'selfPrivateUnsupported'
+  | 'privateRouteUnavailable'
+
+/**
+ * Whether the send can pay the wallet's own network once the recipient goes
+ * back to the source asset. A plain send always can. A private one is a
+ * same-asset send, coin or token, which needs the provider to offer the
+ * route: the same pair of checks the Stealth toggle makes before it arms.
+ */
+export function getOwnNetworkBlock(opts: {
+  /** Stealth is on and the send can be routed as a swap. */
+  stealthActive: boolean
+  /** The source asset's `hasSelfPrivate`. */
+  selfPrivateAvailable: boolean
+  /**
+   * The probed verdict for a private route from the source asset to itself.
+   * `undefined` while no probe has answered.
+   */
+  privateRouteOffered: boolean | undefined
+}): OwnNetworkBlock | undefined {
+  const { privateRouteOffered, selfPrivateAvailable, stealthActive } = opts
+  if (!stealthActive) return
+  // A reset recipient receives the source asset itself, which only the
+  // asset's own capability flag allows, for a token as for a coin:
+  if (!selfPrivateAvailable) return 'selfPrivateUnsupported'
+  if (privateRouteOffered === false) return 'privateRouteUnavailable'
 }
 
 /** One row of the "Recipient receives" picker. */

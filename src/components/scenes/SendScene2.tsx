@@ -11,6 +11,7 @@ import {
   type EdgeDenomination,
   type EdgeMemo,
   type EdgeMemoOption,
+  type EdgeParsedUri,
   type EdgeSpendInfo,
   type EdgeSpendTarget,
   type EdgeSwapQuote,
@@ -31,7 +32,10 @@ import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { showSendScamWarningModal } from '../../actions/ScamWarningActions'
-import { checkAndShowGetCryptoModal } from '../../actions/ScanActions'
+import {
+  addressWarnings,
+  checkAndShowGetCryptoModal
+} from '../../actions/ScanActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { showSwapSendWarningModal } from '../../actions/SwapSendWarningActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -60,7 +64,12 @@ import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, FioRequest } from '../../types/types'
-import { getCurrencyCode, isEvmWallet } from '../../util/CurrencyInfoHelpers'
+import { describeAddressRejection } from '../../util/addressRejection'
+import {
+  getCurrencyCode,
+  isEvmWallet,
+  isOwnEvmAddress
+} from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   addToFioAddressCache,
@@ -75,9 +84,11 @@ import {
   getHoudiniAssets,
   getHoudiniAssetSupport,
   getHoudiniChain,
+  getOwnNetworkBlock,
   getRecipientAsset,
   getRecipientAssetChoices,
   HOUDINI_MIN_USD,
+  isOwnChainAddressText,
   type RecipientAssetChoice,
   recipientAssetKey,
   schemeNamesChain
@@ -92,7 +103,10 @@ import {
 } from '../../util/memoUtils'
 import {
   type CrossChainPayment,
+  isPayableOnAny,
+  isTokenAmount,
   parseCrossChainPayment,
+  parseOwnNetworkPayment,
   peekPaymentUri
 } from '../../util/paymentUri'
 import {
@@ -928,7 +942,14 @@ const SendComponent: React.FC<Props> = props => {
 
   const handleChangeAddress =
     (spendTarget: EdgeSpendTarget) =>
-    async (changeAddressResult: ChangeAddressResult): Promise<void> => {
+    async (
+      changeAddressResult: ChangeAddressResult,
+      /**
+       * The caller just set the recipient back to the wallet's own network,
+       * dropping whatever network was picked or adopted before.
+       */
+      recipientReset: boolean = false
+    ): Promise<void> => {
       const {
         addressEntryMethod,
         parsedUri,
@@ -940,11 +961,24 @@ const SendComponent: React.FC<Props> = props => {
         detectedDestPluginId
       } = changeAddressResult
 
-      // A destination detected from the address itself makes this a cross-asset
-      // send. `setPickedRecipientAsset` has not re-rendered yet, so the routing
-      // below reads the detected chain rather than the stale render-time state.
-      const uriGuaranteesReceiveSide =
-        detectedDestPluginId != null || (swapSendActive && !sameAsset)
+      // A destination detected from the address itself, or a recipient just
+      // set back to the source asset, changes where this send pays.
+      // `setPickedRecipientAsset` has not re-rendered yet, so the routing below
+      // works out the recipient this address lands on rather than reading the
+      // stale render-time state.
+      //
+      // A reset recipient is the source asset itself, which stays a swap only
+      // while Stealth is on. A detected destination is a cross-asset send.
+      const nextDestPluginId = recipientReset
+        ? pluginId
+        : detectedDestPluginId ?? destPluginId
+      const nextSameAsset = recipientReset
+        ? true
+        : detectedDestPluginId == null && sameAsset
+      const nextSwapSendActive = recipientReset
+        ? swapSendAllowed && stealth
+        : detectedDestPluginId != null || swapSendActive
+      const uriGuaranteesReceiveSide = nextSwapSendActive && !nextSameAsset
 
       if (parsedUri != null) {
         // The recipient is one of the terms a quote was priced against, so a
@@ -969,10 +1003,9 @@ const SendComponent: React.FC<Props> = props => {
         // which reports the tag as `uniqueIdentifier`. The quote reads the tag
         // row alone, so leaving that value on the plain-send memo would quote
         // an exchange deposit with no tag and pay it uncredited.
-        const memoDestChain =
-          detectedDestPluginId == null
-            ? destChain
-            : getHoudiniChain(detectedDestPluginId)
+        const memoDestChain = nextSwapSendActive
+          ? getHoudiniChain(nextDestPluginId)
+          : undefined
         const uriMemo = crossChainMemo ?? parsedUri.uniqueIdentifier
         if (
           memoDestChain?.memoNeeded === true &&
@@ -987,20 +1020,40 @@ const SendComponent: React.FC<Props> = props => {
         spendTarget.uniqueIdentifier = parsedUri?.uniqueIdentifier
         spendTarget.publicAddress = parsedUri?.publicAddress
 
-        if (uriGuaranteesReceiveSide) {
+        if (
+          uriGuaranteesReceiveSide &&
+          isTokenAmount(parsedUri, crossChainNativeAmount)
+        ) {
+          // The sending wallet read this code as a request for the token being
+          // sent, so its amount is in token units. The payout is a different
+          // asset, which makes the amount what this wallet sends: priced as
+          // the payout it would quote the wrong asset and size.
+          spendTarget.nativeAmount = parsedUri.nativeAmount
+          setReceiveNativeAmount(undefined)
+          setGuaranteedSide('send')
+        } else if (uriGuaranteesReceiveSide) {
           // A payment URI's amount is what the recipient should receive, so a
           // cross-asset send guarantees the destination side and prices the
           // send side off the quote.
           //
-          // Only an amount the destination chain's own parser read is taken.
-          // The sending wallet reads a same-chain code in the SOURCE asset's
-          // units, which cannot price a different asset on that chain: 5 SOL
-          // in lamports is 5,000 USDC.
+          // An amount the destination chain's own parser read is taken as is.
+          // The sending wallet reads a same-chain code in the units of the
+          // asset its parse names, so that amount counts only when the named
+          // asset is the one being paid out: a token send paying out ETH
+          // keeps an EIP-681 `value`, and 5 SOL in lamports is never read as
+          // 5,000 USDC.
           //
           // Same-asset (stealth) sends stay on the send side: guaranteeing the
           // receive side needs a receive-priced quote, and the provider offers
           // no fixed-rate route when the source and destination assets match.
-          const uriReceiveNativeAmount = crossChainNativeAmount
+          const ownParseStatesPayout =
+            detectedDestPluginId == null &&
+            nextDestPluginId === pluginId &&
+            parsedUri.tokenId !== undefined &&
+            parsedUri.tokenId === destTokenId
+          const uriReceiveNativeAmount =
+            crossChainNativeAmount ??
+            (ownParseStatesPayout ? parsedUri.nativeAmount : undefined)
           spendTarget.nativeAmount = undefined
           if (uriReceiveNativeAmount != null) {
             setReceiveNativeAmount(uriReceiveNativeAmount)
@@ -1115,6 +1168,32 @@ const SendComponent: React.FC<Props> = props => {
   )
 
   /**
+   * Set the recipient back to the source asset for an address the wallet's
+   * own network parser accepted. The tag and quote held for the asset being
+   * left are dropped, as picking the source asset under "Recipient receives"
+   * does, and the whole parse lands in the tile, so a payment code keeps its
+   * amount and memo.
+   */
+  const adoptOwnNetworkDestination =
+    (spendTarget: EdgeSpendTarget) =>
+    async (
+      parsedUri: EdgeParsedUri,
+      addressEntryMethod: AddressEntryMethod
+    ): Promise<void> => {
+      setPickedRecipientAsset(undefined)
+      setDestinationTag(undefined)
+      setSwapQuote(undefined)
+      setReceiveNativeAmount(undefined)
+      setGuaranteedSide('send')
+      setFixedToFallback(false)
+
+      await handleChangeAddress(spendTarget)(
+        { parsedUri, addressEntryMethod },
+        true
+      )
+    }
+
+  /**
    * The recipient assets the "Myself" picker may offer: the source asset plus
    * every swap destination. The wallet picker lists a token only for the
    * wallets that have it enabled.
@@ -1144,23 +1223,117 @@ const SendComponent: React.FC<Props> = props => {
    * the recipient's address before touching "Recipient receives". Detect the
    * chain it belongs to, adopt it as the destination, and keep the address.
    *
-   * Returns false to let the tile report an invalid address, which is still
-   * the right answer for a genuine typo.
+   * Every path that does not adopt the address resolves the reason for the
+   * tile to show, since the scene is otherwise left exactly as it was.
+   *
+   * Adopting an address can change the recipient network without the user
+   * naming it, and each such change is announced. A network the user picked
+   * by name is not.
    */
   const handleUnparsedAddress =
     (spendTarget: EdgeSpendTarget) =>
     async (
       address: string,
       addressEntryMethod: AddressEntryMethod
-    ): Promise<boolean> => {
-      if (!swapSendAllowed || multipleTargets) return false
+    ): Promise<boolean | string> => {
+      const networkNameOf = (id: string): string =>
+        account.currencyConfig[id].currencyInfo.displayName
 
       const candidates = detectHoudiniChains(address, {
         sourcePluginId: pluginId,
         sourceTokenId: tokenId,
         isSupported: id => account.currencyConfig[id] != null
       })
-      if (candidates.length === 0) return false
+
+      // A send that cannot become a swap only pays the wallet's own network,
+      // so an address from elsewhere is called out as such. Text written for
+      // this network, bare or inside a payment URI, is a bad address here (a
+      // failed checksum), whatever other networks share the format.
+      //
+      // Fitting another network's format is not enough to call it that
+      // network's address either: the wallet's own network may be one the
+      // provider does not serve, and a mistyped `0x` address there fits every
+      // served EVM network. One of them has to accept the text.
+      if (!swapSendAllowed || multipleTargets) {
+        const ownChain = getHoudiniChain(pluginId)
+        const isOwnFormat =
+          ownChain != null && isOwnChainAddressText(ownChain, address)
+        const isOtherNetworkAddress =
+          !isOwnFormat &&
+          (await isPayableOnAny(
+            candidates.map(
+              candidate => account.currencyConfig[candidate.pluginId]
+            ),
+            address
+          ))
+        return describeAddressRejection({
+          type: isOtherNetworkAddress ? 'otherNetwork' : 'invalid',
+          networkName: networkNameOf(pluginId)
+        })
+      }
+
+      // With another network picked for the recipient, the tile read the
+      // text against that network alone, so the wallet's own parser has not
+      // seen it yet. It reads the text before any other network does, as it
+      // does on a plain send: an address it accepts sets the recipient back
+      // to the source asset, whichever other networks share the format. A
+      // legacy Bitcoin address also fits Bitcoin Cash, and an Ethereum one
+      // fits every EVM network, and detection leaves the wallet's own network
+      // out of its matches for a coin source.
+      if (destPluginId !== pluginId) {
+        const ownParsedUri = await parseOwnNetworkPayment(
+          coreWallet,
+          currencyCode,
+          tokenId,
+          address
+        )
+        if (ownParsedUri != null) {
+          // The tile turns down a send to the wallet's own address before it
+          // adopts one, and this path adopts in the tile's place:
+          if (await isOwnEvmAddress(coreWallet, ownParsedUri.publicAddress)) {
+            return lstrings.send_to_self_error_message
+          }
+          // A private send only switches when the provider routes it, which
+          // is what the Stealth toggle checks before arming. The decline
+          // reads the same as the toggle's refusal:
+          const ownAssetKey = `${pluginId}:${String(tokenId)}`
+          const ownNetworkBlock = getOwnNetworkBlock({
+            stealthActive: stealth,
+            selfPrivateAvailable,
+            privateRouteOffered:
+              routeCaps[`${ownAssetKey}->${ownAssetKey}`]?.stealth
+          })
+          if (ownNetworkBlock === 'selfPrivateUnsupported') {
+            return sprintf(
+              lstrings.stealth_self_private_unsupported_1s,
+              currencyCode
+            )
+          }
+          if (ownNetworkBlock === 'privateRouteUnavailable') {
+            return lstrings.stealth_route_unavailable_info
+          }
+          // The tile asks these before it adopts an address on the wallet's
+          // network. Turning one down is the user's answer, not an error:
+          if (!(await addressWarnings(ownParsedUri, currencyCode))) return true
+
+          await adoptOwnNetworkDestination(spendTarget)(
+            ownParsedUri,
+            addressEntryMethod
+          )
+          showToast(
+            sprintf(
+              lstrings.send_recipient_network_changed_1s,
+              networkNameOf(pluginId)
+            )
+          )
+          return true
+        }
+      }
+
+      // A genuine typo, or a network no swap can pay out to.
+      if (candidates.length === 0) {
+        return describeAddressRejection({ type: 'unrecognized' })
+      }
 
       // An address format shared by several chains (any EVM `0x…`) cannot be
       // resolved from the address alone, and guessing would send the funds to
@@ -1197,8 +1370,12 @@ const SendComponent: React.FC<Props> = props => {
         const picked = candidates.find(
           candidate => candidate.pluginId === selected
         )
-        // Dismissing the picker is a deliberate cancel, not a bad address.
-        if (picked == null) return true
+        // Dismissing the picker is a deliberate cancel, not a bad address, so
+        // it is acknowledged rather than reported as an error.
+        if (picked == null) {
+          showToast(lstrings.send_address_no_network_selected)
+          return true
+        }
         chain = picked
       }
 
@@ -1206,7 +1383,14 @@ const SendComponent: React.FC<Props> = props => {
         account.currencyConfig[chain.pluginId],
         address
       )
-      if (payment == null) return false
+      // The format matched but the chain's own parser, which is what checks
+      // a checksum, turned it down.
+      if (payment == null) {
+        return describeAddressRejection({
+          type: 'invalid',
+          networkName: networkNameOf(chain.pluginId)
+        })
+      }
       const { publicAddress, nativeAmount, memo } = payment
 
       // A scanned exchange deposit code carries the tag that credits the
@@ -1224,6 +1408,16 @@ const SendComponent: React.FC<Props> = props => {
         nativeAmount,
         crossChainMemo
       )
+      // A lone match is adopted without asking, so the change is announced.
+      // Several matches went through the picker, where the user named it.
+      if (candidates.length === 1 && chain.pluginId !== destPluginId) {
+        showToast(
+          sprintf(
+            lstrings.send_recipient_network_changed_1s,
+            networkNameOf(chain.pluginId)
+          )
+        )
+      }
       return true
     }
 
@@ -1252,6 +1446,7 @@ const SendComponent: React.FC<Props> = props => {
     }
     return (
       <EditableAmountTile
+        key={`addressAmount${index}`}
         title={title}
         exchangeRates={exchangeRates}
         nativeAmount={nativeAmount ?? ''}
@@ -1370,6 +1565,7 @@ const SendComponent: React.FC<Props> = props => {
 
       return (
         <AddressTile2
+          key={`address${index}`}
           title={title}
           recipientAddress={publicAddress}
           coreWallet={coreWallet}
@@ -1483,6 +1679,7 @@ const SendComponent: React.FC<Props> = props => {
         (spendInfo.spendTargets.length > 1 ? ` ${(index + 1).toString()}` : '')
       return (
         <EditableAmountTile
+          key={`amount${index}`}
           title={title}
           exchangeRates={exchangeRates}
           nativeAmount={nativeAmount ?? ''}
@@ -2487,6 +2684,7 @@ const SendComponent: React.FC<Props> = props => {
 
       return (
         <EdgeRow
+          key={`${memoOption.type}:${memoOption.memoName}`}
           rightButtonType="touchable"
           title={memoTitle}
           onPress={handleMemo}
@@ -2567,7 +2765,13 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * The scam warning opens a plain send, until an address is entered. A
+   * swap-send has its own warning card and an error stands alone, so the
+   * scene never stacks this card on either.
+   */
   const renderScamWarning = (): React.ReactElement | null => {
+    if (swapSendActive || showErrorCard) return null
     const { publicAddress } = spendInfo.spendTargets[0]
 
     if (publicAddress === '' || publicAddress == null) {
