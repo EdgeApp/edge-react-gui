@@ -6,6 +6,7 @@ import type {
   EdgeMetadata,
   EdgeTransaction
 } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import {
   getPluginIdIcon,
@@ -18,10 +19,16 @@ import { edgeLight } from '../../theme/variables/edgeLight'
 const BITCOIN_WALLET_ID = 'bitcoin-wallet-id'
 const RECIPIENT_ADDRESS = 'bc1qrecipientaddressthepayeecontrols'
 const DEPOSIT_ADDRESS = '13e6qqcAZCgApTDyMNG8brru4PmtjbReUd'
+const SWAP_PROVIDER_NAME = 'MoonPay Trade (DeFi)'
 
 // Only the fields `getTxActionDisplayInfo` actually reads:
 const account = {
   currencyWallets: {},
+  swapConfig: {
+    mptradedefi: {
+      swapInfo: { pluginId: 'mptradedefi', displayName: SWAP_PROVIDER_NAME }
+    }
+  },
   currencyConfig: {
     bitcoin: {
       currencyInfo: { currencyCode: 'BTC' },
@@ -196,6 +203,104 @@ describe('getTxActionDisplayInfo, the parent network-fee row', () => {
       ethereumWallet
     )
     expect(mergedData.category).toContain(lstrings.wc_smartcontract_network_fee)
+  })
+})
+
+/**
+ * A sale as the MoonPay ramp plugin leaves it: a send to the provider's
+ * deposit address carrying a fiat action, and no name of its own.
+ */
+const makeFiatSellTx = (metadata?: EdgeMetadata): EdgeTransaction => {
+  return {
+    txid: 'txid',
+    tokenId: null,
+    currencyCode: 'BTC',
+    nativeAmount: '-563825',
+    isSend: true,
+    metadata,
+    assetAction: { assetActionType: 'sell' },
+    spendTargets: [{ publicAddress: DEPOSIT_ADDRESS, nativeAmount: '563825' }],
+    savedAction: {
+      actionType: 'fiat',
+      orderId: 'f8a1c2d4',
+      isEstimate: true,
+      fiatPlugin: { providerId: 'moonpay', providerDisplayName: 'MoonPay' },
+      payinAddress: DEPOSIT_ADDRESS,
+      fiatAsset: { fiatCurrencyCode: 'iso:USD', fiatAmount: '471.04' },
+      cryptoAsset: {
+        pluginId: 'bitcoin',
+        tokenId: null,
+        nativeAmount: '563825'
+      }
+    }
+  } as unknown as EdgeTransaction
+}
+
+describe('getTxActionDisplayInfo, fiat sale titles', () => {
+  const sellTitle = sprintf(lstrings.transaction_details_sold_1s, 'Bitcoin')
+
+  it('titles a sale by its asset', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeFiatSellTx(),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(sellTitle)
+  })
+
+  it('outranks a stored swap provider name on a sale', () => {
+    const { mergedData, userData } = getTxActionDisplayInfo(
+      makeFiatSellTx({ name: SWAP_PROVIDER_NAME }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(sellTitle)
+    // The stored name itself is left alone:
+    expect(userData.name).toBe(SWAP_PROVIDER_NAME)
+  })
+
+  it('outranks a stored swap provider name whose plugin is not loaded', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeFiatSellTx({ name: SWAP_PROVIDER_NAME }),
+      { ...account, swapConfig: {} } as unknown as EdgeAccount,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(sellTitle)
+  })
+
+  it('outranks a loaded swap provider name that has no contact', () => {
+    const houdiniAccount = {
+      ...account,
+      swapConfig: {
+        houdini: {
+          swapInfo: { pluginId: 'houdini', displayName: 'HoudiniSwap' }
+        }
+      }
+    } as unknown as EdgeAccount
+    const { mergedData } = getTxActionDisplayInfo(
+      makeFiatSellTx({ name: 'HoudiniSwap' }),
+      houdiniAccount,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(sellTitle)
+  })
+
+  it('lets any other stored name stand on a sale', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeFiatSellTx({ name: 'MoonPay' }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe('MoonPay')
+  })
+
+  it('lets a stored swap provider name stand on a swap', () => {
+    const { mergedData } = getTxActionDisplayInfo(
+      makeSwapSendTx({ metadata: { name: SWAP_PROVIDER_NAME } }),
+      account,
+      bitcoinWallet
+    )
+    expect(mergedData.name).toBe(SWAP_PROVIDER_NAME)
   })
 })
 

@@ -12,6 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../constants/CdnConstants'
+import { SWAP_PROVIDER_CONTACT_NAMES } from '../constants/MerchantContacts'
 import { TX_ACTION_LABEL_MAP } from '../constants/txActionConstants'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
@@ -726,9 +727,26 @@ export const getTxActionDisplayInfo = (
   // by any route would otherwise display exactly what the flow conceals.
   const isPrivateSend = action?.actionType === 'swapSend' && action.privacy
 
+  // A fiat buy or sell is never a swap, so its title also outranks a stored
+  // name that belongs to a swap provider: the row would otherwise present the
+  // sale as a trade on that exchange. The contact list is checked beside the
+  // loaded plugins because the payee picker offers a provider's name whether
+  // or not its plugin loaded.
+  const storedName = metadata?.name
+  const isSwapNameOnFiat =
+    action?.actionType === 'fiat' &&
+    storedName != null &&
+    (SWAP_PROVIDER_CONTACT_NAMES.has(storedName) ||
+      Object.values(account.swapConfig).some(
+        swapConfig => swapConfig.swapInfo.displayName === storedName
+      ))
+
   const mergedData: EdgeMetadata = {
     name:
-      !isPrivateSend && metadata?.name != null && metadata.name.length > 0
+      !isPrivateSend &&
+      !isSwapNameOnFiat &&
+      metadata?.name != null &&
+      metadata.name.length > 0
         ? metadata.name
         : savedData.name,
     category:
