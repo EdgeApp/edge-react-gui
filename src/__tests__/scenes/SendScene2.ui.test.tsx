@@ -366,6 +366,83 @@ describe('SendScene2', () => {
     ).toBeNull()
     rendered2.unmount()
   })
+  it('arms Stealth Send from the stealth param', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet.id,
+            tokenId: null,
+            stealth: true,
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
+      </FakeProviders>
+    )
+
+    expect(
+      rendered.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
+    rendered.unmount()
+  })
+  it('leaves Stealth Send off when the stealth param is absent', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet.id,
+            tokenId: null,
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
+      </FakeProviders>
+    )
+
+    expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
+    expect(
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
+  it('arms nothing from the stealth param on an address-prefilled send', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
+
+    // The toggle is not offered for a send that arrives with an address:
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet.id,
+            tokenId: null,
+            spendInfo: {
+              tokenId: null,
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' }
+              ]
+            },
+            stealth: true,
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
+      </FakeProviders>
+    )
+
+    expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
+    expect(
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
 })
 
 afterAll(async () => {

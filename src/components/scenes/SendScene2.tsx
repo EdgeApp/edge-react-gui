@@ -235,6 +235,11 @@ export interface SendScene2Params {
   ) => Promise<EdgeTransaction>
   // Useful to disable during for test runtime
   doCheckAndShowGetCryptoModal?: boolean
+  /**
+   * Arms the Stealth Send toggle on entry. Ignored wherever a tap on the
+   * toggle would be refused, or where the toggle is not offered at all.
+   */
+  stealth?: boolean
 }
 
 interface FioSenderInfo {
@@ -297,7 +302,8 @@ const SendComponent: React.FC<Props> = props => {
     onExpired,
     beforeTransaction,
     alternateBroadcast,
-    doCheckAndShowGetCryptoModal = true
+    doCheckAndShowGetCryptoModal = true,
+    stealth: initStealth = false
   } = route.params
 
   const openCameraRef = React.useRef<boolean>(openCamera)
@@ -3449,6 +3455,12 @@ const SendComponent: React.FC<Props> = props => {
       ).catch((err: unknown) => {
         showError(err)
       })
+    }
+    // Arm through the tap handler so an entry request gets the same quote and
+    // memo handling as a tap. A send that cannot go private opens with the
+    // toggle off, and the card already states why.
+    if (initStealth && swapSendAllowed && stealthBlockedReason == null) {
+      handleToggleStealth()
     }
   })
   useUnmount(() => {
