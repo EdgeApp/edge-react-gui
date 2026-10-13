@@ -81,6 +81,10 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
     isSwapProvider: true
   },
   {
+    displayName: 'MoonPay',
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/moonpay_symbol_prp.png`
+  },
+  {
     displayName: 'MoonPay Trade (Centralized)',
     thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptrade/icon.png`,
     isSwapProvider: true

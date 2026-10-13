@@ -3,6 +3,8 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: MoonPay payee contact in the transaction details payee picker
+- fixed: A MoonPay sale no longer shows a swap provider's name, such as "MoonPay Trade (DeFi)", as its title
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 
 ## 4.52.0 (staging)
