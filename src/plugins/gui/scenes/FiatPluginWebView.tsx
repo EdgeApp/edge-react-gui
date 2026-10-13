@@ -17,7 +17,7 @@ export interface FiatPluginOpenWebViewParams {
 
 interface Props extends BuySellTabSceneProps<'guiPluginWebView'> {}
 
-export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
+export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   const { route } = props
   const { injectedJs, onClose, onMessage, onUrlChange, url } = route.params
   const navigation = useNavigation()
