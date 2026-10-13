@@ -77,7 +77,6 @@
 - fixed: Info server swap disables for mainnet coins not applying
 - fixed: Send totals for multiple recipients show the wallet's display unit, such as sats, instead of the currency code
 - fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
-- fixed: Backing out of the send scene in a MoonPay sell returns to the MoonPay order instead of an error and QR code page
 - fixed: Jest snapshot failures when `AGENT_TEST_MODE` is on in the local `config.json`
 - fixed: An address the send scene cannot use shows a message naming the reason
 - fixed: An address on the sending wallet's own network switches the recipient network back
@@ -91,6 +90,7 @@
 - fixed: MoonPay Trade logo cropped in transactions and invisible on the light theme
 - fixed: Swap & Send and Stealth Send to your own Zcash wallet failing with "HoudiniSwap: maxLength 200"
 - fixed: Pending transaction card's dead Learn More link, and its message now says when to resync the wallet
+- fixed: Backing out of the send scene in a MoonPay sell returns to the same MoonPay order without starting a new one
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
