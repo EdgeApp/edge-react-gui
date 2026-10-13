@@ -625,23 +625,21 @@ export const SwapCreateScene: React.FC<Props> = props => {
               />
             )}
           </EdgeAnim>
-          {fromWallet != null && toWallet != null ? (
-            <EdgeAnim enter={fadeInDown60}>
-              <EdgeCard sections>
-                <SettingsSwitchRow
-                  label={lstrings.stealth_swap_toggle}
-                  value={stealth}
-                  onPress={handleToggleStealth}
+          <EdgeAnim enter={fadeInDown60}>
+            <EdgeCard sections>
+              <SettingsSwitchRow
+                label={lstrings.stealth_swap_toggle}
+                value={stealth}
+                onPress={handleToggleStealth}
+              />
+              {stealth ? (
+                <StealthInfoText
+                  message={lstrings.stealth_swap_info}
+                  showLearnMore
                 />
-                {stealth ? (
-                  <StealthInfoText
-                    message={lstrings.stealth_swap_info}
-                    showLearnMore
-                  />
-                ) : null}
-              </EdgeCard>
-            </EdgeAnim>
-          ) : null}
+              ) : null}
+            </EdgeCard>
+          </EdgeAnim>
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (
