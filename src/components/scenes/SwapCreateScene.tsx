@@ -72,6 +72,10 @@ export interface SwapCreateParams {
 
   // Display error message in an alert card
   errorDisplayInfo?: SwapErrorDisplayInfo
+
+  // Sets the Stealth Swap toggle on entry. The scene applies it once and
+  // clears it, so the toggle then stays where the user leaves it.
+  stealth?: boolean
 }
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
@@ -83,7 +87,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
     fromTokenId = null,
     toWalletId,
     toTokenId = null,
-    errorDisplayInfo
+    errorDisplayInfo,
+    stealth: stealthParam
   } = route.params ?? {}
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -101,7 +106,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   // Stealth Swap: when enabled, the quote routes through the Houdini privacy
   // provider as a fixed provider (see SwapConfirmationScene).
-  const [stealth, setStealth] = useState(false)
+  const [stealth, setStealth] = useState(stealthParam === true)
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -156,6 +161,16 @@ export const SwapCreateScene: React.FC<Props> = props => {
       dispatch(checkEnabledExchanges())
     })
   }, [dispatch, navigation])
+
+  // This tab stays mounted, so a caller can navigate here with `stealth` long
+  // after the first render. The param is consumed rather than kept: the other
+  // `setParams` calls on this scene merge into the route params, and a
+  // lingering value would put the toggle back every time one of them ran.
+  React.useEffect(() => {
+    if (stealthParam == null) return
+    setStealth(stealthParam)
+    navigation.setParams({ stealth: undefined })
+  }, [navigation, stealthParam])
 
   //
   // Callbacks
