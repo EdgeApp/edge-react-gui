@@ -11,7 +11,7 @@
 | Supersedes | - |
 | Related | [Asana: Deeplink - New format](https://app.asana.com/0/1215088146871429/1210180856778864) |
 
-<!-- tdd-code-fingerprint: 9a4241e8d5ab84a29023a378a6d049640c41858f -->
+<!-- tdd-code-fingerprint: 67d7ec808229154879b36dd673014a9d71dcbbbf -->
 
 Code blocks cite their file on the `jon/deeplink-new-format` branch rather than a commit sha: the doc is folded into the branch's first commit, so every push re-slots it ahead of the code it quotes and orphans any sha pinned before that push. The branch ref resolves for the life of the review, and these links move to `develop` when the branch merges. Direction came from the task description (growth's campaign-tracking request) and the operator's ruling on it.
 
