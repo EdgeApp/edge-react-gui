@@ -47,6 +47,7 @@ coverage/
 /vendor/*.tgz
 /vendor/edge-core-js-*.tgz
 /*.tgz
+!/edge-exchange-plugins-*.tgz
 
 # Checkpoint jsons
 /android/app/src/main/assets/saplingtree/
