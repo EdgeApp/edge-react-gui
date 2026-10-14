@@ -321,6 +321,47 @@ export const setRampCryptoSelection =
     dispatch(updateOneSetting({ rampLastCryptoSelection }))
   }
 
+/**
+ * Save the Send scene's Stealth Send toggle. Only a user tap calls this: a
+ * navigation param or deep link arms the toggle for one visit and leaves the
+ * saved value alone.
+ */
+export const setStealthSendEnabled =
+  (
+    account: EdgeAccount,
+    stealthSendEnabled: boolean
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      stealthSendEnabled
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ stealthSendEnabled }))
+  }
+
+/**
+ * Save the swap scene's Stealth Swap toggle, on a user tap only, like
+ * `setStealthSendEnabled`.
+ */
+export const setStealthSwapEnabled =
+  (
+    account: EdgeAccount,
+    stealthSwapEnabled: boolean
+  ): ThunkAction<Promise<void>> =>
+  async dispatch => {
+    const settings = await readSyncedSettings(account)
+    const updatedSettings: SyncedAccountSettings = {
+      ...settings,
+      stealthSwapEnabled
+    }
+
+    await writeSyncedSettings(account, updatedSettings)
+    dispatch(updateOneSetting({ stealthSwapEnabled }))
+  }
+
 export const asPasswordReminderLevels = asObject({
   '20': asMaybe(asBoolean, false),
   '200': asMaybe(asBoolean, false),
@@ -375,6 +416,8 @@ export const asSyncedAccountSettings = asObject({
   stateProvinceCode: asMaybe(asString),
   rampLastFiatCurrencyCode: asMaybe(asString),
   rampLastCryptoSelection: asMaybe(asRampLastCryptoSelection),
+  stealthSendEnabled: asMaybe(asBoolean, false),
+  stealthSwapEnabled: asMaybe(asBoolean, false),
   mostRecentWallets: asMaybe(asArray(asMostRecentWallet), () => []),
   passwordRecoveryRemindersShown: asMaybe(asPasswordReminderLevels, () =>
     asPasswordReminderLevels({})

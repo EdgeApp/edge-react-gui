@@ -56,6 +56,8 @@ export const settingsLegacy = (
         preferredSwapPluginType,
         securityCheckedWallets,
         stateProvinceCode,
+        stealthSendEnabled,
+        stealthSwapEnabled,
         userPausedWallets,
         walletsSort,
         rampLastFiatCurrencyCode,
@@ -89,6 +91,8 @@ export const settingsLegacy = (
         settingsLoaded: true,
         stateProvinceCode,
         spamFilterOn,
+        stealthSendEnabled,
+        stealthSwapEnabled,
         walletsSort,
         rampLastFiatCurrencyCode,
         rampLastCryptoSelection
