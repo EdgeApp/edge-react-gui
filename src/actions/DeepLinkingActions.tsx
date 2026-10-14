@@ -8,7 +8,10 @@ import { ButtonsModal } from '../components/modals/ButtonsModal'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { FundAccountModal } from '../components/modals/FundAccountModal'
 import {
+  ErrorNoMatchingWallets,
   pickWallet,
+  WalletListModal,
+  type WalletListResult,
   type WalletListWalletResult
 } from '../components/modals/WalletListModal'
 import {
@@ -117,6 +120,7 @@ export function getDeepLinkReadiness(link: DeepLink): DeepLinkReadiness {
     case 'paymentRedirect':
     case 'requestAddress':
     case 'rewards':
+    case 'send':
     case 'walletConnect':
       return 'wallets'
 
@@ -174,15 +178,17 @@ export function launchDeepLink(
   link: DeepLink
 ): ThunkAction<Promise<boolean>> {
   return async (dispatch, getState) => {
-    // Only the exchange links raise the back-to-back pickers the drops below
-    // protect, and they raise them from inside an `affiliate` or `marketing`
-    // wrapper too, since that hands its inner link to the same `handleLink`.
+    // Only the exchange links and the send link raise the pickers the drops
+    // below protect, and they raise them from inside an `affiliate` or
+    // `marketing` wrapper too, since that hands its inner link to the same
+    // `handleLink`.
     // Dropping every link would lose a WalletConnect or payment link that
     // arrives from another app while one is up, since `DeepLinkingManager`
     // clears its pending slot before launching and ignores the result, and
     // those were handled before this guard existed.
     const innerType = unwrapDeepLink(link).type
-    const isExchangeLink = innerType === 'rampCreate' || innerType === 'swap'
+    const isExchangeLink =
+      innerType === 'rampCreate' || innerType === 'send' || innerType === 'swap'
 
     // DeepLinkingManager only launches a link once the app has the state it
     // needs, but promo card taps call in directly. A link that opens a wallet
@@ -428,6 +434,24 @@ async function handleLink(
     case 'requestAddress':
       await doRequestAddress(navigation, state.core.account, dispatch, link)
       break
+
+    case 'send': {
+      const { asset, stealth } = link
+      const result = await pickSendWallet(account, navigation, asset)
+      if (result == null) return false
+
+      // The same entry as the balance card's Send button, so the scene shows
+      // the same first-send scam warning. A link without `stealth=true` leaves
+      // the param off rather than false, so the scene starts the toggle the
+      // way it does for any other plain entry.
+      navigation.push('send2', {
+        walletId: result.walletId,
+        tokenId: result.tokenId,
+        hiddenFeaturesMap: { scamWarning: false },
+        stealth: stealth ? true : undefined
+      })
+      break
+    }
 
     case 'swap': {
       const { buyAsset, sellAsset, promoId } = link
@@ -896,6 +920,44 @@ async function pickLinkedWallet(
     showCreateWallet: true
   })
   return result?.type === 'wallet' ? result : null
+}
+
+/**
+ * Pick the wallet a send link sends from. A named asset narrows the picker to
+ * that asset, auto-picking a lone match. With no asset, or none of the user's
+ * wallets holding it, the user picks from every wallet, the same picker the
+ * balance card's Send button opens. There are no create-wallet rows: a new
+ * wallet is empty, so there is nothing to send from it. Returns undefined when
+ * the user dismissed the picker.
+ */
+async function pickSendWallet(
+  account: EdgeAccount,
+  navigation: Parameters<typeof pickWallet>[0]['navigation'],
+  asset: EdgeAsset | undefined
+): Promise<WalletListWalletResult | undefined> {
+  if (asset != null) {
+    try {
+      const result = await pickWallet({
+        account,
+        assets: [asset],
+        headerTitle: lstrings.select_wallet_to_send_from,
+        navigation
+      })
+      return result?.type === 'wallet' ? result : undefined
+    } catch (error: unknown) {
+      if (!(error instanceof Error) || error.message !== ErrorNoMatchingWallets)
+        throw error
+    }
+  }
+
+  const result = await Airship.show<WalletListResult>(bridge => (
+    <WalletListModal
+      bridge={bridge}
+      headerTitle={lstrings.select_wallet_to_send_from}
+      navigation={navigation}
+    />
+  ))
+  return result?.type === 'wallet' ? result : undefined
 }
 
 /**
