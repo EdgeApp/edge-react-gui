@@ -17,6 +17,7 @@
  *   - promotion: Activate a promotion code
  *   - recovery: Password recovery
  *   - sell: Sell flow entry, optionally pinning a ramp provider / payment type
+ *   - send: Send flow entry, optionally pre-selecting an asset or Stealth Send
  *   - swap: Crypto-to-crypto swap
  *   - x-callback-url: Address request
  *
@@ -187,6 +188,21 @@ export interface RequestAddressLink {
 }
 
 /**
+ * An entry into the send flow:
+ *
+ *   edge://send[?stealth=true][&asset=<asset>]
+ *
+ * The user picks the wallet to send from, narrowed to `asset` when the link
+ * names one. `stealth` arms the Send scene's Stealth Send toggle for this visit
+ * only; any value other than "true" leaves it off.
+ */
+export interface SendLink {
+  type: 'send'
+  asset?: EdgeAsset
+  stealth: boolean
+}
+
+/**
  * An entry into the swap flow:
  *
  *   edge://swap
@@ -248,6 +264,7 @@ export type DeepLink =
   | PriceChangeLink
   | PromotionLink
   | RequestAddressLink
+  | SendLink
   | SwapLink
   | WalletConnectLink
   | RampCreateLink

@@ -26,6 +26,7 @@ Code blocks cite their file on the `jon/deeplink-new-format` branch rather than 
    - [4.3 The link-scoped promo id](#43-the-link-scoped-promo-id)
    - [4.4 Promo cards as link sources](#44-promo-cards-as-link-sources)
    - [4.5 Outcomes](#45-outcomes)
+   - [4.6 The send link](#46-the-send-link)
 5. [Testing](#5-testing)
 6. [Phase history](#6-phase-history)
 7. [Decisions](#7-decisions)
@@ -373,9 +374,42 @@ Reachable entry configurations and what each produces. Rows follow from [4.1](#4
 | Legacy `edge://swap`, `edge://buy/<provider>/<type>` | none | unchanged behavior | unchanged | unchanged |
 | A buy-tab promo held, then an `exchange/swap` link arrives | swap's pickers | swap scene | `{ new, swapTab }` | the swap link's promo |
 
+### 4.6 The send link
+
+The `send` host opens the Send scene from a wallet the user picks, optionally with Stealth Send already on:
+
+```
+edge://send[?<params>]
+https://deep.edge.app/send[?<params>]
+```
+
+Both parameters are optional and may appear in either order:
+
+| Parameter | Meaning |
+|---|---|
+| `stealth` | `true` turns on the Send scene's Stealth Send toggle for this visit. Any other value, or none, opens a plain send. |
+| `asset` | A `<pluginId>[_<tokenId>]` spec, parsed like the `exchange` assets in [4.1](#41-link-grammar-and-parsing). It narrows the wallet picker. A malformed spec is ignored. |
+
+`handleLink` resolves the wallet in `pickSendWallet`, then pushes `send2` with the wallet, `stealth: true` when the link asked for it, and the same `scamWarning: false` the balance card's Send button passes:
+
+| Entry | Wallet picker | Lands on |
+|---|---|---|
+| `send?stealth=true&asset=bitcoin`, exactly one bitcoin wallet | auto-picked, no modal | Send from that wallet, Stealth Send on |
+| `send?stealth=true&asset=bitcoin`, several bitcoin wallets | modal narrowed to bitcoin | Send from the picked wallet, Stealth Send on |
+| `send?stealth=true&asset=bitcoin`, no bitcoin wallet | every wallet, no create-wallet rows | Send from the picked wallet, Stealth Send on |
+| `send?stealth=true` (no asset) | every wallet, the balance card's Send picker | Send from the picked wallet, Stealth Send on |
+| `send` or `send?stealth=<anything else>` | as above | Send, no stealth param |
+| Any of the above, picker dismissed | modal, dismissed | nothing, caller unchanged |
+
+There are no create-wallet rows because a new wallet is empty and has nothing to send. Auto-pick ignores balance: a lone empty wallet opens Send, which shows its Wallet Empty modal. The picker is not narrowed to chains Stealth Send serves. A coin on an unserved chain opens Send with the toggle off and its reason shown. A token on an unserved chain is not refused up front, since a token source always swaps to the chain's coin: the toggle arms, and the first quote after an amount is entered fails and turns it off with a toast. The link takes no `promoId`, since conversion attribution is per tab and Send is not one of the exchange tabs.
+
+**Name native assets in marketing links.** Stealth Send always pays the recipient the destination chain's native coin, because the Send scene asks every swap-send quote for `toTokenId: null`. A token source therefore pays out the chain's coin rather than the token: a "send USDT privately" link built on `asset=ethereum_<USDT contract>` delivers ETH to the recipient. Token payouts arrive with [EdgeApp/edge-react-gui#6253](https://github.com/EdgeApp/edge-react-gui/pull/6253), which changes this paragraph.
+
+The `send` link raises a picker of its own, so `getDeepLinkReadiness` waits for every wallet before following it, and the in-progress guard of [7.11](#711-only-exchange-links-are-dropped-while-a-picker-is-open) drops a second picker link while its picker is up.
+
 ## 5. Testing
 
-Automated coverage is 128 cases in `src/__tests__/DeepLink.test.ts` (17 of them new for `exchange`), 5 `linkPromo` cases in `src/__tests__/reducers/RootReducer.test.ts`, 19 in `src/__tests__/actions/LinkPromoActions.test.ts`, 7 in `src/__tests__/util/trackingLinkPromo.test.ts`, and 5 in `src/__tests__/hooks/useTabBlur.test.tsx`.
+Automated coverage is 135 cases in `src/__tests__/DeepLink.test.ts` (17 of them new for `exchange`, 7 for `send`), 5 `linkPromo` cases in `src/__tests__/reducers/RootReducer.test.ts`, 22 in `src/__tests__/actions/LinkPromoActions.test.ts`, 8 in `src/__tests__/actions/SendLinkActions.test.ts`, 7 in `src/__tests__/util/trackingLinkPromo.test.ts`, and 5 in `src/__tests__/hooks/useTabBlur.test.tsx`.
 
 1. Both URL forms parse to the same link. `https://deep.edge.app/exchange/buy?buyAsset=bitcoin` and `edge://exchange/buy?buyAsset=bitcoin` each produce `rampCreate` with `asset: { pluginId: 'bitcoin', tokenId: null }`.
 2. Mainnet assets on token chains. `exchange/sell?sellAsset=ethereum` and `?sellAsset=arbitrum` give [`tokenId`](#tokenid)`: null` on their own plugin id.
@@ -563,7 +597,7 @@ Reopen if: a flow gains a step that leaves the tab navigator and still belongs t
 
 ### 7.11 Only exchange links are dropped while a picker is open
 
-Chosen: the in-progress guard in `launchDeepLink` applies to `rampCreate` and `swap` links only. It reads the type through `unwrapDeepLink`, so it sees the one an `affiliate` or `marketing` wrapper carries, and it runs on both paths out of the readiness branch, so an `exchange` link that names no asset takes it too. That asset-less link also counts as the latest link when it navigates, so an `exchange` link still waiting for wallets drops rather than opening its picker afterwards. Narrowing the drop by link type only works if the type it reads is the one that reaches `handleLink`, and neither a wrapper's own type nor an asset-less link's lighter readiness changes what that link writes.
+Chosen: the in-progress guard in `launchDeepLink` applies to `rampCreate`, `send` and `swap` links only. The `send` link ([4.6](#46-the-send-link)) joined later, since it raises its own picker. It reads the type through `unwrapDeepLink`, so it sees the one an `affiliate` or `marketing` wrapper carries, and it runs on both paths out of the readiness branch, so an `exchange` link that names no asset takes it too. That asset-less link also counts as the latest link when it navigates, so an `exchange` link still waiting for wallets drops rather than opening its picker afterwards. Narrowing the drop by link type only works if the type it reads is the one that reaches `handleLink`, and neither a wrapper's own type nor an asset-less link's lighter readiness changes what that link writes.
 
 Rejected: dropping every `'wallets'` link. `walletConnect` and `paymentRedirect` share that readiness, raise no picker of their own, and arrive from another app while the user is mid-flow, which is exactly when the guard is armed. `DeepLinkingManager` clears its pending slot before it launches and ignores the return value, so a dropped link is gone, and both types were handled before this guard existed.
 

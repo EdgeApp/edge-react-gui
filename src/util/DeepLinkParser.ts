@@ -322,6 +322,15 @@ function parseEdgeProtocol(url: URL<string>): DeepLink {
       }
     }
 
+    case 'send': {
+      const query = parseQuery(url.query)
+      return {
+        type: 'send',
+        asset: parseOptionalAsset(query.asset),
+        stealth: query.stealth === 'true'
+      }
+    }
+
     case 'swap': {
       return { type: 'swap' }
     }
