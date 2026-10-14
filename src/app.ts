@@ -39,7 +39,7 @@ import { isAgentTestMode } from './util/agentTestMode'
 import { initAttestation } from './util/attestation'
 import { willSignInfoRollup } from './util/edgeApiSigner'
 import { log, logToServer } from './util/logger'
-import { INFO_TEST_SERVER, shouldUseTestServers } from './util/maestro'
+import { INFO_TEST_SERVER } from './util/maestro'
 import {
   configureInfoServer,
   configureNetwork,
@@ -50,16 +50,9 @@ import { getOsVersion } from './util/rnUtils'
 import { runOnce } from './util/runOnce'
 import { checkAppVersion } from './util/versionCheck'
 
-// `CONFIG.INFO_SERVER` overrides the production info servers,
-// e.g. to point a debug build at a local info server. Absent in production
-// builds.
+// This test build always uses the tester info server.
 configureNetwork({
-  infoServers:
-    CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
-      ? CONFIG.INFO_SERVER
-      : shouldUseTestServers()
-      ? [INFO_TEST_SERVER]
-      : undefined,
+  infoServers: [INFO_TEST_SERVER],
   referralServers: config.referralServers ?? [],
   notificationServers: config.notificationServers
 })

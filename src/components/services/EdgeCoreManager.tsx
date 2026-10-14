@@ -293,13 +293,6 @@ export const EdgeCoreManager: React.FC<Props> = props => {
     syncServer = SYNC_TEST_SERVER
   }
 
-  if (CONFIG.LOGIN_SERVER != null && CONFIG.LOGIN_SERVER.length > 0) {
-    loginServer = CONFIG.LOGIN_SERVER
-  }
-  if (CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0) {
-    infoServer = CONFIG.INFO_SERVER
-  }
-
   if (bootFatalError != null) {
     return (
       <View style={styles.bootErrorContainer}>
