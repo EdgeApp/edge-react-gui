@@ -20,6 +20,11 @@ tags:
     env:
       WALLET: ${SRC_WALLET}
       WALLET_CODE: ${SRC_CODE}
+# The toggle is remembered per account; this walk needs it off.
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'off'
 - tapOn:
     id: 'addressTileMyself'
 - waitForAnimationToEnd:

@@ -15,6 +15,12 @@ tags:
     env:
       WALLET: ${SRC_WALLET}
       WALLET_CODE: ${SRC_CODE}
+# The toggle is remembered per account, so it is forced off for the start.
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+    env:
+      TOGGLE: 'Stealth Swap'
+      STATE: 'off'
 - assertVisible: 'Stealth Swap'
 - takeScreenshot: maestro/screenshots/stealth-swap-01-start
 
@@ -22,5 +28,6 @@ tags:
     file: ../common/stealth-toggle.yaml
     env:
       TOGGLE: 'Stealth Swap'
+      STATE: 'on'
 - assertVisible: 'Routes your swap through multiple.*Learn more.*'
 - takeScreenshot: maestro/screenshots/stealth-swap-02-stealth-on

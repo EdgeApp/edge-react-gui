@@ -387,7 +387,7 @@ Both parameters are optional and may appear in either order:
 
 | Parameter | Meaning |
 |---|---|
-| `stealth` | `true` turns on the Send scene's Stealth Send toggle for this visit. Any other value, or none, opens a plain send. |
+| `stealth` | `true` turns on the Send scene's Stealth Send toggle for this visit, without changing the user's saved choice. Any other value, or none, opens a plain send. |
 | `asset` | A `<pluginId>[_<tokenId>]` spec, parsed like the `exchange` assets in [4.1](#41-link-grammar-and-parsing). It narrows the wallet picker. A malformed spec is ignored. |
 
 `handleLink` resolves the wallet in `pickSendWallet`, then pushes `send2` with the wallet, `stealth: true` when the link asked for it, and the same `scamWarning: false` the balance card's Send button passes:
@@ -398,8 +398,10 @@ Both parameters are optional and may appear in either order:
 | `send?stealth=true&asset=bitcoin`, several bitcoin wallets | modal narrowed to bitcoin | Send from the picked wallet, Stealth Send on |
 | `send?stealth=true&asset=bitcoin`, no bitcoin wallet | every wallet, no create-wallet rows | Send from the picked wallet, Stealth Send on |
 | `send?stealth=true` (no asset) | every wallet, the balance card's Send picker | Send from the picked wallet, Stealth Send on |
-| `send` or `send?stealth=<anything else>` | as above | Send, no stealth param |
+| `send` or `send?stealth=<anything else>` | as above | Send, no stealth param: the toggle follows the user's saved choice |
 | Any of the above, picker dismissed | modal, dismissed | nothing, caller unchanged |
+
+The saved choice changes only on a tap of the toggle, which writes it to the account's synced settings (`setStealthSendEnabled`, and `setStealthSwapEnabled` on the swap scene). The tap handler returns that write, so the switch row stays locked until it lands and a second tap cannot persist a stale value. A param or link never writes it.
 
 There are no create-wallet rows because a new wallet is empty and has nothing to send. Auto-pick ignores balance: a lone empty wallet opens Send, which shows its Wallet Empty modal. The picker is not narrowed to chains Stealth Send serves. A coin on an unserved chain opens Send with the toggle off and its reason shown. A token on an unserved chain is not refused up front, since a token source always swaps to the chain's coin: the toggle arms, and the first quote after an amount is entered fails and turns it off with a toast. The link takes no `promoId`, since conversion attribution is per tab and Send is not one of the exchange tabs.
 
@@ -496,6 +498,16 @@ The review found that nothing released the promo for a flow the user abandoned, 
 | The swap navigate carried a "preserve the selection" branch that preserved nothing, and three places in this document described it as working | The branch is gone and the document says what the code does |
 
 The first two are the same mistake in two places: a guard written for the case in front of it, applied to a category wider than the case. The third is the cost of a design document that outlives its first draft, and the reason [10.2](#102-where-this-document-was-wrong-or-silent) exists.
+
+### Phase 6: third review round
+
+| Found | Shipped |
+|---|---|
+| The ineligible side of the send seeding rules had no test | A suite on a wallet that cannot go private: no seed, no toast, no save, and the saved choice or param arms on the switch to an eligible wallet |
+| Saving the tap made the stealth maestro flows depend on what the previous run left on the account | `maestro/common/stealth-toggle.yaml` takes a target state and taps only on a mismatch |
+| No test covered `send` joining the open-picker guard, or a swap param arriving after the tab mounted | One case for each, both failing with the guarded line removed |
+| The send grammar read as if `asset` needed `stealth`, and section 4.6 would go stale when #6253 lands | `edge://send[?<params>]` with both optional; 4.6 splits the unserved case by coin and token |
+| The toggle tap did not await its save, so a quick second tap could persist a stale choice (Bugbot) | Both tap handlers return the write and the switch row pending-locks until it lands |
 
 ## 7. Decisions
 

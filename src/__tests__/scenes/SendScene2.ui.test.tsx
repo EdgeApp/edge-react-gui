@@ -1,5 +1,13 @@
-import { afterAll, beforeAll, describe, expect, it, jest } from '@jest/globals'
-import { render } from '@testing-library/react-native'
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest
+} from '@jest/globals'
+import { act, fireEvent, render } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
@@ -10,11 +18,13 @@ import {
   makeFakeEdgeWorld
 } from 'edge-core-js'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import {
   SendScene2,
   type SendScene2Params
 } from '../../components/scenes/SendScene2'
+import { Airship } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
@@ -24,13 +34,44 @@ import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import type * as HoudiniChains from '../../util/houdiniChains'
 
 jest.useRealTimers()
+
+const mockSetStealthSendEnabled = jest.fn()
+jest.mock('../../actions/SettingsActions', () => ({
+  ...jest.requireActual<object>('../../actions/SettingsActions'),
+  setStealthSendEnabled: (...args: unknown[]) => {
+    mockSetStealthSendEnabled(...args)
+    return async () => {}
+  }
+}))
+
+/**
+ * Chains whose `getHoudiniChain` entry reports no private route to itself, so
+ * a test can make a wallet ineligible for a same-asset Stealth Send.
+ */
+const mockNoSelfPrivate = new Set<string>()
+jest.mock('../../util/houdiniChains', () => {
+  const actual = jest.requireActual<typeof HoudiniChains>(
+    '../../util/houdiniChains'
+  )
+  return {
+    ...actual,
+    getHoudiniChain: (...args: Parameters<typeof actual.getHoudiniChain>) => {
+      const chain = actual.getHoudiniChain(...args)
+      return chain != null && mockNoSelfPrivate.has(chain.pluginId)
+        ? { ...chain, hasSelfPrivate: false }
+        : chain
+    }
+  }
+})
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
 
 let btcWallet: EdgeCurrencyWallet | undefined
+let ethWallet: EdgeCurrencyWallet | undefined
 
 // For use later when we need tests that use EVM currencies
 // let ethWallet: EdgeCurrencyWallet | undefined
@@ -86,6 +127,11 @@ beforeAll(async () => {
     process.exit(-1)
   }
   btcWallet = await account.waitForCurrencyWallet(btcInfo.id)
+
+  const ethInfo = account.getFirstWalletInfo('wallet:ethereum')
+  if (ethInfo != null) {
+    ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
+  }
 
   // For use later when we need tests that use EVM currencies
   // ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
@@ -442,6 +488,242 @@ describe('SendScene2', () => {
       rendered.queryByText(lstrings.stealth_send_info, { exact: false })
     ).toBeNull()
     rendered.unmount()
+  })
+})
+
+describe('SendScene2 saved Stealth Send choice', () => {
+  beforeEach(() => {
+    mockSetStealthSendEnabled.mockReset()
+    mockNoSelfPrivate.clear()
+  })
+
+  /** A root state whose account saved `stealthSendEnabled`. */
+  const savedState = (stealthSendEnabled: boolean): FakeState => ({
+    ...fakeRootState,
+    core: { account },
+    ui: {
+      ...fakeRootState.ui,
+      settings: { ...fakeRootState.ui?.settings, stealthSendEnabled }
+    }
+  })
+
+  const renderSend = (
+    state: FakeState,
+    params: Partial<SendScene2Params> = {}
+  ): ReturnType<typeof render> =>
+    render(
+      <FakeProviders initialState={state}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet?.id ?? '',
+            tokenId: null,
+            doCheckAndShowGetCryptoModal: false,
+            ...params
+          })}
+        />
+      </FakeProviders>
+    )
+
+  it('arms Stealth Send from the saved choice', () => {
+    if (btcWallet == null) return
+
+    const rendered = renderSend(savedState(true))
+
+    expect(
+      rendered.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
+    // Seeding is not a tap, so it saves nothing:
+    expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+    rendered.unmount()
+  })
+
+  it('arms nothing from the saved choice on an address-prefilled send', () => {
+    if (btcWallet == null) return
+
+    const rendered = renderSend(savedState(true), {
+      spendInfo: {
+        tokenId: null,
+        spendTargets: [{ publicAddress: 'some pub address' }]
+      }
+    })
+
+    expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
+    expect(
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
+
+  it('lets the stealth param override the saved choice without saving it', () => {
+    if (btcWallet == null) return
+
+    const armed = renderSend(savedState(false), { stealth: true })
+    expect(
+      armed.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
+    armed.unmount()
+
+    const off = renderSend(savedState(true), { stealth: false })
+    expect(
+      off.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    off.unmount()
+
+    expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+  })
+
+  it('saves the choice a tap makes', () => {
+    if (btcWallet == null) return
+
+    const rendered = renderSend(savedState(false))
+
+    fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
+    expect(
+      rendered.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
+    expect(mockSetStealthSendEnabled).toHaveBeenLastCalledWith(account, true)
+
+    fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
+    expect(
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    expect(mockSetStealthSendEnabled).toHaveBeenLastCalledWith(account, false)
+    expect(mockSetStealthSendEnabled).toHaveBeenCalledTimes(2)
+    rendered.unmount()
+  })
+
+  /** Switch the scene's source wallet, or its asset, through its picker. */
+  const switchWallet = async (
+    rendered: ReturnType<typeof render>,
+    walletId: string,
+    tokenId: string | null = null
+  ): Promise<void> => {
+    const showSpy = jest
+      .spyOn(Airship, 'show')
+      .mockResolvedValue({ type: 'wallet', walletId, tokenId })
+    await act(async () => {
+      fireEvent.press(rendered.getByText(lstrings.send_scene_send_from_wallet))
+    })
+    showSpy.mockRestore()
+  }
+
+  it('re-seeds from the saved choice after a wallet change', async () => {
+    if (btcWallet == null || ethWallet == null) return
+
+    const rendered = renderSend(savedState(true))
+    await switchWallet(rendered, ethWallet.id)
+
+    // The switch resets the toggle, then the saved choice arms it again on
+    // the new wallet:
+    expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
+    expect(
+      rendered.getByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeTruthy()
+    expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+    rendered.unmount()
+  })
+
+  it('keeps a tap made on this visit across a wallet change', async () => {
+    if (btcWallet == null || ethWallet == null) return
+
+    // The mocked writer leaves the store's saved value at true, so only the
+    // visit's own record of the tap can keep the toggle off:
+    const rendered = renderSend(savedState(true))
+    fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
+    await switchWallet(rendered, ethWallet.id)
+
+    expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
+    expect(
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
+  describe('on a wallet that cannot go private', () => {
+    const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+
+    /** The reason the card shows in place of the info text. */
+    const reasonFor = (currencyCode: string): string =>
+      sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
+
+    const infoShown = (rendered: ReturnType<typeof render>): boolean =>
+      rendered.queryByText(lstrings.stealth_send_info, { exact: false }) != null
+
+    it('opens off with its reason, without a toast or a save', () => {
+      if (btcWallet == null) return
+      mockNoSelfPrivate.add('bitcoin')
+      const showSpy = jest.spyOn(Airship, 'show')
+
+      const rendered = renderSend(savedState(true))
+
+      expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
+      expect(infoShown(rendered)).toBe(false)
+      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
+      // Seeding skips a wallet it cannot arm, rather than tapping and being
+      // refused:
+      expect(showSpy).not.toHaveBeenCalled()
+      expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+      showSpy.mockRestore()
+      rendered.unmount()
+    })
+
+    it('toasts a refused tap and saves nothing', () => {
+      if (btcWallet == null) return
+      mockNoSelfPrivate.add('bitcoin')
+      const showSpy = jest.spyOn(Airship, 'show').mockResolvedValue(undefined)
+
+      const rendered = renderSend(savedState(false))
+      fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
+
+      expect(showSpy).toHaveBeenCalledTimes(1)
+      expect(infoShown(rendered)).toBe(false)
+      expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+      showSpy.mockRestore()
+      rendered.unmount()
+    })
+
+    it('arms from the saved choice on the next wallet that can', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      mockNoSelfPrivate.add('bitcoin')
+
+      const rendered = renderSend(savedState(true))
+      expect(infoShown(rendered)).toBe(false)
+      await switchWallet(rendered, ethWallet.id)
+
+      expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
+      expect(infoShown(rendered)).toBe(true)
+      expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+    })
+
+    it('arms from the stealth param on the next wallet that can', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      mockNoSelfPrivate.add('bitcoin')
+
+      const rendered = renderSend(savedState(false), { stealth: true })
+      expect(infoShown(rendered)).toBe(false)
+      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
+      await switchWallet(rendered, ethWallet.id)
+
+      expect(infoShown(rendered)).toBe(true)
+      expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+    })
+
+    it('re-seeds on a token switch within one wallet', async () => {
+      if (ethWallet == null) return
+      // ETH to itself is refused, while a token source swaps to the chain's
+      // coin and can go private:
+      mockNoSelfPrivate.add('ethereum')
+
+      const rendered = renderSend(savedState(true), { walletId: ethWallet.id })
+      expect(infoShown(rendered)).toBe(false)
+      expect(rendered.getByText(reasonFor('ETH'))).toBeTruthy()
+      await switchWallet(rendered, ethWallet.id, USDT_TOKEN_ID)
+
+      expect(infoShown(rendered)).toBe(true)
+      expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+    })
   })
 })
 

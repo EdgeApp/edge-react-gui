@@ -660,6 +660,12 @@ The request reaches Houdini whatever the provider's switch in Exchange Settings 
 
 A Stealth Swap whose pair has no private route shows the error and leaves the toggle on. The request asked for privacy, and quietly re-quoting a transparent swap is the substitution the plugin is told never to make; the user turns the toggle off if a transparent swap is acceptable.
 
+### Remembered toggle settings
+
+Each toggle remembers the user's last choice per account, Send and Swap separately, in the synced account settings (`stealthSendEnabled` and `stealthSwapEnabled`), so the choice follows the account to other devices. Only a tap the scene accepts writes it. A refused tap, the toggle turning itself off on a missing private route, and the `stealth` navigation param (including the `edge://send` link) write nothing, so a marketing link cannot change what the user picked.
+
+The Send scene seeds its toggle on entry and again after every wallet or asset switch, through the same eligibility test a tap uses. A send that cannot go private opens with the toggle off and its reason shown, and the saved choice waits for the next eligible wallet. Address-prefilled entries never offer the toggle, so a saved choice arms nothing there. Within one visit the entry's `stealth` param, then the user's own taps, take precedence over the saved value. The swap tab stays mounted, so its param override lasts until the user switches to another tab.
+
 ### Saying that a swap is running
 
 A send routed through Houdini looks like a send and behaves like a swap: the wallet pays the provider's deposit address, and the recipient is paid later by a second transaction the provider broadcasts. The table below lists what tells the user so, and each row answers a different question.
