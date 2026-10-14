@@ -156,6 +156,8 @@ exports[`initialState 1`] = `
         },
       },
       "stateProvinceCode": undefined,
+      "stealthSendEnabled": false,
+      "stealthSwapEnabled": false,
       "tokenWarningsShown": [],
       "userPausedWallets": [],
       "userPausedWalletsSet": null,
