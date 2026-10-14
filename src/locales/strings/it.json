@@ -1335,7 +1335,6 @@
   "stealth_quote_rate": "Tasso di cambio",
   "stealth_quote_expires": "La quota scade",
   "stealth_getting_quote": "Ottengo la quota...",
-  "stealth_multi_recipient_unsupported": "Invio Stealth e destinatari cross-asset non sono disponibili quando si invia a più destinatari.",
   "stealth_route_unavailable_toast": "Il routing privato non è disponibile per questa coppia in questo momento. L'invio Stealth è stato disattivato.",
   "stealth_route_unavailable_info": "Il routing privato non è disponibile per questa coppia in questo momento.",
   "stealth_self_private_unsupported_1s": "Il routing privato non è disponibile quando si invia %1$s a se stessi.",
