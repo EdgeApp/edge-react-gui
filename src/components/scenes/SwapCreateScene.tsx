@@ -15,11 +15,15 @@ import { Keyboard, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { isAssetDisabled } from '../../actions/ExchangeInfoActions'
-import { checkEnabledExchanges } from '../../actions/SettingsActions'
+import {
+  checkEnabledExchanges,
+  setStealthSwapEnabled
+} from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
+import { useTabBlur } from '../../hooks/useTabBlur'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -73,8 +77,8 @@ export interface SwapCreateParams {
   // Display error message in an alert card
   errorDisplayInfo?: SwapErrorDisplayInfo
 
-  // Sets the Stealth Swap toggle on entry. The scene applies it once and
-  // clears it, so the toggle then stays where the user leaves it.
+  // Sets the Stealth Swap toggle for this visit, in place of the account's
+  // saved choice. The scene applies it once and clears it, and never saves it.
   stealth?: boolean
 }
 
@@ -105,8 +109,15 @@ export const SwapCreateScene: React.FC<Props> = props => {
   >('from')
 
   // Stealth Swap: when enabled, the quote routes through the Houdini privacy
-  // provider as a fixed provider (see SwapConfirmationScene).
-  const [stealth, setStealth] = useState(stealthParam === true)
+  // provider as a fixed provider (see SwapConfirmationScene). The toggle shows
+  // the account's saved choice, unless a `stealth` param set it for this visit.
+  const stealthSwapEnabled = useSelector(
+    state => state.ui.settings.stealthSwapEnabled
+  )
+  const [stealthOverride, setStealthOverride] = useState<boolean | undefined>(
+    stealthParam
+  )
+  const stealth = stealthOverride ?? stealthSwapEnabled
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -168,9 +179,15 @@ export const SwapCreateScene: React.FC<Props> = props => {
   // lingering value would put the toggle back every time one of them ran.
   React.useEffect(() => {
     if (stealthParam == null) return
-    setStealth(stealthParam)
+    setStealthOverride(stealthParam)
     navigation.setParams({ stealth: undefined })
   }, [navigation, stealthParam])
+
+  // The visit ends when the user switches tabs, and the saved choice is back
+  // the next time they open Swap.
+  useTabBlur(navigation, 'swapTab', () => {
+    setStealthOverride(undefined)
+  })
 
   //
   // Callbacks
@@ -460,16 +477,21 @@ export const SwapCreateScene: React.FC<Props> = props => {
     Keyboard.dismiss()
   })
 
-  const handleToggleStealth = useHandler(() => {
-    setStealth(value => !value)
+  // A tap is the user's choice, so it is saved, and it replaces any param
+  // override at once rather than waiting on the settings write. The row stays
+  // locked until the save lands, so a second tap cannot race it.
+  const handleToggleStealth = useHandler(async (): Promise<void> => {
+    setStealthOverride(!stealth)
+    await dispatch(setStealthSwapEnabled(account, !stealth))
   })
 
   // Declining the stealth provider's terms backs out to this scene with the
   // toggle off, so the next tap on the button asks for an ordinary swap
   // instead of walking straight back into the same terms modal. Turning the
-  // toggle back on brings the modal back, until the terms are accepted.
+  // toggle back on brings the modal back, until the terms are accepted. The
+  // decline only lasts this visit, so the saved choice is left alone.
   const handleStealthTermsDeclined = useHandler(() => {
-    setStealth(false)
+    setStealthOverride(false)
   })
 
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {

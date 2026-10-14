@@ -36,6 +36,7 @@ import {
   addressWarnings,
   checkAndShowGetCryptoModal
 } from '../../actions/ScanActions'
+import { setStealthSendEnabled } from '../../actions/SettingsActions'
 import { playSendSound } from '../../actions/SoundActions'
 import { showSwapSendWarningModal } from '../../actions/SwapSendWarningActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -236,7 +237,8 @@ export interface SendScene2Params {
   // Useful to disable during for test runtime
   doCheckAndShowGetCryptoModal?: boolean
   /**
-   * Arms the Stealth Send toggle on entry. Ignored wherever a tap on the
+   * Sets the Stealth Send toggle for this visit, in place of the account's
+   * saved choice. Never saved itself. Arming is ignored wherever a tap on the
    * toggle would be refused, or where the toggle is not offered at all.
    */
   stealth?: boolean
@@ -303,7 +305,7 @@ const SendComponent: React.FC<Props> = props => {
     beforeTransaction,
     alternateBroadcast,
     doCheckAndShowGetCryptoModal = true,
-    stealth: initStealth = false
+    stealth: stealthParam
   } = route.params
 
   const openCameraRef = React.useRef<boolean>(openCamera)
@@ -414,6 +416,9 @@ const SendComponent: React.FC<Props> = props => {
 
   const countryCode = useSelector(state => state.ui.countryCode)
   const account = useSelector<EdgeAccount>(state => state.core.account)
+  const stealthSendEnabled = useSelector<boolean>(
+    state => state.ui.settings.stealthSendEnabled
+  )
   const exchangeRates = useSelector<GuiExchangeRates>(
     state => state.exchangeRates
   )
@@ -1722,7 +1727,8 @@ const SendComponent: React.FC<Props> = props => {
         // Stealth toggle and the learned
         // route capabilities go too: all describe the pair and wallet the user
         // just left, so carrying them over produces auto-disables and errors
-        // the user cannot connect to anything they did.
+        // the user cannot connect to anything they did. The toggle is then
+        // seeded afresh for the new pair, once a render describes it.
         if (walletChanged || assetChanged) {
           setRecipientPluginId(undefined)
           setDestinationTag(undefined)
@@ -1732,6 +1738,7 @@ const SendComponent: React.FC<Props> = props => {
           setFixedToFallback(false)
           setRateStarvedFallback(false)
           setStealth(false)
+          reseedStealthRef.current = true
           setRouteCaps({})
           // The message describes the pair and wallet the user just left, the
           // same reason the toggle and the route caps go. Through the owners,
@@ -1790,14 +1797,19 @@ const SendComponent: React.FC<Props> = props => {
   // Send-to-address swap handlers + rows
   // ---------------------------------------------------------------------
 
-  const handleToggleStealth = useHandler((): void => {
-    if (multipleTargets) return
+  /**
+   * Flips the Stealth toggle, or refuses to, returning whether it moved.
+   * Shared by a tap and by seeding, so an entry request or a saved choice gets
+   * the same quote and memo handling as a tap.
+   */
+  const flipStealth = useHandler((): boolean => {
+    if (multipleTargets) return false
     // No private route is possible for this asset, pair, or amount: refuse to
     // arm and say why, instead of arming a toggle whose quote is guaranteed to
     // fail. Turning it back OFF is always allowed.
     if (!stealth && stealthBlockedReason != null) {
       showToast(stealthBlockedReason)
-      return
+      return false
     }
     // The standing quote was priced under the OTHER privacy setting, so it is
     // dead the moment the toggle moves. Drop it here rather than relying on
@@ -1821,7 +1833,49 @@ const SendComponent: React.FC<Props> = props => {
     }
     setStealth(value => !value)
     setPinValue(undefined)
+    return true
   })
+
+  /**
+   * The toggle setting this visit asks for: the entry's `stealth` param while
+   * there is one, then the user's last tap. `undefined` defers to the saved
+   * choice.
+   */
+  const visitStealthRef = React.useRef<boolean | undefined>(stealthParam)
+
+  /**
+   * Only a tap the scene accepted becomes the account's saved choice. Seeding
+   * goes through `flipStealth` directly and saves nothing, so an entry param
+   * or deep link never changes what the user picked. The row stays locked
+   * until the save lands, so a second tap cannot race it.
+   */
+  const handleToggleStealth = useHandler(async (): Promise<void> => {
+    if (!flipStealth()) return
+    visitStealthRef.current = !stealth
+    await dispatch(setStealthSendEnabled(account, !stealth))
+  })
+
+  /**
+   * Arms the toggle when the visit or the saved choice asks for it and a tap
+   * would be accepted. Anywhere else it stays off with its reason, and the
+   * saved choice is left for the next eligible wallet. Address-prefilled and
+   * other constrained entries never offer the toggle, so nothing arms there.
+   */
+  const seedStealth = useHandler((): void => {
+    const wanted = visitStealthRef.current ?? stealthSendEnabled
+    if (!wanted || stealth) return
+    if (!swapSendAllowed || stealthBlockedReason != null) return
+    flipStealth()
+  })
+
+  // Set by a wallet or asset switch, which resets the toggle. Eligibility
+  // depends on the new pair, so the seed waits for the render that has it.
+  const reseedStealthRef = React.useRef(false)
+  React.useEffect(() => {
+    if (!reseedStealthRef.current) return
+    reseedStealthRef.current = false
+    seedStealth()
+  }, [walletId, tokenId, seedStealth])
 
   const handlePickRecipientAsset = useHandler((): void => {
     if (multipleTargets) return
@@ -3456,12 +3510,9 @@ const SendComponent: React.FC<Props> = props => {
         showError(err)
       })
     }
-    // Arm through the tap handler so an entry request gets the same quote and
-    // memo handling as a tap. A send that cannot go private opens with the
-    // toggle off, and the card already states why.
-    if (initStealth && swapSendAllowed && stealthBlockedReason == null) {
-      handleToggleStealth()
-    }
+    // A send that cannot go private opens with the toggle off, and the card
+    // already states why.
+    seedStealth()
   })
   useUnmount(() => {
     // Retire any quote request still in flight, so its answer is closed
