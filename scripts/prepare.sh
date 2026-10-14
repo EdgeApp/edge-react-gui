@@ -39,5 +39,21 @@ fi
 node ./node_modules/.bin/rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
 
+# Regenerate the API reference and the CLI's command table and help text
+# from the route declarations. All are committed, so a fresh clone works
+# without this; the writes are skipped when nothing changed, so prepare never
+# dirties git.
+npm run docs:api
+
+# The published CLI's package manifest, which mirrors this package's version
+# and pins every dependency its module graph reaches to the exact version
+# `package-lock.json` resolved. Here as well as in `precommit:cli`, because the
+# commits that stale it are the routine ones — "Bump version to v4.52.0",
+# "Upgrade edge-core-js@^2.51.0" — and `cli:manifest:check` runs on `develop`
+# in CI. `npm run prepare` heals it, the same way it heals the documentation
+# artifacts above — by hand, since `.npmrc` sets `ignore-scripts=true` and no
+# install runs this script.
+npm run cli:manifest
+
 # Create contract type definitions:
 npm run typechain

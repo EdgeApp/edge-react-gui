@@ -1,0 +1,6 @@
+# The committed generated artifacts. They belong in the tree — a fresh clone
+# needs no build step to run the CLI or read its reference — but they are
+# output, so a review should not have to scroll them and the language
+# statistics should not count them.
+docs/api/dist/** linguist-generated=true
+src/cli/generated/** linguist-generated=true
