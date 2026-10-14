@@ -1389,8 +1389,12 @@ async function getMaxSpendExchangeAmount(
     const addresses = await wallet.getAddresses({ tokenId: null })
     return addresses.length > 0 ? addresses[0].publicAddress : ''
   }
+  // Sell providers lock the deposit amount, and the send happens minutes
+  // later at the standard fee. Pricing the max at the high fee leaves a
+  // cushion so a fee refresh in between does not cause InsufficientFunds:
   const maxSpendNativeAmount = await wallet.getMaxSpendable({
     tokenId,
+    networkFeeOption: 'high',
     spendTargets: [{ publicAddress: await getDummyAddress() }]
   })
   const maxSpendExchangeAmount = convertNativeToDenomination(
