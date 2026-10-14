@@ -61,13 +61,14 @@ export function checkFioObtData(
   transactions: EdgeTransaction[]
 ): ThunkAction<Promise<unknown>> {
   return async (dispatch, getState) => {
-    const state = getState()
+    let state = getState()
     let account: EdgeAccount
     let fioWallets: EdgeCurrencyWallet[]
 
     // Loop until the account and wallets appear (the app may not have loaded them yet):
     let loopCount = 0
     while (true) {
+      state = getState()
       account = state.core.account
       fioWallets = state.ui.fio.fioWallets
       if (account?.currencyConfig != null && fioWallets.length > 0) break
@@ -94,7 +95,7 @@ export function checkFioObtData(
         const obtForTx: FioObtRecord | undefined = obtDataRecords.find(
           obtRecord => obtRecord.content.obt_id === transaction.txid
         )
-        if (obtForTx == null) return
+        if (obtForTx == null) continue
 
         edgeMetadata.notes ??= ''
         let fioNotes = sprintf(
