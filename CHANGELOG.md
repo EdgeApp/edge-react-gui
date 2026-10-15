@@ -63,6 +63,7 @@
 - fixed: Send totals for multiple recipients show the wallet's display unit, such as sats, instead of the currency code
 - fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
 - fixed: Backing out of the send scene in a MoonPay sell returns to the same MoonPay order without starting a new one
+- fixed: Backing out of a Paybis sell send returns to the same Paybis page
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
