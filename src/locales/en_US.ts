@@ -2353,7 +2353,7 @@ const strings = {
     'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
   pending_transaction_modal_title: 'Pending Transaction',
   pending_transaction_modal_message:
-    'You have a pending transaction which is preventing another send. You may wait for confirmations or accelerate the pending transaction.',
+    'You have a pending transaction which is preventing another send. If it appears in a block explorer, you may wait for it to confirm or accelerate it. If it is not found after a few minutes, resync the wallet.',
   pending_transaction_modal_go_to_transaction: 'Go to Transaction',
   pending_transactions_confirmed:
     'Pending transactions confirmed, you may proceed with your transaction.',
