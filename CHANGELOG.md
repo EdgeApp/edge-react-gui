@@ -91,6 +91,7 @@
 - fixed: Swap & Send and Stealth Send to your own Zcash wallet failing with "HoudiniSwap: maxLength 200"
 - fixed: Pending transaction card's dead Learn More link, and its message now says when to resync the wallet
 - fixed: Backing out of the send scene in a MoonPay sell returns to the same MoonPay order without starting a new one
+- fixed: Backing out of a Paybis sell send closes the Paybis widget instead of showing a QR code page
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
