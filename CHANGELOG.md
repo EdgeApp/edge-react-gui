@@ -70,6 +70,7 @@
 - fixed: An address the send scene cannot use shows a message naming the reason
 - fixed: An address on the sending wallet's own network switches the recipient network back
 - fixed: The send scene no longer stacks the scam warning above the swap-send warning
+- fixed: Pending transaction card's dead Learn More link, and its message now says when to resync the wallet
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
