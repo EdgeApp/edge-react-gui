@@ -3,7 +3,7 @@ import '@ethersproject/shims'
 
 import { gt } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, type ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
 import {
@@ -18,15 +18,24 @@ import type {
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
+import { getStakingProvider } from '../../util/rpcProviders'
 import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import type { StakePolicyAdapter } from './types'
 
 export interface GlifInfinityPoolAdapterConfig {
   type: 'glif-infinity-pool'
-  rpcProviderUrls: string[]
   poolContractAddress: string
   simpleRampContractAddress: string
+}
+
+interface WorkflowUtils {
+  maxFeePerGas: BigNumber | undefined
+  maxPriorityFeePerGas: BigNumber | undefined
+  nextNonce: () => Promise<number>
+  txs: ethers.PopulatedTransaction[]
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
 }
 
 export const makeGlifInfinityPoolAdapter = (
@@ -55,10 +64,7 @@ export const makeGlifInfinityPoolAdapter = (
   const metadataPoolAssetName = stakeAsset.currencyCode
 
   const { adapterConfig, stakePolicyId } = policyConfig
-  const { rpcProviderUrls } = adapterConfig
-  const provider = new ethers.providers.FallbackProvider(
-    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
-  )
+  const provider = getStakingProvider(policyConfig.parentPluginId)
 
   // Declare contracts:
   const { poolContractAddress, simpleRampContractAddress } = adapterConfig
@@ -96,7 +102,7 @@ export const makeGlifInfinityPoolAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       for (const tx of txs) {
         await walletSigner.sendTransaction(tx)
       }
@@ -108,7 +114,9 @@ export const makeGlifInfinityPoolAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const txs: ethers.PopulatedTransaction[] = []
 
     const walletSigner = new EdgeWalletSigner(wallet, provider)
@@ -325,7 +333,7 @@ export const makeGlifInfinityPoolAdapter = (
       const poolTokenBalance = await poolTokenContract
         .connect(walletSigner)
         .balanceOf(walletAddress)
-        .catch(err => {
+        .catch((err: unknown) => {
           if (
             String(err).includes('Transaction reverted without a reason string')
           ) {
@@ -338,7 +346,7 @@ export const makeGlifInfinityPoolAdapter = (
       const redemptionValue = await poolContract
         .connect(walletSigner)
         .previewRedeem(poolTokenBalance)
-        .catch(err => {
+        .catch((err: unknown) => {
           if (
             String(err).includes('Transaction reverted without a reason string')
           ) {

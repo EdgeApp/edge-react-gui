@@ -21,6 +21,7 @@ import type {
   StakeAssetInfo,
   StakePosition
 } from '../../types'
+import { getStakingProvider } from '../../util/rpcProviders'
 import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { tarotUtils } from '../util/tarotUtils'
@@ -28,7 +29,6 @@ import type { StakePolicyAdapter } from './types'
 
 export interface TarotPoolAdapterConfig {
   type: 'tarot-velodrome-pool'
-  rpcProviderUrls: string[]
   poolContractAddress: string
   token0: {
     contractAddress: string
@@ -61,6 +61,13 @@ const SLIPPAGE = 0.02 // 2%
 const SLIPPAGE_FACTOR = 1 + SLIPPAGE // A multiplier to get a minimum amount
 const DEADLINE_OFFSET = 60 * 60 * 12 // 12 hours
 
+interface WorkflowUtils {
+  gasPrice: BigNumber | undefined
+  txs: ChainableTransaction[]
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
+}
+
 type ChainableTransaction = (
   previousTx?: ethers.providers.TransactionResponse
 ) => Promise<ethers.PopulatedTransaction>
@@ -85,7 +92,6 @@ export const makeTarotPoolAdapter = (
 
   const { adapterConfig, stakePolicyId } = policyConfig
   const {
-    rpcProviderUrls,
     poolContractAddress,
     token0,
     token1,
@@ -108,9 +114,7 @@ export const makeTarotPoolAdapter = (
   const metadataName = `Tarot LP Token ${leverage}X Leveraged Pool`
   const metadataPoolAssetName = `${policyConfig.stakeAssets[0].currencyCode}/${policyConfig.stakeAssets[1].currencyCode}`
 
-  const provider = new ethers.providers.FallbackProvider(
-    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
-  )
+  const provider = getStakingProvider(policyConfig.parentPluginId)
 
   // L1 fee utils ported from edge-currency-accountbased:
 
@@ -214,7 +218,7 @@ export const makeTarotPoolAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       let txResponse: ethers.providers.TransactionResponse | undefined
       let nonce: number | undefined
       for (const makeTx of txs) {
@@ -232,7 +236,9 @@ export const makeTarotPoolAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const txs: ChainableTransaction[] = []
 
     const walletSigner = new EdgeWalletSigner(wallet, provider)

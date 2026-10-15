@@ -457,19 +457,13 @@ export default [
       'src/plugins/gui/util/initializeProviders.ts',
 
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
-      'src/plugins/stake-plugins/generic/policyAdapters/EthereumKilnAdaptor.ts',
-      'src/plugins/stake-plugins/generic/policyAdapters/GlifInfinityPoolAdapter.ts',
-      'src/plugins/stake-plugins/generic/policyAdapters/TarotPoolAdaptor.ts',
 
       'src/plugins/stake-plugins/generic/util/EdgeWalletSigner.ts',
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
-      'src/plugins/stake-plugins/generic/util/tarotUtils.ts',
+
       'src/plugins/stake-plugins/metadataCache.ts',
       'src/plugins/stake-plugins/stakePlugins.ts',
 
-      'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
-
-      'src/plugins/stake-plugins/uniswapV2/Ecosystem.ts',
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
       'src/plugins/stake-plugins/util/builder.ts',
