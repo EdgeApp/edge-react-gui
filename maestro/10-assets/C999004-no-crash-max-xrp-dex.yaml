@@ -31,9 +31,10 @@ tags:
 - tapOn: "Exchange"
 - tapOn: "Select Source Wallet"
 - tapOn:
-    text: "XRP(?: .*)?"
+    id: "walletListRow.My XRP.XRP"
 - tapOn: "Select Receiving Wallet"
-- tapOn: "Ripple USD.*"
+- tapOn:
+    id: "walletListRow.My XRP.Ripple USD"
 - tapOn: "MAX"
 - extendedWaitUntil:
     visible: "Tap to Change Provider"
