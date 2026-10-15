@@ -2853,7 +2853,7 @@ const SendComponent: React.FC<Props> = props => {
   const handleLearnMore = useHandler(async () => {
     const url =
       config.pendingTxLearnMoreUrl ??
-      'https://support.edge.app/hc/en-us/articles/43465958781723'
+      'https://support.edge.app/en/articles/13892385-why-is-my-transaction-still-pending'
     return await Linking.openURL(url).catch(() => {})
   })
 
