@@ -24,8 +24,27 @@ import { FakeProviders, type FakeState } from '../../util/fake/FakeProviders'
 import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
+import { asHoudiniChains } from '../../util/houdiniChains'
 
 jest.useRealTimers()
+
+// Houdini's served list, without which the scene offers no "Recipient
+// receives" row and no Stealth toggle:
+const houdiniChains = asHoudiniChains({
+  bitcoin: {
+    memoNeeded: false,
+    addressValidation:
+      '^([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39}|bc1[a-z0-9]{59})$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  },
+  ethereum: {
+    memoNeeded: false,
+    addressValidation: '^(0x)[0-9A-Za-z]{40}$',
+    coin: { hasSelfPrivate: true },
+    tokens: {}
+  }
+})
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
@@ -96,7 +115,11 @@ describe('SendScene2', () => {
   it('Render SendScene', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -116,7 +139,11 @@ describe('SendScene2', () => {
   it('1 spendTarget', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -142,7 +169,11 @@ describe('SendScene2', () => {
   it('1 spendTarget with info tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -172,7 +203,11 @@ describe('SendScene2', () => {
   it('2 spendTargets', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -200,7 +235,11 @@ describe('SendScene2', () => {
   it('2 spendTargets hide tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
 
     const params: SendScene2Params = {
       hiddenFeaturesMap: { address: true },
@@ -246,7 +285,11 @@ describe('SendScene2', () => {
   it('2 spendTargets lock tiles', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
     const params: SendScene2Params = {
       lockTilesMap: { address: true },
       walletId: btcWallet.id,
@@ -296,6 +339,7 @@ describe('SendScene2', () => {
       core: { account },
       ui: {
         ...fakeRootState.ui,
+        houdiniChains,
         settings: {
           ...fakeRootState.ui?.settings,
           denominationSettings: {
@@ -334,7 +378,11 @@ describe('SendScene2', () => {
   it('hides the Stealth Send card and Recipient receives row with 2 spendTargets', () => {
     if (btcWallet == null) return
 
-    const rootState: FakeState = { ...fakeRootState, core: { account } }
+    const rootState: FakeState = {
+      ...fakeRootState,
+      core: { account },
+      ui: { ...fakeRootState.ui, houdiniChains }
+    }
     // No pre-filled address, so the scene is eligible for Stealth Send:
     const params: SendScene2Params = {
       walletId: btcWallet.id,

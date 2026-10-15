@@ -3,6 +3,7 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import {
   disableAssetsCover,
+  getStealthDisableAssets,
   makeStealthSwapRequestOptions
 } from '../../util/stealthSwap'
 
@@ -119,5 +120,52 @@ describe('disableAssetsCover', () => {
   it('ignores entries for other chains', () => {
     const disableAssets = [{ pluginId: 'ethereum', tokenId: 'allCoins' }]
     expect(disableAssetsCover(disableAssets, 'tron', null)).toBe(false)
+  })
+})
+
+describe('getStealthDisableAssets', () => {
+  const disableAssets = {
+    source: [{ pluginId: 'zano', tokenId: undefined }],
+    destination: [{ pluginId: 'tron', tokenId: 'allTokens' }]
+  }
+
+  it('adds the bans on Houdini to each side', () => {
+    const merged = getStealthDisableAssets(disableAssets, {
+      houdini: {
+        source: [{ pluginId: 'bitcoinsv', tokenId: undefined }],
+        destination: [{ pluginId: 'monero', tokenId: undefined }]
+      }
+    })
+    expect(merged).toEqual({
+      source: [
+        { pluginId: 'zano', tokenId: undefined },
+        { pluginId: 'bitcoinsv', tokenId: undefined }
+      ],
+      destination: [
+        { pluginId: 'tron', tokenId: 'allTokens' },
+        { pluginId: 'monero', tokenId: undefined }
+      ]
+    })
+    // A source ban must not refuse the same asset as a destination:
+    expect(disableAssetsCover(merged.source, 'bitcoinsv', null)).toBe(true)
+    expect(disableAssetsCover(merged.destination, 'bitcoinsv', null)).toBe(
+      false
+    )
+  })
+
+  it('ignores the bans on other providers', () => {
+    const merged = getStealthDisableAssets(disableAssets, {
+      changenow: {
+        source: [{ pluginId: 'bitcoinsv', tokenId: undefined }],
+        destination: [{ pluginId: 'monero', tokenId: undefined }]
+      }
+    })
+    expect(merged).toEqual(disableAssets)
+  })
+
+  it('returns the same lists when nothing is banned for Houdini', () => {
+    // The send scene memoizes on this result, so an unchanged kill switch
+    // must not hand its quote effect a new object:
+    expect(getStealthDisableAssets(disableAssets, {})).toBe(disableAssets)
   })
 })

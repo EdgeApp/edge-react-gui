@@ -5,7 +5,13 @@ import type {
   EdgeTokenId
 } from 'edge-core-js'
 
-import type { DisableAsset } from '../actions/ExchangeInfoActions'
+import type {
+  DisableAsset,
+  DisableAssetsByPlugin,
+  ExchangeInfo
+} from '../actions/ExchangeInfoActions'
+
+type DisableAssets = ExchangeInfo['swap']['disableAssets']
 
 /**
  * The swap provider that powers both Stealth flows, and every send-to-address
@@ -84,4 +90,24 @@ export function disableAssetsCover(
         disableAsset.tokenId === 'allCoins' ||
         (disableAsset.tokenId === 'allTokens' && tokenId != null))
   )
+}
+
+/**
+ * The assets the info server's kill switch withdraws from a send-to-address
+ * quote: the ones withdrawn from every swap, plus the ones withdrawn from the
+ * stealth provider alone. That provider is the only one such a quote asks, so
+ * an asset banned for it has no provider left, the same as one banned for all.
+ * Bans on other providers change nothing here.
+ */
+export function getStealthDisableAssets(
+  disableAssets: DisableAssets,
+  disableAssetsByPlugin: DisableAssetsByPlugin
+): DisableAssets {
+  const stealthBans: DisableAssets | undefined =
+    disableAssetsByPlugin[STEALTH_SWAP_PLUGIN_ID]
+  if (stealthBans == null) return disableAssets
+  return {
+    source: [...disableAssets.source, ...stealthBans.source],
+    destination: [...disableAssets.destination, ...stealthBans.destination]
+  }
 }
