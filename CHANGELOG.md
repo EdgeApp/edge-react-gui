@@ -6,6 +6,7 @@
 
 ## 4.52.0 (staging)
 
+- fixed: HoudiniSwap order links open the order status page instead of "Page Not Found"
 - added: Arc wallets
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
 - added: Slow-sync explainer card and Learn More article on Bitcoin-family wallets with a long transaction history.
