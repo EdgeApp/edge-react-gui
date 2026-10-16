@@ -7,19 +7,22 @@ import {
   it,
   jest
 } from '@jest/globals'
-import { act, render } from '@testing-library/react-native'
+import { act, render, waitFor } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
   type EdgeAccount,
+  type EdgeAddress,
   type EdgeContext,
   type EdgeCurrencyInfo,
   type EdgeCurrencyPlugin,
   type EdgeCurrencyWallet,
   type EdgeParsedUri,
+  type EdgeSwapPlugin,
   type EdgeTokenId,
   lockEdgeCorePlugins,
-  makeFakeEdgeWorld
+  makeFakeEdgeWorld,
+  SwapCurrencyError
 } from 'edge-core-js'
 import * as React from 'react'
 
@@ -50,6 +53,7 @@ jest.mock('../../components/services/AirshipInstance', () => {
 
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
+const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 
 const SCAM_WARNING = 'Scam Warning'
@@ -103,6 +107,22 @@ const ftmCurrencyInfo: EdgeCurrencyInfo = {
   walletType: 'wallet:fantom'
 }
 
+/**
+ * The swap provider every send-to-address quote goes to. It records the
+ * destination addresses each request reached it with, then declines the pair
+ * as a provider with no route would.
+ */
+const quotedDestinations: EdgeAddress[][] = []
+const fakeHoudiniPlugin: EdgeSwapPlugin = {
+  swapInfo: { pluginId: 'houdini', displayName: 'Houdini', supportEmail: '' },
+  async fetchSwapQuote(request) {
+    quotedDestinations.push(
+      await request.toWallet.getAddresses({ tokenId: null })
+    )
+    throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+  }
+}
+
 const asUserDump = asObject({
   loginKey: asString,
   data: asObject({
@@ -128,7 +148,8 @@ beforeAll(async () => {
     bitcoin: makeParsingPlugin(btcCurrencyInfo, /^bc1[a-z0-9]{39}$/),
     ethereum: makeParsingPlugin(ethCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
     avalanche: makeParsingPlugin(avaxCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
-    fantom: makeParsingPlugin(ftmCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/)
+    fantom: makeParsingPlugin(ftmCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
+    houdini: fakeHoudiniPlugin
   })
   lockEdgeCorePlugins()
 
@@ -136,7 +157,13 @@ beforeAll(async () => {
   context = await world.makeEdgeContext({
     apiKey: '',
     appId: '',
-    plugins: { bitcoin: true, ethereum: true, avalanche: true, fantom: true }
+    plugins: {
+      bitcoin: true,
+      ethereum: true,
+      avalanche: true,
+      fantom: true,
+      houdini: true
+    }
   })
   account = await context.loginWithKey('bob', dump.loginKey)
   const btcInfo = account.getFirstWalletInfo('wallet:bitcoin')
@@ -165,6 +192,15 @@ describe('SendScene2 recipient network', () => {
     enterUnparsedAddress: (text: string) => Promise<boolean | string>
     /** Hands the scene a payment code the sending wallet's parser accepted. */
     enterParsedAddress: (text: string) => Promise<void>
+    /**
+     * Hands the scene a recipient as the tile does for a picked wallet of the
+     * user's own: the address the tile shows, with every address the wallet
+     * has.
+     */
+    enterOwnWalletAddress: (
+      parsedUri: EdgeParsedUri,
+      walletAddresses: EdgeAddress[]
+    ) => Promise<void>
     /** Picks an asset by name in the "Recipient receives" picker. */
     pickRecipientAsset: (name: string) => Promise<void>
     recipientAddress: () => string
@@ -219,6 +255,15 @@ describe('SendScene2 recipient network', () => {
           await tileProps().onChangeAddress({
             parsedUri,
             addressEntryMethod: 'other'
+          })
+        })
+      },
+      enterOwnWalletAddress: async (parsedUri, walletAddresses) => {
+        await act(async () => {
+          await tileProps().onChangeAddress({
+            parsedUri,
+            addressEntryMethod: 'other',
+            walletAddresses
           })
         })
       },
@@ -411,6 +456,44 @@ describe('SendScene2 recipient network', () => {
     expect(mockShowToast.mock.calls).toEqual([
       ['Recipient network changed to Ethereum.']
     ])
+    scene.unmount()
+  })
+
+  it("quotes a picked wallet's addresses with the shown one first", async () => {
+    const scene = renderBitcoinSend()
+    await scene.pickRecipientAsset('Ethereum')
+
+    // An amount over the provider's floor, so the quote goes out:
+    const ONE_ETH = '1000000000000000000'
+    // The provider picks the address type it pays out to, so the picked
+    // wallet's other addresses ride along after the one the tile shows:
+    const shown: EdgeAddress = {
+      addressType: 'publicAddress',
+      publicAddress: EVM_ADDRESS
+    }
+    const other: EdgeAddress = {
+      addressType: 'segwitAddress',
+      publicAddress: OTHER_EVM_ADDRESS
+    }
+    quotedDestinations.length = 0
+    await scene.enterOwnWalletAddress(
+      { publicAddress: EVM_ADDRESS, nativeAmount: ONE_ETH },
+      [other, shown]
+    )
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([shown, other])
+    })
+
+    // A pasted address is the only one the quote gets:
+    quotedDestinations.length = 0
+    await scene.enterUnparsedAddress(
+      `ethereum:${OTHER_EVM_ADDRESS}@1?value=${ONE_ETH}`
+    )
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([
+        { addressType: 'publicAddress', publicAddress: OTHER_EVM_ADDRESS }
+      ])
+    })
     scene.unmount()
   })
 
