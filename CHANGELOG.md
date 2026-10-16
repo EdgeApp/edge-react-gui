@@ -73,6 +73,8 @@
 - fixed: An address on the sending wallet's own network switches the recipient network back
 - fixed: The send scene no longer stacks the scam warning above the swap-send warning
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
+- fixed: MoonPay Trade logo cropped in transactions and invisible on the light theme
+- fixed: Theme setting ignoring the selected mode
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
