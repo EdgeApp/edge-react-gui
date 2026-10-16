@@ -143,6 +143,25 @@ export const infoServerData: {
 
 let infoServerPollStarted = false
 
+const rollupListeners = new Set<() => void>()
+
+/**
+ * Calls `listener` each time a rollup lands in `infoServerData`, so a consumer
+ * that reads it at mount picks up a rollup that arrives later. Returns the
+ * unsubscribe function.
+ */
+export const onInfoRollup = (listener: () => void): (() => void) => {
+  rollupListeners.add(listener)
+  return () => {
+    rollupListeners.delete(listener)
+  }
+}
+
+/** Tells the `onInfoRollup` listeners that `infoServerData` changed. */
+export const notifyInfoRollup = (): void => {
+  for (const listener of rollupListeners) listener()
+}
+
 /**
  * Fetch the unsigned public info rollup. Exported so `keysStore` can fall back
  * to it when the signed infoRollup fetch fails to populate `infoServerData`:
@@ -167,6 +186,7 @@ export const fetchPublicRollup = async (): Promise<void> => {
       const infoData = await response.json()
       infoServerData.rollupRaw = infoData
       infoServerData.rollup = asInfoRollup(infoData)
+      notifyInfoRollup()
       await runOnce('checkAppVersion', checkAppVersion)
     }
   } catch (e) {
