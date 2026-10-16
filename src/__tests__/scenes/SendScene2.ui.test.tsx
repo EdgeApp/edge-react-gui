@@ -641,14 +641,14 @@ describe('SendScene2 saved Stealth Send choice', () => {
   describe('on a wallet that cannot go private', () => {
     const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 
-    /** The reason the card shows in place of the info text. */
+    /** The reason a refused tap toasts. A plain send shows no inline line. */
     const reasonFor = (currencyCode: string): string =>
       sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
 
     const infoShown = (rendered: ReturnType<typeof render>): boolean =>
       rendered.queryByText(lstrings.stealth_send_info, { exact: false }) != null
 
-    it('opens off with its reason, without a toast or a save', () => {
+    it('opens off without a reason line, a toast or a save', () => {
       if (btcWallet == null) return
       mockNoSelfPrivate.add('bitcoin')
       const showSpy = jest.spyOn(Airship, 'show')
@@ -657,7 +657,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
       expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
+      expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
       // Seeding skips a wallet it cannot arm, rather than tapping and being
       // refused:
       expect(showSpy).not.toHaveBeenCalled()
@@ -701,7 +701,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
       const rendered = renderSend(savedState(false), { stealth: true })
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
+      expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
       await switchWallet(rendered, ethWallet.id)
 
       expect(infoShown(rendered)).toBe(true)
@@ -717,7 +717,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
       const rendered = renderSend(savedState(true), { walletId: ethWallet.id })
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.getByText(reasonFor('ETH'))).toBeTruthy()
+      expect(rendered.queryByText(reasonFor('ETH'))).toBeNull()
       await switchWallet(rendered, ethWallet.id, USDT_TOKEN_ID)
 
       expect(infoShown(rendered)).toBe(true)
