@@ -17,16 +17,21 @@ import {
   type EdgeCurrencyPlugin,
   type EdgeCurrencyWallet,
   type EdgeParsedUri,
+  type EdgeSwapInfo,
+  type EdgeSwapPlugin,
   type EdgeTokenId,
   lockEdgeCorePlugins,
-  makeFakeEdgeWorld
+  makeFakeEdgeWorld,
+  SwapCurrencyError
 } from 'edge-core-js'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import { EdgeRow } from '../../components/rows/EdgeRow'
 import { SendScene2 } from '../../components/scenes/SendScene2'
 import type * as AirshipInstance from '../../components/services/AirshipInstance'
 import { Airship, showToast } from '../../components/services/AirshipInstance'
+import { StealthInfoText } from '../../components/themed/StealthInfoText'
 import { AddressTile2 } from '../../components/tiles/AddressTile2'
 import { lstrings } from '../../locales/strings'
 import { avaxCurrencyInfo } from '../../util/fake/fakeAvaxInfo'
@@ -51,6 +56,11 @@ jest.mock('../../components/services/AirshipInstance', () => {
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+
+// Either side of the provider's 25 USD floor for a private route, at the fake
+// rates' 1326.1958 USD per ETH:
+const FIVE_USD_OF_ETH = '3770000000000000'
+const FIFTY_USD_OF_ETH = '37700000000000000'
 
 const SCAM_WARNING = 'Scam Warning'
 const SWAP_BEFORE_SEND = 'Swap before send'
@@ -87,6 +97,22 @@ const makeParsingPlugin = (
       }
       return Object.assign(tools, { parseUri })
     }
+  }
+}
+
+/**
+ * The Stealth provider, with no route for any pair, so every quote the scene
+ * asks for is refused the way a real missing route is.
+ */
+const houdiniSwapInfo: EdgeSwapInfo = {
+  pluginId: 'houdini',
+  displayName: 'Houdini Swap',
+  supportEmail: ''
+}
+const houdiniPlugin: EdgeSwapPlugin = {
+  swapInfo: houdiniSwapInfo,
+  async fetchSwapQuote(request) {
+    throw new SwapCurrencyError(houdiniSwapInfo, request)
   }
 }
 
@@ -128,7 +154,8 @@ beforeAll(async () => {
     bitcoin: makeParsingPlugin(btcCurrencyInfo, /^bc1[a-z0-9]{39}$/),
     ethereum: makeParsingPlugin(ethCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
     avalanche: makeParsingPlugin(avaxCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
-    fantom: makeParsingPlugin(ftmCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/)
+    fantom: makeParsingPlugin(ftmCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
+    houdini: () => houdiniPlugin
   })
   lockEdgeCorePlugins()
 
@@ -136,7 +163,13 @@ beforeAll(async () => {
   context = await world.makeEdgeContext({
     apiKey: '',
     appId: '',
-    plugins: { bitcoin: true, ethereum: true, avalanche: true, fantom: true }
+    plugins: {
+      bitcoin: true,
+      ethereum: true,
+      avalanche: true,
+      fantom: true,
+      houdini: true
+    }
   })
   account = await context.loginWithKey('bob', dump.loginKey)
   const btcInfo = account.getFirstWalletInfo('wallet:bitcoin')
@@ -163,6 +196,8 @@ describe('SendScene2 recipient network', () => {
 
   interface RenderedSend {
     enterUnparsedAddress: (text: string) => Promise<boolean | string>
+    /** Types an amount into the send's amount modal, plain or swap. */
+    enterAmount: (nativeAmount: string) => Promise<void>
     /** Hands the scene a payment code the sending wallet's parser accepted. */
     enterParsedAddress: (text: string) => Promise<void>
     /** Picks an asset by name in the "Recipient receives" picker. */
@@ -174,6 +209,10 @@ describe('SendScene2 recipient network', () => {
     position: (text: string) => number
     /** Whether some text node on the scene reads exactly this. */
     shows: (text: string) => boolean
+    /** The notes under the Stealth Send toggle, top to bottom. */
+    stealthNotes: () => string[]
+    /** Taps the Stealth Send toggle. */
+    toggleStealth: () => Promise<void>
     unmount: () => void
   }
 
@@ -205,6 +244,40 @@ describe('SendScene2 recipient network', () => {
             (await tileProps().onUnparsedAddress?.(text, 'other')) ?? false
         })
         return result
+      },
+      enterAmount: async nativeAmount => {
+        const amounts = {
+          nativeAmount,
+          exchangeAmount: '',
+          fiatAmount: '',
+          fieldChanged: 'crypto'
+        }
+        const show = jest.spyOn(Airship, 'show').mockImplementationOnce(
+          // A plain send reads the amount as it is typed, and a swap-send
+          // reads what the modal resolves with:
+          async (renderModal: (bridge: never) => React.ReactNode) => {
+            const modal = renderModal(
+              undefined as never
+            ) as React.ReactElement<{
+              onAmountsChanged?: (next: typeof amounts) => void
+            }>
+            modal.props.onAmountsChanged?.(amounts)
+            return amounts
+          }
+        )
+        const row = [
+          ...rendered.UNSAFE_queryAllByProps({
+            title: lstrings.fio_request_amount
+          }),
+          ...rendered.UNSAFE_queryAllByProps({
+            title: lstrings.stealth_you_send
+          })
+        ].find(node => typeof node.props.onPress === 'function')
+        if (row == null) throw new Error('No amount row')
+        await act(async () => {
+          row.props.onPress()
+        })
+        show.mockRestore()
       },
       enterParsedAddress: async text => {
         const currencyCode =
@@ -253,6 +326,18 @@ describe('SendScene2 recipient network', () => {
         1,
       shows: text =>
         JSON.stringify(rendered.toJSON()).includes(JSON.stringify([text])),
+      stealthNotes: () =>
+        rendered
+          .UNSAFE_queryAllByType(StealthInfoText)
+          .map(note => note.props.message),
+      toggleStealth: async () => {
+        const [toggle] = rendered.UNSAFE_getAllByProps({
+          label: lstrings.stealth_send_toggle
+        })
+        await act(async () => {
+          await toggle.props.onPress?.()
+        })
+      },
       unmount: () => {
         rendered.unmount()
       }
@@ -519,6 +604,68 @@ describe('SendScene2 recipient network', () => {
     expect(mockShowToast).not.toHaveBeenCalled()
 
     show.mockRestore()
+    scene.unmount()
+  })
+
+  it('leaves a plain send of an asset no Stealth route serves unexplained', async () => {
+    const scene = renderSend(ftmWallet)
+
+    // No swap is involved until the user asks for one, so nothing sits under
+    // the toggle. Tapping it says why it stays off, naming the asset alone:
+    expect(scene.stealthNotes()).toEqual([])
+    await scene.toggleStealth()
+    expect(mockShowToast.mock.calls).toEqual([
+      [sprintf(lstrings.stealth_asset_unsupported_1s, 'AVAX')]
+    ])
+    expect(scene.stealthNotes()).toEqual([])
+    scene.unmount()
+  })
+
+  it('names the Stealth minimum only once a swap is picked', async () => {
+    const scene = renderSend(ethWallet)
+    const belowMinimum = expect.stringMatching(
+      /^Stealth routing needs at least/
+    )
+    await scene.enterParsedAddress(EVM_ADDRESS)
+    await scene.enterAmount(FIVE_USD_OF_ETH)
+
+    expect(scene.stealthNotes()).toEqual([])
+    await scene.toggleStealth()
+    expect(mockShowToast.mock.calls).toEqual([[belowMinimum]])
+
+    // A picked recipient asset makes the send a swap, so the reason shows.
+    // The pick clears the recipient, so the send is entered again:
+    await scene.pickRecipientAsset('Bitcoin')
+    await scene.enterUnparsedAddress(BTC_ADDRESS)
+    await scene.enterAmount(FIVE_USD_OF_ETH)
+    expect(scene.stealthNotes()).toEqual([belowMinimum])
+    scene.unmount()
+  })
+
+  it('keeps the note after a Stealth quote fails and turns the toggle off', async () => {
+    const scene = renderSend(ethWallet)
+    await scene.enterParsedAddress(EVM_ADDRESS)
+    await scene.enterAmount(FIFTY_USD_OF_ETH)
+    expect(scene.stealthNotes()).toEqual([])
+
+    await scene.toggleStealth()
+    // The quote is refused after the tap returns, so its outcome is awaited
+    // inside act, where the scene's updates from it are applied:
+    await act(async () => {
+      for (let i = 0; i < 50 && mockShowToast.mock.calls.length === 0; ++i) {
+        await new Promise(resolve => setTimeout(resolve, 20))
+      }
+    })
+
+    // Stealth turns back off and says so, and the reason stays under the
+    // toggle, since the user did ask for the swap:
+    expect(scene.stealthNotes()).toEqual([
+      lstrings.stealth_route_unavailable_info
+    ])
+    expect(mockShowToast.mock.calls).toEqual([
+      [lstrings.stealth_route_unavailable_toast]
+    ])
+
     scene.unmount()
   })
 
