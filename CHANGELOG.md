@@ -76,6 +76,7 @@
 - fixed: The send scene no longer stacks the scam warning above the swap-send warning
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
 - fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
+- fixed: Swap-send notice title cut off on Android
 - removed: LetsExchange swap provider
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 
