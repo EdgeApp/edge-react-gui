@@ -18,6 +18,7 @@ import {
   makeFakeEdgeWorld
 } from 'edge-core-js'
 import * as React from 'react'
+import { ScrollView, StyleSheet } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -37,6 +38,8 @@ import fakeUser from '../../util/fake/fakeUserDump.json'
 import type * as HoudiniChains from '../../util/houdiniChains'
 
 jest.useRealTimers()
+
+type TestInstance = ReturnType<typeof render>['UNSAFE_root']
 
 const mockSetStealthSendEnabled = jest.fn()
 jest.mock('../../actions/SettingsActions', () => ({
@@ -487,6 +490,49 @@ describe('SendScene2', () => {
     expect(
       rendered.queryByText(lstrings.stealth_send_info, { exact: false })
     ).toBeNull()
+    rendered.unmount()
+  })
+  it('pads the scroll content past the docked slider', () => {
+    if (btcWallet == null) return
+
+    const rootState: FakeState = { ...fakeRootState, core: { account } }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SendScene2
+          {...fakeEdgeAppSceneProps('send2', {
+            walletId: btcWallet.id,
+            tokenId: null,
+            spendInfo: {
+              tokenId: null,
+              spendTargets: [
+                { publicAddress: 'some pub address', nativeAmount: '1234' }
+              ]
+            },
+            doCheckAndShowGetCryptoModal: false
+          })}
+        />
+      </FakeProviders>
+    )
+
+    // The test renderer never lays out the dock, so report a height for it:
+    const docks = rendered.UNSAFE_root.findAll(
+      (node: TestInstance) =>
+        typeof node.type !== 'string' &&
+        node.props.onLayout != null &&
+        node.findAll(
+          (child: TestInstance) => child.props.onSlidingComplete != null
+        ).length > 0
+    )
+    act(() => {
+      fireEvent(docks[docks.length - 1], 'layout', {
+        nativeEvent: { layout: { x: 0, y: 0, width: 400, height: 100 } }
+      })
+    })
+    const scroll = rendered.UNSAFE_getByType(ScrollView)
+    expect(
+      StyleSheet.flatten(scroll.props.contentContainerStyle).paddingBottom
+    ).toBeGreaterThanOrEqual(100)
     rendered.unmount()
   })
 })
