@@ -120,8 +120,9 @@ export const TransactionDetailsComponent: React.FC<Props> = props => {
 
   const contactThumbnail = useContactThumbnail(mergedData.name)
   const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
-  const thumbnailPath = contactThumbnail ?? pluginIdIcon?.uri
-  const fitThumbnail = contactThumbnail == null && pluginIdIcon?.fit === true
+  const thumbnail = contactThumbnail ?? pluginIdIcon
+  const thumbnailPath = thumbnail?.uri
+  const fitThumbnail = thumbnail?.fit === true
 
   // Check if this is a gift card transaction
   const giftCardAction =
