@@ -420,7 +420,6 @@ const SendComponent: React.FC<Props> = props => {
   const defaultIsoFiat = useSelector<string>(
     state => state.ui.settings.defaultIsoFiat
   )
-  const hasNotifications = useSelector(state => state.ui.notificationHeight > 0)
   // The info server's swap kill switch. A send-to-address quote is a swap, so
   // a provider or asset switched off there must stop it the same as on the
   // Exchange scene:
@@ -4058,83 +4057,14 @@ const SendComponent: React.FC<Props> = props => {
       backgroundGradientEnd={theme.assetBackgroundGradientEnd}
       backgroundGradientStart={theme.assetBackgroundGradientStart}
       overrideDots={theme.backgroundDots.assetOverrideDots}
-    >
-      {({ insetStyle }) => {
-        // We only need a bit more room under the slider when it's against
-        // the bottom edge of the screen to improve usability — things
-        // close to the edges of the screen are hard to access. When
-        // notifications push the slider up away from the bottom edge,
-        // reduce the bottom margin.
-        const sliderBottom =
-          insetStyle.paddingBottom +
-          (hasNotifications ? theme.rem(1) : theme.rem(2))
-        return (
-          <>
-            <KeyboardAwareScrollView
-              style={styles.keyboardAwareScrollView}
-              innerRef={ref => {
-                const kbRef: KeyboardAwareScrollView | null = ref as any
-                scrollViewRef.current = kbRef
-              }}
-              contentContainerStyle={{
-                ...insetStyle,
-                paddingTop: 0,
-                paddingBottom: theme.rem(5)
-              }}
-              extraScrollHeight={theme.rem(2.75)}
-              enableOnAndroid
-              scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
-            >
-              <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
-                <EdgeCard sections>
-                  {renderSelectedWallet()}
-                  {renderSelectFioAddress()}
-                  {swapSendActive &&
-                  spendInfo.spendTargets[0].publicAddress != null
-                    ? renderYouSendRow()
-                    : null}
-                  {swapSendActive ? renderSwapFeeRow() : null}
-                </EdgeCard>
-              </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
-                <EdgeCard sections>
-                  {renderRecipientReceives()}
-                  {renderAddressAmountPairs()}
-                  {swapSendActive &&
-                  spendInfo.spendTargets[0].publicAddress != null
-                    ? renderRecipientGetsRow()
-                    : null}
-                  {swapSendActive ? renderDestinationTagRow() : null}
-                  {swapSendActive ? renderSwapQuoteRow() : null}
-                  {renderTimeout()}
-                </EdgeCard>
-              </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-                <EdgeCard sections>{renderAddAddress()}</EdgeCard>
-              </EdgeAnim>
-              {renderStealthToggle()}
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
-                <EdgeCard sections>
-                  {renderMultiRecipientTotal()}
-                  {renderFees()}
-                  {renderMetadataNotes()}
-                  {renderMemoOptions()}
-                  {renderInfoTiles()}
-                  {renderAuthentication()}
-                </EdgeCard>
-              </EdgeAnim>
-              <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-                {renderScamWarning()}
-              </EdgeAnim>
-              {renderPendingTransactionWarning()}
-              {renderSwapSendWarning()}
-              {renderFixedToFallbackWarning()}
-              {renderNymWarning()}
-              {renderError()}
-              {sliderTopNode}
-            </KeyboardAwareScrollView>
-            <View style={[styles.sliderView, { bottom: sliderBottom }]}>
-              {showSlider && (
+      // Docking the slider folds its measured height into the scene's bottom
+      // inset, so the scroll content always ends above it:
+      dockProps={
+        showSlider
+          ? {
+              keyboardVisibleOnly: false,
+              contentContainerStyle: styles.sliderDock,
+              children: (
                 <EdgeAnim enter={{ type: 'fadeInDown', distance: 120 }}>
                   <SafeSlider
                     disabledText={disabledText}
@@ -4152,11 +4082,82 @@ const SendComponent: React.FC<Props> = props => {
                     disabled={disableSlider}
                   />
                 </EdgeAnim>
-              )}
-            </View>
-          </>
-        )
-      }}
+              )
+            }
+          : undefined
+      }
+    >
+      {({ insetStyle, undoInsetStyle }) => (
+        // The scroll view runs under the dock, so only its content stops
+        // short of the slider:
+        <View style={{ ...undoInsetStyle, marginTop: 0 }}>
+          <KeyboardAwareScrollView
+            style={styles.keyboardAwareScrollView}
+            innerRef={ref => {
+              const kbRef: KeyboardAwareScrollView | null = ref as any
+              scrollViewRef.current = kbRef
+            }}
+            contentContainerStyle={{
+              ...insetStyle,
+              paddingTop: 0,
+              paddingBottom: insetStyle.paddingBottom + theme.rem(0.5)
+            }}
+            // The docked slider rides the keyboard, so a focused field
+            // (the PIN) has to clear it as well as the keyboard toolbar:
+            extraScrollHeight={theme.rem(2.75) + insetStyle.paddingBottom}
+            enableOnAndroid
+            scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+          >
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
+              <EdgeCard sections>
+                {renderSelectedWallet()}
+                {renderSelectFioAddress()}
+                {swapSendActive &&
+                spendInfo.spendTargets[0].publicAddress != null
+                  ? renderYouSendRow()
+                  : null}
+                {swapSendActive ? renderSwapFeeRow() : null}
+              </EdgeCard>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInUp', distance: 40 }}>
+              <EdgeCard sections>
+                {renderRecipientReceives()}
+                {renderAddressAmountPairs()}
+                {swapSendActive &&
+                spendInfo.spendTargets[0].publicAddress != null
+                  ? renderRecipientGetsRow()
+                  : null}
+                {swapSendActive ? renderDestinationTagRow() : null}
+                {swapSendActive ? renderSwapQuoteRow() : null}
+                {renderTimeout()}
+              </EdgeCard>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+              <EdgeCard sections>{renderAddAddress()}</EdgeCard>
+            </EdgeAnim>
+            {renderStealthToggle()}
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
+              <EdgeCard sections>
+                {renderMultiRecipientTotal()}
+                {renderFees()}
+                {renderMetadataNotes()}
+                {renderMemoOptions()}
+                {renderInfoTiles()}
+                {renderAuthentication()}
+              </EdgeCard>
+            </EdgeAnim>
+            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+              {renderScamWarning()}
+            </EdgeAnim>
+            {renderPendingTransactionWarning()}
+            {renderSwapSendWarning()}
+            {renderFixedToFallbackWarning()}
+            {renderNymWarning()}
+            {renderError()}
+            {sliderTopNode}
+          </KeyboardAwareScrollView>
+        </View>
+      )}
     </SceneWrapper>
   )
 }
@@ -4168,11 +4169,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.5),
     marginBottom: 0
   },
-  sliderView: {
-    width: '100%',
-    justifyContent: 'center',
+  sliderDock: {
     alignItems: 'center',
-    position: 'absolute'
+    // Things close to the screen edge are hard to reach:
+    paddingBottom: theme.rem(2)
   },
   calcFeeView: {
     flexDirection: 'row'
