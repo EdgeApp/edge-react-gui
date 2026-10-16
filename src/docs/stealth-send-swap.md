@@ -11,7 +11,7 @@
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: ad0bd70d7184d9e64155ee6e24c7f325bef5b4fa -->
+<!-- tdd-code-fingerprint: bcec1769510e11cb18249977f0dab2d3a5716e64 -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -632,15 +632,18 @@ Ignoring the enable flag does not extend to the info server's swap kill switch. 
 
 ### Transaction identity
 
-Three send shapes reach the transaction list, and each carries its own title:
+Three send shapes and one swap shape reach the transaction list, and each carries its own title:
 
 | Flow | Title |
 |---|---|
 | Cross-asset send, stealth off | Swap & Send |
 | Same-asset send, stealth on | Stealth Send |
 | Cross-asset send, stealth on | Stealth Swap & Send |
+| Swap between the user's own wallets, stealth on | Stealth Swap |
 
 The flow is named on the saved action, not inferred in the GUI. A send is a `swapSend` action (see [The send action](#the-send-action)) written by the plugin, and `getTxActionDisplayInfo` titles it from two facts the action carries: `privacy`, and whether `fromAsset` and `toAsset` name the same asset. A transparent send is a Swap & Send whatever its assets, a private same-asset send is a Stealth Send, and a private cross-asset send is a Stealth Swap & Send.
+
+A Stealth Swap is a `swap` action, not a `swapSend`. When Houdini routes a swap into the user's own wallet privately, the plugin writes `privacy: true` on `EdgeTxActionSwap`, and `getTxActionDisplayInfo` titles that action Stealth Swap. Unlike a Stealth Send, a stored metadata name still wins here: both ends are the user's own wallets, so a name the user gave the transaction reveals nothing the flow conceals. Swaps saved before the flag existed carry nothing that says they were private, so they keep the Swap Funds title.
 
 Privacy changes what a send is called, and nothing about who it paid. The broadcast path skips the `payeeName` write into `metadata.name` for a stealth send, and a private send's title outranks any stored metadata name, so the list reads "Stealth Send" where another send would read a payee. The transaction list's own fallback needs no change, because a swap-send's spend target is the provider's deposit address, never the recipient's.
 
