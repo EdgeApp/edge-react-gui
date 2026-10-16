@@ -15,34 +15,6 @@ doSomething().catch(showError)
 doSomething().catch((error: unknown) => showError(error))
 ```
 
-### Avoid `@ts-expect-error` (`avoid-ts-expect-error`)
-
-Do not suppress type errors when a trivial fix exists (use `?? []`, `?? {}`, or
-an explicit type).
-
-```ts
-// Bad:
-// @ts-expect-error - cleaner can return undefined
-items.map(renderItem)
-```
-
-```ts
-// Good:
-;(items ?? []).map(renderItem)
-```
-
-### Undefined vs Null Semantics (`undefined-vs-null-semantics`)
-
-Use `!== undefined` when `null` has meaning (ex: "delete this field").
-
-```ts
-// Bad (treats null + undefined the same):
-const changed = value != null
-
-// Good:
-const changed = value !== undefined
-```
-
 ### Always Await Async (`always-await-async`)
 
 Await async work to ensure spinners, double-tap prevention, and sequencing.
@@ -53,36 +25,6 @@ wallet.saveTxMetadata(params).catch((error: unknown) => showError(error))
 
 // Good:
 await wallet.saveTxMetadata(params)
-```
-
-### No Redundant Catch (`no-redundant-catch`)
-
-If the caller already handles errors, do not add a local `.catch()`.
-
-```ts
-// Bad:
-const handle = async () => {
-  await op().catch((error: unknown) => showError(error))
-}
-
-// Good:
-const handle = async () => {
-  await op()
-}
-```
-
-### TokenId Must Not Fallback to Null (`tokenid-no-null-fallback`)
-
-If `tokenId` is a non-null string, never silently fallback to `null` (it changes
-meaning from "this token" to "native currency").
-
-```ts
-// Bad:
-const spendTokenId = tokenId ?? null
-
-// Good:
-if (tokenId == null) throw new Error('Missing tokenId')
-const spendTokenId = tokenId
 ```
 
 ### No Redundant Error Handling (`no-redundant-error-handling`)
@@ -119,141 +61,7 @@ try {
 }
 ```
 
-### Do Not Mask Errors (`dont-mask-errors`)
-
-Avoid replacing unknown errors with a generic message; rethrow unexpected ones.
-
-```ts
-// Bad:
-catch (error) {
-  throw new Error('Failed')
-}
-
-// Good:
-catch (error) {
-  if (isExpectedError(error)) throw new Error('Invalid request')
-  throw error
-}
-```
-
-### Check Array Bounds (`check-array-bounds`)
-
-Verify arrays have elements before indexing.
-
-```ts
-// Bad:
-useAddress(vin.addresses[0])
-
-// Good:
-if (vin.addresses.length === 0) return
-useAddress(vin.addresses[0])
-```
-
-### Compare Same Types (`compare-same-types`)
-
-Do not compare tokenIds to currency codes; use the correct identifier.
-
-```ts
-// Bad:
-const isSpecial = SPECIAL_TOKEN_IDS.includes(request.fromCurrencyCode)
-
-// Good:
-const isSpecial = SPECIAL_TOKEN_IDS.includes(request.fromTokenId)
-```
-
-### Lookup Table Defensive Access (`lookup-table-defensive-access`)
-
-Use optional chaining for dynamic keys.
-
-```ts
-// Bad:
-const ok = TABLE[pluginId].includes(tokenId)
-
-// Good:
-const ok = TABLE[pluginId]?.includes(tokenId) ?? false
-```
-
-### Consolidate Guard Clauses (`consolidate-guard-clauses`)
-
-If validation applies to all branches, do it once at function entry.
-
-```ts
-// Bad:
-if (mode === 'a') {
-  if (!id) return
-  doA(id)
-} else {
-  if (!id) return
-  doB(id)
-}
-
-// Good:
-if (!id) return
-if (mode === 'a') doA(id)
-else doB(id)
-```
-
 ## React & UI
-
-### Prefer `useHandler` Over `useCallback` (`useHandler-over-useCallback`)
-
-Prefer `useHandler` (from `hooks/useHandler`) for event handlers.
-
-```ts
-// Bad:
-const onPress = useCallback(() => {
-  void submit()
-}, [submit])
-
-// Good:
-const onPress = useHandler(() => {
-  void submit()
-})
-```
-
-### Combine Related Effects (`combine-related-effects`)
-
-Combine effects that update related state to avoid redundant renders.
-
-```ts
-// Bad: two effects update the same derived state
-useEffect(() => setLabel(getLabel(a)), [a])
-useEffect(() => setLabel(getLabel(b)), [b])
-
-// Good:
-useEffect(() => {
-  setLabel(getLabel(a, b))
-}, [a, b])
-```
-
-### Extract Display Logic (`display-logic-extraction`)
-
-Extract complex display logic into helpers with early returns.
-
-```ts
-// Bad:
-const title = a ? (b ? 'A+B' : 'A') : b ? 'B' : 'None'
-
-// Good:
-function getTitle(a: boolean, b: boolean): string {
-  if (a && b) return 'A+B'
-  if (a) return 'A'
-  if (b) return 'B'
-  return 'None'
-}
-```
-
-### Use `StyleSheet.compose` (`stylesheet-compose`)
-
-Prefer `StyleSheet.compose(baseStyle, customStyle)`.
-
-```ts
-// Bad:
-const style = [styles.base, maybeStyle]
-
-// Good:
-const style = StyleSheet.compose(styles.base, maybeStyle)
-```
 
 ### Platform Keyboard Return Key (`platform-keyboard`)
 
@@ -393,16 +201,6 @@ settings.notifState = { ...settings.notifState, ...newNotifState }
 
 ## Async & Concurrency
 
-### Use `makePeriodicTask` (`makePeriodicTask`)
-
-Prefer `makePeriodicTask` over `setInterval`.
-
-```ts
-const task = makePeriodicTask(async () => {
-  await refresh()
-}, 30_000)
-```
-
 ### Background Services Location (`background-services-location`)
 
 Background services live in `components/services/` as mounted React components.
@@ -431,18 +229,6 @@ try {
 }
 ```
 
-### Polling Race Conditions (`polling-race-conditions`)
-
-When polling is cancellable, check cancel flags after every `await`.
-
-```ts
-while (!cancelled) {
-  const result = await fetchStuff()
-  if (cancelled) return
-  onResult(result)
-}
-```
-
 ### Refresh State in Delayed Callbacks (`refresh-state-callbacks`)
 
 Read state inside the callback to avoid stale closures.
@@ -454,130 +240,7 @@ setTimeout(() => {
 }, 1000)
 ```
 
-### Cleanup Timeouts on Shutdown (`cleanup-timeouts-shutdown`)
-
-Track timeout ids and clear them in shutdown.
-
-```ts
-const timeouts = new Set<ReturnType<typeof setTimeout>>()
-
-function addTimeout(id: ReturnType<typeof setTimeout>): void {
-  timeouts.add(id)
-}
-
-function shutdown(): void {
-  for (const id of timeouts) clearTimeout(id)
-  timeouts.clear()
-}
-```
-
-### Serialize Event Handlers (`serialize-event-handlers`)
-
-Serialize async handlers touching shared resources.
-
-```ts
-const pendingByRepo = new Map<string, Promise<void>>()
-
-async function runSerialized(repoId: string, fn: () => Promise<void>) {
-  const prev = pendingByRepo.get(repoId) ?? Promise.resolve()
-  const next = prev.then(fn, fn)
-  pendingByRepo.set(repoId, next)
-  await next
-}
-```
-
-## Data Validation (Cleaners)
-
-### Clean All External Data (`clean-all-external-data`)
-
-Clean network + disk inputs before use.
-
-```ts
-// Good:
-const cleaned = asMyType(raw)
-```
-
-### Derive Types From Cleaners (`derive-types-from-cleaners`)
-
-Use `ReturnType<typeof asCleaner>`.
-
-```ts
-export type MyType = ReturnType<typeof asMyType>
-```
-
-### `asOptional` Also Accepts Null (`asoptional-handles-null`)
-
-Preserve null vs undefined when it matters.
-
-```ts
-// Good:
-const asField = asOptional(asEither(asNull, asString), null)
-```
-
-### New Persisted Fields Must Be Optional (`new-fields-optional`)
-
-New persisted fields must be `asOptional` unless a migration exists.
-
-```ts
-// Good:
-const asSettings = asObject({
-  version: asNumber,
-  newField: asOptional(asString)
-})
-```
-
-### Remove Unused Cleaner Fields (`remove-unused-cleaner-fields`)
-
-Avoid dead cleaner fields that add noise.
-
-```ts
-// Good: delete unused field, or comment why it remains
-```
-
 ## Code Quality
-
-### Delete Unnecessary Code (`delete-unnecessary-code`)
-
-Remove unused vars, unreachable branches, commented blocks.
-
-```ts
-// Bad:
-// TODO: maybe use later
-// const unused = 123
-
-// Good: delete it
-```
-
-### Put Parameters Inline (`put-parameters-inline`)
-
-Inline pass-through variables unless they add type safety.
-
-```ts
-// Bad:
-const x = 1
-doThing(x)
-
-// Good:
-doThing(1)
-```
-
-### Use Existing Helpers (`use-existing-helpers`)
-
-Search for existing project helpers before creating new ones.
-
-```ts
-// Good:
-const tokenId = getTokenId(wallet, currencyCode)
-```
-
-### Avoid Duplicated Mocks (`avoid-duplicated-mocks`)
-
-Prefer `src/util/fake/`.
-
-```ts
-// Good:
-import { fakeWallet } from '../../util/fake/fakeWallet'
-```
 
 ### No Hardcoded Debug URLs (`no-hardcoded-debug-urls`)
 
@@ -600,18 +263,6 @@ Avoid `file:../` in `package.json`.
 { "some-lib": "file:../some-lib" }
 ```
 
-### Guard Debug Logging (`guard-debug-logging`)
-
-No unguarded `console.log` in production code.
-
-```ts
-// Bad:
-console.log('debug', value)
-
-// Good:
-if (ENV.DEBUG_VERBOSE_LOGGING) console.log('debug', value)
-```
-
 ### Validation Single Source (`validation-single-source`)
 
 Use one validator for realtime + submit.
@@ -631,60 +282,7 @@ Prefer local helpers instead of expensive async wallet bridge calls.
 const display = div(nativeAmount, multiplier, 18)
 ```
 
-### No Hand-Rolled Standard Ops (`no-hand-rolled-ops`)
-
-Use established libraries for standard algorithms.
-
-```ts
-// Good:
-import { base64 } from 'rfc4648'
-```
-
-### Keep Config Consistent (`keep-config-consistent`)
-
-Avoid duplicated constants drifting.
-
-```ts
-// Good:
-export const POLL_MS = 30_000
-```
-
-### Remove Unused Styles (`remove-unused-styles`)
-
-Delete unused `StyleSheet.create` entries.
-
-```ts
-// Good: remove styles.unused if nothing references it
-```
-
 ## Strings & Localization
-
-### Reuse Existing Strings (`reuse-existing-strings`)
-
-Search `en_US.json` before adding new keys.
-
-```ts
-// Good:
-const text = sprintf(lstrings.get_started_button)
-```
-
-### Context-Based Key Names (`context-based-key-names`)
-
-Keys describe meaning, not screen.
-
-```text
-Bad: signup_screen_get_started
-Good: get_started_button
-```
-
-### Avoid "Tap to ..." (`avoid-tap-to-x`)
-
-Prompts describe the action, not the gesture.
-
-```text
-Bad: Tap to select a country
-Good: Select a country
-```
 
 ### Localization Happens in the GUI Layer (`localization-gui-level`)
 
@@ -696,60 +294,4 @@ throw new NetworkError('CONNECTION_FAILED')
 
 // Good (GUI):
 showError(lstrings.connection_failed)
-```
-
-## Comments & Documentation
-
-### Add Non-Obvious Constraints (`add-non-obvious-constraints`)
-
-Document constraints that are not obvious.
-
-```ts
-// EVM-only: assumes EVM contract address format
-```
-
-### Remove Stale Comments (`remove-stale-comments`)
-
-Delete comments that no longer match reality.
-
-```ts
-// Bad: comment says "only mainnet" but code supports testnet too
-```
-
-### Comments Explain Why, Not What (`comments-why-not-what`)
-
-```ts
-// Bad:
-// Loop through items and filter by status
-
-// Good:
-// Only active items can be edited; archived items are read-only
-```
-
-## Server Conventions
-
-Only applies to repos ending in `-server` or containing `pm2.json` at repo root.
-
-### Server devDependencies (`server-devdependencies`)
-
-```text
-All deps go in devDependencies except cleaner packages.
-```
-
-### Separate Server/Client Config (`separate-configs`)
-
-```text
-Validate serverConfig.json and clientConfig.json with cleaners.
-```
-
-### PM2 Process Management (`pm2-process-management`)
-
-```text
-API in cluster mode; engines as single instances.
-```
-
-### Build Both Frontend/Backend (`build-both`)
-
-```text
-build script must build both (parallel ok).
 ```
