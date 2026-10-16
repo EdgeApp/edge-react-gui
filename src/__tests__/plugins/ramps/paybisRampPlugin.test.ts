@@ -436,6 +436,29 @@ describe('paybisRampPlugin sell payment redirect', () => {
     expect(pop).toHaveBeenCalledTimes(1)
   })
 
+  it('opens nothing when the user leaves the widget during the payment-details fetch', async () => {
+    const webView = await openWidget()
+    let releaseDetails = (): void => {}
+    const detailsHeld = new Promise<void>(resolve => {
+      releaseDetails = resolve
+    })
+    global.fetch = (async (url: string, options?: { body?: string }) => {
+      if (new URL(url).pathname.endsWith('/payment-details')) {
+        await detailsHeld
+      }
+      return await fakeFetch(url, options)
+    }) as typeof global.fetch
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    webView.onClose()
+    releaseDetails()
+    await settle()
+
+    expect(paramsFor('send2')).toHaveLength(0)
+    expect(pop).not.toHaveBeenCalled()
+  })
+
   it('opens the widget again without the one-time token after a send', async () => {
     const webView = await openWidget()
     expect(webView.url).toContain('oneTimeToken=ott')

@@ -1275,6 +1275,9 @@ export const paybisRampPlugin: RampPluginFactory = (
               console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
               let isFirstOpen = true
+              // Set once the user leaves the widget, so a payment-details
+              // fetch still in flight opens nothing:
+              let webViewClosed = false
 
               // Opens the send scene for this order's payment, and finishes the
               // sale once it is sent:
@@ -1289,6 +1292,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                     apiKey: state!.apiKey,
                     promoCode
                   })
+                  if (webViewClosed) return
                   const {
                     assetId,
                     amount,
@@ -1398,10 +1402,6 @@ export const paybisRampPlugin: RampPluginFactory = (
                     }
                   )
 
-                  // Open the widget again, so it shows the order's status:
-                  navigation.pop()
-                  await openWebView()
-
                   // Track conversion
                   onLogEvent('Sell_Success', {
                     conversionValues: {
@@ -1433,7 +1433,12 @@ export const paybisRampPlugin: RampPluginFactory = (
                       params
                     )
                   }
+
+                  // Open the widget again, so it shows the order's status:
+                  navigation.pop()
+                  await openWebView()
                 } catch (e: unknown) {
+                  if (webViewClosed) return
                   // The widget still shows the order, so the user returns to it.
                   // Only the redirect page is worth closing:
                   redirect.closeRedirectPage()
@@ -1470,12 +1475,15 @@ export const paybisRampPlugin: RampPluginFactory = (
                   ? `${baseWebviewUrl}${ott}`
                   : baseWebviewUrl
                 isFirstOpen = false
+                webViewClosed = false
                 redirect.reset()
 
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
-                  onClose: () => {},
+                  onClose: () => {
+                    webViewClosed = true
+                  },
                   onShouldStartLoad: redirect.onShouldStartLoad,
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
