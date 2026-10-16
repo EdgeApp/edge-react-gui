@@ -6,6 +6,7 @@ import {
   asMaybePendingFundsError,
   asMaybeSwapCurrencyError,
   type EdgeAccount,
+  type EdgeAddress,
   type EdgeCurrencyConfig,
   type EdgeCurrencyWallet,
   type EdgeDenomination,
@@ -369,6 +370,12 @@ const SendComponent: React.FC<Props> = props => {
   const [destinationTag, setDestinationTag] = useState<string | undefined>(
     undefined
   )
+  // Every address of the user's own wallet when it was picked as the
+  // recipient, so the swap provider can pay out to the address type it
+  // supports. Undefined for a pasted, typed, or scanned recipient.
+  const [recipientWalletAddresses, setRecipientWalletAddresses] = useState<
+    EdgeAddress[] | undefined
+  >(undefined)
   const [swapQuote, setSwapQuote] = useState<EdgeSwapQuote | undefined>(
     undefined
   )
@@ -730,12 +737,10 @@ const SendComponent: React.FC<Props> = props => {
         fromTokenId: tokenId,
         toTokenId: null,
         toPluginId: destPluginId,
-        toAddresses: [
-          {
-            addressType: 'publicAddress',
-            publicAddress: spendInfo.spendTargets[0].publicAddress ?? ''
-          }
-        ],
+        toAddresses: makeSwapToAddresses(
+          spendInfo.spendTargets[0].publicAddress ?? '',
+          recipientWalletAddresses
+        ),
         nativeAmount: spendInfo.spendTargets[0].nativeAmount ?? '0',
         quoteFor: guaranteedSide === 'send' ? 'from' : 'to'
       },
@@ -958,7 +963,8 @@ const SendComponent: React.FC<Props> = props => {
         resolvedName,
         crossChainNativeAmount,
         crossChainMemo,
-        detectedDestPluginId
+        detectedDestPluginId,
+        walletAddresses
       } = changeAddressResult
 
       // A destination detected from the address itself, or a recipient just
@@ -1087,6 +1093,7 @@ const SendComponent: React.FC<Props> = props => {
         setMinNativeAmount(parsedUri.minNativeAmount)
         setExpireDate(parsedUri?.expireDate)
         setAddressExpired(false)
+        setRecipientWalletAddresses(walletAddresses)
         setSpendInfo({ ...spendInfo, memos })
         needsScrollToEnd.current = true
       }
@@ -1104,14 +1111,17 @@ const SendComponent: React.FC<Props> = props => {
       destPluginId: string,
       publicAddress: string,
       addressEntryMethod: AddressEntryMethod,
-      crossChainNativeAmount?: string,
       /**
-       * A destination memo the new destination arrived with, from a scanned
-       * URI. Passed in rather than written by the caller beforehand, because
-       * the reset below clears the tag and would drop it.
+       * What the new destination arrived with. A destination memo from a
+       * scanned URI is passed in rather than written by the caller
+       * beforehand, because the reset below clears the tag and would drop it.
        */
-      crossChainMemo?: string
+      destination: Pick<
+        ChangeAddressResult,
+        'crossChainNativeAmount' | 'crossChainMemo' | 'walletAddresses'
+      > = {}
     ): Promise<void> => {
+      const { crossChainMemo } = destination
       setRecipientPluginId(destPluginId)
       // A new destination chain invalidates any tag and quote held for the old
       // one, exactly as picking the recipient asset by hand does. A memo that
@@ -1124,9 +1134,9 @@ const SendComponent: React.FC<Props> = props => {
       setFixedToFallback(false)
 
       await handleChangeAddress(spendTarget)({
+        ...destination,
         parsedUri: { publicAddress },
         addressEntryMethod,
-        crossChainNativeAmount,
         detectedDestPluginId: destPluginId
       })
     }
@@ -1181,11 +1191,16 @@ const SendComponent: React.FC<Props> = props => {
 
   const handleSelfTransferAsset =
     (spendTarget: EdgeSpendTarget) =>
-    async (destPluginId: string, address: string): Promise<boolean> => {
+    async (
+      destPluginId: string,
+      address: string,
+      walletAddresses: EdgeAddress[]
+    ): Promise<boolean> => {
       await adoptCrossChainDestination(spendTarget)(
         destPluginId,
         address,
-        'other'
+        'other',
+        { walletAddresses }
       )
       return true
     }
@@ -1399,8 +1414,7 @@ const SendComponent: React.FC<Props> = props => {
         chain.pluginId,
         publicAddress,
         addressEntryMethod,
-        nativeAmount,
-        crossChainMemo
+        { crossChainNativeAmount: nativeAmount, crossChainMemo }
       )
       // A lone match is adopted without asking, so the change is announced.
       // Several matches went through the picker, where the user named it.
@@ -1420,6 +1434,8 @@ const SendComponent: React.FC<Props> = props => {
     // lastAddressEntryMethod so we don't auto launch the camera again.
     setLastAddressEntryMethod(undefined)
     spendInfo.spendTargets.splice(index, 1)
+    // The picked wallet's addresses belong to the first target only:
+    if (index === 0) setRecipientWalletAddresses(undefined)
     setSpendInfo({ ...spendInfo })
     needsScrollToEnd.current = true
   }
@@ -1486,6 +1502,7 @@ const SendComponent: React.FC<Props> = props => {
     setGuaranteedSide('send')
     setRecipientPluginId(undefined)
     setDestinationTag(undefined)
+    setRecipientWalletAddresses(undefined)
     setSpendInfo({ ...spendInfo })
     // This is deleting the amount tile. If this happens, remove the
     // lastAddressEntryMethod so we don't auto launch the camera again.
@@ -3852,9 +3869,10 @@ const SendComponent: React.FC<Props> = props => {
             fromTokenId: tokenId,
             toTokenId: null,
             toPluginId: destPluginId,
-            toAddresses: [
-              { addressType: 'publicAddress', publicAddress: toAddress }
-            ],
+            toAddresses: makeSwapToAddresses(
+              toAddress,
+              recipientWalletAddresses
+            ),
             toMemos,
             nativeAmount: quoteNativeAmount,
             quoteFor: guaranteedSide === 'send' ? 'from' : 'to',
@@ -4000,6 +4018,7 @@ const SendComponent: React.FC<Props> = props => {
         : receiveNativeAmount,
       destPluginId,
       destinationTag,
+      recipientWalletAddresses,
       swapDisablePlugins,
       swapDisableAssets,
       swapQuoteNonce
@@ -4322,4 +4341,25 @@ function describeAsset(
   if (token == null) return undefined
   const { currencyCode, displayName } = token
   return { currencyCode, displayName }
+}
+
+/**
+ * The destination addresses for a swap-to-address quote. The payout address
+ * comes first. When the recipient is one of the user's own wallets, its other
+ * addresses follow, so the provider can pick the address type it supports.
+ */
+function makeSwapToAddresses(
+  toAddress: string,
+  walletAddresses: EdgeAddress[] | undefined
+): EdgeAddress[] {
+  const payoutAddress = walletAddresses?.find(
+    address => address.publicAddress === toAddress
+  )
+  if (walletAddresses == null || payoutAddress == null) {
+    return [{ addressType: 'publicAddress', publicAddress: toAddress }]
+  }
+  return [
+    payoutAddress,
+    ...walletAddresses.filter(address => address !== payoutAddress)
+  ]
 }
