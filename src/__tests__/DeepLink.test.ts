@@ -544,6 +544,45 @@ describe('parseDeepLink', function () {
     })
   })
 
+  describe('send', () => {
+    makeLinkTests({
+      'edge://send?stealth=true': {
+        type: 'send',
+        asset: undefined,
+        stealth: true
+      },
+      'edge://send?stealth=true&asset=bitcoin': {
+        type: 'send',
+        asset: { pluginId: 'bitcoin', tokenId: null },
+        stealth: true
+      },
+      'https://deep.edge.app/send?asset=ethereum_0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&stealth=true':
+        {
+          type: 'send',
+          asset: {
+            pluginId: 'ethereum',
+            tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+          },
+          stealth: true
+        },
+      'edge://send': {
+        type: 'send',
+        asset: undefined,
+        stealth: false
+      },
+      'edge://send?stealth=1&asset=monero': {
+        type: 'send',
+        asset: { pluginId: 'monero', tokenId: null },
+        stealth: false
+      },
+      'edge://send?stealth=true&asset=ethereum_': {
+        type: 'send',
+        asset: undefined,
+        stealth: true
+      }
+    })
+  })
+
   describe('swap', () => {
     makeLinkTests({
       'edge://swap': {
@@ -876,6 +915,7 @@ describe('getDeepLinkReadiness', function () {
       'wallets'
     ],
     [{ type: 'rewards', pluginId: 'bitcoin', tokenId: null }, 'wallets'],
+    [{ type: 'send', stealth: true }, 'wallets'],
     [{ type: 'walletConnect', uri: 'wc:topic@2' }, 'wallets'],
 
     // An `exchange` link that names an asset opens the wallet picker, so it

@@ -37,6 +37,8 @@ tags:
       AMOUNT: ${AMOUNT}
 - runFlow:
     file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'on'
 - runFlow:
     file: ../common/stealth-await-quote.yaml
     env:

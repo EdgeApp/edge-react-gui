@@ -60,6 +60,7 @@ tags:
     file: ../common/stealth-toggle.yaml
     env:
       TOGGLE: 'Stealth Swap'
+      STATE: 'on'
 - tapOn:
     text: 'Tap to edit'
     index: 0

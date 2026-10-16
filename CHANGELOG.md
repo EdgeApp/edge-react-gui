@@ -32,6 +32,8 @@
 - added: MoonPay Trade swap provider
 - added: Per-provider swap asset disables from the info server
 - added: Copy button for the master private key or seed, cleared from the clipboard after one minute
+- added: `stealth` navigation param that presets the Stealth Swap and Stealth Send toggles
+- added: `edge://send` deep link that opens Send, optionally with Stealth Send on
 - changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
@@ -44,6 +46,8 @@
 - changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
 - changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
 - changed: Hide the Stealth Send card and Recipient receives row on sends with multiple recipients
+- changed: Stealth Swap toggle shows on the swap scene before assets are selected
+- changed: Stealth Send and Stealth Swap toggles remember the last setting per account
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
 - fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
 - fixed: Missing exchange rates when the device clock is set ahead

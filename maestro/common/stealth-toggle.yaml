@@ -1,7 +1,15 @@
-# Flips the Stealth toggle.
+# Sets the Stealth toggle to a requested state.
 #
 # env TOGGLE  "Stealth Send" on the Send scene, "Stealth Swap" on the Exchange
 #             scene. Defaults to the Send scene's label.
+# env STATE   "on" or "off". Defaults to "on".
+#
+# The toggles are remembered per account, so a scene can open with Stealth
+# already on from an earlier run. The helper reads the current state from the
+# explainer text the card shows only while armed, and taps only when that state
+# differs from STATE. A tap the scene refuses (below the private floor, an
+# asset with no private route) leaves the explainer hidden and shows the reason
+# instead, which callers can assert.
 #
 # Toggling always invalidates any held quote and refetches, because the private
 # and transparent routes are different requests, so callers that need a live
@@ -9,15 +17,19 @@
 appId: ${APP_ID}
 env:
   APP_ID: ${MAESTRO_APP_ID || 'co.edgesecure.app'}
-  # Declared under a different name than the one callers pass: a subflow env
+  # Declared under different names than the ones callers pass: a subflow env
   # entry that reuses the caller's key overwrites what the caller passed, so
   # `TOGGLE: ${TOGGLE || default}` would silently ignore the argument.
   TOGGLE_LABEL: ${TOGGLE || 'Stealth Send'}
+  TARGET: ${STATE || 'on'}
+  # The explainer text each card shows only while armed:
+  INFO: "${(TOGGLE || 'Stealth Send') == 'Stealth Swap' ? 'Routes your swap through multiple.*' : 'Uses a route that helps obfuscate.*'}"
 ---
 # Rows can sit above or below the fold depending on where the previous step
 # left the scroll position, so the row is brought into view from either side
-# before it is tapped. A `scrollUntilVisible` that is already satisfied is a
-# no-op, and one that scrolls the wrong way is optional and warns.
+# before it is read. A `scrollUntilVisible` that is already satisfied is a
+# no-op, and one that scrolls the wrong way is optional and warns. Centering
+# the row also brings the explainer below it into view.
 - scrollUntilVisible:
     element:
       text: '${TOGGLE_LABEL}'
@@ -32,6 +44,19 @@ env:
     timeout: 4000
     centerElement: true
     optional: true
-- tapOn: '${TOGGLE_LABEL}'
-- waitForAnimationToEnd:
-    timeout: 2500
+- runFlow:
+    when:
+      notVisible: '${INFO}'
+      true: ${TARGET == 'on'}
+    commands:
+      - tapOn: '${TOGGLE_LABEL}'
+      - waitForAnimationToEnd:
+          timeout: 2500
+- runFlow:
+    when:
+      visible: '${INFO}'
+      true: ${TARGET == 'off'}
+    commands:
+      - tapOn: '${TOGGLE_LABEL}'
+      - waitForAnimationToEnd:
+          timeout: 2500

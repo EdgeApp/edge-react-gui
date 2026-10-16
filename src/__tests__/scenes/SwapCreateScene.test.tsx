@@ -2,6 +2,7 @@ import {
   afterAll,
   afterEach,
   beforeAll,
+  beforeEach,
   describe,
   expect,
   it,
@@ -81,6 +82,24 @@ afterAll(async () => {
   await context?.close()
 })
 
+const mockSetStealthSwapEnabled = jest.fn()
+jest.mock('../../actions/SettingsActions', () => ({
+  ...jest.requireActual<object>('../../actions/SettingsActions'),
+  setStealthSwapEnabled: (...args: unknown[]) => {
+    mockSetStealthSwapEnabled(...args)
+    return async () => {}
+  }
+}))
+
+/** A root state whose account saved `stealthSwapEnabled`. */
+const savedState = (stealthSwapEnabled: boolean): FakeState => ({
+  ...fakeRootState,
+  ui: {
+    ...fakeRootState.ui,
+    settings: { ...fakeRootState.ui?.settings, stealthSwapEnabled }
+  }
+})
+
 describe('SwapCreateScene', () => {
   afterEach(() => {
     jest.restoreAllMocks()
@@ -101,6 +120,7 @@ describe('SwapCreateScene', () => {
 
   it('asks for an ordinary swap after the Stealth terms are declined', async () => {
     if (btcWallet == null || ethWallet == null) throw new Error('No wallets')
+    mockSetStealthSwapEnabled.mockReset()
     const rootState: FakeState = { ...fakeRootState, core: { account } }
     const navigate = jest
       .spyOn(fakeNavigation, 'navigate')
@@ -156,7 +176,160 @@ describe('SwapCreateScene', () => {
     expect(nextParams).not.toBe(stealthParams)
     expect(nextParams.swapRequest.privacy).toBeUndefined()
     expect(nextParams.swapRequestOptions.forceEnabled).toBeUndefined()
-
+    // Only the tap saves. The decline turns the toggle off for this visit:
+    expect(mockSetStealthSwapEnabled).toHaveBeenCalledTimes(1)
+    expect(mockSetStealthSwapEnabled.mock.calls[0][1]).toBe(true)
     rendered.unmount()
+  })
+
+  it('offers the Stealth Swap toggle before any wallet is picked', () => {
+    const rootState: FakeState = { ...fakeRootState }
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
+      </FakeProviders>
+    )
+
+    expect(rendered.getByText(lstrings.stealth_swap_toggle)).toBeTruthy()
+    expect(
+      rendered.queryByText(lstrings.stealth_swap_info, { exact: false })
+    ).toBeNull()
+    rendered.unmount()
+  })
+
+  it('turns Stealth Swap on from the stealth param', () => {
+    const rootState: FakeState = { ...fakeRootState }
+    const sceneProps = fakeSwapTabSceneProps('swapCreate', { stealth: true })
+    const setParams = jest.spyOn(sceneProps.navigation, 'setParams')
+
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <SwapCreateScene {...sceneProps} />
+      </FakeProviders>
+    )
+
+    expect(
+      rendered.getByText(lstrings.stealth_swap_info, { exact: false })
+    ).toBeTruthy()
+    // The param is consumed, so later param merges cannot re-apply it:
+    expect(setParams).toHaveBeenCalledWith({ stealth: undefined })
+    rendered.unmount()
+    // The fake navigation is shared by every test in the file:
+    setParams.mockRestore()
+  })
+
+  describe('saved Stealth Swap choice', () => {
+    beforeEach(() => {
+      mockSetStealthSwapEnabled.mockReset()
+    })
+
+    const infoShown = (rendered: ReturnType<typeof render>): boolean =>
+      rendered.queryByText(lstrings.stealth_swap_info, { exact: false }) != null
+
+    it('starts from the saved choice', () => {
+      const on = render(
+        <FakeProviders initialState={savedState(true)}>
+          <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
+        </FakeProviders>
+      )
+      expect(infoShown(on)).toBe(true)
+      on.unmount()
+
+      const off = render(
+        <FakeProviders initialState={savedState(false)}>
+          <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
+        </FakeProviders>
+      )
+      expect(infoShown(off)).toBe(false)
+      off.unmount()
+    })
+
+    it('lets the stealth param override the saved choice without saving it', () => {
+      const rendered = render(
+        <FakeProviders initialState={savedState(true)}>
+          <SwapCreateScene
+            {...fakeSwapTabSceneProps('swapCreate', { stealth: false })}
+          />
+        </FakeProviders>
+      )
+
+      expect(infoShown(rendered)).toBe(false)
+      expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+    })
+
+    it('saves the choice a tap makes', () => {
+      const rendered = render(
+        <FakeProviders initialState={savedState(false)}>
+          <SwapCreateScene {...fakeSwapTabSceneProps('swapCreate', {})} />
+        </FakeProviders>
+      )
+
+      fireEvent.press(rendered.getByText(lstrings.stealth_swap_toggle))
+      expect(infoShown(rendered)).toBe(true)
+      expect(mockSetStealthSwapEnabled).toHaveBeenCalledTimes(1)
+      expect(mockSetStealthSwapEnabled.mock.calls[0][1]).toBe(true)
+      rendered.unmount()
+    })
+
+    it('drops the param override when the user leaves the swap tab', () => {
+      // A tab navigator that has moved to another tab, with its blur handler
+      // captured so the test can fire it:
+      let leaveTab: () => void = () => {}
+      const sceneProps = fakeSwapTabSceneProps('swapCreate', { stealth: true })
+      const getParent = jest
+        .spyOn(sceneProps.navigation, 'getParent')
+        .mockReturnValue({
+          addListener: (event: string, callback: () => void) => {
+            leaveTab = callback
+            return () => {}
+          },
+          getState: () => ({ index: 0, routes: [{ name: 'walletsTab' }] })
+        })
+
+      const rendered = render(
+        <FakeProviders initialState={savedState(false)}>
+          <SwapCreateScene {...sceneProps} />
+        </FakeProviders>
+      )
+      expect(infoShown(rendered)).toBe(true)
+
+      act(() => {
+        leaveTab()
+      })
+      expect(infoShown(rendered)).toBe(false)
+      expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+      // The fake navigation is shared by every test in the file:
+      getParent.mockRestore()
+    })
+
+    it('applies a stealth param that arrives after the tab mounted', () => {
+      // The swap tab stays mounted, so a link reaches it as new params on a
+      // scene that already rendered with none:
+      const sceneProps = fakeSwapTabSceneProps('swapCreate', {})
+      const setParams = jest.spyOn(sceneProps.navigation, 'setParams')
+
+      const rendered = render(
+        <FakeProviders initialState={savedState(false)}>
+          <SwapCreateScene {...sceneProps} />
+        </FakeProviders>
+      )
+      expect(infoShown(rendered)).toBe(false)
+
+      rendered.rerender(
+        <FakeProviders initialState={savedState(false)}>
+          <SwapCreateScene
+            {...fakeSwapTabSceneProps('swapCreate', { stealth: true })}
+          />
+        </FakeProviders>
+      )
+      expect(infoShown(rendered)).toBe(true)
+      expect(setParams).toHaveBeenCalledWith({ stealth: undefined })
+      expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+      rendered.unmount()
+      setParams.mockRestore()
+    })
   })
 })

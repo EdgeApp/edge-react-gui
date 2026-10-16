@@ -22,6 +22,11 @@ tags:
       WALLET_CODE: ${SRC_CODE}
 
 # Plain same-asset start: the recipient selector is available before an address.
+# The toggle is remembered per account, so it is forced off first.
+- runFlow:
+    file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'off'
 - assertVisible: 'Stealth Send'
 - assertVisible: 'Recipient receives'
 - takeScreenshot: maestro/screenshots/stealth-send-01-initial
@@ -29,10 +34,14 @@ tags:
 # Stealth on: the toggle card expands with the explainer and Learn more link.
 - runFlow:
     file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'on'
 - assertVisible: 'Uses a route that helps obfuscate.*Learn more.*'
 - takeScreenshot: maestro/screenshots/stealth-send-02-stealth-on
 - runFlow:
     file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'off'
 
 # A memo-required destination chain adds its tag row.
 - runFlow:

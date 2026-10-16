@@ -113,11 +113,19 @@ private quote on a pair the suite does not cover is five `runFlow` steps:
       AMOUNT: '30'
 - runFlow:
     file: ../common/stealth-toggle.yaml
+    env:
+      STATE: 'on'
 - runFlow:
     file: ../common/stealth-await-quote.yaml
 ```
 
-Two things bite when writing these by hand:
+Three things bite when writing these by hand:
+
+- **The Stealth toggles are remembered per account** (synced settings), so a
+  scene can open with Stealth already on from an earlier run or another
+  device. `stealth-toggle.yaml` takes `STATE: on|off` and taps only when the
+  card is in the other state, so call it with an explicit state rather than
+  assuming the scene opens off.
 
 - **The confirm slider is a pan gesture.** A coordinate swipe across the track
   does nothing at all. `stealth-slide-to-confirm.yaml` swipes from the thumb by
