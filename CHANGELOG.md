@@ -74,6 +74,7 @@
 - fixed: The send scene no longer stacks the scam warning above the swap-send warning
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
 - fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
+- fixed: Stealth Send note no longer shows under the toggle on a plain send
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)

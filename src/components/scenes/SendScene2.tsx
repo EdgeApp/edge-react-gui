@@ -771,7 +771,14 @@ const SendComponent: React.FC<Props> = props => {
    */
   const stealthBlockedReason: string | undefined =
     sameAsset && !selfPrivateAvailable
-      ? sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
+      ? sprintf(
+          // An asset the provider does not serve at all has no route of any
+          // kind, so the "to itself" wording would only mislead:
+          getHoudiniChain(pluginId, tokenId) == null
+            ? lstrings.stealth_asset_unsupported_1s
+            : lstrings.stealth_self_private_unsupported_1s,
+          currencyCode
+        )
       : belowPrivateFloor
       ? sprintf(
           lstrings.stealth_below_private_minimum_1s,
@@ -2258,6 +2265,15 @@ const SendComponent: React.FC<Props> = props => {
     // send has several. The toggle state is left alone, and the card returns
     // with it once the send is back to a single recipient:
     if (multipleTargets) return null
+    // The reason is only worth showing next to a swap. A plain send to the
+    // same asset involves none, so nothing under the toggle explains it, and
+    // the toast on tap covers the one way to ask for one. The exceptions are a
+    // picked recipient asset, which is a swap already, and a Stealth Send
+    // whose quote failed and turned the toggle off, which the user asked for:
+    const showBlockedReason =
+      stealthBlockedReason != null &&
+      !stealth &&
+      (crossAssetPicked || pairCaps.stealth === false)
     return (
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
         <EdgeCard sections>
@@ -2266,7 +2282,7 @@ const SendComponent: React.FC<Props> = props => {
             value={stealth}
             onPress={handleToggleStealth}
           />
-          {stealthBlockedReason != null && !stealth ? (
+          {showBlockedReason ? (
             <StealthInfoText message={stealthBlockedReason} />
           ) : stealth ? (
             <StealthInfoText
