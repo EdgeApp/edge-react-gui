@@ -77,9 +77,10 @@
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
 - fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
 - fixed: Swap-send notice title cut off on Android
-- removed: LetsExchange swap provider
+- fixed: Stealth Send note no longer shows under the toggle on a plain send
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
+- removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
 

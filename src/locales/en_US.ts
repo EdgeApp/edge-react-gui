@@ -1714,6 +1714,7 @@ const strings = {
     'Stealth routing is not available for this pair right now. Stealth Send has been turned off.',
   stealth_route_unavailable_info:
     'Stealth routing is not available for this pair right now.',
+  stealth_asset_unsupported_1s: 'Stealth routing is not available for %1$s.',
   stealth_self_private_unsupported_1s:
     'Stealth routing is not available when sending %1$s to itself.',
   stealth_below_private_minimum_1s:
