@@ -807,6 +807,7 @@
   "transaction_details_swap": "Scambia Fondi",
   "transaction_details_swap_and_send": "Scambio & Invio",
   "transaction_details_stealth_send": "Invio Stealth",
+  "transaction_details_stealth_swap": "Stealth Swap",
   "transaction_details_stealth_swap_and_send": "Scambio e invio Stealth",
   "transaction_details_swap_network_fee": "Commissioni di rete per lo scambio",
   "transaction_details_swap_order_cancel": "Ordine di scambio annullato",
