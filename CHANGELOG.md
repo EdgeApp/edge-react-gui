@@ -3,7 +3,6 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
-- changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
@@ -44,6 +43,7 @@
 - changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
 - changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
 - changed: Hide the Stealth Send card and Recipient receives row on sends with multiple recipients
+- changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
 - fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
 - fixed: Missing exchange rates when the device clock is set ahead
