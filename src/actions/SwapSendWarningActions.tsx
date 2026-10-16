@@ -4,7 +4,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
 import { Airship } from '../components/services/AirshipInstance'
-import { Paragraph, WarningText } from '../components/themed/EdgeText'
+import { Paragraph } from '../components/themed/EdgeText'
 import { SWAP_SEND_WARNING } from '../constants/constantSettings'
 import { lstrings } from '../locales/strings'
 import { config } from '../theme/appConfig'
@@ -36,7 +36,7 @@ export const showSwapSendWarningModal = async (
         config.appName
       )
       await Airship.show<boolean>(bridge => {
-        const warningMessage = [
+        const message = [
           routingMessage,
           lstrings.stealth_swap_send_modal_message_timing,
           lstrings.stealth_swap_send_modal_message_kyc,
@@ -49,11 +49,8 @@ export const showSwapSendWarningModal = async (
           <ConfirmContinueModal
             bridge={bridge}
             title={lstrings.stealth_swap_send_modal_title}
-            warning
           >
-            <Paragraph>
-              <WarningText>{warningMessage}</WarningText>
-            </Paragraph>
+            <Paragraph>{message}</Paragraph>
           </ConfirmContinueModal>
         )
       })
