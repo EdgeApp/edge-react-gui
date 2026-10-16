@@ -97,7 +97,8 @@ const SWAP_BEFORE_SEND = 'Swap before send'
  * payment code, and reads the code's `amount` or EIP-681 `value` in whole
  * native units, plus an XRP-style `dt` destination tag. Like the real parsers
  * it names no asset for either, so the wallet stamps the asset it was asked
- * about on both.
+ * about on both. An EIP-681 token `transfer` reads only when asked with a
+ * token's code, as an EVM parser refuses it asked with the coin's.
  */
 const makeParsingPlugin = (
   currencyInfo: EdgeCurrencyInfo,
@@ -109,8 +110,25 @@ const makeParsingPlugin = (
     ...plugin,
     async makeCurrencyTools() {
       const tools = await makeCurrencyTools()
-      const parseUri = async (uri: string): Promise<EdgeParsedUri> => {
+      const parseUri = async (
+        uri: string,
+        currencyCode?: string
+      ): Promise<EdgeParsedUri> => {
         const [target, query = ''] = uri.replace(/^[a-z]+:/, '').split('?')
+        if (target.endsWith('/transfer')) {
+          if (
+            currencyCode == null ||
+            currencyCode === currencyInfo.currencyCode
+          ) {
+            throw new Error('InvalidUriError')
+          }
+          const payee = /(?:^|&)address=([^&]+)/.exec(query)?.[1]
+          if (payee == null || !addressFormat.test(payee)) {
+            throw new Error('InvalidPublicAddressError')
+          }
+          const amount = /(?:^|&)uint256=(\d+)/.exec(query)?.[1]
+          return { publicAddress: payee, nativeAmount: amount }
+        }
         const publicAddress = target.split('@')[0]
         if (!addressFormat.test(publicAddress)) {
           throw new Error('InvalidPublicAddressError')
@@ -235,6 +253,8 @@ describe('SendScene2 recipient network', () => {
     enterParsedAddress: (text: string) => Promise<void>
     /** Picks an asset by name in the "Recipient receives" picker. */
     pickRecipientAsset: (name: string) => Promise<void>
+    /** Picks one of the user's own wallets under "Myself". */
+    pickMyself: (pluginId: string, address: string) => Promise<void>
     recipientAddress: () => string
     /** Presses the Stealth Send toggle. */
     toggleStealth: () => Promise<void>
@@ -323,6 +343,13 @@ describe('SendScene2 recipient network', () => {
           row?.props.onPress?.()
         })
         show.mockRestore()
+      },
+      pickMyself: async (pluginId, address) => {
+        const { selfTransfer } = tileProps()
+        if (selfTransfer == null) throw new Error('No "Myself" picker')
+        await act(async () => {
+          await selfTransfer.onPickAsset({ pluginId, tokenId: null }, address)
+        })
       },
       recipientAddress: () => tileProps().recipientAddress,
       toggleStealth: async () => {
@@ -413,6 +440,50 @@ describe('SendScene2 recipient network', () => {
     scene.unmount()
   })
 
+  it('keeps the entered amount through a "Myself" pick on another network', async () => {
+    const scene = renderBitcoinSend()
+    await scene.enterParsedAddress(`bitcoin:${BTC_ADDRESS}?amount=150000`)
+    expect(scene.shows('0.0015 BTC')).toBe(true)
+
+    // The picked wallet's address carries no amount, and the entered one is
+    // in the asset being sent, so it stays as the guaranteed send side:
+    await scene.pickMyself('ethereum', EVM_ADDRESS)
+    expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
+    expect(scene.shows('Ethereum (ETH)')).toBe(true)
+    expect(scene.position('0.0015 BTC')).toBeGreaterThan(-1)
+    expect(scene.position('(Guaranteed)')).toBeLessThan(
+      scene.position('Recipient gets')
+    )
+    scene.unmount()
+  })
+
+  it('keeps the entered amount when an address adopts another network', async () => {
+    const scene = renderBitcoinSend()
+    await scene.enterParsedAddress(`bitcoin:${BTC_ADDRESS}?amount=150000`)
+
+    expect(await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)).toBe(
+      true
+    )
+    expect(scene.shows('Ethereum (ETH)')).toBe(true)
+    expect(scene.position('0.0015 BTC')).toBeGreaterThan(-1)
+    scene.unmount()
+  })
+
+  it('keeps the entered amount when an address switches back', async () => {
+    const scene = renderBitcoinSend()
+    await scene.enterParsedAddress(`bitcoin:${BTC_ADDRESS}?amount=150000`)
+    await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
+    expect(scene.shows('Ethereum (ETH)')).toBe(true)
+
+    // A bare Bitcoin address carries no amount, and the entered one is in
+    // the asset this plain send pays:
+    expect(await scene.enterUnparsedAddress(BTC_ADDRESS)).toBe(true)
+    expect(scene.recipientAddress()).toBe(BTC_ADDRESS)
+    expect(scene.shows('Bitcoin (BTC)')).toBe(true)
+    expect(scene.shows('0.0015 BTC')).toBe(true)
+    scene.unmount()
+  })
+
   it("switches back when other networks share the wallet's address format", async () => {
     const scene = renderSend(ethWallet)
     await scene.enterUnparsedAddress(BTC_ADDRESS)
@@ -485,6 +556,28 @@ describe('SendScene2 recipient network', () => {
     expect(scene.position('(Guaranteed)')).toBeGreaterThan(
       scene.position('Recipient gets')
     )
+    scene.unmount()
+  })
+
+  it("receives a token code's amount when the payout is a token on the wallet's own chain", async () => {
+    const scene = renderSend(ethWallet)
+    await scene.pickRecipientAsset('Tether')
+    mockShowToast.mockClear()
+
+    // The wallet reads a token's payment code only with the token's own code,
+    // and the amount is what the recipient asked to get, six decimals:
+    expect(
+      await scene.enterUnparsedAddress(
+        `ethereum:0x${USDT_TOKEN_ID}@1/transfer?address=${EVM_ADDRESS}&uint256=5000000`
+      )
+    ).toBe(true)
+    expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
+    expect(scene.shows('Tether (USDT)')).toBe(true)
+    expect(scene.position('5 USDT')).toBeGreaterThan(-1)
+    expect(scene.position('(Guaranteed)')).toBeGreaterThan(
+      scene.position('Recipient gets')
+    )
+    expect(mockShowToast).not.toHaveBeenCalled()
     scene.unmount()
   })
 
@@ -636,6 +729,21 @@ describe('SendScene2 recipient network', () => {
   })
 
   describe('with Stealth on', () => {
+    it("leaves a coin code's amount off a same-asset token send", async () => {
+      const scene = renderSend(ethWallet, USDT_TOKEN_ID)
+      await scene.toggleStealth()
+      expect(scene.stealthArmed()).toBe(true)
+
+      // Read as the token being sent, this code is 2,000,000,000 USDT:
+      await scene.enterParsedAddress(
+        `ethereum:${EVM_ADDRESS}?value=2000000000000000`
+      )
+      expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
+      expect(scene.shows('2000000000 USDT')).toBe(false)
+      expect(scene.shows('0 USDT')).toBe(true)
+      scene.unmount()
+    })
+
     it("keeps a code's destination tag through the switch", async () => {
       const scene = renderSend(xrpWallet)
       await scene.pickRecipientAsset('Bitcoin')

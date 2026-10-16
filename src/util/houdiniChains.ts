@@ -699,9 +699,11 @@ export function isReceiveSideGuaranteed(opts: {
 
 /**
  * A parsed address with the amount the user already entered, for an address
- * re-entered when a destination is cleared. A bare address carries no amount,
- * and the entered one is in the source asset's units on both sides of the
- * switch, so it stays. An amount the address does carry wins.
+ * re-entered when a destination is cleared or a new one is adopted. A bare
+ * address carries no amount, and the entered one is in the source asset's
+ * units on both sides of the switch, so it stays. An amount the address does
+ * carry wins. A parse that names the source asset by `tokenId` places the
+ * kept amount on the send side (see `getUriAmountSide`).
  */
 export function keepEnteredAmount(
   parsedUri: EdgeParsedUri,

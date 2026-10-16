@@ -1057,7 +1057,14 @@ const SendComponent: React.FC<Props> = props => {
             setGuaranteedSide(uriAmount.side)
           }
         } else {
-          spendTarget.nativeAmount = parsedUri.nativeAmount
+          // A plain or same-asset send pays the source asset, so an amount
+          // stated in any other asset prices nothing here. A coin `value` on
+          // a token send (see `withStatedAsset`) would otherwise size the
+          // token spend in wei.
+          spendTarget.nativeAmount =
+            parsedUri.tokenId === undefined || parsedUri.tokenId === tokenId
+              ? parsedUri.nativeAmount
+              : undefined
         }
 
         const memos: EdgeMemo[] = []
@@ -1140,8 +1147,16 @@ const SendComponent: React.FC<Props> = props => {
       setGuaranteedSide('send')
       setFixedToFallback(false)
 
+      // The send side is the guaranteed one now, so a destination that
+      // arrived with no amount of its own keeps the one already entered:
       await handleChangeAddress(spendTarget)({
-        parsedUri: { publicAddress },
+        parsedUri:
+          crossChainNativeAmount == null
+            ? keepEnteredAmount(
+                { publicAddress, tokenId },
+                spendTarget.nativeAmount
+              )
+            : { publicAddress },
         addressEntryMethod,
         crossChainNativeAmount,
         detectedDestPluginId: destAsset.pluginId
@@ -1153,7 +1168,8 @@ const SendComponent: React.FC<Props> = props => {
    * network's parser accepted. The tag and quote held for the network being
    * left are dropped, as picking the source asset under "Recipient receives"
    * does, and the whole parse lands in the tile, so a payment code keeps its
-   * amount and memo.
+   * amount and memo. A bare address keeps the amount already entered, which
+   * is in the source asset this send now pays.
    */
   const adoptOwnNetworkDestination =
     (spendTarget: EdgeSpendTarget) =>
@@ -1169,7 +1185,10 @@ const SendComponent: React.FC<Props> = props => {
       setFixedToFallback(false)
 
       await handleChangeAddress(spendTarget)(
-        { parsedUri, addressEntryMethod },
+        {
+          parsedUri: keepEnteredAmount(parsedUri, spendTarget.nativeAmount),
+          addressEntryMethod
+        },
         true
       )
     }
@@ -1301,6 +1320,38 @@ const SendComponent: React.FC<Props> = props => {
           type: isOtherNetworkAddress ? 'otherNetwork' : 'invalid',
           networkName: networkNameOf(pluginId)
         })
+      }
+
+      // A token payout on the wallet's own network is read by the wallet,
+      // which the tile asks with the sent asset's code, and an EVM wallet
+      // refuses a token's payment code asked that way. The payout token's own
+      // code reads it, and the amount it states is what the recipient gets:
+      if (
+        swapSendActive &&
+        destPluginId === pluginId &&
+        destTokenId != null &&
+        destTokenId !== tokenId &&
+        destCurrencyCode != null &&
+        peekPaymentUri(address).scheme != null
+      ) {
+        const payoutUri = await parseOwnNetworkPayment(
+          coreWallet,
+          destCurrencyCode,
+          destTokenId,
+          address
+        )
+        if (payoutUri != null) {
+          if (await isOwnEvmAddress(coreWallet, payoutUri.publicAddress)) {
+            return lstrings.send_to_self_error_message
+          }
+          if (!(await addressWarnings(payoutUri, destCurrencyCode))) return true
+          // A parser that leaves the asset unstated read it as the token:
+          await handleChangeAddress(spendTarget)({
+            parsedUri: { ...payoutUri, tokenId: destTokenId },
+            addressEntryMethod
+          })
+          return true
+        }
       }
 
       // With another network picked for the recipient, the tile read the
@@ -1602,15 +1653,13 @@ const SendComponent: React.FC<Props> = props => {
               ) {
                 return
               }
-              const payment = await parseCrossChainPayment(
+              // A token payout accepts a code for that token, and keeps its
+              // amount only when the code states it in that token:
+              return await parseCrossChainPayment(
                 account.currencyConfig[destChain.pluginId],
-                text
+                text,
+                destTokenId
               )
-              // The chain's parser reads a code's amount in the chain's coin,
-              // which cannot price a token destination:
-              return payment == null || destTokenId == null
-                ? payment
-                : { ...payment, nativeAmount: undefined }
             }
           : undefined
 

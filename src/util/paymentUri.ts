@@ -84,7 +84,10 @@ function parseChainId(text: string | undefined): number | undefined {
 /** A payment destination on a chain the user holds no wallet for. */
 export interface CrossChainPayment {
   publicAddress: string
-  /** The amount the code asks for, in the destination chain's native units. */
+  /**
+   * The amount the code asks for, in the payout asset's native units. Left
+   * out when the code states it in another asset.
+   */
   nativeAmount?: string
   /**
    * The destination memo the code carries (an XRP `dt`, a `memo` parameter).
@@ -100,22 +103,59 @@ export interface CrossChainPayment {
  * needing a wallet on it.
  *
  * Resolves undefined for anything the parser rejects, and for a code that
- * names one of the chain's tokens: this flow pays out the chain's own coin,
- * so honoring a token code would pay the wrong asset.
+ * names a token other than the payout: honoring it would pay the wrong
+ * asset. A code naming the payout token, such as a USDT invoice for a USDT
+ * payout, keeps its amount, which is in that token's units. A coin code on a
+ * token payout keeps its address but not its amount, which is in the coin.
  */
 export async function parseCrossChainPayment(
   currencyConfig: EdgeCurrencyConfig,
-  text: string
+  text: string,
+  payoutTokenId: EdgeTokenId = null
 ): Promise<CrossChainPayment | undefined> {
-  const { currencyCode } = currencyConfig.currencyInfo
   try {
-    const parsed = await currencyConfig.parseUri(text.trim(), currencyCode)
-    const { publicAddress, nativeAmount, tokenId, uniqueIdentifier } = parsed
+    const parsed = await parseAsPayout(
+      currencyConfig,
+      text.trim(),
+      payoutTokenId
+    )
+    const { publicAddress, nativeAmount, uniqueIdentifier } = parsed
     if (publicAddress == null || publicAddress === '') return
-    if (tokenId != null) return
-    return { publicAddress, nativeAmount, memo: uniqueIdentifier }
+    const statedTokenId = parsed.tokenId ?? null
+    if (statedTokenId != null && statedTokenId !== payoutTokenId) return
+    return {
+      publicAddress,
+      nativeAmount: statedTokenId === payoutTokenId ? nativeAmount : undefined,
+      memo: uniqueIdentifier
+    }
   } catch (error: unknown) {
     return undefined
+  }
+}
+
+/**
+ * Asks the chain's parser for its coin first, so a code that names no asset
+ * reads as the coin. A parser that refuses a token's code when asked for the
+ * coin (EVM chains throw on a `transfer` code for any other asset) gets the
+ * payout token's own code next, but only for a payment URI: bare text asked
+ * as a token can turn into a different payment altogether, such as Tron's
+ * PIX lookup for USDT.
+ */
+async function parseAsPayout(
+  currencyConfig: EdgeCurrencyConfig,
+  text: string,
+  payoutTokenId: EdgeTokenId
+): Promise<EdgeParsedUri> {
+  const { currencyCode } = currencyConfig.currencyInfo
+  try {
+    return await currencyConfig.parseUri(text, currencyCode)
+  } catch (error: unknown) {
+    const payoutToken =
+      payoutTokenId == null
+        ? undefined
+        : currencyConfig.allTokens[payoutTokenId]
+    if (payoutToken == null || peekPaymentUri(text).scheme == null) throw error
+    return await currencyConfig.parseUri(text, payoutToken.currencyCode)
   }
 }
 

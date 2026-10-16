@@ -155,19 +155,124 @@ describe('parseCrossChainPayment', () => {
     expect(await parseCrossChainPayment(config, 'nope')).toBeUndefined()
   })
 
-  it('rejects a code for one of the chain tokens', async () => {
-    // This flow pays out the chain's own coin, so a token code is refused
-    // rather than paid in the wrong asset.
+  const PAYEE = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
+  const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+
+  it('rejects a token code on a coin payout', async () => {
+    // Honoring it would pay the coin for an invoice in the token:
     const config = makeConfig(async () => ({
-      publicAddress: '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e',
-      tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
     }))
     expect(await parseCrossChainPayment(config, 'ethereum:0x')).toBeUndefined()
+  })
+
+  it("accepts the payout token's code with its amount", async () => {
+    // A USDC invoice for a USDC payout, its amount in USDC's own units:
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE, nativeAmount: '1000000' })
+  })
+
+  it("rejects another token's code on a token payout", async () => {
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDT_TOKEN_ID)
+    ).toBeUndefined()
+  })
+
+  it("keeps a coin code's address but not its amount on a token payout", async () => {
+    // The amount is in the chain's coin, which cannot price the token:
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '2000000000000000'
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE })
   })
 
   it('rejects a result with no address', async () => {
     const config = makeConfig(async () => ({}))
     expect(await parseCrossChainPayment(config, 'ripple:')).toBeUndefined()
+  })
+
+  // Ethereum's parser throws on a `transfer` code asked for any asset but the
+  // token it moves, and core turns the code it answers with into a tokenId:
+  const makeEvmConfig = (): EdgeCurrencyConfig => ({
+    ...makeFakeCurrencyConfig(
+      { pluginId: 'ethereum', currencyCode: 'ETH' },
+      {
+        [USDT_TOKEN_ID]: {
+          currencyCode: 'USDT',
+          displayName: 'Tether',
+          denominations: [{ name: 'USDT', multiplier: '1000000' }],
+          networkLocation: { contractAddress: `0x${USDT_TOKEN_ID}` }
+        }
+      }
+    ),
+    parseUri: async (uri, currencyCode) => {
+      if (!uri.includes('/transfer')) {
+        return { publicAddress: PAYEE, nativeAmount: '2000000000000000' }
+      }
+      if (currencyCode !== 'USDT') {
+        throw new Error('InternalErrorInvalidCurrencyCode')
+      }
+      return {
+        publicAddress: PAYEE,
+        nativeAmount: '25000000',
+        tokenId: USDT_TOKEN_ID
+      }
+    }
+  })
+  const USDT_INVOICE = `ethereum:0x${USDT_TOKEN_ID}/transfer?address=${PAYEE}&uint256=25000000`
+
+  it('accepts a token invoice the parser only reads as that token', async () => {
+    expect(
+      await parseCrossChainPayment(makeEvmConfig(), USDT_INVOICE, USDT_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE, nativeAmount: '25000000' })
+  })
+
+  it('still reads a coin code as the coin on a token payout', async () => {
+    expect(
+      await parseCrossChainPayment(
+        makeEvmConfig(),
+        `ethereum:${PAYEE}?value=2000000000000000`,
+        USDT_TOKEN_ID
+      )
+    ).toEqual({ publicAddress: PAYEE })
+  })
+
+  it('rejects a token invoice on a coin payout', async () => {
+    expect(
+      await parseCrossChainPayment(makeEvmConfig(), USDT_INVOICE)
+    ).toBeUndefined()
+  })
+
+  it('asks for the payout token only for a payment URI', async () => {
+    const asked: Array<string | undefined> = []
+    const config: EdgeCurrencyConfig = {
+      ...makeEvmConfig(),
+      parseUri: async (uri, currencyCode) => {
+        asked.push(currencyCode)
+        throw new Error('InvalidPublicAddressError')
+      }
+    }
+    expect(
+      await parseCrossChainPayment(config, 'not-an-address', USDT_TOKEN_ID)
+    ).toBeUndefined()
+    expect(asked).toEqual(['ETH'])
   })
 })
 
