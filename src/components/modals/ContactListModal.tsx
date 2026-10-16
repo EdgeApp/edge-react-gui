@@ -4,6 +4,7 @@ import type { AirshipBridge } from 'react-native-airship'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { getMerchantThumbnail } from '../../hooks/redux/useContactThumbnail'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
@@ -52,12 +53,21 @@ export const ContactListModal: React.FC<Props> = ({
       (company != null && company !== '' ? company : '')
 
     const label = primaryLabel ?? ''
+    const thumbnail =
+      getMerchantThumbnail(label, theme) ??
+      (hasThumbnail && thumbnailPath != null
+        ? { uri: thumbnailPath, fit: false }
+        : undefined)
 
     return (
       <SelectableRow
         icon={
-          hasThumbnail && thumbnailPath != null ? (
-            <Image style={styles.image} source={{ uri: thumbnailPath }} />
+          thumbnail != null ? (
+            <Image
+              style={styles.image}
+              source={{ uri: thumbnail.uri }}
+              resizeMode={thumbnail.fit ? 'contain' : 'cover'}
+            />
           ) : (
             <IonIcon
               style={styles.tileAvatarIcon}

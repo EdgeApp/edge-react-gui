@@ -23,7 +23,11 @@ export const getBorrowPluginIconUri = (
  * Swap plugins whose icon is a single-color mark on a transparent background.
  * The CDN has an `icon-light.png` beside their `icon.png` for light themes.
  */
-const themedSwapPluginIcons = new Set<string>(['houdini'])
+const themedSwapPluginIcons = new Set<string>([
+  'houdini',
+  'mptrade',
+  'mptradedefi'
+])
 
 export function hasThemedSwapPluginIcon(pluginId: string): boolean {
   return themedSwapPluginIcons.has(pluginId)

@@ -290,6 +290,19 @@ describe('getPluginIdIcon', () => {
     expect(getPluginIdIcon('lifi', edgeLight)).toEqual(lifiIcon)
   })
 
+  it('gives MoonPay Trade its themed swap logo, fitted', () => {
+    for (const pluginId of ['mptrade', 'mptradedefi']) {
+      expect(getPluginIdIcon(pluginId, edgeDark)).toEqual({
+        uri: `https://content.edge.app/exchangeIcons/${pluginId}/icon.png`,
+        fit: true
+      })
+      expect(getPluginIdIcon(pluginId, edgeLight)).toEqual({
+        uri: `https://content.edge.app/exchangeIcons/${pluginId}/icon-light.png`,
+        fit: true
+      })
+    }
+  })
+
   it('has no logo for an unknown or missing provider', () => {
     expect(getPluginIdIcon('notAProvider', edgeDark)).toBeUndefined()
     expect(getPluginIdIcon(undefined, edgeDark)).toBeUndefined()

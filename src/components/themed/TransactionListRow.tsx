@@ -182,8 +182,9 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   // Icon & Thumbnail
   const contactThumbnail = useContactThumbnail(name)
   const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
-  const thumbnailPath = contactThumbnail ?? pluginIdIcon?.uri
-  const fitThumbnail = contactThumbnail == null && pluginIdIcon?.fit === true
+  const thumbnail = contactThumbnail ?? pluginIdIcon
+  const thumbnailPath = thumbnail?.uri
+  const fitThumbnail = thumbnail?.fit === true
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)

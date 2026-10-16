@@ -3,6 +3,12 @@ import { EDGE_CONTENT_SERVER_URI } from './CdnConstants'
 export interface MerchantContact {
   displayName: string
   thumbnailPath: string
+
+  /**
+   * The swap provider behind this merchant, when its transaction thumbnail
+   * should be the provider's themed logo rather than `thumbnailPath`.
+   */
+  pluginId?: string
 }
 
 export const MERCHANT_CONTACTS: MerchantContact[] = [
@@ -68,11 +74,13 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'MoonPay Trade (Centralized)',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptrade/icon.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptrade/icon.png`,
+    pluginId: 'mptrade'
   },
   {
     displayName: 'MoonPay Trade (DeFi)',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptradedefi/icon.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/mptradedefi/icon.png`,
+    pluginId: 'mptradedefi'
   },
   {
     displayName: 'ShapeShift',
