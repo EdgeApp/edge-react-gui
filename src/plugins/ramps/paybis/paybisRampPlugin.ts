@@ -85,6 +85,7 @@ import {
   validateRampQuoteRequest
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
+import { makeSellPaymentRedirect } from '../utils/sellPaymentRedirect'
 import { asInitOptions } from './paybisRampTypes'
 
 const pluginId = 'paybis'
@@ -1274,9 +1275,6 @@ export const paybisRampPlugin: RampPluginFactory = (
               console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
               let isFirstOpen = true
-              // Set once the current WebView itself has loaded the redirect page,
-              // which is the web fallback meant for outside the app:
-              let webViewOnRedirectPage = false
 
               // Opens the send scene for this order's payment, and finishes the
               // sale once it is sent:
@@ -1438,7 +1436,7 @@ export const paybisRampPlugin: RampPluginFactory = (
                 } catch (e: unknown) {
                   // The widget still shows the order, so the user returns to it.
                   // Only the redirect page is worth closing:
-                  if (webViewOnRedirectPage) navigation.pop()
+                  redirect.closeRedirectPage()
                   if (
                     e instanceof Error &&
                     e.message === SendErrorNoTransaction
@@ -1460,6 +1458,11 @@ export const paybisRampPlugin: RampPluginFactory = (
                 }
               }
 
+              const redirect = makeSellPaymentRedirect({
+                navigation,
+                onPaymentRedirect: handlePaymentRedirect
+              })
+
               const openWebView = async (): Promise<void> => {
                 // Only include oneTimeToken on the first open. Subsequent opens
                 // with the same requestId must omit it per Paybis API requirements.
@@ -1467,21 +1470,13 @@ export const paybisRampPlugin: RampPluginFactory = (
                   ? `${baseWebviewUrl}${ott}`
                   : baseWebviewUrl
                 isFirstOpen = false
-                webViewOnRedirectPage = false
+                redirect.reset()
 
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
                   onClose: () => {},
-                  // Refuse the redirect, so the WebView stays on Paybis's page for
-                  // this order while the send scene is open:
-                  onShouldStartLoad: (uri: string): boolean => {
-                    if (!isReturnUrl(uri, 'payment')) return true
-                    handlePaymentRedirect().catch((error: unknown) => {
-                      showError(error)
-                    })
-                    return false
-                  },
+                  onShouldStartLoad: redirect.onShouldStartLoad,
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
                       showError(error)
@@ -1496,14 +1491,8 @@ export const paybisRampPlugin: RampPluginFactory = (
                       lstrings.fiat_plugin_sell_failed_try_again,
                       NOT_SUCCESS_TOAST_HIDE_MS
                     )
-                  } else if (isReturnUrl(newUrl, 'payment')) {
-                    // The redirect loaded anyway (the refusal above came too late
-                    // on Android). The page reports its URL more than once while
-                    // it loads, and a later report can arrive after Back, so only
-                    // the first one may open the send scene:
-                    if (webViewOnRedirectPage) return
-                    webViewOnRedirectPage = true
-                    await handlePaymentRedirect()
+                  } else {
+                    await redirect.onUrlChange(newUrl)
                   }
                 }
               }
