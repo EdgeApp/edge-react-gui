@@ -42,7 +42,6 @@ import {
 } from '../../gui/fiatProviderTypes'
 import {
   addExactRegion,
-  isReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
   RETURN_URL_PAYMENT,
   validateExactRegion
@@ -66,6 +65,7 @@ import {
   validateRampQuoteRequest
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
+import { makeSellPaymentRedirect } from '../utils/sellPaymentRedirect'
 import { openExternalWebView } from '../utils/webViewUtils'
 import {
   asInitOptions,
@@ -1003,9 +1003,6 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 console.log('Approving moonpay sell quote url=' + urlObj.href)
 
                 let inPayment = false
-                // Set once the WebView itself has loaded the redirect page,
-                // which is the web fallback meant for outside the app:
-                let webViewOnRedirectPage = false
 
                 // Opens the send scene for the sell order named in MoonPay's
                 // payment redirect, and finishes the sale once it is sent:
@@ -1187,7 +1184,7 @@ export const moonpayRampPlugin: RampPluginFactory = (
                       // returns to it. Opening the widget again would
                       // make MoonPay create another order. Only the
                       // redirect page is worth closing:
-                      if (webViewOnRedirectPage) navigation.pop()
+                      redirect.closeRedirectPage()
                     }
 
                     if (
@@ -1280,6 +1277,11 @@ export const moonpayRampPlugin: RampPluginFactory = (
                   }
                 }
 
+                const redirect = makeSellPaymentRedirect({
+                  navigation,
+                  onPaymentRedirect: handlePaymentRedirect
+                })
+
                 const signedUrl = await signMoonpayUrl(urlObj.href)
                 await new Promise<void>(resolve => {
                   navigation.navigate('guiPluginWebView', {
@@ -1287,27 +1289,10 @@ export const moonpayRampPlugin: RampPluginFactory = (
                     onClose: () => {
                       resolve()
                     },
-                    // Refuse the redirect, so the WebView stays on MoonPay's
-                    // page for this order while the send scene is open:
-                    onShouldStartLoad: (uri: string): boolean => {
-                      if (!isReturnUrl(uri, 'payment')) return true
-                      handlePaymentRedirect(uri).catch((error: unknown) => {
-                        showError(error)
-                      })
-                      return false
-                    },
+                    onShouldStartLoad: redirect.onShouldStartLoad,
                     onUrlChange: async (uri: string): Promise<void> => {
                       console.log('Moonpay WebView url change: ' + uri)
-
-                      // The redirect loaded anyway (the refusal above came
-                      // too late on Android). The page reports its URL more
-                      // than once while it loads, and a later report can
-                      // arrive after Back, so only the first one may open
-                      // the send scene:
-                      if (!isReturnUrl(uri, 'payment')) return
-                      if (webViewOnRedirectPage) return
-                      webViewOnRedirectPage = true
-                      await handlePaymentRedirect(uri)
+                      await redirect.onUrlChange(uri)
                     }
                   })
                 })
