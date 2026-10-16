@@ -26,14 +26,6 @@ export interface FiatPluginOpenWebViewParams {
 
 interface Props extends BuySellTabSceneProps<'guiPluginWebView'> {}
 
-/**
- * Android omits `isTopFrame`, despite its type, and never reports a frame
- * inside the page, so a missing value means the main frame.
- */
-type AnyPlatformLoadRequest = Omit<ShouldStartLoadRequest, 'isTopFrame'> & {
-  isTopFrame?: boolean
-}
-
 export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   const { route } = props
   const {
@@ -59,10 +51,11 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   })
 
   const handleShouldStartLoad = useHandler(
-    (event: AnyPlatformLoadRequest): boolean => {
+    (event: ShouldStartLoadRequest): boolean => {
       // A frame inside the page must not be able to stand in for the page
-      // itself, so only main-frame loads are the caller's to refuse:
-      if (event.isTopFrame === false) return true
+      // itself, so only loads known to be for the main frame are the
+      // caller's to refuse:
+      if (!event.isTopFrame) return true
       return onShouldStartLoad?.(event.url) ?? true
     }
   )
