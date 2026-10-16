@@ -73,6 +73,7 @@
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
 - fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
 - removed: LetsExchange swap provider
+- fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 
 ## 4.51.3 (2026-09-30)
 
