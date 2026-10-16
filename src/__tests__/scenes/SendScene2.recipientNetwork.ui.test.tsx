@@ -7,17 +7,18 @@ import {
   it,
   jest
 } from '@jest/globals'
-import { act, render } from '@testing-library/react-native'
+import { act, render, waitFor } from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
   type EdgeAccount,
+  type EdgeAddress,
   type EdgeContext,
+  type EdgeCurrencyEngine,
   type EdgeCurrencyInfo,
   type EdgeCurrencyPlugin,
   type EdgeCurrencyWallet,
   type EdgeParsedUri,
-  type EdgeSwapInfo,
   type EdgeSwapPlugin,
   type EdgeTokenId,
   lockEdgeCorePlugins,
@@ -55,6 +56,12 @@ jest.mock('../../components/services/AirshipInstance', () => {
 
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
+const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
+const ZCASH_ADDRESS = /^(u1[a-z0-9]+|zs1[a-z0-9]+|t1[1-9A-HJ-NP-Za-km-z]{33})$/
+// An amount over the provider's floor, so the quote goes out:
+const ONE_BTC = '100000000'
+const ONE_ETH = '1000000000000000000'
+const ONE_ZEC = '100000000'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
 
 // Either side of the provider's 25 USD floor for a private route, at the fake
@@ -101,22 +108,6 @@ const makeParsingPlugin = (
 }
 
 /**
- * The Stealth provider, with no route for any pair, so every quote the scene
- * asks for is refused the way a real missing route is.
- */
-const houdiniSwapInfo: EdgeSwapInfo = {
-  pluginId: 'houdini',
-  displayName: 'Houdini Swap',
-  supportEmail: ''
-}
-const houdiniPlugin: EdgeSwapPlugin = {
-  swapInfo: houdiniSwapInfo,
-  async fetchSwapQuote(request) {
-    throw new SwapCurrencyError(houdiniSwapInfo, request)
-  }
-}
-
-/**
  * An EVM network the provider does not pay out to. Only the network differs
  * from the fake Avalanche: the coin and its fake balances are reused as-is.
  */
@@ -127,6 +118,73 @@ const ftmCurrencyInfo: EdgeCurrencyInfo = {
   displayName: 'Fantom',
   pluginId: 'fantom',
   walletType: 'wallet:fantom'
+}
+
+/**
+ * The swap provider every send-to-address quote goes to. It records the
+ * destination addresses each request reached it with, then declines the pair
+ * as a provider with no route would.
+ */
+const quotedDestinations: EdgeAddress[][] = []
+const fakeHoudiniPlugin: EdgeSwapPlugin = {
+  swapInfo: { pluginId: 'houdini', displayName: 'Houdini', supportEmail: '' },
+  async fetchSwapQuote(request) {
+    quotedDestinations.push(
+      await request.toWallet.getAddresses({ tokenId: null })
+    )
+    throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+  }
+}
+
+const zecCurrencyInfo: EdgeCurrencyInfo = {
+  ...btcCurrencyInfo,
+  assetDisplayName: 'Zcash',
+  chainDisplayName: 'Zcash',
+  currencyCode: 'ZEC',
+  displayName: 'Zcash',
+  pluginId: 'zcash',
+  walletType: 'wallet:zcash',
+  denominations: [{ name: 'ZEC', multiplier: '100000000', symbol: 'Z' }],
+  defaultSettings: {
+    customFeeSettings: [],
+    publicAddress: 't1Zcash111111111111111111111111111',
+    networkFee: '400',
+    parentNetworkFee: '',
+    balances: { ZEC: '10' }
+  }
+}
+
+/**
+ * Zcash wallets list a unified, a shielded and a transparent address, the
+ * unified one first, as the real engine does. Each wallet gets its own set,
+ * so two of them are told apart.
+ */
+const makeZcashPlugin = (): EdgeCurrencyPlugin => {
+  const plugin = makeParsingPlugin(zecCurrencyInfo, ZCASH_ADDRESS)
+  let engineCount = 0
+  return {
+    ...plugin,
+    async makeCurrencyEngine(walletInfo, opts): Promise<EdgeCurrencyEngine> {
+      const engine = await plugin.makeCurrencyEngine(walletInfo, opts)
+      const digit = String(++engineCount)
+      const addresses: EdgeAddress[] = [
+        {
+          addressType: 'unifiedAddress',
+          publicAddress: `u1${digit.repeat(60)}`
+        },
+        {
+          addressType: 'saplingAddress',
+          publicAddress: `zs1${digit.repeat(60)}`
+        },
+        {
+          addressType: 'transparentAddress',
+          publicAddress: `t1${digit.repeat(33)}`
+        }
+      ]
+      const getAddresses = async (): Promise<EdgeAddress[]> => addresses
+      return Object.assign(engine, { getAddresses })
+    }
+  }
 }
 
 const asUserDump = asObject({
@@ -146,6 +204,8 @@ let account: EdgeAccount | undefined
 let btcWallet: EdgeCurrencyWallet | undefined
 let ethWallet: EdgeCurrencyWallet | undefined
 let ftmWallet: EdgeCurrencyWallet | undefined
+let zecWallet: EdgeCurrencyWallet | undefined
+let otherZecWallet: EdgeCurrencyWallet | undefined
 
 beforeAll(async () => {
   const dump = asUserDump(fakeUser)
@@ -155,7 +215,8 @@ beforeAll(async () => {
     ethereum: makeParsingPlugin(ethCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
     avalanche: makeParsingPlugin(avaxCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
     fantom: makeParsingPlugin(ftmCurrencyInfo, /^0x[0-9A-Fa-f]{40}$/),
-    houdini: () => houdiniPlugin
+    zcash: makeZcashPlugin(),
+    houdini: fakeHoudiniPlugin
   })
   lockEdgeCorePlugins()
 
@@ -168,6 +229,7 @@ beforeAll(async () => {
       ethereum: true,
       avalanche: true,
       fantom: true,
+      zcash: true,
       houdini: true
     }
   })
@@ -179,6 +241,12 @@ beforeAll(async () => {
   if (ethInfo == null) throw new Error('Unable to get wallet info')
   ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
   ftmWallet = await account.createCurrencyWallet('wallet:fantom', {
+    fiatCurrencyCode: 'iso:USD'
+  })
+  zecWallet = await account.createCurrencyWallet('wallet:zcash', {
+    fiatCurrencyCode: 'iso:USD'
+  })
+  otherZecWallet = await account.createCurrencyWallet('wallet:zcash', {
     fiatCurrencyCode: 'iso:USD'
   })
 })
@@ -200,8 +268,23 @@ describe('SendScene2 recipient network', () => {
     enterAmount: (nativeAmount: string) => Promise<void>
     /** Hands the scene a payment code the sending wallet's parser accepted. */
     enterParsedAddress: (text: string) => Promise<void>
+    /**
+     * Hands the scene a recipient as the tile does for a picked wallet of the
+     * user's own: the address the tile shows, with every address the wallet
+     * has.
+     */
+    enterOwnWalletAddress: (
+      parsedUri: EdgeParsedUri,
+      walletAddresses: EdgeAddress[]
+    ) => Promise<void>
+    /** Picks one of the user's own wallets through the tile's "Myself". */
+    pickOwnWallet: (picked: EdgeCurrencyWallet | undefined) => Promise<void>
     /** Picks an asset by name in the "Recipient receives" picker. */
     pickRecipientAsset: (name: string) => Promise<void>
+    /** Enters the amount through the swap-send "You send" row. */
+    enterSendAmount: (nativeAmount: string) => Promise<void>
+    /** The props the scene hands the address tile. */
+    tileProps: () => React.ComponentProps<typeof AddressTile2>
     recipientAddress: () => string
     /** How many text nodes on the scene read exactly this. */
     count: (text: string) => number
@@ -295,6 +378,52 @@ describe('SendScene2 recipient network', () => {
           })
         })
       },
+      enterOwnWalletAddress: async (parsedUri, walletAddresses) => {
+        await act(async () => {
+          await tileProps().onChangeAddress({
+            parsedUri,
+            addressEntryMethod: 'other',
+            walletAddresses
+          })
+        })
+      },
+      pickOwnWallet: async picked => {
+        if (picked == null) throw new Error('No wallet')
+        const show = jest.spyOn(Airship, 'show').mockResolvedValueOnce({
+          type: 'wallet',
+          walletId: picked.id,
+          tokenId: null
+        })
+        await act(async () => {
+          rendered
+            .UNSAFE_getByProps({ testID: 'addressTileMyself' })
+            .props.onPress()
+        })
+        // The tile settles the pick on its own promise chain, whose updates
+        // only reach the scene once an act scope closes over them:
+        for (let i = 0; i < 50 && tileProps().recipientAddress === ''; ++i) {
+          await act(async () => {
+            await new Promise(resolve => setTimeout(resolve, 20))
+          })
+        }
+        expect(tileProps().recipientAddress).not.toBe('')
+        show.mockRestore()
+      },
+      enterSendAmount: async nativeAmount => {
+        const show = jest
+          .spyOn(Airship, 'show')
+          .mockResolvedValueOnce({ nativeAmount })
+        const row = rendered
+          .UNSAFE_getAllByType(EdgeRow)
+          .find(
+            candidate => candidate.props.title === lstrings.stealth_you_send
+          )
+        await act(async () => {
+          row?.props.onPress?.()
+        })
+        show.mockRestore()
+      },
+      tileProps,
       pickRecipientAsset: async name => {
         const show = jest.spyOn(Airship, 'show').mockImplementationOnce(
           // The scene's own picker, answered from the rows it offers:
@@ -497,6 +626,125 @@ describe('SendScene2 recipient network', () => {
       ['Recipient network changed to Ethereum.']
     ])
     scene.unmount()
+  })
+
+  it("quotes a picked wallet's addresses with the shown one first", async () => {
+    const scene = renderBitcoinSend()
+    await scene.pickRecipientAsset('Ethereum')
+
+    // The provider picks the address type it pays out to, so the picked
+    // wallet's other addresses ride along after the one the tile shows:
+    const shown: EdgeAddress = {
+      addressType: 'publicAddress',
+      publicAddress: EVM_ADDRESS
+    }
+    const other: EdgeAddress = {
+      addressType: 'segwitAddress',
+      publicAddress: OTHER_EVM_ADDRESS
+    }
+    quotedDestinations.length = 0
+    await scene.enterOwnWalletAddress(
+      { publicAddress: EVM_ADDRESS, nativeAmount: ONE_ETH },
+      [other, shown]
+    )
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([shown, other])
+    })
+
+    // A pasted address is the only one the quote gets:
+    quotedDestinations.length = 0
+    await scene.enterUnparsedAddress(
+      `ethereum:${OTHER_EVM_ADDRESS}@1?value=${ONE_ETH}`
+    )
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([
+        { addressType: 'publicAddress', publicAddress: OTHER_EVM_ADDRESS }
+      ])
+    })
+    scene.unmount()
+  })
+
+  it('quotes a wallet picked on another chain with the shown address first', async () => {
+    const scene = renderBitcoinSend()
+    const shown: EdgeAddress = {
+      addressType: 'publicAddress',
+      publicAddress: EVM_ADDRESS
+    }
+    const other: EdgeAddress = {
+      addressType: 'segwitAddress',
+      publicAddress: OTHER_EVM_ADDRESS
+    }
+
+    // The "Myself" picker hands a wallet on another chain to the scene as a
+    // cross-asset destination, not through the address callback:
+    await act(async () => {
+      await scene
+        .tileProps()
+        .selfTransfer?.onPickCrossAsset('ethereum', EVM_ADDRESS, [other, shown])
+    })
+    expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
+
+    quotedDestinations.length = 0
+    await scene.enterSendAmount(ONE_BTC)
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([shown, other])
+    })
+    scene.unmount()
+  })
+
+  it("quotes only the shown address when the wallet's list lacks it", async () => {
+    const scene = renderBitcoinSend()
+    await scene.pickRecipientAsset('Ethereum')
+
+    // A list that does not hold the shown address belongs to some other
+    // wallet, so none of it may reach the provider:
+    quotedDestinations.length = 0
+    await scene.enterOwnWalletAddress(
+      { publicAddress: EVM_ADDRESS, nativeAmount: ONE_ETH },
+      [{ addressType: 'segwitAddress', publicAddress: OTHER_EVM_ADDRESS }]
+    )
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual([
+        { addressType: 'publicAddress', publicAddress: EVM_ADDRESS }
+      ])
+    })
+    scene.unmount()
+  })
+
+  it('quotes every address of a wallet picked through Myself', async () => {
+    if (zecWallet == null || otherZecWallet == null) {
+      throw new Error('No wallet')
+    }
+    const zecAddresses = await zecWallet.getAddresses({ tokenId: null })
+    const otherZecAddresses = await otherZecWallet.getAddresses({
+      tokenId: null
+    })
+
+    // A wallet on another chain shows its first address and quotes them all:
+    const crossChain = renderBitcoinSend()
+    await crossChain.pickOwnWallet(zecWallet)
+    expect(crossChain.recipientAddress()).toBe(zecAddresses[0].publicAddress)
+    quotedDestinations.length = 0
+    await crossChain.enterSendAmount(ONE_BTC)
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual(zecAddresses)
+    })
+    crossChain.unmount()
+
+    // So does another wallet on the sending wallet's own chain, which the
+    // tile hands over through the address callback instead:
+    const sameChain = renderSend(zecWallet)
+    await sameChain.pickOwnWallet(otherZecWallet)
+    expect(sameChain.recipientAddress()).toBe(
+      otherZecAddresses[0].publicAddress
+    )
+    await sameChain.toggleStealth()
+    quotedDestinations.length = 0
+    await sameChain.enterSendAmount(ONE_ZEC)
+    await waitFor(() => {
+      expect(quotedDestinations.at(-1)).toEqual(otherZecAddresses)
+    })
+    sameChain.unmount()
   })
 
   it('shows the scam warning on a plain send with no address', async () => {
