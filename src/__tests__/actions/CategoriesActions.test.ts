@@ -328,6 +328,13 @@ describe('getPluginIdIcon', () => {
     }
   })
 
+  it('fits a static logo whose mark runs to the image edge', () => {
+    expect(getPluginIdIcon('swapuz', edgeLight)).toEqual({
+      uri: 'https://content.edge.app/swapuz.png',
+      fit: true
+    })
+  })
+
   it('has no logo for an unknown or missing provider', () => {
     expect(getPluginIdIcon('notAProvider', edgeDark)).toBeUndefined()
     expect(getPluginIdIcon(undefined, edgeDark)).toBeUndefined()

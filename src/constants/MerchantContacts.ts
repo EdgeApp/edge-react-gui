@@ -6,7 +6,8 @@ export interface MerchantContact {
 
   /**
    * The swap provider behind this merchant, when its transaction thumbnail
-   * should be the provider's themed logo rather than `thumbnailPath`.
+   * should be the provider's logo from `getPluginIdIcon` rather than
+   * `thumbnailPath`.
    */
   pluginId?: string
 }
@@ -69,7 +70,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'LetsExchange',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/letsexchange-logo.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/letsexchange-logo.png`,
+    pluginId: 'letsexchange'
   },
   {
     displayName: 'LI.FI',
@@ -101,7 +103,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'Swapuz',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/swapuz.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/swapuz.png`,
+    pluginId: 'swapuz'
   },
   {
     displayName: 'Switchain',
@@ -129,7 +132,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'Velodrome',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/velodrome.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/velodrome.png`,
+    pluginId: 'velodrome'
   },
   {
     displayName: 'Visa® Prepaid Card',

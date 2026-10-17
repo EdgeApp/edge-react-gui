@@ -788,6 +788,16 @@ const pluginIdIcons: Record<string, string> = {
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }
 
+/**
+ * Providers whose static image is a mark with no background that runs to the
+ * image edge, so a circular crop clips it.
+ */
+const fittedPluginIdIcons = new Set<string>([
+  'letsexchange',
+  'swapuz',
+  'velodrome'
+])
+
 export interface PluginIdIcon {
   uri: string
 
@@ -802,7 +812,8 @@ export interface PluginIdIcon {
  * The provider logo for a transaction. A provider whose logo is a single-color
  * mark uses the logo the swap scenes show: it follows the theme, so it stays
  * visible on a light background, and it is fitted instead of cropped. Every
- * other provider has one static image drawn for the circular thumbnail.
+ * other provider has one static image, cropped to a circle unless its mark
+ * runs to the image edge.
  */
 export function getPluginIdIcon(
   pluginId: string | undefined,
@@ -813,5 +824,7 @@ export function getPluginIdIcon(
     return { uri: getSwapPluginIconUri(pluginId, theme), fit: true }
   }
   const uri = pluginIdIcons[pluginId]
-  return uri == null ? undefined : { uri, fit: false }
+  return uri == null
+    ? undefined
+    : { uri, fit: fittedPluginIdIcons.has(pluginId) }
 }
