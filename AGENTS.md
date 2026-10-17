@@ -18,6 +18,10 @@
 - `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
 - `tsc` - TypeScript type checking (via package.json script)
 
+## Localization
+
+- After adding, changing or removing a string in `src/locales/en_US.ts`, follow `.claude/skills/localize-strings/SKILL.md` (run `npm run localize:ai`, commit the generated files with the change, never hand-translate)
+
 ## Swap Provider Integration
 
 The plugin itself lives in `edge-exchange-plugins`; this repo only wires it up, and every wiring point below fails SILENTLY when missed (no error, just a blank icon or a provider that never initializes). Registering a new swap `pluginId` means all of:
