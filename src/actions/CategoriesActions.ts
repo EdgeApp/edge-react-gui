@@ -766,35 +766,37 @@ export const getTxActionDisplayInfo = (
 }
 
 const pluginIdIcons: Record<string, string> = {
-  '0xgasless': EDGE_CONTENT_SERVER_URI + '/0xgasless.png',
   bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
   bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
   bridgeless: EDGE_CONTENT_SERVER_URI + '/bridgeless.png',
   changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
   changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
   changelly: EDGE_CONTENT_SERVER_URI + '/changelly.png',
-  cosmosibc: EDGE_CONTENT_SERVER_URI + '/cosmosibc.png',
   exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
-  fantomsonicupgrade: EDGE_CONTENT_SERVER_URI + '/fantomsonicupgrade.png',
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
-  lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
   mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
   nexchange: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nexchange/icon.png',
   nymswap: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nymswap/icon.png',
-  rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
-  sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
   swapter: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/swapter/icon.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
   unizen: EDGE_CONTENT_SERVER_URI + '/unizen.png',
-  swapkit: EDGE_CONTENT_SERVER_URI + '/swapkit.png',
   tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
-  xgram: EDGE_CONTENT_SERVER_URI + '/xgram.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }
+
+/**
+ * Providers whose static image is a mark with no background that runs to the
+ * image edge, so a circular crop clips it.
+ */
+const fittedPluginIdIcons = new Set<string>([
+  'letsexchange',
+  'swapuz',
+  'velodrome'
+])
 
 export interface PluginIdIcon {
   uri: string
@@ -810,7 +812,8 @@ export interface PluginIdIcon {
  * The provider logo for a transaction. A provider whose logo is a single-color
  * mark uses the logo the swap scenes show: it follows the theme, so it stays
  * visible on a light background, and it is fitted instead of cropped. Every
- * other provider has one static image drawn for the circular thumbnail.
+ * other provider has one static image, cropped to a circle unless its mark
+ * runs to the image edge.
  */
 export function getPluginIdIcon(
   pluginId: string | undefined,
@@ -821,5 +824,7 @@ export function getPluginIdIcon(
     return { uri: getSwapPluginIconUri(pluginId, theme), fit: true }
   }
   const uri = pluginIdIcons[pluginId]
-  return uri == null ? undefined : { uri, fit: false }
+  return uri == null
+    ? undefined
+    : { uri, fit: fittedPluginIdIcons.has(pluginId) }
 }

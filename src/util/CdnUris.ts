@@ -24,9 +24,17 @@ export const getBorrowPluginIconUri = (
  * The CDN has an `icon-light.png` beside their `icon.png` for light themes.
  */
 const themedSwapPluginIcons = new Set<string>([
+  '0xgasless',
+  'cosmosibc',
+  'fantomsonicupgrade',
   'houdini',
+  'lifi',
   'mptrade',
-  'mptradedefi'
+  'mptradedefi',
+  'rango',
+  'sideshift',
+  'swapkit',
+  'xgram'
 ])
 
 export function hasThemedSwapPluginIcon(pluginId: string): boolean {

@@ -8,6 +8,7 @@
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
+- fixed: Swap provider logos in transactions cropped, missing, or invisible on the light theme
 
 ## 4.52.0 (staging)
 

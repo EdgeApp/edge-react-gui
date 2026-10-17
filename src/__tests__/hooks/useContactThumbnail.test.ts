@@ -18,6 +18,24 @@ describe('getMerchantThumbnail', () => {
     })
   })
 
+  it('gives a white-only swap merchant its themed logo, fitted', () => {
+    expect(getMerchantThumbnail('LI.FI', edgeLight)).toEqual({
+      uri: 'https://content.edge.app/exchangeIcons/lifi/icon-light.png',
+      fit: true
+    })
+    expect(getMerchantThumbnail('Xgram', edgeDark)).toEqual({
+      uri: 'https://content.edge.app/exchangeIcons/xgram/icon.png',
+      fit: true
+    })
+  })
+
+  it('fits a swap merchant whose static logo runs to the image edge', () => {
+    expect(getMerchantThumbnail('Velodrome', edgeDark)).toEqual({
+      uri: 'https://content.edge.app/velodrome.png',
+      fit: true
+    })
+  })
+
   it('keeps the cropped image for every other merchant', () => {
     expect(getMerchantThumbnail('Bitrefill', edgeLight)).toEqual({
       uri: 'https://content.edge.app/bitrefill.png',

@@ -1,14 +1,13 @@
 import * as React from 'react'
 
-import type { PluginIdIcon } from '../../actions/CategoriesActions'
+import {
+  getPluginIdIcon,
+  type PluginIdIcon
+} from '../../actions/CategoriesActions'
 import { useTheme } from '../../components/services/ThemeContext'
 import { MERCHANT_CONTACTS } from '../../constants/MerchantContacts'
 import { useSelector } from '../../types/reactRedux'
 import type { Theme } from '../../types/Theme'
-import {
-  getSwapPluginIconUri,
-  hasThemedSwapPluginIcon
-} from '../../util/CdnUris'
 import { normalizeForSearch } from '../../util/utils'
 
 /**
@@ -65,8 +64,8 @@ export const useContactThumbnail = (
 
 /**
  * The thumbnail for the first merchant whose name matches. A merchant backed
- * by a swap provider with a themed logo gets that logo, fitted, so it matches
- * the provider's other transaction thumbnails.
+ * by a swap provider gets that provider's transaction logo, so it matches the
+ * provider's other transaction thumbnails.
  */
 export function getMerchantThumbnail(
   name: string,
@@ -78,8 +77,5 @@ export function getMerchantThumbnail(
   )
   if (merchant == null) return
   const { pluginId, thumbnailPath } = merchant
-  if (pluginId != null && hasThemedSwapPluginIcon(pluginId)) {
-    return { uri: getSwapPluginIconUri(pluginId, theme), fit: true }
-  }
-  return { uri: thumbnailPath, fit: false }
+  return getPluginIdIcon(pluginId, theme) ?? { uri: thumbnailPath, fit: false }
 }
