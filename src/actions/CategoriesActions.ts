@@ -766,33 +766,25 @@ export const getTxActionDisplayInfo = (
 }
 
 const pluginIdIcons: Record<string, string> = {
-  '0xgasless': EDGE_CONTENT_SERVER_URI + '/0xgasless.png',
   bitrefill: EDGE_CONTENT_SERVER_URI + '/bitrefill.png',
   bitsofgold: EDGE_CONTENT_SERVER_URI + '/bits-of-gold-logo.png',
   bridgeless: EDGE_CONTENT_SERVER_URI + '/bridgeless.png',
   changenow: EDGE_CONTENT_SERVER_URI + '/changenow.png',
   changehero: EDGE_CONTENT_SERVER_URI + '/changehero.png',
   changelly: EDGE_CONTENT_SERVER_URI + '/changelly.png',
-  cosmosibc: EDGE_CONTENT_SERVER_URI + '/cosmosibc.png',
   exolix: EDGE_CONTENT_SERVER_URI + '/exolix-logo.png',
-  fantomsonicupgrade: EDGE_CONTENT_SERVER_URI + '/fantomsonicupgrade.png',
   godex: EDGE_CONTENT_SERVER_URI + '/godex.png',
   letsexchange: EDGE_CONTENT_SERVER_URI + '/letsexchange-logo.png',
-  lifi: EDGE_CONTENT_SERVER_URI + '/lifi.png',
   mayaprotocol: EDGE_CONTENT_SERVER_URI + '/mayaprotocol.png',
   nexchange: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nexchange/icon.png',
   nymswap: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/nymswap/icon.png',
-  rango: EDGE_CONTENT_SERVER_URI + '/rango.png',
-  sideshift: EDGE_CONTENT_SERVER_URI + '/sideshift-logo.png',
   simplex: EDGE_CONTENT_SERVER_URI + '/simplex.png',
   swapter: EDGE_CONTENT_SERVER_URI + '/exchangeIcons/swapter/icon.png',
   swapuz: EDGE_CONTENT_SERVER_URI + '/swapuz.png',
   thorchain: EDGE_CONTENT_SERVER_URI + '/thorchain.png',
   unizen: EDGE_CONTENT_SERVER_URI + '/unizen.png',
-  swapkit: EDGE_CONTENT_SERVER_URI + '/swapkit.png',
   tronResources: EDGE_CONTENT_SERVER_URI + '/TRON/TRON.png',
   velodrome: EDGE_CONTENT_SERVER_URI + '/velodrome.png',
-  xgram: EDGE_CONTENT_SERVER_URI + '/xgram.png',
   xrpdex: EDGE_CONTENT_SERVER_URI + '/xrpdex.png'
 }
 

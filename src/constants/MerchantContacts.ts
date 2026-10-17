@@ -14,7 +14,8 @@ export interface MerchantContact {
 export const MERCHANT_CONTACTS: MerchantContact[] = [
   {
     displayName: '0x Gasless Swap',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/0xgasless.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/0xgasless.png`,
+    pluginId: '0xgasless'
   },
   {
     displayName: 'Bitrefill',
@@ -42,11 +43,13 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'IBC Transfer',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/cosmosibc.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/cosmosibc.png`,
+    pluginId: 'cosmosibc'
   },
   {
     displayName: 'Fantom/Sonic Bridge',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/fantomsonicupgrade.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/fantomsonicupgrade.png`,
+    pluginId: 'fantomsonicupgrade'
   },
   {
     displayName: 'EOS Network',
@@ -70,7 +73,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'LI.FI',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/lifi.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/lifi.png`,
+    pluginId: 'lifi'
   },
   {
     displayName: 'MoonPay Trade (Centralized)',
@@ -88,7 +92,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'SideShift.ai',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/sideshift-logo.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/sideshift-logo.png`,
+    pluginId: 'sideshift'
   },
   {
     displayName: 'Simplex',
@@ -136,7 +141,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'Xgram',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/xgram.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/exchangeIcons/xgram/icon.png`,
+    pluginId: 'xgram'
   },
   {
     displayName: 'XRP DEX',
@@ -144,7 +150,8 @@ export const MERCHANT_CONTACTS: MerchantContact[] = [
   },
   {
     displayName: 'Rango Exchange',
-    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/rango.png`
+    thumbnailPath: `${EDGE_CONTENT_SERVER_URI}/rango.png`,
+    pluginId: 'rango'
   },
   {
     displayName: 'Phaze Gift Card',

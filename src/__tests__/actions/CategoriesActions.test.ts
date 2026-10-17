@@ -285,13 +285,38 @@ describe('getPluginIdIcon', () => {
   })
 
   it('keeps the one cropped image for every other provider', () => {
-    const lifiIcon = { uri: 'https://content.edge.app/lifi.png', fit: false }
-    expect(getPluginIdIcon('lifi', edgeDark)).toEqual(lifiIcon)
-    expect(getPluginIdIcon('lifi', edgeLight)).toEqual(lifiIcon)
+    const exolixIcon = {
+      uri: 'https://content.edge.app/exolix-logo.png',
+      fit: false
+    }
+    expect(getPluginIdIcon('exolix', edgeDark)).toEqual(exolixIcon)
+    expect(getPluginIdIcon('exolix', edgeLight)).toEqual(exolixIcon)
   })
 
   it('gives MoonPay Trade its themed swap logo, fitted', () => {
     for (const pluginId of ['mptrade', 'mptradedefi']) {
+      expect(getPluginIdIcon(pluginId, edgeDark)).toEqual({
+        uri: `https://content.edge.app/exchangeIcons/${pluginId}/icon.png`,
+        fit: true
+      })
+      expect(getPluginIdIcon(pluginId, edgeLight)).toEqual({
+        uri: `https://content.edge.app/exchangeIcons/${pluginId}/icon-light.png`,
+        fit: true
+      })
+    }
+  })
+
+  it('gives every white-only swap logo its themed logo, fitted', () => {
+    for (const pluginId of [
+      '0xgasless',
+      'cosmosibc',
+      'fantomsonicupgrade',
+      'lifi',
+      'rango',
+      'sideshift',
+      'swapkit',
+      'xgram'
+    ]) {
       expect(getPluginIdIcon(pluginId, edgeDark)).toEqual({
         uri: `https://content.edge.app/exchangeIcons/${pluginId}/icon.png`,
         fit: true
