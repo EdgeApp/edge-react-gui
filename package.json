@@ -42,6 +42,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint . --concurrency=auto",
     "localize": "node -r sucrase/register ./scripts/localizeLanguage.ts; git add ./src/locales/strings",
+    "localize:compare": "node -r sucrase/register ./scripts/localizeCompare.ts",
     "localize:context": "node -r sucrase/register ./scripts/localizeContext.ts",
     "localize:translate": "node -r sucrase/register ./scripts/localizeTranslate.ts",
     "logging-server": "node -r sucrase/register scripts/loggingServer.ts",
