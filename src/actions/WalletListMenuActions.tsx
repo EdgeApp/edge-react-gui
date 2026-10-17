@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { EdgeCard } from '../components/cards/EdgeCard'
 import {
   type ButtonInfo,
   ButtonsModal
@@ -13,6 +14,7 @@ import {
   EditWalletSettingsModal,
   type WalletSettingsResult
 } from '../components/modals/WalletSettingsModal'
+import { EdgeRow } from '../components/rows/EdgeRow'
 import {
   Airship,
   showError,
@@ -212,8 +214,7 @@ export function walletListMenuAction(
         })
       }
     }
-    case 'viewPrivateViewKey':
-    case 'viewXPub': {
+    case 'viewPrivateViewKey': {
       return async (dispatch, getState) => {
         const state = getState()
         const { account } = state.core
@@ -230,30 +231,23 @@ export function walletListMenuAction(
         }
         const buttons = xpubExplorer != null ? { copy, link } : { copy }
 
-        const title =
-          switchString === 'viewPrivateViewKey'
-            ? lstrings.fragment_wallets_view_private_view_key
-            : lstrings.fragment_wallets_view_xpub
-
         await Airship.show<'copy' | 'link' | undefined>(bridge => (
           <ButtonsModal
             bridge={bridge}
             buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
             message={displayPublicSeed}
-            title={title}
+            title={lstrings.fragment_wallets_view_private_view_key}
           >
-            {switchString === 'viewXPub' ? null : (
-              <Alert
-                type="warning"
-                title={lstrings.string_warning}
-                marginRem={0.5}
-                message={sprintf(
-                  lstrings.fragment_wallets_view_private_view_key_warning_s,
-                  getWalletName(wallet)
-                )}
-                numberOfLines={0}
-              />
-            )}
+            <Alert
+              type="warning"
+              title={lstrings.string_warning}
+              marginRem={0.5}
+              message={sprintf(
+                lstrings.fragment_wallets_view_private_view_key_warning_s,
+                getWalletName(wallet)
+              )}
+              numberOfLines={0}
+            />
           </ButtonsModal>
         )).then(async result => {
           switch (result) {
@@ -264,6 +258,63 @@ export function walletListMenuAction(
             case 'link':
               if (xpubExplorer != null) {
                 await Linking.openURL(sprintf(xpubExplorer, displayPublicSeed))
+              }
+              break
+            case undefined:
+              break
+          }
+        })
+      }
+    }
+
+    case 'viewXPub': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const { account } = state.core
+        const wallet = account.currencyWallets[walletId]
+        const { xpubExplorer } = wallet.currencyInfo
+
+        const displayKeys = await account.getDisplayPublicKeys(wallet.id)
+        const xpubs = Object.values(displayKeys)
+
+        const copy: ButtonInfo = {
+          label:
+            xpubs.length > 1
+              ? lstrings.fragment_wallets_copy_all_xpubs
+              : lstrings.fragment_request_copy_title
+        }
+        const link: ButtonInfo = {
+          label: lstrings.transaction_details_show_advanced_block_explorer
+        }
+        const buttons = xpubExplorer != null ? { copy, link } : { copy }
+
+        await Airship.show<'copy' | 'link' | undefined>(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            buttons={buttons as { copy: ButtonInfo; link: ButtonInfo }}
+            title={lstrings.fragment_wallets_view_xpub}
+          >
+            <EdgeCard sections>
+              {Object.entries(displayKeys).map(([name, xpub]) => (
+                <EdgeRow
+                  body={xpub}
+                  key={name}
+                  maximumHeight="large"
+                  rightButtonType="copy"
+                  title={getXpubTitle(name)}
+                />
+              ))}
+            </EdgeCard>
+          </ButtonsModal>
+        )).then(async result => {
+          switch (result) {
+            case 'copy':
+              Clipboard.setString(xpubs.join('\n'))
+              showToast(lstrings.fragment_wallets_pubkey_copied_title)
+              break
+            case 'link':
+              if (xpubExplorer != null && xpubs.length > 0) {
+                await Linking.openURL(sprintf(xpubExplorer, xpubs[0]))
               }
               break
             case undefined:
@@ -406,5 +457,25 @@ export function walletListMenuAction(
 
     default:
       return async () => {}
+  }
+}
+
+/**
+ * Names a display public key by the address format it derives.
+ */
+function getXpubTitle(name: string): string {
+  switch (name) {
+    case 'bip84':
+      return lstrings.fragment_wallets_xpub_segwit
+    case 'bip49':
+      return lstrings.fragment_wallets_xpub_wrapped_segwit
+    case 'bip44':
+      return lstrings.fragment_wallets_xpub_legacy
+    case 'bip32':
+      return lstrings.fragment_wallets_xpub_legacy_bip32
+    case 'publicKey':
+      return lstrings.fragment_wallets_xpub_public_key
+    default:
+      return name
   }
 }
