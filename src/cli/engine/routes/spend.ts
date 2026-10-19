@@ -238,6 +238,22 @@ export async function buildSpendInfo(
 ): Promise<EdgeSpendInfo> {
   const bodyMetadata = body.metadata
 
+  // Refused rather than ranked. `nativeAmount` and `amount` are published
+  // as aliases, and `nativeAmount ?? amount` silently dropped a
+  // disagreement, so a caller sending both with different values signed
+  // whichever `nativeAmount` held. Same class of contradiction as
+  // `spendInfo` beside the shorthand, and as `useMax` beside an amount:
+  // a usage error must not change how much is signed.
+  if (body.nativeAmount != null && body.amount != null) {
+    throw engineError(
+      'BAD_REQUEST',
+      'nativeAmount cannot be combined with amount: they are aliases, so ' +
+        'a disagreement would silently take nativeAmount and change how ' +
+        'much is signed.',
+      400
+    )
+  }
+
   if (body.spendInfo != null) {
     // Refused rather than ranked. `spendInfo` was used as-is and the
     // shorthand siblings were never read, so on the three irreversible
@@ -714,6 +730,21 @@ export const spend = route({
           400
         )
       }
+      // Several destinations with amounts omitted used to pass the guard
+      // above — it only looked for a target that already named one — and
+      // then `getMaxSpendable` was written into `spendTargets[0]` alone.
+      // Extra outputs kept an empty amount while the first was set to the
+      // whole spendable balance.
+      if ((ctx.body.spendInfo?.spendTargets?.length ?? 0) > 1) {
+        throw engineError(
+          'BAD_REQUEST',
+          'useMax cannot be combined with multiple spendTargets: the ' +
+            'maximum spendable amount is written into the first target ' +
+            'only, so extra destinations would keep an empty amount while ' +
+            'the first is set to the whole balance.',
+          400
+        )
+      }
     }
 
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
@@ -768,15 +799,31 @@ export const spend = route({
           txid: signedTx.txid,
           error: message
         })
+        // Parked, because `broadcast-tx` only accepts a `tx_` handle from
+        // `sign-tx`. The signed bytes in `details.signedTx` cannot be
+        // posted back: that route has no raw-bytes field, so without a
+        // handle the documented recovery was impossible and a scripted
+        // retry of `spend` built a fresh transaction at the next nonce.
+        const stored = storeTransaction(ctx, {
+          sessionId: ctx.params.sessionId,
+          walletId: wallet.id,
+          transaction: signedTx
+        })
         throw engineError(
           'BROADCAST_FAILED',
           `The transaction was signed but the broadcast failed: ${message}. ` +
             'It may still have reached the network. Check txid ' +
-            `${signedTx.txid} on the chain before retrying, or re-send the ` +
-            'raw transaction in `details.signedTx` — building a new one ' +
-            'pays the recipient twice on an account-based chain.',
+            `${signedTx.txid} on the chain before retrying, or re-send ` +
+            'the same transaction through `broadcast-tx` with ' +
+            `\`${stored.objectId}\` — building a new one pays the ` +
+            'recipient twice on an account-based chain.',
           502,
-          { txid: signedTx.txid, signedTx: signedTx.signedTx, saved: false }
+          {
+            txid: signedTx.txid,
+            signedTx: signedTx.signedTx,
+            saved: false,
+            objectId: stored.objectId
+          }
         )
       }
     }
@@ -918,7 +965,10 @@ export const broadcastTx = route({
   path: '/account/{sessionId}/broadcast-tx',
   cli: { command: 'broadcast-tx', positional: 'objectId' },
   body: asObject({
-    objectId: doc(asString, 'From `sign-tx`.')
+    objectId: doc(
+      asString,
+      'From `sign-tx`, or from a `spend` whose broadcast failed.'
+    )
   }).withRest,
   returns: doc(
     asTransactionHandle,

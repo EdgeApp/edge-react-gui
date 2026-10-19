@@ -51,6 +51,7 @@ function makeWallet(
     saveTxFails?: boolean
     saveMetadataFails?: boolean
     broadcastFails?: boolean
+    broadcastFailOnce?: boolean
     accelerateAnswers?: EdgeTransaction | null
   } = {}
 ): { wallet: EdgeCurrencyWallet; calls: Calls } {
@@ -61,6 +62,8 @@ function makeWallet(
     saveTx: [],
     accelerate: []
   }
+  let failBroadcast =
+    opts.broadcastFails === true || opts.broadcastFailOnce === true
   const wallet = {
     id: opts.id ?? 'wallet-1',
     currencyInfo: {
@@ -105,7 +108,8 @@ function makeWallet(
     },
     async broadcastTx(tx: EdgeTransaction) {
       calls.broadcastTx.push(tx)
-      if (opts.broadcastFails === true) {
+      if (failBroadcast) {
+        if (opts.broadcastFailOnce === true) failBroadcast = false
         // What a socket timeout looks like from here, and the whole problem:
         // indistinguishable from a node that accepted the transaction and
         // then stopped answering.
@@ -281,33 +285,51 @@ describe('spend', () => {
 
   it('carries the txid out of a failed broadcast', async () => {
     // The throw used to escape the handler, so the signed transaction and
-    // its txid were discarded: the only `storeTransaction` on this route is
-    // the `dryRun` arm. A socket timeout *after* the node accepted the
-    // transaction therefore answered `NETWORK_ERROR` with nothing for the
-    // caller to reconcile against — and on an account-based chain a
-    // scripted retry builds a fresh transaction at the next nonce and pays
-    // the recipient twice. The `saveTx` arm above takes the same stance for
-    // the same reason, on the path where the uncertainty is smaller.
+    // its txid were discarded: the only `storeTransaction` on this route
+    // used to be the `dryRun` arm. A socket timeout *after* the node
+    // accepted the transaction therefore answered `NETWORK_ERROR` with
+    // nothing for the caller to reconcile against — and on an
+    // account-based chain a scripted retry builds a fresh transaction at
+    // the next nonce and pays the recipient twice. The signed transaction
+    // is parked under a `tx_` handle so `broadcast-tx` can re-send it;
+    // `details.signedTx` alone cannot, because that route only accepts an
+    // `objectId`.
     const objects = new ObjectHandleStore()
     const warnings: Warning[] = []
-    const { wallet, calls } = makeWallet({ broadcastFails: true })
+    const { wallet, calls } = makeWallet({ broadcastFailOnce: true })
     const ctx = makeCtx({ objects, wallets: [wallet], body: body(), warnings })
 
     const failure = await thrown(async () => await spend.handler(ctx))
     expect(failure.code).toBe('BROADCAST_FAILED')
     expect(failure.status).toBe(502)
     // The identity of money that may already have left the wallet, in the
-    // message and in `details`, plus the raw bytes so the caller can
-    // re-send the *same* transaction rather than build another.
+    // message and in `details`, plus the handle so the caller can re-send
+    // the *same* transaction rather than build another.
     expect(failure.message).toContain('tx-signed')
     expect(failure.details?.txid).toBe('tx-signed')
     expect(failure.details?.signedTx).toBe('deadbeef')
     expect(failure.details?.saved).toBe(false)
+    expect(failure.details?.objectId).toMatch(/^tx_/)
+    expect(failure.message).toContain(String(failure.details?.objectId))
     expect(calls.broadcastTx).toHaveLength(1)
     // Nothing was written to local history, which the envelope says.
     expect(calls.saveTx).toHaveLength(0)
     expect(warnings[0].message).toBe('broadcastTx failed')
     expect(warnings[0].extra?.txid).toBe('tx-signed')
+    // The handle survives, which is what lets `broadcast-tx` retry it.
+    expect(objects.size).toBe(1)
+
+    const retried: any = await broadcastTx.handler(
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: { objectId: failure.details?.objectId }
+      })
+    )
+    expect(retried.objectId).toBe(failure.details?.objectId)
+    expect(retried.transaction.txid).toBe('tx-broadcast')
+    expect(calls.broadcastTx).toHaveLength(2)
+    expect(objects.size).toBe(1)
   })
 
   it('asks the maximum only once a destination exists', async () => {
@@ -420,6 +442,37 @@ describe('spend', () => {
     expect(calls.makeSpend[0].spendTargets[0].nativeAmount).toBe('900')
   })
 
+  it('refuses useMax beside several destinations', async () => {
+    // Amounts omitted, so the named-amount guard lets it through, and then
+    // the maximum is written into the first target only. Extra outputs
+    // would keep an empty amount while the first is set to the whole
+    // spendable balance.
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet()
+    const ctx = makeCtx({
+      objects,
+      wallets: [wallet],
+      body: {
+        walletId: 'wallet-1',
+        useMax: true,
+        spendInfo: {
+          spendTargets: [
+            { publicAddress: 'bc1qexample' },
+            { publicAddress: 'bc1qelsewhere' }
+          ]
+        }
+      }
+    })
+    const error = await thrown(async () => await spend.handler(ctx))
+    expect(error.code).toBe('BAD_REQUEST')
+    expect(error.status).toBe(400)
+    expect(error.message).toMatch(
+      /useMax cannot be combined with multiple spendTargets/
+    )
+    expect(calls.makeSpend).toStrictEqual([])
+    expect(calls.broadcastTx).toStrictEqual([])
+  })
+
   it('refuses a spend with nowhere to send it', async () => {
     const objects = new ObjectHandleStore()
     const { wallet } = makeWallet()
@@ -431,6 +484,35 @@ describe('spend', () => {
     const error = await thrown(async () => await spend.handler(ctx))
     expect(error.code).toBe('BAD_REQUEST')
     expect(error.message).toMatch(/A destination is required/)
+  })
+
+  it('refuses nativeAmount beside amount', async () => {
+    // Aliases, ranked as `nativeAmount ?? amount`, so a mismatched pair
+    // signed whichever `nativeAmount` held. Refused up front like every
+    // other contradictory pair on this body.
+    for (const amounts of [
+      { nativeAmount: '1000', amount: '2000' },
+      { nativeAmount: '1000', amount: '1000' }
+    ]) {
+      const objects = new ObjectHandleStore()
+      const { wallet, calls } = makeWallet()
+      const error = await thrown(
+        async () =>
+          await spend.handler(
+            makeCtx({
+              objects,
+              wallets: [wallet],
+              body: { walletId: 'wallet-1', to: 'bc1qexample', ...amounts }
+            })
+          )
+      )
+      expect(error.code).toBe('BAD_REQUEST')
+      expect(error.status).toBe(400)
+      expect(error.message).toMatch(
+        /nativeAmount cannot be combined with amount/
+      )
+      expect(calls.makeSpend).toHaveLength(0)
+    }
   })
 })
 

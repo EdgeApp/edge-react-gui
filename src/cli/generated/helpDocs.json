@@ -514,7 +514,7 @@
       "params": {
         "objectId": {
           "pass": "<objectId>",
-          "doc": "From `sign-tx`.",
+          "doc": "From `sign-tx`, or from a `spend` whose broadcast failed.",
           "optional": false
         }
       },

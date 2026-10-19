@@ -81,9 +81,9 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
   // because that is what happened at the transport — but it is the one
   // network code a script must not retry blindly: the transaction may have
   // reached the chain, and on an account-based chain a fresh one at the next
-  // nonce pays the recipient twice. The envelope carries `details.txid` and
-  // `details.signedTx` so the caller can check and, if it has to, re-send
-  // the same bytes.
+  // nonce pays the recipient twice. The envelope carries `details.txid`,
+  // `details.signedTx` and `details.objectId` so the caller can check and,
+  // if it has to, re-send the same transaction through `broadcast-tx`.
   BROADCAST_FAILED: EXIT.NETWORK,
 
   // Before the status fallback: both are 503s the fallback would call

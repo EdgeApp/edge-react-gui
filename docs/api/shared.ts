@@ -337,7 +337,7 @@ export const errorCodes: ErrorCode[] = [
     code: 'BROADCAST_FAILED',
     status: 502,
     origin: 'engine',
-    doc: 'The transaction was signed and the broadcast did not succeed. It may still have reached the network, so `details.txid` and `details.signedTx` carry the transaction\u2019s identity and its raw bytes: check the txid on the chain before doing anything else. The one network failure a script must **not** retry blindly \u2014 building a fresh transaction pays the recipient twice on an account-based chain, where the retry takes the next nonce. Re-sending `details.signedTx` through `broadcast-tx` is safe, because it is the same transaction. `details.saved` says whether local history has it. Exit code 6.'
+    doc: 'The transaction was signed and the broadcast did not succeed. It may still have reached the network, so `details.txid` and `details.signedTx` carry the transaction\u2019s identity and its raw bytes: check the txid on the chain before doing anything else. The one network failure a script must **not** retry blindly \u2014 building a fresh transaction pays the recipient twice on an account-based chain, where the retry takes the next nonce. `details.objectId` is a `tx_` handle for that same signed transaction: `broadcast-tx` with that handle is safe, because it is the same transaction. `details.saved` says whether local history has it. Exit code 6.'
   },
   {
     code: 'SETTINGS_UNREADABLE',
