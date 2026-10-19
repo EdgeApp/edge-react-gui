@@ -553,3 +553,30 @@ describe('SessionStore.create for a caller that has gone', () => {
     expect(store.list()).toHaveLength(1)
   })
 })
+
+/**
+ * A login whose wallet wait failed.
+ *
+ * `create` receives a live EdgeAccount from a successful core login, then
+ * waits for wallets before minting a sessionId. A throw from
+ * `waitForAllWallets` skipped the abandoned-client logout and also skipped
+ * `this.sessions.set`, so no later logout could reach the account.
+ */
+describe('SessionStore.create when the wallet wait fails', () => {
+  it('logs the account out rather than leaking it', async () => {
+    const store = new SessionStore(events)
+    const logout = jest.fn<() => Promise<void>>(async () => {})
+    const account = {
+      ...makeFakeDiskletAccount(),
+      logout,
+      waitForAllWallets: async () => {
+        throw new Error('wallets never loaded')
+      }
+    } as unknown as EdgeAccount
+    await expect(store.create(account, 'password')).rejects.toThrow(
+      'wallets never loaded'
+    )
+    expect(logout).toHaveBeenCalledTimes(1)
+    expect(store.list()).toStrictEqual([])
+  })
+})

@@ -261,10 +261,19 @@ export class SessionStore {
     // Redux, so a same-turn create after login never lands the keys.
     // Drain the pixie stack before exposing the session so POST /wallets
     // is safe immediately. waitForAllWallets is a no-op on empty accounts.
-    await new Promise<void>(resolve => {
-      setImmediate(resolve)
-    })
-    await account.waitForAllWallets()
+    // Logout on any failure here: the account is already logged in, and
+    // until it is in `sessions` nothing else can tear it down — the
+    // abandoned-client path below is the only other logout, and a throw
+    // never reaches it.
+    try {
+      await new Promise<void>(resolve => {
+        setImmediate(resolve)
+      })
+      await account.waitForAllWallets()
+    } catch (error: unknown) {
+      await account.logout().catch(() => {})
+      throw error
+    }
     if (opts.abandoned?.() === true) {
       await account.logout().catch(() => {})
       // Its own engine-side code, and a 4xx so the log records it as the
