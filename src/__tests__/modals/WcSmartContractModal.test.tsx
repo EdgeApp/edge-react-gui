@@ -259,10 +259,19 @@ describe('WcSmartContractModal with an EVM request', () => {
     rendered.getByText(
       'Approving this request may move funds or grant permissions'
     )
-    // The details list every signed field in full:
+    // The signed fields wait behind the header, which names each section:
+    rendered.getByText('Signed Data')
+    rendered.getByText('Domain, Permit')
+    expect(rendered.queryByText(SPENDER)).toBeNull()
+    fireEvent.press(rendered.getByTestId('wcDetailsToggle'))
+    rendered.getByText('Domain')
+    rendered.getByText('name')
+    rendered.getByText('USD Coin')
     rendered.getByText('Permit')
     rendered.getByText('spender')
     rendered.getByText(SPENDER)
+    fireEvent.press(rendered.getByTestId('wcDetailsToggle'))
+    expect(rendered.queryByText(SPENDER)).toBeNull()
     rendered.unmount()
   })
 
@@ -274,6 +283,15 @@ describe('WcSmartContractModal with an EVM request', () => {
         method: 'eth_sendTransaction',
         params: [{ from: WALLET, to: USDC, data: '0x' }]
       },
+      details: [
+        {
+          title: 'Transaction',
+          rows: [
+            { name: 'to', value: USDC },
+            { name: 'data', value: '68 bytes' }
+          ]
+        }
+      ],
       walletAddress: WALLET,
       actions: [
         {
@@ -299,6 +317,14 @@ describe('WcSmartContractModal with an EVM request', () => {
     rendered.getByText(
       'This lets 0xDe70...e2fB77 take every NFT you hold in collection 0xA0b8...06eB48'
     )
+    // A lone section's fields come without a heading of their own:
+    rendered.getByText('Transaction')
+    expect(rendered.queryByText('68 bytes')).toBeNull()
+    fireEvent.press(rendered.getByTestId('wcDetailsToggle'))
+    rendered.getByText('to')
+    rendered.getByText(USDC)
+    rendered.getByText('68 bytes')
+    expect(rendered.getAllByText('Transaction')).toHaveLength(1)
     rendered.unmount()
   })
 
