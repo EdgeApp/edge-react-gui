@@ -34,7 +34,6 @@ import { ButtonsView } from '../buttons/ButtonsView'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { Space } from '../layout/Space'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { EdgeText } from '../themed/EdgeText'
@@ -267,11 +266,11 @@ export const GettingStartedScene: React.FC<Props> = props => {
   return (
     <SceneWrapper hasHeader={false}>
       <Animated.View style={skipButtonAnimatedStyle}>
-        <Space alignRight horizontalRem={1} verticalRem={0.5}>
+        <View style={styles.skipContainer}>
           <EdgeTouchableOpacity onPress={handleCompleteUsps}>
             <EdgeText>{lstrings.skip}</EdgeText>
           </EdgeTouchableOpacity>
-        </Space>
+        </View>
       </Animated.View>
       <GestureDetector gesture={gesture}>
         <View style={styles.container}>
@@ -428,6 +427,11 @@ export const GettingStartedScene: React.FC<Props> = props => {
 // -----------------------------------------------------------------------------
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  skipContainer: {
+    alignItems: 'flex-end',
+    marginHorizontal: theme.rem(1),
+    marginVertical: theme.rem(0.5)
+  },
   container: {
     flex: 1
   },
