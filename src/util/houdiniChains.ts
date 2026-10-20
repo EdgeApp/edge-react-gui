@@ -5,9 +5,12 @@ import { peekPaymentUri } from './paymentUri'
 
 /**
  * A destination chain HoudiniSwap can pay out to, keyed by the Edge currency
- * pluginId. `addressValidation` is Houdini's own per-chain regex, used only to
+ * pluginId. `addressValidation` is Houdini's own per-chain regex, used to
  * prefilter which chain a pasted address could belong to; the chosen chain's
- * own `parseUri` is what validates it. `memoNeeded` chains
+ * own `parseUri` is what validates it. The Send scene also reads it as the
+ * payout rule: a shown Zcash address it rejects gets the transparent-payout
+ * warning, so widening the Zcash pattern (say, to accept a u1) would hide that
+ * warning for a picked wallet's unified address. `memoNeeded` chains
  * show a destination-tag row whose value rides the send request's `toMemos`
  * to the plugin and onward as `destinationTag` on order creation.
  */

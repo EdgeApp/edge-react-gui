@@ -71,6 +71,7 @@ const FIFTY_USD_OF_ETH = '37700000000000000'
 
 const SCAM_WARNING = 'Scam Warning'
 const SWAP_BEFORE_SEND = 'Swap before send'
+const ZCASH_TRANSPARENT_WARNING = 'Transparent Zcash payout'
 
 interface RecipientAssetItem {
   value: string
@@ -745,6 +746,60 @@ describe('SendScene2 recipient network', () => {
       expect(quotedDestinations.at(-1)).toEqual(otherZecAddresses)
     })
     sameChain.unmount()
+  })
+
+  it('warns that a Stealth send to an own Zcash wallet pays its t1', async () => {
+    const scene = renderBitcoinSend()
+    await scene.pickOwnWallet(zecWallet)
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+
+    await scene.toggleStealth()
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(true)
+    expect(scene.shows(lstrings.stealth_zcash_transparent_payout_body)).toBe(
+      true
+    )
+    expect(scene.shows(lstrings.stealth_swap_send_warning_title_private)).toBe(
+      true
+    )
+    scene.unmount()
+  })
+
+  it('hides the transparent payout warning behind an error card', async () => {
+    const scene = renderBitcoinSend()
+    await scene.pickOwnWallet(zecWallet)
+    await scene.toggleStealth()
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(true)
+
+    // The fake provider refuses every quote. The refusal settles on the
+    // quote's own promise chain, so only a closing act scope delivers it:
+    await scene.enterSendAmount(ONE_BTC)
+    for (
+      let i = 0;
+      i < 50 && !scene.shows(lstrings.exchange_generic_error_title);
+      ++i
+    ) {
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20))
+      })
+    }
+    expect(scene.shows(lstrings.exchange_generic_error_title)).toBe(true)
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+    scene.unmount()
+  })
+
+  it('shows no transparent payout warning for a pasted t1', async () => {
+    const scene = renderSend(zecWallet)
+    await scene.toggleStealth()
+    // No address yet, so there is no payout to warn about:
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+
+    await scene.enterParsedAddress(`t1${'3'.repeat(33)}`)
+
+    expect(scene.shows(lstrings.stealth_swap_send_warning_title_private)).toBe(
+      true
+    )
+    expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+    scene.unmount()
   })
 
   it('shows the scam warning on a plain send with no address', async () => {
