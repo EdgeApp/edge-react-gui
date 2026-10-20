@@ -21,18 +21,20 @@ type DisableAssets = ExchangeInfo['swap']['disableAssets']
 export const STEALTH_SWAP_PLUGIN_ID = 'houdini'
 
 /**
- * Where both Stealth toggles' "Learn more" sends the user.
- *
- * PLACEHOLDER: the feature spec names this gist as the stand-in until the
- * Stealth Send article exists. The final URL is a single edit here, since the
- * send scene and the swap amount-entry scene both read this constant.
- *
- * A gist is a mutable page its owner can rewrite, opened in the system browser
- * from inside a flow the user is trusting with fund movement, so replace it
- * with the first-party article once that is published.
+ * Where both Stealth toggles' "Learn more" sends the user: Edge's support
+ * article on Stealth Send and Stealth Swap. The send scene and the swap
+ * amount-entry scene both read this constant.
  */
 export const STEALTH_LEARN_MORE_URI =
-  'https://gist.github.com/j0ntz/b3f8101f0a1f79539150fc73511bff8b'
+  'https://support.edge.app/articles/17606891'
+
+/**
+ * The Stealth provider's display name, for copy that names it. Falls back to
+ * the plugin id when the account has no such provider registered.
+ */
+export const getStealthProviderName = (account: EdgeAccount): string =>
+  account.swapConfig[STEALTH_SWAP_PLUGIN_ID]?.swapInfo.displayName ??
+  STEALTH_SWAP_PLUGIN_ID
 
 /**
  * Restricts a swap request to the Houdini privacy provider, for Stealth Swap

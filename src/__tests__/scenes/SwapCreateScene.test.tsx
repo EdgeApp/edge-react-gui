@@ -38,6 +38,7 @@ import {
 } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 import { asHoudiniChains } from '../../util/houdiniChains'
+import { getStealthProviderName } from '../../util/stealthSwap'
 
 jest.mock('../../components/services/AirshipInstance', () => ({
   ...jest.requireActual<object>('../../components/services/AirshipInstance'),
@@ -48,6 +49,12 @@ jest.useRealTimers()
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
+
+/** The Stealth toggle's info line, naming the provider the way the scene does. */
+const stealthInfo = (): string => {
+  if (account == null) throw new Error('No account')
+  return sprintf(lstrings.stealth_info_1s, getStealthProviderName(account))
+}
 let btcWallet: EdgeCurrencyWallet | undefined
 let ethWallet: EdgeCurrencyWallet | undefined
 
@@ -125,6 +132,7 @@ const servedState: FakeState = {
 /** A root state whose account saved `stealthSwapEnabled`. */
 const savedState = (stealthSwapEnabled: boolean): FakeState => ({
   ...servedState,
+  core: { account },
   ui: {
     ...servedState.ui,
     settings: { ...fakeRootState.ui?.settings, stealthSwapEnabled }
@@ -223,9 +231,7 @@ describe('SwapCreateScene', () => {
     )
 
     expect(rendered.getByText(lstrings.stealth_swap_toggle)).toBeTruthy()
-    expect(
-      rendered.queryByText(lstrings.stealth_swap_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
 
@@ -240,14 +246,12 @@ describe('SwapCreateScene', () => {
 
     // A stealth param or saved choice cannot arm a swap Houdini cannot route:
     expect(rendered.queryByText(lstrings.stealth_swap_toggle)).toBeNull()
-    expect(
-      rendered.queryByText(lstrings.stealth_swap_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
 
   it('turns Stealth Swap on from the stealth param', () => {
-    const rootState: FakeState = servedState
+    const rootState: FakeState = { ...servedState, core: { account } }
     const sceneProps = fakeSwapTabSceneProps('swapCreate', { stealth: true })
     const setParams = jest.spyOn(sceneProps.navigation, 'setParams')
 
@@ -257,9 +261,7 @@ describe('SwapCreateScene', () => {
       </FakeProviders>
     )
 
-    expect(
-      rendered.getByText(lstrings.stealth_swap_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     // The param is consumed, so later param merges cannot re-apply it:
     expect(setParams).toHaveBeenCalledWith({ stealth: undefined })
     rendered.unmount()
@@ -273,7 +275,7 @@ describe('SwapCreateScene', () => {
     })
 
     const infoShown = (rendered: ReturnType<typeof render>): boolean =>
-      rendered.queryByText(lstrings.stealth_swap_info, { exact: false }) != null
+      rendered.queryByText(stealthInfo(), { exact: false }) != null
 
     it('starts from the saved choice', () => {
       const on = render(
@@ -420,6 +422,7 @@ describe('SwapCreateScene Stealth Swap bans', () => {
             btc: makeWallet('btc', btcConfig),
             eth: makeWallet('eth', ethConfig)
           },
+          swapConfig: {},
           watch: () => () => {}
         }
       },
