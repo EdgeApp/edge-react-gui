@@ -303,7 +303,7 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       // If disabled the plugin will run a dry-run and just generate a UUID.
       // The mapping file has to be uploaded manually via sentry-cli in this case.
       // Default is enabled.
-      autoUploadProguardMapping = true
+      autoUploadProguardMapping = false // test build only: see Jenkinsfile
 
       // Experimental flag to turn on support for GuardSquare's tools integration (Dexguard and External Proguard).
       // If enabled, the plugin will try to consume and upload the mapping file produced by Dexguard and External Proguard.
@@ -314,12 +314,12 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       // for Sentry. This executes sentry-cli automatically so
       // you don't need to do it manually.
       // Default is disabled.
-      uploadNativeSymbols = true
+      uploadNativeSymbols = false // test build only: see Jenkinsfile
 
       // Whether the plugin should attempt to auto-upload the native debug symbols to Sentry or not.
       // If disabled the plugin will run a dry-run.
       // Default is enabled.
-      autoUploadNativeSymbols = true
+      autoUploadNativeSymbols = false // test build only: see Jenkinsfile
 
       // Does or doesn't include the source code of native code for Sentry.
       // This executes sentry-cli with the --include-sources param. automatically so

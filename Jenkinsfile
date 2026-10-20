@@ -89,6 +89,9 @@ pipeline {
   environment {
     LC_CTYPE = 'en_US.UTF-8'
     DISABLE_XCPRETTY = "${params.VERBOSE}"
+    // Test build only: sentry.edge.app answers uploads with 502s today, and
+    // every Sentry build step skips its upload when this is set.
+    SENTRY_DISABLE_AUTO_UPLOAD = 'true'
   }
 
   stages {
