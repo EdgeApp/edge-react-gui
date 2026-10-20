@@ -764,8 +764,9 @@ export const makeTarotPoolAdapter = (
       const token0WalletBalance = wallet.balanceMap.get(token0.tokenId) ?? '0'
       const token1WalletBalance = wallet.balanceMap.get(token1.tokenId) ?? '0'
 
-      // Can stake if wallet has balances for each token and they don't currently any of the borrowable
+      // Can stake if the policy is live, the wallet holds both tokens, and it holds none of the borrowables
       const canStake =
+        policyConfig.deprecated !== true &&
         !eq(token0WalletBalance, '0') &&
         !eq(token1WalletBalance, '0') &&
         eq(token0NativeAmount, '0') &&

@@ -1,3 +1,4 @@
+import { lstrings } from '../../../../locales/strings'
 import ANYSWAP_V5_ERC20_ABI from '../../../abi/ANYSWAP_V5_ERC20_ABI.json'
 import UNISWAP_V2_PAIR from '../../../abi/UNISWAP_V2_PAIR.json'
 import VELODROME_V2_GAUGE from '../../../abi/VELODROME_V2_GAUGE.json'
@@ -216,7 +217,12 @@ function generateVelodromeV2StakePolicyInfo(
     parentCurrencyCode: 'ETH',
     isStablePool,
     poolAddress: lpTokenContract.address,
+    // Velodrome gauges stopped emitting rewards with the Aero upgrade.
+    // Existing positions can still exit, but new stakes are blocked:
+    deprecated: true,
+    unstakeWarning: lstrings.stake_warning_velodrome_aero_upgrade,
     policy: makeVelodromeV2StakePolicy({
+      disableStake: true,
       isStablePool,
       lpTokenContract,
       stakingContract: eco.makeContract(
