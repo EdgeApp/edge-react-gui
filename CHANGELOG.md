@@ -44,6 +44,7 @@
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Stealth Swap toggle shows on the swap scene before assets are selected
 - changed: Stealth Send and Stealth Swap toggles remember the last setting per account
+- changed: Welcome screen "Already have an account?" prompt is white, with only "Sign in" green
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
 - fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
