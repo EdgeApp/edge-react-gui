@@ -36,6 +36,7 @@ import { fakeRootState } from '../../util/fake/fakeRootState'
 import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 import { asHoudiniChains, type HoudiniChains } from '../../util/houdiniChains'
+import { getStealthProviderName } from '../../util/stealthSwap'
 
 jest.useRealTimers()
 
@@ -78,6 +79,12 @@ const houdiniChains = makeHoudiniChains()
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
+
+/** The Stealth toggle's info line, naming the provider the way the scene does. */
+const stealthInfo = (): string => {
+  if (account == null) throw new Error('No account')
+  return sprintf(lstrings.stealth_info_1s, getStealthProviderName(account))
+}
 
 let btcWallet: EdgeCurrencyWallet | undefined
 let ethWallet: EdgeCurrencyWallet | undefined
@@ -472,9 +479,7 @@ describe('SendScene2', () => {
       </FakeProviders>
     )
 
-    expect(
-      rendered.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     rendered.unmount()
   })
   it('leaves Stealth Send off when the stealth param is absent', () => {
@@ -499,9 +504,7 @@ describe('SendScene2', () => {
     )
 
     expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
-    expect(
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
   it('arms nothing from the stealth param on an address-prefilled send', () => {
@@ -534,9 +537,7 @@ describe('SendScene2', () => {
     )
 
     expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
-    expect(
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
   it('pads the scroll content past the docked slider', () => {
@@ -629,9 +630,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
     const rendered = renderSend(savedState(true))
 
-    expect(
-      rendered.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     // Seeding is not a tap, so it saves nothing:
     expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
     rendered.unmount()
@@ -660,9 +659,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
     expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
 
     rendered.rerender(scene(loaded))
-    expect(
-      rendered.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
     rendered.unmount()
   })
@@ -678,9 +675,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
     })
 
     expect(rendered.queryByText(lstrings.stealth_send_toggle)).toBeNull()
-    expect(
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
 
@@ -688,15 +683,11 @@ describe('SendScene2 saved Stealth Send choice', () => {
     if (btcWallet == null) return
 
     const armed = renderSend(savedState(false), { stealth: true })
-    expect(
-      armed.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(armed.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     armed.unmount()
 
     const off = renderSend(savedState(true), { stealth: false })
-    expect(
-      off.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(off.queryByText(stealthInfo(), { exact: false })).toBeNull()
     off.unmount()
 
     expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
@@ -708,15 +699,11 @@ describe('SendScene2 saved Stealth Send choice', () => {
     const rendered = renderSend(savedState(false))
 
     fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
-    expect(
-      rendered.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     expect(mockSetStealthSendEnabled).toHaveBeenLastCalledWith(account, true)
 
     fireEvent.press(rendered.getByText(lstrings.stealth_send_toggle))
-    expect(
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     expect(mockSetStealthSendEnabled).toHaveBeenLastCalledWith(account, false)
     expect(mockSetStealthSendEnabled).toHaveBeenCalledTimes(2)
     rendered.unmount()
@@ -746,9 +733,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
     // The switch resets the toggle, then the saved choice arms it again on
     // the new wallet:
     expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
-    expect(
-      rendered.getByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeTruthy()
+    expect(rendered.getByText(stealthInfo(), { exact: false })).toBeTruthy()
     expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
     rendered.unmount()
   })
@@ -763,9 +748,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
     await switchWallet(rendered, ethWallet.id)
 
     expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
-    expect(
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false })
-    ).toBeNull()
+    expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
     rendered.unmount()
   })
   describe('on a wallet that cannot go private', () => {
@@ -774,7 +757,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
       sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
 
     const infoShown = (rendered: ReturnType<typeof render>): boolean =>
-      rendered.queryByText(lstrings.stealth_send_info, { exact: false }) != null
+      rendered.queryByText(stealthInfo(), { exact: false }) != null
 
     it('opens off without a reason line, a toast or a save', () => {
       if (btcWallet == null) return

@@ -33,6 +33,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { getHoudiniAssets } from '../../util/houdiniChains'
 import {
   getStealthDisableAssets,
+  getStealthProviderName,
   makeStealthSwapRequestOptions
 } from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
@@ -708,7 +709,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
                 />
                 {stealth ? (
                   <StealthInfoText
-                    message={lstrings.stealth_swap_info}
+                    message={sprintf(
+                      lstrings.stealth_info_1s,
+                      getStealthProviderName(account)
+                    )}
                     showLearnMore
                   />
                 ) : null}

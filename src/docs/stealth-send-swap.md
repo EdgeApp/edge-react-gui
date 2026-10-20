@@ -1078,7 +1078,7 @@ Not our work, tracked so it is not rediscovered:
 | PIN spending limits on stealth sends | Reversed, now shipped | The original reasoning compared this to a swap. It is a send. See [Gate swap-send behind the PIN spending limit](#gate-swap-send-behind-the-pin-spending-limit). |
 | [EIP-681](#eip-681) `value=` (wei) amounts | Deferred | Address is accepted, amount ignored; no reported user impact yet. |
 | Validate provider deposit addresses against the source chain | Deferred | A PIVX order returns an address the PIVX plugin cannot spend to, and it surfaces as an opaque wallet error rather than a provider problem. A check after `asHoudiniOrder` would name the real cause; any chain the provider gets wrong fails the same way. |
-| First-party Stealth Send article behind "Learn more" | Deferred | The feature spec has both toggles open a gist as a placeholder until the article exists. `STEALTH_LEARN_MORE_URI` is the one line to edit when it does. A gist stays editable by its owner, so the swap should not wait long. |
+| First-party Stealth Send article behind "Learn more" | Shipped | Both toggles open Edge's support article (`STEALTH_LEARN_MORE_URI`, `https://support.edge.app/articles/17606891`), replacing the gist that stood in for it. |
 | Price impact when the destination asset has no fiat rate | Deferred | `calculateQuotePriceImpact` treats a to-side fiat value of zero as a total loss, so a send to an asset the account holds no rate for would show "(100.00%)" beside the exchange rate. Found by reading the code; two live quotes to unheld chains (Avalanche, HyperEVM) both had rates and showed about 2%. To fix separately if it turns up. |
 | Whether the PIN spending limit should count fees | Decided: it does not | Settled against the pre-Houdini behavior rather than carried as a question. See [Match the pre-existing spending-limit arithmetic](#match-the-pre-existing-spending-limit-arithmetic). |
 
@@ -1297,6 +1297,12 @@ Not our work, tracked so it is not rediscovered:
 - **Sketched:** review asked for this change to be rebased onto `develop`, which had added the remembered Stealth toggles and dropped `makeStealthSwapRequestOptions`'s `ignoreProviderSetting` argument ([Phase 38](#phase-38-stealth-swap-stops-honoring-the-provider-switch)), plus scene tests for the payout entry paths phases 44 to 46 added.
 - **Shipped:** the Send scene reseeds its toggle when the served list lands, so a saved choice read before the list loaded is not lost ([Remembered toggle settings](#remembered-toggle-settings)), and `flipStealth` carries the memo across modes through `carryMemoAcrossModes`, the helper the other mode changes use. The Exchange scene computes its Stealth state as the override or saved choice gated on the served list, and shows the toggle on the list alone. Four scene cases in `SendScene2.recipientNetwork.ui.test.tsx` cover the payout entry paths: a token code to the wallet's own address declined, a gateway token code kept out when its warning is declined, bare text never read as the payout token, and a token code on another chain read through that chain's parser. Each fails when its guard is removed. The type links now point at edge-core-js.
 - **Held:** every behavior from phases 39 to 46; the only snapshot change is the "Bitcoin Network" subtitle row this change already added.
+
+### Phase 39: one Stealth info line, and the support article
+
+- **Sketched:** a copy audit by the provider found the Stealth Send and Stealth Swap info lines saying different things, two fixed-to strings reading awkwardly, and the AML/KYC bullet not saying what happens when the user declines to verify. "Learn more" should open the published support article.
+- **Shipped:** both toggles show one line, "%1$s routing helps obfuscate the on-chain link between sender and receiver wallets.", with the provider's display name filled from `getStealthProviderName`, the same `swapConfig` lookup the swap-send modal uses. The fixed-to toast and fallback card now say "Your send amount is guaranteed instead", and the AML/KYC bullet ends "If you do not, the funds are returned to you." `STEALTH_LEARN_MORE_URI` points at the support article.
+- **Held:** the claim stays at "helps obfuscate". The "Powered by" card placement and the estimated-quote strings are unchanged.
 
 ## 11. Decisions
 

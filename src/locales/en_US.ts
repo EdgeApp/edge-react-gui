@@ -1696,10 +1696,8 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   stealth_send_toggle: 'Stealth Send',
   stealth_swap_toggle: 'Stealth Swap',
-  stealth_send_info:
-    'Uses a route that helps obfuscate the on-chain link between source and destination wallets.',
-  stealth_swap_info:
-    'Routes your swap through multiple exchanges so your source and destination wallets are more obfuscated on-chain.',
+  stealth_info_1s:
+    '%1$s routing helps obfuscate the on-chain link between sender and receiver wallets.',
   stealth_learn_more: 'Learn more',
   stealth_you_send: 'You send',
   stealth_recipient_gets: 'Recipient gets',
@@ -1723,10 +1721,10 @@ const strings = {
   stealth_below_standard_minimum_1s:
     'The provider needs at least %1$s to route this send. Enter a larger amount.',
   stealth_fixed_to_unavailable_toast:
-    'The provider cannot guarantee an exact receive amount for this pair. The send amount is now the guaranteed side.',
+    'The provider cannot guarantee an exact receive amount for this pair. Your send amount is guaranteed instead.',
   stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
   stealth_fixed_to_fallback_body:
-    'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
+    'The provider cannot guarantee this receive amount. Your send amount is guaranteed instead, and the recipient amount is an estimate based on current rates. Edit either amount to continue.',
   stealth_zcash_transparent_payout_title: 'Transparent Zcash payout',
   stealth_zcash_transparent_payout_body:
     'Zcash payouts go to a transparent address at this time. The amount received is visible on the blockchain.',
@@ -1740,7 +1738,7 @@ const strings = {
     'This transaction may take longer than usual to complete.',
   stealth_swap_send_modal_title: 'This send uses a swap provider',
   stealth_swap_send_modal_message_kyc:
-    'In rare cases, the provider or its exchange partners may hold a transaction for AML/KYC review and ask you to verify your identity before releasing the funds.',
+    'In rare cases, the provider or its exchange partners may hold a transaction for AML/KYC review and ask you to verify your identity. If you do not, the funds are returned to you.',
   stealth_swap_send_modal_message_recovery_1s:
     'A held or failed swap is resolved with the provider. %1$s cannot cancel, refund, or recover funds once they are sent.',
   stealth_swap_send_modal_message_2s:
