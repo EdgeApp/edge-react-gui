@@ -1726,6 +1726,9 @@ const strings = {
   stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
   stealth_fixed_to_fallback_body:
     'The provider could not guarantee the requested receive amount, so the send amount is now guaranteed instead and the recipient amount is an estimate from current rates. Edit either amount to continue.',
+  stealth_zcash_transparent_payout_title: 'Transparent Zcash payout',
+  stealth_zcash_transparent_payout_body:
+    'Zcash payouts go to a transparent address at this time. The amount received is visible on the blockchain.',
   stealth_swap_send_warning_title: 'Swap before send',
   stealth_swap_send_warning_title_private: 'Stealth swap before send',
   stealth_swap_send_warning_body:

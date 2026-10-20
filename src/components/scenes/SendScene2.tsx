@@ -2935,6 +2935,40 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * The provider pays Zcash only to a transparent address, so a Stealth send
+   * to a unified or shielded address lands on that wallet's t1 instead, in
+   * the open. It is its own card because the fallback warning can replace
+   * the swap warning, and this one has to stay through either.
+   */
+  const renderZcashTransparentWarning = (): React.ReactElement | null => {
+    const shownAddress = spendInfo.spendTargets[0]?.publicAddress
+    if (
+      !swapSendActive ||
+      !stealth ||
+      destPluginId !== 'zcash' ||
+      shownAddress == null ||
+      shownAddress === '' ||
+      destChain?.addressValidation.test(shownAddress) === true ||
+      showErrorCard
+    ) {
+      return null
+    }
+    return (
+      <EdgeAnim
+        enter={{ type: 'fadeInUp', distance: 60 }}
+        exit={{ type: 'fadeOutDown' }}
+      >
+        <AlertCardUi4
+          type="warning"
+          title={lstrings.stealth_zcash_transparent_payout_title}
+          body={lstrings.stealth_zcash_transparent_payout_body}
+          marginRem={0.5}
+        />
+      </EdgeAnim>
+    )
+  }
+
   const renderNymWarning = (): React.ReactElement | null => {
     if (!isNymActive || !processingAmountChanged) return null
 
@@ -4254,6 +4288,7 @@ const SendComponent: React.FC<Props> = props => {
             {renderPendingTransactionWarning()}
             {renderSwapSendWarning()}
             {renderFixedToFallbackWarning()}
+            {renderZcashTransparentWarning()}
             {renderNymWarning()}
             {renderError()}
             {sliderTopNode}

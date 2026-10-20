@@ -29,6 +29,7 @@
 - added: Copy button for the master private key or seed, cleared from the clipboard after one minute
 - added: `stealth` navigation param that presets the Stealth Swap and Stealth Send toggles
 - added: `edge://send` deep link that opens Send, optionally with Stealth Send on
+- added: Warning that a Stealth Send to Zcash pays a transparent address
 - changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
@@ -83,6 +84,7 @@
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 - fixed: MoonPay Trade logo cropped in transactions and invisible on the light theme
+- fixed: Swap & Send and Stealth Send to your own Zcash wallet failing with "HoudiniSwap: maxLength 200"
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
