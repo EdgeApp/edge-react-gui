@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
+  EdgeAddress,
   EdgeCurrencyWallet,
   EdgeParsedUri,
   EdgeTokenId
@@ -84,6 +85,13 @@ export interface ChangeAddressResult {
    * re-rendered yet and so cannot be read back.
    */
   detectedDestPluginId?: string
+
+  /**
+   * Every address of the user's own wallet picked as the recipient. A swap
+   * provider may pay out only to one of the wallet's address types, such as
+   * a Zcash transparent address rather than the unified receive address.
+   */
+  walletAddresses?: EdgeAddress[]
 }
 
 export interface AddressTileRef {
@@ -145,7 +153,11 @@ interface Props {
    */
   selfTransfer?: {
     allowedAssets: EdgeAsset[]
-    onPickCrossAsset: (pluginId: string, address: string) => Promise<boolean>
+    onPickCrossAsset: (
+      pluginId: string,
+      address: string,
+      walletAddresses: EdgeAddress[]
+    ) => Promise<boolean>
   }
   navigation: NavigationBase
 }
@@ -269,7 +281,11 @@ export const AddressTile2 = React.forwardRef(
     )
 
     const changeAddress = useHandler(
-      async (address: string, addressEntryMethod: AddressEntryMethod) => {
+      async (
+        address: string,
+        addressEntryMethod: AddressEntryMethod,
+        walletAddresses?: EdgeAddress[]
+      ) => {
         if (address == null || address.trim() === '') return
 
         // A cross-chain destination cannot go through this wallet's URI
@@ -287,7 +303,8 @@ export const AddressTile2 = React.forwardRef(
             parsedUri: { publicAddress: payment.publicAddress },
             addressEntryMethod,
             crossChainNativeAmount: payment.nativeAmount,
-            crossChainMemo: payment.memo
+            crossChainMemo: payment.memo,
+            walletAddresses
           })
           return
         }
@@ -473,7 +490,8 @@ export const AddressTile2 = React.forwardRef(
             parsedUri,
             addressEntryMethod,
             alias: zanoAlias,
-            resolvedName
+            resolvedName,
+            walletAddresses
           })
         } catch (e: unknown) {
           const currencyInfo = coreWallet.currencyInfo
@@ -605,10 +623,20 @@ export const AddressTile2 = React.forwardRef(
           const { walletId, tokenId: pickedTokenId } = result
           const wallet = currencyWallets[walletId]
 
-          // Prefer segwit address if the selected wallet has one
-          const { segwitAddress, publicAddress } =
-            await wallet.getReceiveAddress({ tokenId: null })
-          const address = segwitAddress ?? publicAddress
+          // Show the segwit address if the selected wallet has one, as its
+          // receive address would. Taking it from the same list the quote
+          // reads keeps the shown address in that list.
+          const walletAddresses = await wallet.getAddresses({ tokenId: null })
+          const shownAddress =
+            walletAddresses.find(
+              entry => entry.addressType === 'segwitAddress'
+            ) ??
+            walletAddresses.find(
+              entry => entry.addressType === 'publicAddress'
+            ) ??
+            walletAddresses[0]
+          if (shownAddress == null) return
+          const address = shownAddress.publicAddress
 
           // A wallet on another chain is a cross-asset destination, so the
           // caller adopts it (recipient asset, quote reset) instead of this
@@ -620,10 +648,14 @@ export const AddressTile2 = React.forwardRef(
             selfTransfer != null &&
             (destPluginId !== pluginId || pickedTokenId !== tokenId)
           ) {
-            await selfTransfer.onPickCrossAsset(destPluginId, address)
+            await selfTransfer.onPickCrossAsset(
+              destPluginId,
+              address,
+              walletAddresses
+            )
             return
           }
-          await changeAddress(address, 'other')
+          await changeAddress(address, 'other', walletAddresses)
         })
         .catch((err: unknown) => {
           showError(err)
