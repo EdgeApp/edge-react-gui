@@ -107,11 +107,17 @@ function buildUtxoPlugins(): EdgeCorePluginsInit {
   }
 }
 
+// LOCAL TEST BUILD ONLY: keep just the plugins that take part in WalletConnect.
+const WALLET_CONNECT_PLUGINS = new Set(["abstract", "algorand", "arbitrum", "avalanche", "axelar", "base", "binancesmartchain", "bitcoin", "bobevm", "botanix", "celo", "coreum", "cosmoshub", "ethereum", "ethereumclassic", "ethereumpow", "fantom", "holesky", "hyperevm", "monad", "nym", "opbnb", "optimism", "osmosis", "polygon", "pulsechain", "robinhood", "rsk", "sepolia", "sonic", "zksync"])
 function buildCurrencyPlugins(): EdgeCorePluginsInit {
-  return {
+  const plugins: EdgeCorePluginsInit = {
     ...buildAccountbasedPlugins(),
     ...buildUtxoPlugins()
   }
+  for (const id of Object.keys(plugins)) {
+    if (!WALLET_CONNECT_PLUGINS.has(id)) plugins[id] = false
+  }
+  return plugins
 }
 
 function buildSwapPlugins(): EdgeCorePluginsInit {
