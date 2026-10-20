@@ -12,13 +12,21 @@ export interface StakePolicyInfo {
   poolAddress?: string
   stakeAssets: StakeAssetInfo[]
   rewardAssets: StakeAssetInfo[]
+  deprecated?: boolean
+  unstakeWarning?: string
 }
 
 export const toStakePolicy =
   (infoResponse: InfoServerResponse) =>
   (policyInfo: StakePolicyInfo): StakePolicy => {
-    const { isStablePool, stakeProviderInfo, stakeAssets, rewardAssets } =
-      policyInfo
+    const {
+      isStablePool,
+      stakeProviderInfo,
+      stakeAssets,
+      rewardAssets,
+      deprecated,
+      unstakeWarning
+    } = policyInfo
     const stakePolicyId = policyInfo.stakePolicyId
     const apy = infoResponse.policies[stakePolicyId]
     const yieldType =
@@ -31,6 +39,8 @@ export const toStakePolicy =
       hideUnstakeAction: true,
       yieldType,
       stakeAssets,
-      rewardAssets
+      rewardAssets,
+      deprecated,
+      unstakeWarning
     }
   }

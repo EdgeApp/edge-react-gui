@@ -45,6 +45,8 @@ export interface EarnSceneParams {}
 
 let USERNAME: string | undefined
 let DISCOVER_MAP: DiscoverStakeMap = {}
+// Every policy, deprecated ones included, so existing positions still show:
+let POLICY_MAP: DiscoverStakeMap = {}
 let PORTFOLIO_MAP: PortfolioStakeMap = {}
 
 interface DiscoverStakeInfo {
@@ -99,6 +101,7 @@ export const EarnScene = (props: Props): React.ReactElement => {
     // Reset local variable if user changes
     USERNAME = account.username
     DISCOVER_MAP = {}
+    POLICY_MAP = {}
     PORTFOLIO_MAP = {}
   }
 
@@ -159,12 +162,11 @@ export const EarnScene = (props: Props): React.ReactElement => {
 
         updateMaps(() => {
           for (const stakePlugin of stakePlugins) {
-            for (const stakePolicy of stakePlugin
-              .getPolicies({ pluginId })
-              .filter(stakePolicy => stakePolicy.deprecated !== true)) {
-              DISCOVER_MAP[stakePolicy.stakePolicyId] = {
-                stakePlugin,
-                stakePolicy
+            for (const stakePolicy of stakePlugin.getPolicies({ pluginId })) {
+              const info = { stakePlugin, stakePolicy }
+              POLICY_MAP[stakePolicy.stakePolicyId] = info
+              if (stakePolicy.deprecated !== true) {
+                DISCOVER_MAP[stakePolicy.stakePolicyId] = info
               }
             }
           }
@@ -190,11 +192,13 @@ export const EarnScene = (props: Props): React.ReactElement => {
         const signal = controller.signal
 
         try {
-          const stakePolicyIds = Object.keys(discoverMap)
+          // Snapshot: an account switch reassigns POLICY_MAP mid-scan
+          const policyMap = POLICY_MAP
+          const stakePolicyIds = Object.keys(policyMap)
           for (const stakePolicyId of stakePolicyIds) {
             if (signal.aborted) break
 
-            const discoverInfo = discoverMap[stakePolicyId]
+            const discoverInfo = policyMap[stakePolicyId]
             const { stakePlugin, stakePolicy } = discoverInfo
 
             // Find matching wallets based on the first stake asset's pluginId

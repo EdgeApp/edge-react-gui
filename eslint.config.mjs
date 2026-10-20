@@ -309,7 +309,6 @@ export default [
       'src/components/scenes/PromotionSettingsScene.tsx',
 
       'src/components/scenes/SpendingLimitsScene.tsx',
-      'src/components/scenes/Staking/EarnScene.tsx',
 
       'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',

@@ -51,6 +51,7 @@
 - changed: Stealth Swap wallet lists show only the assets the Houdini provider supports
 - changed: The send scene's exchange rate row no longer names the swap provider
 - changed: Stealth Send from a token source pays out that token, when Houdini serves it, instead of the chain coin
+- changed: Close the Optimism Velodrome and Tarot Earn pools to new stakes after the Aero upgrade
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Send slider covering the last lines of the bottom warning card
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
@@ -92,6 +93,7 @@
 - fixed: Pending transaction card's dead Learn More link, and its message now says when to resync the wallet
 - fixed: Backing out of the send scene in a MoonPay sell returns to the same MoonPay order without starting a new one
 - fixed: Backing out of a Paybis sell send closes the Paybis widget instead of showing a QR code page
+- fixed: Earn Portfolio missing staked positions in deprecated pools
 - removed: LetsExchange swap provider
 
 ## 4.51.3 (2026-09-30)
