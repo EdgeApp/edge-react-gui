@@ -1792,7 +1792,7 @@
   "insufficient_funds_2s": "%1$s (%2$s) insufficienti.",
   "unexpected_pending_transactions_error": "Impossibile inviare la transazione mentre il portafoglio contiene una transazione in sospeso. Attendere la conferma della transazione.",
   "pending_transaction_modal_title": "Transazione in sospeso",
-  "pending_transaction_modal_message": "Hai una transazione in sospeso che sta impedendo un altro invio. Puoi aspettare che la transazione in sospeso venga confermata oppure accelerarla.",
+  "pending_transaction_modal_message": "You have a pending transaction which is preventing another send. If it appears in a block explorer, you may wait for it to confirm or accelerate it. If it is not found after a few minutes, resync the wallet.",
   "pending_transaction_modal_go_to_transaction": "Vai alla transazione",
   "pending_transactions_confirmed": "Transazioni in attesa confermate, è ora possibile procedere con la nuova transazione.",
   "split_from_1s": "Dividi da %1$s",
