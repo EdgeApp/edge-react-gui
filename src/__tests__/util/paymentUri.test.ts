@@ -4,7 +4,7 @@ import type { EdgeCurrencyConfig, EdgeParsedUri } from 'edge-core-js'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import {
   findPayableChains,
-  isTokenAmount,
+  getUriAmountSide,
   parseCrossChainPayment,
   parseOwnNetworkPayment,
   peekPaymentUri,
@@ -155,19 +155,124 @@ describe('parseCrossChainPayment', () => {
     expect(await parseCrossChainPayment(config, 'nope')).toBeUndefined()
   })
 
-  it('rejects a code for one of the chain tokens', async () => {
-    // This flow pays out the chain's own coin, so a token code is refused
-    // rather than paid in the wrong asset.
+  const PAYEE = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
+  const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+  const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
+
+  it('rejects a token code on a coin payout', async () => {
+    // Honoring it would pay the coin for an invoice in the token:
     const config = makeConfig(async () => ({
-      publicAddress: '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e',
-      tokenId: 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
     }))
     expect(await parseCrossChainPayment(config, 'ethereum:0x')).toBeUndefined()
+  })
+
+  it("accepts the payout token's code with its amount", async () => {
+    // A USDC invoice for a USDC payout, its amount in USDC's own units:
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE, nativeAmount: '1000000' })
+  })
+
+  it("rejects another token's code on a token payout", async () => {
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '1000000',
+      tokenId: USDC_TOKEN_ID
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDT_TOKEN_ID)
+    ).toBeUndefined()
+  })
+
+  it("keeps a coin code's address but not its amount on a token payout", async () => {
+    // The amount is in the chain's coin, which cannot price the token:
+    const config = makeConfig(async () => ({
+      publicAddress: PAYEE,
+      nativeAmount: '2000000000000000'
+    }))
+    expect(
+      await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE })
   })
 
   it('rejects a result with no address', async () => {
     const config = makeConfig(async () => ({}))
     expect(await parseCrossChainPayment(config, 'ripple:')).toBeUndefined()
+  })
+
+  // Ethereum's parser throws on a `transfer` code asked for any asset but the
+  // token it moves, and core turns the code it answers with into a tokenId:
+  const makeEvmConfig = (): EdgeCurrencyConfig => ({
+    ...makeFakeCurrencyConfig(
+      { pluginId: 'ethereum', currencyCode: 'ETH' },
+      {
+        [USDT_TOKEN_ID]: {
+          currencyCode: 'USDT',
+          displayName: 'Tether',
+          denominations: [{ name: 'USDT', multiplier: '1000000' }],
+          networkLocation: { contractAddress: `0x${USDT_TOKEN_ID}` }
+        }
+      }
+    ),
+    parseUri: async (uri, currencyCode) => {
+      if (!uri.includes('/transfer')) {
+        return { publicAddress: PAYEE, nativeAmount: '2000000000000000' }
+      }
+      if (currencyCode !== 'USDT') {
+        throw new Error('InternalErrorInvalidCurrencyCode')
+      }
+      return {
+        publicAddress: PAYEE,
+        nativeAmount: '25000000',
+        tokenId: USDT_TOKEN_ID
+      }
+    }
+  })
+  const USDT_INVOICE = `ethereum:0x${USDT_TOKEN_ID}/transfer?address=${PAYEE}&uint256=25000000`
+
+  it('accepts a token invoice the parser only reads as that token', async () => {
+    expect(
+      await parseCrossChainPayment(makeEvmConfig(), USDT_INVOICE, USDT_TOKEN_ID)
+    ).toEqual({ publicAddress: PAYEE, nativeAmount: '25000000' })
+  })
+
+  it('still reads a coin code as the coin on a token payout', async () => {
+    expect(
+      await parseCrossChainPayment(
+        makeEvmConfig(),
+        `ethereum:${PAYEE}?value=2000000000000000`,
+        USDT_TOKEN_ID
+      )
+    ).toEqual({ publicAddress: PAYEE })
+  })
+
+  it('rejects a token invoice on a coin payout', async () => {
+    expect(
+      await parseCrossChainPayment(makeEvmConfig(), USDT_INVOICE)
+    ).toBeUndefined()
+  })
+
+  it('asks for the payout token only for a payment URI', async () => {
+    const asked: Array<string | undefined> = []
+    const config: EdgeCurrencyConfig = {
+      ...makeEvmConfig(),
+      parseUri: async (uri, currencyCode) => {
+        asked.push(currencyCode)
+        throw new Error('InvalidPublicAddressError')
+      }
+    }
+    expect(
+      await parseCrossChainPayment(config, 'not-an-address', USDT_TOKEN_ID)
+    ).toBeUndefined()
+    expect(asked).toEqual(['ETH'])
   })
 })
 
@@ -336,42 +441,105 @@ describe('withStatedAsset', () => {
   })
 })
 
-describe('isTokenAmount', () => {
+describe('getUriAmountSide', () => {
   const tokenId = 'dac17f958d2ee523a2206206994597c13d831ec7'
   const publicAddress = '0x1f36BF25aE6c07Ae5B6cB6BF6b0b13B1B4d1B372'
+  const tokenToCoin = { sourceTokenId: tokenId, sameChainDestTokenId: null }
 
-  it("reads a token parse's amount as the token's", () => {
+  it("sends a token parse's amount when the token is being sent", () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(true)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'send', nativeAmount: '5000000' })
   })
 
-  it("reads a coin parse's amount as the coin's", () => {
+  it("receives a coin parse's amount when the coin is paid out", () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId: null }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
   })
 
   it('reads a parse naming no asset as the coin', () => {
     const parsedUri = { publicAddress, nativeAmount: '5000000' }
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
+  })
+
+  it("receives a token parse's amount when that token is paid out", () => {
+    const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        sourceTokenId: null,
+        sameChainDestTokenId: tokenId
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '5000000' })
+  })
+
+  it('prices neither side for an asset neither side holds', () => {
+    // A coin code read on a token send paying out another chain:
+    const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId: null }
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        sourceTokenId: tokenId,
+        sameChainDestTokenId: undefined
+      })
+    ).toBeUndefined()
   })
 
   it('has no amount to place for a bare address', () => {
-    expect(isTokenAmount({ publicAddress, tokenId }, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri: { publicAddress, tokenId },
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toBeUndefined()
   })
 
-  it("reads a corrected coin code's amount as the coin's", () => {
+  it("receives a corrected coin code's amount as the coin's", () => {
     const parsedUri = withStatedAsset(
       { publicAddress, nativeAmount: '500000000', tokenId },
       `ethereum:${publicAddress}?value=5e8`
     )
-    expect(isTokenAmount(parsedUri, undefined)).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: undefined,
+        ...tokenToCoin
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '500000000' })
   })
 
-  it("leaves another chain's amount in that chain's coin", () => {
+  it("receives another chain's amount in that chain's coin", () => {
     // The destination chain's parser read the amount. The sending wallet's
     // parse carries only the address, whatever asset it names.
     const parsedUri = { publicAddress, nativeAmount: '5000000', tokenId }
-    expect(isTokenAmount(parsedUri, '1000000000000000000')).toBe(false)
+    expect(
+      getUriAmountSide({
+        parsedUri,
+        crossChainNativeAmount: '1000000000000000000',
+        sourceTokenId: tokenId,
+        sameChainDestTokenId: undefined
+      })
+    ).toEqual({ side: 'receive', nativeAmount: '1000000000000000000' })
   })
 })
 

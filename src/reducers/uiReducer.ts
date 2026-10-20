@@ -3,9 +3,11 @@ import { combineReducers, type Reducer } from 'redux'
 import type { ExchangeInfo } from '../actions/ExchangeInfoActions'
 import type { GiftCardInfo } from '../actions/GiftCardInfoActions'
 import type { Action } from '../types/reduxTypes'
+import type { HoudiniChains } from '../util/houdiniChains'
 import { exchangeInfo } from './ExchangeInfoReducer'
 import { fio, type FioState } from './FioReducer'
 import { giftCardInfo } from './GiftCardInfoReducer'
+import { houdiniChains } from './HoudiniChainsReducer'
 import {
   passwordReminder,
   type PasswordReminderState
@@ -19,6 +21,7 @@ import { settings, type SettingsState } from './scenes/SettingsReducer'
 export interface UiState {
   readonly exchangeInfo: ExchangeInfo
   readonly giftCardInfo: GiftCardInfo
+  readonly houdiniChains: HoudiniChains
   readonly fio: FioState
   readonly fioAddress: FioAddressSceneState
   readonly passwordReminder: PasswordReminderState
@@ -31,6 +34,7 @@ export interface UiState {
 const uiInner = combineReducers<UiState, Action>({
   exchangeInfo,
   giftCardInfo,
+  houdiniChains,
   fio,
   fioAddress,
   passwordReminder,

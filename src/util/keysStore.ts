@@ -32,7 +32,7 @@ import {
   RemoteKeysError
 } from './keysServer'
 import { debugLog } from './logger'
-import { fetchPublicRollup, infoServerData } from './network'
+import { fetchPublicRollup, infoServerData, notifyInfoRollup } from './network'
 import { raceTimeout, TIMED_OUT } from './raceTimeout'
 import { runOnce } from './runOnce'
 import { getOsVersion } from './utils'
@@ -198,6 +198,7 @@ function applyPublicRollup(raw: unknown): void {
   // `fetchPublicRollup`; a signed launch skips that call, so set it here too
   // or those fields stay missing until the next unsigned poll.
   infoServerData.rollupRaw = raw
+  notifyInfoRollup()
   // `queryInfo` runs this on the unsigned path. Without it here, builds that
   // take the signed path would defer the force-upgrade check by up to one
   // INFO_FETCH_INTERVAL on every launch.

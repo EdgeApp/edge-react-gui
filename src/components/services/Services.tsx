@@ -10,6 +10,7 @@ import { updateExchangeInfo } from '../../actions/ExchangeInfoActions'
 import { refreshConnectedWallets } from '../../actions/FioActions'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { updateGiftCardInfo } from '../../actions/GiftCardInfoActions'
+import { updateHoudiniChains } from '../../actions/HoudiniChainsActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
 import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
@@ -20,6 +21,7 @@ import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { onInfoRollup } from '../../util/network'
 import {
   height,
   ratioHorizontal,
@@ -70,6 +72,19 @@ export const Services: React.FC<Props> = props => {
       `Dimensions: ratioHorizontal=${ratioHorizontal} ratioVertical=${ratioVertical}`
     )
   }, [])
+
+  // The refresher below runs at mount, which can beat the launch rollup.
+  // Reload Houdini's list whenever a rollup lands, so Stealth shows as soon
+  // as the list arrives rather than on the next refresher tick:
+  React.useEffect(
+    () =>
+      onInfoRollup(() => {
+        dispatch(updateHoudiniChains()).catch((error: unknown) => {
+          console.warn(error)
+        })
+      }),
+    [dispatch]
+  )
 
   React.useEffect(() => {
     if (account != null) {
@@ -175,6 +190,9 @@ export const Services: React.FC<Props> = props => {
         console.warn(error)
       })
       dispatch(updateGiftCardInfo()).catch((error: unknown) => {
+        console.warn(error)
+      })
+      dispatch(updateHoudiniChains()).catch((error: unknown) => {
         console.warn(error)
       })
     },

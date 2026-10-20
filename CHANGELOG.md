@@ -30,6 +30,7 @@
 - added: `stealth` navigation param that presets the Stealth Swap and Stealth Send toggles
 - added: `edge://send` deep link that opens Send, optionally with Stealth Send on
 - added: Warning that a Stealth Send to Zcash pays a transparent address
+- added: Token destinations, like USDT on Tron, for Stealth Send and swap-to-address sends
 - changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
 - changed: Standardize wallet list automation test IDs to use period separators.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
@@ -46,6 +47,10 @@
 - changed: Stealth Swap toggle shows on the swap scene before assets are selected
 - changed: Stealth Send and Stealth Swap toggles remember the last setting per account
 - changed: Welcome screen "Already have an account?" prompt is white, with only "Sign in" green
+- changed: The "Recipient receives" list shows each asset's name over its network
+- changed: Stealth Swap wallet lists show only the assets the Houdini provider supports
+- changed: The send scene's exchange rate row no longer names the swap provider
+- changed: Stealth Send from a token source pays out that token, when Houdini serves it, instead of the chain coin
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Send slider covering the last lines of the bottom warning card
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
