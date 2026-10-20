@@ -40,6 +40,7 @@ interface WalletConnect {
   ) => Promise<void>
   rejectSession: (proposal: Web3WalletTypes.SessionProposal) => Promise<void>
   disconnectSession: (topic: string) => Promise<void>
+  extendSession: (topic: string) => Promise<void>
   approveRequest: (
     topic: string,
     requestId: number,
@@ -253,6 +254,16 @@ export function useWalletConnect(): WalletConnect {
     })
   })
 
+  /**
+   * Moves a session's expiry a week out. The client changes its own copy
+   * first and then waits for the dapp to agree, so this settles only once
+   * the dapp has answered.
+   */
+  const extendSession = useHandler(async (topic: string): Promise<void> => {
+    const client = await getClient()
+    await client.extendSession({ topic })
+  })
+
   const approveRequest = useHandler(
     async (topic: string, id: number, result: JsonObject | string) => {
       const client = await getClient()
@@ -290,6 +301,7 @@ export function useWalletConnect(): WalletConnect {
       approveSession,
       rejectSession,
       disconnectSession,
+      extendSession,
       approveRequest,
       rejectRequest
     }),
@@ -299,6 +311,7 @@ export function useWalletConnect(): WalletConnect {
       approveSession,
       rejectSession,
       disconnectSession,
+      extendSession,
       approveRequest,
       rejectRequest
     ]

@@ -150,6 +150,14 @@ export const WalletConnectService: React.FC<Props> = props => {
       return
     }
 
+    // A session lasts a week from its last extension, and an extension only
+    // reaches the dapp while the dapp is online, which it is right now. The
+    // client moves its own expiry out before the dapp answers, so the
+    // request is served without waiting for that answer:
+    walletConnect.extendSession(request.topic).catch((error: unknown) => {
+      console.log('walletConnect extendSession error', String(error))
+    })
+
     const [namespace] = request.params.chainId.split(':')
     if (namespace === 'bip122') {
       // A malformed payload throws out of the cleaners below. Reject the
