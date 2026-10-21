@@ -1241,9 +1241,9 @@ const SendComponent: React.FC<Props> = props => {
   const destinationAssets = React.useMemo<EdgeAsset[]>(
     () =>
       getHoudiniAssets({
+        bans: swapDisableAssets.destination,
         currencyConfigs: account.currencyConfig,
-        houdiniChains,
-        destinationBans: swapDisableAssets.destination
+        houdiniChains
       }),
     [account.currencyConfig, houdiniChains, swapDisableAssets.destination]
   )
