@@ -1335,6 +1335,7 @@
   "stealth_you_send": "Invii",
   "stealth_recipient_gets": "Il destinatario riceve",
   "stealth_recipient_receives": "Il destinatario riceve",
+  "stealth_recipient_network_1s": "%1$s Network",
   "stealth_guaranteed": "Garantito",
   "stealth_estimated": "Stimato",
   "stealth_slide_send": "Scorri per inviare in stealth",
