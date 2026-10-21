@@ -752,22 +752,27 @@ describe('SendScene2 saved Stealth Send choice', () => {
     rendered.unmount()
   })
   describe('on a wallet that cannot go private', () => {
-    /** The reason a refused tap toasts. A plain send shows no inline line. */
+    /** The reason under the dimmed toggle, and the toast a refused tap shows. */
     const reasonFor = (currencyCode: string): string =>
       sprintf(lstrings.stealth_self_private_unsupported_1s, currencyCode)
 
     const infoShown = (rendered: ReturnType<typeof render>): boolean =>
       rendered.queryByText(stealthInfo(), { exact: false }) != null
 
-    it('opens off without a reason line, a toast or a save', () => {
+    const toggleDimmed = (rendered: ReturnType<typeof render>): boolean =>
+      rendered.UNSAFE_getByProps({ label: lstrings.stealth_send_toggle }).props
+        .disabled === true
+
+    it('opens dimmed and off with its reason, without a toast or a save', () => {
       if (btcWallet == null) return
       const showSpy = jest.spyOn(Airship, 'show')
 
       const rendered = renderSend(savedState(true, ['bitcoin']))
 
       expect(rendered.getByText(lstrings.stealth_send_toggle)).toBeTruthy()
+      expect(toggleDimmed(rendered)).toBe(true)
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
+      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
       // Seeding skips a wallet it cannot arm, rather than tapping and being
       // refused:
       expect(showSpy).not.toHaveBeenCalled()
@@ -785,6 +790,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
       expect(showSpy).toHaveBeenCalledTimes(1)
       expect(infoShown(rendered)).toBe(false)
+      expect(toggleDimmed(rendered)).toBe(true)
       expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
       showSpy.mockRestore()
       rendered.unmount()
@@ -799,6 +805,8 @@ describe('SendScene2 saved Stealth Send choice', () => {
 
       expect(rendered.getByText(/^My Ethereum \(ETH\)$/)).toBeTruthy()
       expect(infoShown(rendered)).toBe(true)
+      expect(toggleDimmed(rendered)).toBe(false)
+      expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
       expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
       rendered.unmount()
     })
@@ -810,7 +818,7 @@ describe('SendScene2 saved Stealth Send choice', () => {
         stealth: true
       })
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.queryByText(reasonFor('BTC'))).toBeNull()
+      expect(rendered.getByText(reasonFor('BTC'))).toBeTruthy()
       await switchWallet(rendered, ethWallet.id)
 
       expect(infoShown(rendered)).toBe(true)
@@ -826,10 +834,11 @@ describe('SendScene2 saved Stealth Send choice', () => {
         walletId: ethWallet.id
       })
       expect(infoShown(rendered)).toBe(false)
-      expect(rendered.queryByText(reasonFor('ETH'))).toBeNull()
+      expect(rendered.getByText(reasonFor('ETH'))).toBeTruthy()
       await switchWallet(rendered, ethWallet.id, USDT_TOKEN_ID)
 
       expect(infoShown(rendered)).toBe(true)
+      expect(rendered.queryByText(reasonFor('ETH'))).toBeNull()
       expect(mockSetStealthSendEnabled).not.toHaveBeenCalled()
       rendered.unmount()
     })
