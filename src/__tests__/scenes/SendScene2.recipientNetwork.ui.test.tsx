@@ -395,6 +395,10 @@ describe('SendScene2 recipient network', () => {
     pickRecipientAsset: (name: string) => Promise<void>
     /** Enters the amount through the swap-send "You send" row. */
     enterSendAmount: (nativeAmount: string) => Promise<void>
+    /** Enters the amount through the swap-send "Recipient gets" row. */
+    enterRecipientAmount: (nativeAmount: string) => Promise<void>
+    /** The props the scene hands the swap-send "Recipient gets" row. */
+    recipientGetsRow: () => React.ComponentProps<typeof EdgeRow>
     /** The props the scene hands the address tile. */
     tileProps: () => React.ComponentProps<typeof AddressTile2>
     /** Picks one of the user's own wallets under "Myself". */
@@ -442,6 +446,15 @@ describe('SendScene2 recipient network', () => {
     )
     const tileProps = (): React.ComponentProps<typeof AddressTile2> =>
       rendered.UNSAFE_getByType(AddressTile2).props
+    const recipientGetsRow = (): React.ComponentProps<typeof EdgeRow> => {
+      const row = rendered
+        .UNSAFE_getAllByType(EdgeRow)
+        .find(
+          candidate => candidate.props.title === lstrings.stealth_recipient_gets
+        )
+      if (row == null) throw new Error('No "Recipient gets" row')
+      return row.props
+    }
     return {
       enterUnparsedAddress: async text => {
         let result: boolean | string = false
@@ -563,6 +576,17 @@ describe('SendScene2 recipient network', () => {
         })
         show.mockRestore()
       },
+      enterRecipientAmount: async nativeAmount => {
+        const show = jest
+          .spyOn(Airship, 'show')
+          .mockResolvedValueOnce({ nativeAmount })
+        const { onPress } = recipientGetsRow()
+        await act(async () => {
+          await onPress?.()
+        })
+        show.mockRestore()
+      },
+      recipientGetsRow,
       tileProps,
       pickRecipientAsset: async name => {
         const show = jest.spyOn(Airship, 'show').mockImplementationOnce(
@@ -1375,9 +1399,28 @@ describe('SendScene2 recipient network', () => {
       scene.unmount()
     })
 
-    it('refuses a source whose private route to itself came back unavailable', async () => {
+    /**
+     * The core's account is frozen, so the quote call is swapped in on a
+     * stand-in that forwards everything else. What the bridge attaches to the
+     * stand-in itself stays its own.
+     */
+    const withFetchSwapQuotes = (
+      fetchSwapQuotes: EdgeAccount['fetchSwapQuotes']
+    ): EdgeAccount => {
       const coreAccount = account
       if (coreAccount == null) throw new Error('No account')
+      return new Proxy<EdgeAccount>({} as unknown as EdgeAccount, {
+        get: (target, key) =>
+          key === 'fetchSwapQuotes'
+            ? fetchSwapQuotes
+            : Reflect.get(
+                Object.hasOwn(target, key) ? target : coreAccount,
+                key
+              )
+      })
+    }
+
+    it('refuses a source whose private route to itself came back unavailable', async () => {
       const fetchSwapQuotes = jest
         .fn<EdgeAccount['fetchSwapQuotes']>()
         .mockRejectedValue(
@@ -1385,21 +1428,7 @@ describe('SendScene2 recipient network', () => {
             name: 'SwapCurrencyError'
           })
         )
-      // The core's account is frozen, so the quote call is swapped in on a
-      // stand-in that forwards everything else. What the bridge attaches to
-      // the stand-in itself stays its own:
-      const sceneAccount = new Proxy<EdgeAccount>(
-        {} as unknown as EdgeAccount,
-        {
-          get: (target, key) =>
-            key === 'fetchSwapQuotes'
-              ? fetchSwapQuotes
-              : Reflect.get(
-                  Object.hasOwn(target, key) ? target : coreAccount,
-                  key
-                )
-        }
-      )
+      const sceneAccount = withFetchSwapQuotes(fetchSwapQuotes)
       const scene = renderSend(ethWallet, null, { sceneAccount })
 
       // A same-asset Stealth Send whose quote finds no private route turns
@@ -1426,6 +1455,65 @@ describe('SendScene2 recipient network', () => {
       expect(scene.shows('Bitcoin (BTC)')).toBe(true)
       expect(scene.stealthArmed()).toBe(true)
       expect(mockShowToast).not.toHaveBeenCalled()
+
+      scene.unmount()
+    })
+
+    it('keeps the swap card when the receive amount cannot be guaranteed', async () => {
+      // The provider prices this pair only from the send side. Send-priced
+      // quotes stay pending, so neither a quote nor a send-side refusal
+      // replaces the card under test:
+      const fetchSwapQuotes = jest
+        .fn<EdgeAccount['fetchSwapQuotes']>()
+        .mockImplementation(async request =>
+          request.quoteFor === 'to'
+            ? await Promise.reject(
+                Object.assign(new Error('No receive-priced route'), {
+                  name: 'SwapCurrencyError'
+                })
+              )
+            : await new Promise(() => {})
+        )
+      const sceneAccount = withFetchSwapQuotes(fetchSwapQuotes)
+      const scene = renderSend(btcWallet, null, { sceneAccount })
+      await scene.toggleStealth()
+      await scene.enterParsedAddress(BTC_ADDRESS)
+      expect(
+        scene.shows(lstrings.stealth_swap_send_warning_title_private)
+      ).toBe(true)
+
+      expect(scene.recipientGetsRow().rightButtonDeactivated).toBe(false)
+
+      await scene.enterRecipientAmount(ONE_BTC)
+      await waitFor(() => {
+        expect(mockShowToast.mock.calls).toEqual([
+          [lstrings.stealth_fixed_to_unavailable_toast]
+        ])
+      })
+
+      // The route cannot price from the receive side, so the edit button
+      // reads as unavailable. A tap still explains why instead of opening the
+      // editor:
+      expect(scene.recipientGetsRow().rightButtonDeactivated).toBe(true)
+      const show = jest.spyOn(Airship, 'show')
+      await act(async () => {
+        await scene.recipientGetsRow().onPress?.()
+      })
+      expect(show).not.toHaveBeenCalled()
+      show.mockRestore()
+      expect(mockShowToast.mock.calls).toEqual([
+        [lstrings.stealth_fixed_to_unavailable_toast],
+        [lstrings.stealth_fixed_to_unavailable_toast]
+      ])
+
+      // The toast says what changed. The swap card stays, and the receive row
+      // reads as the estimate:
+      expect(
+        scene.shows(lstrings.stealth_swap_send_warning_title_private)
+      ).toBe(true)
+      expect(scene.shows('Receive amount is an estimate')).toBe(false)
+      expect(scene.shows(`(${lstrings.stealth_estimated})`)).toBe(true)
+      expect(scene.stealthArmed()).toBe(true)
 
       scene.unmount()
     })

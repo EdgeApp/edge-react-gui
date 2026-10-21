@@ -1722,9 +1722,6 @@ const strings = {
     'The provider needs at least %1$s to route this send. Enter a larger amount.',
   stealth_fixed_to_unavailable_toast:
     'The provider cannot guarantee an exact receive amount for this pair. Your send amount is guaranteed instead.',
-  stealth_fixed_to_fallback_title: 'Receive amount is an estimate',
-  stealth_fixed_to_fallback_body:
-    'The provider cannot guarantee this receive amount. Your send amount is guaranteed instead, and the recipient amount is an estimate based on current rates. Edit either amount to continue.',
   stealth_zcash_transparent_payout_title: 'Transparent Zcash payout',
   stealth_zcash_transparent_payout_body:
     'Zcash payouts go to a transparent address at this time. The amount received is visible on the blockchain.',
