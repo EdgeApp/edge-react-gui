@@ -1899,6 +1899,8 @@ const strings = {
     'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose "Claim Rewards and Unstake" instead.',
   stake_warning_unstake:
     'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
+  stake_warning_velodrome_aero_upgrade:
+    'Velodrome rewards ended with the Aero upgrade, and this pool no longer accepts new deposits. Unstake to withdraw your funds.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',

@@ -175,7 +175,11 @@ const makePolicyConfig = (
     },
     parentPluginId: 'optimism',
     parentCurrencyCode: 'ETH',
+    // Tarot pool yield came from Velodrome gauge rewards, which ended with
+    // the Aero upgrade. Existing positions can still exit:
+    deprecated: true,
     stakeWarning: lstrings.stake_warning_multiple_transactions,
+    unstakeWarning: lstrings.stake_warning_velodrome_aero_upgrade,
     hideClaimAction: true,
     hideUnstakeAndClaimAction: true,
     mustMaxUnstake: true,
