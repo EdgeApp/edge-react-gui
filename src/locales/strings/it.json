@@ -1344,7 +1344,7 @@
   "stealth_getting_quote": "Ottengo la quota...",
   "stealth_route_unavailable_toast": "Il routing Stealth non è disponibile per questa coppia in questo momento. L'invio Stealth è stato disattivato.",
   "stealth_route_unavailable_info": "Il routing Stealth non è disponibile per questa coppia in questo momento.",
-  "stealth_asset_unsupported_1s": "Stealth routing is not available for %1$s.",
+  "stealth_asset_unsupported_1s": "Instradamento Stealth non disponibile per %1$s.",
   "stealth_self_private_unsupported_1s": "Il routing Stealth non è disponibile quando si invia %1$s a se stesso.",
   "stealth_below_private_minimum_1s": "Il routing Stealth ha bisogno di almeno %1$s. Inserisci un importo più grande.",
   "stealth_below_standard_minimum_1s": "Il provider ha bisogno di almeno %1$s per indirizzare questo invio. Inserisci un importo più grande.",
