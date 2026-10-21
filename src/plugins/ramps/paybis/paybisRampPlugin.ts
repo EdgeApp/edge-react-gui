@@ -9,13 +9,14 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import type {
-  EdgeAssetAction,
-  EdgeFetchOptions,
-  EdgeSpendInfo,
-  EdgeTransaction,
-  EdgeTxActionFiat,
-  JsonObject
+import {
+  asMaybePendingFundsError,
+  type EdgeAssetAction,
+  type EdgeFetchOptions,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
+  type EdgeTxActionFiat,
+  type JsonObject
 } from 'edge-core-js'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -85,6 +86,7 @@ import {
   validateRampQuoteRequest
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
+import { makeSellPaymentRedirect } from '../utils/sellPaymentRedirect'
 import { asInitOptions } from './paybisRampTypes'
 
 const pluginId = 'paybis'
@@ -1274,6 +1276,236 @@ export const paybisRampPlugin: RampPluginFactory = (
               console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
               let isFirstOpen = true
+              // Set once the user leaves the widget, so a payment-details
+              // fetch still in flight opens nothing:
+              let webViewClosed = false
+
+              // Opens the send scene for this order's payment, and finishes the
+              // sale once it is sent:
+              const handlePaymentRedirect = async (): Promise<void> => {
+                if (inPayment) return
+                inPayment = true
+                let broadcastAttempted = false
+                let sendSceneClosed = false
+                let broadcastTx: EdgeTransaction | undefined
+                try {
+                  const payDetails = await paybisFetch({
+                    method: 'GET',
+                    url: state!.apiUrl,
+                    path: `v2/request/${requestId}/payment-details`,
+                    apiKey: state!.apiKey,
+                    promoCode
+                  })
+                  if (webViewClosed) return
+                  const {
+                    assetId,
+                    amount,
+                    currencyCode: pbCurrencyCode,
+                    network,
+                    depositAddress,
+                    destinationTag
+                  } = asPaymentDetails(payDetails)
+                  const { pluginId, tokenId } =
+                    PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
+
+                  console.log(`Creating Paybis payment`)
+                  console.log(`  amount: ${amount}`)
+                  console.log(`  assetId: ${assetId}`)
+                  console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
+                  console.log(`  network: ${network}`)
+                  console.log(`  pluginId: ${pluginId}`)
+                  console.log(`  tokenId: ${tokenId}`)
+                  const { multiplier } = getExchangeDenom(
+                    coreWallet.currencyConfig,
+                    tokenId
+                  )
+                  const nativeAmount = mul(amount, multiplier)
+
+                  const assetAction: EdgeAssetAction = {
+                    assetActionType: 'sell'
+                  }
+                  const savedAction: EdgeTxActionFiat = {
+                    actionType: 'fiat',
+                    orderId: requestId,
+                    orderUri: `${widgetUrl}?requestId=${requestId}`,
+                    isEstimate: true,
+                    fiatPlugin: {
+                      providerId: pluginId,
+                      providerDisplayName,
+                      supportEmail
+                    },
+                    payinAddress: depositAddress,
+                    cryptoAsset: {
+                      pluginId: coreWallet.currencyInfo.pluginId,
+                      tokenId,
+                      nativeAmount
+                    },
+                    fiatAsset: {
+                      fiatCurrencyCode,
+                      fiatAmount
+                    }
+                  }
+
+                  const spendInfo: EdgeSpendInfo = {
+                    tokenId,
+                    assetAction,
+                    savedAction,
+                    spendTargets: [
+                      {
+                        nativeAmount,
+                        publicAddress: depositAddress
+                      }
+                    ]
+                  }
+
+                  if (destinationTag != null) {
+                    spendInfo.memos = [
+                      {
+                        type: 'text',
+                        value: destinationTag,
+                        hidden: true
+                      }
+                    ]
+                  }
+
+                  const sendParams: SendScene2Params = {
+                    walletId: coreWallet.id,
+                    tokenId,
+                    spendInfo,
+                    lockTilesMap: {
+                      address: true,
+                      amount: true,
+                      wallet: true
+                    },
+                    hiddenFeaturesMap: {
+                      address: true
+                    }
+                  }
+                  // The send scene calls onBack whenever it unmounts, so wait for
+                  // it here: leaving without sending lands in the catch below.
+                  const tx = await new Promise<EdgeTransaction>(
+                    (resolve, reject) => {
+                      navigation.navigate('send2', {
+                        ...sendParams,
+                        // The default broadcast, wrapped to record that the
+                        // signed transaction was handed to the network:
+                        alternateBroadcast: async (
+                          signedTx: EdgeTransaction
+                        ) => {
+                          // Leaving the scene does not stop a send that is
+                          // still signing. The widget is closed by then, so
+                          // that send must not go out:
+                          if (sendSceneClosed) {
+                            throw new Error(
+                              'Paybis sell send scene closed before broadcast'
+                            )
+                          }
+                          broadcastAttempted = true
+                          try {
+                            broadcastTx = await coreWallet.broadcastTx(signedTx)
+                            return broadcastTx
+                          } catch (e: unknown) {
+                            // The wallet refused the spend before submitting
+                            // anything:
+                            if (asMaybePendingFundsError(e) != null) {
+                              broadcastAttempted = false
+                            }
+                            throw e
+                          }
+                        },
+                        onDone: (
+                          error: Error | null,
+                          edgeTransaction?: EdgeTransaction
+                        ) => {
+                          if (error != null) {
+                            reject(error)
+                          } else if (edgeTransaction != null) {
+                            resolve(edgeTransaction)
+                          } else {
+                            reject(new Error(SendErrorNoTransaction))
+                          }
+                        },
+                        onBack: () => {
+                          sendSceneClosed = true
+                          // Backing out after the broadcast went through
+                          // still completes the sale:
+                          if (broadcastTx != null) {
+                            resolve(broadcastTx)
+                          } else {
+                            reject(new Error(SendErrorBackPressed))
+                          }
+                        }
+                      })
+                    }
+                  )
+
+                  // Track conversion
+                  onLogEvent('Sell_Success', {
+                    conversionValues: {
+                      conversionType: 'sell',
+                      destFiatCurrencyCode: fiatCurrencyCode,
+                      destFiatAmount: fiatAmount,
+                      sourceAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        tokenId,
+                        exchangeAmount: amount
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: requestId
+                    }
+                  })
+
+                  if (tokenId != null) {
+                    const params: SaveTxActionParams = {
+                      walletId: coreWallet.id,
+                      tokenId,
+                      txid: tx.txid,
+                      savedAction,
+                      assetAction: {
+                        ...assetAction,
+                        assetActionType: 'sell'
+                      }
+                    }
+                    await account.currencyWallets[coreWallet.id].saveTxAction(
+                      params
+                    )
+                  }
+
+                  // Open the widget again, so it shows the order's status:
+                  navigation.pop()
+                  await openWebView()
+                } catch (e: unknown) {
+                  if (webViewClosed) return
+                  navigation.pop()
+                  if (broadcastAttempted) {
+                    // The send may have reached the network, so open the
+                    // widget again to show the order's status:
+                    await openWebView()
+                  }
+                  // Otherwise nothing was sent. Paybis keeps the order waiting
+                  // for payment once Pay is tapped, with no way to pay or
+                  // cancel it on the page, so the widget stays closed and the
+                  // user quotes again.
+                  if (
+                    e instanceof Error &&
+                    e.message === SendErrorNoTransaction
+                  ) {
+                    showToast(
+                      lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                      NOT_SUCCESS_TOAST_HIDE_MS
+                    )
+                  } else if (
+                    e instanceof Error &&
+                    e.message === SendErrorBackPressed
+                  ) {
+                    // Do nothing
+                  } else {
+                    showError(e)
+                  }
+                } finally {
+                  inPayment = false
+                }
+              }
 
               const openWebView = async (): Promise<void> => {
                 // Only include oneTimeToken on the first open. Subsequent opens
@@ -1282,11 +1514,21 @@ export const paybisRampPlugin: RampPluginFactory = (
                   ? `${baseWebviewUrl}${ott}`
                   : baseWebviewUrl
                 isFirstOpen = false
+                webViewClosed = false
+                // Each WebView gets its own redirect state, so a late report
+                // from one already closed opens nothing:
+                const redirect = makeSellPaymentRedirect({
+                  navigation,
+                  onPaymentRedirect: handlePaymentRedirect
+                })
 
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
-                  onClose: () => {},
+                  onClose: () => {
+                    webViewClosed = true
+                  },
+                  onShouldStartLoad: redirect.onShouldStartLoad,
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
                       showError(error)
@@ -1301,181 +1543,8 @@ export const paybisRampPlugin: RampPluginFactory = (
                       lstrings.fiat_plugin_sell_failed_try_again,
                       NOT_SUCCESS_TOAST_HIDE_MS
                     )
-                  } else if (isReturnUrl(newUrl, 'payment')) {
-                    if (inPayment) return
-                    inPayment = true
-                    try {
-                      const payDetails = await paybisFetch({
-                        method: 'GET',
-                        url: state!.apiUrl,
-                        path: `v2/request/${requestId}/payment-details`,
-                        apiKey: state!.apiKey,
-                        promoCode
-                      })
-                      const {
-                        assetId,
-                        amount,
-                        currencyCode: pbCurrencyCode,
-                        network,
-                        depositAddress,
-                        destinationTag
-                      } = asPaymentDetails(payDetails)
-                      const { pluginId, tokenId } =
-                        PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
-
-                      console.log(`Creating Paybis payment`)
-                      console.log(`  amount: ${amount}`)
-                      console.log(`  assetId: ${assetId}`)
-                      console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
-                      console.log(`  network: ${network}`)
-                      console.log(`  pluginId: ${pluginId}`)
-                      console.log(`  tokenId: ${tokenId}`)
-                      const { multiplier } = getExchangeDenom(
-                        coreWallet.currencyConfig,
-                        tokenId
-                      )
-                      const nativeAmount = mul(amount, multiplier)
-
-                      const assetAction: EdgeAssetAction = {
-                        assetActionType: 'sell'
-                      }
-                      const savedAction: EdgeTxActionFiat = {
-                        actionType: 'fiat',
-                        orderId: requestId,
-                        orderUri: `${widgetUrl}?requestId=${requestId}`,
-                        isEstimate: true,
-                        fiatPlugin: {
-                          providerId: pluginId,
-                          providerDisplayName,
-                          supportEmail
-                        },
-                        payinAddress: depositAddress,
-                        cryptoAsset: {
-                          pluginId: coreWallet.currencyInfo.pluginId,
-                          tokenId,
-                          nativeAmount
-                        },
-                        fiatAsset: {
-                          fiatCurrencyCode,
-                          fiatAmount
-                        }
-                      }
-
-                      const spendInfo: EdgeSpendInfo = {
-                        tokenId,
-                        assetAction,
-                        savedAction,
-                        spendTargets: [
-                          {
-                            nativeAmount,
-                            publicAddress: depositAddress
-                          }
-                        ]
-                      }
-
-                      if (destinationTag != null) {
-                        spendInfo.memos = [
-                          {
-                            type: 'text',
-                            value: destinationTag,
-                            hidden: true
-                          }
-                        ]
-                      }
-
-                      const sendParams: SendScene2Params = {
-                        walletId: coreWallet.id,
-                        tokenId,
-                        spendInfo,
-                        lockTilesMap: {
-                          address: true,
-                          amount: true,
-                          wallet: true
-                        },
-                        hiddenFeaturesMap: {
-                          address: true
-                        }
-                      }
-                      // Navigate to send scene
-                      const tx = await new Promise<EdgeTransaction>(
-                        (resolve, reject) => {
-                          navigation.navigate('send2', {
-                            ...sendParams,
-                            onDone: (
-                              error: Error | null,
-                              edgeTransaction?: EdgeTransaction
-                            ) => {
-                              if (error != null) {
-                                reject(error)
-                              } else if (edgeTransaction != null) {
-                                resolve(edgeTransaction)
-                              } else {
-                                reject(new Error(SendErrorNoTransaction))
-                              }
-                            },
-                            onBack: () => {
-                              reject(new Error(SendErrorBackPressed))
-                            }
-                          })
-                        }
-                      )
-
-                      // Track conversion
-                      onLogEvent('Sell_Success', {
-                        conversionValues: {
-                          conversionType: 'sell',
-                          destFiatCurrencyCode: fiatCurrencyCode,
-                          destFiatAmount: fiatAmount,
-                          sourceAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            tokenId,
-                            exchangeAmount: amount
-                          }),
-                          fiatProviderId: pluginId,
-                          orderId: requestId
-                        }
-                      })
-
-                      if (tokenId != null) {
-                        const params: SaveTxActionParams = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          txid: tx.txid,
-                          savedAction,
-                          assetAction: {
-                            ...assetAction,
-                            assetActionType: 'sell'
-                          }
-                        }
-                        await account.currencyWallets[
-                          coreWallet.id
-                        ].saveTxAction(params)
-                      }
-
-                      navigation.pop()
-                      await openWebView()
-                    } catch (e: unknown) {
-                      navigation.pop()
-                      await openWebView()
-                      if (
-                        e instanceof Error &&
-                        e.message === SendErrorNoTransaction
-                      ) {
-                        showToast(
-                          lstrings.fiat_plugin_sell_failed_to_send_try_again,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                      } else if (
-                        e instanceof Error &&
-                        e.message === SendErrorBackPressed
-                      ) {
-                        // Do nothing
-                      } else {
-                        showError(e)
-                      }
-                    } finally {
-                      inPayment = false
-                    }
+                  } else {
+                    await redirect.onUrlChange(newUrl)
                   }
                 }
               }

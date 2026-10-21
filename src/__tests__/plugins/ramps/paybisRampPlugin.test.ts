@@ -1,14 +1,50 @@
-import { afterEach, beforeEach, describe, expect, it } from '@jest/globals'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  jest
+} from '@jest/globals'
 import { floor, gt, mul } from 'biggystring'
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeTransaction,
+  PendingFundsError
+} from 'edge-core-js'
 
+import type { SendScene2Params } from '../../../components/scenes/SendScene2'
+import {
+  showError,
+  showToast
+} from '../../../components/services/AirshipInstance'
 import { FiatProviderError } from '../../../plugins/gui/fiatProviderTypes'
+import { RETURN_URL_PAYMENT } from '../../../plugins/gui/providers/common'
+import type { FiatPluginOpenWebViewParams } from '../../../plugins/gui/scenes/FiatPluginWebView'
 import { paybisRampPlugin } from '../../../plugins/ramps/paybis/paybisRampPlugin'
 import type {
   RampPlugin,
   RampPluginConfig,
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
+
+jest.mock('../../../components/services/AirshipInstance', () => ({
+  ...jest.requireActual<object>('../../../components/services/AirshipInstance'),
+  showError: jest.fn(),
+  showToast: jest.fn(),
+  showToastSpinner: async (message: string, promise: Promise<unknown>) =>
+    await promise
+}))
+jest.mock('../../../components/services/PermissionsManager', () => ({
+  ...jest.requireActual<object>(
+    '../../../components/services/PermissionsManager'
+  ),
+  requestPermissionOnSettings: async () => false
+}))
+jest.mock('../../../util/crypto', () => ({
+  ...jest.requireActual<object>('../../../util/crypto'),
+  sha512HashAndSign: () => 'test-signature'
+}))
 
 interface QuoteBody {
   currencyCodeFrom: string
@@ -128,10 +164,27 @@ const fakeFetch = async (
     quoteBodies.push(body)
     return jsonResponse(quoteResponse(body))
   }
+  if (pathname.endsWith('/v2/public/request')) {
+    return jsonResponse({ requestId: 'request-id', oneTimeToken: 'ott' })
+  }
+  if (pathname.endsWith('/payment-details')) {
+    return jsonResponse({
+      assetId: 'BTC',
+      blockchain: 'bitcoin',
+      network: 'mainnet',
+      depositAddress: 'deposit-address',
+      currencyCode: 'BTC',
+      amount: '0.001'
+    })
+  }
   throw new Error(`Unexpected fetch ${url}`)
 }
 
-const makePlugin = (): RampPlugin => {
+const makePlugin = (
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  navigation = {} as RampPluginConfig['navigation'],
+  onLogEvent: RampPluginConfig['onLogEvent'] = () => {}
+): RampPlugin => {
   const config: RampPluginConfig = {
     initOptions: {
       apiKey: 'test-api-key',
@@ -146,9 +199,8 @@ const makePlugin = (): RampPlugin => {
     },
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     account: {} as RampPluginConfig['account'],
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    navigation: {} as RampPluginConfig['navigation'],
-    onLogEvent: () => {},
+    navigation,
+    onLogEvent,
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     disklet: {} as RampPluginConfig['disklet']
   }
@@ -276,5 +328,304 @@ describe('paybisRampPlugin fetchQuotes over-limit handling', () => {
 
     expect(error.quoteError.errorType).toBe('overLimit')
     expect(quoteBodies).toHaveLength(2)
+  })
+})
+
+describe('paybisRampPlugin sell payment redirect', () => {
+  const paymentUrl = `${RETURN_URL_PAYMENT}?requestId=request-id`
+  const navigate = jest.fn((route: string, params: unknown) => {})
+  const broadcastTx = jest.fn(async (tx: EdgeTransaction) => tx)
+  // Popping the widget closes its WebView, as the scene's beforeRemove does:
+  const pop = jest.fn(() => {
+    const webViews = paramsFor<FiatPluginOpenWebViewParams>('guiPluginWebView')
+    webViews[webViews.length - 1]?.onClose()
+  })
+
+  const coreWallet = {
+    id: 'wallet-id',
+    currencyInfo: { pluginId: 'bitcoin' },
+    currencyConfig: {
+      currencyInfo: {
+        pluginId: 'bitcoin',
+        denominations: [{ name: 'BTC', multiplier: '100000000' }]
+      }
+    },
+    getReceiveAddress: async () => ({ publicAddress: 'receive-address' }),
+    broadcastTx
+  } as unknown as EdgeCurrencyWallet
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const signedTx = { txid: 'txid' } as EdgeTransaction
+
+  const paramsFor = <T>(route: string): T[] =>
+    navigate.mock.calls
+      .filter(([name]) => name === route)
+      .map(([, params]) => params as T)
+
+  /** Checks the widget opened again once, for the same order. */
+  const expectReopenedOnce = (): FiatPluginOpenWebViewParams => {
+    expect(pop).toHaveBeenCalledTimes(1)
+    const webViews = paramsFor<FiatPluginOpenWebViewParams>('guiPluginWebView')
+    expect(webViews).toHaveLength(2)
+    expect(webViews[1].url).toContain('requestId=request-id')
+    expect(webViews[1].url).not.toContain('oneTimeToken')
+    return webViews[1]
+  }
+
+  /** Checks the widget closed once, with no new widget opened. */
+  const expectClosedOnce = (): void => {
+    expect(pop).toHaveBeenCalledTimes(1)
+    expect(paramsFor('guiPluginWebView')).toHaveLength(1)
+  }
+
+  /** Lets the plugin's pending fetches and navigation settle. */
+  const settle = async (): Promise<void> => {
+    for (let i = 0; i < 10; ++i) {
+      await new Promise(resolve => setTimeout(resolve, 0))
+    }
+  }
+
+  /** Approves a sell quote and returns the widget's WebView params. */
+  const openWidget = async (
+    onLogEvent?: RampPluginConfig['onLogEvent']
+  ): Promise<FiatPluginOpenWebViewParams> => {
+    const navigation = {
+      navigate,
+      pop
+    } as unknown as RampPluginConfig['navigation']
+    const quotes = await makePlugin(navigation, onLogEvent).fetchQuotes(
+      makeRequest({ amountQuery: { exchangeAmount: '0.001' } })
+    )
+    await quotes[0].approveQuote({ coreWallet })
+    const [webView] = paramsFor<FiatPluginOpenWebViewParams>('guiPluginWebView')
+    return webView
+  }
+
+  beforeEach(() => {
+    quoteBodies = []
+    limit = undefined
+    global.fetch = fakeFetch as typeof global.fetch
+    navigate.mockClear()
+    pop.mockClear()
+    broadcastTx.mockReset()
+    broadcastTx.mockImplementation(async (tx: EdgeTransaction) => tx)
+    jest.mocked(showError).mockClear()
+    jest.mocked(showToast).mockClear()
+    // The plugin waits for an animation frame before signing:
+    jest.useRealTimers()
+  })
+
+  afterEach(() => {
+    expect(showError).not.toHaveBeenCalled()
+    global.fetch = realFetch
+    jest.useFakeTimers()
+  })
+
+  it('opens the send scene once for a refused redirect, and Back closes the widget', async () => {
+    const webView = await openWidget()
+    expect(webView.url).toContain('oneTimeToken=ott')
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const sends = paramsFor<SendScene2Params>('send2')
+    expect(sends).toHaveLength(1)
+    expect(sends[0].spendInfo?.spendTargets).toMatchObject([
+      { nativeAmount: '100000', publicAddress: 'deposit-address' }
+    ])
+
+    sends[0].onBack?.()
+    await settle()
+    expectClosedOnce()
+    expect(showToast).not.toHaveBeenCalled()
+  })
+
+  it('closes the widget when the send scene sends nothing', async () => {
+    const webView = await openWidget()
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    await send.onDone?.(null)
+    await settle()
+
+    expectClosedOnce()
+    expect(showToast).toHaveBeenCalledTimes(1)
+  })
+
+  it('opens the send scene once for a redirect that loads anyway', async () => {
+    const webView = await openWidget()
+
+    await webView.onUrlChange?.(paymentUrl)
+    await webView.onUrlChange?.(paymentUrl)
+    await webView.onUrlChange?.(paymentUrl)
+    await settle()
+    const sends = paramsFor<SendScene2Params>('send2')
+    expect(sends).toHaveLength(1)
+
+    // Back closes the widget along with the redirect page:
+    sends[0].onBack?.()
+    await settle()
+    expectClosedOnce()
+
+    // A report from the closed page opens nothing:
+    await webView.onUrlChange?.(paymentUrl)
+    await settle()
+    expect(paramsFor('send2')).toHaveLength(1)
+  })
+
+  it('opens the send scene once when the refusal comes too late', async () => {
+    const webView = await openWidget()
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await webView.onUrlChange?.(paymentUrl)
+    await webView.onUrlChange?.(paymentUrl)
+    await settle()
+    const sends = paramsFor<SendScene2Params>('send2')
+    expect(sends).toHaveLength(1)
+
+    sends[0].onBack?.()
+    await settle()
+    expectClosedOnce()
+  })
+
+  it('opens nothing when the user leaves the widget during the payment-details fetch', async () => {
+    const webView = await openWidget()
+    let releaseDetails = (): void => {}
+    const detailsHeld = new Promise<void>(resolve => {
+      releaseDetails = resolve
+    })
+    global.fetch = (async (url: string, options?: { body?: string }) => {
+      if (new URL(url).pathname.endsWith('/payment-details')) {
+        await detailsHeld
+      }
+      return await fakeFetch(url, options)
+    }) as typeof global.fetch
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    webView.onClose()
+    releaseDetails()
+    await settle()
+
+    expect(paramsFor('send2')).toHaveLength(0)
+    expect(pop).not.toHaveBeenCalled()
+  })
+
+  it('opens nothing when the payment-details fetch fails after the user left the widget', async () => {
+    const webView = await openWidget()
+    let failDetails = (): void => {}
+    const detailsHeld = new Promise<void>((resolve, reject) => {
+      failDetails = () => {
+        reject(new Error('payment-details failed'))
+      }
+    })
+    global.fetch = (async (url: string, options?: { body?: string }) => {
+      if (new URL(url).pathname.endsWith('/payment-details')) {
+        await detailsHeld
+      }
+      return await fakeFetch(url, options)
+    }) as typeof global.fetch
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    webView.onClose()
+    failDetails()
+    await settle()
+
+    expect(paramsFor('send2')).toHaveLength(0)
+    expect(pop).not.toHaveBeenCalled()
+  })
+
+  it('opens the widget again without the one-time token after a send', async () => {
+    const webView = await openWidget()
+    expect(webView.url).toContain('oneTimeToken=ott')
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    await send.onDone?.(null, { txid: 'txid' } as EdgeTransaction)
+    await settle()
+
+    expectReopenedOnce()
+  })
+
+  it('finishes the sale when Back follows a broadcast that went through', async () => {
+    const onLogEvent = jest.fn()
+    const webView = await openWidget(onLogEvent)
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    // A step after the broadcast fails, so the send scene stays open on its
+    // error card and the user leaves with Back:
+    await send.alternateBroadcast?.(signedTx)
+    send.onBack?.()
+    await settle()
+
+    expect(onLogEvent).toHaveBeenCalledWith('Sell_Success', expect.anything())
+    expectReopenedOnce()
+    expect(showToast).not.toHaveBeenCalled()
+  })
+
+  it('opens the widget again when Back follows a broadcast that failed', async () => {
+    const webView = await openWidget()
+    broadcastTx.mockRejectedValue(new Error('broadcast timed out'))
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow(
+      'broadcast timed out'
+    )
+    send.onBack?.()
+    await settle()
+
+    expectReopenedOnce()
+  })
+
+  it('closes the widget when the wallet refuses the spend', async () => {
+    const webView = await openWidget()
+    broadcastTx.mockRejectedValue(new PendingFundsError())
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow()
+    send.onBack?.()
+    await settle()
+
+    expectClosedOnce()
+  })
+
+  it('refuses a broadcast that comes after Back', async () => {
+    const webView = await openWidget()
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    send.onBack?.()
+    await settle()
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow()
+
+    expect(broadcastTx).not.toHaveBeenCalled()
+    expectClosedOnce()
+  })
+
+  it('opens the widget again when a step after the send throws', async () => {
+    const webView = await openWidget(() => {
+      throw new Error('log failed')
+    })
+
+    expect(webView.onShouldStartLoad?.(paymentUrl)).toBe(false)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    const tx = await send.alternateBroadcast?.(signedTx)
+    await send.onDone?.(null, tx)
+    await settle()
+
+    expectReopenedOnce()
+    expect(showError).toHaveBeenCalledTimes(1)
+    jest.mocked(showError).mockClear()
   })
 })
