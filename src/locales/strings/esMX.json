@@ -1472,6 +1472,7 @@
   "stake_warning_stake": "Los fondos en staking te bloquearán de reclamar recompensas durante 16 horas y de retirar tus fondos staked durante 36 horas.\n\nCada interacción (stake, unstake, reclamar recompensas) reiniciará ambos temporizadores.",
   "stake_warning_claim": "Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose \"Claim Rewards and Unstake\" instead.",
   "stake_warning_unstake": "Deshacer staking de una cantidad parcial bloqueará la posibilidad de deshacer staking de más fondos durante 36 horas.",
+  "stake_warning_velodrome_aero_upgrade": "Velodrome rewards ended with the Aero upgrade, and this pool no longer accepts new deposits. Unstake to withdraw your funds.",
   "stake_modal_modify_stake_title": "Hacer staking de %s",
   "stake_modal_modify_unstake_title": "Deshacer staking de %s",
   "stake_error_insufficient_s": "%s insuficiente",
