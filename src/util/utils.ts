@@ -9,20 +9,10 @@ import type {
   EdgeTokenMap,
   EdgeTransaction
 } from 'edge-core-js'
-import { Linking, Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
-import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { v4 } from 'uuid'
 
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
-import {
-  FEE_ALERT_THRESHOLD,
-  FEE_COLOR_THRESHOLD,
-  FIAT_CODES_SYMBOLS,
-  FIAT_PRECISION,
-  getFiatSymbol
-} from '../constants/WalletAndCurrencyConstants'
 import {
   toLocaleDate,
   toLocaleDateTime,
@@ -33,10 +23,24 @@ import { lstrings } from '../locales/strings'
 import { convertCurrency, getExchangeRate } from '../selectors/WalletSelectors'
 import type { RootState } from '../types/reduxTypes'
 import type { GuiFiatType } from '../types/types'
-import { getCurrencyCode } from './CurrencyInfoHelpers'
 import { base58 } from './encoding'
+import {
+  DECIMAL_PRECISION,
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIAT_CODES_SYMBOLS,
+  FIAT_PRECISION,
+  getFiatSymbol,
+  removeIsoPrefix
+} from './fiatConstants'
 
-export const DECIMAL_PRECISION = 18
+// Re-export so existing importers of removeIsoPrefix from utils stay unchanged
+export { removeIsoPrefix }
+
+// Re-exported, not declared: it lives in the leaf `fiatConstants.ts` so the
+// Node-safe modules that need it do not import this one, which reaches the
+// locales and the Redux selectors.
+export { DECIMAL_PRECISION }
 export const DEFAULT_TRUNCATE_PRECISION = 6
 
 export const normalizeForSearch = (
@@ -257,15 +261,11 @@ export function fixFiatCurrencyCode(currencyCode: string): string {
   return currencyCode.startsWith('iso:') ? currencyCode : 'iso:' + currencyCode
 }
 
-// multiplier / exchange rate / ( 1 / unit )
-// 100000000 / $16500 / (1/$0.001) = ~6 sats
-export const calculateSpamThreshold = (
-  rate: number,
-  denom: EdgeDenomination
-): string => {
-  if (rate === 0) return '0'
-  return div(div(denom.multiplier, rate.toString()), '1000')
-}
+// `calculateSpamThreshold` is not re-exported here. It lives in
+// `spamThreshold.ts` beside the threshold logic the CLI shares, and a
+// re-export made this module import that one — closing a cycle
+// `utils → spamThreshold → exchangeRates → network → utils`. Sparing three
+// call sites an import path is not worth a cycle; they name the real module.
 
 export interface PrecisionAdjustParams {
   exchangeSecondaryToPrimaryRatio: number
@@ -345,50 +345,33 @@ export async function snooze(ms: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, ms))
 }
 
-let prevTotal = '0'
 export const getTotalFiatAmountFromExchangeRates = (
   state: RootState,
   isoFiatCurrencyCode: string
 ): string => {
-  const log: string[] = ['', '']
   let total = '0'
   const { exchangeRates } = state
   for (const walletId of Object.keys(state.core.account.currencyWallets)) {
     const wallet = state.core.account.currencyWallets[walletId]
-    log.push(
-      `LogTot: pluginId:${
-        wallet.currencyInfo.pluginId
-      } wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`
-    )
     for (const tokenId of wallet.balanceMap.keys()) {
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
-      const currencyCode = getCurrencyCode(wallet, tokenId)
       const rate = getExchangeRate(
         exchangeRates,
         wallet.currencyInfo.pluginId,
         tokenId,
         isoFiatCurrencyCode
       )
-      log.push(
-        `\nLogTot: code=${currencyCode} rate=${rate} nb=${nativeBalance}`
-      )
 
       // Find the currency or token info:
       let info: EdgeCurrencyInfo | EdgeToken = wallet.currencyInfo
       if (tokenId != null) {
         const token = wallet.currencyConfig.allTokens[tokenId]
-        if (token == null) {
-          log.push(`LogTot: No token for ${tokenId}`)
-          continue
-        }
+        if (token == null) continue
         info = token
       }
       const {
         denominations: [denomination]
       } = info
-      log.push(
-        `LogTot: mult=${denomination.multiplier} name=${denomination.name}`
-      )
 
       // Do the conversion:
       const exchangeBalance = div(
@@ -396,94 +379,100 @@ export const getTotalFiatAmountFromExchangeRates = (
         denomination.multiplier,
         DECIMAL_PRECISION
       )
-      const fiatBalance = mul(rate, exchangeBalance)
-      const newTotal = add(total, fiatBalance)
-      log.push(
-        `LogTot: nativeBalance=${nativeBalance} / multiplier=${denomination.multiplier} => exchangeBalance=${exchangeBalance}`
-      )
-      log.push(
-        `LogTot: rate=${rate} * exchangeBalance=${exchangeBalance} => fiatBalance=${fiatBalance}`
-      )
-      log.push(
-        `LogTot: total=${total} + fiatBalance=${fiatBalance} => newTotal=${newTotal}`
-      )
-      total = newTotal
+      total = add(total, mul(rate, exchangeBalance))
     }
   }
 
-  if (total !== prevTotal) {
-    // Use for troubleshooting incorrect balance issues. Disable for now as it's pretty noisy
-    // console.warn(log.join('\n'))
-  }
-  prevTotal = total
+  // No troubleshooting log. There was one — about eight template literals
+  // per token per wallet, built unconditionally — behind a gate that could
+  // not be opened: first a module-level `prevTotal` whose print was
+  // commented out, then `process.env.EDGE_LOG_FIAT_TOTAL`, and both callers
+  // are React Native code. In the RN bundle `process.env` is the shim
+  // `setUpGlobals.js` installs, which defines `NODE_ENV` and nothing else:
+  // no `babel-plugin-transform-inline-environment-variables`, no
+  // `react-native-config`, no metro transform. So the lines were always
+  // built and never printable, inside a `useSelector` that re-runs on every
+  // exchange-rate tick while the home scene is mounted. Git history has
+  // them for the next time a balance is wrong.
   return total
 }
 
 type AsyncFunction = () => Promise<any>
 
+/**
+ * Ask each server in turn, starting the next when the current one fails or
+ * has not answered within `timeoutMs`, and answer with the first success.
+ *
+ * Event-driven rather than a race over an array of promises. The array
+ * version tracked servers by their *position*, and positions moved: a
+ * failure was spliced out by the index it was created at, after earlier
+ * stagger timers had already been popped, and `pending` counted servers
+ * passed over rather than servers still running — so a primary that was
+ * slow and then failed, the common outage shape, took a still-live
+ * fallback's promise out with it and threw while healthy servers were in
+ * flight. Here a server is either running or settled, the counts are of
+ * those, and the last failure is rethrown only when none is running and
+ * none is left to start.
+ *
+ * Each stagger timer is cleared as soon as it is no longer needed, so a
+ * winning answer does not leave one armed for the rest of `timeoutMs`
+ * holding a Node event loop open.
+ */
 export async function asyncWaterfall(
   asyncFuncs: AsyncFunction[],
   timeoutMs: number = 5000
 ): Promise<any> {
-  let pending = asyncFuncs.length
-  const promises: Array<Promise<any>> = []
-  for (const func of asyncFuncs) {
-    const index = promises.length
-    promises.push(
-      func().catch((e: unknown) => {
-        ;(e as any).index = index
-        throw e
-      })
-    )
-    if (pending > 1) {
-      promises.push(
-        new Promise(resolve => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          snooze(timeoutMs).then(() => {
-            resolve('async_waterfall_timed_out')
-          })
-        })
-      )
-    }
-    try {
-      const result = await Promise.race(promises)
-      if (result === 'async_waterfall_timed_out') {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        promises.pop()
-        --pending
-      } else {
-        return result
-      }
-    } catch (e: any) {
-      const i = e.index
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      promises.splice(i, 1)
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      promises.pop()
-      --pending
-      if (pending === 0) {
-        throw e
-      }
-    }
-  }
-}
+  if (asyncFuncs.length === 0) return undefined
+  return await new Promise((resolve, reject) => {
+    let next = 0
+    let running = 0
+    let settled = false
+    let staggerTimer: ReturnType<typeof setTimeout> | undefined
 
-export async function openLink(url: string): Promise<void> {
-  if (Platform.OS === 'ios') {
-    try {
-      await SafariView.isAvailable()
-      await SafariView.show({ url })
-      return
-    } catch (e: any) {
-      console.log(e)
+    const finish = (): void => {
+      settled = true
+      if (staggerTimer != null) clearTimeout(staggerTimer)
+      staggerTimer = undefined
     }
-  }
-  const supported = await Linking.canOpenURL(url)
-  if (supported) {
-    await Linking.openURL(url)
-  } else {
-    throw new Error(`Don't know how to open URI: ${url}`)
-  }
+
+    const startNext = (): void => {
+      if (staggerTimer != null) clearTimeout(staggerTimer)
+      staggerTimer = undefined
+      if (settled || next >= asyncFuncs.length) return
+      const func = asyncFuncs[next++]
+      ++running
+      let attempt: Promise<any>
+      try {
+        attempt = Promise.resolve(func())
+      } catch (error: unknown) {
+        attempt = Promise.reject(error)
+      }
+      attempt.then(
+        result => {
+          if (settled) return
+          finish()
+          resolve(result)
+        },
+        (error: unknown) => {
+          if (settled) return
+          --running
+          // A failure hands over at once rather than waiting out the
+          // stagger, and the last one is the answer only when nothing is
+          // still running and nothing is left to try.
+          if (next < asyncFuncs.length) startNext()
+          else if (running === 0) {
+            finish()
+            reject(error)
+          }
+        }
+      )
+      if (next < asyncFuncs.length) {
+        staggerTimer = setTimeout(startNext, timeoutMs)
+      }
+    }
+
+    startNext()
+  })
 }
 
 export function maxPrimaryCurrencyConversionDecimals(
@@ -780,21 +769,6 @@ export const darkenHexColor = (
     .padStart(2, '0')}${scaledB.toString(16).padStart(2, '0')}`
 
   return scaledHexColor
-}
-
-/**
- * Reads and normalizes the OS version.
- */
-export function getOsVersion(): string {
-  const osVersionRaw = DeviceInfo.getSystemVersion()
-  return Array.from({ length: 3 }, (_, i) => {
-    const part = osVersionRaw.split('.')[i]
-    return part != null && part !== '' ? part : '0'
-  }).join('.')
-}
-
-export const removeIsoPrefix = (currencyCode: string): string => {
-  return currencyCode.replace('iso:', '')
 }
 
 export const getDisplayUsername = (
