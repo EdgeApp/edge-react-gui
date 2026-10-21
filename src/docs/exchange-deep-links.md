@@ -504,7 +504,7 @@ The first two are the same mistake in two places: a guard written for the case i
 | Found | Shipped |
 |---|---|
 | The ineligible side of the send seeding rules had no test | A suite on a wallet that cannot go private: no seed, no toast, no save, and the saved choice or param arms on the switch to an eligible wallet |
-| Saving the tap made the stealth maestro flows depend on what the previous run left on the account | `maestro/common/stealth-toggle.yaml` takes a target state and taps only on a mismatch |
+| Saving the tap made the stealth maestro flows depend on what the previous run left on the account | The `stealth-toggle.yaml` subflow (now in the agent flow library, `~/.cursor/skills/build-and-test/maestro/`, not this repo) takes a target state and taps only on a mismatch |
 | No test covered `send` joining the open-picker guard, or a swap param arriving after the tab mounted | One case for each, both failing with the guarded line removed |
 | The send grammar read as if `asset` needed `stealth`, and section 4.6 would go stale when #6253 lands | `edge://send[?<params>]` with both optional; 4.6 splits the unserved case by coin and token |
 | The toggle tap did not await its save, so a quick second tap could persist a stale choice (Bugbot) | Both tap handlers return the write and the switch row pending-locks until it lands |

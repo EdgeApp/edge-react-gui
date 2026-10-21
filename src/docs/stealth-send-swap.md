@@ -888,13 +888,14 @@ Full-repo verification: `verify-repo.sh` PASSED on all three repos, covering ins
 
 ### Maestro suite
 
-[`maestro](#maestro)/14-stealth/` holds a flow per user-visible branch, built from reusable
-subflows in `maestro/common/stealth-*.yaml`. The point of the split is that a
-later session can drive one specific state (a live private quote on some other
-pair, say) in a handful of `runFlow` steps rather than walking the simulator by
-hand. `maestro/14-stealth/README.md` documents how to run the suite whole or one
-flow at a time, what each env var needs from the signed-in account, and the two
-gotchas that cost the most time to find: the confirm slider is a pan gesture
+The [maestro](#maestro) drive flows for this feature live in the agent flow
+library (`~/.cursor/skills/build-and-test/maestro/`), not in this repo: one flow
+per user-visible branch, built from reusable `stealth-*` subflows. The point of
+the split is that a later session can drive one specific state (a live private
+quote on some other pair, say) in a handful of `runFlow` steps rather than
+walking the simulator by hand. The library's README documents how to run the
+suite whole or one flow at a time, what each env var needs from the signed-in
+account, and the two gotchas that cost the most time to find: the confirm slider is a pan gesture
 that ignores coordinate swipes entirely, and notification cards float over the
 bottom of every scene including the slider. The launch subflow also closes the
 "Verify your password" prompt, which covers the scene on some launches and hides
@@ -1555,7 +1556,7 @@ Inter-Blockchain Communication, the Cosmos-ecosystem transfer protocol. Houdini 
 
 ### Maestro
 
-The YAML-driven UI test runner the repo drives the simulator with. `maestro/14-stealth/` holds one flow per user-visible branch of this feature, composed from subflows in `maestro/common/`. [Documentation](https://docs.maestro.dev/).
+The YAML-driven UI test runner that drives the simulator. This feature's flows, one per user-visible branch and composed from `stealth-*` subflows, live in the agent flow library (`~/.cursor/skills/build-and-test/maestro/`), not in this repo. [Documentation](https://docs.maestro.dev/).
 
 ### Memo
 
