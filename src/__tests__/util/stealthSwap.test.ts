@@ -4,6 +4,7 @@ import type { EdgeAccount } from 'edge-core-js'
 import {
   disableAssetsCover,
   getStealthDisableAssets,
+  getStealthProviderName,
   makeStealthSwapRequestOptions
 } from '../../util/stealthSwap'
 
@@ -155,5 +156,18 @@ describe('getStealthDisableAssets', () => {
     // The send scene memoizes on this result, so an unchanged kill switch
     // must not hand its quote effect a new object:
     expect(getStealthDisableAssets(disableAssets, {})).toBe(disableAssets)
+  })
+})
+
+describe('getStealthProviderName', () => {
+  it("uses the provider's display name", () => {
+    const named = {
+      swapConfig: { houdini: { swapInfo: { displayName: 'HoudiniSwap' } } }
+    } as unknown as EdgeAccount
+    expect(getStealthProviderName(named)).toBe('HoudiniSwap')
+  })
+
+  it('falls back to the plugin id without the provider', () => {
+    expect(getStealthProviderName(fakeAccount(['changenow']))).toBe('houdini')
   })
 })

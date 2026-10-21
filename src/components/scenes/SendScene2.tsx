@@ -122,6 +122,7 @@ import {
 import {
   disableAssetsCover,
   getStealthDisableAssets,
+  getStealthProviderName,
   makeStealthSwapRequestOptions,
   STEALTH_SWAP_PLUGIN_ID
 } from '../../util/stealthSwap'
@@ -2561,7 +2562,10 @@ const SendComponent: React.FC<Props> = props => {
             <StealthInfoText message={stealthBlockedReason} />
           ) : stealth ? (
             <StealthInfoText
-              message={lstrings.stealth_send_info}
+              message={sprintf(
+                lstrings.stealth_info_1s,
+                getStealthProviderName(account)
+              )}
               showLearnMore
             />
           ) : null}

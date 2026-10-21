@@ -888,13 +888,14 @@ Full-repo verification: `verify-repo.sh` PASSED on all three repos, covering ins
 
 ### Maestro suite
 
-[`maestro](#maestro)/14-stealth/` holds a flow per user-visible branch, built from reusable
-subflows in `maestro/common/stealth-*.yaml`. The point of the split is that a
-later session can drive one specific state (a live private quote on some other
-pair, say) in a handful of `runFlow` steps rather than walking the simulator by
-hand. `maestro/14-stealth/README.md` documents how to run the suite whole or one
-flow at a time, what each env var needs from the signed-in account, and the two
-gotchas that cost the most time to find: the confirm slider is a pan gesture
+The [maestro](#maestro) drive flows for this feature live in the agent flow
+library (`~/.cursor/skills/build-and-test/maestro/`), not in this repo: one flow
+per user-visible branch, built from reusable `stealth-*` subflows. The point of
+the split is that a later session can drive one specific state (a live private
+quote on some other pair, say) in a handful of `runFlow` steps rather than
+walking the simulator by hand. The library's README documents how to run the
+suite whole or one flow at a time, what each env var needs from the signed-in
+account, and the two gotchas that cost the most time to find: the confirm slider is a pan gesture
 that ignores coordinate swipes entirely, and notification cards float over the
 bottom of every scene including the slider. The launch subflow also closes the
 "Verify your password" prompt, which covers the scene on some launches and hides
@@ -1077,7 +1078,7 @@ Not our work, tracked so it is not rediscovered:
 | PIN spending limits on stealth sends | Reversed, now shipped | The original reasoning compared this to a swap. It is a send. See [Gate swap-send behind the PIN spending limit](#gate-swap-send-behind-the-pin-spending-limit). |
 | [EIP-681](#eip-681) `value=` (wei) amounts | Deferred | Address is accepted, amount ignored; no reported user impact yet. |
 | Validate provider deposit addresses against the source chain | Deferred | A PIVX order returns an address the PIVX plugin cannot spend to, and it surfaces as an opaque wallet error rather than a provider problem. A check after `asHoudiniOrder` would name the real cause; any chain the provider gets wrong fails the same way. |
-| First-party Stealth Send article behind "Learn more" | Deferred | The feature spec has both toggles open a gist as a placeholder until the article exists. `STEALTH_LEARN_MORE_URI` is the one line to edit when it does. A gist stays editable by its owner, so the swap should not wait long. |
+| First-party Stealth Send article behind "Learn more" | Shipped | Both toggles open Edge's support article (`STEALTH_LEARN_MORE_URI`, `https://support.edge.app/articles/17606891`), replacing the gist that stood in for it. |
 | Price impact when the destination asset has no fiat rate | Deferred | `calculateQuotePriceImpact` treats a to-side fiat value of zero as a total loss, so a send to an asset the account holds no rate for would show "(100.00%)" beside the exchange rate. Found by reading the code; two live quotes to unheld chains (Avalanche, HyperEVM) both had rates and showed about 2%. To fix separately if it turns up. |
 | Whether the PIN spending limit should count fees | Decided: it does not | Settled against the pre-Houdini behavior rather than carried as a question. See [Match the pre-existing spending-limit arithmetic](#match-the-pre-existing-spending-limit-arithmetic). |
 
@@ -1296,6 +1297,12 @@ Not our work, tracked so it is not rediscovered:
 - **Sketched:** review asked for this change to be rebased onto `develop`, which had added the remembered Stealth toggles and dropped `makeStealthSwapRequestOptions`'s `ignoreProviderSetting` argument ([Phase 38](#phase-38-stealth-swap-stops-honoring-the-provider-switch)), plus scene tests for the payout entry paths phases 44 to 46 added.
 - **Shipped:** the Send scene reseeds its toggle when the served list lands, so a saved choice read before the list loaded is not lost ([Remembered toggle settings](#remembered-toggle-settings)), and `flipStealth` carries the memo across modes through `carryMemoAcrossModes`, the helper the other mode changes use. The Exchange scene computes its Stealth state as the override or saved choice gated on the served list, and shows the toggle on the list alone. Four scene cases in `SendScene2.recipientNetwork.ui.test.tsx` cover the payout entry paths: a token code to the wallet's own address declined, a gateway token code kept out when its warning is declined, bare text never read as the payout token, and a token code on another chain read through that chain's parser. Each fails when its guard is removed. The type links now point at edge-core-js.
 - **Held:** every behavior from phases 39 to 46; the only snapshot change is the "Bitcoin Network" subtitle row this change already added.
+
+### Phase 39: one Stealth info line, and the support article
+
+- **Sketched:** a copy audit by the provider found the Stealth Send and Stealth Swap info lines saying different things, two fixed-to strings reading awkwardly, and the AML/KYC bullet not saying what happens when the user declines to verify. "Learn more" should open the published support article.
+- **Shipped:** both toggles show one line, "%1$s routing helps obfuscate the on-chain link between sender and receiver wallets.", with the provider's display name filled from `getStealthProviderName`, the same `swapConfig` lookup the swap-send modal uses. The fixed-to toast and fallback card now say "Your send amount is guaranteed instead", and the AML/KYC bullet ends "If you do not, the funds are returned to you." `STEALTH_LEARN_MORE_URI` points at the support article.
+- **Held:** the claim stays at "helps obfuscate". The "Powered by" card placement and the estimated-quote strings are unchanged.
 
 ## 11. Decisions
 
@@ -1555,7 +1562,7 @@ Inter-Blockchain Communication, the Cosmos-ecosystem transfer protocol. Houdini 
 
 ### Maestro
 
-The YAML-driven UI test runner the repo drives the simulator with. `maestro/14-stealth/` holds one flow per user-visible branch of this feature, composed from subflows in `maestro/common/`. [Documentation](https://docs.maestro.dev/).
+The YAML-driven UI test runner that drives the simulator. This feature's flows, one per user-visible branch and composed from `stealth-*` subflows, live in the agent flow library (`~/.cursor/skills/build-and-test/maestro/`), not in this repo. [Documentation](https://docs.maestro.dev/).
 
 ### Memo
 
