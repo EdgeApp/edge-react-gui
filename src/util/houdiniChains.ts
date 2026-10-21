@@ -282,15 +282,15 @@ export function getHoudiniAssetSupport(opts: {
 /**
  * Every asset Houdini serves that this account has a currency plugin and a
  * token definition for, in picker order: each chain's coin, when served,
- * followed by that chain's tokens sorted by name. `destinationBans` removes
- * the assets the info server withdrew as swap destinations.
+ * followed by that chain's tokens sorted by name. `bans` removes the assets
+ * the info server withdrew for the side of the swap the caller lists.
  */
 export function getHoudiniAssets(opts: {
   currencyConfigs: HoudiniCurrencyConfigs
   houdiniChains: HoudiniChains
-  destinationBans?: DisableAsset[]
+  bans?: DisableAsset[]
 }): EdgeAsset[] {
-  const { currencyConfigs, destinationBans = [], houdiniChains } = opts
+  const { bans = [], currencyConfigs, houdiniChains } = opts
 
   const assets: EdgeAsset[] = []
   for (const chain of houdiniChains.values()) {
@@ -313,7 +313,7 @@ export function getHoudiniAssets(opts: {
   }
 
   return assets.filter(
-    asset => !disableAssetsCover(destinationBans, asset.pluginId, asset.tokenId)
+    asset => !disableAssetsCover(bans, asset.pluginId, asset.tokenId)
   )
 }
 

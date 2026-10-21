@@ -990,7 +990,7 @@ describe('getHoudiniAssets', () => {
     const assets = getHoudiniAssets({
       currencyConfigs,
       houdiniChains,
-      destinationBans: [
+      bans: [
         // One token:
         { pluginId: 'tron', tokenId: USDT_TRON },
         // A chain coin, which leaves its tokens:
@@ -1015,14 +1015,14 @@ describe('getHoudiniAssets', () => {
 describe('the "Recipient receives" picker rows', () => {
   const getRows = (
     source: { pluginId: string; tokenId: string | null },
-    destinationBans?: Parameters<typeof getHoudiniAssets>[0]['destinationBans']
+    bans?: Parameters<typeof getHoudiniAssets>[0]['bans']
   ): Array<{ pluginId: string; tokenId: string | null }> =>
     getRecipientAssetChoices({
       source,
       destinationAssets: getHoudiniAssets({
         currencyConfigs,
-        houdiniChains,
-        destinationBans
+        bans,
+        houdiniChains
       })
     }).map(choice => choice.asset)
 

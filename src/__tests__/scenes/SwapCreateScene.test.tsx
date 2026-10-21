@@ -24,8 +24,10 @@ import { sprintf } from 'sprintf-js'
 import type { SwapConfirmationParams } from '../../components/scenes/SwapConfirmationScene'
 import { SwapCreateScene } from '../../components/scenes/SwapCreateScene'
 import type { SwapProcessingParams } from '../../components/scenes/SwapProcessingScene'
-import { showToast } from '../../components/services/AirshipInstance'
+import { Airship, showToast } from '../../components/services/AirshipInstance'
+import { SwapInput } from '../../components/themed/SwapInput'
 import { lstrings } from '../../locales/strings'
+import type { EdgeAsset } from '../../types/types'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { makeFakePlugin } from '../../util/fake/fakeCurrencyPlugin'
@@ -387,6 +389,14 @@ describe('SwapCreateScene', () => {
 describe('SwapCreateScene Stealth Swap bans', () => {
   const btcConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
   const ethConfig = makeFakeCurrencyConfig(ethCurrencyInfo)
+  // A chain Houdini's served list leaves out:
+  const ltcConfig = makeFakeCurrencyConfig({
+    ...btcCurrencyInfo,
+    currencyCode: 'LTC',
+    displayName: 'Litecoin',
+    pluginId: 'litecoin',
+    walletType: 'wallet:litecoin'
+  })
   const makeWallet = (
     id: string,
     currencyConfig: typeof btcConfig
@@ -404,23 +414,45 @@ describe('SwapCreateScene Stealth Swap bans', () => {
       watch: () => () => {}
     } as unknown as EdgeCurrencyWallet)
 
-  const renderScene = (houdiniBans: {
-    source: Array<{ pluginId: string }>
-    destination: Array<{ pluginId: string }>
-  }): {
+  interface RenderedSwap {
     navigate: ReturnType<typeof jest.spyOn>
+    pickPair: (fromWalletId: string, toWalletId: string) => void
+    /** The assets a wallet picker offers, or `undefined` for every asset. */
+    pickerAssets: (side: 'from' | 'to') => Promise<EdgeAsset[] | undefined>
     pressMax: () => void
+    reasonShown: (currencyCode: string) => boolean
+    stealthArmed: () => boolean
+    stealthDimmed: () => boolean
     toggleStealth: () => void
     unmount: () => void
-  } => {
+  }
+
+  const renderScene = (opts: {
+    houdiniBans?: {
+      source: Array<{ pluginId: string }>
+      destination: Array<{ pluginId: string }>
+    }
+    stealthSwapEnabled?: boolean
+    toWalletId?: string
+  }): RenderedSwap => {
+    const {
+      houdiniBans = { source: [], destination: [] },
+      stealthSwapEnabled = false,
+      toWalletId = 'eth'
+    } = opts
     const rootState: FakeState = {
       ...fakeRootState,
       core: {
         account: {
-          currencyConfig: { bitcoin: btcConfig, ethereum: ethConfig },
+          currencyConfig: {
+            bitcoin: btcConfig,
+            ethereum: ethConfig,
+            litecoin: ltcConfig
+          },
           currencyWallets: {
             btc: makeWallet('btc', btcConfig),
-            eth: makeWallet('eth', ethConfig)
+            eth: makeWallet('eth', ethConfig),
+            ltc: makeWallet('ltc', ltcConfig)
           },
           swapConfig: {},
           watch: () => () => {}
@@ -435,24 +467,66 @@ describe('SwapCreateScene Stealth Swap bans', () => {
             disableAssetsByPlugin: { houdini: houdiniBans },
             disablePlugins: {}
           }
-        }
+        },
+        settings: { ...fakeRootState.ui?.settings, stealthSwapEnabled }
       }
     }
-    const props = fakeSwapTabSceneProps('swapCreate', {
-      fromWalletId: 'btc',
-      toWalletId: 'eth'
-    })
-    const navigate = jest.spyOn(props.navigation, 'navigate')
-    const rendered = render(
+    const sceneElement = (
+      fromWalletId: string,
+      toWalletId: string
+    ): React.JSX.Element => (
       <FakeProviders initialState={rootState}>
-        <SwapCreateScene {...props} />
+        <SwapCreateScene
+          {...fakeSwapTabSceneProps('swapCreate', { fromWalletId, toWalletId })}
+        />
       </FakeProviders>
     )
+    const navigate = jest.spyOn(fakeNavigation, 'navigate')
+    const rendered = render(sceneElement('btc', toWalletId))
+    const toggleProps = (): { disabled?: boolean } =>
+      rendered.UNSAFE_getByProps({ label: lstrings.stealth_swap_toggle }).props
     return {
       navigate,
+      pickPair: (fromWalletId, toWalletId) => {
+        rendered.rerender(sceneElement(fromWalletId, toWalletId))
+      },
+      pickerAssets: async side => {
+        let allowedAssets: EdgeAsset[] | undefined
+        const show = jest
+          .spyOn(Airship, 'show')
+          .mockImplementationOnce(
+            async (renderModal: (bridge: never) => React.ReactNode) => {
+              const modal = renderModal(
+                undefined as never
+              ) as React.ReactElement<{ allowedAssets?: EdgeAsset[] }>
+              allowedAssets = modal.props.allowedAssets
+              return undefined
+            }
+          )
+        const input = rendered
+          .UNSAFE_getAllByType(SwapInput)
+          .find(
+            node =>
+              node.props.walletPillTestID ===
+              (side === 'from' ? 'swapFromWalletPill' : 'swapToWalletPill')
+          )
+        if (input == null) throw new Error(`No ${side} input`)
+        await act(async () => {
+          await input.props.onSelectWallet()
+        })
+        show.mockRestore()
+        return allowedAssets
+      },
       pressMax: () => {
         fireEvent.press(rendered.getByText(lstrings.string_max_cap))
       },
+      reasonShown: currencyCode =>
+        rendered.queryByText(
+          sprintf(lstrings.stealth_asset_unsupported_1s, currencyCode)
+        ) != null,
+      stealthArmed: () =>
+        rendered.queryByText(stealthInfo(), { exact: false }) != null,
+      stealthDimmed: () => toggleProps().disabled === true,
       toggleStealth: () => {
         fireEvent.press(rendered.getByText(lstrings.stealth_swap_toggle))
       },
@@ -465,12 +539,12 @@ describe('SwapCreateScene Stealth Swap bans', () => {
 
   beforeEach(() => {
     jest.mocked(showToast).mockClear()
+    mockSetStealthSwapEnabled.mockReset()
   })
 
   it('quotes a Houdini-banned source when Stealth Swap is off', () => {
     const scene = renderScene({
-      source: [{ pluginId: 'bitcoin' }],
-      destination: []
+      houdiniBans: { source: [{ pluginId: 'bitcoin' }], destination: [] }
     })
     scene.pressMax()
     expect(showToast).not.toHaveBeenCalled()
@@ -481,45 +555,93 @@ describe('SwapCreateScene Stealth Swap bans', () => {
     scene.unmount()
   })
 
-  it('refuses a Houdini-banned source with Stealth Swap on', () => {
+  it('dims a saved Stealth Swap off on a Houdini-banned source', () => {
     const scene = renderScene({
-      source: [{ pluginId: 'bitcoin' }],
-      destination: []
+      houdiniBans: { source: [{ pluginId: 'bitcoin' }], destination: [] },
+      stealthSwapEnabled: true
     })
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.reasonShown('BTC')).toBe(true)
+
+    // A tap explains the block, and neither arms nor saves:
     scene.toggleStealth()
-    scene.pressMax()
     expect(showToast).toHaveBeenCalledWith(
-      sprintf(
-        lstrings.swap_token_no_enabled_exchanges_2s,
-        'BTC',
-        btcCurrencyInfo.displayName
-      )
+      sprintf(lstrings.stealth_asset_unsupported_1s, 'BTC')
     )
-    expect(scene.navigate).not.toHaveBeenCalledWith(
-      'swapProcessing',
-      expect.anything()
-    )
+    expect(scene.stealthArmed()).toBe(false)
+    expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+
+    // The pair quotes as an ordinary swap:
+    scene.pressMax()
+    // The spy types its calls after navigate's last overload, an options
+    // object, while the scene calls the (name, params) overload:
+    const calls = scene.navigate.mock.calls as unknown as Array<
+      [string, unknown]
+    >
+    const processingCall = calls.find(call => call[0] === 'swapProcessing')
+    const processingParams = processingCall?.[1] as SwapProcessingParams
+    expect(processingParams.swapRequest.privacy).toBeUndefined()
     scene.unmount()
   })
 
-  it('refuses a Houdini-banned destination with Stealth Swap on', () => {
+  it('dims Stealth Swap on a Houdini-banned destination', () => {
     const scene = renderScene({
-      source: [],
-      destination: [{ pluginId: 'ethereum' }]
+      houdiniBans: { source: [], destination: [{ pluginId: 'ethereum' }] }
     })
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.reasonShown('ETH')).toBe(true)
     scene.toggleStealth()
-    scene.pressMax()
     expect(showToast).toHaveBeenCalledWith(
-      sprintf(
-        lstrings.swap_token_no_enabled_exchanges_2s,
-        'ETH',
-        ethCurrencyInfo.displayName
-      )
+      sprintf(lstrings.stealth_asset_unsupported_1s, 'ETH')
     )
-    expect(scene.navigate).not.toHaveBeenCalledWith(
-      'swapProcessing',
-      expect.anything()
+    expect(scene.stealthArmed()).toBe(false)
+    expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+    scene.unmount()
+  })
+
+  it('dims Stealth Swap on a side Houdini does not serve', () => {
+    const scene = renderScene({ toWalletId: 'ltc' })
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.reasonShown('LTC')).toBe(true)
+    scene.toggleStealth()
+    expect(showToast).toHaveBeenCalledWith(
+      sprintf(lstrings.stealth_asset_unsupported_1s, 'LTC')
     )
+    expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+    scene.unmount()
+  })
+
+  it('returns to the saved choice once the pair can route', () => {
+    const scene = renderScene({ stealthSwapEnabled: true, toWalletId: 'ltc' })
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.reasonShown('LTC')).toBe(true)
+
+    scene.pickPair('btc', 'eth')
+    expect(scene.stealthDimmed()).toBe(false)
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.reasonShown('LTC')).toBe(false)
+    expect(mockSetStealthSwapEnabled).not.toHaveBeenCalled()
+    scene.unmount()
+  })
+
+  it('leaves out of each Stealth picker what Houdini is banned for there', async () => {
+    const scene = renderScene({
+      houdiniBans: { source: [{ pluginId: 'ethereum' }], destination: [] },
+      stealthSwapEnabled: true
+    })
+    expect(scene.stealthArmed()).toBe(true)
+
+    // ETH may still be received, but picking it to send would only turn
+    // Stealth off, so the sending picker does not offer it:
+    const fromAssets = await scene.pickerAssets('from')
+    const toAssets = await scene.pickerAssets('to')
+    expect(fromAssets).toContainEqual({ pluginId: 'bitcoin', tokenId: null })
+    expect(fromAssets).not.toContainEqual({
+      pluginId: 'ethereum',
+      tokenId: null
+    })
+    expect(toAssets).toContainEqual({ pluginId: 'ethereum', tokenId: null })
     scene.unmount()
   })
 })
