@@ -1472,6 +1472,7 @@
   "stake_warning_stake": "ステーキングした資金に関しては、報酬の受け取りが16時間、ステーキングした資金の引き出しが36時間ブロックされます。\n\n各操作（ステーキング、ステーク解除、報酬の受け取り）ごとに、両方のタイマーがリセットされます。",
   "stake_warning_claim": "Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose \"Claim Rewards and Unstake\" instead.",
   "stake_warning_unstake": "部分的なステーク解除を行うと、36時間ステーク解除できなくなります。",
+  "stake_warning_velodrome_aero_upgrade": "Velodrome rewards ended with the Aero upgrade, and this pool no longer accepts new deposits. Unstake to withdraw your funds.",
   "stake_modal_modify_stake_title": "%s からステーク",
   "stake_modal_modify_unstake_title": "%s からステーク解除",
   "stake_error_insufficient_s": "%sが足りません",
