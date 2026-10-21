@@ -52,6 +52,7 @@
 - changed: The send scene's exchange rate row no longer names the swap provider
 - changed: Stealth Send from a token source pays out that token, when Houdini serves it, instead of the chain coin
 - changed: Close the Optimism Velodrome and Tarot Earn pools to new stakes after the Aero upgrade
+- changed: Stealth toggles show dimmed and off, with the reason, for assets or pairs Stealth cannot route
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Send slider covering the last lines of the bottom warning card
 - fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
@@ -85,7 +86,6 @@
 - fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
 - fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
 - fixed: Swap-send notice title cut off on Android
-- fixed: Stealth Send note no longer shows under the toggle on a plain send
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 - fixed: MoonPay Trade logo cropped in transactions and invisible on the light theme
