@@ -11,7 +11,7 @@
 | Supersedes | prototype PRs [#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031) (kept open as reference) |
 | Related | [Asana task](https://app.asana.com/0/1215088146871429/1216251688512498) |
 
-<!-- tdd-code-fingerprint: c08fb0fcf705e707a7cb811215ea4db13e3a4380 -->
+<!-- tdd-code-fingerprint: 8e0d83b5e9fcd45eb230a306f9498d6ced266176 -->
 
 This document describes what is built on branch `jon/stealth-send-swap` across the three repos above. Direction came from the Asana task and its UI proposal A, plus follow-up operator comments on the task. The code is the source of truth: every code block is quoted from the branch and captioned with a link pinned to the commit it was quoted from.
 
@@ -590,7 +590,7 @@ The wallet's parse names the wrong asset for one code. An [EIP-681](#eip-681) co
 
 ### Availability fallbacks
 
-Whether the provider offers a private route, or a receive-priced (fixed) route, is a live property of each pair. The scene learns it from real quote failures. A `SwapCurrencyError` while the receive side is guaranteed flips the guarantee to the send side, seeds the send amount from display exchange rates so the send stays actionable, and raises a warning card that clears on the next amount edit. One while stealth is on for a **same-asset** pair turns the toggle off (toast, persistent info line) and degrades the swap into the plain direct send the toggle had upgraded. A **cross-asset** pair with no route keeps the plain error card: the request is Houdini-only with or without the toggle, so flipping it changes nothing and there is no other provider to degrade into. Learned capabilities are cached per pair in session state (`routeCaps`), so a later attempt to re-arm the toggle or re-fix the receive amount answers with a pre-emptive toast instead of another doomed quote. The full branch structure is the flowchart in [Section 8](#8-the-send-scene-ux-end-to-end).
+Whether the provider offers a private route, or a receive-priced (fixed) route, is a live property of each pair. The scene learns it from real quote failures. A `SwapCurrencyError` while the receive side is guaranteed flips the guarantee to the send side, seeds the send amount from display exchange rates so the send stays actionable, and raises a toast. The amount rows carry the rest: "Recipient gets" reads as estimated, with a `~` before its amount. One while stealth is on for a **same-asset** pair turns the toggle off (toast, persistent info line) and degrades the swap into the plain direct send the toggle had upgraded. A **cross-asset** pair with no route keeps the plain error card: the request is Houdini-only with or without the toggle, so flipping it changes nothing and there is no other provider to degrade into. Learned capabilities are cached per pair in session state (`routeCaps`), so a later attempt to re-arm the toggle or re-fix the receive amount answers with a pre-emptive toast instead of another doomed quote. Once the pair is known to have no receive-priced route, the "Recipient gets" edit icon draws in the deactivated color (`EdgeRow`'s `rightButtonDeactivated`). The row stays tappable: a tap is what raises that toast. The full branch structure is the flowchart in [Section 8](#8-the-send-scene-ux-end-to-end).
 
 Two effects write the scene's single `error` state, the quote effect and the plain-send `makeSpend` effect, and each retracts only its own message when the other takes over. Entering swap-send mode clears a plain-send failure so an insufficient-funds message cannot sit over a valid quote; leaving it clears the swap's failure so a minimum-amount message cannot sit over the plain send the user switched to. Provenance is tracked rather than guessed, because clearing unconditionally in either direction wipes the other effect's answer.
 
@@ -652,7 +652,7 @@ Every row, coin or token, has two lines: the asset's own name over the network i
 
 A token source does not pay out its chain's coin unless that coin is picked. With Stealth on and nothing picked, a USDT sender makes a private USDT to USDT send, and the chain's coin is a row like any other destination.
 
-Picking a row on the chain already selected keeps the entered address and destination tag, because one address serves every asset on a chain. It drops the held quote, the receive amount, the fixed-to fallback and the PIN, which all belonged to the previous asset. Picking a row on another chain clears the address. A pasted address still detects its chain and adopts that chain's coin.
+Picking a row on the chain already selected keeps the entered address and destination tag, because one address serves every asset on a chain. It drops the held quote, the receive amount, the receive-side guarantee and the PIN, which all belonged to the previous asset. Picking a row on another chain clears the address. A pasted address still detects its chain and adopts that chain's coin.
 
 The picker's rows are keyed on the asset rather than on its label. A display name is not an identity: several chains share a currency code (ETH on Ethereum, Base and Arbitrum), and the POL ERC-20 on Ethereum shares its display name AND its currency code with the Polygon chain, so a name-keyed list marked both rows selected and resolved either tap to the same destination, leaving Polygon unreachable from a POL wallet. `RecipientAssetListModal`, the picker's own modal, therefore resolves with each row's `value`, an asset key, which is also what the row's `testID` follows. It is built on `ListModal` and reuses the filtering that already provides. The two-line row has its own modal because `RadioListModal` is shared with Settings, Swap Settings and the fiat plugin, whose rows are one line with a radio mark. `RadioListModal` rows carry an optional `value` for the same reason, defaulting to the name so those callers are unchanged. The detected-network picker passes it.
 
@@ -731,7 +731,7 @@ A send routed through Houdini looks like a send and behaves like a swap: the wal
 |---|---|---|---|
 | Terms modal | `SwapConfirmationScene`, through `swapVerifyTerms` | the dedicated swap scene confirms a quote Houdini won | the provider's own `agreedToTerms` user setting |
 | Swap-send modal | `SendScene2`, through `showSwapSendWarningModal` | the send scene first becomes a swap | `swapSendWarning.json` in the account disklet |
-| Warning card | `SendScene2`, in the warning cluster | `swapSendActive`, while no error card or fixed-to fallback card is shown | none, it is scene state |
+| Warning card | `SendScene2`, in the warning cluster | `swapSendActive`, while no error card is shown | none, it is scene state |
 
 The terms modal is the pre-existing centralized-provider acknowledgement, keyed by pluginId in `SwapVerifyTermsModal`'s `pluginData` table. Houdini's entry gives it the same three links every other centralized provider gets. Accepting saves `agreedToTerms: true`, and `swapVerifyTerms` returns early on that value without reading the provider's enable flag, so a user who accepted is never asked again, switch on or off.
 
@@ -747,7 +747,7 @@ export const showSwapSendWarningModal = async (
 ): Promise<void> => {
 ```
 
-The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the fixed-to fallback and Nym cards and reads off `swapSendActive`. The cluster shows one swap card at a time: an error card (`showErrorCard`, the same test `renderError` uses) hides both swap warnings, and the fixed-to fallback card hides the generic one, since it is the more specific notice and clears on the next amount edit. The user can still send while the fallback card shows, so its body ends with the swap warning's own text: hiding the generic card must not drop the swap-and-delay notice. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about the Stealth swap when Stealth is on. That copy does not use the word "private": the card is titled "Stealth swap before send" and says the funds are swapped over an obfuscated route.
+The card is the recurring half. A modal shown once cannot warn the user on their fortieth stealth send, and the wait is a property of every one of them, so `renderSwapSendWarning` sits with the Nym card and reads off `swapSendActive`. An error card (`showErrorCard`, the same test `renderError` uses) hides it. The fixed-to fallback does not: it says what changed in a toast and leaves the card in place, which keeps the swap-and-delay notice on screen while the user can still send. A user who hits the kill switch's "no enabled exchanges" error sees that error alone, not a warning about a swap that cannot run. Private routing gets its own copy, since the sentence a user needs is about the Stealth swap when Stealth is on. That copy does not use the word "private": the card is titled "Stealth swap before send" and says the funds are swapped over an obfuscated route.
 
 The scam warning card is held to the same one-card rule. It opens a plain send and goes once an address is entered. `renderScamWarning` returns nothing on a swap-send or under an error card, so a network picked under "Recipient receives" before any address shows the swap card alone.
 
@@ -798,7 +798,7 @@ flowchart TD
   I -- yes --> K[Receive side guaranteed,\nfixed to]
   K --> L{"Houdini offers a\nreceive-priced route?\n[API] GET /tokens, GET /quotes"}
   L -- yes --> M["Houdini quote arms,\nreceive amount locked\n[API] POST /exchanges"]
-  L -- no --> N[Falls back to fixed from:\ntoast, warning card, send\namount seeded from rates]
+  L -- no --> N[Falls back to fixed from:\ntoast, send amount\nseeded from rates]
   N --> O[Card clears when the\nuser edits an amount]
   O --> J
   J --> T{Clears the floor\nfor this route?\n25 USD private, 10 standard\nlocal, no request}
@@ -822,7 +822,7 @@ flowchart TD
   Q -- no --> S[Stealth turns itself off:\ntoast, info line under the\ntoggle, pair remembered]
   S --> V
   S -. later toggle taps .-> X[Refuses to arm,\npre-emptive toast]
-  N -. later Recipient gets taps .-> Y[Editor refuses to open,\npre-emptive toast]
+  N -. later Recipient gets taps .-> Y[Edit icon dimmed; editor\nrefuses to open,\npre-emptive toast]
   J -. toggle flipped either way .-> RQ[Held quote invalidated,\nre-quote with the new\nprivacy and floor]
   RQ --> T
 ```
@@ -1303,6 +1303,13 @@ Not our work, tracked so it is not rediscovered:
 - **Sketched:** a copy audit by the provider found the Stealth Send and Stealth Swap info lines saying different things, two fixed-to strings reading awkwardly, and the AML/KYC bullet not saying what happens when the user declines to verify. "Learn more" should open the published support article.
 - **Shipped:** both toggles show one line, "%1$s routing helps obfuscate the on-chain link between sender and receiver wallets.", with the provider's display name filled from `getStealthProviderName`, the same `swapConfig` lookup the swap-send modal uses. The fixed-to toast and fallback card now say "Your send amount is guaranteed instead", and the AML/KYC bullet ends "If you do not, the funds are returned to you." `STEALTH_LEARN_MORE_URI` points at the support article.
 - **Held:** the claim stays at "helps obfuscate". The "Powered by" card placement and the estimated-quote strings are unchanged.
+
+### Phase 48: the fixed-to fallback says it in a toast
+
+- **Sketched:** review of the phase 39 copy found the fallback card saying what its toast had just said, and ending "Edit either amount to continue". Neither half of that line held. The pair is marked as having no receive-priced route before the card shows, and from then on "Recipient gets" only answers with the toast. Nothing kept the user from sending without an edit.
+- **Shipped:** the fallback raises its toast and nothing else ([Availability fallbacks](#availability-fallbacks)). The `fixedToFallback` state, the card and its two strings are gone, and "Stealth swap before send" stays on screen through the fallback. "Recipient gets" reads as estimated, with a `~` before its amount. A scene case in `SendScene2.recipientNetwork.ui.test.tsx` refuses only the receive-priced quote and checks the toast, the steady swap card, and that no fallback card shows.
+- **Shipped (operator review):** the "Recipient gets" edit icon dims once the pair has no receive-priced route. `EdgeRow` gained `rightButtonDeactivated`, which changes the icon color only: presses still reach `onPress`. The scene case also checks the dimmed icon and that a later tap raises the toast again without opening the editor.
+- **Held:** the pre-emptive toast on a later "Recipient gets" tap, `markRouteCap('fixedTo')`, and the rate-seeded send amount.
 
 ## 11. Decisions
 

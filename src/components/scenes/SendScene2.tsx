@@ -411,10 +411,6 @@ const SendComponent: React.FC<Props> = props => {
   const [routeCaps, setRouteCaps] = useState<
     Record<string, { stealth?: boolean; fixedTo?: boolean }>
   >({})
-  // A fixed receive amount was abandoned because the provider offers no
-  // receive-priced route for the pair. Shows the warning card until the user
-  // edits an amount or changes the destination:
-  const [fixedToFallback, setFixedToFallback] = useState<boolean>(false)
   // The fixed-to fallback wanted to seed a send amount but had no exchange rate
   // to seed it from. Cleared by the one retry that fires when rates arrive.
   const [rateStarvedFallback, setRateStarvedFallback] = useState<boolean>(false)
@@ -1174,7 +1170,6 @@ const SendComponent: React.FC<Props> = props => {
       setSwapQuote(undefined)
       setReceiveNativeAmount(undefined)
       setGuaranteedSide('send')
-      setFixedToFallback(false)
 
       // The send side is the guaranteed one now, so a destination that
       // arrived with no amount of its own keeps the one already entered:
@@ -1211,7 +1206,6 @@ const SendComponent: React.FC<Props> = props => {
       setSwapQuote(undefined)
       setReceiveNativeAmount(undefined)
       setGuaranteedSide('send')
-      setFixedToFallback(false)
 
       await handleChangeAddress(spendTarget)(
         {
@@ -1285,7 +1279,6 @@ const SendComponent: React.FC<Props> = props => {
       setSwapQuote(undefined)
       setReceiveNativeAmount(undefined)
       setGuaranteedSide('send')
-      setFixedToFallback(false)
       if (pick === 'plainSend') return false
       const parsedUri = await coreWallet.parseUri(address, currencyCode)
       await handleChangeAddress(spendTarget)(
@@ -1622,7 +1615,6 @@ const SendComponent: React.FC<Props> = props => {
     }
     setExpireDate(undefined)
     setPinValue(undefined)
-    setFixedToFallback(false)
     // Clearing the address ends the swap-send: leaving the destination asset,
     // tag, receive amount or standing quote behind means the next address
     // entered gets quoted against the previous recipient's state.
@@ -1908,7 +1900,6 @@ const SendComponent: React.FC<Props> = props => {
           setSwapQuote(undefined)
           setReceiveNativeAmount(undefined)
           setGuaranteedSide('send')
-          setFixedToFallback(false)
           setRateStarvedFallback(false)
           setStealth(false)
           reseedStealthRef.current = true
@@ -2148,7 +2139,6 @@ const SendComponent: React.FC<Props> = props => {
           setSwapQuote(undefined)
           setReceiveNativeAmount(undefined)
           setGuaranteedSide('send')
-          setFixedToFallback(false)
           setPinValue(undefined)
           return
         }
@@ -2196,7 +2186,6 @@ const SendComponent: React.FC<Props> = props => {
         // an amount the user just replaced.
         setSwapQuote(undefined)
         setGuaranteedSide('send')
-        setFixedToFallback(false)
         setSpendInfo({ ...spendInfo })
       })
       .catch((error: unknown) => {
@@ -2238,7 +2227,6 @@ const SendComponent: React.FC<Props> = props => {
           setReceiveNativeAmount(nativeAmount)
           setSwapQuote(undefined)
           setGuaranteedSide('receive')
-          setFixedToFallback(false)
         })
         .catch((error: unknown) => {
           showError(error)
@@ -2267,7 +2255,6 @@ const SendComponent: React.FC<Props> = props => {
         setReceiveNativeAmount(mul(amount, destExchangeDenom.multiplier))
         setSwapQuote(undefined)
         setGuaranteedSide('receive')
-        setFixedToFallback(false)
       })
       .catch((error: unknown) => {
         showError(error)
@@ -2314,10 +2301,12 @@ const SendComponent: React.FC<Props> = props => {
     displayCode: string,
     isGuaranteed: boolean,
     onPress: () => void,
-    fiat: SwapRowFiat | undefined
+    fiat: SwapRowFiat | undefined,
+    editDeactivated: boolean = false
   ): React.ReactElement => (
     <EdgeRow
       rightButtonType="editable"
+      rightButtonDeactivated={editDeactivated}
       title={title}
       titleState={
         isGuaranteed ? (
@@ -2404,7 +2393,10 @@ const SendComponent: React.FC<Props> = props => {
       destCurrencyCode ?? '',
       guaranteedSide === 'receive',
       handleEditRecipientGets,
-      swapRowFiat(receiveNativeAmount, destCurrencyConfig, destTokenId)
+      swapRowFiat(receiveNativeAmount, destCurrencyConfig, destTokenId),
+      // The route cannot price from the receive side, so the editor is
+      // unavailable. A tap still reaches the handler, which says why:
+      pairCaps.fixedTo === false
     )
   }
 
@@ -3084,8 +3076,7 @@ const SendComponent: React.FC<Props> = props => {
    * transaction: the provider pays them in a second one, once the deposit
    * confirms. That wait is the part the scene does not otherwise show, so it
    * sits with the other warning cards for as long as the send stays a swap,
-   * giving way to the more specific fallback warning (which repeats it) or an
-   * error.
+   * giving way only to an error.
    */
   const swapSendWarningBody = `${
     stealth
@@ -3094,7 +3085,7 @@ const SendComponent: React.FC<Props> = props => {
   } ${lstrings.transaction_may_take_longer}`
 
   const renderSwapSendWarning = (): React.ReactElement | null => {
-    if (!swapSendActive || fixedToFallback || showErrorCard) return null
+    if (!swapSendActive || showErrorCard) return null
     return (
       <EdgeAnim
         enter={{ type: 'fadeInUp', distance: 60 }}
@@ -3108,30 +3099,6 @@ const SendComponent: React.FC<Props> = props => {
               : lstrings.stealth_swap_send_warning_title
           }
           body={swapSendWarningBody}
-          marginRem={0.5}
-        />
-      </EdgeAnim>
-    )
-  }
-
-  /**
-   * A fixed receive amount (typed, or carried by a scanned payment URI) had
-   * to fall back to a guaranteed SEND amount because the provider offers no
-   * receive-priced route for this pair. It takes the swap warning's place,
-   * so it carries that warning's text too, and clears as soon as the user
-   * edits an amount.
-   */
-  const renderFixedToFallbackWarning = (): React.ReactElement | null => {
-    if (!fixedToFallback || !swapSendActive || showErrorCard) return null
-    return (
-      <EdgeAnim
-        enter={{ type: 'fadeInUp', distance: 60 }}
-        exit={{ type: 'fadeOutDown' }}
-      >
-        <AlertCardUi4
-          type="warning"
-          title={lstrings.stealth_fixed_to_fallback_title}
-          body={`${lstrings.stealth_fixed_to_fallback_body} ${swapSendWarningBody}`}
           marginRem={0.5}
         />
       </EdgeAnim>
@@ -4170,7 +4137,7 @@ const SendComponent: React.FC<Props> = props => {
           if (guaranteedSide === 'receive') {
             // No receive-priced route. Guarantee the send side instead,
             // seeded from display rates so the send stays actionable, and
-            // warn that the recipient amount is no longer exact.
+            // toast that the recipient amount is no longer exact.
             markRouteCap('fixedTo')
             // Read the rates through the ref, not the closure. This effect
             // deliberately does not depend on `exchangeRates` (see its
@@ -4207,7 +4174,6 @@ const SendComponent: React.FC<Props> = props => {
               )
               setSpendInfo({ ...spendInfo })
               setGuaranteedSide('send')
-              setFixedToFallback(true)
               setRateStarvedFallback(false)
               clearSwapError()
               showToast(lstrings.stealth_fixed_to_unavailable_toast)
@@ -4501,7 +4467,6 @@ const SendComponent: React.FC<Props> = props => {
             </EdgeAnim>
             {renderPendingTransactionWarning()}
             {renderSwapSendWarning()}
-            {renderFixedToFallbackWarning()}
             {renderZcashTransparentWarning()}
             {renderNymWarning()}
             {renderError()}

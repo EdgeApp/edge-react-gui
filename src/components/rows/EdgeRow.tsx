@@ -45,6 +45,10 @@ interface Props {
   loading?: boolean
   maximumHeight?: 'small' | 'medium' | 'large'
   rightButtonType?: RowActionIcon
+
+  /** Draws the right button in the deactivated color. Presses still reach
+   * `onPress`, so the caller can explain why the action is unavailable. */
+  rightButtonDeactivated?: boolean
   title?: string
 
   /** A state node for the title, rendered after it. Supply it wrapped in a
@@ -70,6 +74,7 @@ export const EdgeRow: React.FC<Props> = (props: Props) => {
     loading,
     marginRem,
     maximumHeight = 'medium',
+    rightButtonDeactivated = false,
     testID,
     title,
     titleState,
@@ -116,6 +121,9 @@ export const EdgeRow: React.FC<Props> = (props: Props) => {
   })
 
   const rightButtonVisible = rightButtonType !== 'none'
+  const rightIconStyle = rightButtonDeactivated
+    ? styles.tappableIconDeactivated
+    : styles.tappableIcon
   const isTappable = onPress != null || onLongPress != null
 
   const content = (
@@ -167,22 +175,19 @@ export const EdgeRow: React.FC<Props> = (props: Props) => {
             disabled={loading}
           >
             {rightButtonType === 'touchable' ? (
-              <ChevronRightIcon
-                style={styles.tappableIcon}
-                size={theme.rem(1)}
-              />
+              <ChevronRightIcon style={rightIconStyle} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'editable' ? (
-              <EditIcon style={styles.tappableIcon} size={theme.rem(1)} />
+              <EditIcon style={rightIconStyle} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'copy' ? (
-              <CopyIcon style={styles.tappableIcon} size={theme.rem(1)} />
+              <CopyIcon style={rightIconStyle} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'delete' ? (
-              <DeleteIcon style={styles.tappableIcon} size={theme.rem(1)} />
+              <DeleteIcon style={rightIconStyle} size={theme.rem(1)} />
             ) : null}
             {rightButtonType === 'questionable' ? (
-              <QuestionIcon style={styles.tappableIcon} size={theme.rem(1)} />
+              <QuestionIcon style={rightIconStyle} size={theme.rem(1)} />
             ) : null}
           </EdgeTouchableOpacity>
         ) : null
@@ -228,6 +233,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   tappableIcon: {
     color: theme.iconTappable,
+    marginLeft: theme.rem(0.5),
+    textAlign: 'center'
+  },
+  tappableIconDeactivated: {
+    color: theme.iconDeactivated,
     marginLeft: theme.rem(0.5),
     textAlign: 'center'
   },
