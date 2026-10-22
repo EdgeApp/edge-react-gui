@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 
 ## 4.52.0 (staging)
 
