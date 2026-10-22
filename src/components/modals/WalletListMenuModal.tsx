@@ -147,7 +147,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'signMessage'
   },
   {
-    pluginIds: ['monero', 'piratechain', 'zcash', 'zano'],
+    pluginIds: ['monero', 'piratechain', 'zcash', 'zcashtestnet', 'zano'],
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
