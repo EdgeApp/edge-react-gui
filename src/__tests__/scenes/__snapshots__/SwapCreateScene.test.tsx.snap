@@ -1000,6 +1000,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
                     >
                       <RCTSwitch
                         accessibilityRole="switch"
+                        disabled={false}
                         onChange={[Function]}
                         onResponderTerminationRequest={[Function]}
                         onStartShouldSetResponder={[Function]}

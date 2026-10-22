@@ -11,7 +11,7 @@
 | Supersedes | - |
 | Related | [Asana: Deeplink - New format](https://app.asana.com/0/1215088146871429/1210180856778864) |
 
-<!-- tdd-code-fingerprint: 67d7ec808229154879b36dd673014a9d71dcbbbf -->
+<!-- tdd-code-fingerprint: e0f7ccb57aa72bb65107b01ed0d5a596fac1e958 -->
 
 Code blocks cite their file on the `jon/deeplink-new-format` branch rather than a commit sha: the doc is folded into the branch's first commit, so every push re-slots it ahead of the code it quotes and orphans any sha pinned before that push. The branch ref resolves for the life of the review, and these links move to `develop` when the branch merges. Direction came from the task description (growth's campaign-tracking request) and the operator's ruling on it.
 
@@ -403,9 +403,9 @@ Both parameters are optional and may appear in either order:
 
 The saved choice changes only on a tap of the toggle, which writes it to the account's synced settings (`setStealthSendEnabled`, and `setStealthSwapEnabled` on the swap scene). The tap handler returns that write, so the switch row stays locked until it lands and a second tap cannot persist a stale value. A param or link never writes it.
 
-There are no create-wallet rows because a new wallet is empty and has nothing to send. Auto-pick ignores balance: a lone empty wallet opens Send, which shows its Wallet Empty modal. The picker is not narrowed to chains Stealth Send serves. A coin on an unserved chain opens Send with the toggle off and its reason shown. A token on an unserved chain is not refused up front, since a token source always swaps to the chain's coin: the toggle arms, and the first quote after an amount is entered fails and turns it off with a toast. The link takes no `promoId`, since conversion attribution is per tab and Send is not one of the exchange tabs.
+There are no create-wallet rows because a new wallet is empty and has nothing to send. Auto-pick ignores balance: a lone empty wallet opens Send, which shows its Wallet Empty modal. The picker is not narrowed to assets Stealth Send serves. Send opens with the recipient asset set to the source asset, coin or token, so the toggle arms only when Houdini can route that asset to itself privately. Otherwise it opens dimmed and off with its reason under it: an asset Houdini does not serve, or one it serves with no private route to itself. A tap toasts the reason and saves nothing, and the link's `stealth=true` arms the toggle once the user picks a wallet, token, or recipient asset that has a route, within the same visit. The link takes no `promoId`, since conversion attribution is per tab and Send is not one of the exchange tabs.
 
-**Name native assets in marketing links.** Stealth Send always pays the recipient the destination chain's native coin, because the Send scene asks every swap-send quote for `toTokenId: null`. A token source therefore pays out the chain's coin rather than the token: a "send USDT privately" link built on `asset=ethereum_<USDT contract>` delivers ETH to the recipient. Token payouts arrive with [EdgeApp/edge-react-gui#6253](https://github.com/EdgeApp/edge-react-gui/pull/6253), which changes this paragraph.
+**Name the asset the recipient should receive.** Since [EdgeApp/edge-react-gui#6253](https://github.com/EdgeApp/edge-react-gui/pull/6253), a Stealth Send pays out the recipient asset, which starts as the source asset and asks the quote for its real `toTokenId`. A "send USDT privately" link built on `asset=ethereum_<USDT contract>` therefore delivers USDT, provided Houdini marks that token with a private route to itself; a token it does not mark opens with the toggle dimmed and its reason shown. The user can still pick another recipient asset, which turns the send into a cross-asset private swap.
 
 The `send` link raises a picker of its own, so `getDeepLinkReadiness` waits for every wallet before following it, and the in-progress guard of [7.11](#711-only-exchange-links-are-dropped-while-a-picker-is-open) drops a second picker link while its picker is up.
 

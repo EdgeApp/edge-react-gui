@@ -807,25 +807,41 @@ const SendComponent: React.FC<Props> = props => {
    * Why the Stealth toggle cannot be armed right now, or `undefined` when it
    * can. Ordered most specific first, so the user reads the reason that
    * applies to the send in front of them rather than the first one that fires.
+   * An asset the info server bans for the provider on its side has no route
+   * at all, the same reason the Exchange scene dims its toggle for.
    */
-  const stealthBlockedReason: string | undefined =
-    sameAsset && !selfPrivateAvailable
-      ? sprintf(
-          // An asset the provider does not serve at all has no route of any
-          // kind, so the "to itself" wording would only mislead:
-          sourceAssetSupport == null
-            ? lstrings.stealth_asset_unsupported_1s
-            : lstrings.stealth_self_private_unsupported_1s,
-          currencyCode
-        )
-      : belowPrivateFloor
-      ? sprintf(
-          lstrings.stealth_below_private_minimum_1s,
-          formatUsdFloor(HOUDINI_MIN_USD.private)
-        )
-      : pairCaps.stealth === false
-      ? lstrings.stealth_route_unavailable_info
-      : undefined
+  const stealthBlockedReason: string | undefined = disableAssetsCover(
+    swapDisableAssets.source,
+    pluginId,
+    tokenId
+  )
+    ? sprintf(lstrings.stealth_asset_unsupported_1s, currencyCode)
+    : disableAssetsCover(
+        swapDisableAssets.destination,
+        destPluginId,
+        destTokenId
+      )
+    ? sprintf(
+        lstrings.stealth_asset_unsupported_1s,
+        destCurrencyCode ?? destTokenId ?? destPluginId
+      )
+    : sameAsset && !selfPrivateAvailable
+    ? sprintf(
+        // An asset the provider does not serve at all has no route of any
+        // kind, so the "to itself" wording would only mislead:
+        sourceAssetSupport == null
+          ? lstrings.stealth_asset_unsupported_1s
+          : lstrings.stealth_self_private_unsupported_1s,
+        currencyCode
+      )
+    : belowPrivateFloor
+    ? sprintf(
+        lstrings.stealth_below_private_minimum_1s,
+        formatUsdFloor(HOUDINI_MIN_USD.private)
+      )
+    : pairCaps.stealth === false
+    ? lstrings.stealth_route_unavailable_info
+    : undefined
 
   /** The floor this send must clear for the route it would actually take. */
   const belowActiveFloor = stealth ? belowPrivateFloor : belowStandardFloor
@@ -1225,9 +1241,9 @@ const SendComponent: React.FC<Props> = props => {
   const destinationAssets = React.useMemo<EdgeAsset[]>(
     () =>
       getHoudiniAssets({
+        bans: swapDisableAssets.destination,
         currencyConfigs: account.currencyConfig,
-        houdiniChains,
-        destinationBans: swapDisableAssets.destination
+        houdiniChains
       }),
     [account.currencyConfig, houdiniChains, swapDisableAssets.destination]
   )
@@ -2048,26 +2064,66 @@ const SendComponent: React.FC<Props> = props => {
    * other constrained entries never offer the toggle, so nothing arms there.
    */
   const seedStealth = useHandler((): void => {
+    if (stealth) {
+      // Picking the source asset back can leave an armed toggle on an asset
+      // with no private route to itself, or one whose quote already came back
+      // without one. It turns off without saving, so it shows its reason and
+      // arms again on the next pair that has a route:
+      if (sameAsset && (!selfPrivateAvailable || pairCaps.stealth === false)) {
+        flipStealth()
+      }
+      return
+    }
     const wanted = visitStealthRef.current ?? stealthSendEnabled
-    if (!wanted || stealth) return
+    if (!wanted) return
     if (!swapSendAllowed || stealthBlockedReason != null) return
     flipStealth()
   })
 
-  // The toggle seeds on mount, after a wallet or asset switch resets it (set
-  // here by the switch; eligibility depends on the new pair, so the seed waits
-  // for the render that has it), and when a swap-send becomes possible: the
-  // served Houdini list can land after the mount seed found none. One effect,
-  // so a render doing two of these seeds once and cannot flip the toggle back.
+  // The toggle seeds on mount, after a wallet or token change (flagged here
+  // by the change; eligibility depends on the new pair, so the seed waits for
+  // the render that has it), whenever the recipient asset changes by any path
+  // (the picker, a detected or "Myself" destination, a cleared address), when
+  // a swap-send becomes possible (the served Houdini list can land after the
+  // mount seed found none), and when a blocked reason clears with nothing
+  // else changing, as an amount raised past the private minimum does. One
+  // effect, so a render doing two of these seeds once and cannot flip the
+  // toggle back.
   const reseedStealthRef = React.useRef(true)
   const seededSwapSendAllowedRef = React.useRef(false)
+  const seededBlockedRef = React.useRef(stealthBlockedReason != null)
+  const pickedRecipientKey =
+    pickedRecipientAsset == null
+      ? undefined
+      : recipientAssetKey(pickedRecipientAsset)
+  const seededRecipientKeyRef = React.useRef(pickedRecipientKey)
   React.useEffect(() => {
     const becameAllowed = swapSendAllowed && !seededSwapSendAllowedRef.current
     seededSwapSendAllowedRef.current = swapSendAllowed
-    if (!reseedStealthRef.current && !becameAllowed) return
+    const recipientChanged =
+      pickedRecipientKey !== seededRecipientKeyRef.current
+    seededRecipientKeyRef.current = pickedRecipientKey
+    const becameUnblocked =
+      stealthBlockedReason == null && seededBlockedRef.current
+    seededBlockedRef.current = stealthBlockedReason != null
+    if (
+      !reseedStealthRef.current &&
+      !becameAllowed &&
+      !recipientChanged &&
+      !becameUnblocked
+    ) {
+      return
+    }
     reseedStealthRef.current = false
     seedStealth()
-  }, [walletId, tokenId, swapSendAllowed, seedStealth])
+  }, [
+    walletId,
+    tokenId,
+    pickedRecipientKey,
+    swapSendAllowed,
+    stealthBlockedReason,
+    seedStealth
+  ])
 
   const handlePickRecipientAsset = useHandler((): void => {
     if (multipleTargets) return
@@ -2533,25 +2589,22 @@ const SendComponent: React.FC<Props> = props => {
     // send has several. The toggle state is left alone, and the card returns
     // with it once the send is back to a single recipient:
     if (multipleTargets) return null
-    // The reason is only worth showing next to a swap. A plain send to the
-    // same asset involves none, so nothing under the toggle explains it, and
-    // the toast on tap covers the one way to ask for one. The exceptions are a
-    // picked recipient asset, which is a swap already, and a Stealth Send
-    // whose quote failed and turned the toggle off, which the user asked for:
-    const showBlockedReason =
-      stealthBlockedReason != null &&
-      !stealth &&
-      (crossAssetPicked || pairCaps.stealth === false)
+    // A toggle that cannot be armed shows dimmed and off with its reason
+    // under it, on a plain send as much as on a swap. The row stays tappable
+    // so a tap can toast the reason. Armed, a reason such as the private
+    // minimum is left to the quote's error card instead:
+    const blockedReason = stealth ? undefined : stealthBlockedReason
     return (
       <EdgeAnim enter={{ type: 'fadeInDown', distance: 40 }}>
         <EdgeCard sections>
           <SettingsSwitchRow
             label={lstrings.stealth_send_toggle}
             value={stealth}
+            disabled={blockedReason != null}
             onPress={handleToggleStealth}
           />
-          {showBlockedReason ? (
-            <StealthInfoText message={stealthBlockedReason} />
+          {blockedReason != null ? (
+            <StealthInfoText message={blockedReason} />
           ) : stealth ? (
             <StealthInfoText
               message={sprintf(

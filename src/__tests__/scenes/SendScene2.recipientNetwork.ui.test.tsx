@@ -50,6 +50,7 @@ import { fakeEdgeAppSceneProps } from '../../util/fake/fakeSceneProps'
 import fakeUser from '../../util/fake/fakeUserDump.json'
 import { asHoudiniChains, type HoudiniChains } from '../../util/houdiniChains'
 import { withStatedAsset } from '../../util/paymentUri'
+import { getStealthProviderName } from '../../util/stealthSwap'
 
 jest.useRealTimers()
 
@@ -299,6 +300,12 @@ const asUserDump = asObject({
 
 let context: EdgeContext | undefined
 let account: EdgeAccount | undefined
+
+/** The Stealth toggle's info line, naming the provider the way the scene does. */
+const stealthInfo = (): string => {
+  if (account == null) throw new Error('No account')
+  return sprintf(lstrings.stealth_info_1s, getStealthProviderName(account))
+}
 let btcWallet: EdgeCurrencyWallet | undefined
 let ethWallet: EdgeCurrencyWallet | undefined
 let ftmWallet: EdgeCurrencyWallet | undefined
@@ -405,6 +412,8 @@ describe('SendScene2 recipient network', () => {
     pickMyself: (pluginId: string, address: string) => Promise<void>
     recipientAddress: () => string
     stealthArmed: () => boolean
+    /** Whether the Stealth Send toggle shows dimmed. */
+    stealthDimmed: () => boolean
     /** The Destination Tag row's text, or `undefined` with no row shown. */
     destinationTag: () => string | undefined
     /** How many text nodes on the scene read exactly this. */
@@ -424,14 +433,36 @@ describe('SendScene2 recipient network', () => {
   const renderSend = (
     wallet: EdgeCurrencyWallet | undefined,
     tokenId: EdgeTokenId = null,
-    opts: { chains?: HoudiniChains; sceneAccount?: EdgeAccount } = {}
+    opts: {
+      chains?: HoudiniChains
+      /** What the info server bans for Houdini alone, on each side. */
+      houdiniBans?: {
+        source: Array<{ pluginId: string }>
+        destination: Array<{ pluginId: string }>
+      }
+      sceneAccount?: EdgeAccount
+    } = {}
   ): RenderedSend => {
     if (wallet == null) throw new Error('No wallet')
-    const { chains = houdiniChains, sceneAccount = account } = opts
+    const { chains = houdiniChains, houdiniBans, sceneAccount = account } = opts
     const rootState: FakeState = {
       ...fakeRootState,
       core: { account: sceneAccount },
-      ui: { ...fakeRootState.ui, houdiniChains: chains }
+      ui: {
+        ...fakeRootState.ui,
+        houdiniChains: chains,
+        ...(houdiniBans == null
+          ? {}
+          : {
+              exchangeInfo: {
+                swap: {
+                  disableAssets: { source: [], destination: [] },
+                  disableAssetsByPlugin: { houdini: houdiniBans },
+                  disablePlugins: {}
+                }
+              }
+            })
+      }
     }
     const rendered = render(
       <FakeProviders initialState={rootState}>
@@ -624,6 +655,9 @@ describe('SendScene2 recipient network', () => {
       stealthArmed: () =>
         rendered.UNSAFE_getByProps({ label: lstrings.stealth_send_toggle })
           .props.value === true,
+      stealthDimmed: () =>
+        rendered.UNSAFE_getByProps({ label: lstrings.stealth_send_toggle })
+          .props.disabled === true,
       destinationTag: () => {
         const row = rendered
           .UNSAFE_getAllByType(EdgeRow)
@@ -1260,21 +1294,22 @@ describe('SendScene2 recipient network', () => {
     scene.unmount()
   })
 
-  it('leaves a plain send of an asset no Stealth route serves unexplained', async () => {
+  it('explains a plain send of an asset no Stealth route serves', async () => {
     const scene = renderSend(ftmWallet)
+    const unserved = sprintf(lstrings.stealth_asset_unsupported_1s, 'AVAX')
 
-    // No swap is involved until the user asks for one, so nothing sits under
-    // the toggle. Tapping it says why it stays off, naming the asset alone:
-    expect(scene.stealthNotes()).toEqual([])
+    // The toggle shows dimmed and off with the reason under it, naming the
+    // asset alone. Tapping it toasts the same reason and leaves it off:
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([unserved])
     await scene.toggleStealth()
-    expect(mockShowToast.mock.calls).toEqual([
-      [sprintf(lstrings.stealth_asset_unsupported_1s, 'AVAX')]
-    ])
-    expect(scene.stealthNotes()).toEqual([])
+    expect(mockShowToast.mock.calls).toEqual([[unserved]])
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.stealthNotes()).toEqual([unserved])
     scene.unmount()
   })
 
-  it('names the Stealth minimum only once a swap is picked', async () => {
+  it('names the Stealth minimum on a plain send and on a swap', async () => {
     const scene = renderSend(ethWallet)
     const belowMinimum = expect.stringMatching(
       /^Stealth routing needs at least/
@@ -1282,16 +1317,137 @@ describe('SendScene2 recipient network', () => {
     await scene.enterParsedAddress(EVM_ADDRESS)
     await scene.enterAmount(FIVE_USD_OF_ETH)
 
-    expect(scene.stealthNotes()).toEqual([])
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([belowMinimum])
     await scene.toggleStealth()
     expect(mockShowToast.mock.calls).toEqual([[belowMinimum]])
 
-    // A picked recipient asset makes the send a swap, so the reason shows.
     // The pick clears the recipient, so the send is entered again:
     await scene.pickRecipientAsset('Bitcoin')
     await scene.enterUnparsedAddress(BTC_ADDRESS)
     await scene.enterAmount(FIVE_USD_OF_ETH)
+    expect(scene.stealthDimmed()).toBe(true)
     expect(scene.stealthNotes()).toEqual([belowMinimum])
+    scene.unmount()
+  })
+
+  it('leaves the minimum to the quote once Stealth is on', async () => {
+    const scene = renderSend(ethWallet)
+    await scene.toggleStealth()
+    expect(scene.stealthArmed()).toBe(true)
+
+    // Armed, an amount below the private minimum is the quote's to report,
+    // so the toggle keeps its usual note and stays tappable:
+    await scene.enterParsedAddress(EVM_ADDRESS)
+    await scene.enterAmount(FIVE_USD_OF_ETH)
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.stealthDimmed()).toBe(false)
+    expect(scene.stealthNotes()).toEqual([stealthInfo()])
+    scene.unmount()
+  })
+
+  it('arms again on a picked recipient asset that has a route', async () => {
+    const chains = asHoudiniChains({
+      ...servedChains,
+      ethereum: { ...servedChains.ethereum, coin: { hasSelfPrivate: false } }
+    })
+    const scene = renderSend(ethWallet, null, { chains })
+    const toItself = sprintf(
+      lstrings.stealth_self_private_unsupported_1s,
+      'ETH'
+    )
+    await scene.pickRecipientAsset('Bitcoin')
+    await scene.toggleStealth()
+    expect(scene.stealthArmed()).toBe(true)
+
+    // Back to ETH, which has no private route to itself, the toggle turns
+    // off with its reason, and a pick with a route arms it again:
+    await scene.pickRecipientAsset('Ethereum')
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([toItself])
+    await scene.pickRecipientAsset('Bitcoin')
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.stealthDimmed()).toBe(false)
+    scene.unmount()
+  })
+
+  it('arms again on a "Myself" pick that has a route', async () => {
+    const chains = asHoudiniChains({
+      ...servedChains,
+      ethereum: { ...servedChains.ethereum, coin: { hasSelfPrivate: false } }
+    })
+    const scene = renderSend(ethWallet, null, { chains })
+    await scene.pickRecipientAsset('Bitcoin')
+    await scene.toggleStealth()
+    expect(scene.stealthArmed()).toBe(true)
+
+    // The "Myself" picker changes the recipient asset without the "Recipient
+    // receives" picker, and the toggle follows it the same way:
+    await scene.pickMyself('ethereum', EVM_ADDRESS)
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([
+      sprintf(lstrings.stealth_self_private_unsupported_1s, 'ETH')
+    ])
+    await scene.pickMyself('bitcoin', BTC_ADDRESS)
+    expect(scene.recipientAddress()).toBe(BTC_ADDRESS)
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.stealthDimmed()).toBe(false)
+    scene.unmount()
+  })
+
+  it('arms again once the amount clears the private minimum', async () => {
+    const chains = asHoudiniChains({
+      ...servedChains,
+      ethereum: { ...servedChains.ethereum, coin: { hasSelfPrivate: false } }
+    })
+    const scene = renderSend(ethWallet, null, { chains })
+    await scene.pickRecipientAsset('Bitcoin')
+    await scene.toggleStealth()
+    await scene.pickMyself('ethereum', EVM_ADDRESS)
+    expect(scene.stealthArmed()).toBe(false)
+
+    // Below the minimum, a pair with a route still refuses to arm:
+    await scene.enterAmount(FIVE_USD_OF_ETH)
+    await scene.pickMyself('bitcoin', BTC_ADDRESS)
+    expect(scene.stealthArmed()).toBe(false)
+    expect(scene.stealthDimmed()).toBe(true)
+
+    // Raising the amount clears the reason with no pick in between, and the
+    // choice the user tapped on this visit arms again:
+    await scene.enterAmount(FIFTY_USD_OF_ETH)
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.stealthDimmed()).toBe(false)
+    scene.unmount()
+  })
+
+  it('explains a send of an asset banned for the Stealth provider', async () => {
+    const scene = renderSend(ethWallet, null, {
+      houdiniBans: { source: [{ pluginId: 'ethereum' }], destination: [] }
+    })
+    const banned = sprintf(lstrings.stealth_asset_unsupported_1s, 'ETH')
+
+    // The Exchange scene dims its toggle for the same ban:
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([banned])
+    await scene.toggleStealth()
+    expect(mockShowToast.mock.calls).toEqual([[banned]])
+    expect(scene.stealthArmed()).toBe(false)
+    scene.unmount()
+  })
+
+  it('explains a send to an asset banned as a Stealth destination', async () => {
+    const scene = renderSend(ethWallet, null, {
+      houdiniBans: { source: [], destination: [{ pluginId: 'ethereum' }] }
+    })
+    const banned = sprintf(lstrings.stealth_asset_unsupported_1s, 'ETH')
+
+    expect(scene.stealthDimmed()).toBe(true)
+    expect(scene.stealthNotes()).toEqual([banned])
+    await scene.toggleStealth()
+    expect(mockShowToast.mock.calls).toEqual([[banned]])
+    expect(scene.stealthArmed()).toBe(false)
     scene.unmount()
   })
 
@@ -1444,8 +1600,9 @@ describe('SendScene2 recipient network', () => {
       })
       expect(scene.stealthArmed()).toBe(false)
 
+      // The user asked for Stealth on this visit, so a pair with a route
+      // arms it again without a tap:
       await scene.pickRecipientAsset('Bitcoin')
-      await scene.toggleStealth()
       expect(scene.stealthArmed()).toBe(true)
       mockShowToast.mockClear()
 
@@ -1455,6 +1612,15 @@ describe('SendScene2 recipient network', () => {
       expect(scene.shows('Bitcoin (BTC)')).toBe(true)
       expect(scene.stealthArmed()).toBe(true)
       expect(mockShowToast).not.toHaveBeenCalled()
+
+      // Picking the source asset back turns the armed toggle off with the
+      // refusal it already learned, rather than quoting that route again:
+      await scene.pickRecipientAsset('Ethereum')
+      expect(scene.stealthArmed()).toBe(false)
+      expect(scene.stealthDimmed()).toBe(true)
+      expect(scene.stealthNotes()).toEqual([
+        lstrings.stealth_route_unavailable_info
+      ])
 
       scene.unmount()
     })
