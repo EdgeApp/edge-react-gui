@@ -1,5 +1,6 @@
-import { abs, sub } from 'biggystring'
+import { abs, add, sub } from 'biggystring'
 import type {
+  EdgeCurrencyConfig,
   EdgeCurrencyWallet,
   EdgeTransaction,
   EdgeTxSwap
@@ -19,7 +20,7 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { getTokenId } from '../../util/CurrencyInfoHelpers'
+import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { convertNativeToDisplay, unixToLocaleDateTime } from '../../util/utils'
 import { RawTextModal } from '../modals/RawTextModal'
@@ -40,25 +41,51 @@ const TXID_PLACEHOLDER = '{{TXID}}'
 // Metadata may have been created and saved before tokenId was required.
 // If tokenId is missing it defaults to null so we can try upgrading it.
 const upgradeSwapData = (
-  destinationWallet: EdgeCurrencyWallet,
+  payoutConfig: EdgeCurrencyConfig | undefined,
   swapData: EdgeTxSwap
 ): EdgeTxSwap => {
-  if (
-    swapData.payoutTokenId === undefined &&
-    destinationWallet.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
-  ) {
-    swapData.payoutTokenId = getTokenId(
-      destinationWallet.currencyConfig,
-      swapData.payoutCurrencyCode
-    )
-  } else if (swapData.payoutTokenId === undefined) {
-    swapData.payoutTokenId = null
-  }
+  if (swapData.payoutTokenId !== undefined) return swapData
+
+  swapData.payoutTokenId =
+    payoutConfig != null &&
+    payoutConfig.currencyInfo.currencyCode !== swapData.payoutCurrencyCode
+      ? getTokenId(payoutConfig, swapData.payoutCurrencyCode)
+      : null
 
   return swapData
 }
 
-export function SwapDetailsCard(props: Props) {
+/**
+ * The amount a swap transaction takes from the source wallet.
+ *
+ * The saved swap action is the best source, since some swaps move the asset
+ * without sending it as the transaction's value. An Arc USDC swap pulls the
+ * USDC through an approval, so `nativeAmount` holds only the fee.
+ * Transactions without a matching saved action fall back to the spent amount
+ * minus the fee.
+ */
+export const getSwapSourceNativeAmount = (
+  transaction: EdgeTransaction,
+  pluginId: string
+): string => {
+  const { savedAction } = transaction
+  if (savedAction?.actionType === 'swap') {
+    const { fromAsset } = savedAction
+    if (
+      fromAsset.nativeAmount != null &&
+      fromAsset.pluginId === pluginId &&
+      fromAsset.tokenId === transaction.tokenId
+    ) {
+      return fromAsset.nativeAmount
+    }
+  }
+  const networkFee = transaction.networkFees
+    .filter(fee => fee.tokenId === transaction.tokenId)
+    .reduce((sum, fee) => add(sum, fee.nativeAmount), '0')
+  return sub(abs(transaction.nativeAmount), networkFee)
+}
+
+export const SwapDetailsCard: React.FC<Props> = props => {
   const { swapData, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -72,12 +99,30 @@ export function SwapDetailsCard(props: Props) {
       : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
   )
 
-  // The wallet may have been deleted:
+  // A send pays out to an address rather than a wallet, and the wallet may
+  // also have been deleted:
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const destinationWallet = currencyWallets[swapData.payoutWalletId]
   const destinationWalletName =
     destinationWallet == null ? '' : getWalletName(destinationWallet)
+
+  // The payout asset's own currency config. A send has no payout wallet to
+  // read it off, so it comes from the saved action's destination asset
+  // instead. Falling back to the SOURCE wallet was not viable: it resolves the
+  // payout currency code against the wrong chain, which left `payoutTokenId`
+  // unset and made the guard below hide this whole card for every send,
+  // taking the order id and provider with it.
+  const { savedAction } = transaction
+  const payoutSwapAction =
+    savedAction?.actionType === 'swap' || savedAction?.actionType === 'swapSend'
+      ? savedAction
+      : undefined
+  const payoutConfig =
+    destinationWallet?.currencyConfig ??
+    (payoutSwapAction == null
+      ? undefined
+      : account.currencyConfig[payoutSwapAction.toAsset.pluginId])
 
   const {
     isEstimate,
@@ -88,7 +133,7 @@ export function SwapDetailsCard(props: Props) {
     payoutTokenId,
     plugin,
     refundAddress
-  } = upgradeSwapData(wallet, swapData)
+  } = upgradeSwapData(payoutConfig, swapData)
   const formattedOrderUri =
     orderUri == null
       ? undefined
@@ -124,12 +169,12 @@ export function SwapDetailsCard(props: Props) {
           return
         }
 
-        if (error) showError(error)
+        if (error != null) showError(error)
       }
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (formattedOrderUri == null) return
 
     // Replace {{TXID}} with actual transaction ID if present
@@ -140,9 +185,9 @@ export function SwapDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: formattedOrderUri })
           else await Linking.openURL(formattedOrderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(formattedOrderUri).catch(err => {
+          Linking.openURL(formattedOrderUri).catch((err: unknown) => {
             showError(err)
           })
         })
@@ -152,22 +197,14 @@ export function SwapDetailsCard(props: Props) {
   }
 
   const destinationDenomination = useSelector(state =>
-    destinationWallet == null || payoutTokenId === undefined
+    payoutConfig == null || payoutTokenId === undefined
       ? undefined
-      : selectDisplayDenom(
-          state,
-          destinationWallet.currencyConfig,
-          payoutTokenId
-        )
+      : selectDisplayDenom(state, payoutConfig, payoutTokenId)
   )
   if (destinationDenomination == null) return null
 
-  const sourceNativeAmount = sub(
-    abs(transaction.nativeAmount),
-    transaction.networkFee
-  )
   const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
-    sourceNativeAmount
+    getSwapSourceNativeAmount(transaction, currencyInfo.pluginId)
   )
   const sourceAssetName =
     tokenId == null
@@ -180,19 +217,16 @@ export function SwapDetailsCard(props: Props) {
     destinationDenomination.multiplier
   )(swapData.payoutNativeAmount)
   const destinationAssetName =
-    payoutTokenId == null
+    payoutTokenId == null || payoutConfig == null
       ? payoutCurrencyCode
-      : `${payoutCurrencyCode} (${
-          getExchangeDenom(destinationWallet.currencyConfig, null).name
-        })`
+      : `${payoutCurrencyCode} (${getExchangeDenom(payoutConfig, null).name})`
 
   const symbolString =
-    currencyInfo.currencyCode === transaction.currencyCode &&
-    walletDefaultDenom.symbol != null
+    tokenId == null && walletDefaultDenom.symbol != null
       ? walletDefaultDenom.symbol
-      : transaction.currencyCode
+      : getCurrencyCode(wallet, tokenId)
 
-  const createExchangeDataString = (newline: string = '\n') => {
+  const createExchangeDataString = (newline: string = '\n'): string => {
     const uniqueIdentifier = memos
       .map(
         (memo, index) =>
@@ -240,6 +274,7 @@ export function SwapDetailsCard(props: Props) {
     <EdgeCard sections>
       <EdgeRow
         rightButtonType="touchable"
+        testID="exchangeDetailsRow"
         title={lstrings.transaction_details_exchange_details}
         onPress={handleExchangeDetails}
       >
@@ -272,6 +307,7 @@ export function SwapDetailsCard(props: Props) {
       {plugin.supportEmail == null ? null : (
         <EdgeRow
           rightButtonType="touchable"
+          testID="exchangeSupportRow"
           title={lstrings.transaction_details_exchange_support}
           onPress={handleEmail}
           body={swapData.plugin.supportEmail}

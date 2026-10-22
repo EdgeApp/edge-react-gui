@@ -1,3 +1,9 @@
+### Description
+
+<!-- What this PR changes and why. Keep it short. When the work has a technical
+design document, mirror that document's Overview here and link the doc on the
+line after it, so this section stays the single place a reviewer starts. -->
+
 ### CHANGELOG
 
 Does this branch warrant an entry to the CHANGELOG?

@@ -12,7 +12,7 @@ import {
 } from '../controllers/loan-manager/redux/reducers'
 import type { Action } from '../types/reduxTypes'
 import type { DeviceReferral } from '../types/ReferralTypes'
-import type { GuiContact, WalletListItem } from '../types/types'
+import type { GuiContact, LinkPromo, WalletListItem } from '../types/types'
 import { account, type AccountState } from './AccountReducer'
 import { core, type CoreState } from './CoreReducer'
 import { network, type NetworkState } from './NetworkReducer'
@@ -30,6 +30,15 @@ export interface RootState {
   // Flag to signal scrolling components to add extra padding at the bottom to
   // avoid blocking content with the notification view
   readonly isNotificationViewActive: boolean
+
+  // Promo attribution for the buy / sell / swap flow a deep link or promo
+  // card opened, with the tab that entry belongs to. It attributes the next
+  // conversion and is released when the entry ends, whether that entry
+  // converts or the user leaves the tab without converting, so it never leaks
+  // into a later conversion. This is deliberately NOT part of
+  // `accountReferral`: the attribution is scoped to one entry into the flow
+  // and is never persisted to the account.
+  readonly linkPromo: LinkPromo | null
 
   // Notification settings for price change/marketing/etc
   readonly notificationSettings: NotificationSettings
@@ -80,6 +89,20 @@ export const rootReducer = combineReducers<RootState, Action>({
     switch (action.type) {
       case 'IS_NOTIFICATION_VIEW_ACTIVE':
         return action.data.isNotificationViewActive
+      default:
+        return state
+    }
+  },
+
+  linkPromo: (
+    state: LinkPromo | null = null,
+    action: Action
+  ): LinkPromo | null => {
+    switch (action.type) {
+      case 'LINK_PROMO/SET':
+        return action.data.linkPromo
+      case 'LOGOUT':
+        return null
       default:
         return state
     }

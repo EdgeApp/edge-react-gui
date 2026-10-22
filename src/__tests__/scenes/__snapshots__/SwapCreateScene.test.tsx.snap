@@ -804,6 +804,267 @@ exports[`SwapCreateScene should render with loading props 1`] = `
             }
           }
           nativeID="4"
+        >
+          <View
+            style={
+              [
+                {
+                  "alignSelf": "stretch",
+                  "borderRadius": 16,
+                },
+                {
+                  "marginBottom": 11,
+                  "marginLeft": 11,
+                  "marginRight": 11,
+                  "marginTop": 11,
+                },
+                {
+                  "paddingBottom": 11,
+                  "paddingLeft": 11,
+                  "paddingRight": 11,
+                  "paddingTop": 11,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "rgba(255, 255, 255, .1)",
+                  "borderRadius": 16,
+                  "bottom": 0,
+                  "left": 0,
+                  "overflow": "hidden",
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                }
+              }
+            />
+            <View
+              style={
+                [
+                  {
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 1,
+                  },
+                  {
+                    "marginVertical": 0,
+                  },
+                ]
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={false}
+                collapsable={false}
+                focusable={true}
+                hitSlop={11}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "rgba(255, 255, 255, 0)",
+                    "flexDirection": "row",
+                    "marginBottom": 1,
+                    "minHeight": 67,
+                    "opacity": 1,
+                    "padding": 11,
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={false}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "flexGrow": 1,
+                      "flexShrink": 1,
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "paddingHorizontal": 11,
+                      "textAlign": "left",
+                    }
+                  }
+                >
+                  Stealth Swap
+                </Text>
+                <View>
+                  <View
+                    collapsable={false}
+                    jestAnimatedProps={
+                      {
+                        "value": {},
+                      }
+                    }
+                    jestAnimatedStyle={
+                      {
+                        "value": {
+                          "opacity": 0,
+                        },
+                      }
+                    }
+                    jestInlineStyle={
+                      [
+                        {
+                          "aspectRatio": 1,
+                          "position": "absolute",
+                          "width": "100%",
+                          "zIndex": 1,
+                        },
+                      ]
+                    }
+                    nativeID="5"
+                    pending={false}
+                    style={
+                      [
+                        {
+                          "aspectRatio": 1,
+                          "position": "absolute",
+                          "width": "100%",
+                          "zIndex": 1,
+                        },
+                        {
+                          "opacity": 0,
+                        },
+                      ]
+                    }
+                  >
+                    <ActivityIndicator
+                      color="#00f1a2"
+                      style={
+                        {
+                          "height": 34,
+                          "marginHorizontal": 11,
+                        }
+                      }
+                    />
+                  </View>
+                  <View
+                    collapsable={false}
+                    jestAnimatedProps={
+                      {
+                        "value": {},
+                      }
+                    }
+                    jestAnimatedStyle={
+                      {
+                        "value": {
+                          "opacity": 1,
+                        },
+                      }
+                    }
+                    jestInlineStyle={{}}
+                    nativeID="6"
+                    pending={false}
+                    style={
+                      [
+                        {
+                          "opacity": 1,
+                        },
+                      ]
+                    }
+                  >
+                    <View
+                      pointerEvents="none"
+                      style={
+                        {
+                          "marginHorizontal": 11,
+                          "padding": 0,
+                        }
+                      }
+                    >
+                      <RCTSwitch
+                        accessibilityRole="switch"
+                        disabled={false}
+                        onChange={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        onTintColor="#00f1a2"
+                        style={
+                          [
+                            {
+                              "height": 31,
+                              "width": 51,
+                            },
+                            {
+                              "backgroundColor": "#888888",
+                              "borderRadius": 16,
+                            },
+                          ]
+                        }
+                        tintColor="#888888"
+                        value={false}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          entering={
+            FadeInDown {
+              "build": [Function],
+              "delayV": 0,
+              "durationV": 300,
+              "easingV": [Function],
+              "initialValues": {
+                "transform": [
+                  {
+                    "translateY": 60,
+                  },
+                ],
+              },
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          layout={
+            LinearTransition {
+              "build": [Function],
+              "durationV": 300,
+              "randomizeDelay": false,
+              "reduceMotionV": "system",
+            }
+          }
+          nativeID="7"
         />
         <View
           collapsable={false}
@@ -842,7 +1103,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="5"
+          nativeID="8"
         />
       </View>
     </View>
@@ -881,7 +1142,7 @@ exports[`SwapCreateScene should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="6"
+    nativeID="9"
     onLayout={[Function]}
     stackHeight={0}
     style={

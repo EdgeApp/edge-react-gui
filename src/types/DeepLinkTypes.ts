@@ -11,11 +11,13 @@
  *
  *   - buy: Buy flow entry, optionally pinning a ramp provider / payment type
  *   - edge: Edge login
+ *   - exchange: Buy / sell / swap entry with the asset(s) pre-selected
  *   - pay: Payment request
  *   - plugin: GUI plugin deep link
  *   - promotion: Activate a promotion code
  *   - recovery: Password recovery
  *   - sell: Sell flow entry, optionally pinning a ramp provider / payment type
+ *   - send: Send flow entry, optionally pre-selecting an asset or Stealth Send
  *   - swap: Crypto-to-crypto swap
  *   - x-callback-url: Address request
  *
@@ -47,6 +49,7 @@ import type {
   FiatPaymentType
 } from '../plugins/gui/fiatPluginTypes'
 import type { AppParamList } from './routerTypes'
+import type { EdgeAsset } from './types'
 
 export interface AztecoLink {
   type: 'azteco'
@@ -127,18 +130,27 @@ export interface PriceChangeLink {
  *
  *   edge://buy[/<providerId>[/<paymentType>]]
  *   edge://sell[/<providerId>[/<paymentType>]]
+ *   edge://exchange/buy?buyAsset=<asset>[&promoId=<id>]
+ *   edge://exchange/sell?sellAsset=<asset>[&promoId=<id>]
  *
  * `providerId` and `paymentType` pin a ramp provider and payment method to the
  * top of the quote results for this navigation only; they are never written to
  * the account referral state. A pin that matches no quote degrades to the
  * normal ordering. The `?af=` query on the `https://deep.edge.app` form keeps
  * its existing attribution behavior, independent of the pinning.
+ *
+ * `asset` pre-selects the wallet to buy into or sell from, and `promoId`
+ * attributes the resulting conversion for this navigation only, overriding the
+ * account's own promo ids. Both are link-scoped in the same sense as the pins:
+ * nothing is written to the account referral state.
  */
 export interface RampCreateLink {
   type: 'rampCreate'
   direction: FiatDirection
   providerId?: string
   paymentType?: FiatPaymentType
+  asset?: EdgeAsset
+  promoId?: string
 }
 
 export interface MarketingLink {
@@ -175,9 +187,35 @@ export interface RequestAddressLink {
   payer?: string
 }
 
+/**
+ * An entry into the send flow:
+ *
+ *   edge://send[?stealth=true][&asset=<asset>]
+ *
+ * The user picks the wallet to send from, narrowed to `asset` when the link
+ * names one. `stealth` arms the Send scene's Stealth Send toggle for this visit
+ * only; any value other than "true" leaves it off.
+ */
+export interface SendLink {
+  type: 'send'
+  asset?: EdgeAsset
+  stealth: boolean
+}
+
+/**
+ * An entry into the swap flow:
+ *
+ *   edge://swap
+ *   edge://exchange/swap[?buyAsset=<asset>][&sellAsset=<asset>][&promoId=<id>]
+ *
+ * Either asset may be omitted, leaving that side for the user to pick.
+ * `promoId` attributes the resulting conversion for this navigation only.
+ */
 export interface SwapLink {
   type: 'swap'
-  // We may eventually add query parameters to pre-populate currencies.
+  buyAsset?: EdgeAsset
+  sellAsset?: EdgeAsset
+  promoId?: string
 }
 
 export interface WalletConnectLink {
@@ -226,6 +264,7 @@ export type DeepLink =
   | PriceChangeLink
   | PromotionLink
   | RequestAddressLink
+  | SendLink
   | SwapLink
   | WalletConnectLink
   | RampCreateLink

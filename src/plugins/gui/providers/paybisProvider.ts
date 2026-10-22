@@ -92,7 +92,11 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
 
 const asApiKeys = asObject({
   apiKey: asString,
-  partnerUrl: asString,
+  // Defaulted here because the config/keys split retired the per-provider
+  // cleaners in `configKeysSchema.ts`, and this was the one field whose default those
+  // cleaners supplied that no consumer replaces. A config omitting it used to
+  // work; without this the provider would fail to initialize.
+  partnerUrl: asOptional(asString, 'https://widget-api.paybis.com'),
   privateKeyB64: asString
 })
 

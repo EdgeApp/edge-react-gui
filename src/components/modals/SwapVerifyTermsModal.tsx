@@ -41,6 +41,16 @@ const pluginData: Record<string, TermsUri> = {
     privacyUri: 'https://exolix.com/privacy',
     kycUri: 'https://exolix.com/aml-kyc'
   },
+  houdini: {
+    // Houdini publishes its terms as a PDF linked from the site footer; the
+    // rest of its legal copy lives in the docs site.
+    termsUri:
+      'https://cdn.prod.website-files.com/69143df941a2491956546ef7/6a579a7d3db98c279dc6020b_Houdini%20Swap%20-%20Terms%20of%20Service-14673161-v6.pdf',
+    privacyUri:
+      'https://docs.houdiniswap.com/products/swap-transfer/privacy-notice',
+    kycUri:
+      'https://docs.houdiniswap.com/overview/getting-started/privacy-and-compliance'
+  },
   nexchange: {
     termsUri: 'https://n.exchange/legal/terms'
   },
@@ -60,9 +70,23 @@ const pluginData: Record<string, TermsUri> = {
   }
 }
 
+interface SwapVerifyTermsOptions {
+  /**
+   * What a decline does besides failing the check. By default it switches the
+   * provider off in the exchange settings, which is what keeps a re-quote from
+   * returning the same provider and asking again. A request that queries the
+   * provider whatever that setting says (a Stealth Swap) gains nothing from
+   * the switch, so it passes `true`: the decline is then not saved at all, and
+   * the caller cancels the swap instead of re-quoting.
+   */
+  declineIsCancelOnly?: boolean
+}
+
 export async function swapVerifyTerms(
-  swapConfig: EdgeSwapConfig
+  swapConfig: EdgeSwapConfig,
+  opts: SwapVerifyTermsOptions = {}
 ): Promise<boolean> {
+  const { declineIsCancelOnly = false } = opts
   const { pluginId } = swapConfig.swapInfo
   const uris = pluginData[pluginId]
   if (uris == null) return true
@@ -80,7 +104,7 @@ export async function swapVerifyTerms(
 
   if (result) {
     await swapConfig.changeUserSettings({ agreedToTerms: true })
-  } else {
+  } else if (!declineIsCancelOnly) {
     await swapConfig.changeUserSettings({ agreedToTerms: false })
     await swapConfig.changeEnabled(false)
   }

@@ -16,6 +16,15 @@ interface Item {
   icon: string | number | React.ReactNode
   name: string
   text?: string
+  /**
+   * What this row resolves to, and what `selected` is matched against.
+   * Defaults to `name`, which is only safe while every label is unique. Pass
+   * an id whenever two rows can legitimately carry the same label: the POL
+   * ERC-20 on Ethereum and the Polygon chain are both named "Polygon", so a
+   * name-keyed list renders both as selected and resolves either tap to the
+   * same row.
+   */
+  value?: string
 }
 
 interface Props {
@@ -23,17 +32,19 @@ interface Props {
   title: string
   items: Item[]
   selected?: string
+  /** Explanatory copy between the title and the list. */
+  message?: string
 }
 
-export function RadioListModal(props: Props) {
-  const { bridge, items, selected, title } = props
+export const RadioListModal: React.FC<Props> = props => {
+  const { bridge, items, message, selected, title } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const renderRow = useHandler((item: Item) => {
-    const { name, icon, text } = item
+    const { name, icon, text, value = name } = item
 
-    const isSelected = selected === name
+    const isSelected = selected === value
     const radio = isSelected
       ? { icon: 'radio-button-on', color: theme.iconTappable }
       : { icon: 'radio-button-off', color: theme.iconTappable }
@@ -59,8 +70,9 @@ export function RadioListModal(props: Props) {
 
     return (
       <EdgeTouchableOpacity
+        testID={`radioListItem_${value}`}
         onPress={() => {
-          bridge.resolve(name)
+          bridge.resolve(value)
         }}
       >
         <View style={styles.row}>
@@ -87,6 +99,7 @@ export function RadioListModal(props: Props) {
     <ListModal
       bridge={bridge}
       title={title}
+      message={message}
       textInput={false}
       rowsData={items}
       rowComponent={renderRow}

@@ -26,10 +26,10 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { formatFiatString } from '../../hooks/useFiatText'
 import { useHandler } from '../../hooks/useHandler'
+import { globalKeys } from '../../keys'
 import { formatDate } from '../../locales/intl'
 import { lstrings } from '../../locales/strings'
 import { getCoingeckoFiat } from '../../selectors/SettingsSelectors'
@@ -297,9 +297,9 @@ export const SwipeChart: React.FC<Props> = props => {
               // Rate limit error, use our API key as a fallback
               if (
                 !fetchUrl.includes('x_cg_pro_api_key') &&
-                ENV.COINGECKO_API_KEY !== ''
+                globalKeys.COINGECKO_API_KEY !== ''
               ) {
-                fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${ENV.COINGECKO_API_KEY}`
+                fetchUrl = `${COINGECKO_URL_PRO}${fetchPath}&x_cg_pro_api_key=${globalKeys.COINGECKO_API_KEY}`
               }
               // Wait 2 second before retrying. It typically takes 1 minute
               // before rate limiting is relieved, so even 2 seconds is hasty.

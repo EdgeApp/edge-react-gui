@@ -4,9 +4,13 @@ import {
   initialState,
   MAX_NON_PASSWORD_DAYS_LIMIT,
   MAX_NON_PASSWORD_LOGINS_LIMIT,
+  NON_PASSWORD_DAYS_GROWTH_RATE,
+  NON_PASSWORD_LOGINS_GROWTH_RATE,
+  passwordReminder,
   type PasswordReminderReducerAction,
   untranslatedReducer as uut
 } from '../../reducers/PasswordReminderReducer'
+import type { Action } from '../../types/reduxTypes'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../../util/utils'
 
 describe('PasswordReminder', () => {
@@ -261,6 +265,41 @@ describe('PasswordReminder', () => {
 
         expect(actual).toEqual(expected)
       })
+    })
+  })
+  describe('Account Settings unlock', () => {
+    // Unlocking Account Settings runs the password through `validatePassword`,
+    // which dispatches `PASSWORD_USED`, and then dispatches
+    // `UI/SETTINGS/SET_SETTINGS_LOCK` to record the unlocked state. Only the
+    // first of those may count as a password use: counting both squares the
+    // reminder thresholds and the reminder stops reappearing.
+    test('Counts one password use per unlock', () => {
+      const unlockActions: Action[] = [
+        { type: 'PASSWORD_USED' },
+        { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: false }
+      ]
+
+      const actual = unlockActions.reduce(
+        (state, action) => passwordReminder(state, action),
+        initialState
+      )
+
+      expect(actual.passwordUseCount).toEqual(1)
+      expect(actual.nonPasswordLoginsLimit).toEqual(
+        NON_PASSWORD_LOGINS_GROWTH_RATE
+      )
+      expect(actual.nonPasswordDaysLimit).toEqual(NON_PASSWORD_DAYS_GROWTH_RATE)
+    })
+
+    test('Lock state changes alone are not password uses', () => {
+      const action: Action = {
+        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+        data: false
+      }
+
+      const actual = passwordReminder(initialState, action)
+
+      expect(actual).toEqual(initialState)
     })
   })
 })

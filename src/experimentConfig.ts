@@ -1,8 +1,8 @@
 import { asMaybe, asObject, asValue, type Cleaner } from 'cleaners'
 import { makeReactNativeDisklet } from 'disklet'
 
+import { CONFIG } from './config'
 import { LOCAL_EXPERIMENT_CONFIG } from './constants/constantSettings'
-import { ENV } from './env'
 import { isMaestro } from './util/maestro'
 
 // Persistent experiment config for A/B testing. Values initialized in this
@@ -114,15 +114,15 @@ const experimentConfigPromise: Promise<ExperimentConfig> =
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
   if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
   else if (
-    ENV.EXPERIMENT_CONFIG_OVERRIDE != null &&
-    Object.keys(ENV.EXPERIMENT_CONFIG_OVERRIDE).length > 0
+    CONFIG.EXPERIMENT_CONFIG_OVERRIDE != null &&
+    Object.keys(CONFIG.EXPERIMENT_CONFIG_OVERRIDE).length > 0
   ) {
     try {
-      console.log('ENV.EXPERIMENT_CONFIG_OVERRIDE set')
-      return asExperimentConfig(ENV.EXPERIMENT_CONFIG_OVERRIDE)
+      console.log('CONFIG.EXPERIMENT_CONFIG_OVERRIDE set')
+      return asExperimentConfig(CONFIG.EXPERIMENT_CONFIG_OVERRIDE)
     } catch (err) {
       console.error(
-        'Error applying ENV.EXPERIMENT_CONFIG_OVERRIDE: ',
+        'Error applying CONFIG.EXPERIMENT_CONFIG_OVERRIDE: ',
         String(err)
       )
       console.warn('Reverting to default experiment config.')

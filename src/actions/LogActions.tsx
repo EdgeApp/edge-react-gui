@@ -36,6 +36,21 @@ import { getExchangeRateCacheDump } from './ExchangeRateActions'
 
 const logsUri = 'https://logs1.edge.app/v1/log/'
 
+// The logs server answers 400 with this body when a log is dated more than
+// five minutes away from its own clock:
+const LOGS_CLOCK_REFUSAL = 'Time Out of Sync'
+
+/**
+ * The logs server refused an upload because the device clock is wrong. The
+ * message is ready to show to the user as-is.
+ */
+export class LogsClockError extends Error {
+  constructor() {
+    super(lstrings.settings_modal_send_logs_clock_error)
+    this.name = 'LogsClockError'
+  }
+}
+
 export interface MultiLogOutput {
   activity: LogOutput
   info: LogOutput
@@ -288,8 +303,12 @@ export const sendLogs = async (
     },
     body: JSON.stringify(logs)
   })
-    .then(response => {
+    .then(async response => {
       if (!response.ok) {
+        const text = await response.text()
+        if (response.status === 400 && text.trim() === LOGS_CLOCK_REFUSAL) {
+          throw new LogsClockError()
+        }
         throw Error(`${logsUri} returned status ${response.status}`)
       }
       console.log(`====== SENDING LOGS SUCCESS ======`, response)

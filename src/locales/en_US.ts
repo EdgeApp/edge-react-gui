@@ -72,6 +72,9 @@ const strings = {
   bitpay_metadata_name: 'Invoice ID: %s',
   bitcoin_received: '%1$s Received',
 
+  // Shown instead of the app when the core fails to start at all:
+  boot_failed_message_1s: 'Edge failed to start: %1$s',
+
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
   share_message:
@@ -250,6 +253,15 @@ const strings = {
   fragment_required: 'Required',
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
+  send_to_self_error_message: 'You cannot send to the same wallet',
+  send_address_invalid_1s: 'This is not a valid %1$s address.',
+  send_address_other_network_1s:
+    'This address is on another network. This send can only go to an address on %1$s.',
+  send_address_unrecognized_1s:
+    'This address does not match any network %1$s can send to from this wallet.',
+  send_recipient_network_changed_1s: 'Recipient network changed to %1$s.',
+  send_address_no_network_selected:
+    'No network was selected, so the address was not added.',
   fragment_send_subtitle: 'Send',
   fragment_send_myself: 'Myself',
   fragment_send_from_label: 'From',
@@ -287,12 +299,14 @@ const strings = {
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_copy_seed: 'Copy Seed',
-  fragment_wallets_copied_seed: 'Copied Seed',
+  fragment_wallets_copied_seed_clears:
+    'Copied seed. The clipboard will clear in 1 minute.',
   fragment_wallets_get_seed_wallet: 'Get Seed',
   fragment_wallets_pause_wallet: 'Pause Wallet',
   fragment_wallets_unpause_wallet: 'Unpause Wallet',
   fragment_wallets_wallet_paused: 'Wallet Paused',
   fragment_wallets_wallet_disabled: 'Wallet Disabled',
+  fragment_wallets_wallet_engine_failed_1s: 'Engine Failed: %1$s',
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
   fragment_wallets_view_xpub: 'View XPub Address',
@@ -475,6 +489,9 @@ const strings = {
   percent_complete_1s: '%1$s Complete',
   sync_status_title: 'Sync in Progress',
   sync_status_blocks: 'Syncing blocks %1$s/%2$s',
+  large_utxo_wallet_title: 'Large Wallet',
+  large_utxo_wallet_body:
+    'This wallet has a long transaction history, so syncing can take a while. While it syncs, the balance will be inaccurate until the sync is complete, so keep the wallet open until it finishes.',
   validating: 'Validating…',
   high_fee_warning_confirm_send: 'Confirm Send',
   mining_fee_custom_label_choice: 'Custom',
@@ -509,6 +526,9 @@ const strings = {
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance',
+  send_confirmation_zero_amount_title: 'Send Zero Amount?',
+  send_confirmation_zero_amount_message:
+    "You're about to send a transaction with a zero amount. Network fees (gas) will still be charged. Are you sure you want to continue?",
   send_confirmation_algo_recipient_not_activated_s:
     'Recipient must first activate %1$s before they can receive funds.',
   send_confirmation_eos_error_cpu:
@@ -655,6 +675,8 @@ const strings = {
   settings_modal_clear_logs_success: 'Logs have been cleared',
   settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
+  settings_modal_send_logs_clock_error:
+    'Logs could not be sent because your device clock is wrong. Turn on automatic date & time in your system settings and try again.',
   settings_modal_share_logs_failure: 'Sharing logs has failed',
   settings_modal_send_unsafe:
     'These logs appear to contain sensitive information, such as private keys and addresses, that could result in the loss of funds. Therefore, it is not safe to send these logs to Edge servers.',
@@ -834,6 +856,7 @@ const strings = {
   string_first_sonic_wallet_name: 'My Sonic',
   string_first_opbnb_wallet_name: 'My opBNB',
   string_first_robinhood_wallet_name: 'My Robinhood Chain',
+  string_first_arc_wallet_name: 'My Arc',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -946,7 +969,9 @@ const strings = {
     'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_error_invalid: 'Invalid Transaction',
   sub_category_label: 'Sub-category',
+  transaction_details_recipient_address: 'Recipient Address',
   transaction_details_recipient_addresses: 'Recipient Addresses',
+  transaction_details_exchange_deposit_address: 'Exchange Deposit Address',
   transaction_details_advance_details_header: 'Advanced Details',
   transaction_details_advance_details_fee_setting: 'Fee Setting',
   transaction_details_advance_details_device: 'Device',
@@ -990,6 +1015,10 @@ const strings = {
   transaction_details_exchange_support_request: '%s Support Request',
   transaction_details_fee_warning: 'High Network Fees',
   transaction_details_swap: 'Swap Funds',
+  transaction_details_swap_and_send: 'Swap & Send',
+  transaction_details_stealth_send: 'Stealth Send',
+  transaction_details_stealth_swap: 'Stealth Swap',
+  transaction_details_stealth_swap_and_send: 'Stealth Swap & Send',
   transaction_details_swap_network_fee: 'Swap Network Fee',
   transaction_details_swap_order_cancel: 'Swap Order Cancelled',
   transaction_details_swap_order_post: 'Swap Order Opened',
@@ -1234,6 +1263,7 @@ const strings = {
   quote_selected_quote: 'Selected Quote',
   quote_swap_provider: 'Select Swap Provider',
   quote_variable_quotes: 'Variable Quotes',
+  quote_requote_toast: 'This quote is no longer valid. Getting a new one.',
   can_be_partial_quote_title: 'Partial Quote',
   can_be_partial_quote_message: 'This quote may be partially fulfilled.',
   can_be_partial_quote_with_max_body:
@@ -1261,6 +1291,8 @@ const strings = {
   wallet_list_modal_header_parent: 'Parent Wallet',
   wallet_list_modal_header_mru: 'Most Recent Wallets',
   wallet_list_modal_header_other: 'Other Wallets',
+  wallet_list_modal_header_same_asset: 'Same Asset',
+  wallet_list_modal_header_other_assets: 'Other Assets',
   wallet_list_modal_creating_wallet: 'Creating Wallet. Please Wait',
   wallet_list_modal_enabling_token: 'Enabling Token. Please Wait',
   wallet_list_modal_confirm_s_bank_withdrawal:
@@ -1472,6 +1504,8 @@ const strings = {
   price_change_notification: 'Price Notification',
   price_change_buy_sell_trade: 'Would you like to buy, sell, or exchange %1$s?',
   // Update notices
+  plugins_unavailable_message_1s:
+    'Some assets and exchanges are unavailable in this session: %1$s',
   update_notice_deprecate_electrum_servers_title: 'Blockbook Upgrade',
   update_notice_deprecate_electrum_servers_message: `%s no longer uses Electrum Servers. If you would like to continue to use CUSTOM NODES, please input Blockbook compatible addresses.\n\nNOTE: If you had custom nodes enabled, those wallets will not sync until corrected.`,
 
@@ -1660,6 +1694,57 @@ const strings = {
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
+  stealth_send_toggle: 'Stealth Send',
+  stealth_swap_toggle: 'Stealth Swap',
+  stealth_info_1s:
+    '%1$s routing helps obfuscate the on-chain link between sender and receiver wallets.',
+  stealth_learn_more: 'Learn more',
+  stealth_you_send: 'You send',
+  stealth_recipient_gets: 'Recipient gets',
+  stealth_recipient_receives: 'Recipient receives',
+  stealth_recipient_network_1s: '%1$s Network',
+  stealth_guaranteed: 'Guaranteed',
+  stealth_estimated: 'Estimated',
+  stealth_slide_send: 'Slide to send stealthily',
+  stealth_quote_rate: 'Exchange Rate',
+  stealth_quote_expires: 'Quote Expires',
+  stealth_getting_quote: 'Getting quote...',
+  stealth_route_unavailable_toast:
+    'Stealth routing is not available for this pair right now. Stealth Send has been turned off.',
+  stealth_route_unavailable_info:
+    'Stealth routing is not available for this pair right now.',
+  stealth_asset_unsupported_1s: 'Stealth routing is not available for %1$s.',
+  stealth_self_private_unsupported_1s:
+    'Stealth routing is not available when sending %1$s to itself.',
+  stealth_below_private_minimum_1s:
+    'Stealth routing needs at least %1$s. Enter a larger amount.',
+  stealth_below_standard_minimum_1s:
+    'The provider needs at least %1$s to route this send. Enter a larger amount.',
+  stealth_fixed_to_unavailable_toast:
+    'The provider cannot guarantee an exact receive amount for this pair. Your send amount is guaranteed instead.',
+  stealth_zcash_transparent_payout_title: 'Transparent Zcash payout',
+  stealth_zcash_transparent_payout_body:
+    'Zcash payouts go to a transparent address at this time. The amount received is visible on the blockchain.',
+  stealth_swap_send_warning_title: 'Swap before send',
+  stealth_swap_send_warning_title_private: 'Stealth swap before send',
+  stealth_swap_send_warning_body:
+    'Your funds are swapped before they reach the recipient.',
+  stealth_swap_send_warning_body_private:
+    'Your funds are swapped over an obfuscated route before they reach the recipient.',
+  transaction_may_take_longer:
+    'This transaction may take longer than usual to complete.',
+  stealth_swap_send_modal_title: 'This send uses a swap provider',
+  stealth_swap_send_modal_message_kyc:
+    'In rare cases, the provider or its exchange partners may hold a transaction for AML/KYC review and ask you to verify your identity. If you do not, the funds are returned to you.',
+  stealth_swap_send_modal_message_recovery_1s:
+    'A held or failed swap is resolved with the provider. %1$s cannot cancel, refund, or recover funds once they are sent.',
+  stealth_swap_send_modal_message_2s:
+    '%1$s reaches this recipient by swapping through %2$s. Your wallet pays the provider, and the provider pays the recipient.',
+  stealth_swap_send_modal_message_timing:
+    'The send is not complete until the provider forwards the funds. Expect it to take longer than a normal send.',
+  stealth_detected_network_title: 'Which network is this address on?',
+  stealth_detected_network_message:
+    'This address belongs to another network. Choose the network the recipient is on and Edge will convert your %1$s for them.',
   send_scene_error_title: 'Error:',
   send_scene_metadata_name_title: 'Payee',
   send_make_spend_xrp_dest_tag_length_error:
@@ -1709,13 +1794,15 @@ const strings = {
   wc_confirm_subtitle: '%s wants to connect your wallet.',
   wc_confirm_body_title: 'Allow %s to:',
   wc_confirm_body:
-    'Request approval for transactions\nView your wallet and balance activity',
+    'View your wallet address\nRequest approval for transactions',
   wc_confirm_select_wallet: 'Select wallet to connect with',
   wc_confirm_return_to_browser: 'You may now return to browser',
   wc_smartcontract_title: 'Smart Contract Call',
   wc_smartcontract_warning_title: 'Warning',
-  wc_smartcontract_warning_text:
-    'Make sure this is an application you can trust. Executing this transaction gives the application access to your funds.',
+  wc_smartcontract_warning_point_funds:
+    'Approving this request may move funds or grant permissions',
+  wc_smartcontract_warning_point_trust:
+    'Only continue if you trust this application and expected this request',
   wc_smartcontract_insufficient_text:
     "You don't have enough %s to cover network fees.",
   wc_smartcontract_wallet: 'Wallet',
@@ -1727,6 +1814,14 @@ const strings = {
   wc_scan_modal_text_modal_hint: 'Wallet Connect URI',
   wc_unsupported_version: 'Unsupported WalletConnect version',
   wc_no_wallets_dapp_requirements: 'No wallets meet dapp requirements',
+  wc_sign_message_title: 'Signature Request',
+  wc_sign_message_warning_text:
+    'Signing proves you control this address. It moves no funds, but only approve it for an application you trust.',
+  wc_sign_message_address: 'Address',
+  wc_sign_message_message: 'Message',
+  wc_sign_message_approve_button: 'Sign',
+  wc_sign_message_reject_button: 'Reject',
+  wc_sign_message_confirmed: 'Signature sent',
 
   // New Token TermsAgreement Modal
   token_agreement_modal_title: '%s Needed to Send Tokens',
@@ -1799,6 +1894,8 @@ const strings = {
     'Claiming rewards will block you from withdrawing your staked funds for 36 hours.\n\nTo claim rewards AND unstake any staked funds, choose "Claim Rewards and Unstake" instead.',
   stake_warning_unstake:
     'Unstaking a partial amount will block you from unstaking more funds for 36 hours.',
+  stake_warning_velodrome_aero_upgrade:
+    'Velodrome rewards ended with the Aero upgrade, and this pool no longer accepts new deposits. Unstake to withdraw your funds.',
   stake_modal_modify_stake_title: 'Stake from %s',
   stake_modal_modify_unstake_title: 'Unstake from %s',
   stake_error_insufficient_s: 'Insufficient %s',
@@ -2259,7 +2356,7 @@ const strings = {
     'Cannot send transaction while wallet contains a pending transaction. Please wait for transaction to confirm.',
   pending_transaction_modal_title: 'Pending Transaction',
   pending_transaction_modal_message:
-    'You have a pending transaction which is preventing another send. You may wait for confirmations or accelerate the pending transaction.',
+    'You have a pending transaction which is preventing another send. If it appears in a block explorer, you may wait for it to confirm or accelerate it. If it is not found after a few minutes, resync the wallet.',
   pending_transaction_modal_go_to_transaction: 'Go to Transaction',
   pending_transactions_confirmed:
     'Pending transactions confirmed, you may proceed with your transaction.',

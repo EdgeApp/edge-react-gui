@@ -25,7 +25,7 @@ tags:
 
 # View master private key for new wallet
 - tapOn: Assets
-- longPressOn: My Bitcoin
+- longPressOn: ".*My Bitcoin"
 - tapOn: ".*Master Private Key"
 - tapOn: Enter your password
 - inputText: ${output.newAccountPassword}
@@ -47,10 +47,10 @@ tags:
 
 # Locate new wallet and check seed phrase
 - scrollUntilVisible:
-    element: ${WALLET_NAME}
+    element: ${".*" + WALLET_NAME}
     centerElement: true
     direction: DOWN
-- longPressOn: ${WALLET_NAME}
+- longPressOn: ${".*" + WALLET_NAME}
 - tapOn: ".*Master Private Key"
 
 # Password Modal

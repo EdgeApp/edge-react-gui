@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { add, div, eq, gt, lt, mul, round } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, type ethers } from 'ethers'
 
 import { infoServerData } from '../../../../util/network'
 import { KilnLiquid20A__factory } from '../../../contracts'
@@ -13,6 +13,7 @@ import type {
   StakePosition
 } from '../../types'
 import { asInfoServerResponse } from '../../util/internalTypes'
+import { getStakingProvider } from '../../util/rpcProviders'
 import type { StakePolicyConfig } from '../types'
 import { EdgeWalletSigner } from '../util/EdgeWalletSigner'
 import { makeKilnApi } from '../util/KilnApi'
@@ -26,29 +27,28 @@ export interface EthereumPooledKilnAdapterConfig {
   baseUrl: string
   contractAddress: string
   exitQueueAddress: string
-  rpcProviderUrls: string[]
+}
+
+interface WorkflowUtils {
+  maxFeePerGas: BigNumber | undefined
+  maxPriorityFeePerGas: BigNumber | undefined
+  nextNonce: () => Promise<number>
+  walletAddress: string
+  walletSigner: EdgeWalletSigner
 }
 
 export const makeEthereumKilnAdapter = (
   policyConfig: StakePolicyConfig<EthereumPooledKilnAdapterConfig>
 ): StakePolicyAdapter => {
   const { stakePolicyId, adapterConfig } = policyConfig
-  const {
-    apiKey,
-    baseUrl,
-    contractAddress,
-    exitQueueAddress,
-    rpcProviderUrls
-  } = adapterConfig
+  const { apiKey, baseUrl, contractAddress, exitQueueAddress } = adapterConfig
 
   if (apiKey == null)
     throw new Error(`Kiln apiKey is required for ${stakePolicyId}`)
 
   const kiln = makeKilnApi(baseUrl, apiKey)
 
-  const provider = new ethers.providers.FallbackProvider(
-    rpcProviderUrls.map(url => new ethers.providers.JsonRpcProvider(url))
-  )
+  const provider = getStakingProvider(policyConfig.parentPluginId)
   const integrationContract = KilnLiquid20A__factory.connect(
     contractAddress,
     provider
@@ -80,7 +80,7 @@ export const makeEthereumKilnAdapter = (
       nativeAmount: networkFee.toString()
     })
 
-    const approve = async () => {
+    const approve = async (): Promise<void> => {
       await walletSigner.sendTransaction(tx)
     }
 
@@ -90,7 +90,9 @@ export const makeEthereumKilnAdapter = (
     }
   }
 
-  async function workflowUtils(wallet: EdgeCurrencyWallet) {
+  async function workflowUtils(
+    wallet: EdgeCurrencyWallet
+  ): Promise<WorkflowUtils> {
     const walletSigner = new EdgeWalletSigner(wallet, provider)
     const walletAddress = await walletSigner.getAddress()
 

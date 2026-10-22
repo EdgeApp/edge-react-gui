@@ -2,6 +2,100 @@
 
 ## Unreleased (develop)
 
+- added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+
+## 4.52.0 (2026-10-21)
+
+- added: Arc wallets
+- added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
+- added: Slow-sync explainer card and Learn More article on Bitcoin-family wallets with a long transaction history.
+- added: Logbox disable option to env.json
+- added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
+- added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
+- added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
+- added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
+- added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards
+- added: WalletConnect Bitcoin (bip122) message signing for proof of ownership with existing BTC wallets
+- added: Native Edge API HMAC signer (`edgeKey.json` + XOR-split C shards) so login-server requests can be signed outside the JS bundle via `apiSigner`, with JS `KEYS.EDGE_API_*` remaining as a fallback.
+- added: Remote signed `GET /v1/infoRollup/:appId` `appKeys` fetch so plugin secrets can rotate without an app release, with DeviceSettings cache and baked-in `keys.json` fallback
+- added: Stealth Send, sending privately to an address on any chain the Houdini provider serves
+- added: Stealth Swap, routing a swap through the Houdini privacy provider
+- added: A pasted address from another chain sets up the cross-chain send
+- added: Swap-sends and stealth sends get their own titles in the transaction list and details
+- added: Swap-sends and stealth sends show the recipient address in transaction details
+- added: The send scene notes when a swap provider pays the recipient
+- added: MoonPay Trade swap provider
+- added: Per-provider swap asset disables from the info server
+- added: Copy button for the master private key or seed, cleared from the clipboard after one minute
+- added: `stealth` navigation param that presets the Stealth Swap and Stealth Send toggles
+- added: `edge://send` deep link that opens Send, optionally with Stealth Send on
+- added: Warning that a Stealth Send to Zcash pays a transparent address
+- added: Token destinations, like USDT on Tron, for Stealth Send and swap-to-address sends
+- changed: Re-enable Pirate Chain on Android, using the smaller binary that downloads its Sapling parameters
+- changed: Standardize wallet list automation test IDs to use period separators.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
+- changed: Prevent sending to the same wallet's own address for EVM assets.
+- changed: Balance-effect checks and the login FIO refresh wait for engine readiness on cache-emitted wallets
+- changed: Opening any wallet-scoped scene asks the core to prioritize that wallet's engine startup in the post-login queue.
+- changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
+- changed: Split runtime `env.json` into non-secret `config.json` and secret `keys.json`; deploy-config branch overrides move from `envJson` to `configJson`/`keysJson` (legacy `envJson` is ignored on this GUI)
+- changed: Replace the flat `ENV` singleton with separate `CONFIG`, `KEYS`/`globalKeys`, and `pluginMaps` accessors (no top-level globalKeys flatten)
+- changed: WalletConnect Smart Contract Call warning restated in the solid UI4 card
+- changed: WalletConnect Connect button pinned to the bottom of Confirm Connection
+- changed: Hide the Stealth Send card and Recipient receives row on sends with multiple recipients
+- changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
+- changed: Stealth Swap toggle shows on the swap scene before assets are selected
+- changed: Stealth Send and Stealth Swap toggles remember the last setting per account
+- changed: Welcome screen "Already have an account?" prompt is white, with only "Sign in" green
+- changed: The "Recipient receives" list shows each asset's name over its network
+- changed: Stealth Swap wallet lists show only the assets the Houdini provider supports
+- changed: The send scene's exchange rate row no longer names the swap provider
+- changed: Stealth Send from a token source pays out that token, when Houdini serves it, instead of the chain coin
+- changed: Close the Optimism Velodrome and Tarot Earn pools to new stakes after the Aero upgrade
+- changed: Stealth toggles show dimmed and off, with the reason, for assets or pairs Stealth cannot route
+- fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
+- fixed: Send slider covering the last lines of the bottom warning card
+- fixed: Paybis and Simplex going missing from buy and sell on the launch after a slow or retried device attestation
+- fixed: Missing wrong-device-clock warning on a launch that runs no device attestation
+- fixed: Missing exchange rates when the device clock is set ahead
+- fixed: Export Logs failing with a bare status 400 when the device clock is wrong
+- fixed: A send whose funds are not spendable yet says so instead of reporting a network error
+- fixed: A swap retried after a failure fetches a fresh quote instead of failing with a "closed proxy" error
+- fixed: WalletConnect Bitcoin message signing returns a BIP-322 signature when the dapp requests `bip322`
+- fixed: Auto-login starting two competing accounts when both `YOLO_PASSWORD` and `YOLO_PIN` are set, and attempting a login when either is set to an empty string.
+- fixed: Auto-login never running on a device with no accounts, since the welcome carousel took priority over the login scene that owns it.
+- fixed: USDC.e shown as USDC in the Optimism Tarot staking pools
+- fixed: Say "edit name" instead of "edit settings" on the create/split wallet scene when the listed wallets have no settings to edit
+- fixed: Show the QR scanner scam warning after the camera permission is granted, instead of behind the OS permission prompt where it flashed away, and show only the Settings recovery guidance when camera access is denied.
+- fixed: Password reminder no longer stops reappearing after unlocking Account Settings
+- fixed: Show the password recovery reminder at every balance milestone, including for funds that arrived while the app was closed or before the exchange rates loaded.
+- fixed: Hide the send scene's MAX button once a send has more than one recipient, and hide "Add another address" once MAX has been applied, so the two can no longer combine into an insufficient-funds transaction.
+- fixed: (iOS) Debug builds crashing on text-input measurement when entering an amount on the Buy scene
+- fixed: Unstake showing a bare "Insufficient funds" instead of naming the balance needed for the network fee
+- fixed: Paybis sell Max now quotes the wallet's full spendable amount.
+- fixed: A failed confirmation slide shows the error instead of a stuck spinner.
+- fixed: Fantom and Optimism staking for EVM wallets that have a seed phrase
+- fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
+- fixed: Info server swap disables for mainnet coins not applying
+- fixed: Send totals for multiple recipients show the wallet's display unit, such as sats, instead of the currency code
+- fixed: Stealth Send "You send" amount shows the wallet's display unit, such as sats, instead of the currency code
+- fixed: Jest snapshot failures when `AGENT_TEST_MODE` is on in the local `config.json`
+- fixed: An address the send scene cannot use shows a message naming the reason
+- fixed: An address on the sending wallet's own network switches the recipient network back
+- fixed: The send scene no longer stacks the scam warning above the swap-send warning
+- fixed: Max sell through Paybis, MoonPay or Banxa failing with insufficient funds when the network fee rises
+- fixed: Apply per-provider swap asset disables from the info server to sends that swap to the recipient's asset
+- fixed: Swap-send notice title cut off on Android
+- fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
+- fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
+- fixed: MoonPay Trade logo cropped in transactions and invisible on the light theme
+- fixed: Swap & Send and Stealth Send to your own Zcash wallet failing with "HoudiniSwap: maxLength 200"
+- fixed: Pending transaction card's dead Learn More link, and its message now says when to resync the wallet
+- fixed: Backing out of the send scene in a MoonPay sell returns to the same MoonPay order without starting a new one
+- fixed: Backing out of a Paybis sell send closes the Paybis widget instead of showing a QR code page
+- fixed: Earn Portfolio missing staked positions in deprecated pools
+- removed: LetsExchange swap provider
+
 ## 4.51.3 (2026-09-30)
 
 - added: (Changelly) TON, BNB Smart Chain BNB and Avalanche C-Chain AVAX swaps
@@ -26,8 +120,13 @@
 - added: App/device attestation for gated info-server requests
 - added: Swapter swap provider
 - added: "-m" tag on the version number in the Help scene for Maestro test builds
+- added: Sign Message option in the wallet list menu for Bitcoin-family wallets, letting users prove self-hosted wallet ownership to exchanges by signing an exchange-provided message.
+- added: `edge://buy` and `edge://sell` deep links (and their `https://deep.edge.app` equivalents) that open the buy/sell flow, optionally pinning a provider and payment method to the top of the quote options for that visit.
+- added: Provider priority in the buy/sell options for affiliated accounts, configured through the info server promo card data.
 - added: `blockscoutApiKey` env config for EVM core plugins
 - changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
+- changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
+- changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
 - changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
@@ -37,7 +136,14 @@
 - changed: Tron resource staking now describes its claim action as reclaiming your own TRX, instead of claiming a reward.
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
 - changed: The balance card title now reads "Unhide Balance" while balances are hidden, and hiding balances shows a toast explaining how to bring them back.
+- changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
+- changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
+- changed: Add maestro test selectors (testIDs) to Manage Tokens rows.
+- changed: Add maestro test selectors (testIDs) to the Wallet Settings name input and Done button.
+- changed: Add a maestro test selector (testID) to the split-wallet confirmation button.
 - fixed: Wallet list rows now announce as a button to screen readers, instead of as an inert group that reads out but does not present itself as something to activate.
+- fixed: The buy/sell amount field no longer reads "Amount undefined" while the app is still working out which wallet to use.
+- fixed: Show the Monero Transaction Key of a send whose key never reached the transaction's saved metadata, by falling back to the key the wallet engine mirrors into `otherParams`. Covers sends made on 4.49.0 and later while the send path reported no key, on devices that still hold the original wallet cache.
 - fixed: Force `NODE_ENV=test` in the Jest script so UI tests keep working when npm is invoked via Socket (Socket otherwise sets `NODE_ENV=development`, which makes react-native-gesture-handler treat Jest as a non-test env).
 - fixed: Bitwave CSV exports now use ISO 8601 UTC timestamps, leave the fee columns blank so Bitwave does not double-count fees, and copy the description into the second custom metadata column.
 - fixed: Bitwave account ids are no longer capitalized by the keyboard or padded with whitespace when entered, so exports import without hand-editing the account id.

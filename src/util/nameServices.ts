@@ -2,7 +2,7 @@ import Resolver from '@unstoppabledomains/resolution'
 import { ethers } from 'ethers'
 
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
-import { ENV } from '../env'
+import { globalKeys } from '../keys'
 import { reverseResolveZnsAddress } from './zns'
 
 export type NameService = 'ens' | 'unstoppable' | 'zns'
@@ -58,8 +58,10 @@ const reverseLookupEns = async (address: string): Promise<string | null> => {
 // --- Unstoppable Domains ---
 let udResolver: Resolver | null = null
 const getUdResolver = (): Resolver | null => {
-  if (ENV.UNSTOPPABLE_DOMAINS_API_KEY == null) return null
-  udResolver ??= new Resolver({ apiKey: ENV.UNSTOPPABLE_DOMAINS_API_KEY })
+  if (globalKeys.UNSTOPPABLE_DOMAINS_API_KEY == null) return null
+  udResolver ??= new Resolver({
+    apiKey: globalKeys.UNSTOPPABLE_DOMAINS_API_KEY
+  })
   return udResolver
 }
 

@@ -36,6 +36,7 @@ export function makeFakeCurrencyConfig(
     getTokenDetails: async () => [],
     getTokenId: async () => '',
     importKey: async () => ({}),
+    parseUri: async () => ({}),
     removeCustomToken: async () => {},
     watch: () => () => {}
   }

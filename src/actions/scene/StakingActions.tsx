@@ -1,7 +1,7 @@
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeTokenId } from 'edge-core-js'
 
+import { CONFIG } from '../../config'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../env'
 import { lstrings } from '../../locales/strings'
 import { getStakePlugins } from '../../plugins/stake-plugins/stakePlugins'
 import type { StakePlugin } from '../../plugins/stake-plugins/types'
@@ -26,7 +26,7 @@ export const updateStakingState = (
     // Exit with empty state if staking is not supported
     if (
       SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported !== true ||
-      !ENV.ENABLE_STAKING
+      !CONFIG.ENABLE_STAKING
     ) {
       dispatch({ type: 'STAKING/FINISH_LOADING', walletId })
       return

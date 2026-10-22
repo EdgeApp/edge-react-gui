@@ -1,4 +1,3 @@
-import { ENV } from '../../../../env'
 import ANYSWAP_V5_ERC20_ABI from '../../../abi/ANYSWAP_V5_ERC20_ABI.json'
 import MASONRY_ABI from '../../../abi/MASONRY_ABI.json'
 import TOMB_TREASURY_ABI from '../../../abi/TOMB_TREASURY_ABI.json'
@@ -268,20 +267,4 @@ export const fantomContractInfoMap = {
 // Ecosystem
 // -----------------------------------------------------------------------------
 
-const { quiknodeApiKey = '', poktPortalApiKey = '' } =
-  typeof ENV.FANTOM_INIT === 'object' ? ENV.FANTOM_INIT : {}
-const rpcProviderUrls = [
-  `https://fantom-mainnet.gateway.pokt.network/v1/lb/${poktPortalApiKey}`,
-  `https://polished-empty-cloud.fantom.quiknode.pro/${quiknodeApiKey}/`,
-  'https://rpc.ftm.tools'
-  // 'https://rpc.fantom.network',
-  // 'https://rpc2.fantom.network',
-  // 'https://rpc3.fantom.network',
-  // 'https://rpcapi.fantom.network',
-  // 'https://rpc.ankr.com/fantom'
-]
-
-export const fantomEcosystem = makeEcosystem(
-  fantomContractInfoMap,
-  rpcProviderUrls
-)
+export const fantomEcosystem = makeEcosystem(fantomContractInfoMap, 'fantom')

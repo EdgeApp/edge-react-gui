@@ -32,7 +32,7 @@ import {
   showReEnableOtpModal,
   showUnlockSettingsModal
 } from '../../actions/SettingsActions'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -204,11 +204,8 @@ export const SettingsScene: React.FC<Props> = props => {
         }
       )
       if (password == null) return true
+      // `showUnlockSettingsModal` already unlocked the settings.
       setValidatedPassword(password)
-      dispatch({
-        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
-        data: false
-      })
     }
     return false
   }
@@ -293,26 +290,22 @@ export const SettingsScene: React.FC<Props> = props => {
       value: mode
     }))
 
+    // Rows carry the mode as their value, so the modal matches `selected`
+    // against it and resolves with it:
     const result = await Airship.show<string | undefined>(bridge => (
       <RadioListModal
         bridge={bridge}
         title={lstrings.settings_theme}
         items={items}
-        selected={themeModeLabels[themeMode]}
+        selected={themeMode}
       />
     ))
 
-    if (result != null) {
-      // Find the mode by label
-      const newMode = Object.entries(themeModeLabels).find(
-        ([, label]) => label === result
-      )?.[0] as ThemeMode | undefined
-
-      if (newMode != null && newMode !== themeMode) {
-        setThemeMode(newMode)
-        applyTheme(newMode)
-        await writeThemeMode(newMode)
-      }
+    const newMode = items.find(item => item.value === result)?.value
+    if (newMode != null && newMode !== themeMode) {
+      setThemeMode(newMode)
+      applyTheme(newMode)
+      await writeThemeMode(newMode)
     }
   })
 
@@ -740,7 +733,7 @@ export const SettingsScene: React.FC<Props> = props => {
             />
           </EdgeCard>
         </>
-        {ENV.ALLOW_DEVELOPER_MODE && (
+        {CONFIG.ALLOW_DEVELOPER_MODE && (
           <EdgeCard sections>
             <SettingsSwitchRow
               key="developerMode"

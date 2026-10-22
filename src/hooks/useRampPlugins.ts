@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { updateFiatPurchaseCount } from '../actions/RequestReviewActions'
-import { ENV } from '../env'
+import { pluginMaps } from '../pluginMaps'
 import { pluginFactories } from '../plugins/ramps/allRampPlugins'
 import type {
   RampPlugin,
@@ -51,10 +51,15 @@ export function useRampPlugins({ account }: UseRampPluginsOptions): {
             const store = createStore(storeId, account.dataStore)
 
             // Create a minimal config for the plugin
-            const initOptions = ENV.RAMP_PLUGIN_INITS[pluginId]
+            const initOptions = pluginMaps.rampPlugins[pluginId]
 
-            // If there is no init option defined for the plugin, simply skip over it
-            if (initOptions == null) {
+            // Skip a plugin with no init options, and equally one whose
+            // entry is still a bare `true`: that means "enabled, but the keys
+            // side has not landed yet", and every ramp plugin runs its
+            // `asInitOptions` object cleaner over this value, so passing the
+            // sentinel through throws and empties buy/sell for the session.
+            // `initializeProviders.ts` carries the same guard.
+            if (initOptions == null || typeof initOptions === 'boolean') {
               continue
             }
 

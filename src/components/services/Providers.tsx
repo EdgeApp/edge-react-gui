@@ -11,7 +11,7 @@ import thunk from 'redux-thunk'
 
 import { fetchCountryCode } from '../../actions/CountryCodeActions'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions'
-import { ENV } from '../../env'
+import { CONFIG } from '../../config'
 import { rootReducer } from '../../reducers/RootReducer'
 import { renderStateProviders } from '../../state/renderStateProviders'
 import type { Dispatch, RootState, Store } from '../../types/reduxTypes'
@@ -29,7 +29,7 @@ interface Props {
  * Provides various global providers to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export function Providers(props: Props) {
+export function Providers(props: Props): React.ReactElement {
   const { context } = props
   const theme = useTheme()
   const isDesktop =
@@ -43,7 +43,7 @@ export function Providers(props: Props) {
   // The `useState` hook lets us pass an initializer that only runs once:
   const [store] = React.useState<Store>(() => {
     const middleware = [loginStatusChecker, thunk]
-    if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
+    if (CONFIG.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
     const enhancer = applyMiddleware<Dispatch, RootState>(...middleware)
     const store = createStore(rootReducer, undefined, enhancer)
@@ -60,10 +60,10 @@ export function Providers(props: Props) {
 
   // Actions to perform at startup:
   React.useEffect(() => {
-    store.dispatch(loadDeviceReferral()).catch(err => {
+    store.dispatch(loadDeviceReferral()).catch((err: unknown) => {
       console.warn(err)
     })
-    store.dispatch(fetchCountryCode()).catch(err => {
+    store.dispatch(fetchCountryCode()).catch((err: unknown) => {
       console.warn(err)
     })
   }, [store])
@@ -72,7 +72,7 @@ export function Providers(props: Props) {
     <Provider store={store}>
       <LoginUiProvider
         isDesktop={isDesktop}
-        // @ts-expect-error
+        // @ts-expect-error: themeOverride prop typing mismatch
         themeOverride={theme}
       >
         <KeyboardProvider statusBarTranslucent>

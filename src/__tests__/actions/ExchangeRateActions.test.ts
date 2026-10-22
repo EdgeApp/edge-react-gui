@@ -3,6 +3,7 @@ import { describe, expect, it } from '@jest/globals'
 import {
   convertToRatesParams,
   type ExchangeRateCache,
+  getServerNow,
   mergePairCache
 } from '../../actions/ExchangeRateActions'
 
@@ -177,5 +178,22 @@ describe('convertToRatesParams', () => {
     expect(Object.prototype.hasOwnProperty.call(wireCurrent, 'isoDate')).toBe(
       false
     )
+  })
+})
+
+describe('getServerNow', () => {
+  const deviceNow = Date.parse('2026-10-09T12:00:00.000Z')
+
+  it('reads the server clock from the Date header', () => {
+    // The device clock is two days ahead here. A rate the server stamped a
+    // moment ago is current by the server clock, but two days old by the
+    // device clock, which would file it as historical.
+    const serverNow = getServerNow('Wed, 07 Oct 2026 12:00:00 GMT', deviceNow)
+    expect(serverNow).toBe(Date.parse('2026-10-07T12:00:00.000Z'))
+  })
+
+  it('falls back to the device clock without a usable header', () => {
+    expect(getServerNow(null, deviceNow)).toBe(deviceNow)
+    expect(getServerNow('not a date', deviceNow)).toBe(deviceNow)
   })
 })

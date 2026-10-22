@@ -44,6 +44,7 @@ exports[`initialState 1`] = `
     "fiat": {},
   },
   "isNotificationViewActive": false,
+  "linkPromo": null,
   "loanManager": {
     "lastResyncTimestamp": 0,
     "loanAccounts": {},
@@ -80,6 +81,7 @@ exports[`initialState 1`] = `
           "destination": [],
           "source": [],
         },
+        "disableAssetsByPlugin": {},
         "disablePlugins": {},
       },
     },
@@ -95,6 +97,7 @@ exports[`initialState 1`] = `
     "giftCardInfo": {
       "disablePlugins": {},
     },
+    "houdiniChains": Map {},
     "notificationHeight": 0,
     "passwordReminder": {
       "lastLoginDate": -Infinity,
@@ -110,6 +113,7 @@ exports[`initialState 1`] = `
         "ip2FaNotifShown": false,
       },
       "autoLogoutTimeInSeconds": 3600,
+      "cameraScamWarningShown": false,
       "changesLocked": true,
       "contactsPermissionShown": false,
       "countryCode": "",
@@ -153,6 +157,8 @@ exports[`initialState 1`] = `
         },
       },
       "stateProvinceCode": undefined,
+      "stealthSendEnabled": false,
+      "stealthSwapEnabled": false,
       "tokenWarningsShown": [],
       "userPausedWallets": [],
       "userPausedWalletsSet": null,

@@ -5,6 +5,7 @@ import { Platform } from 'react-native'
 
 import { lstrings } from '../locales/strings'
 import type { WalletConnectChainId } from '../types/types'
+import { utxoPlugins } from '../util/corePlugins'
 import { asMoneroUserSettings, isMoneroEdgeLws } from '../util/monero'
 import { removeIsoPrefix } from '../util/utils'
 
@@ -24,6 +25,30 @@ export const MAX_RATIO = 0.95
 export const RESYNC_THRESHOLD = 0.05
 export const DONE_THRESHOLD = 0.999
 
+/**
+ * Plugin ids served by `edge-currency-plugins`, derived from the plugin
+ * registry in `util/corePlugins.ts` so the list can't drift from what the
+ * app actually runs: a plugin not registered there can't produce a wallet.
+ *
+ * Read on call rather than at module evaluation. `corePlugins` builds its maps
+ * from `pluginMaps`, which the keys store fills in at boot, and this module is
+ * inside that import cycle: at evaluation time `utxoPlugins` is still
+ * undefined. The id set never changes once built, only the init values do.
+ */
+export const getUtxoPluginIds = (): string[] => Object.keys(utxoPlugins)
+
+export const isUtxoPluginId = (pluginId: string): boolean =>
+  getUtxoPluginIds().includes(pluginId)
+
+/**
+ * Transaction count past which a UTXO wallet counts as "large" and earns the
+ * slow-sync explainer card. Support's sampling of the wallets that generated
+ * stale-balance tickets found 164 and 310 transactions against 162 and 293 used
+ * xpub addresses, so the two measures track each other closely and the cheaper
+ * transaction count stands in for both.
+ */
+export const LARGE_UTXO_WALLET_TX_COUNT = 100
+
 // Translations for custom fee keys:
 export const FEE_STRINGS = {
   gasLimit: lstrings.gasLimit,
@@ -39,6 +64,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'abstract',
   'amoy',
   'arbitrum',
+  'arc',
   'avalanche',
   'axelar',
   'base',
@@ -152,7 +178,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monad',
   'wallet:opbnb',
   'wallet:nym',
-  'wallet:robinhood'
+  'wallet:robinhood',
+  'wallet:arc'
 ]
 
 export interface WalletSettingOption {
@@ -316,7 +343,13 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     displayIoniaRewards: true,
     isImportKeySupported: true,
     isStakingSupported: true,
-    unstoppableDomainsTicker: 'BTC'
+    unstoppableDomainsTicker: 'BTC',
+    walletConnectV2ChainId: {
+      namespace: 'bip122',
+      // CAIP-2 identifies a bip122 chain by the first 32 characters of its
+      // genesis block hash:
+      reference: '000000000019d6689c085ae165831e93'
+    }
   },
   bitcointestnet: {
     hasSegwit: true,
@@ -570,6 +603,17 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     walletConnectV2ChainId: {
       namespace: 'eip155',
       reference: '4663'
+    }
+  },
+  arc: {
+    initWalletName: lstrings.string_first_arc_wallet_name,
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    allowZeroTx: true,
+    isImportKeySupported: true,
+    showChainIcon: true,
+    walletConnectV2ChainId: {
+      namespace: 'eip155',
+      reference: '5042'
     }
   },
   filecoin: {
@@ -1014,9 +1058,6 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       'zs1ps48sm9yusglfd2y28e7uhfkxfljy38papy00lzdmcdmctczx2hmvchcfjvp3n68zr2tu732y8k',
     noChangeMiningFee: true,
     isImportKeySupported: true,
-    // The Android build leaves out the Pirate native library
-    // (see react-native.config.js), so wallets there are keys-only:
-    keysOnlyMode: Platform.OS === 'android',
     highPrecisionSyncRatioDisplay: true,
     importKeyOptions: [
       {

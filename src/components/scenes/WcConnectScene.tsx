@@ -10,13 +10,16 @@ import { MAX_ADDRESS_CHARACTERS } from '../../constants/WalletAndCurrencyConstan
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useUnmount } from '../../hooks/useUnmount'
-import { useWalletConnect } from '../../hooks/useWalletConnect'
+import {
+  getWalletConnectAddress,
+  useWalletConnect
+} from '../../hooks/useWalletConnect'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset } from '../../types/types'
 import { truncateString } from '../../util/utils'
-import { ButtonsView } from '../buttons/ButtonsView'
+import { SCENE_BUTTONS_MARGIN_REM, SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -70,14 +73,14 @@ export const WcConnectScene = withWallet((props: Props) => {
 
   useAsyncEffect(
     async () => {
-      const r = await wallet.getReceiveAddress({ tokenId: null })
-      setWalletAddress(r.publicAddress)
+      const address = await getWalletConnectAddress(wallet)
+      if (address != null) setWalletAddress(address)
     },
     [wallet],
     'WcConnectScene'
   )
 
-  const handleConnect = async () => {
+  const handleConnect = async (): Promise<void> => {
     try {
       await walletConnect.approveSession(proposal, wallet.id)
       connected.current = true
@@ -87,7 +90,7 @@ export const WcConnectScene = withWallet((props: Props) => {
           message={lstrings.wc_confirm_return_to_browser}
           onPress={() => {}}
         />
-      )).catch(e => {
+      )).catch((e: unknown) => {
         showError(e)
       })
       navigation.navigate('wcConnections', {})
@@ -121,7 +124,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     }
   })
 
-  const renderWalletSelect = () => {
+  const renderWalletSelect = (): React.ReactElement => {
     const walletNameStr = truncateString(walletName, MAX_ADDRESS_CHARACTERS)
     const walletImage = (
       <CryptoIcon pluginId={wallet.currencyInfo.pluginId} tokenId={null} />
@@ -145,6 +148,7 @@ export const WcConnectScene = withWallet((props: Props) => {
     <SceneWrapper>
       <SceneHeader title={lstrings.wc_confirm_title} underline />
       <ScrollView
+        style={styles.scroll}
         contentContainerStyle={styles.container}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
@@ -162,16 +166,16 @@ export const WcConnectScene = withWallet((props: Props) => {
         <EdgeText style={styles.bodyTitle}>{bodyTitleText}</EdgeText>
         <EdgeText style={styles.body}>{lstrings.wc_confirm_body}</EdgeText>
         {renderWalletSelect()}
-        {subTitleText === '' ? null : (
-          <ButtonsView
-            parentType="scene"
-            primary={{
-              label: lstrings.wc_confirm_connect_button,
-              onPress: handleConnect
-            }}
-          />
-        )}
       </ScrollView>
+      {subTitleText === '' ? null : (
+        <SceneButtons
+          absolute
+          primary={{
+            label: lstrings.wc_confirm_connect_button,
+            onPress: handleConnect
+          }}
+        />
+      )}
     </SceneWrapper>
   )
 })
@@ -182,9 +186,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2),
     marginLeft: theme.rem(0.5)
   },
+  scroll: {
+    flex: 1
+  },
   container: {
     padding: theme.rem(0.5),
-    paddingTop: theme.rem(1)
+    paddingTop: theme.rem(1),
+    // Keep the last row clear of the absolutely-positioned SceneButtons:
+    paddingBottom: theme.rem(SCENE_BUTTONS_MARGIN_REM)
   },
   listRow: {
     marginTop: theme.rem(1),

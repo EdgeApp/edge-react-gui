@@ -14,22 +14,42 @@ import { useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import type { DisableAsset } from '../../actions/ExchangeInfoActions'
-import { checkEnabledExchanges } from '../../actions/SettingsActions'
+import {
+  type DisableAsset,
+  isAssetDisabled
+} from '../../actions/ExchangeInfoActions'
+import {
+  checkEnabledExchanges,
+  setStealthSwapEnabled
+} from '../../actions/SettingsActions'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
+import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
+import { useTabBlur } from '../../hooks/useTabBlur'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import {
+  getHoudiniAssets,
+  getHoudiniAssetSupport,
+  type HoudiniChains
+} from '../../util/houdiniChains'
+import {
+  getStealthDisableAssets,
+  getStealthProviderName,
+  makeStealthSwapRequestOptions
+} from '../../util/stealthSwap'
+import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { SceneButtons } from '../buttons/SceneButtons'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EdgeCard } from '../cards/EdgeCard'
 import {
   EdgeAnim,
   fadeInDown30,
@@ -48,8 +68,10 @@ import {
 } from '../modals/WalletListModal'
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
+import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { StealthInfoText } from '../themed/StealthInfoText'
 import {
   SwapInput,
   type SwapInputCardAmounts,
@@ -66,15 +88,20 @@ export interface SwapCreateParams {
 
   // Display error message in an alert card
   errorDisplayInfo?: SwapErrorDisplayInfo
-}
 
-export interface SwapErrorDisplayInfo {
-  message: string
-  title: string
-  error: unknown
+  // Sets the Stealth Swap toggle for this visit, in place of the account's
+  // saved choice. The scene applies it once and clears it, and never saves it.
+  stealth?: boolean
 }
 
 interface Props extends SwapTabSceneProps<'swapCreate'> {}
+
+/** One side of the selected pair, as the Stealth block check reads it. */
+interface StealthSwapSide {
+  currencyCode: string
+  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet | undefined
+}
 
 export const SwapCreateScene: React.FC<Props> = props => {
   const { navigation, route } = props
@@ -83,10 +110,15 @@ export const SwapCreateScene: React.FC<Props> = props => {
     fromTokenId = null,
     toWalletId,
     toTokenId = null,
-    errorDisplayInfo
+    errorDisplayInfo,
+    stealth: stealthParam
   } = route.params ?? {}
   const theme = useTheme()
   const dispatch = useDispatch()
+
+  // An `edge://exchange/swap` link credits its promo to this one entry into
+  // the swap flow, so leaving the tab without swapping gives the credit back.
+  useLinkPromoRelease(navigation, 'swapTab')
 
   // Input state is the state of the user input
   const [inputNativeAmount, setInputNativeAmount] = useState('0')
@@ -94,6 +126,16 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const [inputNativeAmountFor, setInputNativeAmountFor] = useState<
     'from' | 'to'
   >('from')
+
+  // Stealth Swap: when enabled, the quote routes through the Houdini privacy
+  // provider as a fixed provider (see SwapConfirmationScene). The toggle shows
+  // the account's saved choice, unless a `stealth` param set it for this visit.
+  const stealthSwapEnabled = useSelector(
+    state => state.ui.settings.stealthSwapEnabled
+  )
+  const [stealthOverride, setStealthOverride] = useState<boolean | undefined>(
+    stealthParam
+  )
 
   const fromInputRef = React.useRef<SwapInputCardInputRef>(null)
   const toInputRef = React.useRef<SwapInputCardInputRef>(null)
@@ -103,6 +145,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const houdiniChains = useSelector(state => state.ui.houdiniChains)
+  // Until the info server serves Houdini's list there is nothing a Stealth
+  // Swap could route, so the toggle stays hidden and reads as off:
+  const stealthAvailable = houdiniChains.size > 0
 
   const toWallet: EdgeCurrencyWallet | undefined =
     toWalletId == null ? undefined : currencyWallets[toWalletId]
@@ -115,6 +161,39 @@ export const SwapCreateScene: React.FC<Props> = props => {
     fromWallet == null ? '' : getCurrencyCode(fromWallet, fromTokenId)
   const toCurrencyCode =
     toWallet == null ? '' : getCurrencyCode(toWallet, toTokenId)
+
+  // Why a Stealth Swap cannot route the selected pair, or `undefined` when it
+  // can: a side Houdini does not serve, or one the info server bans for it on
+  // that side, the sending side named first. No route is probed before the
+  // quote, so a provider that cannot quote a served pair still fails at Next.
+  // Before the list loads nothing is known to be unserved, so nothing blocks.
+  const stealthDisableAssets = getStealthDisableAssets(
+    exchangeInfo.swap.disableAssets,
+    exchangeInfo.swap.disableAssetsByPlugin
+  )
+  const stealthBlockedCurrencyCode = getStealthBlockedCurrencyCode({
+    bans: stealthDisableAssets,
+    from: {
+      currencyCode: fromCurrencyCode,
+      tokenId: fromTokenId,
+      wallet: fromWallet
+    },
+    houdiniChains,
+    to: { currencyCode: toCurrencyCode, tokenId: toTokenId, wallet: toWallet }
+  })
+  const stealthBlockedReason =
+    stealthBlockedCurrencyCode == null
+      ? undefined
+      : sprintf(
+          lstrings.stealth_asset_unsupported_1s,
+          stealthBlockedCurrencyCode
+        )
+  // A blocked pair reads as off without touching the saved choice, which
+  // comes back once the user picks a pair Stealth can route:
+  const stealth =
+    (stealthOverride ?? stealthSwapEnabled) &&
+    stealthAvailable &&
+    stealthBlockedReason == null
 
   const fromWalletSpecialCurrencyInfo = getSpecialCurrencyInfo(
     fromWallet?.currencyInfo.pluginId ?? ''
@@ -148,6 +227,22 @@ export const SwapCreateScene: React.FC<Props> = props => {
       dispatch(checkEnabledExchanges())
     })
   }, [dispatch, navigation])
+
+  // This tab stays mounted, so a caller can navigate here with `stealth` long
+  // after the first render. The param is consumed rather than kept: the other
+  // `setParams` calls on this scene merge into the route params, and a
+  // lingering value would put the toggle back every time one of them ran.
+  React.useEffect(() => {
+    if (stealthParam == null) return
+    setStealthOverride(stealthParam)
+    navigation.setParams({ stealth: undefined })
+  }, [navigation, stealthParam])
+
+  // The visit ends when the user switches tabs, and the saved choice is back
+  // the next time they open Swap.
+  useTabBlur(navigation, 'swapTab', () => {
+    setStealthOverride(undefined)
+  })
 
   //
   // Callbacks
@@ -194,24 +289,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
     return { errorDisplayInfo: clearError ? undefined : errorDisplayInfo }
   }
 
-  const checkDisableAsset = (
-    disableAssets: DisableAsset[],
-    walletId: string,
-    tokenId: EdgeTokenId
-  ): boolean => {
-    const wallet = currencyWallets[walletId] ?? { currencyInfo: {} }
-    const walletPluginId = wallet.currencyInfo.pluginId
-    const walletTokenId = tokenId
-    for (const disableAsset of disableAssets) {
-      const { pluginId, tokenId } = disableAsset
-      if (pluginId !== walletPluginId) continue
-      if (tokenId === walletTokenId) return true
-      if (tokenId === 'allCoins') return true
-      if (tokenId === 'allTokens' && walletTokenId != null) return true
-    }
-    return false
-  }
-
   function checkAmountExceedsBalance(): boolean {
     // If no from wallet, return false:
     if (fromWallet == null) return false
@@ -229,9 +306,15 @@ export const SwapCreateScene: React.FC<Props> = props => {
 
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
-      const disableSrc = checkDisableAsset(
-        exchangeInfo.swap.disableAssets.source,
-        swapRequest.fromWallet.id,
+      // A Stealth Swap asks Houdini alone, so Houdini's own bans refuse the
+      // pair here too. Left to the core, a pair no enabled provider can quote
+      // fails with an internal error rather than this message:
+      const disableAssets = stealth
+        ? stealthDisableAssets
+        : exchangeInfo.swap.disableAssets
+      const disableSrc = isAssetDisabled(
+        disableAssets.source,
+        swapRequest.fromWallet.currencyInfo.pluginId,
         fromTokenId
       )
       if (disableSrc) {
@@ -245,9 +328,9 @@ export const SwapCreateScene: React.FC<Props> = props => {
         return
       }
 
-      const disableDest = checkDisableAsset(
-        exchangeInfo.swap.disableAssets.destination,
-        swapRequest.toWallet.id,
+      const disableDest = isAssetDisabled(
+        disableAssets.destination,
+        swapRequest.toWallet.currencyInfo.pluginId,
         toTokenId
       )
       if (disableDest) {
@@ -266,10 +349,21 @@ export const SwapCreateScene: React.FC<Props> = props => {
       errorDisplayInfo: undefined
     })
 
-    // Start request for quote:
+    // Start request for quote. A stealth swap restricts the request to the
+    // Houdini privacy provider AND demands a private route: restricting the
+    // provider alone would still accept that provider's transparent standard
+    // routes, which are priced better and would be labelled private here.
+    // The restriction also queries Houdini when it is switched off in Exchange
+    // Settings, a setting only a swap with Stealth off honors.
+    const quoteRequest: EdgeSwapRequest = stealth
+      ? { ...swapRequest, privacy: 'required' }
+      : swapRequest
+    const quoteRequestOptions = stealth
+      ? makeStealthSwapRequestOptions(account, swapRequestOptions)
+      : swapRequestOptions
     navigation.navigate('swapProcessing', {
-      swapRequest,
-      swapRequestOptions,
+      swapRequest: quoteRequest,
+      swapRequestOptions: quoteRequestOptions,
       onCancel: () => {
         navigation.goBack()
       },
@@ -277,7 +371,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove: resetState
+          onApprove: resetState,
+          onStealthTermsDeclined: handleStealthTermsDeclined,
+          swapRequest: quoteRequest,
+          swapRequestOptions: quoteRequestOptions
         })
       }
     })
@@ -292,6 +389,21 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const showWalletListModal = async (
     whichWallet: 'from' | 'to'
   ): Promise<void> => {
+    // A Stealth Swap asks the Houdini provider alone, so its pickers offer
+    // only what that provider serves: each served chain's coin and the tokens
+    // on its list, less what the info server bans for it on that side. An
+    // asset selected before the toggle went on that Stealth cannot route
+    // turns the toggle off with its reason instead.
+    const allowedAssets = stealth
+      ? getHoudiniAssets({
+          bans:
+            whichWallet === 'to'
+              ? stealthDisableAssets.destination
+              : stealthDisableAssets.source,
+          currencyConfigs: account.currencyConfig,
+          houdiniChains
+        })
+      : undefined
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -303,6 +415,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
         }
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
+        allowedAssets={allowedAssets}
         filterActivation
       />
     ))
@@ -441,6 +554,28 @@ export const SwapCreateScene: React.FC<Props> = props => {
     Keyboard.dismiss()
   })
 
+  // A tap is the user's choice, so it is saved, and it replaces any param
+  // override at once rather than waiting on the settings write. The row stays
+  // locked until the save lands, so a second tap cannot race it. A pair
+  // Stealth cannot route refuses the tap with its reason and saves nothing.
+  const handleToggleStealth = useHandler(async (): Promise<void> => {
+    if (stealthBlockedReason != null) {
+      showToast(stealthBlockedReason)
+      return
+    }
+    setStealthOverride(!stealth)
+    await dispatch(setStealthSwapEnabled(account, !stealth))
+  })
+
+  // Declining the stealth provider's terms backs out to this scene with the
+  // toggle off, so the next tap on the button asks for an ordinary swap
+  // instead of walking straight back into the same terms modal. Turning the
+  // toggle back on brings the modal back, until the terms are accepted. The
+  // decline only lasts this visit, so the saved choice is left alone.
+  const handleStealthTermsDeclined = useHandler(() => {
+    setStealthOverride(false)
+  })
+
   const handleFromAmountChange = useHandler((amounts: SwapInputCardAmounts) => {
     navigation.setParams({
       // Update the error state:
@@ -471,7 +606,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
   // Render
   //
 
-  const renderAlert = (): React.ReactNode => {
+  const renderAlert = (): React.ReactElement | null => {
     const { minimumPopupModals } = fromWalletSpecialCurrencyInfo
     const primaryNativeBalance = fromWalletBalanceMap.get(fromTokenId) ?? '0'
 
@@ -609,6 +744,29 @@ export const SwapCreateScene: React.FC<Props> = props => {
               />
             )}
           </EdgeAnim>
+          {stealthAvailable ? (
+            <EdgeAnim enter={fadeInDown60}>
+              <EdgeCard sections>
+                <SettingsSwitchRow
+                  label={lstrings.stealth_swap_toggle}
+                  value={stealth}
+                  disabled={stealthBlockedReason != null}
+                  onPress={handleToggleStealth}
+                />
+                {stealthBlockedReason != null ? (
+                  <StealthInfoText message={stealthBlockedReason} />
+                ) : stealth ? (
+                  <StealthInfoText
+                    message={sprintf(
+                      lstrings.stealth_info_1s,
+                      getStealthProviderName(account)
+                    )}
+                    showLearnMore
+                  />
+                ) : null}
+              </EdgeCard>
+            </EdgeAnim>
+          ) : null}
           <EdgeAnim enter={fadeInDown60}>{renderAlert()}</EdgeAnim>
           <EdgeAnim enter={fadeInDown90}>
             {isNextHidden || isKeyboardOpen ? null : (
@@ -638,3 +796,60 @@ const MaxButtonText = styled(UnscaledText)(theme => ({
   fontSize: theme.rem(0.75),
   includeFontPadding: false
 }))
+
+/**
+ * True when Houdini serves the wallet's asset and the info server has not
+ * banned it for Houdini on this side of the swap.
+ */
+function isStealthRoutable(opts: {
+  bans: DisableAsset[]
+  houdiniChains: HoudiniChains
+  tokenId: EdgeTokenId
+  wallet: EdgeCurrencyWallet
+}): boolean {
+  const { bans, houdiniChains, tokenId, wallet } = opts
+  const { pluginId } = wallet.currencyInfo
+  return (
+    getHoudiniAssetSupport({ asset: { pluginId, tokenId }, houdiniChains }) !=
+      null && !isAssetDisabled(bans, pluginId, tokenId)
+  )
+}
+
+/**
+ * The currency code of the side a Stealth Swap cannot route, the sending side
+ * first, or `undefined` when it can. A side not picked yet blocks nothing, and
+ * neither does anything before Houdini's list loads, since nothing is known to
+ * be unserved until then.
+ */
+function getStealthBlockedCurrencyCode(opts: {
+  bans: { source: DisableAsset[]; destination: DisableAsset[] }
+  from: StealthSwapSide
+  houdiniChains: HoudiniChains
+  to: StealthSwapSide
+}): string | undefined {
+  const { bans, from, houdiniChains, to } = opts
+  if (houdiniChains.size === 0) return undefined
+  if (
+    from.wallet != null &&
+    !isStealthRoutable({
+      bans: bans.source,
+      houdiniChains,
+      tokenId: from.tokenId,
+      wallet: from.wallet
+    })
+  ) {
+    return from.currencyCode
+  }
+  if (
+    to.wallet != null &&
+    !isStealthRoutable({
+      bans: bans.destination,
+      houdiniChains,
+      tokenId: to.tokenId,
+      wallet: to.wallet
+    })
+  ) {
+    return to.currencyCode
+  }
+  return undefined
+}

@@ -24,6 +24,7 @@ import type {
   SettingsState
 } from '../reducers/scenes/SettingsReducer'
 import type { StakingAction } from '../reducers/StakingReducer'
+import type { HoudiniChains } from '../util/houdiniChains'
 import type { TweakSource } from '../util/ReferralHelpers'
 import type {
   AccountReferral,
@@ -35,6 +36,7 @@ import type {
   FioAddress,
   FioDomain,
   GuiContact,
+  LinkPromo,
   MostRecentWallet,
   SpendingLimits,
   WalletListItem
@@ -87,6 +89,7 @@ export type Action =
       type: 'IS_NOTIFICATION_VIEW_ACTIVE'
       data: { isNotificationViewActive: boolean }
     }
+  | { type: 'LINK_PROMO/SET'; data: { linkPromo: LinkPromo | null } }
   | { type: 'LOGIN'; data: LoginPayload }
   | {
       type: 'MESSAGE_TWEAK_HIDDEN'
@@ -160,6 +163,7 @@ export type Action =
     }
   | { type: 'UPDATE_EXCHANGE_INFO'; data: ExchangeInfo }
   | { type: 'UPDATE_GIFT_CARD_INFO'; data: GiftCardInfo }
+  | { type: 'UPDATE_HOUDINI_CHAINS'; data: HoudiniChains }
   | { type: 'UPDATE_SORTED_WALLET_LIST'; data: WalletListItem[] }
   | {
       type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'

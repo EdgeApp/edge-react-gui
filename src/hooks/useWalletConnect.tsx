@@ -20,6 +20,12 @@ import { useSelector } from '../types/reactRedux'
 import type { WalletConnectChainId, WcConnectionInfo } from '../types/types'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
 import { runWithTimeout, unixToLocaleDateTime } from '../util/utils'
+import {
+  forgetSessionWallet,
+  readActiveSessionWallets,
+  rememberSessionWallet,
+  type SessionWallets
+} from '../util/walletConnectSessionStore'
 import { useHandler } from './useHandler'
 import { useWatch } from './useWatch'
 
@@ -88,14 +94,18 @@ export function useWalletConnect(): WalletConnect {
     const client = await getClient()
     const connections: WcConnectionInfo[] = []
     const sessions = client.getActiveSessions()
-    const accounts = await getAccounts(currencyWallets)
+    const sessionWallets = await readActiveSessionWallets(account, () =>
+      Object.keys(client.getActiveSessions())
+    )
+    const accountsLookup = makeAccountsLookup(currencyWallets)
     for (const sessionName of Object.keys(sessions)) {
       const session = sessions[sessionName]
-      const walletId = getWalletIdFromSessionNamespace(
-        session.namespaces,
-        accounts
+      const walletId = await resolveSessionWalletId(
+        session,
+        sessionWallets,
+        accountsLookup
       )
-      if (walletId == null) continue
+      if (walletId == null || currencyWallets[walletId] == null) continue
 
       const connection = parseConnection(session, walletId)
       connections.push(connection)
@@ -123,9 +133,11 @@ export function useWalletConnect(): WalletConnect {
 
           resolve(proposal)
         })
-        client.core.pairing.pair({ uri, activatePairing: true }).catch(e => {
-          reject(e)
-        })
+        client.core.pairing
+          .pair({ uri, activatePairing: true })
+          .catch((e: unknown) => {
+            reject(e)
+          })
       }),
       20000
     )
@@ -143,17 +155,23 @@ export function useWalletConnect(): WalletConnect {
           .walletConnectV2ChainId
       if (chainId == null) return
 
-      const address = await wallet.getReceiveAddress({ tokenId: null })
-      const supportedNamespaces = getSupportedNamespaces(
-        chainId,
-        address.publicAddress
-      )
+      // Returning here would let the caller report a connection that never
+      // happened and leave the dapp waiting on an unanswered proposal.
+      const address = await getWalletConnectAddress(wallet)
+      if (address == null) {
+        throw new Error('Wallet has no address to connect')
+      }
 
-      // Check that we support all required methods
-      if (Object.keys(proposal.params.requiredNamespaces).length > 0) {
-        const unsupportedMethods = proposal.params.requiredNamespaces[
-          chainId.namespace
-        ].methods.filter(method => {
+      const supportedNamespaces = getSupportedNamespaces(chainId, address)
+
+      // Check that we support all required methods. A dapp can require a
+      // namespace this wallet does not serve at all, in which case there is
+      // nothing to compare here and `buildApprovedNamespaces` below rejects
+      // the proposal on its own.
+      const requiredNamespace =
+        proposal.params.requiredNamespaces[chainId.namespace]
+      if (requiredNamespace != null) {
+        const unsupportedMethods = requiredNamespace.methods.filter(method => {
           return !supportedNamespaces[chainId.namespace].methods.includes(
             method
           )
@@ -165,7 +183,7 @@ export function useWalletConnect(): WalletConnect {
         }
       }
 
-      await runWithTimeout(
+      const session = await runWithTimeout(
         client.approveSession({
           id: proposal.id,
           namespaces: buildApprovedNamespaces({
@@ -174,6 +192,18 @@ export function useWalletConnect(): WalletConnect {
           })
         }),
         20000
+      )
+      // The session is live from here on, so a failed write must not surface
+      // as a failed connection: the caller would reject a proposal the dapp
+      // already holds. Without the stored mapping, requests still resolve by
+      // the session's address.
+      await rememberSessionWallet(account, session.topic, walletId).catch(
+        (error: unknown) => {
+          console.log(
+            'walletConnect rememberSessionWallet error',
+            String(error)
+          )
+        }
       )
     }
   )
@@ -186,7 +216,7 @@ export function useWalletConnect(): WalletConnect {
           id: proposal.id,
           reason: getSdkError('USER_REJECTED')
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.log('walletConnect rejectSession error', String(e))
         })
     }
@@ -207,13 +237,18 @@ export function useWalletConnect(): WalletConnect {
       }),
       10000
     )
+    // The session is already gone, so a failed write must not surface as a
+    // failed disconnect. A leftover entry is pruned on the next read.
+    await forgetSessionWallet(account, topic).catch((error: unknown) => {
+      console.log('walletConnect forgetSessionWallet error', String(error))
+    })
     Airship.show(bridge => (
       <FlashNotification
         bridge={bridge}
         message={sprintf(lstrings.wc_dapp_disconnected, dAppName)}
         onPress={() => {}}
       />
-    )).catch(e => {
+    )).catch((e: unknown) => {
       console.log(e)
     })
   })
@@ -226,7 +261,7 @@ export function useWalletConnect(): WalletConnect {
           topic,
           response: { id, jsonrpc: '2.0', result }
         })
-        .catch(e => {
+        .catch((e: unknown) => {
           console.log('walletConnect approveRequest error', String(e))
         })
     }
@@ -243,7 +278,7 @@ export function useWalletConnect(): WalletConnect {
           error: getSdkError('USER_REJECTED_METHODS')
         }
       })
-      .catch(e => {
+      .catch((e: unknown) => {
         console.log('walletConnect rejectRequest error', String(e))
       })
   })
@@ -271,13 +306,26 @@ export function useWalletConnect(): WalletConnect {
 }
 
 // Utilities
+
+/** The shape `buildApprovedNamespaces` expects, keyed by CAIP-2 namespace. */
+type SupportedNamespaces = Record<
+  string,
+  {
+    chains: string[]
+    methods: string[]
+    events: string[]
+    accounts: string[]
+  }
+>
+
 const getSupportedNamespaces = (
   chainId: WalletConnectChainId,
   addr: string
-) => {
+): SupportedNamespaces => {
   const { namespace, reference } = chainId
 
   let methods: string[]
+  let events: string[] = ['chainChanged', 'accountsChanged']
   switch (namespace) {
     case 'eip155':
       methods = [
@@ -294,6 +342,13 @@ const getSupportedNamespaces = (
     case 'algorand':
       methods = ['algo_signTxn']
       break
+    case 'bip122':
+      // Proof of ownership only. `sendTransfer` and `signPsbt` are left out
+      // deliberately: the UTXO plugin has no WalletConnect payload parser, so
+      // advertising them would accept spend requests Edge cannot serve.
+      methods = ['getAccountAddresses', 'signMessage']
+      events = ['bip122_addressesChanged']
+      break
     case 'cosmos':
       methods = ['cosmos_getAccounts', 'cosmos_signDirect', 'cosmos_signAmino']
   }
@@ -302,15 +357,15 @@ const getSupportedNamespaces = (
     [namespace]: {
       chains: [`${namespace}:${reference}`],
       methods,
-      events: ['chainChanged', 'accountsChanged'],
+      events,
       accounts: [`${namespace}:${reference}:${addr}`]
     }
   }
 }
 
-export const getAccounts = async (
+const getAccounts = async (
   currencyWallets: Record<string, EdgeCurrencyWallet>
-) => {
+): Promise<Map<string, string>> => {
   const map = new Map<string, string>()
   for (const walletId of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[walletId]
@@ -318,13 +373,84 @@ export const getAccounts = async (
       SPECIAL_CURRENCY_INFO[wallet.currencyInfo.pluginId].walletConnectV2ChainId
     if (chainId == null) continue
 
-    const address = await currencyWallets[walletId].getReceiveAddress({
-      tokenId: null
-    })
-    const account = `${chainId.namespace}:${chainId.reference}:${address.publicAddress}`
+    const address = await getWalletConnectAddress(wallet)
+    if (address == null) continue
+
+    const account = `${chainId.namespace}:${chainId.reference}:${address}`
     map.set(account, walletId)
   }
   return map
+}
+
+/**
+ * The address a WalletConnect session advertises for a wallet. Native SegWit is
+ * preferred where a chain offers it, since that is the address Edge shows the
+ * user as their receive address and therefore the one a verifier expects to see
+ * a proof-of-ownership signature against. Every other chain reports a single
+ * address and is unaffected.
+ */
+export const getWalletConnectAddress = async (
+  wallet: EdgeCurrencyWallet
+): Promise<string | undefined> => {
+  const addresses = await wallet.getAddresses({ tokenId: null })
+  const address =
+    addresses.find(address => address.addressType === 'segwitAddress') ??
+    addresses.find(address => address.addressType === 'publicAddress') ??
+    addresses[0]
+  // A wallet that reports no address cannot take part in a session. Returning
+  // undefined keeps it out of the account map instead of throwing, which would
+  // take down session listing and request routing for every other wallet.
+  return address?.publicAddress
+}
+
+/**
+ * Defers the account map until a session fails to resolve from the stored
+ * mapping, and builds it at most once however many sessions miss. `getAccounts`
+ * makes a `getAddresses` bridge call for every WalletConnect-capable wallet, so
+ * building it per session costs one round trip per wallet per session.
+ */
+export const makeAccountsLookup = (
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+): AccountsLookup => {
+  let accounts: Promise<Map<string, string>> | undefined
+  return {
+    currencyWallets,
+    getAccounts: async () => {
+      accounts ??= getAccounts(currencyWallets)
+      return await accounts
+    }
+  }
+}
+
+export interface AccountsLookup {
+  currencyWallets: Record<string, EdgeCurrencyWallet>
+  /** The account-to-wallet map, built on first use. */
+  getAccounts: () => Promise<Map<string, string>>
+}
+
+/**
+ * The wallet that approved a session: the remembered mapping first, since it
+ * survives receive-address rotation, then the address carried on the session.
+ * A remembered wallet the account no longer holds (deleted, or restored from
+ * the same keys under a new id) falls through to the address, which still
+ * matches the restored wallet.
+ */
+export const resolveSessionWalletId = async (
+  session: SessionTypes.Struct,
+  sessionWallets: SessionWallets,
+  accountsLookup: AccountsLookup
+): Promise<string | undefined> => {
+  const remembered = sessionWallets[session.topic]
+  if (
+    remembered != null &&
+    accountsLookup.currencyWallets[remembered] != null
+  ) {
+    return remembered
+  }
+  return getWalletIdFromSessionNamespace(
+    session.namespaces,
+    await accountsLookup.getAccounts()
+  )
 }
 
 export const getWalletIdFromSessionNamespace = (

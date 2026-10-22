@@ -4,9 +4,9 @@ import * as React from 'react'
 import { ActivityIndicator, type ListRenderItemInfo, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+import { CONFIG } from '../../../config'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { SPECIAL_CURRENCY_INFO } from '../../../constants/WalletAndCurrencyConstants'
-import { ENV } from '../../../env'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useHandler } from '../../../hooks/useHandler'
 import { useWatch } from '../../../hooks/useWatch'
@@ -45,6 +45,8 @@ export interface EarnSceneParams {}
 
 let USERNAME: string | undefined
 let DISCOVER_MAP: DiscoverStakeMap = {}
+// Every policy, deprecated ones included, so existing positions still show:
+let POLICY_MAP: DiscoverStakeMap = {}
 let PORTFOLIO_MAP: PortfolioStakeMap = {}
 
 interface DiscoverStakeInfo {
@@ -67,7 +69,11 @@ interface WalletStakeInfo {
 
 /** Hook to ensure the UI updates on map changes, while retaining cached data
  * functionality */
-const useStakeMaps = () => {
+const useStakeMaps = (): {
+  discoverMap: DiscoverStakeMap
+  portfolioMap: PortfolioStakeMap
+  updateMaps: (updates: () => void) => void
+} => {
   const [, forceUpdate] = React.useReducer(x => x + 1, 0)
 
   const updateMaps = React.useCallback((updates: () => void) => {
@@ -82,7 +88,7 @@ const useStakeMaps = () => {
   }
 }
 
-export const EarnScene = (props: Props) => {
+export const EarnScene = (props: Props): React.ReactElement => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -95,6 +101,7 @@ export const EarnScene = (props: Props) => {
     // Reset local variable if user changes
     USERNAME = account.username
     DISCOVER_MAP = {}
+    POLICY_MAP = {}
     PORTFOLIO_MAP = {}
   }
 
@@ -148,19 +155,18 @@ export const EarnScene = (props: Props) => {
 
         const isStakingSupported =
           SPECIAL_CURRENCY_INFO[pluginId]?.isStakingSupported === true &&
-          ENV.ENABLE_STAKING
+          CONFIG.ENABLE_STAKING
         if (!isStakingSupported) continue
 
         const stakePlugins = await getStakePlugins(pluginId)
 
         updateMaps(() => {
           for (const stakePlugin of stakePlugins) {
-            for (const stakePolicy of stakePlugin
-              .getPolicies({ pluginId })
-              .filter(stakePolicy => !stakePolicy.deprecated)) {
-              DISCOVER_MAP[stakePolicy.stakePolicyId] = {
-                stakePlugin,
-                stakePolicy
+            for (const stakePolicy of stakePlugin.getPolicies({ pluginId })) {
+              const info = { stakePlugin, stakePolicy }
+              POLICY_MAP[stakePolicy.stakePolicyId] = info
+              if (stakePolicy.deprecated !== true) {
+                DISCOVER_MAP[stakePolicy.stakePolicyId] = info
               }
             }
           }
@@ -179,18 +185,20 @@ export const EarnScene = (props: Props) => {
   // Refresh stake positions when re-entering the scene or on initial load
   useAsyncEffect(
     async () => {
-      if (!isLoadingDiscover || (isFocused && !isPrevFocused)) {
+      if (!isLoadingDiscover || (isFocused && isPrevFocused !== true)) {
         setIsLoadingPortfolio(true)
 
         const controller = new AbortController()
         const signal = controller.signal
 
         try {
-          const stakePolicyIds = Object.keys(discoverMap)
+          // Snapshot: an account switch reassigns POLICY_MAP mid-scan
+          const policyMap = POLICY_MAP
+          const stakePolicyIds = Object.keys(policyMap)
           for (const stakePolicyId of stakePolicyIds) {
             if (signal.aborted) break
 
-            const discoverInfo = discoverMap[stakePolicyId]
+            const discoverInfo = policyMap[stakePolicyId]
             const { stakePlugin, stakePolicy } = discoverInfo
 
             // Find matching wallets based on the first stake asset's pluginId
@@ -265,7 +273,7 @@ export const EarnScene = (props: Props) => {
   const filterStakeInfo = (
     info: DiscoverStakeInfo | PortfolioStakeInfo
   ): boolean => {
-    if (!searchText) return true
+    if (searchText === '') return true
     const searchLower = searchText.toLowerCase()
 
     // Match against policy provider name
@@ -284,9 +292,9 @@ export const EarnScene = (props: Props) => {
       if (currencyInfo.currencyCode.toLowerCase().includes(searchLower))
         return true
       // Also check asset's own display name if available
-      if (stakeAsset.displayName?.toLowerCase().includes(searchLower))
+      if (stakeAsset.displayName?.toLowerCase().includes(searchLower) === true)
         return true
-      if (stakeAsset.currencyCode?.toLowerCase().includes(searchLower))
+      if (stakeAsset.currencyCode.toLowerCase().includes(searchLower))
         return true
     }
 
@@ -298,9 +306,9 @@ export const EarnScene = (props: Props) => {
       if (currencyInfo.currencyCode.toLowerCase().includes(searchLower))
         return true
       // Also check asset's own display name if available
-      if (rewardAsset.displayName?.toLowerCase().includes(searchLower))
+      if (rewardAsset.displayName?.toLowerCase().includes(searchLower) === true)
         return true
-      if (rewardAsset.currencyCode?.toLowerCase().includes(searchLower))
+      if (rewardAsset.currencyCode.toLowerCase().includes(searchLower))
         return true
     }
 
@@ -311,7 +319,7 @@ export const EarnScene = (props: Props) => {
     (discoverStakeInfo: DiscoverStakeInfo, currencyInfo: EdgeCurrencyInfo) => {
       const { stakePlugin, stakePolicy } = discoverStakeInfo
 
-      const handlePress = async () => {
+      const handlePress = async (): Promise<void> => {
         let walletId: string | undefined
 
         const matchingWallets = wallets.filter(
@@ -378,7 +386,7 @@ export const EarnScene = (props: Props) => {
       const { stakePlugin, stakePolicy, walletStakeInfos } = portfolioStakeInfo
       if (walletStakeInfos.length === 0) return null
 
-      const handlePress = async () => {
+      const handlePress = async (): Promise<void> => {
         let walletId: string | undefined
         let stakePosition: StakePosition | undefined
 

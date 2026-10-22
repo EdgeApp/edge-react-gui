@@ -1,4 +1,4 @@
-import { eq, lte, mul, round } from 'biggystring'
+import { eq, floor, lte, mul, round } from 'biggystring'
 import {
   asArray,
   asBoolean,
@@ -9,13 +9,14 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import type {
-  EdgeAssetAction,
-  EdgeFetchOptions,
-  EdgeSpendInfo,
-  EdgeTransaction,
-  EdgeTxActionFiat,
-  JsonObject
+import {
+  asMaybePendingFundsError,
+  type EdgeAssetAction,
+  type EdgeFetchOptions,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
+  type EdgeTxActionFiat,
+  type JsonObject
 } from 'edge-core-js'
 import { Platform } from 'react-native'
 import { CustomTabs } from 'react-native-custom-tabs'
@@ -85,6 +86,7 @@ import {
   validateRampQuoteRequest
 } from '../utils/constraintUtils'
 import { getSettlementRange } from '../utils/getSettlementRange'
+import { makeSellPaymentRedirect } from '../utils/sellPaymentRedirect'
 import { asInitOptions } from './paybisRampTypes'
 
 const pluginId = 'paybis'
@@ -242,6 +244,10 @@ const ensureIsoPrefix = (currencyCode: string): string => {
 
 const FIAT_DECIMALS = -2
 const CRYPTO_DECIMALS = -8
+// Share of a crypto-denominated order ceiling that a max request re-quotes at.
+// Paybis derives that ceiling from a fiat limit at the current rate, so it
+// drifts between requests; re-quoting exactly at it fails when the rate moves.
+const CRYPTO_CEILING_MARGIN = '0.995'
 
 const PAYBIS_TO_EDGE_CURRENCY_MAP: Record<string, ExtendedTokenId> = {
   AAVE: {
@@ -860,17 +866,18 @@ export const paybisRampPlugin: RampPluginFactory = (
           let amount
 
           if (isMaxAmount) {
-            // Use default max amounts
-            amount = amountType === 'fiat' ? '10000' : '10'
-
             if (maxAmountLimit != null) {
-              const maxCapNumber = parseFloat(maxAmountLimit)
-              const amountNumber = parseFloat(amount)
-              if (!Number.isNaN(maxCapNumber) && !Number.isNaN(amountNumber)) {
-                if (amountNumber > maxCapNumber) {
-                  amount = maxAmountLimit
-                }
-              }
+              // A sell max carries the user's actual maximum, so quote exactly
+              // that. Round DOWN: rounding up asks to sell more than the wallet
+              // can spend, which fails at the send step with the amount locked.
+              amount = floor(
+                maxAmountLimit,
+                amountType === 'fiat' ? FIAT_DECIMALS : CRYPTO_DECIMALS
+              )
+            } else {
+              // A buy max has no known ceiling, so probe with a large default
+              // and let the provider clamp it to its own limit.
+              amount = amountType === 'fiat' ? '10000' : '10'
             }
           } else {
             amount = exchangeAmount
@@ -896,16 +903,6 @@ export const paybisRampPlugin: RampPluginFactory = (
               amount = isMaxAmount ? amount : round(amount, CRYPTO_DECIMALS)
               directionChange = 'from'
             }
-          }
-
-          const bodyParams = {
-            currencyCodeFrom,
-            amount,
-            currencyCodeTo,
-            directionChange,
-            isReceivedAmount: directionChange === 'to',
-            paymentMethod: direction === 'buy' ? paymentMethod : undefined,
-            payoutMethod: direction === 'sell' ? paymentMethod : undefined
           }
 
           let promoCode: string | undefined
@@ -941,26 +938,47 @@ export const paybisRampPlugin: RampPluginFactory = (
             }
           }
 
-          const response = await paybisFetch({
-            method: 'POST',
-            url: state.apiUrl,
-            path: 'v2/public/quote',
-            apiKey: state.apiKey,
-            bodyParams,
-            promoCode
-          })
+          // Paybis reports its per-order ceiling only when a request exceeds it.
+          // A max request above that ceiling would otherwise be dropped, leaving
+          // Max with no quote at all, so re-quote once at the reported ceiling.
+          // Any other request surfaces the limit error unchanged.
+          const amountDecimals =
+            amountType === 'fiat' ? FIAT_DECIMALS : CRYPTO_DECIMALS
+          const requestedCurrencyCode =
+            directionChange === 'from' ? currencyCodeFrom : currencyCodeTo
+          let quoteAmount = amount
+          let quoteResult: ReturnType<typeof asQuote> | undefined
 
-          const {
-            id: quoteId,
-            paymentMethods,
-            paymentMethodErrors,
-            payoutMethods,
-            payoutMethodErrors
-          } = asQuote(response)
+          for (let attempt = 0; attempt < 2; attempt++) {
+            const bodyParams = {
+              currencyCodeFrom,
+              amount: quoteAmount,
+              currencyCodeTo,
+              directionChange,
+              isReceivedAmount: directionChange === 'to',
+              paymentMethod: direction === 'buy' ? paymentMethod : undefined,
+              payoutMethod: direction === 'sell' ? paymentMethod : undefined
+            }
 
-          const pmErrors = paymentMethodErrors ?? payoutMethodErrors
-          if (pmErrors != null) {
+            const response = await paybisFetch({
+              method: 'POST',
+              url: state.apiUrl,
+              path: 'v2/public/quote',
+              apiKey: state.apiKey,
+              bodyParams,
+              promoCode
+            })
+
+            const candidate = asQuote(response)
+            const pmErrors =
+              candidate.paymentMethodErrors ?? candidate.payoutMethodErrors
+            if (pmErrors == null) {
+              quoteResult = candidate
+              break
+            }
+
             let lastError
+            let ceilingAmount: string | undefined
             for (const e of pmErrors) {
               lastError = e
               // New error message observed from paybis API
@@ -982,40 +1000,54 @@ export const paybisRampPlugin: RampPluginFactory = (
                 /^Minimum amount is (\d+(?:\.\d+)?) ([A-Z]+)/.exec(
                   e.error.message
                 )
-              if (maxMatch != null) {
+              const overLimit = maxMatch ?? maxMatchLegacy
+              const underLimit = minMatch ?? minMatchLegacy
+              if (overLimit != null) {
+                // The ceiling is the largest amount Paybis accepts per order, so
+                // a buy or sell max takes it and retries. Only when it is quoted
+                // in the same currency the amount was requested in.
+                if (
+                  isMaxAmount &&
+                  attempt === 0 &&
+                  overLimit[2] === requestedCurrencyCode
+                ) {
+                  ceilingAmount = floor(
+                    amountType === 'crypto'
+                      ? mul(overLimit[1], CRYPTO_CEILING_MARGIN)
+                      : overLimit[1],
+                    amountDecimals
+                  )
+                  break
+                }
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'overLimit',
-                  errorAmount: Number(maxMatch[1]),
-                  displayCurrencyCode: maxMatch[2]
+                  errorAmount: Number(overLimit[1]),
+                  displayCurrencyCode: overLimit[2]
                 })
-              } else if (minMatch != null) {
+              } else if (underLimit != null) {
                 throw new FiatProviderError({
                   providerId: pluginId,
                   errorType: 'underLimit',
-                  errorAmount: Number(minMatch[1]),
-                  displayCurrencyCode: minMatch[2]
-                })
-              } else if (maxMatchLegacy != null) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'overLimit',
-                  errorAmount: Number(maxMatchLegacy[1]),
-                  displayCurrencyCode: maxMatchLegacy[2]
-                })
-              } else if (minMatchLegacy != null) {
-                throw new FiatProviderError({
-                  providerId: pluginId,
-                  errorType: 'underLimit',
-                  errorAmount: Number(minMatchLegacy[1]),
-                  displayCurrencyCode: minMatchLegacy[2]
+                  errorAmount: Number(underLimit[1]),
+                  displayCurrencyCode: underLimit[2]
                 })
               }
+            }
+
+            if (ceilingAmount != null) {
+              quoteAmount = ceilingAmount
+              continue
             }
             throw new Error(
               lastError?.error.message ?? 'Paybis Unknown paymentMethodError'
             )
           }
+
+          if (quoteResult == null) {
+            throw new Error('Paybis quote unavailable')
+          }
+          const { id: quoteId, paymentMethods, payoutMethods } = quoteResult
 
           let pmQuote
           if (direction === 'buy' && paymentMethods?.length === 1) {
@@ -1034,14 +1066,17 @@ export const paybisRampPlugin: RampPluginFactory = (
           let cryptoAmount: string
           let fiatAmount: string
 
+          // Compare against the amount actually sent: a max request that hit the
+          // provider ceiling was re-quoted at that ceiling, so the originally
+          // requested amount no longer matches what the quote answers.
           if (directionChange === 'from') {
             assert(
-              eq(amount, amountFrom.amount),
+              eq(quoteAmount, amountFrom.amount),
               'Quote not equal to requested from amount'
             )
           } else {
             assert(
-              eq(amount, amountTo.amount),
+              eq(quoteAmount, amountTo.amount),
               'Quote not equal to requested to amount'
             )
           }
@@ -1241,6 +1276,236 @@ export const paybisRampPlugin: RampPluginFactory = (
               console.log(`baseWebviewUrl: ${baseWebviewUrl}`)
               let inPayment = false
               let isFirstOpen = true
+              // Set once the user leaves the widget, so a payment-details
+              // fetch still in flight opens nothing:
+              let webViewClosed = false
+
+              // Opens the send scene for this order's payment, and finishes the
+              // sale once it is sent:
+              const handlePaymentRedirect = async (): Promise<void> => {
+                if (inPayment) return
+                inPayment = true
+                let broadcastAttempted = false
+                let sendSceneClosed = false
+                let broadcastTx: EdgeTransaction | undefined
+                try {
+                  const payDetails = await paybisFetch({
+                    method: 'GET',
+                    url: state!.apiUrl,
+                    path: `v2/request/${requestId}/payment-details`,
+                    apiKey: state!.apiKey,
+                    promoCode
+                  })
+                  if (webViewClosed) return
+                  const {
+                    assetId,
+                    amount,
+                    currencyCode: pbCurrencyCode,
+                    network,
+                    depositAddress,
+                    destinationTag
+                  } = asPaymentDetails(payDetails)
+                  const { pluginId, tokenId } =
+                    PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
+
+                  console.log(`Creating Paybis payment`)
+                  console.log(`  amount: ${amount}`)
+                  console.log(`  assetId: ${assetId}`)
+                  console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
+                  console.log(`  network: ${network}`)
+                  console.log(`  pluginId: ${pluginId}`)
+                  console.log(`  tokenId: ${tokenId}`)
+                  const { multiplier } = getExchangeDenom(
+                    coreWallet.currencyConfig,
+                    tokenId
+                  )
+                  const nativeAmount = mul(amount, multiplier)
+
+                  const assetAction: EdgeAssetAction = {
+                    assetActionType: 'sell'
+                  }
+                  const savedAction: EdgeTxActionFiat = {
+                    actionType: 'fiat',
+                    orderId: requestId,
+                    orderUri: `${widgetUrl}?requestId=${requestId}`,
+                    isEstimate: true,
+                    fiatPlugin: {
+                      providerId: pluginId,
+                      providerDisplayName,
+                      supportEmail
+                    },
+                    payinAddress: depositAddress,
+                    cryptoAsset: {
+                      pluginId: coreWallet.currencyInfo.pluginId,
+                      tokenId,
+                      nativeAmount
+                    },
+                    fiatAsset: {
+                      fiatCurrencyCode,
+                      fiatAmount
+                    }
+                  }
+
+                  const spendInfo: EdgeSpendInfo = {
+                    tokenId,
+                    assetAction,
+                    savedAction,
+                    spendTargets: [
+                      {
+                        nativeAmount,
+                        publicAddress: depositAddress
+                      }
+                    ]
+                  }
+
+                  if (destinationTag != null) {
+                    spendInfo.memos = [
+                      {
+                        type: 'text',
+                        value: destinationTag,
+                        hidden: true
+                      }
+                    ]
+                  }
+
+                  const sendParams: SendScene2Params = {
+                    walletId: coreWallet.id,
+                    tokenId,
+                    spendInfo,
+                    lockTilesMap: {
+                      address: true,
+                      amount: true,
+                      wallet: true
+                    },
+                    hiddenFeaturesMap: {
+                      address: true
+                    }
+                  }
+                  // The send scene calls onBack whenever it unmounts, so wait for
+                  // it here: leaving without sending lands in the catch below.
+                  const tx = await new Promise<EdgeTransaction>(
+                    (resolve, reject) => {
+                      navigation.navigate('send2', {
+                        ...sendParams,
+                        // The default broadcast, wrapped to record that the
+                        // signed transaction was handed to the network:
+                        alternateBroadcast: async (
+                          signedTx: EdgeTransaction
+                        ) => {
+                          // Leaving the scene does not stop a send that is
+                          // still signing. The widget is closed by then, so
+                          // that send must not go out:
+                          if (sendSceneClosed) {
+                            throw new Error(
+                              'Paybis sell send scene closed before broadcast'
+                            )
+                          }
+                          broadcastAttempted = true
+                          try {
+                            broadcastTx = await coreWallet.broadcastTx(signedTx)
+                            return broadcastTx
+                          } catch (e: unknown) {
+                            // The wallet refused the spend before submitting
+                            // anything:
+                            if (asMaybePendingFundsError(e) != null) {
+                              broadcastAttempted = false
+                            }
+                            throw e
+                          }
+                        },
+                        onDone: (
+                          error: Error | null,
+                          edgeTransaction?: EdgeTransaction
+                        ) => {
+                          if (error != null) {
+                            reject(error)
+                          } else if (edgeTransaction != null) {
+                            resolve(edgeTransaction)
+                          } else {
+                            reject(new Error(SendErrorNoTransaction))
+                          }
+                        },
+                        onBack: () => {
+                          sendSceneClosed = true
+                          // Backing out after the broadcast went through
+                          // still completes the sale:
+                          if (broadcastTx != null) {
+                            resolve(broadcastTx)
+                          } else {
+                            reject(new Error(SendErrorBackPressed))
+                          }
+                        }
+                      })
+                    }
+                  )
+
+                  // Track conversion
+                  onLogEvent('Sell_Success', {
+                    conversionValues: {
+                      conversionType: 'sell',
+                      destFiatCurrencyCode: fiatCurrencyCode,
+                      destFiatAmount: fiatAmount,
+                      sourceAmount: new CryptoAmount({
+                        currencyConfig: coreWallet.currencyConfig,
+                        tokenId,
+                        exchangeAmount: amount
+                      }),
+                      fiatProviderId: pluginId,
+                      orderId: requestId
+                    }
+                  })
+
+                  if (tokenId != null) {
+                    const params: SaveTxActionParams = {
+                      walletId: coreWallet.id,
+                      tokenId,
+                      txid: tx.txid,
+                      savedAction,
+                      assetAction: {
+                        ...assetAction,
+                        assetActionType: 'sell'
+                      }
+                    }
+                    await account.currencyWallets[coreWallet.id].saveTxAction(
+                      params
+                    )
+                  }
+
+                  // Open the widget again, so it shows the order's status:
+                  navigation.pop()
+                  await openWebView()
+                } catch (e: unknown) {
+                  if (webViewClosed) return
+                  navigation.pop()
+                  if (broadcastAttempted) {
+                    // The send may have reached the network, so open the
+                    // widget again to show the order's status:
+                    await openWebView()
+                  }
+                  // Otherwise nothing was sent. Paybis keeps the order waiting
+                  // for payment once Pay is tapped, with no way to pay or
+                  // cancel it on the page, so the widget stays closed and the
+                  // user quotes again.
+                  if (
+                    e instanceof Error &&
+                    e.message === SendErrorNoTransaction
+                  ) {
+                    showToast(
+                      lstrings.fiat_plugin_sell_failed_to_send_try_again,
+                      NOT_SUCCESS_TOAST_HIDE_MS
+                    )
+                  } else if (
+                    e instanceof Error &&
+                    e.message === SendErrorBackPressed
+                  ) {
+                    // Do nothing
+                  } else {
+                    showError(e)
+                  }
+                } finally {
+                  inPayment = false
+                }
+              }
 
               const openWebView = async (): Promise<void> => {
                 // Only include oneTimeToken on the first open. Subsequent opens
@@ -1249,11 +1514,21 @@ export const paybisRampPlugin: RampPluginFactory = (
                   ? `${baseWebviewUrl}${ott}`
                   : baseWebviewUrl
                 isFirstOpen = false
+                webViewClosed = false
+                // Each WebView gets its own redirect state, so a late report
+                // from one already closed opens nothing:
+                const redirect = makeSellPaymentRedirect({
+                  navigation,
+                  onPaymentRedirect: handlePaymentRedirect
+                })
 
                 navigation.navigate('guiPluginWebView', {
                   url: webviewUrl,
                   // No pending promise to resolve
-                  onClose: () => {},
+                  onClose: () => {
+                    webViewClosed = true
+                  },
+                  onShouldStartLoad: redirect.onShouldStartLoad,
                   onUrlChange: newUrl => {
                     handleUrlChange(newUrl).catch((error: unknown) => {
                       showError(error)
@@ -1268,181 +1543,8 @@ export const paybisRampPlugin: RampPluginFactory = (
                       lstrings.fiat_plugin_sell_failed_try_again,
                       NOT_SUCCESS_TOAST_HIDE_MS
                     )
-                  } else if (isReturnUrl(newUrl, 'payment')) {
-                    if (inPayment) return
-                    inPayment = true
-                    try {
-                      const payDetails = await paybisFetch({
-                        method: 'GET',
-                        url: state!.apiUrl,
-                        path: `v2/request/${requestId}/payment-details`,
-                        apiKey: state!.apiKey,
-                        promoCode
-                      })
-                      const {
-                        assetId,
-                        amount,
-                        currencyCode: pbCurrencyCode,
-                        network,
-                        depositAddress,
-                        destinationTag
-                      } = asPaymentDetails(payDetails)
-                      const { pluginId, tokenId } =
-                        PAYBIS_TO_EDGE_CURRENCY_MAP[assetId]
-
-                      console.log(`Creating Paybis payment`)
-                      console.log(`  amount: ${amount}`)
-                      console.log(`  assetId: ${assetId}`)
-                      console.log(`  pbCurrencyCode: ${pbCurrencyCode}`)
-                      console.log(`  network: ${network}`)
-                      console.log(`  pluginId: ${pluginId}`)
-                      console.log(`  tokenId: ${tokenId}`)
-                      const { multiplier } = getExchangeDenom(
-                        coreWallet.currencyConfig,
-                        tokenId
-                      )
-                      const nativeAmount = mul(amount, multiplier)
-
-                      const assetAction: EdgeAssetAction = {
-                        assetActionType: 'sell'
-                      }
-                      const savedAction: EdgeTxActionFiat = {
-                        actionType: 'fiat',
-                        orderId: requestId,
-                        orderUri: `${widgetUrl}?requestId=${requestId}`,
-                        isEstimate: true,
-                        fiatPlugin: {
-                          providerId: pluginId,
-                          providerDisplayName,
-                          supportEmail
-                        },
-                        payinAddress: depositAddress,
-                        cryptoAsset: {
-                          pluginId: coreWallet.currencyInfo.pluginId,
-                          tokenId,
-                          nativeAmount
-                        },
-                        fiatAsset: {
-                          fiatCurrencyCode,
-                          fiatAmount
-                        }
-                      }
-
-                      const spendInfo: EdgeSpendInfo = {
-                        tokenId,
-                        assetAction,
-                        savedAction,
-                        spendTargets: [
-                          {
-                            nativeAmount,
-                            publicAddress: depositAddress
-                          }
-                        ]
-                      }
-
-                      if (destinationTag != null) {
-                        spendInfo.memos = [
-                          {
-                            type: 'text',
-                            value: destinationTag,
-                            hidden: true
-                          }
-                        ]
-                      }
-
-                      const sendParams: SendScene2Params = {
-                        walletId: coreWallet.id,
-                        tokenId,
-                        spendInfo,
-                        lockTilesMap: {
-                          address: true,
-                          amount: true,
-                          wallet: true
-                        },
-                        hiddenFeaturesMap: {
-                          address: true
-                        }
-                      }
-                      // Navigate to send scene
-                      const tx = await new Promise<EdgeTransaction>(
-                        (resolve, reject) => {
-                          navigation.navigate('send2', {
-                            ...sendParams,
-                            onDone: (
-                              error: Error | null,
-                              edgeTransaction?: EdgeTransaction
-                            ) => {
-                              if (error != null) {
-                                reject(error)
-                              } else if (edgeTransaction != null) {
-                                resolve(edgeTransaction)
-                              } else {
-                                reject(new Error(SendErrorNoTransaction))
-                              }
-                            },
-                            onBack: () => {
-                              reject(new Error(SendErrorBackPressed))
-                            }
-                          })
-                        }
-                      )
-
-                      // Track conversion
-                      onLogEvent('Sell_Success', {
-                        conversionValues: {
-                          conversionType: 'sell',
-                          destFiatCurrencyCode: fiatCurrencyCode,
-                          destFiatAmount: fiatAmount,
-                          sourceAmount: new CryptoAmount({
-                            currencyConfig: coreWallet.currencyConfig,
-                            tokenId,
-                            exchangeAmount: amount
-                          }),
-                          fiatProviderId: pluginId,
-                          orderId: requestId
-                        }
-                      })
-
-                      if (tokenId != null) {
-                        const params: SaveTxActionParams = {
-                          walletId: coreWallet.id,
-                          tokenId,
-                          txid: tx.txid,
-                          savedAction,
-                          assetAction: {
-                            ...assetAction,
-                            assetActionType: 'sell'
-                          }
-                        }
-                        await account.currencyWallets[
-                          coreWallet.id
-                        ].saveTxAction(params)
-                      }
-
-                      navigation.pop()
-                      await openWebView()
-                    } catch (e: unknown) {
-                      navigation.pop()
-                      await openWebView()
-                      if (
-                        e instanceof Error &&
-                        e.message === SendErrorNoTransaction
-                      ) {
-                        showToast(
-                          lstrings.fiat_plugin_sell_failed_to_send_try_again,
-                          NOT_SUCCESS_TOAST_HIDE_MS
-                        )
-                      } else if (
-                        e instanceof Error &&
-                        e.message === SendErrorBackPressed
-                      ) {
-                        // Do nothing
-                      } else {
-                        showError(e)
-                      }
-                    } finally {
-                      inPayment = false
-                    }
+                  } else {
+                    await redirect.onUrlChange(newUrl)
                   }
                 }
               }

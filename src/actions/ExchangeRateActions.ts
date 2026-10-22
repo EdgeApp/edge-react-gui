@@ -352,6 +352,11 @@ async function fetchExchangeRates(
         const cleanedRates = asRatesParams(json)
         const targetFiat = fixFiatCurrencyCode(cleanedRates.targetFiat)
 
+        // The server stamps each rate with its own clock, so judge a rate's
+        // age against that clock. A device clock set ahead would otherwise
+        // file every current rate as historical and leave no rates to show:
+        const serverNow = getServerNow(response.headers.get('date'), now)
+
         if (verbose) {
           // The requested pairs are already logged above (request body), so
           // here we only summarize the outcome and name the pairs the server
@@ -395,7 +400,7 @@ async function fetchExchangeRates(
           const rateObj = rates.crypto[pluginId][safeTokenId][targetFiat]
 
           const isHistorical =
-            isoDate != null && isoDate.getTime() < now - ONE_HOUR
+            isoDate != null && isoDate.getTime() < serverNow - ONE_HOUR
           if (isHistorical) {
             const dateTimestamp = isoDate.getTime()
             const yesterdayTargetTimestamp = Date.parse(yesterday)
@@ -432,7 +437,7 @@ async function fetchExchangeRates(
           const rateObj = rates.fiat[fiatCode][targetFiat]
 
           const isHistorical =
-            isoDate != null && isoDate.getTime() < now - ONE_HOUR
+            isoDate != null && isoDate.getTime() < serverNow - ONE_HOUR
           if (isHistorical) {
             const dateTimestamp = isoDate.getTime()
             const yesterdayTargetTimestamp = Date.parse(yesterday)
@@ -575,6 +580,19 @@ export function mergePairCache(
     cryptoPairs: Array.from(cryptoPairs.values()),
     fiatPairs: Array.from(fiatPairs.values())
   }
+}
+
+/**
+ * The rates server's current time, read from its `Date` response header.
+ * Falls back to the device clock when the header is missing or unreadable.
+ */
+export const getServerNow = (
+  dateHeader: string | null,
+  deviceNow: number
+): number => {
+  if (dateHeader == null) return deviceNow
+  const serverNow = Date.parse(dateHeader)
+  return isNaN(serverNow) ? deviceNow : serverNow
 }
 
 const getYesterdayDateRoundDownHour = (now?: Date | number): Date => {

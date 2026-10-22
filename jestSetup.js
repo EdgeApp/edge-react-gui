@@ -246,7 +246,8 @@ jest.mock('react-native-device-info', () => {
     getDeviceType: jest.fn(),
     hasNotch: jest.fn(),
     getBuildNumber: jest.fn(),
-    getVersion: jest.fn()
+    getVersion: jest.fn(() => '1.2.3'),
+    getSystemVersion: jest.fn(() => '18.0.0')
   }
 })
 
@@ -258,4 +259,11 @@ jest.mock('react-native-keyboard-aware-scroll-view', () => {
 jest.mock('react-native-reorderable-list', () => ({
   ...jest.requireActual('react-native-reorderable-list'),
   useReorderableDrag: () => jest.fn()
+}))
+
+// `isAgentTestMode` reads the developer's local config.json. Read it as off
+// in every test, so a machine with AGENT_TEST_MODE on renders the same scenes
+// as one without it. A test that needs the flag on mocks the module itself:
+jest.mock('./src/util/agentTestMode', () => ({
+  isAgentTestMode: () => false
 }))

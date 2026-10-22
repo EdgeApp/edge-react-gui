@@ -8,7 +8,7 @@ env:
     ZCASH_BDAY: ${ZCASH_BDAY || ""}
 ---
 # Parse env so we can accept a string or array input
-- evalScript: ${if (ASSET_NAMES.startsWith('[')) ASSET_NAMES = JSON.parse(ASSET_NAMES); else ASSET_NAMES = [ASSET_NAMES]}
+- evalScript: ${if (ASSET_NAMES.startsWith('[')) output.ASSET_NAMES = JSON.parse(ASSET_NAMES); else output.ASSET_NAMES = [ASSET_NAMES]}
 
 # Open add wallet screen
 - tapOn: Assets
@@ -17,21 +17,21 @@ env:
 - tapOn: Search Wallets
 
 # Loop over wallet names and import them
-- evalScript: ${var index = 0}
+- evalScript: ${output.index = 0}
 - repeat:
-    times: ${ASSET_NAMES.length}
+    times: ${output.ASSET_NAMES.length}
     commands:
-      - evalScript: ${var assetName = ASSET_NAMES[index]}
+      - evalScript: ${output.assetName = output.ASSET_NAMES[output.index]}
       - tapOn:
           id: "undefined.clearIcon"
-      - inputText: ${assetName}
+      - inputText: ${output.assetName}
       
       # Escape parentheses for regex matching - "Bitcoin (no Segwit)" breaks flow otherwise
-      - evalScript: ${assetName = assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
+      - evalScript: ${output.assetName = output.assetName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')}
       - tapOn:
-          text: ${".*" + assetName}
-          index: 1 # First index is thesearch bar
-      - evalScript: ${index++}
+          text: ${".*" + output.assetName}
+          index: 1 # First index is the search bar
+      - evalScript: ${output.index++}
 
 - tapOn: Next
 - tapOn: Import Wallets
@@ -47,11 +47,15 @@ env:
         - hideKeyboard
         - tapOn: "Enter your.*"
 # Drop keyboard - iOS
+# Do not press Enter/Return: seed field is multiline, returnKeyType=none,
+# blurOnSubmit=false. Tapping the field label also fails to dismiss. Tap the
+# non-interactive instruction paragraph (Maestro iOS keyboard workaround).
 - runFlow:
     when:
       platform: iOS
     commands:
-        - tapOn: "Private Key or Private Seed"
+        - tapOn:
+            text: "^Enter your private seed, private key, or active key to verify and restore the associated wallet$"
 
 - tapOn: Next
 
@@ -64,7 +68,7 @@ env:
 
 # Add birthday height for Zcash and Pirate Chain
 # Index for targetting the correct "edit" icon 
-- evalScript: ${var index = 0}
+- evalScript: ${output.index = 0}
 # Pirate Chain on top if both are displayed
 - runFlow:
     when:
@@ -72,10 +76,10 @@ env:
     commands:
       - tapOn: 
           text: ""
-          index: ${index}
+          index: ${output.index}
       - inputText: ${PIRATE_BDAY}
       - tapOn: Submit
-      - evalScript: ${index++}
+      - evalScript: ${output.index++}
 # Zcash birthday
 - runFlow:
     when:
@@ -83,19 +87,27 @@ env:
     commands:
       - tapOn: 
           text: ""
-          index: ${index}
+          index: ${output.index}
       - inputText: ${ZCASH_BDAY}
       - tapOn: Submit
-      - evalScript: ${index++}
+      - evalScript: ${output.index++}
 
 
-# tap on next until it becomes tapable and works to see "assets" button
-# skip if NO_COMPLETE is true (for autodetect tokens flow test)
-- repeat:
-    while:
-      visible: Next
+# Complete the import unless the caller intentionally stops early
+# to test the auto-detected-token notification.
+- runFlow:
+    when:
       true: ${!NO_COMPLETE}
     commands:
-      - tapOn: 
-          text: Next
-          optional: true
+      # Bound retries so a stuck Next button cannot hang the suite.
+      - repeat:
+          times: 10
+          while:
+            visible: Next
+          commands:
+            - tapOn:
+                text: Next
+                optional: true
+
+      # A bounded repeat can exhaust successfully, so verify completion.
+      - assertNotVisible: Next

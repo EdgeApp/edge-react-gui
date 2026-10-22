@@ -14,8 +14,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   formatCategory,
+  getPluginIdIcon,
   getTxActionDisplayInfo,
-  pluginIdIcons,
   splitCategory
 } from '../../actions/CategoriesActions'
 import { getFiatSymbol } from '../../constants/WalletAndCurrencyConstants'
@@ -180,8 +180,11 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   }
 
   // Icon & Thumbnail
-  const thumbnailPath =
-    useContactThumbnail(name) ?? pluginIdIcons[iconPluginId ?? '']
+  const contactThumbnail = useContactThumbnail(name)
+  const pluginIdIcon = getPluginIdIcon(iconPluginId, theme)
+  const thumbnail = contactThumbnail ?? pluginIdIcon
+  const thumbnailPath = thumbnail?.uri
+  const fitThumbnail = thumbnail?.fit === true
   if (thumbnailPath != null) {
     arrowIconSize = theme.rem(1)
     arrowContainerStyle.push(styles.arrowIconOverlayContainer)
@@ -209,7 +212,11 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   const icon =
     thumbnailPath != null ? (
       <ShadowedView style={styles.contactContainer}>
-        <FastImage style={styles.contactImage} source={iconSource} />
+        <FastImage
+          style={fitThumbnail ? styles.logoImage : styles.contactImage}
+          source={iconSource}
+          resizeMode={fitThumbnail ? 'contain' : 'cover'}
+        />
         {arrowIcon}
       </ShadowedView>
     ) : (
@@ -262,7 +269,12 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
 
   // HACK: Handle 100% of the margins because of SceneHeader usage on this scene
   return isCard === true ? (
-    <EdgeCard icon={icon} onPress={handlePress} onLongPress={handleLongPress}>
+    <EdgeCard
+      icon={icon}
+      testID={`txListRow_${name}`}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
+    >
       <SectionView dividerMarginRem={[0.2, 0.5]} marginRem={0.25}>
         <>
           <View style={styles.row}>
@@ -297,6 +309,7 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
     </EdgeCard>
   ) : (
     <EdgeTouchableOpacity
+      testID={`txListRow_${name}`}
       onPress={handlePress}
       onLongPress={handleLongPress}
       style={styles.cardlessRow}
@@ -379,6 +392,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     borderRadius: theme.rem(1)
+  },
+  logoImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%'
   },
   arrowIconOverlayContainer: {
     position: 'absolute',

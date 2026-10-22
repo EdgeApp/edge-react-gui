@@ -16,6 +16,7 @@ import type {
 import { makeBigAccumulator } from '../../util/accumulator'
 import { makeBuilder } from '../../util/builder'
 import { fromHex } from '../../util/hex'
+import { getSignerSeed } from '../../util/signer'
 import { pluginInfo } from '../pluginInfo'
 import { fantomEcosystem as eco } from '../policyInfo/fantomEcosystem'
 import type { StakePluginPolicy } from '../types'
@@ -153,7 +154,7 @@ export const makeMasonryPolicy = (
       )[0]
 
       // Get the signer for the wallet
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
       const signerAddress = eco.makeSigner(signerSeed).getAddress()
 
       // TODO: Replace this assertion with an LP-contract call to get the liquidity pool ratios
@@ -442,7 +443,7 @@ export const makeMasonryPolicy = (
       request: StakePositionRequest
     ): Promise<StakePosition> {
       const { stakePolicyId, wallet, account } = request
-      const signerSeed = await account.getDisplayPrivateKey(wallet.id)
+      const signerSeed = await getSignerSeed(account, wallet)
 
       const policyInfo = pluginInfo.policyInfo.find(
         p => p.stakePolicyId === stakePolicyId

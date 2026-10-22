@@ -1,7 +1,8 @@
 import { useIsFocused } from '@react-navigation/native'
-import { add, div, gt, gte, lte, sub, toFixed } from 'biggystring'
+import { add, div, gt, gte, toFixed } from 'biggystring'
 import type {
   EdgeSwapQuote,
+  EdgeSwapRequest,
   EdgeSwapRequestOptions,
   EdgeSwapResult
 } from 'edge-core-js'
@@ -10,7 +11,6 @@ import { SectionList, type ViewStyle } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { updateSwapCount } from '../../actions/RequestReviewActions'
-import { useSwapRequestOptions } from '../../hooks/swap/useSwapRequestOptions'
 import { useHandler } from '../../hooks/useHandler'
 import { useMount } from '../../hooks/useMount'
 import { useRowLayout } from '../../hooks/useRowLayout'
@@ -29,6 +29,7 @@ import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
 import { CryptoAmount } from '../../util/CryptoAmount'
 import { logActivity } from '../../util/logger'
+import { getSwapErrorCategory } from '../../util/swapErrorCategory'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
@@ -50,20 +51,39 @@ import { EdgeModal } from '../modals/EdgeModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal'
 import { CircleTimer } from '../progress-indicators/CircleTimer'
 import { SwapProviderRow } from '../rows/SwapProviderRow'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { ModalFooter } from '../themed/ModalParts'
+import {
+  calculateQuotePriceImpact,
+  PRICE_IMPACT_WARNING_THRESHOLD
+} from '../themed/PriceImpactText'
 import { SafeSlider } from '../themed/SafeSlider'
 import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
-
-const PRICE_IMPACT_WARNING_THRESHOLD = 0.05
 
 export interface SwapConfirmationParams {
   selectedQuote: EdgeSwapQuote
   quotes: EdgeSwapQuote[]
   onApprove: () => void
+
+  /**
+   * Called when the user declines the provider's terms on a Stealth Swap, just
+   * before this scene backs out to the swap create scene. The caller owns the
+   * Stealth toggle, so this is where it switches the toggle off.
+   */
+  onStealthTermsDeclined?: () => void
+
+  /**
+   * The request and options the quotes were fetched with. An expiry re-quote
+   * reuses them verbatim, so a Stealth Swap keeps its privacy demand and its
+   * provider restriction. `quote.request` cannot stand in: it is the plugin's
+   * copy, with `quoteFor: 'max'` already resolved to a fixed amount, and the
+   * options never ride on a quote at all.
+   */
+  swapRequest: EdgeSwapRequest
+  swapRequestOptions: EdgeSwapRequestOptions
 }
 
 interface Props extends SwapTabSceneProps<'swapConfirmation'> {}
@@ -75,7 +95,15 @@ interface Section {
 
 export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { quotes, onApprove } = route.params
+  const {
+    quotes,
+    onApprove,
+    onStealthTermsDeclined,
+    swapRequest,
+    swapRequestOptions
+  } = route.params
+  // A Stealth Swap's provider is fixed, so its powered-by card is not tappable:
+  const isStealth = swapRequest.privacy === 'required'
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -97,8 +125,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   )
 
   const [pending, setPending] = useState(false)
-
-  const swapRequestOptions = useSwapRequestOptions()
+  /** The quote's timer ran out; nothing on screen may be approved any more. */
+  const [expired, setExpired] = useState(false)
 
   const isFocused = useIsFocused()
 
@@ -108,49 +136,18 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   const [selectedQuote, setSelectedQuote] = useState(() =>
     pickBestQuoteWithPreference(quotes, swapRequestOptions)
   )
-  const [calledApprove, setCalledApprove] = useState(false)
+  // Quotes this scene has handed to `approve`. Each one is closed once its
+  // attempt finishes, so none of them can be approved a second time:
+  const approvedQuotes = React.useRef(new Set<EdgeSwapQuote>())
 
   const { request } = selectedQuote
   const { quoteFor } = request
 
-  const priceImpact = React.useMemo(() => {
-    const { fromWallet, fromTokenId, toWallet, toTokenId } = request
-
-    const fromExchangeDenom = getExchangeDenom(
-      fromWallet.currencyConfig,
-      fromTokenId
-    )
-    const toExchangeDenom = getExchangeDenom(toWallet.currencyConfig, toTokenId)
-
-    const fromExchangeAmount = convertNativeToExchange(
-      fromExchangeDenom.multiplier
-    )(selectedQuote.fromNativeAmount)
-    const toExchangeAmount = convertNativeToExchange(
-      toExchangeDenom.multiplier
-    )(selectedQuote.toNativeAmount)
-
-    const fromFiatValue = convertCurrency(
-      exchangeRates,
-      fromWallet.currencyInfo.pluginId,
-      fromTokenId,
-      defaultIsoFiat,
-      fromExchangeAmount
-    )
-    const toFiatValue = convertCurrency(
-      exchangeRates,
-      toWallet.currencyInfo.pluginId,
-      toTokenId,
-      defaultIsoFiat,
-      toExchangeAmount
-    )
-
-    if (lte(fromFiatValue, '0')) return undefined
-
-    const impact = parseFloat(
-      div(sub(fromFiatValue, toFiatValue), fromFiatValue, 8)
-    )
-    return impact > 0 ? impact : undefined
-  }, [selectedQuote, exchangeRates, defaultIsoFiat, request])
+  const priceImpact = React.useMemo(
+    () =>
+      calculateQuotePriceImpact(selectedQuote, exchangeRates, defaultIsoFiat),
+    [selectedQuote, exchangeRates, defaultIsoFiat]
+  )
 
   const showPriceImpact =
     priceImpact != null && priceImpact >= PRICE_IMPACT_WARNING_THRESHOLD
@@ -194,15 +191,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   )
   const showFeeWarning = gt(feeFiat, '0.01') && gte(feePercent, '0.05')
 
-  const handleExchangeTimerExpired = useHandler(() => {
-    if (!isFocused) return
-    if (termsCheckPending.current) {
-      timerExpiredDuringTerms.current = true
-      return
-    }
-
+  const requote = useHandler(() => {
     navigation.replace('swapProcessing', {
-      swapRequest: selectedQuote.request,
+      swapRequest,
       swapRequestOptions,
       onCancel: () => {
         navigation.navigate('swapTab', { screen: 'swapCreate' })
@@ -211,10 +202,28 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         navigation.replace('swapConfirmation', {
           selectedQuote: quotes[0],
           quotes,
-          onApprove
+          onApprove,
+          onStealthTermsDeclined,
+          swapRequest,
+          swapRequestOptions
         })
       }
     })
+  })
+
+  const handleExchangeTimerExpired = useHandler(() => {
+    // An approval in flight owns the quote until it finishes:
+    if (!isFocused || pending) return
+    // The quote is dead whether or not we can leave this scene yet. Recording
+    // it disables the slider immediately, which matters in the terms-check
+    // case below, where the navigation away is deferred until the modal
+    // resolves and the scene stays on screen in the meantime.
+    setExpired(true)
+    if (termsCheckPending.current) {
+      timerExpiredDuringTerms.current = true
+      return
+    }
+    requote()
   })
 
   useMount(() => {
@@ -222,9 +231,27 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
 
     dispatch(logEvent('Exchange_Shift_Quote'))
     termsCheckPending.current = true
-    swapVerifyTerms(swapConfig)
+    swapVerifyTerms(swapConfig, { declineIsCancelOnly: isStealth })
       .then(async result => {
         termsCheckPending.current = false
+        if (!result && isStealth) {
+          // A Stealth Swap has one provider, so there is nothing to re-quote
+          // against: a new quote would come from the same provider and ask
+          // again. Declining its terms backs out of this swap with the
+          // Stealth toggle off, and saves nothing. The create scene reads
+          // its pair from the route params, so they go back with it.
+          onStealthTermsDeclined?.()
+          navigation.navigate('swapTab', {
+            screen: 'swapCreate',
+            params: {
+              fromWalletId: swapRequest.fromWallet.id,
+              fromTokenId: swapRequest.fromTokenId,
+              toWalletId: swapRequest.toWallet.id,
+              toTokenId: swapRequest.toTokenId
+            }
+          })
+          return
+        }
         if (!result || timerExpiredDuringTerms.current) {
           handleExchangeTimerExpired()
         }
@@ -238,16 +265,28 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       })
   })
 
-  // Close the quote if the component unmounts
+  // Close the selected quote if the component unmounts before approving it
   useUnmount(() => {
-    if (!calledApprove)
+    if (!approvedQuotes.current.has(selectedQuote))
       selectedQuote.close().catch((err: unknown) => {
         showError(err)
       })
   })
 
   const handleSlideComplete = async (reset: () => void): Promise<void> => {
-    setCalledApprove(true)
+    // A retry after a failed approval, a return from the success scene, or a
+    // slide after the timer expired while the scene was unfocused all land
+    // on a quote that cannot be approved, so fetch fresh quotes instead:
+    if (
+      approvedQuotes.current.has(selectedQuote) ||
+      isQuoteExpired(selectedQuote)
+    ) {
+      reset()
+      showToast(lstrings.quote_requote_toast)
+      requote()
+      return
+    }
+    approvedQuotes.current.add(selectedQuote)
     setPending(true)
 
     try {
@@ -270,9 +309,16 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
       } = selectedQuote
       // Both fromCurrencyCode and toCurrencyCode will exist, since we set them:
       const { toWallet, toTokenId, fromWallet, fromTokenId } = request
+      const swapAttempt = {
+        swapProviderId: pluginId,
+        sourcePluginId: fromWallet.currencyInfo.pluginId,
+        sourceTokenId: fromTokenId,
+        destPluginId: toWallet.currencyInfo.pluginId,
+        destTokenId: toTokenId
+      }
 
       try {
-        dispatch(logEvent('Exchange_Shift_Start'))
+        dispatch(logEvent('Exchange_Shift_Start', swapAttempt))
         const result: EdgeSwapResult = await selectedQuote.approve()
 
         logActivity(`Swap Exchange Executed: ${account.username}`)
@@ -304,8 +350,9 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         // Dispatch the success action and callback
         onApprove()
 
-        await dispatch(updateSwapCount())
-
+        // Log the conversion before updating the swap count: that update can
+        // wait on a review prompt, and the link promo this swap earns is
+        // released if the user leaves the swap tab in the meantime.
         dispatch(
           logEvent('Exchange_Shift_Success', {
             conversionValues: {
@@ -330,8 +377,24 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
             }
           })
         )
-      } catch (error: any) {
-        dispatch(logEvent('Exchange_Shift_Failed', { error: String(error) })) // TODO: Do we need to parse/clean all cases?
+
+        // The review-count update is not part of the swap, so it is dropped
+        // rather than awaited: a rejection from it would otherwise reach the
+        // handler below and log a completed swap as failed, showing an error
+        // over the success scene that is already open. The ramp flow drops
+        // its own count update the same way.
+        dispatch(updateSwapCount()).catch(() => {})
+      } catch (error: unknown) {
+        dispatch(
+          logEvent('Exchange_Shift_Failed', {
+            ...swapAttempt,
+            error: String(error),
+            errorCategory: getSwapErrorCategory(
+              error,
+              isQuoteExpired(selectedQuote)
+            )
+          })
+        )
         setTimeout(() => {
           showError(error)
         }, 1)
@@ -478,7 +541,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <PoweredByCard
             iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
             poweredByText={exchangeName}
-            onPress={handlePoweredByTap}
+            onPress={isStealth ? undefined : handlePoweredByTap}
           />
         </EdgeAnim>
         {selectedQuote.isEstimate && !showPriceImpact ? (
@@ -508,7 +571,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
-            disabled={pending}
+            disabled={pending || expired}
           />
         </EdgeAnim>
         {renderTimer()}
@@ -660,6 +723,9 @@ const getSwapInfo = (
     return swapInfo
   }
 }
+
+const isQuoteExpired = (quote: EdgeSwapQuote): boolean =>
+  quote.expirationDate != null && quote.expirationDate.valueOf() <= Date.now()
 
 const getBetterQuoteRate = (
   quoteA: EdgeSwapQuote,

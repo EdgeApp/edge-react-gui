@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { WebView, type WebViewNavigation } from 'react-native-webview'
+import type { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
@@ -12,14 +13,29 @@ export interface FiatPluginOpenWebViewParams {
   injectedJs?: string
   onClose: (() => boolean) | (() => void)
   onMessage?: (message: string, injectJs: (js: string) => void) => void
+  /**
+   * Called before the WebView navigates its main frame to a URL. Return
+   * false to refuse the load and keep the WebView on its current page.
+   * Frames inside the page never reach this callback. Android stops waiting
+   * for the answer after 250ms and loads the page anyway, in which case
+   * `onUrlChange` reports the URL.
+   */
+  onShouldStartLoad?: (url: string) => boolean
   onUrlChange?: (url: string) => void | Promise<void>
 }
 
 interface Props extends BuySellTabSceneProps<'guiPluginWebView'> {}
 
-export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
+export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   const { route } = props
-  const { injectedJs, onClose, onMessage, onUrlChange, url } = route.params
+  const {
+    injectedJs,
+    onClose,
+    onMessage,
+    onShouldStartLoad,
+    onUrlChange,
+    url
+  } = route.params
   const navigation = useNavigation()
 
   const webViewRef = React.useRef<WebView>(null)
@@ -33,6 +49,16 @@ export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
       })
     }
   })
+
+  const handleShouldStartLoad = useHandler(
+    (event: ShouldStartLoadRequest): boolean => {
+      // A frame inside the page must not be able to stand in for the page
+      // itself, so only loads known to be for the main frame are the
+      // caller's to refuse:
+      if (!event.isTopFrame) return true
+      return onShouldStartLoad?.(event.url) ?? true
+    }
+  )
 
   const injectJs = (js: string): void => {
     if (webViewRef.current != null) webViewRef.current.injectJavaScript(js)
@@ -66,6 +92,9 @@ export function FiatPluginWebViewComponent(props: Props): React.ReactElement {
         source={{ uri: url }}
         onMessage={handleMessage}
         onNavigationStateChange={handleNavigationStateChange}
+        onShouldStartLoadWithRequest={
+          onShouldStartLoad == null ? undefined : handleShouldStartLoad
+        }
         injectedJavaScriptBeforeContentLoaded={injectedJs}
       />
     </SceneWrapper>

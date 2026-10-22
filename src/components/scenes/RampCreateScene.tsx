@@ -22,6 +22,7 @@ import {
 import { COUNTRY_CODES, FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
+import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
 import { useRampLastCryptoSelection } from '../../hooks/useRampLastCryptoSelection'
 import { useRampPlugins } from '../../hooks/useRampPlugins'
 import { useRampPreferredProviders } from '../../hooks/useRampPreferredProviders'
@@ -30,6 +31,7 @@ import {
   type SupportedPluginResult,
   useSupportedPlugins
 } from '../../hooks/useSupportedPlugins'
+import { useTabBlur } from '../../hooks/useTabBlur'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import type { FiatPaymentType } from '../../plugins/gui/fiatPluginTypes'
@@ -84,6 +86,13 @@ import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FilledTextInput } from '../themed/FilledTextInput'
 import { RampRegionSelect } from './RampCreateScene/RampRegionSelect'
+
+/**
+ * Upper bound on the decimals the crypto amount field renders, for assets whose
+ * own precision goes beyond what a ramp quote can express. See
+ * `cryptoMaxDecimals`.
+ */
+const MAX_CRYPTO_ENTRY_DECIMALS = 9
 
 export interface RampCreateParams {
   forcedWalletResult?: WalletListWalletResult
@@ -166,6 +175,29 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
   } = useRampLastCryptoSelection()
 
   const selectedCrypto = forcedWalletResult ?? rampLastCryptoSelection
+
+  // A sell amount is entered in the selected asset, so it cannot carry over to
+  // another one. The dropdown clears it on a pick, but the asset also changes
+  // without one: a deep link sets a forced wallet on a scene that is already
+  // mounted, and leaving the tab drops it again. Key the reset off the
+  // selection itself so every one of those paths clears it.
+  const selectedAssetKey =
+    selectedCrypto == null
+      ? undefined
+      : `${selectedCrypto.walletId}:${selectedCrypto.tokenId ?? ''}`
+  const lastAssetKeyRef = React.useRef(selectedAssetKey)
+  const handleAssetChange = useHandler(() => {
+    cancelPendingMax()
+    if (direction === 'sell') {
+      setAmountQuery({ empty: true })
+      setLastUsedInput(null)
+    }
+  })
+  React.useEffect(() => {
+    if (lastAssetKeyRef.current === selectedAssetKey) return
+    lastAssetKeyRef.current = selectedAssetKey
+    handleAssetChange()
+  }, [handleAssetChange, selectedAssetKey])
 
   const [selectedWallet, selectedCryptoCurrencyCode] =
     selectedCrypto != null
@@ -592,40 +624,58 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     denomination
   ])
 
+  // How many decimals the crypto field renders. Providers quote each asset at
+  // its own precision and change it over time (Moonpay moves BTC 5 -> 8 and
+  // ETH/SOL to 9 decimals on the buy flow in September 2026), so this follows
+  // the asset instead of assuming a count. The 9-decimal ceiling keeps the
+  // field readable for high-precision assets such as ETH, whose 18 decimals
+  // would expose the rounding noise of the float exchange rate that
+  // `displayCryptoAmount` divides by while the user types a fiat amount.
+  const cryptoMaxDecimals = React.useMemo(() => {
+    if (denomination == null) return MAX_CRYPTO_ENTRY_DECIMALS
+    return Math.min(
+      mulToPrecision(denomination.multiplier),
+      MAX_CRYPTO_ENTRY_DECIMALS
+    )
+  }, [denomination])
+
   // Log the quote event only when the scene is focused
   useFocusEffect(() => {
     dispatch(logEvent(direction === 'buy' ? 'Buy_Quote' : 'Sell_Quote'))
   })
 
+  const tab = direction === 'buy' ? 'buyTab' : 'sellTab'
+
+  // Leaving the tab ends the link promo's entry into this flow, which is
+  // tracked separately: the promo survives a link that pinned nothing, so it
+  // cannot ride the params guard below.
+  useLinkPromoRelease(navigation, tab)
+
   // Drop the deep link pin when the user leaves the buy/sell tab. React
   // Navigation keeps route params on the tab's route for the whole app
   // session, so leaving them in place would pin every later visit to the tab,
-  // not just the flow the link opened. The listener is on the TAB, so stepping
-  // forward to the option list and back keeps the pin: only leaving the tab
-  // ends it. Subscribing on `navigation` alone (never on the params) also
-  // keeps a warm deep link that arrives while the tab is focused from being
-  // cleared by a re-subscription.
-  // The pins are read through a ref so the guard below can see them without
-  // entering the dep array, which is what the `navigation`-only subscription
-  // above depends on.
-  const pinsRef = React.useRef({ pinnedProviderId, pinnedPaymentType })
-  pinsRef.current = { pinnedProviderId, pinnedPaymentType }
-
-  React.useEffect(() => {
-    const tabNavigation = navigation.getParent()
-    if (tabNavigation == null) return
-    return tabNavigation.addListener('blur', () => {
-      const { pinnedProviderId, pinnedPaymentType } = pinsRef.current
-      // Nothing to drop: tab switching is the app's most-travelled path, and a
-      // user who never tapped a deep link would otherwise pay a params update
-      // plus a re-render every time they leave the tab.
-      if (pinnedProviderId == null && pinnedPaymentType == null) return
-      navigation.setParams({
-        providerId: undefined,
-        paymentType: undefined
-      })
+  // not just the flow the link opened. `useTabBlur` fires on a tab switch
+  // alone, so stepping forward to the option list, or out to the `send2`
+  // deposit a sell pushes above the tabs, keeps the pin.
+  useTabBlur(navigation, tab, () => {
+    // Nothing to drop: tab switching is the app's most-travelled path, and a
+    // user who never tapped a deep link would otherwise pay a params update
+    // plus a re-render every time they leave the tab.
+    if (
+      pinnedProviderId == null &&
+      pinnedPaymentType == null &&
+      forcedWalletResult == null
+    )
+      return
+    // The forced wallet is link-scoped like the pins: leaving it set would
+    // keep overriding the user's own wallet choice for the rest of the
+    // session, since it always wins over the last-selection setting.
+    navigation.setParams({
+      providerId: undefined,
+      paymentType: undefined,
+      forcedWalletResult: undefined
     })
-  }, [navigation])
+  })
 
   //
   // Handlers
@@ -690,11 +740,21 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       />
     ))
     if (result?.type === 'wallet') {
+      // Compare against the wallet on screen, not the persisted last
+      // selection: a link's forced wallet outranks that setting, so the two
+      // disagree for the whole visit a deep link opened.
       if (
-        rampLastCryptoSelection?.walletId === result.walletId &&
-        rampLastCryptoSelection?.tokenId === result.tokenId
+        selectedCrypto?.walletId === result.walletId &&
+        selectedCrypto?.tokenId === result.tokenId
       ) {
         return
+      }
+
+      // An explicit pick ends the link's pre-selection. The forced wallet wins
+      // over the last-selection setting, so leaving it in the params would
+      // keep showing it and make this pick do nothing.
+      if (forcedWalletResult != null) {
+        navigation.setParams({ forcedWalletResult: undefined })
       }
 
       // Clear amount and max state when switching crypto assets in sell mode
@@ -1091,7 +1151,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                 placeholder={cryptoAmountPlaceholder}
                 keyboardType="decimal-pad"
                 numeric
-                maxDecimals={6}
+                maxDecimals={cryptoMaxDecimals}
                 returnKeyType="done"
                 showSpinner={isFetchingQuotes && lastUsedInput === 'fiat'}
                 disabled={cryptoInputDisabled}
@@ -1329,8 +1389,12 @@ async function getMaxSpendExchangeAmount(
     const addresses = await wallet.getAddresses({ tokenId: null })
     return addresses.length > 0 ? addresses[0].publicAddress : ''
   }
+  // Sell providers lock the deposit amount, and the send happens minutes
+  // later at the standard fee. Pricing the max at the high fee leaves a
+  // cushion so a fee refresh in between does not cause InsufficientFunds:
   const maxSpendNativeAmount = await wallet.getMaxSpendable({
     tokenId,
+    networkFeeOption: 'high',
     spendTargets: [{ publicAddress: await getDummyAddress() }]
   })
   const maxSpendExchangeAmount = convertNativeToDenomination(

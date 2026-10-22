@@ -36,6 +36,8 @@ class MainApplication :
           // packages.add(new MyReactNativePackage());
           val packages = PackageList(this).packages
           packages.add(EdgeAttestationPackage())
+          packages.add(EdgeApiSignerPackage())
+          packages.add(EdgeClipboardPackage())
           return packages
         }
 

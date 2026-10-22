@@ -28,7 +28,12 @@ import type {
   NavigationBase,
   RootSceneProps
 } from '../types/routerTypes'
-import { currencyCodesToEdgeAssets } from '../util/CurrencyInfoHelpers'
+import { isAgentTestMode } from '../util/agentTestMode'
+import { allPlugins } from '../util/corePlugins'
+import {
+  currencyCodesToEdgeAssets,
+  isKeysOnlyPlugin
+} from '../util/CurrencyInfoHelpers'
 import { logActivity } from '../util/logger'
 import { clearReverseLookupCache } from '../util/nameServices'
 import { logEvent, trackError } from '../util/tracking'
@@ -55,6 +60,44 @@ import {
 const PER_WALLET_TIMEOUT = 5000
 const MIN_CREATE_WALLET_TIMEOUT = 20000
 
+// Plugin loading happens once per core context, so a plugin that is missing at
+// the first login stays missing for every later one. Report it a single time.
+let missingPluginsReported = false
+
+/**
+ * Reports plugins that we asked the core to load but never got back, which
+ * happens when a plugin's API keys are absent or malformed. The core leaves
+ * such a plugin out of `currencyConfig` / `swapConfig` rather than failing the
+ * login, so the app still works without whatever that plugin provides.
+ *
+ * Keys-only plugins are skipped: they take nothing from the info server, so
+ * remote keys can never break them, and the user cannot use them anyway.
+ */
+function reportMissingPlugins(account: EdgeAccount): void {
+  if (missingPluginsReported) return
+  missingPluginsReported = true
+
+  const missingPluginIds = Object.keys(allPlugins).filter(pluginId => {
+    const init = allPlugins[pluginId]
+    if (init === false || init == null) return false
+    if (isKeysOnlyPlugin(pluginId)) return false
+    return (
+      account.currencyConfig[pluginId] == null &&
+      account.swapConfig[pluginId] == null
+    )
+  })
+  if (missingPluginIds.length === 0) return
+
+  showError(
+    new Error(
+      sprintf(
+        lstrings.plugins_unavailable_message_1s,
+        missingPluginIds.join(', ')
+      )
+    )
+  )
+}
+
 export function initializeAccount(
   navigation: RootSceneProps<'login'>['navigation'],
   account: EdgeAccount
@@ -78,6 +121,8 @@ export function initializeAccount(
       }
     })
 
+    reportMissingPlugins(account)
+
     const referralPromise = dispatch(loadAccountReferral(account))
 
     // Navigate immediately - all settings are now in Redux
@@ -100,6 +145,9 @@ export function initializeAccount(
     // We don't want to pester the user with too many interrupting flows.
     let hideSurvey = false
 
+    // Agent test builds skip every interrupting flow below:
+    const agentTestMode = isAgentTestMode()
+
     // Show a notice for deprecated electrum server settings
     const pluginIdsNeedingUserAction: string[] = []
     for (const pluginId in account.currencyConfig) {
@@ -118,16 +166,20 @@ export function initializeAccount(
     }
     if (pluginIdsNeedingUserAction.length > 0) {
       hideSurvey = true
-      await Airship.show<boolean>(bridge => (
-        <ConfirmContinueModal
-          bridge={bridge}
-          title={lstrings.update_notice_deprecate_electrum_servers_title}
-          body={sprintf(
-            lstrings.update_notice_deprecate_electrum_servers_message,
-            config.appName
-          )}
-        />
-      ))
+      // The settings write below runs whether or not the notice shows:
+      const noticePromise = agentTestMode
+        ? Promise.resolve(true)
+        : Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              title={lstrings.update_notice_deprecate_electrum_servers_title}
+              body={sprintf(
+                lstrings.update_notice_deprecate_electrum_servers_message,
+                config.appName
+              )}
+            />
+          ))
+      await noticePromise
         .finally(() => {
           for (const pluginId of pluginIdsNeedingUserAction) {
             const currencyConfig = account.currencyConfig[pluginId]
@@ -145,7 +197,7 @@ export function initializeAccount(
     }
 
     // Check for security alerts:
-    if (hasSecurityAlerts(account)) {
+    if (!agentTestMode && hasSecurityAlerts(account)) {
       // This is not the normal security alerts scene!
       // Since we only have access to the root navigator,
       // this scene exists as a peer of the main app:
@@ -176,7 +228,8 @@ export function initializeAccount(
     })
 
     if (
-      await showNotificationPermissionReminder({
+      !agentTestMode &&
+      (await showNotificationPermissionReminder({
         appName: config.appName,
         onLogEvent(event, values) {
           dispatch(logEvent(event, values))
@@ -189,13 +242,14 @@ export function initializeAccount(
             }
           )
         }
-      })
+      }))
     ) {
       hideSurvey = true
     }
 
     // Post login stuff: Survey modal (existing accounts only)
     if (
+      !agentTestMode &&
       !newAccount &&
       !hideSurvey &&
       !getDeviceSettings().isSurveyDiscoverShown &&

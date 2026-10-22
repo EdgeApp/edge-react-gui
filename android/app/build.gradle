@@ -103,6 +103,19 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a' // Exclude Intel
         }
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file("src/main/cpp/CMakeLists.txt")
+            version "3.22.1"
+        }
     }
 
     // Edge addition: sideloadable per-ABI APKs for distribution outside
@@ -394,4 +407,56 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       // Default is enabled.
       telemetry = true
   }
+}
+
+// Gradle daemons started from Android Studio inherit a minimal PATH that
+// usually lacks nvm / Homebrew node, so reuse the NODE_BINARY that the React
+// Native iOS build already depends on before falling back to a PATH lookup.
+def resolveNodeBinary(File repoRoot) {
+    def pattern = ~'^\\s*export\\s+NODE_BINARY=(.+)$'
+    for (String name : ['ios/.xcode.env.local', 'ios/.xcode.env']) {
+        File file = new File(repoRoot, name)
+        if (!file.exists()) continue
+        for (String line : file.readLines()) {
+            def matcher = pattern.matcher(line)
+            if (!matcher.find()) continue
+            String value = matcher.group(1).trim().replaceAll('^["\']|["\']$', '')
+            // Skip `$(command -v node)` and friends: this is not a shell.
+            if (value.contains('$')) continue
+            if (new File(value).canExecute()) return value
+        }
+    }
+    return 'node'
+}
+
+// Regenerate XOR-split API secret C sources and EdgeApiKey.{swift,java} before
+// every native build. Explicitly clear ALLOW_STUB so a stub from `npm prepare`
+// cannot leak into the signer outputs.
+def nodeBinary = resolveNodeBinary(rootProject.projectDir.parentFile)
+tasks.register("generateEdgeApiSigner", Exec) {
+    def repoRoot = rootProject.projectDir.parentFile
+    workingDir repoRoot
+    environment "EDGE_API_SIGNER_ALLOW_STUB", ""
+    commandLine nodeBinary, "-r", "sucrase/register", "./scripts/makeApiSigner.ts"
+}
+// Same edgeKey.json feeds EdgeApiKey used by native push registration; keep it
+// in lockstep with the signer so a key rotation cannot leave AppDelegate /
+// MessagesWorker on the previous public key.
+tasks.register("generateEdgeApiKeyHeaders", Exec) {
+    def repoRoot = rootProject.projectDir.parentFile
+    workingDir repoRoot
+    commandLine nodeBinary, "-r", "sucrase/register", "./scripts/makeNativeHeaders.ts"
+}
+generateEdgeApiKeyHeaders.dependsOn("generateEdgeApiSigner")
+preBuild.dependsOn("generateEdgeApiKeyHeaders")
+
+// edge_api_secret.c is gitignored but listed in CMakeLists.txt, and the CMake
+// configure/build tasks do not run behind preBuild, so wire them up directly
+// or a fresh checkout fails with "Cannot find source file".
+tasks.matching {
+    it.name.startsWith("configureCMake") ||
+        it.name.startsWith("buildCMake") ||
+        it.name.startsWith("externalNativeBuild")
+}.configureEach {
+    dependsOn("generateEdgeApiSigner")
 }

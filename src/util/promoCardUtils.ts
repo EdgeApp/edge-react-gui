@@ -34,7 +34,7 @@ export const addPromoCardToNotifications = async (
   account: EdgeAccount,
   promoCard: DisplayInfoCard
 ): Promise<void> => {
-  const { ctaButton, messageId, localeMessages } = promoCard
+  const { ctaButton, messageId, localeMessages, promoId } = promoCard
 
   if (ctaButton == null) return
   const title = getLocaleOrDefaultString(ctaButton.localeLabels)
@@ -61,7 +61,8 @@ export const addPromoCardToNotifications = async (
         messageId,
         title,
         body,
-        ctaUrl
+        ctaUrl,
+        promoId
       }
     }
   })
@@ -181,7 +182,11 @@ export const checkAndAddExpiredPromos = async (
               messageId,
               title: ctaTitle,
               body: title,
-              ctaUrl
+              ctaUrl,
+              // Carried like the dismissed-card path above, so an expired
+              // promo tapped from the notification center still attributes
+              // its conversion to the card it came from.
+              promoId: card.promoId
             }
           }
         })

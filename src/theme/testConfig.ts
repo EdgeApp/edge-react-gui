@@ -12,7 +12,7 @@ export const testConfig: AppConfig = {
   configName: 'test',
   darkTheme: testDark,
   pendingTxLearnMoreUrl:
-    'https://support.edge.app/hc/en-us/articles/43465958781723',
+    'https://support.edge.app/en/articles/13892385-why-is-my-transaction-still-pending',
   defaultWallets: [
     { pluginId: 'bitcoin', tokenId: null },
     { pluginId: 'fantom', tokenId: '6c021ae822bea943b2e66552bde1d2696a53fbb7' },

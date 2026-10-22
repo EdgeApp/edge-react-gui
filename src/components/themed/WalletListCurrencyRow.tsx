@@ -1,12 +1,14 @@
 import type { EdgeCurrencyWallet, EdgeToken, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { useIconColor } from '../../hooks/useIconColor'
 import { useWalletBalance } from '../../hooks/useWalletBalance'
 import { useWalletName } from '../../hooks/useWalletName'
+import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
@@ -29,6 +31,15 @@ interface Props {
   tokenId: EdgeTokenId
   wallet: EdgeCurrencyWallet
 
+  /**
+   * Namespace for the row's `testID`, so a walk can name the row it means on
+   * the surface it means. This component renders BOTH the wallet-list scene
+   * and the wallet-picker modal, and the modal sits over the scene, so a
+   * shared namespace would make a picker row indistinguishable from the row
+   * behind it.
+   */
+  testIdPrefix?: string
+
   // Callbacks:
   onLongPress?: () => void
   onPress?: (
@@ -44,6 +55,7 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
     token,
     tokenId,
     wallet,
+    testIdPrefix = 'walletListRow',
 
     // Callbacks:
     onLongPress,
@@ -56,6 +68,13 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
     state => state.ui.settings.userPausedWalletsSet
   )
   const isPaused = userPausedWalletsSet?.has(wallet.id) ?? false
+
+  // A cache-seeded wallet stays in `currencyWallets` even when its
+  // engine fails, so this row is what the user sees instead of the
+  // loading row that used to carry the error:
+  const account = useSelector(state => state.core.account)
+  const currencyWalletErrors = useWatch(account, 'currencyWalletErrors')
+  const engineError = currencyWalletErrors[wallet.id]
   const isDisabled = isKeysOnlyPlugin(wallet.currencyInfo.pluginId)
   const { pluginId } = wallet.currencyInfo
   const iconColor = useIconColor({ pluginId, tokenId })
@@ -178,12 +197,23 @@ const WalletListCurrencyRowComponent: React.FC<Props> = props => {
     <View
       accessible
       accessibilityRole="button"
-      testID={`walletListRow_${walletName}_${displayCurrencyCode}`}
+      // Keyed by surface and wallet so a UI test can target one specific row.
+      // This row renders in the wallet list and in the wallet picker, and the
+      // picker floats over a list whose rows repeat its names, so the prefix
+      // is what tells a picker row from the covered row behind it.
+      testID={`${testIdPrefix}.${walletName}.${displayCurrencyCode}`}
     >
       <EdgeCard
         icon={iconNode}
         overlay={
-          isPaused || isDisabled ? (
+          engineError != null ? (
+            <EdgeText style={styles.overlayLabel}>
+              {sprintf(
+                lstrings.fragment_wallets_wallet_engine_failed_1s,
+                engineError.message
+              )}
+            </EdgeText>
+          ) : isPaused || isDisabled ? (
             <EdgeText style={styles.overlayLabel}>
               {isPaused
                 ? lstrings.fragment_wallets_wallet_paused

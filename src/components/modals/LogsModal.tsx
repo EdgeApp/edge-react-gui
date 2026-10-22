@@ -5,7 +5,11 @@ import RNFS from 'react-native-fs'
 import Share, { type ShareOptions } from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
-import { type MultiLogOutput, sendLogs } from '../../actions/LogActions'
+import {
+  LogsClockError,
+  type MultiLogOutput,
+  sendLogs
+} from '../../actions/LogActions'
 import { lstrings } from '../../locales/strings'
 import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
@@ -91,12 +95,14 @@ export const LogsModal: React.FC<Props> = props => {
 
     await Promise.all([
       sendLogs(logs.activity, underDuress).catch((error: unknown) => {
+        if (error instanceof LogsClockError) throw error
         const message = error instanceof Error ? error.message : String(error)
         throw new Error(
           `${lstrings.settings_modal_send_logs_failure} activity logs code ${message}`
         )
       }),
       sendLogs(logs.info, underDuress).catch((error: unknown) => {
+        if (error instanceof LogsClockError) throw error
         const message = error instanceof Error ? error.message : String(error)
         throw new Error(
           `${lstrings.settings_modal_send_logs_failure} info logs code ${message}`

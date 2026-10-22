@@ -353,7 +353,7 @@ export const WalletListMenuModal: React.FC<Props> = props => {
         return (
           <EdgeTouchableOpacity
             key={option.value}
-            testID={`walletListMenu_${option.value}`}
+            testID={`walletListMenu.${option.value}`}
             onPress={async () => {
               await optionAction(option.value)
             }}
