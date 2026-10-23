@@ -776,7 +776,11 @@ function buildOpenApi(): Record<string, unknown> {
 
 // ---------------------------------------------------------------------- CSS
 
-const CSS = fs.readFileSync(path.join(__dirname, 'apiDocs.css'), 'utf8')
+// LF whatever the checkout: inlined as read, a Windows checkout with
+// core.autocrlf put CRLF into index.html and `--check` failed there.
+const CSS = fs
+  .readFileSync(path.join(__dirname, 'apiDocs.css'), 'utf8')
+  .replace(/\r\n/g, '\n')
 
 // --------------------------------------------------------------------- HTML
 
