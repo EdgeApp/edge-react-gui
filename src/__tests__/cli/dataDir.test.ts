@@ -24,20 +24,37 @@ function tempDir(): string {
   return dir
 }
 
+/**
+ * Windows has no POSIX modes: `stat` reports 666 for every directory and
+ * access is an ACL, so the mode cases run elsewhere and Windows gets its own.
+ */
+const itPosix = process.platform === 'win32' ? it.skip : it
+const itWindows = process.platform === 'win32' ? it : it.skip
+
 describe('secureDataDir', () => {
-  it('creates a directory 0700', () => {
+  itPosix('creates a directory 0700', () => {
     const dir = path.join(tempDir(), 'new')
     expect(secureDataDir(dir)).toBeUndefined()
     expect(fs.statSync(dir).mode & 0o777).toBe(0o700)
   })
 
-  it('leaves an existing directory’s mode alone, and says when others can read it', () => {
-    const dir = tempDir()
-    fs.chmodSync(dir, 0o755)
-    const warning = secureDataDir(dir)
-    expect(fs.statSync(dir).mode & 0o777).toBe(0o755)
-    expect(warning).toMatch(/other local users can read/)
+  itWindows('creates a directory, and warns about no mode', () => {
+    const dir = path.join(tempDir(), 'new')
+    expect(secureDataDir(dir)).toBeUndefined()
+    expect(fs.statSync(dir).isDirectory()).toBe(true)
+    expect(secureDataDir(tempDir())).toBeUndefined()
   })
+
+  itPosix(
+    'leaves an existing directory’s mode alone, and says when others can read it',
+    () => {
+      const dir = tempDir()
+      fs.chmodSync(dir, 0o755)
+      const warning = secureDataDir(dir)
+      expect(fs.statSync(dir).mode & 0o777).toBe(0o755)
+      expect(warning).toMatch(/other local users can read/)
+    }
+  )
 
   it('says nothing about an existing directory only its owner can read', () => {
     const dir = tempDir()

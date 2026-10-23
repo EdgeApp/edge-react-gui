@@ -26,6 +26,9 @@ function load(): Logger {
   return require('../../cli/engine/logger')
 }
 
+/** For the cases that depend on POSIX file modes or rename semantics. */
+const itPosix = process.platform === 'win32' ? it.skip : it
+
 beforeEach(() => {
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-logger-'))
   homedir = jest.spyOn(os, 'homedir').mockReturnValue(home)
@@ -178,7 +181,8 @@ describe('EngineLogger roll', () => {
     expect(current).not.toContain('past the ceiling')
   })
 
-  it('opens the fresh log owner-only', async () => {
+  // Windows has no POSIX modes; the log's privacy there is its directory's ACL.
+  itPosix('opens the fresh log owner-only', async () => {
     const { EngineLogger } = load()
     seedCurrentLog('modeprof', 100)
     const logger = new EngineLogger('modeprof', 150)
@@ -356,7 +360,11 @@ describe('EngineLogger with a dead stream', () => {
     expect(fs.readFileSync(file, 'utf8')).toContain('reach the new generation')
   })
 
-  it('awaits every rolled generation, not just the last', async () => {
+  // Windows will not rename over a `.1` that the first generation still has
+  // open, so it skips the second roll and this sequence cannot happen there:
+  // the line goes to the current file, as 'keeps the line when the rename
+  // fails' checks.
+  itPosix('awaits every rolled generation, not just the last', async () => {
     const { EngineLogger } = load()
     fs.mkdirSync(logsDir(), { recursive: true })
     const file = path.join(logsDir(), 'engine-tworolls.log')
