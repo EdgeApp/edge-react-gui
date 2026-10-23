@@ -267,13 +267,15 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
     testMode: opts.testMode,
     loginServer: opts.loginServer
   })
-  const socketPath = socketPathFor(profile)
+  // Read at every ping: on Windows the engine names its pipe when it claims
+  // the profile, and before that there is no path to read.
+  const socketPath = (): string => socketPathFor(profile)
   const doSpawn = opts.deps?.spawn ?? spawn
   const ping = opts.deps?.ping ?? pingEngine
   const spawnTimeoutMs = opts.deps?.spawnTimeoutMs ?? SPAWN_TIMEOUT_MS
   const pollMs = opts.deps?.pollMs ?? 250
 
-  if (await ping(socketPath)) return
+  if (await ping(socketPath())) return
 
   // Resolve the engine entry relative to this file, and nowhere else. The
   // sibling bundle comes first: rollup flattens src/cli into lib/edgeCli.js,
@@ -351,7 +353,7 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
         ? 'EDGE_CLI_API_KEY=<your --api-key value> '
         : ''
     throw new EngineUnavailableError(
-      `Engine is not running for profile ${profile} (socket ${socketPath}). Start it with: ${prefix}${runner}${
+      `Engine is not running for profile ${profile} (socket ${socketPath()}). Start it with: ${prefix}${runner}${
         printed === '' ? '' : ` ${printed}`
       }`
     )
@@ -393,6 +395,8 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   const logFd = fs.openSync(startupLog, 'a', 0o600)
   const child = doSpawn(process.execPath, args, {
     detached: true,
+    // On Windows a detached child gets its own console window otherwise.
+    windowsHide: true,
     stdio: ['ignore', logFd, logFd],
     env: {
       ...engineEnv(process.env),
@@ -441,7 +445,7 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
         `Could not start the engine: ${spawnError.message} (${process.execPath})`
       )
     }
-    if (exitInfo != null && !(await ping(socketPath))) {
+    if (exitInfo != null && !(await ping(socketPath()))) {
       const earlyTail = readTail(startupLog, 2000)
       throw new EngineUnavailableError(
         `The engine ${exitInfo} during startup (profile ${profile}).` +
@@ -450,7 +454,7 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
             : `\n--- engine output (${startupLog}) ---\n${earlyTail}`)
       )
     }
-    if (await ping(socketPath)) return
+    if (await ping(socketPath())) return
   }
 
   const tail = readTail(startupLog, 2000)
