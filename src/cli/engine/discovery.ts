@@ -119,6 +119,12 @@ export function runDir(profile: string): string {
 }
 
 export function socketPathFor(profile: string): string {
+  // Windows has no Unix sockets on the filesystem: `listen` takes a named
+  // pipe there and refuses a file path with EACCES. Naming the pipe after the
+  // run directory keeps it per user, since pipes share one global namespace.
+  if (process.platform === 'win32') {
+    return join('\\\\?\\pipe', runDir(profile), 'engine.sock')
+  }
   return join(runDir(profile), 'engine.sock')
 }
 

@@ -393,6 +393,8 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   const logFd = fs.openSync(startupLog, 'a', 0o600)
   const child = doSpawn(process.execPath, args, {
     detached: true,
+    // On Windows a detached child gets its own console window otherwise.
+    windowsHide: true,
     stdio: ['ignore', logFd, logFd],
     env: {
       ...engineEnv(process.env),

@@ -488,6 +488,10 @@ export async function listenUnix(
       // Node binds at `0777 & ~umask`, so a failed `chmodSync` leaves the
       // only guard absent — reported, not swallowed, because an operator
       // whose socket is group-readable has no other way to find out.
+      // A Windows named pipe has no mode to set. Its default ACL gives
+      // write access only to its creator, LocalSystem and administrators;
+      // everyone else may open it read-only, which cannot send a request.
+      if (process.platform === 'win32') return
       try {
         fs.chmodSync(socketPath, 0o600)
       } catch (error: unknown) {
