@@ -36,7 +36,7 @@ if [ ! -f "android/app/google-services.json" ]; then
 fi
 
 # Build the EdgeProvider shim code:
-node ./node_modules/.bin/rollup -c
+npx rollup -c
 node -r sucrase/register ./scripts/stringifyBridge.ts
 
 # Regenerate the API reference and the CLI's command table and help text
