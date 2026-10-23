@@ -29,7 +29,13 @@ import { TCP_TOKEN_HEADER } from '../src/cli/engine/transportAuth'
 import { errorMessage } from '../src/util/errorMessage'
 import { sleep } from '../src/util/sleep'
 import { rawRequest } from './engineRequest'
-import { CLI, parseLeadingJson, readTcpToken } from './util/cliHarness'
+import {
+  CLI,
+  parseLeadingJson,
+  readTcpToken,
+  runDirOfSocket,
+  socketPathOf
+} from './util/cliHarness'
 
 const DIR = path.join(os.tmpdir(), `edge-cli-subscribe-${process.pid}`)
 const BASE = ['--fake', `--directory=${DIR}`]
@@ -235,10 +241,12 @@ async function main(): Promise<void> {
       created.out.slice(0, 200)
     )
     const statusOut = cli('engine-status').out
-    const socketPath = /"socketPath":\s*"([^"]+)"/.exec(statusOut)?.[1] ?? ''
+    const socketPath = socketPathOf(
+      /"socketPath":\s*"([^"]+)"/.exec(statusOut)?.[1] ?? ''
+    )
     const sessionId = JSON.parse(
       fs.readFileSync(
-        path.join(path.dirname(socketPath), 'session.json'),
+        path.join(runDirOfSocket(socketPath), 'session.json'),
         'utf8'
       )
     ).sessionId as string
@@ -335,9 +343,13 @@ async function main(): Promise<void> {
     liveExit,
     sleep(15000).then(() => 'HUNG')
   ])
+  // `kill('SIGINT')` on Windows is TerminateProcess: no handler runs, so the
+  // exit there says nothing about `subscribe`. A console Ctrl-C does reach
+  // the handler, but a test has no way to send one to a child.
   check(
     'Ctrl-C on an open subscription exits 130',
-    liveCode === 'code 130',
+    liveCode === 'code 130' ||
+      (process.platform === 'win32' && liveCode === 'signal SIGINT'),
     liveCode
   )
   spawnSync('node', [...CLI, '--fake', `--directory=${liveDir}`, 'engine-stop'])

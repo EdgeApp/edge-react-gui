@@ -160,6 +160,25 @@ export function parseLeadingJson(text: string | undefined): any {
 }
 
 /**
+ * A `socketPath` regexed out of `engine-status`, unescaped.
+ *
+ * The capture is still JSON, which only shows on Windows: every `\` of the
+ * pipe name arrives doubled, and a connect to that names no pipe at all.
+ */
+export function socketPathOf(captured: string): string {
+  return JSON.parse(`"${captured}"`)
+}
+
+/**
+ * The run directory behind an engine's socket path. On Windows that is a
+ * named pipe embedding the run directory under `\\?\pipe\`, so
+ * `path.dirname` alone named a directory that does not exist.
+ */
+export function runDirOfSocket(socketPath: string): string {
+  return path.dirname(socketPath.replace(/^\\\\\?\\pipe\\/, ''))
+}
+
+/**
  * Start a real engine from source and wait until it is serving.
  *
  * Three network suites had this: spawn `src/cli/engine/index.ts` under
