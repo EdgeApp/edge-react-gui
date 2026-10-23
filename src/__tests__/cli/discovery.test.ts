@@ -38,6 +38,21 @@ function setPlatform(value: NodeJS.Platform): void {
   Object.defineProperty(process, 'platform', { value })
 }
 
+/**
+ * A path a real listener can bind on this machine, for the cases that open
+ * one. Those run on the real platform's layout, where `socketPathFor` is a
+ * pipe on Windows too.
+ */
+function listenable(socketPath: string): string {
+  return platform === 'win32'
+    ? path.join('\\\\?\\pipe', socketPath)
+    : socketPath
+}
+
+// The directory links below are junctions on Windows, which, unlike
+// symlinks, need neither administrator rights nor Developer Mode. POSIX
+// ignores the type.
+
 beforeEach(() => {
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-discovery-'))
   homedir = jest.spyOn(os, 'homedir').mockReturnValue(home)
@@ -122,7 +137,7 @@ describe('profileHash', () => {
       fs.mkdtempSync(path.join(os.tmpdir(), 'edge-dir-'))
     )
     const link = path.join(home, 'link-to-data')
-    fs.symlinkSync(real, link)
+    fs.symlinkSync(real, link, 'junction')
     const spellings = [
       real,
       `${real}/`,
@@ -277,11 +292,17 @@ describe('cleanupStaleLock', () => {
       })
     )
     fs.writeFileSync(sessionFilePath(profile), '{"sessionId":"sess_x"}')
-    fs.writeFileSync(socketPathFor(profile), '')
+    // A stale pipe is no file: a dead engine's pipe goes with its process.
+    if (process.platform !== 'win32') {
+      fs.writeFileSync(socketPathFor(profile), '')
+    }
     fs.writeFileSync(path.join(runDir(profile), 'engine-startup.log'), 'boot')
   }
 
-  /** A real listener on this profile's socket, closed by the caller. */
+  /**
+   * A real listener on this profile's socket, closed by the caller. A case
+   * that opens one runs on the real platform's layout: see `listenable`.
+   */
   async function listen(profile: string): Promise<net.Server> {
     const { socketPathFor } = load()
     const socketPath = socketPathFor(profile)
@@ -296,6 +317,7 @@ describe('cleanupStaleLock', () => {
   }
 
   it('returns the pid and removes nothing while the engine is alive', async () => {
+    setPlatform(platform)
     const { cleanupStaleLock, runFilePath, sessionFilePath } = load()
     seed('live', process.pid)
     const server = await listen('live')
@@ -751,7 +773,7 @@ describe('canonicalDirectory', () => {
     const { canonicalDirectory } = load()
     const real = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-canon-'))
     const link = `${real}-link`
-    fs.symlinkSync(real, link)
+    fs.symlinkSync(real, link, 'junction')
     try {
       const wanted = path.join(link, 'data')
       const before = canonicalDirectory(wanted)
@@ -769,7 +791,7 @@ describe('canonicalDirectory', () => {
     const { canonicalDirectory, profileHash } = load()
     const real = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-canon-'))
     const link = `${real}-link`
-    fs.symlinkSync(real, link)
+    fs.symlinkSync(real, link, 'junction')
     try {
       const key = { appId: '', testMode: false }
       expect(profileHash({ ...key, directory: link })).toBe(
@@ -854,7 +876,7 @@ describe('probe classification', () => {
 
   it('reads a real listener as listening and a stale socket file as absent', async () => {
     const { probeEngineSocket } = load()
-    const socketPath = path.join(home, 'probe.sock')
+    const socketPath = listenable(path.join(home, 'probe.sock'))
     const server = net.createServer()
     await new Promise<void>(resolve => server.listen(socketPath, resolve))
     try {
@@ -866,6 +888,8 @@ describe('probe classification', () => {
         })
       )
     }
-    expect(await probeEngineSocket(path.join(home, 'gone.sock'))).toBe('absent')
+    expect(
+      await probeEngineSocket(listenable(path.join(home, 'gone.sock')))
+    ).toBe('absent')
   })
 })
