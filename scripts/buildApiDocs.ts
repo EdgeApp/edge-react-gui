@@ -776,7 +776,12 @@ function buildOpenApi(): Record<string, unknown> {
 
 // ---------------------------------------------------------------------- CSS
 
-const CSS = fs.readFileSync(path.join(__dirname, 'apiDocs.css'), 'utf8')
+// LF whatever the checkout's line endings: the stylesheet is inlined into
+// index.html, and `--check` requires that file to be identical to the
+// committed one.
+const CSS = fs
+  .readFileSync(path.join(__dirname, 'apiDocs.css'), 'utf8')
+  .replace(/\r\n/g, '\n')
 
 // --------------------------------------------------------------------- HTML
 

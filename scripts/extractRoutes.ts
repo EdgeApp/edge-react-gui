@@ -644,7 +644,10 @@ function readJsDoc(node: ts.Node): {
     typeof doc.comment === 'string'
       ? doc.comment
       : (doc.comment ?? []).map(c => c.text).join('')
+  // A Windows checkout with `core.autocrlf` hands the compiler CRLF source,
+  // and `'\n\n'` never matches across `\r\n\r\n`.
   const paras = comment
+    .replace(/\r\n/g, '\n')
     .split('\n\n')
     .map(p => p.replace(/\s*\n\s*/g, ' ').trim())
   const tags: Array<[string, string]> = []
