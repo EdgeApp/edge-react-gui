@@ -17,7 +17,13 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import { CLI, parseLeadingJson, runRoot } from './util/cliHarness'
+import {
+  CLI,
+  parseLeadingJson,
+  runDirOfSocket,
+  runRoot,
+  socketPathOf
+} from './util/cliHarness'
 
 const DIR = path.join(os.tmpdir(), `edge-cli-fake-${process.pid}`)
 const BASE = ['--fake', `--directory=${DIR}`]
@@ -329,7 +335,7 @@ function checkPromptSession(): void {
   const profileDir =
     promptSocket == null
       ? path.join(runRoot(), 'no-such-profile')
-      : path.dirname(promptSocket[1])
+      : runDirOfSocket(socketPathOf(promptSocket[1]))
   spawnSync('node', [...CLI, '--fake', `--directory=${dir}`, 'engine-stop'], {
     encoding: 'utf8'
   })
@@ -426,7 +432,7 @@ function checkNamedSession(): void {
     const sessionFile =
       socket == null
         ? undefined
-        : path.join(path.dirname(socket[1]), 'session.json')
+        : path.join(runDirOfSocket(socketPathOf(socket[1])), 'session.json')
     // Strict: an unreadable file must fail the checks that compare ids, not
     // make them compare `undefined` with `undefined`.
     const savedId = (): string => {
@@ -763,7 +769,8 @@ function main(): void {
     // Taken from the engine rather than recomputed, so the leak check below
     // cannot drift from however the client resolves appId and login server.
     const socketMatch = /"socketPath":\s*"([^"]+)"/.exec(status.out)
-    if (socketMatch != null) runProfileDir = path.dirname(socketMatch[1])
+    if (socketMatch != null)
+      runProfileDir = runDirOfSocket(socketPathOf(socketMatch[1]))
     const engineConfig = ok('engine-config', 'engine-config')
     // The call's stated job is to say which configuration the engine is
     // running on, and the one file this suite's engine is *not* started with
