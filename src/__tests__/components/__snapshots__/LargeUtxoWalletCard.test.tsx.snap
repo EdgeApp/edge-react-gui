@@ -303,6 +303,7 @@ exports[`LargeUtxoWalletCard should render 1`] = `
         "top": 0,
       }
     }
+    testID="edgeCardCloseButton"
   >
     <Text
       adjustsFontSizeToFit={true}
