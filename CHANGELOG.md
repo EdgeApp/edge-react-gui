@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Zcash Testnet (TAZ), off by default
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build

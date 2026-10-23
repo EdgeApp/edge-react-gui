@@ -32,11 +32,13 @@ export const asZcashMigrationStatus = asObject({
 })
 export type ZcashMigrationStatus = ReturnType<typeof asZcashMigrationStatus>
 
+const ZCASH_PLUGIN_IDS = ['zcash', 'zcashtestnet']
+
 // Both platforms implement the migration surface against their respective
 // zcash SDKs, so there is no platform gate: an accountbased build without the
 // method is the only case that needs excluding.
 const isMigrationCapable = (wallet: EdgeCurrencyWallet): boolean =>
-  wallet.currencyInfo.pluginId === 'zcash' &&
+  ZCASH_PLUGIN_IDS.includes(wallet.currencyInfo.pluginId) &&
   typeof wallet.otherMethods.getMigrationStatus === 'function'
 
 /**
