@@ -108,6 +108,68 @@ engine, session and flags are the same as one-shot mode — `edge-cli -t` with n
 command opens a prompt already pointed at the tester servers. `help` lists the
 commands, and EOF (Ctrl-D) leaves.
 
+### Windows
+
+The CLI builds and runs on Windows. It needs a checkout with the
+repository's own line endings, a POSIX shell for the npm scripts, and a C++
+toolchain for the signed build.
+
+**Line endings.** Every file is committed with LF, and the checks here
+compare against LF: prettier, the `--check` gates over the generated files,
+and the export tests' reference output. Git for Windows defaults to
+`core.autocrlf=true`, which writes CRLF on checkout, so all three fail on
+such a clone. Turn it off for this repository only:
+
+```sh
+git clone -c core.autocrlf=false https://github.com/EdgeApp/edge-react-gui.git
+```
+
+An existing clone takes `git config core.autocrlf false`, then
+`git rm --cached -r -q . && git reset --hard` to rewrite its files. That
+discards uncommitted changes, so commit or stash them first.
+
+**Shell.** npm runs `package.json` scripts through `cmd.exe` there, and the
+scripts here are written for a POSIX shell: `prepare` runs
+`./scripts/prepare.sh`, `build:cli:copy-native` uses `mkdir -p` and `cp`,
+and `test:cli:offline:built` sets a variable inline. So does
+edge-currency-accountbased's own build, whose `webpack` step copies with
+`cp -r`. Install [Git for Windows](https://git-scm.com/download/win) and
+point npm at its bash once, before `npm ci`:
+
+```sh
+npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+```
+
+With that, the npm scripts run as written, from PowerShell or Git Bash.
+
+**Toolchain, for `build:cli:all`.** `build:cli:native` compiles the HMAC
+signer with node-gyp, which on Windows needs Python 3 and Visual Studio
+Build Tools 2019 or later with the "Desktop development with C++" workload
+(MSVC and a Windows SDK). `build:cli` alone needs neither. In PowerShell,
+where the Build Tools installer asks for administrator rights itself:
+
+```sh
+winget install Python.Python.3.13
+winget install Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+```
+
+node-gyp finds both on its own; `npm run build:cli:all` prints the Visual
+Studio it picked (`gyp info find VS`).
+
+What differs at run time:
+
+- The engine listens on a named pipe, `\\?\pipe\<run directory>\engine.sock`,
+  not a socket file, because Windows `listen` takes no filesystem path. The
+  run directory still holds `engine.json` and `session.json`, and
+  `engine-status` reports the pipe as `socketPath`.
+- The `0700` and `0600` modes above are POSIX modes, which Windows does not
+  have; access there is an ACL. Everything under your user profile,
+  `~/.edge-cli` and `~/.config/edge-cli` included, is private to you by
+  default. A `-d` outside it inherits its parent's ACL, which the CLI does
+  not check, so it prints no mode warning there.
+- `EDGE_CLI_PASSWORD=… edge-cli …` is POSIX shell syntax. In PowerShell, set
+  `$env:EDGE_CLI_PASSWORD` first.
+
 ### Engine / client flags
 
 | Flag | Who | Description |
