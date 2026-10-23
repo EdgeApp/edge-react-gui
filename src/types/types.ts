@@ -244,6 +244,7 @@ const asLocalAccountSettingsInner = asObject({
     asAccountNotifDismissInfo({})
   ),
   isNymWarningShown: asMaybe(asBoolean, false),
+  largeTxHistoryCardDismissed: asMaybe(asBoolean, false),
   tokenWarningsShown: asMaybe(asTokenWarningsShown, []),
   reviewTrigger: asMaybe(asReviewTriggerData)
 })
