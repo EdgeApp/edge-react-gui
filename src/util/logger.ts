@@ -215,9 +215,12 @@ export function logToServer(...info: unknown[]): void {
       logs = logs + (' ' + String(item))
     }
   }
+  // Report through global.clog, the console from before src/app.ts points
+  // it here. The redirected console would answer each failed POST with two
+  // more POSTs to the same unreachable server:
   request(logs).catch((err: unknown) => {
-    console.error(err)
-    console.log('Failed logToServer')
+    // @ts-expect-error - global.clog is injected at runtime
+    global.clog('Failed logToServer', err)
   })
 }
 
