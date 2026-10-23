@@ -78,7 +78,12 @@ export const getCreateWalletList = (
     excludeAssets = [],
     disableLegacy = false
   } = opts
-  const segwitSpecialCases = new Set(['bitcoin', 'litecoin', 'digibyte'])
+  const segwitSpecialCases = new Set([
+    'bitcoin',
+    'litecoin',
+    'digibyte',
+    'ecashbitcoin'
+  ])
   const existingWalletsMap = new Map<string, Set<EdgeTokenId>>()
   for (const item of filteredWalletList) {
     if (item.type !== 'asset') continue

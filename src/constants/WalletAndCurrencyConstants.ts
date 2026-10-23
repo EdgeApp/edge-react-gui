@@ -84,6 +84,8 @@ export const CURRENCY_SETTINGS_KEYS = [
   'digibyte',
   'dogecoin',
   'eboost',
+  'ecashbitcoin',
+  'ecashbitcoinbetanet',
   'ethDev',
   'ethereum',
   'ethereumclassic',
@@ -179,7 +181,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:opbnb',
   'wallet:nym',
   'wallet:robinhood',
-  'wallet:arc'
+  'wallet:arc',
+  'wallet:ecashbitcoin',
+  'wallet:ecashbitcoinbetanet'
 ]
 
 export interface WalletSettingOption {
@@ -558,6 +562,18 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     isImportKeySupported: true,
     isStakingSupported: false,
     unstoppableDomainsTicker: 'ECASH'
+  },
+  ecashbitcoin: {
+    hasSegwit: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecash_bitcoin_wallet_name,
+    isImportKeySupported: true
+  },
+  ecashbitcoinbetanet: {
+    hasSegwit: true,
+    maxSpendTargets: UTXO_MAX_SPEND_TARGETS,
+    initWalletName: lstrings.string_first_ecash_bitcoin_betanet_wallet_name,
+    isImportKeySupported: true
   },
   ethereum: {
     initWalletName: lstrings.string_first_ethereum_wallet_name,

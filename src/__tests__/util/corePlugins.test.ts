@@ -21,6 +21,8 @@ describe('corePlugins', () => {
       'dogecoin',
       'eboost',
       'ecash',
+      'ecashbitcoin',
+      'ecashbitcoinbetanet',
       'feathercoin',
       'groestlcoin',
       'litecoin',

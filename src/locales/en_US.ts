@@ -779,6 +779,8 @@ const strings = {
   string_first_dash_wallet_name: 'My Dash',
   string_first_digibyte_wallet_name: 'My DigiByte',
   string_first_ecash_wallet_name: 'My eCash',
+  string_first_ecash_bitcoin_wallet_name: 'My eCash (ECX)',
+  string_first_ecash_bitcoin_betanet_wallet_name: 'My eCash Betanet',
   string_first_eos_wallet_name: 'My EOS',
   string_first_holesky_wallet_name: 'My Holesky',
   string_first_hyperevm_wallet_name: 'My HyperEVM',

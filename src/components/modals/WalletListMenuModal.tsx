@@ -111,7 +111,9 @@ export const WALLET_LIST_MENU: Array<{
       'telos',
       'ufo',
       'vertcoin',
-      'wax'
+      'wax',
+      'ecashbitcoin',
+      'ecashbitcoinbetanet'
     ],
     label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
@@ -132,6 +134,8 @@ export const WALLET_LIST_MENU: Array<{
       'dogecoin',
       'eboost',
       'ecash',
+      'ecashbitcoin',
+      'ecashbitcoinbetanet',
       'feathercoin',
       'groestlcoin',
       'litecoin',
