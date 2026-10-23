@@ -71,6 +71,7 @@ const defaultSettings: LocalAccountSettings = {
     transaction: { amount: 0, isEnabled: false }
   },
   isNymWarningShown: false,
+  largeTxHistoryCardDismissed: false,
   reviewTrigger: defaultReviewTrigger,
   tokenWarningsShown: [],
   accountNotifDismissInfo: {

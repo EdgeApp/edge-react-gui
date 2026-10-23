@@ -922,7 +922,11 @@ export const TransactionListTop: React.FC<Props> = props => {
             {!isStakingAvailable ? null : renderStakedBalance()}
           </EdgeCard>
           {renderSyncStatus()}
-          {isLargeUtxoWallet ? <LargeUtxoWalletCard /> : null}
+          {isLargeUtxoWallet ? (
+            <EdgeAnim visible={showSyncCard} exit={syncCardExitAnim}>
+              <LargeUtxoWalletCard wallet={wallet} />
+            </EdgeAnim>
+          ) : null}
           {renderZcashMigrationCard()}
           {renderButtons()}
         </>

@@ -286,6 +286,18 @@ export const writeCameraScamWarningShown = async (
 }
 
 /**
+ * Persists the user's close of the Large Tx History card, so it stays hidden
+ * for every wallet on this account.
+ */
+export const writeLargeTxHistoryCardDismissed = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
+  const settings = await getLocalAccountSettings(account)
+  const updatedSettings = { ...settings, largeTxHistoryCardDismissed: true }
+  return await writeLocalAccountSettings(account, updatedSettings)
+}
+
+/**
  * Tracks whether a token gas requirement warning has been shown per a
  * particular currency plugin. If the plugin id exists in this array, the
  * warning will not be shown again for that currency plugin.
