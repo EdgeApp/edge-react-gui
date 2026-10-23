@@ -13,7 +13,7 @@ beforeAll(() => {
 })
 
 const servers: Array<net.Server | http.Server> = []
-const sockets: string[] = []
+const tempDirs: string[] = []
 /**
  * Every connection these servers accepted.
  *
@@ -38,20 +38,25 @@ afterEach(async () => {
       })
     })
   )
-  for (const socketPath of sockets.splice(0)) {
+  for (const dir of tempDirs.splice(0)) {
     // The whole `mkdtemp` directory, not just the socket file inside it:
     // unlinking one file left the directory behind, and 132 of them had
     // accumulated in $TMPDIR on this machine.
-    fs.rmSync(path.dirname(socketPath), { recursive: true, force: true })
+    fs.rmSync(dir, { recursive: true, force: true })
   }
 })
 
-/** A unix socket path this test owns. */
+/**
+ * A socket path this test owns: a unix socket in a fresh directory, or on
+ * Windows, which cannot listen on a file path, a pipe named after one.
+ */
 function tempSocket(): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-api-'))
+  tempDirs.push(dir)
   const socketPath = path.join(dir, 'engine.sock')
-  sockets.push(socketPath)
-  return socketPath
+  return process.platform === 'win32'
+    ? path.join('\\\\?\\pipe', socketPath)
+    : socketPath
 }
 
 /** Listen on `socketPath` and hand each connection to `onConnection`. */
@@ -298,11 +303,11 @@ describe('ApiClient against an engine that is shutting down', () => {
       res.end(shuttingDown)
       // The engine finishes its teardown: it stops listening, drops the
       // connection and unlinks the socket, which is the ENOENT exit the
-      // wait is really looking for.
+      // wait is really looking for. A Windows pipe goes with the server.
       setTimeout(() => {
         req.socket.destroy()
         server.close()
-        fs.rmSync(socketPath, { force: true })
+        if (process.platform !== 'win32') fs.rmSync(socketPath, { force: true })
       }, 10)
     })
     servers.push(server)
