@@ -17,6 +17,7 @@ import {
   createAccountWithCaptcha,
   loginWithPasswordAndCaptcha,
   readTcpToken,
+  runDirOfSocket,
   startEngine
 } from './util/cliHarness'
 
@@ -173,7 +174,7 @@ async function main(): Promise<void> {
 
     // Persist session for CLI commands
     fs.writeFileSync(
-      path.join(path.dirname(sock), 'session.json'),
+      path.join(runDirOfSocket(sock), 'session.json'),
       JSON.stringify({
         sessionId,
         username: TEST_USER,
@@ -199,7 +200,7 @@ async function main(): Promise<void> {
 
     const sid = sessionId2 ?? sessionId
     fs.writeFileSync(
-      path.join(path.dirname(sock), 'session.json'),
+      path.join(runDirOfSocket(sock), 'session.json'),
       JSON.stringify({
         sessionId: sid,
         username: TEST_USER,
