@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Scripts that write AI translations to `src/locales/strings-ai` and compare them with the current locale files
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
