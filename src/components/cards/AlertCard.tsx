@@ -15,6 +15,7 @@ interface Props {
   footer?: string
   header?: string
   button?: ButtonInfo
+  onClose?: () => Promise<void> | void // If specified, adds a close button
 
   // DO NOT USE after a scene is fully UI4! Margins should all align without adjustment.
   marginRem?: number[] | number
@@ -38,7 +39,8 @@ interface Props {
  *  |___________________________|
  */
 export const AlertCardUi4: React.FC<Props> = (props: Props) => {
-  const { title, type, header, body, button, footer, marginRem } = props
+  const { title, type, header, body, button, footer, marginRem, onClose } =
+    props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -59,9 +61,16 @@ export const AlertCardUi4: React.FC<Props> = (props: Props) => {
         type === 'error' ? theme.cardGradientError : theme.cardGradientWarning
       }
       marginRem={marginRem}
+      onClose={onClose}
     >
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
+        <View
+          style={
+            onClose == null
+              ? styles.titleContainer
+              : styles.titleContainerClosable
+          }
+        >
           <IonIcon
             name="warning-outline"
             style={styles.icon}
@@ -113,6 +122,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  // Keeps the title clear of the card's corner close button:
+  titleContainerClosable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: theme.rem(1.5)
   },
   titleText: {
     marginLeft: theme.rem(0.2),
