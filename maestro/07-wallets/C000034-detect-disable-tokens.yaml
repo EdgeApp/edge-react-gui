@@ -59,6 +59,23 @@ tags:
             - tapOn:
                 text: "Tokens Detected.*"
                 optional: true
+      # The notification is transient and can disappear before Android taps it.
+      # If it did not open Manage Tokens, navigate there through the wallet menu.
+      - runFlow:
+          when:
+            notVisible: "Select tokens to display in wallet:"
+          commands:
+            - tapOn: Assets
+            - scrollUntilVisible:
+                element: ${WALLET_NAME}
+                direction: DOWN
+                centerElement: true
+                timeout: 10000
+            - longPressOn: ${WALLET_NAME}
+            - tapOn: ".*Add / Edit Tokens"
+      - extendedWaitUntil:
+          visible: "Select tokens to display in wallet:"
+          timeout: 10000
       # Ensure scene displays correctly
       - assertVisible: ${WALLET_NAME}
       - assertVisible: "Select tokens to display in wallet:"

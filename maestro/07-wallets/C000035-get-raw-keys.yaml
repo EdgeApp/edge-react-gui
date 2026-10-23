@@ -58,6 +58,9 @@ tags:
 - assertVisible: '.*imported": false.*'
 - tapOn:
     id: "modal-close-button"
+- extendedWaitUntil:
+    notVisible: "^Raw Keys$"
+    timeout: 5000
 
 # Import an existing BCH wallet
 - runFlow:
