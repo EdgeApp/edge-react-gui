@@ -5,7 +5,9 @@ import { showError } from '../components/services/AirshipInstance'
 export function useRefresher<T>(
   cb: () => Promise<T>,
   defaultValue: T,
-  delay: number
+  delay: number,
+  /** Stops refreshing once this returns true for a value. */
+  isFinal?: (value: T) => boolean
 ): T {
   const [value, setValue] = React.useState<T>(defaultValue)
 
@@ -17,6 +19,7 @@ export function useRefresher<T>(
         .then(value => {
           if (abort) return
           setValue(value)
+          if (isFinal?.(value) === true) return
           timerId = setTimeout(handleTimeout, delay)
         })
         .catch((err: unknown) => {
@@ -31,7 +34,7 @@ export function useRefresher<T>(
       abort = true
       clearTimeout(timerId)
     }
-  }, [cb, delay, defaultValue])
+  }, [cb, delay, defaultValue, isFinal])
 
   return value
 }

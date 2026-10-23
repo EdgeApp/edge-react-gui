@@ -69,6 +69,7 @@ import {
 } from '../../util/utils'
 import { IconButton } from '../buttons/IconButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
+import { EcashSplitWarningCard } from '../cards/EcashSplitWarningCard'
 import { EdgeCard } from '../cards/EdgeCard'
 import { LargeUtxoWalletCard } from '../cards/LargeUtxoWalletCard'
 import { VisaCardCard } from '../cards/VisaCardCard'
@@ -927,6 +928,7 @@ export const TransactionListTop: React.FC<Props> = props => {
               <LargeUtxoWalletCard wallet={wallet} />
             </EdgeAnim>
           ) : null}
+          <EcashSplitWarningCard wallet={wallet} />
           {renderZcashMigrationCard()}
           {renderButtons()}
         </>

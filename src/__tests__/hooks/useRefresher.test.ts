@@ -50,6 +50,19 @@ describe('useRefresher', () => {
     rendered.unmount()
   })
 
+  it('stops refreshing once a value is final', async () => {
+    let count = 0
+    const refresh = jest.fn(async () => ++count)
+    const isFinal = (value: number | undefined): boolean => value === 2
+    const rendered = renderHook(() =>
+      useRefresher(refresh, undefined, 1000, isFinal)
+    )
+    await advance(5000)
+    expect(refresh).toHaveBeenCalledTimes(2)
+    expect(rendered.result.current).toBe(2)
+    rendered.unmount()
+  })
+
   it('stops refreshing once unmounted', async () => {
     const refresh = jest.fn(async () => 1)
     const rendered = renderHook(() => useRefresher(refresh, undefined, 1000))
