@@ -3,8 +3,6 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
-- changed: Rename the Large Wallet card to Large Tx History and shorten its copy
-- changed: Large Tx History card shows only while syncing and can be closed for good
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
@@ -13,7 +11,15 @@
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 - fixed: Runaway log requests in dev builds when the `LOG_SERVER` listener is down
 
-## 4.52.0 (staging)
+## 4.52.1 (2026-10-23)
+
+- added: (Bridgeless) Reject quotes above the destination token's withdrawal cap
+- changed: Rename the Large Wallet card to Large Tx History and shorten its copy
+- changed: Large Tx History card shows only while syncing and can be closed for good
+- changed: (Bridgeless) Keep quotes 1% inside the bridge's withdrawal limits
+- fixed: (Bridgeless) Minimum deposit and 'to' quote amounts cover the bridge commission exactly
+
+## 4.52.0 (2026-10-21)
 
 - added: Arc wallets
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
