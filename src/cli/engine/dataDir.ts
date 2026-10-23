@@ -43,6 +43,9 @@ export function secureDataDir(directory: string): string | undefined {
     }
     return
   }
+  // Windows reports every directory as mode 666 and controls access with
+  // ACLs, which `chmod` does not change. A mode check means nothing there.
+  if (process.platform === 'win32') return
   let mode: number
   try {
     mode = fs.statSync(directory).mode & 0o777

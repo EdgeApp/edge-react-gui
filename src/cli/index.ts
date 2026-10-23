@@ -138,7 +138,11 @@ async function buildContext(options: CliOptions): Promise<CliContext> {
   // daemon behind — and with no `-t` that daemon would point at production.
   const profile = profileHash({ appId, directory, testMode, loginServer })
   const client = new ApiClient({
-    socketPath: socketPathFor(profile),
+    // A getter, read at every request: on Windows the pipe name lives in the
+    // engine's run file, which a spawn partway through this command creates.
+    get socketPath() {
+      return socketPathFor(profile)
+    },
     timeoutMs: clientTimeoutMs(options.timeout),
     onConnectFail: async () => {
       await ensureEngine(engineOpts)
