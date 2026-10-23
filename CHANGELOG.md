@@ -4,7 +4,15 @@
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 
-## 4.52.0 (staging)
+## 4.52.1 (2026-10-23)
+
+- added: (Bridgeless) Reject quotes above the destination token's withdrawal cap
+- changed: Rename the Large Wallet card to Large Tx History and shorten its copy
+- changed: Large Tx History card shows only while syncing and can be closed for good
+- changed: (Bridgeless) Keep quotes 1% inside the bridge's withdrawal limits
+- fixed: (Bridgeless) Minimum deposit and 'to' quote amounts cover the bridge commission exactly
+
+## 4.52.0 (2026-10-21)
 
 - added: Arc wallets
 - added: `YOLO_OTP_KEY` env setting, which lets auto-login reach a 2FA-protected account on a device that has no login stash for it yet.
