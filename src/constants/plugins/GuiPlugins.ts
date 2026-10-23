@@ -94,6 +94,13 @@ export const guiPlugins: Record<string, GuiPlugin> = {
     displayName: 'Bits of Gold',
     permissions: ['camera']
   },
+  dfx: {
+    pluginId: 'dfx',
+    storeId: 'dfx',
+    baseUri: 'https://app.dfx.swiss',
+    displayName: 'DFX',
+    permissions: ['camera']
+  },
   creditcard: {
     pluginId: 'amountquote',
     storeId: '',
