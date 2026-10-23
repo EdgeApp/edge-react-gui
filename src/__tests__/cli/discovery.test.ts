@@ -27,15 +27,64 @@ function load(): Discovery {
   return require('../../cli/engine/discovery')
 }
 
+/**
+ * Most of these cases are about the socket *file* a POSIX engine leaves in
+ * its run directory. On Windows `socketPathFor` names a pipe instead, which
+ * a test cannot seed with `writeFileSync`. The file layout is pinned here,
+ * and the pipe has its own cases below.
+ */
+const platform = process.platform
+function setPlatform(value: NodeJS.Platform): void {
+  Object.defineProperty(process, 'platform', { value })
+}
+
 beforeEach(() => {
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-discovery-'))
   homedir = jest.spyOn(os, 'homedir').mockReturnValue(home)
+  setPlatform('linux')
   jest.resetModules()
 })
 
 afterEach(() => {
+  setPlatform(platform)
   homedir.mockRestore()
   fs.rmSync(home, { recursive: true, force: true })
+})
+
+describe('socketPathFor', () => {
+  it('is a file in the run directory', () => {
+    const { runDir, socketPathFor } = load()
+    expect(socketPathFor('p1')).toBe(path.join(runDir('p1'), 'engine.sock'))
+  })
+
+  it('is a named pipe with a name no other user can predict on Windows', () => {
+    setPlatform('win32')
+    const { newSocketPath, runDir } = load()
+    const pipe = newSocketPath('p1')
+    expect(pipe).toMatch(/engine-[0-9a-f]{32}\.sock$/)
+    expect(pipe.startsWith(path.join('\\\\?\\pipe', runDir('p1')))).toBe(true)
+    expect(newSocketPath('p1')).not.toBe(pipe)
+  })
+
+  it('is the pipe a live engine recorded on Windows', () => {
+    setPlatform('win32')
+    const { ensureRunDir, newSocketPath, socketPathFor, writeRunFile } = load()
+    const pipe = newSocketPath('p1')
+    ensureRunDir('p1')
+    writeRunFile('p1', { pid: process.pid, socketPath: pipe } as any)
+    expect(socketPathFor('p1')).toBe(pipe)
+  })
+
+  it('is no recorded pipe once its engine is gone on Windows', () => {
+    // Someone else may have created that name since the engine died.
+    setPlatform('win32')
+    const { ensureRunDir, newSocketPath, socketPathFor, writeRunFile } = load()
+    const pipe = newSocketPath('p1')
+    ensureRunDir('p1')
+    writeRunFile('p1', { pid: 0x7ffffffe, socketPath: pipe } as any)
+    expect(socketPathFor('p1')).not.toBe(pipe)
+    expect(socketPathFor('p1')).toMatch(/engine-[0-9a-f]{32}\.sock$/)
+  })
 })
 
 const key = {
