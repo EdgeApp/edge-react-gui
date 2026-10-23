@@ -148,6 +148,7 @@ export const EdgeCard: React.FC<Props> = props => {
     onClose == null ? null : (
       <EdgeTouchableOpacity
         style={styles.cornerContainer}
+        testID="edgeCardCloseButton"
         onPress={handleClose}
       >
         <CloseIcon size={theme.rem(1.5)} />
