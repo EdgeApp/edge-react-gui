@@ -34,11 +34,11 @@ import {
   cleanupStaleLock,
   ENGINE_EXIT_ALREADY_RUNNING,
   ensureRunDir,
+  newSocketPath,
   profileHash,
   readRunFile,
   removeRunArtifacts,
   runFilePath,
-  socketPathFor,
   sweepStaleProfiles,
   writeRunFile
 } from './discovery'
@@ -221,7 +221,7 @@ async function main(): Promise<void> {
   // happily remove on POSIX while the stream kept writing to the inode.
   const staleLogs = sweepOldLogs(undefined, logger.logPath)
   const livePid = await cleanupStaleLock(profile)
-  const socketPath = socketPathFor(profile)
+  const socketPath = newSocketPath(profile)
   // One timestamp for the claim and for the post-bind rewrite below, so the
   // claim keeps its identity: `discovery.ts`'s `claimUnchanged` compares
   // `pid` and `startedAt`, and a fresh `startedAt` at bind made a sweep that
