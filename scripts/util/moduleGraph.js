@@ -150,7 +150,10 @@ function walkGraph(entries) {
     }
   }
   return {
-    modules: [...seen].map(f => path.relative(ROOT, f)).sort(),
+    // `/`-separated on every platform: these are compared with git's paths.
+    modules: [...seen]
+      .map(f => path.relative(ROOT, f).split(path.sep).join('/'))
+      .sort(),
     packages: bare
   }
 }
