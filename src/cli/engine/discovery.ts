@@ -118,8 +118,40 @@ export function runDir(profile: string): string {
   return join(cliRunRoot(), profile)
 }
 
+/**
+ * The socket a client connects to for this profile.
+ *
+ * On Windows it is the pipe the profile's live engine recorded in its run
+ * file. With no live engine it is a fresh name nothing listens on, because a
+ * pipe named by a dead engine's run file may since have been created by
+ * someone else.
+ */
 export function socketPathFor(profile: string): string {
+  if (process.platform === 'win32') {
+    const run = readRunFile(profile)
+    if (run?.socketPath != null && isProcessAlive(run.pid)) {
+      return run.socketPath
+    }
+    return newSocketPath(profile)
+  }
   return join(runDir(profile), 'engine.sock')
+}
+
+/**
+ * The socket a starting engine binds.
+ *
+ * Windows `listen` takes a named pipe, not a file path, and every user on a
+ * machine shares one pipe namespace. A name derived from the profile alone
+ * is one another local user can create first, and their server then receives
+ * this user's requests, passwords and PINs included. The pipe name carries
+ * 128 random bits instead, and clients read it from the run file, which only
+ * this user can open. It embeds the run directory too, which keeps names
+ * readable and lets the test harness map one back to its directory.
+ */
+export function newSocketPath(profile: string): string {
+  if (process.platform !== 'win32') return socketPathFor(profile)
+  const nonce = crypto.randomBytes(16).toString('hex')
+  return join('\\\\?\\pipe', runDir(profile), `engine-${nonce}.sock`)
 }
 
 export function runFilePath(profile: string): string {
