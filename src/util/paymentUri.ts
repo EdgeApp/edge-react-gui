@@ -1,6 +1,7 @@
 import type {
   EdgeCurrencyConfig,
   EdgeCurrencyWallet,
+  EdgeMetadata,
   EdgeParsedUri,
   EdgeTokenId
 } from 'edge-core-js'
@@ -84,6 +85,8 @@ function parseChainId(text: string | undefined): number | undefined {
 /** A payment destination on a chain the user holds no wallet for. */
 export interface CrossChainPayment {
   publicAddress: string
+  /** The payout asset's code, which names it in the address warnings. */
+  currencyCode: string
   /**
    * The amount the code asks for, in the payout asset's native units. Left
    * out when the code states it in another asset.
@@ -95,6 +98,13 @@ export interface CrossChainPayment {
    * scanned exchange deposit code that carries one has to keep it.
    */
   memo?: string
+  /**
+   * The parser's metadata. A gateway code (`<pluginId>://...`) sets
+   * `metadata.gateway`, which `addressWarnings` asks the user to confirm.
+   */
+  metadata?: EdgeMetadata
+  /** Set when the address is a legacy format `addressWarnings` warns about. */
+  legacyAddress?: string
 }
 
 /**
@@ -119,14 +129,28 @@ export async function parseCrossChainPayment(
       text.trim(),
       payoutTokenId
     )
-    const { publicAddress, nativeAmount, uniqueIdentifier } = parsed
+    const {
+      publicAddress,
+      nativeAmount,
+      uniqueIdentifier,
+      metadata,
+      legacyAddress
+    } = parsed
     if (publicAddress == null || publicAddress === '') return
     const statedTokenId = parsed.tokenId ?? null
     if (statedTokenId != null && statedTokenId !== payoutTokenId) return
+    const payoutToken =
+      payoutTokenId == null
+        ? undefined
+        : currencyConfig.allTokens[payoutTokenId]
     return {
       publicAddress,
+      currencyCode:
+        payoutToken?.currencyCode ?? currencyConfig.currencyInfo.currencyCode,
       nativeAmount: statedTokenId === payoutTokenId ? nativeAmount : undefined,
-      memo: uniqueIdentifier
+      memo: uniqueIdentifier,
+      metadata,
+      legacyAddress
     }
   } catch (error: unknown) {
     return undefined

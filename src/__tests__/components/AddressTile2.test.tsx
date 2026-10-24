@@ -1,10 +1,20 @@
 import { describe, expect, it, jest } from '@jest/globals'
-import { fireEvent, render, waitFor } from '@testing-library/react-native'
-import type { EdgeAddress, EdgeCurrencyWallet } from 'edge-core-js'
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native'
+import type {
+  EdgeAddress,
+  EdgeCurrencyWallet,
+  EdgeMetadata
+} from 'edge-core-js'
 import * as React from 'react'
+import { sprintf } from 'sprintf-js'
 
 import { Airship } from '../../components/services/AirshipInstance'
-import { AddressTile2 } from '../../components/tiles/AddressTile2'
+import {
+  AddressTile2,
+  type AddressTileRef,
+  type ChangeAddressResult
+} from '../../components/tiles/AddressTile2'
+import { lstrings } from '../../locales/strings'
 import type { EdgeAsset } from '../../types/types'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import { ethCurrencyInfo } from '../../util/fake/fakeEthInfo'
@@ -95,5 +105,109 @@ describe('AddressTile2 "Myself" picker', () => {
 
     showSpy.mockRestore()
     rendered.unmount()
+  })
+})
+
+describe('AddressTile2 cross-chain address', () => {
+  const PAYEE = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
+  // Parsers flag a gateway code on the metadata, outside the core type:
+  const gatewayMetadata: EdgeMetadata & { gateway: boolean } = {
+    gateway: true
+  }
+
+  const renderCrossChainTile = (
+    onChangeAddress: (result: ChangeAddressResult) => Promise<void>
+  ): {
+    ref: React.RefObject<AddressTileRef | null>
+    unmount: () => void
+  } => {
+    const wallet = makeWallet('source', async () => [])
+    const ref = React.createRef<AddressTileRef>()
+    const rootState: FakeState = {
+      core: {
+        account: {
+          currencyConfig: { ethereum: ethConfig },
+          currencyWallets: { source: wallet },
+          watch: () => () => {}
+        }
+      }
+    }
+    const rendered = render(
+      <FakeProviders initialState={rootState}>
+        <AddressTile2
+          ref={ref}
+          coreWallet={wallet}
+          tokenId={null}
+          title="Send to"
+          recipientAddress=""
+          onChangeAddress={onChangeAddress}
+          resetSendTransaction={() => {}}
+          isCameraOpen={false}
+          navigation={fakeNavigation}
+          parseCrossChainAddress={async () => ({
+            publicAddress: PAYEE,
+            currencyCode: 'USDT',
+            metadata: gatewayMetadata
+          })}
+        />
+      </FakeProviders>
+    )
+    return { ref, unmount: rendered.unmount }
+  }
+
+  const answerModals = (
+    answer: boolean
+  ): { titles: unknown[]; restore: () => void } => {
+    const titles: unknown[] = []
+    const spy = jest
+      .spyOn(Airship, 'show')
+      .mockImplementation(
+        async (renderModal: (bridge: never) => React.ReactNode) => {
+          const modal = renderModal(undefined as never) as React.ReactElement<{
+            title?: string
+          }>
+          titles.push(modal.props.title)
+          return answer
+        }
+      )
+    return {
+      titles,
+      restore: () => {
+        spy.mockRestore()
+      }
+    }
+  }
+
+  it("keeps a gateway code out when the payout's warning is declined", async () => {
+    const onChangeAddress = jest.fn(async (result: ChangeAddressResult) => {})
+    const modals = answerModals(false)
+    const tile = renderCrossChainTile(onChangeAddress)
+
+    await act(async () => {
+      await tile.ref.current?.onChangeAddress(`ethereum://${PAYEE}`)
+    })
+    expect(modals.titles).toEqual([
+      sprintf(lstrings.gateway_agreement_modal_title, 'USDT')
+    ])
+    expect(onChangeAddress).not.toHaveBeenCalled()
+
+    modals.restore()
+    tile.unmount()
+  })
+
+  it('takes a gateway code once the warning is accepted', async () => {
+    const onChangeAddress = jest.fn(async (result: ChangeAddressResult) => {})
+    const modals = answerModals(true)
+    const tile = renderCrossChainTile(onChangeAddress)
+
+    await act(async () => {
+      await tile.ref.current?.onChangeAddress(`ethereum://${PAYEE}`)
+    })
+    expect(onChangeAddress).toHaveBeenCalledWith(
+      expect.objectContaining({ parsedUri: { publicAddress: PAYEE } })
+    )
+
+    modals.restore()
+    tile.unmount()
   })
 })

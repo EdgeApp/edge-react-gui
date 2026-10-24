@@ -300,6 +300,9 @@ export const AddressTile2 = React.forwardRef(
             await rejectUnparsedAddress(address, addressEntryMethod)
             return
           }
+          // Declining a gateway or legacy-address warning is a cancel, not an
+          // invalid address:
+          if (!(await addressWarnings(payment, payment.currencyCode))) return
           await onChangeAddress({
             parsedUri: { publicAddress: payment.publicAddress },
             addressEntryMethod,
