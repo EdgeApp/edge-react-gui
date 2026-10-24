@@ -1,5 +1,9 @@
 import { describe, expect, it } from '@jest/globals'
-import type { EdgeCurrencyConfig, EdgeParsedUri } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeMetadata,
+  EdgeParsedUri
+} from 'edge-core-js'
 
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
 import {
@@ -133,8 +137,30 @@ describe('parseCrossChainPayment', () => {
       )
     ).toEqual({
       publicAddress: 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh',
+      currencyCode: 'XRP',
       nativeAmount: '20000000',
       memo: '987654'
+    })
+  })
+
+  it("carries the parser's gateway flag and legacy address for the warnings", async () => {
+    // Parsers flag a gateway code on the metadata, outside the core type:
+    const metadata: EdgeMetadata & { gateway: boolean } = { gateway: true }
+    const config = makeConfig(async () => ({
+      publicAddress: 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh',
+      legacyAddress: 'rLegacy',
+      metadata
+    }))
+    expect(
+      await parseCrossChainPayment(
+        config,
+        'ripple://rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh'
+      )
+    ).toEqual({
+      publicAddress: 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh',
+      currencyCode: 'XRP',
+      legacyAddress: 'rLegacy',
+      metadata: { gateway: true }
     })
   })
 
@@ -178,7 +204,11 @@ describe('parseCrossChainPayment', () => {
     }))
     expect(
       await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
-    ).toEqual({ publicAddress: PAYEE, nativeAmount: '1000000' })
+    ).toEqual({
+      publicAddress: PAYEE,
+      currencyCode: 'XRP',
+      nativeAmount: '1000000'
+    })
   })
 
   it("rejects another token's code on a token payout", async () => {
@@ -200,7 +230,7 @@ describe('parseCrossChainPayment', () => {
     }))
     expect(
       await parseCrossChainPayment(config, 'ethereum:0x', USDC_TOKEN_ID)
-    ).toEqual({ publicAddress: PAYEE })
+    ).toEqual({ publicAddress: PAYEE, currencyCode: 'XRP' })
   })
 
   it('rejects a result with no address', async () => {
@@ -241,7 +271,11 @@ describe('parseCrossChainPayment', () => {
   it('accepts a token invoice the parser only reads as that token', async () => {
     expect(
       await parseCrossChainPayment(makeEvmConfig(), USDT_INVOICE, USDT_TOKEN_ID)
-    ).toEqual({ publicAddress: PAYEE, nativeAmount: '25000000' })
+    ).toEqual({
+      publicAddress: PAYEE,
+      currencyCode: 'USDT',
+      nativeAmount: '25000000'
+    })
   })
 
   it('still reads a coin code as the coin on a token payout', async () => {
@@ -251,7 +285,7 @@ describe('parseCrossChainPayment', () => {
         `ethereum:${PAYEE}?value=2000000000000000`,
         USDT_TOKEN_ID
       )
-    ).toEqual({ publicAddress: PAYEE })
+    ).toEqual({ publicAddress: PAYEE, currencyCode: 'USDT' })
   })
 
   it('rejects a token invoice on a coin payout', async () => {
@@ -568,11 +602,19 @@ describe('findPayableChains', () => {
     ).toEqual([
       {
         chain: 'alsoAccepts',
-        payment: { publicAddress: '0xabc', nativeAmount: '5' }
+        payment: {
+          publicAddress: '0xabc',
+          currencyCode: 'POL',
+          nativeAmount: '5'
+        }
       },
       {
         chain: 'accepts',
-        payment: { publicAddress: '0xabc', nativeAmount: '5' }
+        payment: {
+          publicAddress: '0xabc',
+          currencyCode: 'POL',
+          nativeAmount: '5'
+        }
       }
     ])
   })

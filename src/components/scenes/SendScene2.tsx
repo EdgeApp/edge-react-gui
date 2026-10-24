@@ -1538,6 +1538,9 @@ const SendComponent: React.FC<Props> = props => {
         chain = picked.chain
         payment = picked.payment
       }
+      // A gateway or legacy-address warning the user declines is a cancel,
+      // so the address is acknowledged without being adopted:
+      if (!(await addressWarnings(payment, payment.currencyCode))) return true
       const { publicAddress, nativeAmount, memo } = payment
 
       // A scanned exchange deposit code carries the tag that credits the

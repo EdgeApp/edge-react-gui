@@ -124,8 +124,8 @@ const ZCASH_TRANSPARENT_WARNING = 'Transparent Zcash payout'
  * native units, plus an XRP-style `dt` destination tag. Like the real parsers
  * it names no asset for either, so the wallet stamps the asset it was asked
  * about on both. An EIP-681 token `transfer` reads only when asked with a
- * token's code, as an EVM parser refuses it asked with the coin's, and a
- * `gateway=1` parameter marks it a gateway code. Each read is logged in
+ * token's code, as an EVM parser refuses it asked with the coin's. A
+ * `gateway=1` parameter on any code marks it a gateway code. Each read is logged in
  * `parseCalls`.
  */
 interface GatewayMetadata extends EdgeMetadata {
@@ -148,6 +148,11 @@ const makeParsingPlugin = (
       ): Promise<EdgeParsedUri> => {
         parseCalls.push({ text: uri, currencyCode })
         const [target, query = ''] = uri.replace(/^[a-z]+:/, '').split('?')
+        const gateway = /(?:^|&)gateway=1(?:&|$)/.test(query)
+        // EVM parsers flag a gateway code on the metadata, outside the core
+        // type, which is how the scan warning reads it:
+        const gatewayMetadata: GatewayMetadata = { gateway }
+        const metadata = gateway ? gatewayMetadata : undefined
         if (target.endsWith('/transfer')) {
           if (
             currencyCode == null ||
@@ -160,15 +165,7 @@ const makeParsingPlugin = (
             throw new Error('InvalidPublicAddressError')
           }
           const amount = /(?:^|&)uint256=(\d+)/.exec(query)?.[1]
-          const gateway = /(?:^|&)gateway=1(?:&|$)/.test(query)
-          // EVM parsers flag a gateway code on the metadata, outside the core
-          // type, which is how the scan warning reads it:
-          const metadata: GatewayMetadata = { gateway }
-          return {
-            publicAddress: payee,
-            nativeAmount: amount,
-            metadata: gateway ? metadata : undefined
-          }
+          return { publicAddress: payee, nativeAmount: amount, metadata }
         }
         const publicAddress = target.split('@')[0]
         if (!addressFormat.test(publicAddress)) {
@@ -176,7 +173,12 @@ const makeParsingPlugin = (
         }
         const amount = /(?:^|&)(?:amount|value)=(\d+)/.exec(query)?.[1]
         const tag = /(?:^|&)dt=(\d+)/.exec(query)?.[1]
-        return { publicAddress, nativeAmount: amount, uniqueIdentifier: tag }
+        return {
+          publicAddress,
+          nativeAmount: amount,
+          uniqueIdentifier: tag,
+          metadata
+        }
       }
       return Object.assign(tools, { parseUri })
     }
@@ -707,6 +709,36 @@ describe('SendScene2 recipient network', () => {
     expect(mockShowToast.mock.calls).toEqual([
       ['Recipient network changed to Ethereum.']
     ])
+    scene.unmount()
+  })
+
+  it("keeps another network's gateway code out when its warning is declined", async () => {
+    const scene = renderBitcoinSend()
+    const titles: unknown[] = []
+    const show = jest
+      .spyOn(Airship, 'show')
+      .mockImplementation(
+        async (renderModal: (bridge: never) => React.ReactNode) => {
+          const modal = renderModal(undefined as never) as React.ReactElement<{
+            title?: string
+          }>
+          titles.push(modal.props.title)
+          return false
+        }
+      )
+
+    // Detection reads the code with the matched chain's parser, which flags
+    // the gateway the same as the wallet's own parser would:
+    expect(
+      await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1?gateway=1`)
+    ).toBe(true)
+    expect(titles).toEqual([
+      sprintf(lstrings.gateway_agreement_modal_title, 'ETH')
+    ])
+    expect(scene.recipientAddress()).toBe('')
+    expect(mockShowToast).not.toHaveBeenCalled()
+
+    show.mockRestore()
     scene.unmount()
   })
 
