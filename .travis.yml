@@ -16,3 +16,4 @@ script:
   - npm run lint
   - npx tsc
   - npm test
+  - npm run verify:pirate-sdk

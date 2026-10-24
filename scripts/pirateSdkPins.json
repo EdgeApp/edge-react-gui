@@ -1,0 +1,44 @@
+{
+  "repository": "https://github.com/PirateNetwork/Stashi-Wallet",
+  "workflow": ".github/workflows/ci.yml",
+  "tag": "v1.2.6",
+  "commit": "dedf63381996c5770945d16a4afa63ec7e35a676",
+  "packages": {
+    "react-native-pirate-wallet": {
+      "version": "0.3.9",
+      "integrity": "sha512-UJJr543AjUjhy63kJ6ENBBiyRt1uDOcjM3l54VdK95N3QwlHdLNp123P//bu22Ly5Z25MA9/CEfkfe1IIwmGxA==",
+      "provenance": "npm-attestation"
+    },
+    "react-native-pirate-wallet-android": {
+      "version": "0.3.9",
+      "integrity": "sha512-1wFjbbNLinVwg5bcNwDFyX9YWODWRTnhoqkIHQuc9Nqpg7eP8EK36dSHpQe6/lSprRQlxbF3A+OXpFDSutx5Bw==",
+      "provenance": "npm-attestation"
+    },
+    "react-native-pirate-wallet-android-external": {
+      "version": "0.3.9",
+      "integrity": "sha512-fT8tvJDkTnNt4XsyDob1yftmkQF0MkvOzKnydOovU/U0Ud0bZSFbtXlWYF8dnqJzhfHTGlaMvu7Z9GFTZojB/Q==",
+      "sha256": "1e41ef188ae463d20b0ef86855884b0bce5e176ede6fd687010210cb8ec434ff",
+      "provenance": "release-asset"
+    },
+    "react-native-pirate-wallet-android-x86_64": {
+      "version": "0.3.9",
+      "integrity": "sha512-AYSPBawF2/NhJNULYkWYX4HWMsw4zmcm6uRTD5ryfEd5c677PE3SniWzHOetz+wyrvztvc+4+1qZCGaU9+j/MQ==",
+      "provenance": "npm-attestation"
+    },
+    "react-native-pirate-wallet-ios-device": {
+      "version": "0.3.9",
+      "integrity": "sha512-qDjzx9F9zwRQgVy5yk4tTF5/uC/WCBfX10Wx64JmZTuX4Ci1/OPJGDzHQYShgI7B5c9CrmXEIqpndEONAEgWhg==",
+      "provenance": "npm-attestation"
+    },
+    "react-native-pirate-wallet-ios-simulator-arm64": {
+      "version": "0.3.9",
+      "integrity": "sha512-onQrr5uK1pGsdLPkLaPiiqlbHt/k4yZ9lwmSVyYhH/Ke37zkcgaEq4GTJ3p4nJrRXjgBkuECOojAxvGMWPyw3Q==",
+      "provenance": "npm-attestation"
+    },
+    "react-native-pirate-wallet-ios-simulator-x86_64": {
+      "version": "0.3.9",
+      "integrity": "sha512-tMbOZRoYCrzCsD3S39ho8z+G893dBD4DecYlhsG0cL2HoeItrveMySA/35fXwEOsSZUluFCekM/gwbCh07pyBA==",
+      "provenance": "npm-attestation"
+    }
+  }
+}
