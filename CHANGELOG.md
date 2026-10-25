@@ -10,6 +10,7 @@
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 - fixed: Runaway log requests in dev builds when the `LOG_SERVER` listener is down
+- removed: Transfer swap provider and same-asset wallet pairs in the exchange pickers
 
 ## 4.52.1 (2026-10-23)
 
