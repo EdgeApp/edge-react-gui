@@ -437,10 +437,10 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
                   />
                 ))}
               </EdgeCard>
-            ) : listItems.length === 0 && !atEnd ? (
-              <EmptyLoader />
             ) : isTransactionListUnsupported ? (
               <ExplorerCard wallet={wallet} tokenId={tokenId} />
+            ) : listItems.length === 0 && !atEnd ? (
+              <EmptyLoader />
             ) : isSearching ? (
               <EdgeText style={styles.noResultsText}>
                 {lstrings.transaction_list_search_no_result}
