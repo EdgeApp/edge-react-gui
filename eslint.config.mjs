@@ -352,7 +352,6 @@ export default [
       'src/components/themed/DividerLine.tsx',
       'src/components/themed/EdgeProviderComponent.tsx',
 
-      'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
       'src/components/themed/FioRequestRow.tsx',

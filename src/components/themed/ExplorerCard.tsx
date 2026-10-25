@@ -14,7 +14,8 @@ import { ButtonBox } from './ThemedButtons'
 const transactionListUnsupportedPluginIds = Object.keys(
   SPECIAL_CURRENCY_INFO
 ).filter(
-  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported
+  pluginId =>
+    SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported === true
 )
 
 interface OwnProps {
@@ -24,7 +25,7 @@ interface OwnProps {
 
 type Props = OwnProps
 
-export const ExplorerCard = (props: Props) => {
+export const ExplorerCard: React.FC<Props> = (props: Props) => {
   const { wallet, tokenId } = props
   const theme = useTheme()
   const styles = getStyles(theme)
