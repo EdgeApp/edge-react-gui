@@ -53,6 +53,8 @@ interface Props<T> {
   }) => void
 }
 
+// React.FC has no type parameters, so generic components use a function:
+/* eslint-disable edge/react-fc-component-definition */
 export function ListModal<T>({
   bridge,
   title,
