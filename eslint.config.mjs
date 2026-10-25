@@ -496,7 +496,6 @@ export default [
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
-      'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
