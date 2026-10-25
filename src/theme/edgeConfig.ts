@@ -11,6 +11,7 @@ export const edgeConfig: AppConfig = {
   backupAccountSite: 'https://edge.app/light-account-creation/',
   configName: 'edge',
   darkTheme: edgeDark,
+  deleteAccountSupportUrl: 'https://support.edge.app/articles/13892260',
   pendingTxLearnMoreUrl:
     'https://support.edge.app/en/articles/13892385-why-is-my-transaction-still-pending',
   zcashMigrationLearnMoreUrl: 'https://support.edge.app/articles/16111542',

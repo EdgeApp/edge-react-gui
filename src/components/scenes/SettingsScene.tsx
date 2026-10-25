@@ -53,7 +53,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { TextDropdown } from '../common/TextDropdown'
 import { SectionView } from '../layout/SectionView'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal'
-import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
+import { DeleteAccountWarningModal } from '../modals/DeleteAccountWarningModal'
 import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
@@ -379,17 +379,7 @@ export const SettingsScene: React.FC<Props> = props => {
     if (await hasLock()) return
 
     const approveDelete = await Airship.show<boolean>(bridge => (
-      <ConfirmContinueModal
-        bridge={bridge}
-        body={sprintf(
-          lstrings.delete_account_body,
-          config.appName,
-          config.supportSite
-        )}
-        title={lstrings.delete_account_title}
-        isSkippable
-        warning
-      />
+      <DeleteAccountWarningModal bridge={bridge} />
     ))
 
     if (!approveDelete) return
