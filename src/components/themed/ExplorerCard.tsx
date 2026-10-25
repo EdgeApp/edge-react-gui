@@ -37,9 +37,7 @@ export const ExplorerCard: React.FC<Props> = (props: Props) => {
   //
 
   const handlePress = useHandler(async () => {
-    const receiveAddress = await wallet.getReceiveAddress({ tokenId: null })
-    const url = sprintf(addressExplorer, receiveAddress.publicAddress)
-    await Linking.openURL(url)
+    await showAddressInExplorer(wallet)
   })
 
   //
@@ -99,3 +97,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center'
   }
 }))
+
+/**
+ * Opens the wallet's receive address on the chain's address explorer.
+ */
+async function showAddressInExplorer(
+  wallet: EdgeCurrencyWallet
+): Promise<void> {
+  const { addressExplorer } = wallet.currencyInfo
+  const addresses = await wallet.getAddresses({ tokenId: null })
+  const primaryAddress =
+    addresses.find(address => address.addressType === 'publicAddress') ??
+    addresses[0]
+  if (primaryAddress == null) return
+  const url = sprintf(addressExplorer, primaryAddress.publicAddress)
+  await Linking.openURL(url)
+}
