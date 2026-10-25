@@ -73,11 +73,32 @@ export function promptForContactsPermission(): ThunkAction<Promise<void>> {
 }
 
 /**
- * Shows the modal if it hasn't been shown before, and attempts to set the
- * system contacts permission setting
+ * Full-screen explanation of why the app wants contacts access,
+ * with Allow and Deny buttons.
  */
 const ContactsPermissionModal: React.FC<Props> = props => {
   const { bridge } = props
+
+  return (
+    <ButtonsModal
+      bridge={bridge}
+      disableCancel
+      buttons={{
+        allow: { label: lstrings.string_allow },
+        deny: { label: lstrings.string_deny }
+      }}
+      fullScreen
+    >
+      <ContactsPermissionContent />
+    </ButtonsModal>
+  )
+}
+
+/**
+ * The icon, title, and explanation for the contacts permission request.
+ * The caller provides the buttons.
+ */
+export const ContactsPermissionContent: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -95,15 +116,7 @@ const ContactsPermissionModal: React.FC<Props> = props => {
   )
 
   return (
-    <ButtonsModal
-      bridge={bridge}
-      disableCancel
-      buttons={{
-        allow: { label: lstrings.string_allow },
-        deny: { label: lstrings.string_deny }
-      }}
-      fullScreen
-    >
+    <>
       <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
           <Fontello
@@ -125,7 +138,7 @@ const ContactsPermissionModal: React.FC<Props> = props => {
       <EdgeText numberOfLines={0} style={styles.message}>
         {message3}
       </EdgeText>
-    </ButtonsModal>
+    </>
   )
 }
 
