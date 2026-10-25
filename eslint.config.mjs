@@ -310,7 +310,6 @@ export default [
 
       'src/components/scenes/SpendingLimitsScene.tsx',
 
-      'src/components/scenes/SwapSettingsScene.tsx',
       'src/components/scenes/SwapSuccessScene.tsx',
 
       'src/components/scenes/WalletRestoreScene.tsx',
