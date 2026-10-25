@@ -118,6 +118,25 @@ export const SmallText: React.FC<{ children: React.ReactNode }> = (props: {
   )
 }
 
+/** Makes the contents of an `EdgeText` or `Paragraph` bold, for inline labels.
+ * Unless used within a `Paragraph` block, provides no outer spacing. */
+export const BoldText: React.FC<{ children: React.ReactNode }> = (props: {
+  children: React.ReactNode
+}) => {
+  const { children } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <Text
+      allowFontScaling={false}
+      style={[styles.fontBold, androidAdjustTextStyle(theme)]}
+    >
+      {children}
+    </Text>
+  )
+}
+
 /** Makes the contents of an `EdgeText` or `Paragraph` orange, for warnings.
  * Unless used within a `Paragraph` block, provides no outer spacing. */
 export const WarningText: React.FC<{ children: React.ReactNode }> = (props: {
@@ -188,6 +207,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     includeFontPadding: false
   },
 
+  fontBold: {
+    fontFamily: theme.fontFaceBold
+  },
   colorPositive: {
     color: theme.positiveText
   },
