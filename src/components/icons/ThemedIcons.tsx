@@ -177,3 +177,5 @@ export const DeleteIcon = makeFontIcon(FontAwesome, 'times')
 export const QuestionIcon = makeFontIcon(SimpleLineIcons, 'question')
 
 export const ChatBubblesIcon = makeFontIcon(Ionicons, 'chatbubbles-outline')
+
+export const PersonIcon = makeFontIcon(Ionicons, 'person')

@@ -101,7 +101,7 @@ export default [
   {
     files: [
       'src/assets/vector/index.ts',
-      'src/components/icons/ThemedIcons.tsx',
+
       'src/components/themed/VectorIcon.tsx'
     ],
     rules: {
@@ -223,7 +223,7 @@ export default [
       'src/components/modals/GradientFadeout.tsx',
 
       'src/components/modals/InsufficientFeesModal.tsx',
-      'src/components/modals/ListModal.tsx',
+
       'src/components/modals/LoanWelcomeModal.tsx',
 
       'src/components/modals/PasswordReminderModal.tsx',
