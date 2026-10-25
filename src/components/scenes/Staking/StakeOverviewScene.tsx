@@ -25,6 +25,7 @@ import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import {
   enableStakeTokens,
+  getAllocationCountdownMessage,
   getAllocationLocktimeMessage,
   getPolicyIconUris,
   getPolicyTitleName,
@@ -137,9 +138,13 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
     }
   }, [account, dispatch, isFocused, stakePlugin, stakePolicyId, wallet])
 
-  // Update the position every minute
+  // Unlock countdowns count down from this time
+  const [now, setNow] = React.useState(() => new Date())
+
+  // Update the position and unlock countdowns every minute
   React.useEffect(() => {
     const task = makePeriodicTask(() => {
+      setNow(new Date())
       dispatch(
         updateStakingPosition(stakePlugin, stakePolicyId, wallet, account)
       ).catch((error: unknown) => {
@@ -229,6 +234,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
     return (
       <CryptoFiatAmountTile
         title={title}
+        details={getAllocationCountdownMessage(item, now)}
         nativeCryptoAmount={nativeAmount ?? '0'}
         tokenId={tokenId}
         denomination={denomination}
@@ -290,6 +296,7 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
               ...unstakedAllocations
             ]}
             renderItem={renderCFAT}
+            extraData={now}
             keyExtractor={(allocation: PositionAllocation) =>
               `${allocation.allocationType}${allocation.currencyCode}${
                 allocation.nativeAmount

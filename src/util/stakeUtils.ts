@@ -123,6 +123,54 @@ export const getAllocationLocktimeMessage = (
 }
 
 /**
+ * Returns the time left until the allocation unlocks, such as
+ * "13 days, 4 hours remaining", if the locktime is a future date.
+ */
+export const getAllocationCountdownMessage = (
+  allocation: PositionAllocation,
+  now: Date = new Date()
+): string | undefined => {
+  if (allocation.locktime == null) return
+  const remainingMs = new Date(allocation.locktime).valueOf() - now.valueOf()
+  if (!(remainingMs > 0)) return
+
+  const totalMinutes = Math.floor(remainingMs / MS_PER_MINUTE)
+  const days = Math.floor(totalMinutes / MINUTES_PER_DAY)
+  const hours = Math.floor((totalMinutes % MINUTES_PER_DAY) / 60)
+  const minutes = totalMinutes % 60
+
+  const dayText = formatCountdownUnit(
+    days,
+    lstrings.stake_countdown_day_1s,
+    lstrings.stake_countdown_days_1s
+  )
+  const hourText = formatCountdownUnit(
+    hours,
+    lstrings.stake_countdown_hour_1s,
+    lstrings.stake_countdown_hours_1s
+  )
+  const minuteText = formatCountdownUnit(
+    minutes,
+    lstrings.stake_countdown_minute_1s,
+    lstrings.stake_countdown_minutes_1s
+  )
+
+  // Show the two largest units, dropping the second one when it is zero
+  const units =
+    days > 0
+      ? [dayText, hourText]
+      : hours > 0
+      ? [hourText, minuteText]
+      : [minuteText]
+  const [first, second] = units.filter((unit): unit is string => unit != null)
+
+  if (first == null) return lstrings.stake_countdown_less_than_minute
+  if (second == null)
+    return sprintf(lstrings.stake_countdown_remaining_1s, first)
+  return sprintf(lstrings.stake_countdown_remaining_2s, first, second)
+}
+
+/**
  * Returns the icon uris of stake and reward assets.
  */
 export const getPolicyIconUris = (
@@ -296,3 +344,17 @@ export const getPoliciesFromPlugins = (
       )
   )
 }
+
+const MS_PER_MINUTE = 60 * 1000
+const MINUTES_PER_DAY = 24 * 60
+
+/**
+ * Formats a count with its singular or plural unit, or returns undefined
+ * for a zero count so the unit can be left out of the countdown.
+ */
+const formatCountdownUnit = (
+  count: number,
+  singular: string,
+  plural: string
+): string | undefined =>
+  count > 0 ? sprintf(count === 1 ? singular : plural, count) : undefined
