@@ -30,13 +30,19 @@ import { getUkCompliantString } from './ukComplianceUtils'
 const getAssetDisplayName = (
   stakePolicy: StakePolicy,
   assetType: 'stakeAssets' | 'rewardAssets'
-) =>
+): string[] =>
   stakePolicy[assetType].map(asset => asset.displayName ?? asset.currencyCode)
 
 /**
  * Returns staked and earned allocations in a shape that makes sense for the GUI
  */
-export const getPositionAllocations = (stakePosition: StakePosition) => {
+export const getPositionAllocations = (
+  stakePosition: StakePosition
+): {
+  staked: PositionAllocation[]
+  earned: PositionAllocation[]
+  unstaked: PositionAllocation[]
+} => {
   return {
     staked: stakePosition.allocations.filter(
       positionAllocation => positionAllocation.allocationType === 'staked'
@@ -71,7 +77,7 @@ export const getPolicyAssetName = (
 export const getPolicyTitleName = (
   stakePolicy: StakePolicy,
   countryCode?: string
-) => {
+): string => {
   const stakeCurrencyCodes = getAssetDisplayName(stakePolicy, 'stakeAssets')
   const rewardCurrencyCodes = getAssetDisplayName(stakePolicy, 'rewardAssets')
 
@@ -106,7 +112,7 @@ export const getPolicyTitleName = (
  */
 export const getAllocationLocktimeMessage = (
   allocation: PositionAllocation
-) => {
+): string => {
   return allocation.locktime != null &&
     new Date(allocation.locktime) > new Date()
     ? ` (${sprintf(
@@ -117,13 +123,63 @@ export const getAllocationLocktimeMessage = (
 }
 
 /**
+ * Returns the time left until the allocation unlocks, such as
+ * "13 days, 4 hours remaining", if the locktime is a future date.
+ */
+export const getAllocationCountdownMessage = (
+  allocation: PositionAllocation,
+  now: Date = new Date()
+): string | undefined => {
+  if (allocation.locktime == null) return
+  const remainingMs = new Date(allocation.locktime).valueOf() - now.valueOf()
+  if (!(remainingMs > 0)) return
+
+  const totalMinutes = Math.floor(remainingMs / MS_PER_MINUTE)
+  const days = Math.floor(totalMinutes / MINUTES_PER_DAY)
+  const hours = Math.floor((totalMinutes % MINUTES_PER_DAY) / 60)
+  const minutes = totalMinutes % 60
+
+  const dayText = formatCountdownUnit(
+    days,
+    lstrings.stake_countdown_day_1s,
+    lstrings.stake_countdown_days_1s
+  )
+  const hourText = formatCountdownUnit(
+    hours,
+    lstrings.stake_countdown_hour_1s,
+    lstrings.stake_countdown_hours_1s
+  )
+  const minuteText = formatCountdownUnit(
+    minutes,
+    lstrings.stake_countdown_minute_1s,
+    lstrings.stake_countdown_minutes_1s
+  )
+
+  // Show the two largest units, dropping the second one when it is zero
+  const units =
+    days > 0
+      ? [dayText, hourText]
+      : hours > 0
+      ? [hourText, minuteText]
+      : [minuteText]
+  const [first, second] = units.filter((unit): unit is string => unit != null)
+
+  if (first == null) return lstrings.stake_countdown_less_than_minute
+  if (second == null)
+    return sprintf(lstrings.stake_countdown_remaining_1s, first)
+  return sprintf(lstrings.stake_countdown_remaining_2s, first, second)
+}
+
+/**
  * Returns the icon uris of stake and reward assets.
  */
 export const getPolicyIconUris = (
   currencyConfigs: EdgeAccount['currencyConfig'],
   stakePolicy: StakePolicy
 ): { stakeAssetUris: string[]; rewardAssetUris: string[] } => {
-  const assetInfosToEdgeTokens = (assetInfos: StakeAssetInfo[]) => {
+  const assetInfosToEdgeTokens = (
+    assetInfos: StakeAssetInfo[]
+  ): EdgeAsset[] => {
     const edgeAssets: EdgeAsset[] = []
 
     for (const stakeAsset of assetInfos) {
@@ -165,7 +221,7 @@ export const getPluginFromPolicyId = (
   return stakePlugins.find(plugin =>
     plugin
       .getPolicies(filter)
-      .find(policy => policy.stakePolicyId === stakePolicyId)
+      .some(policy => policy.stakePolicyId === stakePolicyId)
   )
 }
 
@@ -211,7 +267,7 @@ export const getFioStakingBalances = (
 export const enableStakeTokens = async (
   wallet: EdgeCurrencyWallet,
   stakePolicy: StakePolicy
-) => {
+): Promise<void> => {
   const requiredTokenIds: EdgeTokenId[] = []
   for (const stakeAssetInfo of [
     ...stakePolicy.stakeAssets,
@@ -223,7 +279,7 @@ export const enableStakeTokens = async (
   await enableTokens(requiredTokenIds, wallet)
 }
 
-export const getBestApy = (stakePolicies: StakePolicy[]) => {
+export const getBestApy = (stakePolicies: StakePolicy[]): number => {
   return stakePolicies.reduce((prev, curr) => Math.max(prev, curr.apy ?? 0), 0)
 }
 
@@ -272,13 +328,13 @@ export const getPoliciesFromPlugins = (
       })
       .filter(
         stakePolicy =>
-          (!stakePolicy.deprecated &&
+          (stakePolicy.deprecated !== true &&
             stakePolicy.stakeAssets.some(
               asset =>
                 asset.pluginId === wallet.currencyInfo.pluginId &&
                 asset.tokenId === tokenId
             )) ||
-          (stakePolicy.deprecated &&
+          (stakePolicy.deprecated === true &&
             stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
               allocation =>
                 allocation.pluginId === wallet.currencyInfo.pluginId &&
@@ -288,3 +344,17 @@ export const getPoliciesFromPlugins = (
       )
   )
 }
+
+const MS_PER_MINUTE = 60 * 1000
+const MINUTES_PER_DAY = 24 * 60
+
+/**
+ * Formats a count with its singular or plural unit, or returns undefined
+ * for a zero count so the unit can be left out of the countdown.
+ */
+const formatCountdownUnit = (
+  count: number,
+  singular: string,
+  plural: string
+): string | undefined =>
+  count > 0 ? sprintf(count === 1 ? singular : plural, count) : undefined

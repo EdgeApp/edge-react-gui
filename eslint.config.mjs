@@ -392,7 +392,6 @@ export default [
 
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
-      'src/components/tiles/CryptoFiatAmountTile.tsx',
 
       'src/components/tiles/ErrorTile.tsx',
       'src/components/tiles/FiatAmountTile.tsx',
@@ -496,7 +495,6 @@ export default [
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
       'src/util/show-confetti.ts',
-      'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
       'src/util/utils.ts',
