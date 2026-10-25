@@ -18,6 +18,7 @@ import {
   showError,
   showToast
 } from '../components/services/AirshipInstance'
+import { RecoveryDetailsText } from '../components/text/RecoveryDetailsText'
 import { Alert } from '../components/themed/Alert'
 import { Paragraph } from '../components/themed/EdgeText'
 import { deleteLoanAccount } from '../controllers/loan-manager/redux/actions'
@@ -295,9 +296,10 @@ export function walletListMenuAction(
         const passwordValid =
           (await dispatch(
             validatePassword({
-              title: lstrings.fragment_wallets_get_seed_title,
-              submitLabel: lstrings.fragment_wallets_get_seed_wallet,
-              warningMessage: lstrings.fragment_wallets_get_seed_warning_message
+              title: lstrings.fragment_wallets_view_recovery_details,
+              submitLabel: lstrings.fragment_wallets_reveal_recovery_details,
+              warningMessage:
+                lstrings.fragment_wallets_recovery_details_warning_message
             })
           )) != null
 
@@ -310,17 +312,19 @@ export function walletListMenuAction(
           )
           const privateKey = await account.getDisplayPrivateKey(wallet.id)
 
-          const buttonPressed = await Airship.show<'copy' | 'ok' | undefined>(
+          const buttonPressed = await Airship.show<'copy' | undefined>(
             bridge => (
               <ButtonsModal
-                title={lstrings.fragment_wallets_get_seed_wallet}
+                title={lstrings.fragment_wallets_recovery_details_title}
                 bridge={bridge}
-                message={privateKey}
                 buttons={{
-                  ok: { label: lstrings.string_ok_cap },
-                  copy: { label: lstrings.fragment_wallets_copy_seed }
+                  copy: {
+                    label: lstrings.fragment_wallets_copy_recovery_details
+                  }
                 }}
-              />
+              >
+                <RecoveryDetailsText text={privateKey} />
+              </ButtonsModal>
             )
           )
           if (buttonPressed === 'copy') {

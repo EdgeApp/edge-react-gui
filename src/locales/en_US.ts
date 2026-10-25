@@ -298,10 +298,11 @@ const strings = {
     'Are you sure you want to disable token %1$s in your %2$s wallet?',
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
-  fragment_wallets_copy_seed: 'Copy Seed',
+  fragment_wallets_copy_recovery_details: 'Copy',
   fragment_wallets_copied_seed_clears:
     'Copied seed. The clipboard will clear in 1 minute.',
-  fragment_wallets_get_seed_wallet: 'Get Seed',
+  fragment_wallets_view_recovery_details: 'View Recovery Details',
+  fragment_wallets_reveal_recovery_details: 'Reveal',
   fragment_wallets_pause_wallet: 'Pause Wallet',
   fragment_wallets_unpause_wallet: 'Unpause Wallet',
   fragment_wallets_wallet_paused: 'Wallet Paused',
@@ -337,12 +338,12 @@ const strings = {
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile:
     'Are you sure you want to resync \n',
-  fragment_wallets_get_seed_title: 'Reveal Master Private Key',
-  fragment_wallets_get_seed_warning_message:
-    'Sharing your master private key may put you at risk of fraudulent tokens and loss of funds.\n\nDo not share your key with anyone.\n\nBy entering your password, you are confirming that you understand the risks.',
+  fragment_wallets_recovery_details_title: 'Recovery Details',
+  fragment_wallets_recovery_details_warning_message:
+    'Never share your wallet keys or seed phrase.\n\nAnyone with this information can control this wallet and access your funds.',
   fragment_wallets_get_raw_keys_title: 'Reveal Raw Keys',
   fragment_wallets_get_raw_keys_warning_message:
-    'Sharing your raw keys may put you at risk of fraudulent tokens and loss of funds.\n\nDo not share your keys with anyone.\n\nBy entering your password, you are confirming that you understand the risks.',
+    'Never share your raw keys.\n\nAnyone with this information can control this wallet and access your funds.',
   fragmet_wallets_delete_wallet_first_confirm_message_mobile:
     'Are you sure you want to archive ',
   fragmet_wallets_delete_fio_extra_message_mobile:
@@ -883,7 +884,6 @@ const strings = {
   string_got_it: 'Got it!',
   exchange_rates_loading: 'Exchange Rates Loading...',
   exchange_rate_loading_singular: 'Exchange Rate Loading...',
-  string_master_private_key: 'Master Private Key',
   string_add_edit_tokens: 'Add / Edit Tokens',
   string_get_raw_keys: 'Get Raw Keys',
   string_raw_keys: 'Raw Keys',

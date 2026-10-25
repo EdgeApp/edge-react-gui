@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`RecoveryDetailsText should bold the labels of a labelled seed and key 1`] = `
+<Text
+  adjustsFontSizeToFit={false}
+  allowFontScaling={false}
+  numberOfLines={0}
+  style={
+    [
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Quicksand-Regular",
+        "fontSize": 22,
+        "includeFontPadding": false,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      false,
+      null,
+    ]
+  }
+>
+  <Text
+    allowFontScaling={false}
+    style={
+      [
+        {
+          "fontFamily": "Quicksand-Bold",
+        },
+        null,
+      ]
+    }
+  >
+    Seed Phrase:
+  </Text>
+  
+
+  laugh smart size
+  
+
+  
+
+  <Text
+    allowFontScaling={false}
+    style={
+      [
+        {
+          "fontFamily": "Quicksand-Bold",
+        },
+        null,
+      ]
+    }
+  >
+    Private Key:
+  </Text>
+  
+
+  a9f2ca700c6e
+</Text>
+`;
+
+exports[`RecoveryDetailsText should render an unlabelled key as plain text 1`] = `
+<Text
+  adjustsFontSizeToFit={false}
+  allowFontScaling={false}
+  numberOfLines={0}
+  style={
+    [
+      {
+        "color": "#FFFFFF",
+        "fontFamily": "Quicksand-Regular",
+        "fontSize": 22,
+        "includeFontPadding": false,
+      },
+      {
+        "marginBottom": 11,
+        "marginLeft": 11,
+        "marginRight": 11,
+        "marginTop": 11,
+      },
+      false,
+      null,
+    ]
+  }
+>
+  gym small island finger talent appear
+</Text>
+`;
