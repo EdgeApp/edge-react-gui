@@ -392,7 +392,6 @@ export default [
 
       'src/components/tiles/AprCard.tsx',
       'src/components/tiles/CountdownTile.tsx',
-      'src/components/tiles/CryptoFiatAmountTile.tsx',
 
       'src/components/tiles/ErrorTile.tsx',
       'src/components/tiles/FiatAmountTile.tsx',

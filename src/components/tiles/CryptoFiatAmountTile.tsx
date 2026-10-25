@@ -13,12 +13,15 @@ import { formatNumber, trimEnd } from '../../locales/intl'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow, type RowActionIcon } from '../rows/EdgeRow'
+import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 // TODO: Check contentPadding
 
 interface Props {
   denomination: EdgeDenomination
+  /** Optional secondary line shown below the amount */
+  details?: string
   maxCryptoChars?: number
   nativeCryptoAmount: string
   title: string
@@ -31,6 +34,7 @@ interface Props {
 export const CryptoFiatAmountTile: React.FC<Props> = (props: Props) => {
   const {
     denomination,
+    details,
     maxCryptoChars = MAX_CRYPTO_AMOUNT_CHARACTERS,
     nativeCryptoAmount,
     title,
@@ -39,6 +43,8 @@ export const CryptoFiatAmountTile: React.FC<Props> = (props: Props) => {
     type = 'none',
     onPress
   } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   const { name: cryptoName, multiplier: cryptoDenomMult } = denomination
 
@@ -84,7 +90,17 @@ export const CryptoFiatAmountTile: React.FC<Props> = (props: Props) => {
           {cryptoAmountText}
           {`(${fiatText})`}
         </EdgeText>
+        {details == null ? null : (
+          <EdgeText style={styles.details}>{details}</EdgeText>
+        )}
       </EdgeRow>
     </EdgeCard>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  details: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.75)
+  }
+}))
