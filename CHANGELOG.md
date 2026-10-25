@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- changed: Ask for contacts access only inside the transaction payee modal, not on receiving a transaction
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails

@@ -958,7 +958,7 @@ const strings = {
   transaction_details_recipient: 'Recipient',
   transaction_details_sender: 'Sender',
   transaction_details_person_name: '%s Name',
-  transaction_details_person_input: 'Choose a %s',
+  transaction_details_person_input_title_1s: 'Enter a %1$s',
   transaction_details_crypto_amount: '%s Amount',
   transaction_details_amount_in_fiat: 'Amount in %s',
   transaction_details_amount_current_price: 'Amount at Current Price',
@@ -1566,6 +1566,7 @@ const strings = {
   delete_account_feedback: 'Account %s deleted',
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
+  contacts_permission_grant_access: 'Grant Contacts Access',
   contacts_permission_modal_body_1:
     '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
   contacts_permission_modal_body_2:
