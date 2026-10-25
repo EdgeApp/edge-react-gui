@@ -81,7 +81,7 @@ export class SwapSettings extends React.Component<Props, State> {
       this.state.enabled[pluginId] = exchange.enabled
     }
 
-    const exchangeIds = Object.keys(swapConfigs).filter(id => id !== 'transfer')
+    const exchangeIds = Object.keys(swapConfigs)
     const cexIds = exchangeIds.filter(
       id => swapConfigs[id].swapInfo.isDex !== true
     )
@@ -100,7 +100,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.swapConfigUnsubscribeFns.forEach(unsubscribe => {
       unsubscribe()
     })
@@ -123,7 +123,7 @@ export class SwapSettings extends React.Component<Props, State> {
     }
   }
 
-  handlePreferredModal = async () => {
+  handlePreferredModal = async (): Promise<void> => {
     const {
       accountPlugins,
       changePreferredSwapPlugin,
@@ -177,9 +177,7 @@ export class SwapSettings extends React.Component<Props, State> {
 
     const exchangeItems = [...dexItems, ...cexItems]
       // const exchangeItems = [...cexItems, ...dexItems]
-      .filter(
-        pluginId => swapConfigs[pluginId].enabled && pluginId !== 'transfer'
-      )
+      .filter(pluginId => swapConfigs[pluginId].enabled)
       .map(pluginId => ({
         name: swapConfigs[pluginId].swapInfo.displayName,
         icon: getSwapPluginIconUri(pluginId, theme)
@@ -250,7 +248,7 @@ export class SwapSettings extends React.Component<Props, State> {
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     return (
       <SceneWrapper>
         <ScrollView
@@ -271,7 +269,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  renderPlugin(pluginId: string) {
+  renderPlugin(pluginId: string): React.ReactElement {
     const { swapConfigs } = this.props
     const { displayName } = swapConfigs[pluginId].swapInfo
     const pluginEnabled = this.state.enabled[pluginId]
@@ -293,7 +291,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  renderPluginIcon(pluginId: string) {
+  renderPluginIcon(pluginId: string): React.ReactElement {
     const { theme } = this.props
     const logoSource = getSwapPluginIconUri(pluginId, theme)
     const styles = getStyles(theme)
@@ -306,7 +304,7 @@ export class SwapSettings extends React.Component<Props, State> {
     )
   }
 
-  renderPreferredArea() {
+  renderPreferredArea(): React.ReactElement {
     const {
       accountPlugins,
       swapConfigs,

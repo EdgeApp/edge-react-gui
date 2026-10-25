@@ -50,7 +50,6 @@ export function checkEnabledExchanges(): ThunkAction<void> {
     const exchanges = account.swapConfig
     if (exchanges == null) return
     for (const exchange of Object.keys(exchanges)) {
-      if (exchange === 'transfer') continue
       if (exchanges[exchange].enabled) {
         isAnyExchangeEnabled = true
       }

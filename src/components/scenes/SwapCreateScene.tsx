@@ -31,6 +31,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import type { EdgeAsset } from '../../types/types'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -404,6 +405,18 @@ export const SwapCreateScene: React.FC<Props> = props => {
           houdiniChains
         })
       : undefined
+    // Moving an asset to another wallet of the same asset is a send, not a
+    // swap, so each picker leaves out the asset the other side holds:
+    const otherWallet = whichWallet === 'to' ? fromWallet : toWallet
+    const excludeAssets: EdgeAsset[] | undefined =
+      otherWallet == null
+        ? undefined
+        : [
+            {
+              pluginId: otherWallet.currencyInfo.pluginId,
+              tokenId: whichWallet === 'to' ? fromTokenId : toTokenId
+            }
+          ]
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -416,6 +429,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
         showCreateWallet={whichWallet === 'to'}
         allowKeysOnlyMode={whichWallet === 'from'}
         allowedAssets={allowedAssets}
+        excludeAssets={excludeAssets}
         filterActivation
       />
     ))

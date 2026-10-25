@@ -15,6 +15,7 @@ import {
   type EdgeAccount,
   type EdgeContext,
   type EdgeCurrencyWallet,
+  type EdgeTokenId,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld
 } from 'edge-core-js'
@@ -387,8 +388,16 @@ describe('SwapCreateScene', () => {
 })
 
 describe('SwapCreateScene Stealth Swap bans', () => {
+  const usdcTokenId = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
   const btcConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
-  const ethConfig = makeFakeCurrencyConfig(ethCurrencyInfo)
+  const ethConfig = makeFakeCurrencyConfig(ethCurrencyInfo, {
+    [usdcTokenId]: {
+      currencyCode: 'USDC',
+      denominations: [{ multiplier: '1000000', name: 'USDC' }],
+      displayName: 'USD Coin',
+      networkLocation: { contractAddress: `0x${usdcTokenId}` }
+    }
+  })
   // A chain Houdini's served list leaves out:
   const ltcConfig = makeFakeCurrencyConfig({
     ...btcCurrencyInfo,
@@ -414,11 +423,20 @@ describe('SwapCreateScene Stealth Swap bans', () => {
       watch: () => () => {}
     } as unknown as EdgeCurrencyWallet)
 
+  interface PickerProps {
+    allowedAssets?: EdgeAsset[]
+    excludeAssets?: EdgeAsset[]
+  }
+
   interface RenderedSwap {
     navigate: ReturnType<typeof jest.spyOn>
     pickPair: (fromWalletId: string, toWalletId: string) => void
     /** The assets a wallet picker offers, or `undefined` for every asset. */
     pickerAssets: (side: 'from' | 'to') => Promise<EdgeAsset[] | undefined>
+    /** The assets a wallet picker leaves out, or `undefined` for none. */
+    pickerExcludedAssets: (
+      side: 'from' | 'to'
+    ) => Promise<EdgeAsset[] | undefined>
     pressMax: () => void
     reasonShown: (currencyCode: string) => boolean
     stealthArmed: () => boolean
@@ -432,12 +450,18 @@ describe('SwapCreateScene Stealth Swap bans', () => {
       source: Array<{ pluginId: string }>
       destination: Array<{ pluginId: string }>
     }
+    fromTokenId?: EdgeTokenId
+    fromWalletId?: string
     stealthSwapEnabled?: boolean
+    toTokenId?: EdgeTokenId
     toWalletId?: string
   }): RenderedSwap => {
     const {
+      fromTokenId,
+      fromWalletId = 'btc',
       houdiniBans = { source: [], destination: [] },
       stealthSwapEnabled = false,
+      toTokenId,
       toWalletId = 'eth'
     } = opts
     const rootState: FakeState = {
@@ -477,46 +501,54 @@ describe('SwapCreateScene Stealth Swap bans', () => {
     ): React.JSX.Element => (
       <FakeProviders initialState={rootState}>
         <SwapCreateScene
-          {...fakeSwapTabSceneProps('swapCreate', { fromWalletId, toWalletId })}
+          {...fakeSwapTabSceneProps('swapCreate', {
+            fromTokenId,
+            fromWalletId,
+            toTokenId,
+            toWalletId
+          })}
         />
       </FakeProviders>
     )
     const navigate = jest.spyOn(fakeNavigation, 'navigate')
-    const rendered = render(sceneElement('btc', toWalletId))
+    const rendered = render(sceneElement(fromWalletId, toWalletId))
     const toggleProps = (): { disabled?: boolean } =>
       rendered.UNSAFE_getByProps({ label: lstrings.stealth_swap_toggle }).props
+    const pickerProps = async (side: 'from' | 'to'): Promise<PickerProps> => {
+      let props: PickerProps = {}
+      const show = jest
+        .spyOn(Airship, 'show')
+        .mockImplementationOnce(
+          async (renderModal: (bridge: never) => React.ReactNode) => {
+            const modal = renderModal(
+              undefined as never
+            ) as React.ReactElement<PickerProps>
+            props = modal.props
+            return undefined
+          }
+        )
+      const input = rendered
+        .UNSAFE_getAllByType(SwapInput)
+        .find(
+          node =>
+            node.props.walletPillTestID ===
+            (side === 'from' ? 'swapFromWalletPill' : 'swapToWalletPill')
+        )
+      if (input == null) throw new Error(`No ${side} input`)
+      await act(async () => {
+        await input.props.onSelectWallet()
+      })
+      show.mockRestore()
+      return props
+    }
     return {
       navigate,
       pickPair: (fromWalletId, toWalletId) => {
         rendered.rerender(sceneElement(fromWalletId, toWalletId))
       },
-      pickerAssets: async side => {
-        let allowedAssets: EdgeAsset[] | undefined
-        const show = jest
-          .spyOn(Airship, 'show')
-          .mockImplementationOnce(
-            async (renderModal: (bridge: never) => React.ReactNode) => {
-              const modal = renderModal(
-                undefined as never
-              ) as React.ReactElement<{ allowedAssets?: EdgeAsset[] }>
-              allowedAssets = modal.props.allowedAssets
-              return undefined
-            }
-          )
-        const input = rendered
-          .UNSAFE_getAllByType(SwapInput)
-          .find(
-            node =>
-              node.props.walletPillTestID ===
-              (side === 'from' ? 'swapFromWalletPill' : 'swapToWalletPill')
-          )
-        if (input == null) throw new Error(`No ${side} input`)
-        await act(async () => {
-          await input.props.onSelectWallet()
-        })
-        show.mockRestore()
-        return allowedAssets
-      },
+      pickerAssets: async side => (await pickerProps(side)).allowedAssets,
+      pickerExcludedAssets: async side =>
+        (await pickerProps(side)).excludeAssets,
       pressMax: () => {
         fireEvent.press(rendered.getByText(lstrings.string_max_cap))
       },
@@ -642,6 +674,33 @@ describe('SwapCreateScene Stealth Swap bans', () => {
       tokenId: null
     })
     expect(toAssets).toContainEqual({ pluginId: 'ethereum', tokenId: null })
+    scene.unmount()
+  })
+
+  it('leaves out of each picker the asset the other side holds', async () => {
+    const scene = renderScene({})
+
+    // Sending BTC to another BTC wallet would be a send, not a swap:
+    expect(await scene.pickerExcludedAssets('to')).toEqual([
+      { pluginId: 'bitcoin', tokenId: null }
+    ])
+    expect(await scene.pickerExcludedAssets('from')).toEqual([
+      { pluginId: 'ethereum', tokenId: null }
+    ])
+    scene.unmount()
+  })
+
+  it('leaves out only the token, not its chain, for a token pair', async () => {
+    const scene = renderScene({
+      fromTokenId: usdcTokenId,
+      fromWalletId: 'eth',
+      toWalletId: 'btc'
+    })
+
+    // USDC on Ethereum is excluded, while ETH stays pickable:
+    expect(await scene.pickerExcludedAssets('to')).toEqual([
+      { pluginId: 'ethereum', tokenId: usdcTokenId }
+    ])
     scene.unmount()
   })
 })
