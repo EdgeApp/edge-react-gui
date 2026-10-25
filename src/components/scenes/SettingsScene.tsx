@@ -58,11 +58,17 @@ import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
 import { requestContactsPermission } from '../services/PermissionsManager'
-import { changeTheme, useTheme } from '../services/ThemeContext'
+import {
+  cacheStyles,
+  changeTheme,
+  type Theme,
+  useTheme
+} from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
@@ -77,6 +83,7 @@ const biometricStateQueryKey = (accountId: string): [string, string] => [
 export const SettingsScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
   const dispatch = useDispatch()
 
   const autoLogoutTimeInSeconds = useSelector(
@@ -385,11 +392,21 @@ export const SettingsScene: React.FC<Props> = props => {
     if (!approveDelete) return
 
     const { username, rootLoginId } = account
+    // Split the localized message around the username so it can be bold:
+    const [beforeUsername, afterUsername = ''] =
+      lstrings.delete_account_verification_body.split('%1$s')
+    const verificationMessage = (
+      <Paragraph>
+        {beforeUsername}
+        <EdgeText style={styles.boldText}>{username}</EdgeText>
+        {afterUsername}
+      </Paragraph>
+    )
     await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         submitLabel={lstrings.string_delete}
-        message={sprintf(lstrings.delete_account_verification_body, username)}
+        message={verificationMessage}
         title={lstrings.delete_account_title}
         warning
         autoCorrect={false}
@@ -784,3 +801,9 @@ export const SettingsScene: React.FC<Props> = props => {
     </SceneWrapper>
   )
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  boldText: {
+    fontFamily: theme.fontFaceBold
+  }
+}))
