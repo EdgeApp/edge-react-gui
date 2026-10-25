@@ -862,6 +862,7 @@ const strings = {
   string_exit: 'Exit',
   string_next: 'NEXT',
   string_next_capitalized: 'Next',
+  string_continue: 'Continue',
   string_no_name: 'No name',
   string_ok: 'OK',
   string_paste: 'Paste',
@@ -1558,8 +1559,15 @@ const strings = {
 
   // Account deletion:
   delete_account_title: 'Delete Account',
-  delete_account_body:
-    'Deleting your %1$s account will make any funds in your wallets inaccessible. Any future funds that these wallets may receive will also be inaccessible.\n\nAccounts created with %1$s buy / sell partners will remain active. You will need to request deletion for any such accounts directly with the appropriate partners.\n\nIf this account has logged into any other devices, the private keys and information on those devices will remain accessible until the application has been deleted from those devices.\n\nDeletion of this account will make the username available to new accounts.\n\nIf you have any questions or concerns, please contact us at %2$s prior to deleting your account.',
+  delete_account_move_funds_warning:
+    'Move all funds out of every wallet first!',
+  delete_account_funds_inaccessible:
+    'Funds left behind or sent to these wallets later will be permanently inaccessible.',
+  delete_account_partner_profiles_1s:
+    'Profiles created with buy/sell or other third-party partners are not deleted and are not linked to this %1$s account. Contact them directly if you wish to manage your data on their platform.',
+  delete_account_contact_support_2s:
+    'If you have any questions, please contact %1$s support prior to deleting your account: {{link}}%2$s{{/link}}',
+  delete_account_understand_impact: 'I understand the impact',
   delete_account_verification_body:
     'To delete your account, please enter your username %1$s',
   delete_account_verification_error: 'Username does not match',

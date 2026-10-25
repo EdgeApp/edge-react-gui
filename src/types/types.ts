@@ -427,6 +427,11 @@ export interface AppConfig {
   disableSwaps?: boolean
   disableSurveyModal?: boolean
   /**
+   * Support article linked from the Delete Account warning modal. Falls back
+   * to `supportSite` when unset.
+   */
+  deleteAccountSupportUrl?: string
+  /**
    * Support article for pending transactions "Learn more" link.
    */
   pendingTxLearnMoreUrl?: string
