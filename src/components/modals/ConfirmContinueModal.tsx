@@ -1,15 +1,17 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
+import { ScrollView } from 'react-native-gesture-handler'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeAnim, fadeIn, fadeOut } from '../common/EdgeAnim'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { MainButton } from '../themed/MainButton'
 import { ModalTitle } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -55,9 +57,15 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const scrollRef = React.useRef<ScrollView>(null)
   const [isAgreed, setAgreed] = React.useState(false)
   const handleTogggle = (): void => {
     setAgreed(!isAgreed)
+  }
+
+  // On short screens, the revealed button can land below the fold:
+  const handleContentSizeChange = (): void => {
+    if (isAgreed) scrollRef.current?.scrollToEnd({ animated: true })
   }
 
   const handleClose = (): void => {
@@ -95,47 +103,62 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
           </ModalTitle>
         )
       }
-      scroll
       onCancel={isSkippable ? handleClose : undefined}
     >
-      {children}
-      {body != null ? <Paragraph>{body}</Paragraph> : null}
-      {hideConfirmPrompt ? null : (
-        <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
-      )}
-      <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
-        <View style={styles.checkBoxContainer}>
-          <EdgeText style={styles.checkboxText}>{agreeLabel}</EdgeText>
-          <View
-            style={[
-              styles.checkCircleContainer,
-              isAgreed ? styles.checkCircleContainerAgreed : undefined
-            ]}
-          >
-            {isAgreed && (
-              <Feather
-                name="check"
-                color={theme.iconTappable}
-                size={theme.rem(0.75)}
-                accessibilityHint={lstrings.check_icon_hint}
-              />
-            )}
+      <ScrollView
+        ref={scrollRef}
+        style={styles.scroll}
+        scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
+        onContentSizeChange={handleContentSizeChange}
+      >
+        {children}
+        {body != null ? <Paragraph>{body}</Paragraph> : null}
+        {hideConfirmPrompt ? null : (
+          <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
+        )}
+        <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
+          <View style={styles.checkBoxContainer}>
+            <EdgeText style={styles.checkboxText}>{agreeLabel}</EdgeText>
+            <View
+              style={[
+                styles.checkCircleContainer,
+                isAgreed ? styles.checkCircleContainerAgreed : undefined
+              ]}
+            >
+              {isAgreed && (
+                <Feather
+                  name="check"
+                  color={theme.iconTappable}
+                  size={theme.rem(0.75)}
+                  accessibilityHint={lstrings.check_icon_hint}
+                />
+              )}
+            </View>
           </View>
-        </View>
-      </EdgeTouchableWithoutFeedback>
-      <EdgeAnim enter={fadeIn} visible={isAgreed} exit={fadeOut}>
-        <MainButton
-          label={continueLabel}
-          marginRem={1}
-          type="primary"
-          onPress={handleAgreed}
-        />
-      </EdgeAnim>
+        </EdgeTouchableWithoutFeedback>
+        <EdgeAnim
+          style={styles.continueButton}
+          enter={fadeIn}
+          visible={isAgreed}
+          exit={fadeOut}
+        >
+          <EdgeButton
+            label={continueLabel}
+            type="primary"
+            onPress={handleAgreed}
+          />
+        </EdgeAnim>
+      </ScrollView>
     </EdgeModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  scroll: {
+    // Only take up as much space as needed to display the contents
+    flexGrow: 0,
+    flexShrink: 1
+  },
   checkBoxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -157,6 +180,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   checkCircleContainerAgreed: {
     borderColor: theme.iconTappable
+  },
+  continueButton: {
+    margin: theme.rem(1)
   },
   checkboxText: {
     flex: 1,
