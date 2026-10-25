@@ -21,6 +21,13 @@ interface Props {
   isSkippable?: boolean
   title?: string
 
+  // Override the default control labels:
+  agreeLabel?: string
+  continueLabel?: string
+
+  // Leave out the "Please confirm your understanding" line:
+  hideConfirmPrompt?: boolean
+
   // Add a border:
   warning?: boolean
 
@@ -38,6 +45,9 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
     children,
     isSkippable = false,
     title,
+    agreeLabel = lstrings.confirm_continue_modal_button_text,
+    continueLabel = lstrings.confirm_finish,
+    hideConfirmPrompt = false,
     warning,
     onPress
   } = props
@@ -90,12 +100,12 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
     >
       {children}
       {body != null ? <Paragraph>{body}</Paragraph> : null}
-      <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
+      {hideConfirmPrompt ? null : (
+        <Paragraph>{lstrings.confirm_continue_modal_body}</Paragraph>
+      )}
       <EdgeTouchableWithoutFeedback onPress={handleTogggle}>
         <View style={styles.checkBoxContainer}>
-          <EdgeText style={styles.checkboxText}>
-            {lstrings.confirm_continue_modal_button_text}
-          </EdgeText>
+          <EdgeText style={styles.checkboxText}>{agreeLabel}</EdgeText>
           <View
             style={[
               styles.checkCircleContainer,
@@ -115,7 +125,7 @@ export const ConfirmContinueModal: React.FC<Props> = props => {
       </EdgeTouchableWithoutFeedback>
       <EdgeAnim enter={fadeIn} visible={isAgreed} exit={fadeOut}>
         <MainButton
-          label={lstrings.confirm_finish}
+          label={continueLabel}
           marginRem={1}
           type="primary"
           onPress={handleAgreed}
