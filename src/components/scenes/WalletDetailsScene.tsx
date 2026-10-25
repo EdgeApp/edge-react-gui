@@ -60,7 +60,7 @@ import { HeaderTitle } from '../navigation/HeaderTitle'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { BuyCrypto } from '../themed/BuyCrypto'
 import { EdgeText, Paragraph } from '../themed/EdgeText'
-import { ExplorerCard } from '../themed/ExplorerCard'
+import { ExplorerCard, ExplorerLink } from '../themed/ExplorerCard'
 import { SearchFooter } from '../themed/SearchFooter'
 import { EmptyLoader } from '../themed/TransactionListComponents'
 import { TransactionView } from '../themed/TransactionListRow'
@@ -451,6 +451,9 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
                 wallet={wallet}
                 tokenId={tokenId}
               />
+            )}
+            {isTransactionListUnsupported ? null : (
+              <ExplorerLink wallet={wallet} />
             )}
           </View>
           {hideEducationSection ? null : (

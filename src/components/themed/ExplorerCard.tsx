@@ -3,9 +3,13 @@ import * as React from 'react'
 import { Linking, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  isUtxoPluginId,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
@@ -24,6 +28,10 @@ interface OwnProps {
 }
 
 type Props = OwnProps
+
+interface ExplorerLinkProps {
+  wallet: EdgeCurrencyWallet
+}
 
 export const ExplorerCard: React.FC<Props> = (props: Props) => {
   const { wallet, tokenId } = props
@@ -72,6 +80,36 @@ export const ExplorerCard: React.FC<Props> = (props: Props) => {
   )
 }
 
+/**
+ * A "Show in Explorer" button for wallets whose transaction list may still be
+ * loading or may never finish syncing. Renders nothing if the chain has no
+ * address explorer, or on UTXO chains, where the receive address is a fresh
+ * one that holds none of the wallet's history.
+ */
+export const ExplorerLink: React.FC<ExplorerLinkProps> = props => {
+  const { wallet } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  const handlePress = useHandler(async () => {
+    await showAddressInExplorer(wallet)
+  })
+
+  const { addressExplorer, pluginId } = wallet.currencyInfo
+  if (addressExplorer === '' || isUtxoPluginId(pluginId)) return null
+
+  return (
+    <View style={styles.explorerLinkContainer}>
+      <EdgeButton
+        label={lstrings.transaction_details_advance_details_show_explorer}
+        mini
+        type="secondary"
+        onPress={handlePress}
+      />
+    </View>
+  )
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
@@ -95,6 +133,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     color: theme.primaryText,
     textAlign: 'center'
+  },
+  explorerLinkContainer: {
+    marginVertical: theme.rem(1)
   }
 }))
 
