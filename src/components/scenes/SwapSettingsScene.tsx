@@ -81,7 +81,7 @@ export class SwapSettings extends React.Component<Props, State> {
       this.state.enabled[pluginId] = exchange.enabled
     }
 
-    const exchangeIds = Object.keys(swapConfigs).filter(id => id !== 'transfer')
+    const exchangeIds = Object.keys(swapConfigs)
     const cexIds = exchangeIds.filter(
       id => swapConfigs[id].swapInfo.isDex !== true
     )
@@ -177,9 +177,7 @@ export class SwapSettings extends React.Component<Props, State> {
 
     const exchangeItems = [...dexItems, ...cexItems]
       // const exchangeItems = [...cexItems, ...dexItems]
-      .filter(
-        pluginId => swapConfigs[pluginId].enabled && pluginId !== 'transfer'
-      )
+      .filter(pluginId => swapConfigs[pluginId].enabled)
       .map(pluginId => ({
         name: swapConfigs[pluginId].swapInfo.displayName,
         icon: getSwapPluginIconUri(pluginId, theme)

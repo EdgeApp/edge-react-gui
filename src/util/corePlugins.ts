@@ -158,8 +158,7 @@ function buildSwapPlugins(): EdgeCorePluginsInit {
     '0xgasless': swapInit('0xgasless'),
 
     cosmosibc: true,
-    fantomsonicupgrade: true,
-    transfer: true
+    fantomsonicupgrade: true
   }
 }
 
