@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Image } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getMerchantThumbnail } from '../../hooks/redux/useContactThumbnail'
@@ -10,6 +9,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { PersonIcon } from '../icons/ThemedIcons'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { SelectableRow } from '../themed/SelectableRow'
 import { promptForContactsPermission } from './ContactsPermissionModal'
@@ -69,10 +69,10 @@ export const ContactListModal: React.FC<Props> = ({
               resizeMode={thumbnail.fit ? 'contain' : 'cover'}
             />
           ) : (
-            <IonIcon
-              style={styles.tileAvatarIcon}
-              name="person"
+            <PersonIcon
+              color={theme.primaryText}
               size={theme.rem(1.5)}
+              style={styles.tileAvatarIcon}
             />
           )
         }
@@ -135,7 +135,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2)
   },
   tileAvatarIcon: {
-    color: theme.primaryText,
     marginRight: theme.rem(0.5)
   }
 }))
