@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.mm b/node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.mm
+index 3df413e..26fb3d5 100644
+--- a/node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.mm
++++ b/node_modules/react-native-permissions/ios/Contacts/RNPermissionHandlerContacts.mm
+@@ -21,6 +21,8 @@ - (void)checkWithResolver:(void (^ _Nonnull)(RNPermissionStatus))resolve
+       return resolve(RNPermissionStatusRestricted);
+     case CNAuthorizationStatusDenied:
+       return resolve(RNPermissionStatusDenied);
++    case CNAuthorizationStatusLimited:
++      return resolve(RNPermissionStatusLimited);
+     case CNAuthorizationStatusAuthorized:
+       return resolve(RNPermissionStatusAuthorized);
+   }
