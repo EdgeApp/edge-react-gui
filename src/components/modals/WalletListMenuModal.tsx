@@ -81,7 +81,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'exportWalletTransactions'
   },
   {
-    label: lstrings.string_master_private_key,
+    label: lstrings.fragment_wallets_view_recovery_details,
     value: 'getSeed'
   },
   {
