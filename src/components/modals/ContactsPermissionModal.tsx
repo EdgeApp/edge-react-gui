@@ -11,7 +11,6 @@ import { permissionNames } from '../../reducers/PermissionsReducer'
 import { config } from '../../theme/appConfig'
 import type { ThunkAction } from '../../types/reduxTypes'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { Airship } from '../services/AirshipInstance'
 import { requestContactsPermission } from '../services/PermissionsManager'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
@@ -22,53 +21,32 @@ interface Props {
   bridge: AirshipBridge<ContactsPermissionResult | undefined>
 }
 
-let isModalShowing = false
-
 /**
- * Shows one instance of this modal asking if the user wants to grant contacts
- * permissions, if the system contacts permission isn't granted.
- *
- * @returns Result of Contacts Access modal or undefined if no modal shown or
- * the modal was dismissed somehow.
+ * Records that the user has answered the contacts permission request,
+ * so the payee modal shows the compact access row from then on.
  */
-export function maybeShowContactsPermissionModal(): ThunkAction<
-  Promise<ContactsPermissionResult | undefined>
-> {
+export function markContactsPermissionShown(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    // Bail if we are currently showing the modal:
-    if (isModalShowing) return
-    isModalShowing = true
-
-    // Bail if we have ever show the modal:
-    const { contactsPermissionShown } = state.ui.settings
-    if (contactsPermissionShown) return
-
-    // Bail if we already have permission:
-    const contactsPermissionOn =
-      (await check(permissionNames.contacts).catch(
-        (_error: unknown) => 'denied'
-      )) === 'granted'
-    if (contactsPermissionOn) return
-
-    // Show the modal:
-    const result = await Airship.show<ContactsPermissionResult | undefined>(
-      bridge => <ContactsPermissionModal bridge={bridge} />
-    )
+    const { account } = getState().core
     await writeContactsPermissionShown(account, true)
-
-    return result
+    dispatch({
+      type: 'UI/SETTINGS/SET_CONTACTS_PERMISSION_SHOWN',
+      data: { contactsPermissionShown: true }
+    })
   }
 }
 
-export function promptForContactsPermission(): ThunkAction<Promise<void>> {
+/**
+ * Asks the OS for contacts access (opening system settings if the
+ * permission is blocked), then syncs the result into redux so the
+ * contacts loader picks it up.
+ */
+export function requestContactsAccess(): ThunkAction<Promise<void>> {
   return async dispatch => {
-    const result = await dispatch(maybeShowContactsPermissionModal())
-    if (result === 'allow') {
-      await requestContactsPermission(true)
-    }
+    await dispatch(markContactsPermissionShown())
+    await requestContactsPermission(true)
+    const contacts = await check(permissionNames.contacts)
+    dispatch({ type: 'PERMISSIONS/UPDATE', data: { contacts } })
   }
 }
 
@@ -76,7 +54,7 @@ export function promptForContactsPermission(): ThunkAction<Promise<void>> {
  * Full-screen explanation of why the app wants contacts access,
  * with Allow and Deny buttons.
  */
-const ContactsPermissionModal: React.FC<Props> = props => {
+export const ContactsPermissionModal: React.FC<Props> = props => {
   const { bridge } = props
 
   return (

@@ -36,7 +36,6 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { calculateSpamThreshold, unixToLocaleDateTime } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
-import { promptForContactsPermission } from '../modals/ContactsPermissionModal'
 import { HeaderTitle } from '../navigation/HeaderTitle'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { ExplorerCard } from '../themed/ExplorerCard'
@@ -132,13 +131,6 @@ const TransactionListComponent: React.FC<Props> = props => {
     return out
   }, [atEnd, isTransactionListUnsupported, transactions])
 
-  const hasNamedTransactions = React.useMemo(() => {
-    return transactions.some(transaction => {
-      const metadataName = transaction.metadata?.name
-      return metadataName != null && metadataName.trim() !== ''
-    })
-  }, [transactions])
-
   // ---------------------------------------------------------------------------
   // Side-Effects
   // ---------------------------------------------------------------------------
@@ -149,15 +141,6 @@ const TransactionListComponent: React.FC<Props> = props => {
       navigation.goBack()
     }
   }, [enabledTokenIds, navigation, tokenId])
-
-  useAsyncEffect(
-    async () => {
-      if (!hasNamedTransactions) return
-      await dispatch(promptForContactsPermission())
-    },
-    [hasNamedTransactions],
-    'TransactionListScene contacts permission'
-  )
 
   // Automatically navigate to the token activation confirmation scene if
   // the token appears in the unactivatedTokenIds list once the wallet loads
