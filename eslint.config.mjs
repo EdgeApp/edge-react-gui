@@ -420,7 +420,7 @@ export default [
 
       'src/hooks/useWalletsSubscriber.ts',
       'src/hooks/useWhyDidYouUpdate.ts',
-      'src/locales/intl.ts',
+
       'src/locales/strings.ts',
       'src/plugins/borrow-plugins/common/ApprovableCall.ts',
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
