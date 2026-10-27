@@ -11,6 +11,7 @@ export function useRefresher<T>(
 
   React.useEffect(() => {
     let abort = false
+    let timerId: ReturnType<typeof setTimeout> | undefined
     const handleTimeout = (): void => {
       cb()
         .then(value => {
@@ -22,9 +23,9 @@ export function useRefresher<T>(
           showError(err)
         })
     }
-    let timerId = setTimeout(handleTimeout, delay)
-
+    // Without a default value to show, the first refresh runs right away:
     if (defaultValue == null) handleTimeout()
+    else timerId = setTimeout(handleTimeout, delay)
 
     return () => {
       abort = true
