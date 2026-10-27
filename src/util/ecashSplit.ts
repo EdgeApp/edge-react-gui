@@ -15,7 +15,7 @@ import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 //
 
 /** The eCash (ECX) plugins whose wallets split from Bitcoin wallets. */
-const ECASH_BITCOIN_PLUGIN_IDS = ['ecashbitcoin', 'ecashbitcoinbetanet']
+export const ECASH_BITCOIN_PLUGIN_IDS = ['ecashbitcoin', 'ecashbitcoinbetanet']
 
 /**
  * The file edge-core-js keeps in a split ECX wallet's synced storage:
