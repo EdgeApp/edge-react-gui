@@ -10,6 +10,7 @@
 - changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
 - changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
 - changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
+- changed: Upgrade edge-login-ui-rn to v4.0.0
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
