@@ -11,14 +11,14 @@ export function useRefresher<T>(
 
   React.useEffect(() => {
     let abort = false
-    const handleTimeout = () => {
+    const handleTimeout = (): void => {
       cb()
         .then(value => {
           if (abort) return
           setValue(value)
           timerId = setTimeout(handleTimeout, delay)
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
     }
