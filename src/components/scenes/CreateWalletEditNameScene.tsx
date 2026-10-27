@@ -24,6 +24,7 @@ import {
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { ECASH_BITCOIN_PLUGIN_IDS } from '../../util/ecashSplit'
 import { logEvent } from '../../util/tracking'
 import { ButtonsView } from '../buttons/ButtonsView'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -201,6 +202,29 @@ const CreateWalletEditNameComponent: React.FC<Props> = props => {
     if (splitSourceWalletId == null) return
     const sourceWallet = account.currencyWallets[splitSourceWalletId]
     if (sourceWallet == null) return
+
+    // An eCash (ECX) wallet sweeps its funds to itself after the split, which
+    // costs a fee and leaves the Bitcoin wallet unsafe to send from until it
+    // confirms:
+    const isEcashSplit = newWalletItems.some(item =>
+      ECASH_BITCOIN_PLUGIN_IDS.includes(item.pluginId)
+    )
+    if (isEcashSplit) {
+      const choice = await Airship.show<'split' | 'cancel' | undefined>(
+        bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={lstrings.ecash_split_confirm_title}
+            message={lstrings.ecash_split_confirm_message}
+            buttons={{
+              split: { label: lstrings.fragment_wallets_split_wallet },
+              cancel: { label: lstrings.string_cancel_cap }
+            }}
+          />
+        )
+      )
+      if (choice !== 'split') return
+    }
 
     const splitItems = newWalletItems.map(item => ({
       fiatCurrencyCode: sourceWallet.fiatCurrencyCode,

@@ -7,6 +7,8 @@
 ## 4.53.0 (staging)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: eCash (ECX) currency info, off unless the plugin config enables it, and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
+- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
@@ -34,6 +36,7 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+- fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.52.1 (2026-10-23)
 
