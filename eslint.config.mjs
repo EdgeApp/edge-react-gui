@@ -122,6 +122,22 @@ export default [
     }
   },
 
+  // `bun lint` runs newer typescript-eslint rules and checks types like
+  // TypeScript 7, so these rules find problems our own ESLint does not.
+  // Keep them as warnings until that code is cleaned up:
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/await-thenable': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/unbound-method': 'warn',
+
+      // TypeScript 7 drops casts that our TypeScript 5 still needs,
+      // so `--fix` would break `tsc`:
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off'
+    }
+  },
+
   // Turn several TypeScript lint errors into warnings:
   {
     files: [
