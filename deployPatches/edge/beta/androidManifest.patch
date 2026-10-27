@@ -1,8 +1,8 @@
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index d0f2b77bd..445adb2a1 100644
+index 790c2bd72..103c867a4 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
-@@ -40,8 +40,8 @@
+@@ -32,8 +32,8 @@
    <application
      android:name=".MainApplication"
      android:label="@string/app_name"
@@ -12,4 +12,4 @@ index d0f2b77bd..445adb2a1 100644
 +    android:roundIcon="@mipmap/ic_launcher_beta_round"
      android:allowBackup="false"
      android:usesCleartextTraffic="true"
-     android:enableOnBackInvokedCallback="false"
+     android:theme="@style/AppTheme">
