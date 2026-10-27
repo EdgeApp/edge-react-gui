@@ -18,6 +18,7 @@ import {
   useReanimatedKeyboardAnimation
 } from 'react-native-keyboard-controller'
 import Reanimated, {
+  type AnimatedStyle,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue
@@ -41,13 +42,14 @@ import {
 } from '../../state/SceneScrollState'
 import { useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import type { OverrideDots } from '../../types/Theme'
+import type { GradientColors, OverrideDots } from '../../types/Theme'
 import { isAgentTestMode } from '../../util/agentTestMode'
 import { styled } from '../hoc/styled'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SceneContainer } from '../layout/SceneContainer'
 import { NotificationView } from '../notification/NotificationView'
 import { MAX_TAB_BAR_HEIGHT } from '../themed/MenuTabs'
+import { BlurTargetView, useSceneBlurTarget } from './BlurBackground'
 import { type AccentColors, DotsBackground } from './DotsBackground'
 
 export interface InsetStyle {
@@ -92,7 +94,7 @@ interface SceneWrapperProps {
   avoidKeyboard?: boolean
 
   // Optional backgroundGradient overrides
-  backgroundGradientColors?: string[]
+  backgroundGradientColors?: GradientColors
   backgroundGradientStart?: { x: number; y: number }
   backgroundGradientEnd?: { x: number; y: number }
 
@@ -173,6 +175,11 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
 
   const navigation = useNavigation<NavigationBase>()
   const isIos = Platform.OS === 'ios'
+
+  // Publish this scene's content as the blur target chrome samples while the
+  // scene is focused (see BlurBackground):
+  const isSceneFocused = useIsFocused()
+  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused)
 
   // Track dock height for content padding when dockProps is used
   const [dockHeight, setDockHeight] = useState(0)
@@ -402,21 +409,27 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   if (scroll) {
     return (
       <>
-        <DotsBackground
-          accentColors={accentColors}
-          overrideDots={overrideDots}
-          backgroundGradientColors={backgroundGradientColors}
-          backgroundGradientStart={backgroundGradientStart}
-          backgroundGradientEnd={backgroundGradientEnd}
-        />
-        <SceneWrapperScrollView
-          keyboardAwareStyle={keyboardAwareStyle}
-          insetStyle={insetStyle}
-          layoutStyle={layoutStyle}
-          {...props}
+        <BlurTargetView
+          ref={sceneBlurTargetRef}
+          collapsable={false}
+          style={styles.blurTargetFill}
         >
-          {memoizedChildren}
-        </SceneWrapperScrollView>
+          <DotsBackground
+            accentColors={accentColors}
+            overrideDots={overrideDots}
+            backgroundGradientColors={backgroundGradientColors}
+            backgroundGradientStart={backgroundGradientStart}
+            backgroundGradientEnd={backgroundGradientEnd}
+          />
+          <SceneWrapperScrollView
+            keyboardAwareStyle={keyboardAwareStyle}
+            insetStyle={insetStyle}
+            layoutStyle={layoutStyle}
+            {...props}
+          >
+            {memoizedChildren}
+          </SceneWrapperScrollView>
+        </BlurTargetView>
         {renderFooter == null ? null : (
           <SceneWrapperFooterContainer
             footerHeight={footerHeight}
@@ -442,23 +455,28 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     return (
       <>
         <Reanimated.View
-          style={[
-            styles.sceneContainer,
-            layoutStyle,
-            insetStyle,
-            keyboardAwareStyle,
-            { padding }
-          ]}
+          style={[styles.sceneContainer, layoutStyle, keyboardAwareStyle]}
         >
-          <DotsBackground
-            accentColors={accentColors}
-            overrideDots={overrideDots}
-            backgroundGradientColors={backgroundGradientColors}
-            backgroundGradientStart={backgroundGradientStart}
-            backgroundGradientEnd={backgroundGradientEnd}
-          />
+          <BlurTargetView
+            ref={sceneBlurTargetRef}
+            collapsable={false}
+            style={[
+              styles.sceneContainer,
+              styles.blurTargetGrow,
+              insetStyle,
+              { padding }
+            ]}
+          >
+            <DotsBackground
+              accentColors={accentColors}
+              overrideDots={overrideDots}
+              backgroundGradientColors={backgroundGradientColors}
+              backgroundGradientStart={backgroundGradientStart}
+              backgroundGradientEnd={backgroundGradientEnd}
+            />
 
-          {memoizedChildren}
+            {memoizedChildren}
+          </BlurTargetView>
           {renderFooter == null ? null : (
             <SceneWrapperFooterContainer
               footerHeight={footerHeight}
@@ -483,7 +501,9 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
 
   return (
     <>
-      <View
+      <BlurTargetView
+        ref={sceneBlurTargetRef}
+        collapsable={false}
         style={[styles.sceneContainer, layoutStyle, insetStyle, { padding }]}
       >
         <DotsBackground
@@ -495,7 +515,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
         />
 
         {memoizedChildren}
-      </View>
+      </BlurTargetView>
       {renderFooter == null ? null : (
         <SceneWrapperFooterContainer
           footerHeight={footerHeight}
@@ -524,13 +544,20 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     flexDirection: 'column',
     justifyContent: 'flex-start'
+  },
+  blurTargetFill: {
+    flex: 1
+  },
+  blurTargetGrow: {
+    flexGrow: 1,
+    flexShrink: 1
   }
 })
 
 interface SceneWrapperScrollViewProps
   extends Pick<SceneWrapperProps, 'keyboardShouldPersistTaps' | 'padding'> {
   children: React.ReactNode
-  keyboardAwareStyle: ViewStyle
+  keyboardAwareStyle: AnimatedStyle<ViewStyle>
   insetStyle: InsetStyle
   layoutStyle: {
     height: number

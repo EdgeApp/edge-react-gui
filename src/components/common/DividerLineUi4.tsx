@@ -1,6 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 
+import type { GradientColors } from '../../types/Theme'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { DEFAULT_MARGIN_REM } from './Margins'
@@ -12,7 +13,7 @@ interface Props {
   marginRem?: number[] | number
 
   /** Unused by current Edge themes, but supported for third-party integrations. */
-  colors?: string[]
+  colors?: GradientColors
 }
 
 const start = { x: 0, y: 0.5 }

@@ -15,8 +15,15 @@ export interface ThemeDot {
 // Updates to dots. undefined keeps the dots, null deletes them
 export type OverrideDots = Array<Partial<ThemeDot> | undefined | null>
 
+/**
+ * A gradient needs at least two stops to interpolate between. `LinearGradient`
+ * enforces that in its own prop types, so the theme has to promise it too —
+ * a plain `string[]` says nothing about length and won't satisfy it.
+ */
+export type GradientColors = readonly [string, string, ...string[]]
+
 interface ThemeGradientParams {
-  colors: string[]
+  colors: GradientColors
   start: GradientCoords
   end: GradientCoords
 }
@@ -97,7 +104,7 @@ export interface Theme {
   loadingIcon: string
 
   // Background
-  backgroundGradientColors: string[]
+  backgroundGradientColors: GradientColors
   backgroundGradientStart: { x: number; y: number }
   backgroundGradientEnd: { x: number; y: number }
   backgroundDots: {
@@ -106,7 +113,7 @@ export interface Theme {
     dots: ThemeDot[]
     assetOverrideDots: OverrideDots
   }
-  assetBackgroundGradientColors: string[]
+  assetBackgroundGradientColors: GradientColors
   assetBackgroundGradientStart: { x: number; y: number }
   assetBackgroundGradientEnd: { x: number; y: number }
   assetBackgroundColorScale: number
@@ -123,6 +130,9 @@ export interface Theme {
   modalBorderWidth: number
   modalBorderRadiusRem: number
   modalBackground: string
+  // Solid stand-ins for blur where it cannot render (Android below 12):
+  modalBackgroundNoBlur: string
+  chromeBackgroundNoBlur: string
   modalSceneOverlayColor: string
   modalDragbarColor: string
 
@@ -141,7 +151,7 @@ export interface Theme {
   tileBackgroundMuted: string
 
   // Section Lists
-  listSectionHeaderBackgroundGradientColors: string[]
+  listSectionHeaderBackgroundGradientColors: GradientColors
   listSectionHeaderBackgroundGradientStart: { x: number; y: number } | null
   listSectionHeaderBackgroundGradientEnd: { x: number; y: number } | null
 
@@ -178,10 +188,10 @@ export interface Theme {
 
   // Header
   headerIcon: ImageProp
-  headerBackground: string[]
+  headerBackground: GradientColors
   headerBackgroundStart: GradientCoords
   headerBackgroundEnd: GradientCoords
-  headerOutlineColors: string[]
+  headerOutlineColors: GradientColors
 
   // Buttons
   buttonBorderRadiusRem: number
@@ -189,7 +199,7 @@ export interface Theme {
 
   keypadButtonOutline: string
   keypadButtonOutlineWidth: number
-  keypadButton: string[]
+  keypadButton: GradientColors
   keypadButtonColorStart: GradientCoords
   keypadButtonColorEnd: GradientCoords
   keypadButtonText: string
@@ -201,7 +211,7 @@ export interface Theme {
 
   primaryButtonOutline: string
   primaryButtonOutlineWidth: number
-  primaryButton: string[]
+  primaryButton: GradientColors
   primaryButtonColorStart: GradientCoords
   primaryButtonColorEnd: GradientCoords
   primaryButtonText: string
@@ -212,8 +222,8 @@ export interface Theme {
 
   secondaryButtonOutline: string
   secondaryButtonOutlineWidth: number
-  secondaryButton: string[]
-  secondaryButtonDisabled: string[]
+  secondaryButton: GradientColors
+  secondaryButtonDisabled: GradientColors
   secondaryButtonColorStart: GradientCoords
   secondaryButtonColorEnd: GradientCoords
   secondaryButtonText: string
@@ -224,7 +234,7 @@ export interface Theme {
 
   escapeButtonOutline: string
   escapeButtonOutlineWidth: number
-  escapeButton: string[]
+  escapeButton: GradientColors
   escapeButtonColorStart: GradientCoords
   escapeButtonColorEnd: GradientCoords
   escapeButtonText: string
@@ -235,7 +245,7 @@ export interface Theme {
 
   pinUsernameButtonOutline: string
   pinUsernameButtonOutlineWidth: number
-  pinUsernameButton: string[]
+  pinUsernameButton: GradientColors
   pinUsernameButtonColorStart: GradientCoords
   pinUsernameButtonColorEnd: GradientCoords
   pinUsernameButtonText: string
@@ -274,10 +284,10 @@ export interface Theme {
   // Mimics raised/embossed text on physical credit cards
   embossedTextShadow: TextShadowParams
 
-  tabBarBackground: string[]
+  tabBarBackground: GradientColors
   tabBarBackgroundStart: GradientCoords
   tabBarBackgroundEnd: GradientCoords
-  tabBarTopOutlineColors: string[]
+  tabBarTopOutlineColors: GradientColors
   tabBarIcon: string
   tabBarIconHighlighted: string
 
@@ -327,7 +337,7 @@ export interface Theme {
 
   // DividerLine component
   dividerLineHeight: number
-  dividerLineColors: string[]
+  dividerLineColors: GradientColors
 
   // Notifications
   // notificationBackground: string,

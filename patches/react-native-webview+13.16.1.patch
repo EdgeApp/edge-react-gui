@@ -76,7 +76,7 @@ index da4eb96..e25b49f 100644
  
    override fun getEventName(): String = EVENT_NAME
 diff --git a/node_modules/react-native-webview/src/WebViewShared.tsx b/node_modules/react-native-webview/src/WebViewShared.tsx
-index 08905ea..2d8b360 100644
+index 3b0a38b..835a648 100644
 --- a/node_modules/react-native-webview/src/WebViewShared.tsx
 +++ b/node_modules/react-native-webview/src/WebViewShared.tsx
 @@ -25,7 +25,7 @@ const extractOrigin = (url: string): string => {
@@ -88,7 +88,7 @@ index 08905ea..2d8b360 100644
  
  const passesWhitelist = (compiledWhitelist: readonly string[], url: string) => {
    const origin = extractOrigin(url);
-@@ -240,6 +240,8 @@ export const useWebViewLogic = ({
+@@ -249,6 +249,8 @@ export const useWebViewLogic = ({
        }
        // !patch for Android only
        onLoadProgress?.(event);

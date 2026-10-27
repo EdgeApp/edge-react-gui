@@ -234,7 +234,7 @@ const getProviderError = async (
     e => e instanceof FiatProviderError
   )
   expect(providerErrors).toHaveLength(1)
-  return providerErrors[0] as FiatProviderError
+  return providerErrors[0]
 }
 
 describe('paybisRampPlugin fetchQuotes over-limit handling', () => {

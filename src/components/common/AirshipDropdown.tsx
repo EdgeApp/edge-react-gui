@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dimensions, View } from 'react-native'
+import { Dimensions, Platform, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { cacheStyles } from 'react-native-patina'
@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { runOnJS } from 'react-native-worklets'
 
 import { useHandler } from '../../hooks/useHandler'
@@ -46,6 +47,15 @@ export function AirshipDropdown(props: Props): React.ReactElement {
   } = props
   const theme = useTheme()
   const styles = getStyles(theme)
+
+  // The Airship layer's own safe-area measurement only works on iOS, and
+  // edge-to-edge Android draws the window under the status bar, so push the
+  // content below it ourselves. iOS already gets this from the layer, so
+  // adding it here would double the gap:
+  const insets = useSafeAreaInsets()
+  const androidInsetStyle = {
+    paddingTop: safeAreaGap + (Platform.OS === 'android' ? insets.top : 0)
+  }
 
   // The user must drag this far to close the drop-down:
   const closeThreshold = theme.rem(1.5)
@@ -136,7 +146,7 @@ export function AirshipDropdown(props: Props): React.ReactElement {
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.body, bodyStyle]}>
+      <Animated.View style={[styles.body, androidInsetStyle, bodyStyle]}>
         {children}
         <View style={styles.dragBarContainer}>
           <View style={styles.dragBar} />
