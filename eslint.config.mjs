@@ -411,7 +411,6 @@ export default [
       'src/hooks/useLayoutOnce.ts',
       'src/hooks/useMount.ts',
 
-      'src/hooks/useRefresher.ts',
       'src/hooks/useScrollToEnd.ts',
       'src/hooks/useSharedEvent.ts',
       'src/hooks/useTokenDisplayData.ts',
