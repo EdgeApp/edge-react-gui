@@ -81,9 +81,9 @@ type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 export class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
-  // Bumped on each text change; the reverse-lookup callback only acts when its
-  // captured value still matches `reverseLookupSeq`. Prevents stale results
-  // from earlier inputs from clobbering the label after the user has moved on.
+  // Bumped on each text change; name lookups only act when their captured
+  // value still matches `reverseLookupSeq`. Prevents stale results from
+  // earlier inputs from clobbering the label after the user has moved on.
   reverseLookupSeq: number = 0
 
   constructor(props: Props) {
@@ -162,7 +162,14 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   onChangeTextDelayed = async (domain: string): Promise<void> => {
-    this.setState({ errorLabel: undefined, validLabel: undefined })
+    // Drop the previous input's resolved address, so submitting before the
+    // new input resolves can't send to it:
+    this.setState({
+      cryptoAddress: undefined,
+      errorLabel: undefined,
+      showSpinner: false,
+      validLabel: undefined
+    })
     this.updateUri(domain)
     // Invalidate any in-flight reverse lookup so a stale resolved name from a
     // previous raw-address input can't briefly land in `validLabel` after the
@@ -294,6 +301,11 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   resolveName = async (name: string, currencyTicker: string): Promise<void> => {
+    // The input changes while the name resolves, so only the latest input
+    // may set the result:
+    const seq = this.reverseLookupSeq
+    const isStale = (): boolean => seq !== this.reverseLookupSeq
+
     this.setState({ errorLabel: undefined })
     if (name === '') return
     this.setState({ showSpinner: true })
@@ -325,8 +337,10 @@ export class AddressModalComponent extends React.Component<Props, State> {
       if (address == null) {
         throw new ResolutionError('UnsupportedDomain', { domain: name })
       }
+      if (isStale()) return
       this.setState({ cryptoAddress: address, validLabel: address })
     } catch (err: unknown) {
+      if (isStale()) return
       this.setState({ cryptoAddress: undefined, validLabel: undefined })
 
       if (err instanceof ResolutionError) {
