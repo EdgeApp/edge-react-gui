@@ -7,7 +7,7 @@ import { asKeysJson, type RuntimeKeys } from './configKeysSchema'
  * the merge base when a remote/cache overlay arrives, never mutated.
  */
 export const bakedKeys: RuntimeKeys = nestGlobalKeys(
-  asKeysJson.withRest(KEYS_JSON) as unknown as Record<string, unknown>
+  asKeysJson.withRest(KEYS_JSON)
 )
 
 /**

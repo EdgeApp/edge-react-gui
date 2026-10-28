@@ -3255,9 +3255,7 @@ const SendComponent: React.FC<Props> = props => {
         })
       } catch (e: unknown) {
         const message = String(e)
-        const isFeeExceeded = message.includes(
-          FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM as string
-        )
+        const isFeeExceeded = message.includes(FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM)
         if (isFeeExceeded) {
           showError(lstrings.fio_fee_exceeds_supplied_maximum_record_obt_data)
         } else {

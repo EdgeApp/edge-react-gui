@@ -815,8 +815,11 @@ const GuiPluginListSceneComponent = React.memo((props: OwnProps) => {
               onCountryPress={handleCountryPress}
               onLogEvent={handleLogEvent}
               onPluginOpened={handlePluginOpened}
-              // HACK: Getting these props to work requires a heavier refactor
+              // HACK: Getting these props to work requires a heavier refactor.
+              // `bun lint` wrongly reports these casts as unnecessary:
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
               navigation={debouncedNavigation as any}
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
               route={route as any}
             />
           </View>

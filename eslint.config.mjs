@@ -122,19 +122,15 @@ export default [
     }
   },
 
-  // `bun lint` runs newer typescript-eslint rules and checks types like
-  // TypeScript 7, so these rules find problems our own ESLint does not.
+  // `bun lint` runs newer typescript-eslint rules than our installed
+  // plugin, so these rules find problems ESLint never reported.
   // Keep them as warnings until that code is cleaned up:
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/await-thenable': 'warn',
       '@typescript-eslint/prefer-optional-chain': 'warn',
-      '@typescript-eslint/unbound-method': 'warn',
-
-      // TypeScript 7 drops casts that our TypeScript 5 still needs,
-      // so `--fix` would break `tsc`:
-      '@typescript-eslint/no-unnecessary-type-assertion': 'off'
+      '@typescript-eslint/unbound-method': 'warn'
     }
   },
 
@@ -283,7 +279,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
@@ -310,8 +305,6 @@ export default [
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
       'src/components/scenes/NotificationScene.tsx',
-
-      'src/components/scenes/OtpSettingsScene.tsx',
 
       'src/components/scenes/PromotionSettingsScene.tsx',
 
@@ -459,7 +452,6 @@ export default [
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
 
       'src/plugins/stake-plugins/metadataCache.ts',
-      'src/plugins/stake-plugins/stakePlugins.ts',
 
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',

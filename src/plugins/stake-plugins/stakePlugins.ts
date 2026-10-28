@@ -21,7 +21,7 @@ export const getStakePlugins = async (
   const thorchainInit = pluginMaps.swapPlugins.thorchain
   const tcInitOptions: JsonObject =
     typeof thorchainInit === 'object' && thorchainInit != null
-      ? (thorchainInit as JsonObject)
+      ? thorchainInit
       : {}
 
   const promises = [

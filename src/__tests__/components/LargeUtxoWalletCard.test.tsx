@@ -45,7 +45,7 @@ describe('LargeUtxoWalletCard', () => {
   it('stays closed for every wallet once closed', async () => {
     const disklet = makeMemoryDisklet()
     const initialState: FakeState = {
-      core: { account: { localDisklet: disklet } as any }
+      core: { account: { localDisklet: disklet } }
     }
     const rendered = renderCard(makeFakeWallet('wallet-1'), initialState)
 

@@ -22,6 +22,21 @@ const asDisableAsset = asObject({
   tokenId: asOptional(asString) // May also be 'all' to disable all tokens
 })
 
+// Same shape as disableAssets, keyed by swap pluginId. A match only
+// removes that one swap provider from the quote request. Each provider
+// entry is cleaned on its own, so a malformed entry bans nothing and
+// leaves the other providers' bans in place.
+const asDisableAssetsByPlugin = asObject(
+  asMaybe(
+    asObject({
+      source: asArray(asDisableAsset),
+      destination: asArray(asDisableAsset)
+    }),
+    () => ({ source: [], destination: [] })
+  )
+)
+export type DisableAssetsByPlugin = ReturnType<typeof asDisableAssetsByPlugin>
+
 const asTrue = asValue<[true]>(true)
 const asDisablePluginsMap = asObject(asTrue)
 export type DisablePluginMap = ReturnType<typeof asDisablePluginsMap>
@@ -54,20 +69,8 @@ export const asExchangeInfo = asObject({
         }),
         () => ({ source: [], destination: [] })
       ),
-      // Same shape as disableAssets, keyed by swap pluginId. A match only
-      // removes that one swap provider from the quote request. Each provider
-      // entry is cleaned on its own, so a malformed entry bans nothing and
-      // leaves the other providers' bans in place.
-      disableAssetsByPlugin: asMaybe(
-        asObject(
-          asMaybe(
-            asObject({
-              source: asArray(asDisableAsset),
-              destination: asArray(asDisableAsset)
-            }),
-            () => ({ source: [], destination: [] })
-          )
-        ),
+      disableAssetsByPlugin: asMaybe<DisableAssetsByPlugin>(
+        asDisableAssetsByPlugin,
         () => ({})
       ),
       disablePlugins: asMaybe(asDisablePluginsMap, () => ({}))
@@ -82,8 +85,6 @@ export const asExchangeInfo = asObject({
 
 export type DisableAsset = ReturnType<typeof asDisableAsset>
 export type ExchangeInfo = ReturnType<typeof asExchangeInfo>
-export type DisableAssetsByPlugin =
-  ExchangeInfo['swap']['disableAssetsByPlugin']
 
 /**
  * True when the asset matches any entry in a disableAssets list.
