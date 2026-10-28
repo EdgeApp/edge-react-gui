@@ -669,7 +669,7 @@ const EdgeTabs: React.FC = () => {
 // The tabs live inside this stack, as well as most app scenes.
 // -------------------------------------------------------------------------
 
-const EdgeAppStack: React.FC = () => {
+const EdgeAppStackComponent: React.FC = () => {
   const countryCode = useSelector(state => state.ui.countryCode)
 
   return (
@@ -1175,6 +1175,11 @@ const EdgeAppStack: React.FC = () => {
     </AppStack.Navigator>
   )
 }
+
+// The drawer re-renders its screen on every open and close. Memoizing the
+// stack keeps that from re-rendering every mounted scene, which is slow on
+// accounts with many wallets.
+const EdgeAppStack = React.memo(EdgeAppStackComponent)
 
 // -------------------------------------------------------------------------
 // Root router
