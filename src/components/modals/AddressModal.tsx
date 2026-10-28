@@ -23,6 +23,8 @@ import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { Dispatch } from '../../types/reduxTypes'
 import { ResolutionError } from '../../types/ResolutionError'
 import type { FioAddress, FlatListItem } from '../../types/types'
+import { getEvmChainId } from '../../util/CurrencyInfoHelpers'
+import { isEnsName } from '../../util/ens'
 import {
   checkPubAddress,
   type FioAddresses,
@@ -249,8 +251,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
   checkIfUnstoppableDomain = (name: string): boolean =>
     UNSTOPPABLE_DOMAINS.some(domain => name.endsWith(domain))
 
+  // ENS resolves any dotted name on EVM wallets. Other wallets still treat
+  // the ENS suffixes as names, so they can refuse them:
   checkIfEnsDomain = (name: string): boolean =>
-    ENS_DOMAINS.some(domain => name.endsWith(domain))
+    ENS_DOMAINS.some(domain => name.endsWith(domain)) ||
+    (getEvmChainId(this.props.coreWallet.currencyInfo.pluginId) != null &&
+      isEnsName(name))
 
   checkIfZnsName = (name: string): boolean => isZnsName(name)
 
@@ -284,10 +290,17 @@ export class AddressModalComponent extends React.Component<Props, State> {
     return address
   }
 
-  fetchEnsAddress = async (domain: string): Promise<string> => {
+  fetchEnsAddress = async (
+    domain: string,
+    chainId: number
+  ): Promise<string> => {
+    // ENS lives on Ethereum mainnet, whatever chain the wallet is on:
     const ethPlugin: EdgeCurrencyConfig =
       this.props.account.currencyConfig.ethereum
-    const address = await ethPlugin.otherMethods.resolveEnsName(domain)
+    const address = await ethPlugin.otherMethods.resolveEnsName(
+      domain.trim(),
+      chainId
+    )
     if (address == null)
       throw new ResolutionError('UnregisteredDomain', { domain })
     return address
@@ -327,7 +340,12 @@ export class AddressModalComponent extends React.Component<Props, State> {
           ]
         )
       } else if (this.checkIfEnsDomain(name)) {
-        address = await this.fetchEnsAddress(name)
+        // ENS only has addresses for EVM chains, so other wallets refuse
+        // the name unless their own plugin resolved it:
+        const chainId = getEvmChainId(
+          this.props.coreWallet.currencyInfo.pluginId
+        )
+        if (chainId != null) address = await this.fetchEnsAddress(name, chainId)
       } else if (
         this.checkIfZnsName(name) &&
         this.props.coreWallet.currencyInfo.pluginId === 'zcash'

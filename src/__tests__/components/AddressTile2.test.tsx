@@ -105,27 +105,46 @@ describe('AddressTile2 "Myself" picker', () => {
 })
 
 describe('AddressTile2 ENS names', () => {
-  it('resolves an ENS name through the ethereum plugin', async () => {
-    const nickAddress = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'
-    const resolveEnsName = jest.fn(async (_name: string) => nickAddress)
-    const config: EdgeCurrencyConfig = {
+  const nickAddress = '0xb8c2C29ee19D8307cb7255e1Cd9CbDE883A267d5'
+
+  /**
+   * Pastes a name into a wallet's address tile.
+   * The ethereum plugin resolves every ENS name,
+   * whichever wallet the tile belongs to.
+   */
+  const pasteName = async (
+    pluginId: string,
+    name: string
+  ): Promise<{
+    onChangeAddress: jest.Mock<(result: ChangeAddressResult) => Promise<void>>
+    resolveEnsName: jest.Mock<
+      (name: string, chainId?: number) => Promise<string | null>
+    >
+  }> => {
+    const resolveEnsName = jest.fn(
+      async (_name: string, _chainId?: number): Promise<string | null> =>
+        nickAddress
+    )
+    const ethereum: EdgeCurrencyConfig = {
       ...ethConfig,
       otherMethods: { resolveEnsName }
     }
     const wallet = {
       ...makeWallet('source', async () => []),
-      currencyConfig: config,
-      parseUri: async (uri: string) => ({ publicAddress: uri })
+      currencyInfo: { ...ethConfig.currencyInfo, pluginId },
+      parseUri: async (uri: string) => {
+        if (!uri.startsWith('0x')) throw new Error('Invalid address')
+        return { publicAddress: uri }
+      }
     } as unknown as EdgeCurrencyWallet
     const onChangeAddress = jest.fn(async (_result: ChangeAddressResult) => {})
-    const pasteSpy = jest
-      .spyOn(Clipboard, 'getString')
-      .mockResolvedValue('nick.eth')
+    const pasteSpy = jest.spyOn(Clipboard, 'getString').mockResolvedValue(name)
+    const toastSpy = jest.spyOn(Airship, 'show').mockResolvedValue(undefined)
 
     const rootState: FakeState = {
       core: {
         account: {
-          currencyConfig: { ethereum: config },
+          currencyConfig: { ethereum },
           currencyWallets: { source: wallet },
           watch: () => () => {}
         }
@@ -148,14 +167,54 @@ describe('AddressTile2 ENS names', () => {
 
     fireEvent.press(rendered.getByTestId('addressTilePaste'))
     await waitFor(() => {
-      expect(onChangeAddress).toHaveBeenCalled()
+      expect(
+        onChangeAddress.mock.calls.length + toastSpy.mock.calls.length
+      ).toBeGreaterThan(0)
     })
-    expect(resolveEnsName).toHaveBeenCalledWith('nick.eth')
+
+    pasteSpy.mockRestore()
+    toastSpy.mockRestore()
+    rendered.unmount()
+    return { onChangeAddress, resolveEnsName }
+  }
+
+  it('resolves an ENS name through the ethereum plugin', async () => {
+    const { onChangeAddress, resolveEnsName } = await pasteName(
+      'ethereum',
+      'nick.eth'
+    )
+    expect(resolveEnsName).toHaveBeenCalledWith('nick.eth', 1)
     const [result] = onChangeAddress.mock.calls[0]
     expect(result.parsedUri?.publicAddress).toBe(nickAddress)
     expect(result.resolvedName).toEqual({ name: 'nick.eth', service: 'ens' })
+  })
 
-    pasteSpy.mockRestore()
-    rendered.unmount()
+  it('resolves DNS names through ENS', async () => {
+    const { onChangeAddress, resolveEnsName } = await pasteName(
+      'ethereum',
+      'nick.box'
+    )
+    expect(resolveEnsName).toHaveBeenCalledWith('nick.box', 1)
+    const [result] = onChangeAddress.mock.calls[0]
+    expect(result.resolvedName).toEqual({ name: 'nick.box', service: 'ens' })
+  })
+
+  it("asks ENS for the wallet's own EVM chain", async () => {
+    const { onChangeAddress, resolveEnsName } = await pasteName(
+      'polygon',
+      'nick.eth'
+    )
+    expect(resolveEnsName).toHaveBeenCalledWith('nick.eth', 137)
+    const [result] = onChangeAddress.mock.calls[0]
+    expect(result.parsedUri?.publicAddress).toBe(nickAddress)
+  })
+
+  it('does not resolve ENS names on other chains', async () => {
+    const { onChangeAddress, resolveEnsName } = await pasteName(
+      'bitcoin',
+      'nick.eth'
+    )
+    expect(resolveEnsName).not.toHaveBeenCalled()
+    expect(onChangeAddress).not.toHaveBeenCalled()
   })
 })

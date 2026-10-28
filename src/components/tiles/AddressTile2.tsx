@@ -25,9 +25,11 @@ import type { EdgeAsset } from '../../types/types'
 import { describeAddressRejection } from '../../util/addressRejection'
 import {
   getCurrencyCode,
+  getEvmChainId,
   isOwnEvmAddress
 } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
+import { isEnsName } from '../../util/ens'
 import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
 import { type CrossChainPayment, withStatedAsset } from '../../util/paymentUri'
@@ -361,16 +363,15 @@ export const AddressTile2 = React.forwardRef(
           }
         }
 
-        // Try resolving address by ENS domain for ethereum wallets only
-        if (
-          coreWallet.currencyInfo.pluginId === 'ethereum' &&
-          /^.*\.eth$/.test(address)
-        ) {
+        // Resolve ENS names to this chain's address on EVM wallets. ENS
+        // lives on Ethereum mainnet, so this always uses the ethereum plugin.
+        // Other wallets fall through and reject the name as an address:
+        const evmChainId = getEvmChainId(coreWallet.currencyInfo.pluginId)
+        const ethPlugin = account.currencyConfig.ethereum
+        if (evmChainId != null && ethPlugin != null && isEnsName(address)) {
           try {
             const resolvedAddress: string | null =
-              await coreWallet.currencyConfig.otherMethods.resolveEnsName(
-                address
-              )
+              await ethPlugin.otherMethods.resolveEnsName(address, evmChainId)
             if (resolvedAddress != null) {
               resolvedName = { name: enteredInput, service: 'ens' }
               address = resolvedAddress
@@ -564,7 +565,7 @@ export const AddressTile2 = React.forwardRef(
     const handleChangeAddress = useHandler(async () => {
       const nameServices: string[] = []
       if (fioPlugin != null) nameServices.push('FIO')
-      if (coreWallet.currencyInfo.pluginId === 'ethereum')
+      if (getEvmChainId(coreWallet.currencyInfo.pluginId) != null)
         nameServices.push('ENS')
       if (coreWallet.currencyInfo.pluginId === 'zcash') nameServices.push('ZNS')
       const title =

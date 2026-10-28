@@ -38,6 +38,17 @@ export function isEvmWallet(wallet: EdgeCurrencyWallet): boolean {
 }
 
 /**
+ * Returns the EVM chain ID for a currency plugin,
+ * or undefined if the plugin is not an EVM chain.
+ */
+export function getEvmChainId(pluginId: string): number | undefined {
+  const { walletConnectV2ChainId } = getSpecialCurrencyInfo(pluginId)
+  if (walletConnectV2ChainId?.namespace !== 'eip155') return
+  const chainId = Number(walletConnectV2ChainId.reference)
+  return Number.isSafeInteger(chainId) ? chainId : undefined
+}
+
+/**
  * Whether the address is this wallet's own, on a wallet where paying it is
  * always a mistake. EVM wallets use a single static address across all EVM
  * chains, so a send to it on the wallet's own network pays the sender.

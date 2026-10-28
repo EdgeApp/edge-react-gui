@@ -162,3 +162,46 @@ describe('AddressModalComponent ENS names', () => {
     unmount()
   })
 })
+
+describe('AddressModalComponent ENS chains', () => {
+  beforeEach(() => {
+    globalKeys.UNSTOPPABLE_DOMAINS_API_KEY = null
+  })
+
+  it("resolves dotted names for the wallet's EVM chain", async () => {
+    const resolveEnsName = jest.fn(
+      async (_name: string, _chainId?: number) => nickAddress
+    )
+    const { modal, unmount } = renderModal(
+      makeEnsAccount(resolveEnsName),
+      makeEnsWallet('polygon')
+    )
+
+    await act(async () => {
+      await modal.onChangeTextDelayed('nick.box')
+    })
+    expect(resolveEnsName).toHaveBeenCalledWith('nick.box', 137)
+    expect(modal.state.cryptoAddress).toBe(nickAddress)
+
+    unmount()
+  })
+
+  it('refuses ENS names on other chains', async () => {
+    const resolveEnsName = jest.fn(
+      async (_name: string, _chainId?: number) => nickAddress
+    )
+    const { modal, unmount } = renderModal(
+      makeEnsAccount(resolveEnsName),
+      makeEnsWallet('bitcoin')
+    )
+
+    await act(async () => {
+      await modal.onChangeTextDelayed('nick.eth')
+    })
+    expect(resolveEnsName).not.toHaveBeenCalled()
+    expect(modal.state.cryptoAddress).toBe(undefined)
+    expect(modal.state.errorLabel).toBe('Domain nick.eth is not supported')
+
+    unmount()
+  })
+})
