@@ -131,6 +131,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:monero',
   'wallet:ethereum',
   'wallet:zcash',
+  'wallet:zcashtestnet',
   'wallet:zksync',
   'wallet:tron',
   'wallet:polkadot',
@@ -1051,6 +1052,31 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
       }
     ],
     unstoppableDomainsTicker: 'ZEC'
+  },
+  zcashtestnet: {
+    initWalletName: lstrings.string_first_zcash_testnet_wallet_name,
+    dummyPublicAddress:
+      'ztestsapling10xwzhkwm0ayzqn99q04l6hhyy76cu6mf6m8cu4xv4pdles7a3puh2cnv7w32qhzktrrsqfekj5q',
+    noChangeMiningFee: true,
+    isImportKeySupported: true,
+    keysOnlyMode: isZecBroken(),
+    highPrecisionSyncRatioDisplay: true,
+    importKeyOptions: [
+      {
+        optionName: 'birthdayHeight',
+        displayName: lstrings.create_wallet_import_options_birthday_height,
+        displayDescription: {
+          message:
+            lstrings.create_wallet_import_options_birthday_height_description,
+          knowledgeBaseUri:
+            'https://edgeapp.zendesk.com/hc/en-us/articles/16347281770907'
+        },
+        required: true,
+        inputType: 'number-pad',
+        inputValidation: (input: string) =>
+          /^\d+$/.test(input) && gte(input, '280000') // sapling activation height
+      }
+    ]
   },
   piratechain: {
     initWalletName: lstrings.string_first_piratechain_wallet_name,

@@ -630,6 +630,7 @@
   "string_first_pivx_wallet_name": "My PIVX",
   "string_first_zano_wallet_name": "My Zano",
   "string_first_zcash_wallet_name": "My Zcash",
+  "string_first_zcash_testnet_wallet_name": "My Zcash Testnet",
   "zcash_migration_recommended_title": "Ironwood Upgrade",
   "zcash_migration_recommended_body_1s": "Zcash's Ironwood network upgrade added a new shielded pool, Ironwood, and %s of your funds is still in the older Orchard pool. Funds will migrate as you create transactions or you can migrate them all in a single transaction to yourself. The amount you move will be publicly visible on the blockchain. Your funds stay safe and spendable either way.",
   "zcash_migration_recommended_button": "Migrate",

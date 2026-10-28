@@ -71,6 +71,7 @@ function buildAccountbasedPlugins(): EdgeCorePluginsInit {
     wax: true,
     zano: true,
     zcash: true,
+    zcashtestnet: coreInit('zcashtestnet'),
     zksync: coreInit('zksync')
   }
 }
