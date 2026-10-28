@@ -14,9 +14,9 @@
 - `npm test` - Run Jest tests (single run)
 - `npm run watch` - Run Jest tests in watch mode
 - `npm test -- --testNamePattern="test name"` - Run specific test by name
-- `npm run verify` - Run lint, typechain, tsc, and test (full verification)
-- `npm run precommit` - Full pre-commit check (localize, lint staged files, tsc, test)
-- `tsc` - TypeScript type checking (via package.json script)
+- `npm run verify` - Run lint, typechain, type check, and test (full verification)
+- `npm run precommit` - Full pre-commit check (localize, lint staged files, type check, test)
+- `bun check` - TypeScript type checking, with the same errors as `tsc`
 
 ## Swap Provider Integration
 
