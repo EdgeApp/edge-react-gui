@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.53.0 (staging)
+
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
