@@ -187,7 +187,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
 
   tryReverseLookup = (input: string): void => {
     if (input === '') return
-    const { coreWallet, currencyCode } = this.props
+    const { account, coreWallet, currencyCode } = this.props
     const seq = ++this.reverseLookupSeq
     // Gate on `parseUri` succeeding so we only hit the network when the input
     // is a valid address (or URI containing one) for this wallet's chain.
@@ -199,6 +199,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         const publicAddress = parsed.publicAddress
         if (publicAddress == null || publicAddress === '') return
         const result = await reverseLookupName(
+          account,
           coreWallet.currencyInfo.pluginId,
           publicAddress
         )

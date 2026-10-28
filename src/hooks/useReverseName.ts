@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+import { useSelector } from '../types/reactRedux'
 import {
   hasReverseLookupSupport,
   peekReverseLookupCache,
@@ -21,6 +22,7 @@ export const useReverseName = (
   pluginId: string,
   address: string | undefined
 ): ReverseLookupResult | null => {
+  const account = useSelector(state => state.core.account)
   const enabled =
     address != null && address !== '' && hasReverseLookupSupport(pluginId)
 
@@ -35,7 +37,7 @@ export const useReverseName = (
     }
     setResult(peekReverseLookupCache(pluginId, address))
     let cancelled = false
-    reverseLookupName(pluginId, address)
+    reverseLookupName(account, pluginId, address)
       .then(next => {
         if (!cancelled) setResult(next)
       })
@@ -43,7 +45,7 @@ export const useReverseName = (
     return () => {
       cancelled = true
     }
-  }, [enabled, pluginId, address])
+  }, [account, enabled, pluginId, address])
 
   return result
 }

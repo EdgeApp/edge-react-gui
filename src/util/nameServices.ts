@@ -1,5 +1,5 @@
 import Resolver from '@unstoppabledomains/resolution'
-import { ethers } from 'ethers'
+import type { EdgeAccount } from 'edge-core-js'
 
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants'
 import { globalKeys } from '../keys'
@@ -20,8 +20,8 @@ export interface ReverseLookupResult {
 // order and the first non-null result wins.
 //
 // - ZNS: Zcash only. Backed by the ZcashNames indexer; Orchard outputs only.
-// - ENS: Ethereum L1 mainnet only. ENSIP-3 reverse records. ENSIP-19 (multi-
-//   chain reverse) requires ethers v6 — out of scope until that upgrade.
+// - ENS: Ethereum L1 mainnet only. Primary names for other chains (ENSIP-19
+//   coin types) are not looked up.
 // - Unstoppable Domains: any EVM chain (per UD docs `Resolution.reverse` only
 //   resolves EVM addresses). Requires `UNSTOPPABLE_DOMAINS_API_KEY` in env.
 const getReverseLookupServices = (pluginId: string): NameService[] => {
@@ -39,20 +39,20 @@ export const hasReverseLookupSupport = (pluginId: string): boolean =>
   getReverseLookupServices(pluginId).length > 0
 
 // --- ENS ---
-// `getDefaultProvider('mainnet')` returns a FallbackProvider that requires no
-// API key but rate-limits modestly. Same default pattern used by the forward
-// resolver in AddressTile2. ethers v5's `lookupAddress` performs the full
-// ENSIP-3 round-trip (reverse record → forward verify), so the returned name
-// is guaranteed to resolve back to `address`. The provider is lazily created
-// once and reused across lookups, mirroring `udResolver` — a FallbackProvider
-// is otherwise reallocated on every unique-address lookup in tx history.
-let ensProvider: ethers.providers.BaseProvider | null = null
-const getEnsProvider = (): ethers.providers.BaseProvider => {
-  ensProvider ??= ethers.getDefaultProvider('mainnet')
-  return ensProvider
-}
-const reverseLookupEns = async (address: string): Promise<string | null> => {
-  return await getEnsProvider().lookupAddress(address)
+// The ethereum plugin's `lookupEnsName` asks the ENS Universal Resolver over
+// Edge's Ethereum RPC servers, so it sees names on both ENSv1 and ENSv2. The
+// resolver verifies the reverse record by resolving the name forward, so the
+// returned name is guaranteed to resolve back to `address`.
+const reverseLookupEns = async (
+  account: EdgeAccount,
+  address: string
+): Promise<string | null> => {
+  const ethereumConfig = account.currencyConfig.ethereum
+  if (ethereumConfig == null) return null
+  const name: string | null = await ethereumConfig.otherMethods.lookupEnsName(
+    address
+  )
+  return name
 }
 
 // --- Unstoppable Domains ---
@@ -113,7 +113,7 @@ const reverseLookupZns = async (address: string): Promise<string | null> => {
 //
 //  2. Positive results cache eagerly: as soon as any service returns a name,
 //     we cache it and stop traversing further services. The verified ENS
-//     name (lookupAddress) takes priority over UD on Ethereum mainnet.
+//     name (lookupEnsName) takes priority over UD on Ethereum mainnet.
 //
 // The inflight map dedupes concurrent calls for the same key — useful when
 // the same address renders in many transaction-list rows on first paint.
@@ -135,13 +135,13 @@ export const clearReverseLookupCache = (): void => {
   cache.clear()
   inflight.clear()
   cacheEpoch += 1
-  // Reset lazily-created service singletons so no provider/resolver internal
-  // state outlives a logout/login cycle (per module-level-cache-bugs rule).
-  ensProvider = null
+  // Reset the lazily-created UD resolver so no resolver internal state
+  // outlives a logout/login cycle (per module-level-cache-bugs rule).
   udResolver = null
 }
 
 const performReverseLookup = async (
+  account: EdgeAccount,
   pluginId: string,
   address: string
 ): Promise<ReverseLookupResult | null> => {
@@ -154,7 +154,7 @@ const performReverseLookup = async (
     try {
       switch (service) {
         case 'ens':
-          name = await reverseLookupEns(address)
+          name = await reverseLookupEns(account, address)
           break
         case 'unstoppable':
           name = await reverseLookupUnstoppable(address)
@@ -182,6 +182,7 @@ const performReverseLookup = async (
 }
 
 export const reverseLookupName = async (
+  account: EdgeAccount,
   pluginId: string,
   address: string
 ): Promise<ReverseLookupResult | null> => {
@@ -193,7 +194,7 @@ export const reverseLookupName = async (
 
   let promise = inflight.get(key)
   if (promise == null) {
-    promise = performReverseLookup(pluginId, address)
+    promise = performReverseLookup(account, pluginId, address)
     inflight.set(key, promise)
   }
   try {

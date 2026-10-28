@@ -473,6 +473,7 @@ export const AddressTile2 = React.forwardRef(
             setLoading(true)
             try {
               const reverse = await reverseLookupName(
+                account,
                 coreWallet.currencyInfo.pluginId,
                 parsedUri.publicAddress
               )
