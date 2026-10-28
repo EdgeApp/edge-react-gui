@@ -1785,7 +1785,7 @@ PODS:
   - react-native-zano (0.6.0):
     - OpenSSL-Universal
     - React-Core
-  - react-native-zcash (0.13.5):
+  - react-native-zcash (0.13.6):
     - gRPC-Swift (~> 1.8)
     - MnemonicSwift (~> 2.2)
     - React-Core
@@ -3459,7 +3459,7 @@ SPEC CHECKSUMS:
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   gRPC-Swift: 74adcaaa62ac5e0a018938840328cb1fdfb09e7b
-  hermes-engine: 5b6bda00bfffd8902370167215f2acfe38974e03
+  hermes-engine: 292ef31431c0831e9a3f3ec9e1cd6874dc21c70e
   ImageColors: 869f48b27ca2afb347fd0bada3257a5f698ee55e
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Logging: beeb016c9c80cf77042d62e83495816847ef108b
@@ -3520,7 +3520,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 45435943d06e262f946fcc3f4c4de6bfd0c9cbe1
   react-native-webview: cac57e5c9caaac09627c910efb968bac54d5b4dd
   react-native-zano: d96cf740633195af3cbfcb4210f1598e64e179b6
-  react-native-zcash: 75e6680a0aa3a3b2c5e703870df74ad3964fa349
+  react-native-zcash: 617239feaeea36289ceadea0f0a9308fe21ac794
   React-NativeModulesApple: 6f8a4b47b7561c796094a6b03ab570c63fb98548
   React-networking: 2fbe0ada4dd67c2c65656d5429f71a96df5eaa02
   React-oscompat: e3c95718adca6d0e7ca9e5b01a04d057f4aa8f72
