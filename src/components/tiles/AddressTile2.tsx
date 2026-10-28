@@ -6,7 +6,6 @@ import type {
   EdgeParsedUri,
   EdgeTokenId
 } from 'edge-core-js'
-import { ethers } from 'ethers'
 import * as React from 'react'
 import { View } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -367,18 +366,16 @@ export const AddressTile2 = React.forwardRef(
           coreWallet.currencyInfo.pluginId === 'ethereum' &&
           /^.*\.eth$/.test(address)
         ) {
-          const chainId = 1 // Hard-coded to Ethereum mainnet
-          const network = ethers.providers.getNetwork(chainId)
-          if (network.name !== 'unknown') {
-            try {
-              const ethersProvider = ethers.getDefaultProvider(network)
-              const resolvedAddress = await ethersProvider.resolveName(address)
-              if (resolvedAddress != null) {
-                resolvedName = { name: enteredInput, service: 'ens' }
-                address = resolvedAddress
-              }
-            } catch (_) {}
-          }
+          try {
+            const resolvedAddress: string | null =
+              await coreWallet.currencyConfig.otherMethods.resolveEnsName(
+                address
+              )
+            if (resolvedAddress != null) {
+              resolvedName = { name: enteredInput, service: 'ens' }
+              address = resolvedAddress
+            }
+          } catch (_) {}
         }
 
         // Preserve and resolve Zano aliases like "@alias"
