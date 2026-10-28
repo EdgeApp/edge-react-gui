@@ -6,6 +6,7 @@ import { useNotifCount } from '../../actions/LocalSettingsActions'
 import { Fontello } from '../../assets/vector/index'
 import { useHandler } from '../../hooks/useHandler'
 import { triggerHaptic } from '../../util/haptic'
+import { perfDrawerPress } from '../../util/perfTrace'
 import { IconBadge } from '../icons/IconBadge'
 import { useTheme } from '../services/ThemeContext'
 import { NavigationButton } from './NavigationButton'
@@ -16,6 +17,7 @@ export const SideMenuButton = () => {
   const number = useNotifCount()
 
   const handlePress = useHandler(() => {
+    perfDrawerPress()
     Keyboard.dismiss()
     triggerHaptic('impactLight')
     navigation.dispatch(DrawerActions.openDrawer())

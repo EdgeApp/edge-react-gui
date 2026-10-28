@@ -14,6 +14,7 @@ import { useSelector } from '../../types/reactRedux'
 import { isKeysOnlyPlugin } from '../../util/CurrencyInfoHelpers'
 import { triggerHaptic } from '../../util/haptic'
 import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
+import { perfCount } from '../../util/perfTrace'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -50,6 +51,7 @@ interface Props {
 }
 
 const WalletListCurrencyRowComponent: React.FC<Props> = props => {
+  perfCount('WalletListCurrencyRow')
   const {
     customAsset,
     token,

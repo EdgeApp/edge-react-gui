@@ -9,6 +9,7 @@ import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { WalletListAssetItem, WalletListItem } from '../../types/types'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
+import { usePerfRender } from '../../util/perfTrace'
 import { normalizeForSearch } from '../../util/utils'
 
 interface Props {
@@ -37,6 +38,7 @@ type EnabledTokenIds = Record<string, string[]>
  */
 export const SortedWalletList: React.FC<Props> = (props: Props) => {
   const { account } = props
+  usePerfRender('SortedWalletList')
 
   // Subscribe to everything that affects the list ordering:
   const allTokens = useAllTokens(account)

@@ -47,6 +47,7 @@ import { arrangeUsers } from '../../util/arrangeUsers'
 import { isCurrencyPluginEnabled } from '../../util/corePlugins'
 import { parseDeepLink } from '../../util/DeepLinkParser'
 import { getUserInfoUsername } from '../../util/getAccountUsername'
+import { perfDrawerEffect, usePerfRender } from '../../util/perfTrace'
 import { getPhazeConfig } from '../../util/phazeConfig'
 import { getDisplayUsername } from '../../util/utils'
 import { IONIA_SUPPORTED_FIATS } from '../cards/VisaCardCard'
@@ -72,7 +73,11 @@ interface Props {
 export function SideMenuComponent(props: Props): React.ReactElement {
   const { navigation } = props
   const navigationBase = navigation as any as NavigationBase
+  usePerfRender('SideMenu')
   const isDrawerOpen = useDrawerStatus() === 'open'
+  React.useEffect(() => {
+    perfDrawerEffect(isDrawerOpen)
+  }, [isDrawerOpen])
   const number = useNotifCount()
 
   const dispatch = useDispatch()

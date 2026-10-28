@@ -8,6 +8,7 @@ import { useWalletBalance } from '../../hooks/useWalletBalance'
 import { useWalletName } from '../../hooks/useWalletName'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
+import { perfCount } from '../../util/perfTrace'
 import { WalletIcon } from '../icons/WalletIcon'
 import { useTheme } from '../services/ThemeContext'
 import { CryptoText } from '../text/CryptoText'
@@ -29,6 +30,7 @@ interface Props {
  * A view representing the data from a wallet, used for rows, cards, etc.
  */
 const CurrencyRowComponent: React.FC<Props> = props => {
+  perfCount('CurrencyRow')
   const {
     marginRem,
     nativeAmount,

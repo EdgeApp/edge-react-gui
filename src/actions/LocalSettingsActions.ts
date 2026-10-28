@@ -16,6 +16,7 @@ import {
   type SpendingLimits
 } from '../types/types'
 import { logActivity } from '../util/logger'
+import { perfBalanceStep, perfBalanceTap, perfNow } from '../util/perfTrace'
 
 export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 
@@ -98,16 +99,21 @@ export function useNotifCount(): number | undefined {
 
 export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
+    perfBalanceTap()
     const state = getState()
     const { account } = state.core
     const currentAccountBalanceVisibility =
       state.ui.settings.isAccountBalanceVisible
     const isAccountBalanceVisible = !currentAccountBalanceVisibility
+    const writeStart = perfNow()
     await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
+    perfBalanceStep('write', writeStart)
+    const dispatchStart = perfNow()
     dispatch({
       type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
       data: { isAccountBalanceVisible }
     })
+    perfBalanceStep('dispatch', dispatchStart)
 
     // Users often hide their balances by accident and then contact support
     // thinking their funds are gone, so explain how to get them back:
