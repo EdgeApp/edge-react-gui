@@ -109,8 +109,7 @@ export interface RampCreateParams {
 }
 
 type Props = (
-  | BuySellTabSceneProps<'pluginListBuy'>
-  | BuySellTabSceneProps<'pluginListSell'>
+  BuySellTabSceneProps<'pluginListBuy'> | BuySellTabSceneProps<'pluginListSell'>
 ) & {
   direction: 'buy' | 'sell'
 }
@@ -995,7 +994,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       const best = getBestQuoteError(
         quoteErrors.map(quoteError => quoteError.error),
         lastUsedInput === 'crypto'
-          ? selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? ''
+          ? (selectedCryptoCurrencyCode ?? selectedFiatCurrencyCode ?? '')
           : selectedFiatCurrencyCode,
         direction
       )

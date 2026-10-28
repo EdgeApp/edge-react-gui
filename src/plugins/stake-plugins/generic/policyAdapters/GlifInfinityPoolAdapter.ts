@@ -231,9 +231,8 @@ export const makeGlifInfinityPoolAdapter = (
       } = await workflowUtils(wallet)
 
       // Approve token transfer
-      const expectedLiquidityAmount = await simpleRampContract.previewWithdraw(
-        requestNativeAmount
-      )
+      const expectedLiquidityAmount =
+        await simpleRampContract.previewWithdraw(requestNativeAmount)
       const allowanceResult = await poolTokenContract.allowance(
         walletAddress,
         simpleRampContract.address

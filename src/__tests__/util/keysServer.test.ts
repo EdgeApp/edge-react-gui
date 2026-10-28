@@ -26,7 +26,7 @@ const makeOkResponse = (body: unknown): Response =>
     status: 200,
     json: async () => body,
     text: async () => JSON.stringify(body)
-  } as unknown as Response)
+  }) as unknown as Response
 
 const makeErrorResponse = (
   status: number,
@@ -39,7 +39,7 @@ const makeErrorResponse = (
     headers: { get: (name: string) => headers[name.toLowerCase()] ?? null },
     json: async () => ({}),
     text: async () => text
-  } as unknown as Response)
+  }) as unknown as Response
 
 describe('fetchRemoteKeys', () => {
   it('requests v1/infoRollup with a URL-encoded appId', async () => {

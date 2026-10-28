@@ -104,7 +104,7 @@ const makeUnpricedWallet = (balance: string): EdgeCurrencyWallet =>
     },
     currencyConfig: { allTokens: {} },
     balanceMap: new Map([[null, balance]])
-  } as unknown as EdgeCurrencyWallet)
+  }) as unknown as EdgeCurrencyWallet
 
 interface StateOptions {
   balance?: string

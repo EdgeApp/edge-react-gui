@@ -44,9 +44,9 @@ export const getStakePlugins = async (
     ...genericPlugins.map(async genericPlugin => {
       for (const config of genericPlugin.policyConfigs) {
         if (config.parentPluginId === pluginId) {
-          return await makeGenericStakePlugin(
-            genericPlugin
-          )(/* INIT OPTIONS */).catch((e: unknown) => {
+          return await makeGenericStakePlugin(genericPlugin)(
+            /* INIT OPTIONS */
+          ).catch((e: unknown) => {
             console.error(String(e))
           })
         }

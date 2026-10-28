@@ -146,5 +146,4 @@ export interface EdgeProviderMethods {
 }
 
 export interface EdgeProvider
-  extends EdgeProviderMethods,
-    EdgeProviderDeepLink {}
+  extends EdgeProviderMethods, EdgeProviderDeepLink {}

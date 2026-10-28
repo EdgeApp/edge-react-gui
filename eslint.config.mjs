@@ -22,6 +22,9 @@ export default [
       // Tweak builtin rules:
       'react/jsx-handler-names': 'warn',
 
+      // `bun fmt` checks formatting instead:
+      'prettier/prettier': 'off',
+
       // Add the React Native plugin:
       ...rnPlugin.configs.all.rules,
       'react-hooks/exhaustive-deps': [

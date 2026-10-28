@@ -96,16 +96,16 @@ export const useFiatText = (props: Props): string => {
   const fiatString = hideBalance
     ? lstrings.redacted_placeholder
     : // Flatten 0's:
-    displayZeroAsInteger && zeroString(fiatAmount)
-    ? '0'
-    : // Normal decimal formatting:
-      formatFiatString({
-        fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
-        autoPrecision,
-        minPrecision,
-        maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
-        noGrouping
-      })
+      displayZeroAsInteger && zeroString(fiatAmount)
+      ? '0'
+      : // Normal decimal formatting:
+        formatFiatString({
+          fiatAmount: isSubCentTruncationActive ? '0.01' : fiatAmount,
+          autoPrecision,
+          minPrecision,
+          maxPrecision: isSubCentTruncationActive ? 2 : maxPrecision,
+          noGrouping
+        })
 
   const lessThanSymbol = isSubCentTruncationActive ? '<' : ''
   const fiatSymbol = hideFiatSymbol

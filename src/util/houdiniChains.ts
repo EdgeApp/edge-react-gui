@@ -457,8 +457,7 @@ export function getRecipientAsset(opts: {
  * private, and the provider has no private route for it.
  */
 export type OwnNetworkBlock =
-  | 'selfPrivateUnsupported'
-  | 'privateRouteUnavailable'
+  'selfPrivateUnsupported' | 'privateRouteUnavailable'
 
 /**
  * Whether the send can pay the wallet's own network once the recipient goes

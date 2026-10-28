@@ -40,7 +40,7 @@ export const makeTestWallet = (
     name,
     balanceMap: new Map(),
     enabledTokenIds: []
-  } as unknown as EdgeCurrencyWallet)
+  }) as unknown as EdgeCurrencyWallet
 
 /**
  * Creates a WalletListItem for testing.

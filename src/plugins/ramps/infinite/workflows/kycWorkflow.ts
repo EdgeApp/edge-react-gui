@@ -182,9 +182,8 @@ export const kycWorkflow = async (params: Params): Promise<void> => {
 
         // If KYC is already approved (possible when linking an existing email),
         // skip opening the KYC webview entirely.
-        const newCustomerKycStatus = await infiniteApi.getKycStatus(
-          newCustomerId
-        )
+        const newCustomerKycStatus =
+          await infiniteApi.getKycStatus(newCustomerId)
         if (newCustomerKycStatus.kycStatus === 'ACTIVE') {
           resolve(true)
           return

@@ -225,8 +225,8 @@ const FlipInputModal2Component = React.forwardRef<FlipInputModalRef, Props>(
         feeStyle === 'dangerText'
           ? styles.feeTextDanger
           : feeStyle === 'warningText'
-          ? styles.feeTextWarning
-          : styles.feeTextDefault
+            ? styles.feeTextWarning
+            : styles.feeTextDefault
       const parenString = ')'
       return (
         <View style={styles.feeContainer}>

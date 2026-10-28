@@ -50,12 +50,7 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 const isAndroid = Platform.OS === 'android'
 
 export type FilledTextInputReturnKeyType =
-  | 'done'
-  | 'go'
-  | 'next'
-  | 'search'
-  | 'send'
-  | 'none' // Defaults to 'done'
+  'done' | 'go' | 'next' | 'search' | 'send' | 'none' // Defaults to 'done'
 
 export interface FilledTextInputBaseProps extends LayoutStyleProps {
   // Contents:
@@ -639,15 +634,15 @@ const TouchContainer = styled(TouchableOpacity)<{
           marginLeft: -theme.rem(1)
         }
       : extendTappable === 'rightOnly'
-      ? {
-          paddingRight: theme.rem(1),
-          marginRight: -theme.rem(1)
-        }
-      : // extendTappable === 'full'
-        {
-          marginHorizontal: -theme.rem(1),
-          paddingHorizontal: theme.rem(1)
-        }
+        ? {
+            paddingRight: theme.rem(1),
+            marginRight: -theme.rem(1)
+          }
+        : // extendTappable === 'full'
+          {
+            marginHorizontal: -theme.rem(1),
+            paddingHorizontal: theme.rem(1)
+          }
 
   return {
     paddingVertical: theme.rem(1.25),
@@ -847,25 +842,24 @@ const StyledAnimatedTextInput = styledWithRef(AnimatedTextInput)<{
 })
 
 const MessagesContainer = styled(Animated.View)<{ noLayoutFlow?: boolean }>(
-  theme => props =>
-    [
-      {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: theme.rem(0.5),
-        height: theme.rem(1)
-      },
-      props.noLayoutFlow === true
-        ? {
-            // HACK: If this field has a potential error message, counter-act the
-            // layout flow to avoid the effect of the error message's appearance
-            // pushing components below the this text field down.
-            // If there's a counter, this field is already taking up the maximum
-            // amount of vertical space, so the above is not an issue.
-            marginBottom: -theme.rem(1)
-          }
-        : {}
-    ]
+  theme => props => [
+    {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: theme.rem(0.5),
+      height: theme.rem(1)
+    },
+    props.noLayoutFlow === true
+      ? {
+          // HACK: If this field has a potential error message, counter-act the
+          // layout flow to avoid the effect of the error message's appearance
+          // pushing components below the this text field down.
+          // If there's a counter, this field is already taking up the maximum
+          // amount of vertical space, so the above is not an issue.
+          marginBottom: -theme.rem(1)
+        }
+      : {}
+  ]
 )
 
 const Message = styled(UnscaledText)<{ mode?: 'danger' | 'warn' }>(
@@ -874,8 +868,8 @@ const Message = styled(UnscaledText)<{ mode?: 'danger' | 'warn' }>(
       props.mode === 'danger'
         ? theme.dangerText
         : props.mode === 'warn'
-        ? theme.warningText
-        : theme.secondaryText,
+          ? theme.warningText
+          : theme.secondaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(0.75),
     includeFontPadding: false

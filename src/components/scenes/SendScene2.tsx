@@ -819,31 +819,31 @@ const SendComponent: React.FC<Props> = props => {
   )
     ? sprintf(lstrings.stealth_asset_unsupported_1s, currencyCode)
     : disableAssetsCover(
-        swapDisableAssets.destination,
-        destPluginId,
-        destTokenId
-      )
-    ? sprintf(
-        lstrings.stealth_asset_unsupported_1s,
-        destCurrencyCode ?? destTokenId ?? destPluginId
-      )
-    : sameAsset && !selfPrivateAvailable
-    ? sprintf(
-        // An asset the provider does not serve at all has no route of any
-        // kind, so the "to itself" wording would only mislead:
-        sourceAssetSupport == null
-          ? lstrings.stealth_asset_unsupported_1s
-          : lstrings.stealth_self_private_unsupported_1s,
-        currencyCode
-      )
-    : belowPrivateFloor
-    ? sprintf(
-        lstrings.stealth_below_private_minimum_1s,
-        formatUsdFloor(HOUDINI_MIN_USD.private)
-      )
-    : pairCaps.stealth === false
-    ? lstrings.stealth_route_unavailable_info
-    : undefined
+          swapDisableAssets.destination,
+          destPluginId,
+          destTokenId
+        )
+      ? sprintf(
+          lstrings.stealth_asset_unsupported_1s,
+          destCurrencyCode ?? destTokenId ?? destPluginId
+        )
+      : sameAsset && !selfPrivateAvailable
+        ? sprintf(
+            // An asset the provider does not serve at all has no route of any
+            // kind, so the "to itself" wording would only mislead:
+            sourceAssetSupport == null
+              ? lstrings.stealth_asset_unsupported_1s
+              : lstrings.stealth_self_private_unsupported_1s,
+            currencyCode
+          )
+        : belowPrivateFloor
+          ? sprintf(
+              lstrings.stealth_below_private_minimum_1s,
+              formatUsdFloor(HOUDINI_MIN_USD.private)
+            )
+          : pairCaps.stealth === false
+            ? lstrings.stealth_route_unavailable_info
+            : undefined
 
   /** The floor this send must clear for the route it would actually take. */
   const belowActiveFloor = stealth ? belowPrivateFloor : belowStandardFloor
@@ -1053,8 +1053,8 @@ const SendComponent: React.FC<Props> = props => {
             ? getHoudiniChain(houdiniChains, pluginId)
             : undefined
           : detectedDestPluginId == null
-          ? destChain
-          : getHoudiniChain(houdiniChains, detectedDestPluginId)
+            ? destChain
+            : getHoudiniChain(houdiniChains, detectedDestPluginId)
         const uriMemo = crossChainMemo ?? parsedUri.uniqueIdentifier
         if (
           memoDestChain?.memoNeeded === true &&
@@ -4080,17 +4080,17 @@ const SendComponent: React.FC<Props> = props => {
       )
         ? { currencyCode, networkName: coreWallet.currencyInfo.displayName }
         : disableAssetsCover(
-            swapDisableAssets.destination,
-            destPluginId,
-            destTokenId
-          )
-        ? // A destination the account cannot describe is still banned:
-          // name it by its ids rather than let the ban lapse.
-          destDescription ?? {
-            currencyCode: destTokenId ?? destPluginId,
-            networkName: destCurrencyInfo?.chainDisplayName ?? destPluginId
-          }
-        : undefined
+              swapDisableAssets.destination,
+              destPluginId,
+              destTokenId
+            )
+          ? // A destination the account cannot describe is still banned:
+            // name it by its ids rather than let the ban lapse.
+            (destDescription ?? {
+              currencyCode: destTokenId ?? destPluginId,
+              networkName: destCurrencyInfo?.chainDisplayName ?? destPluginId
+            })
+          : undefined
       if (disabledAsset != null) {
         setSwapQuote(undefined)
         setFetchingSwapQuote(false)

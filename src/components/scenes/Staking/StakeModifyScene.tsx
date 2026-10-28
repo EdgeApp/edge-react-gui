@@ -484,13 +484,13 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
       allocationType === 'stake'
         ? sprintf(lstrings.stake_amount_s_stake, quoteCurrencyCode)
         : isClaim
-        ? claimLanguage?.amountLabel ??
-          sprintf(lstrings.stake_amount_claim, quoteCurrencyCode)
-        : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
+          ? (claimLanguage?.amountLabel ??
+            sprintf(lstrings.stake_amount_claim, quoteCurrencyCode))
+          : sprintf(lstrings.stake_amount_s_unstake, quoteCurrencyCode)
 
     const nativeAmount = zeroString(quoteAllocation?.nativeAmount)
       ? ''
-      : quoteAllocation?.nativeAmount ?? ''
+      : (quoteAllocation?.nativeAmount ?? '')
 
     return (
       <EdgeCard key={`${allocationType}${pluginId}${currencyCode}`}>
@@ -518,13 +518,11 @@ const StakeModifySceneComponent: React.FC<Props> = props => {
     modification: ChangeQuoteRequest['action'],
     asset: StakeAssetInfo
   ): React.ReactElement | null => {
-    if (
-      !(
-        modification === 'stake' ||
-        modification === 'unstake' ||
-        modification === 'claim'
-      )
-    )
+    if (!(
+      modification === 'stake' ||
+      modification === 'unstake' ||
+      modification === 'claim'
+    ))
       return null
     const { pluginId, tokenId } = asset
     const quoteAllocation: QuoteAllocation | undefined =

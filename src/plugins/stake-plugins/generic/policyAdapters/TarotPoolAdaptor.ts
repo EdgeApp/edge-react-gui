@@ -636,9 +636,8 @@ export const makeTarotPoolAdapter = (
 
       const max = await tarot.getMaxDeleverage()
       const amounts = await tarot.getDeleverageAmounts(max)
-      const collateralBalance = await collateralContract.balanceOf(
-        walletAddress
-      )
+      const collateralBalance =
+        await collateralContract.balanceOf(walletAddress)
       const deadline = Math.round(Date.now() / 1000) + DEADLINE_OFFSET
 
       const bAmountAMin = tarot.decimalToBalance(amounts.bAmountAMin)

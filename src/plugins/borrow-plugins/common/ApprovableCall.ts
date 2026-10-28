@@ -58,7 +58,7 @@ export const makeApprovableCall = async (
         {
           nativeAmount: txInfo.value
             ? txInfo.value.toString()
-            : nativeAmount ?? '0',
+            : (nativeAmount ?? '0'),
           publicAddress: txInfo.to,
           otherParams: { data: txInfo.data }
         }
@@ -72,9 +72,8 @@ export const makeApprovableCall = async (
       pendingTxs
     }
 
-    const edgeUnsignedTx: EdgeTransaction = await wallet.makeSpend(
-      edgeSpendInfo
-    )
+    const edgeUnsignedTx: EdgeTransaction =
+      await wallet.makeSpend(edgeSpendInfo)
     return edgeUnsignedTx
   }
 

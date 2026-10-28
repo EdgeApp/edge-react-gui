@@ -53,10 +53,9 @@ export interface CreateWalletSelectCryptoParams {
   splitSourceWalletId?: string
 }
 
-interface Props
-  extends EdgeAppSceneProps<
-    'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
-  > {}
+interface Props extends EdgeAppSceneProps<
+  'createWalletSelectCrypto' | 'createWalletSelectCryptoNewAccount'
+> {}
 
 const CreateWalletSelectCryptoComponent: React.FC<Props> = (props: Props) => {
   const { navigation, route } = props

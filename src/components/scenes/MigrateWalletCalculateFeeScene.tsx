@@ -248,8 +248,7 @@ const MigrateWalletCalculateFeeComponent: React.FC<Props> = props => {
         let assetSpendRoutines: Array<() => Promise<void>>
         if (
           (wallet.otherMethods.makeMaxSpend as
-            | MakeMaxSpendMethod
-            | undefined) != null
+            MakeMaxSpendMethod | undefined) != null
         ) {
           assetSpendRoutines = [
             async () => {

@@ -42,9 +42,7 @@ export interface VaultBankAccountInfo {
 }
 
 export type VaultPayload =
-  | VaultPersonalInfo
-  | VaultAddressInfo
-  | VaultBankAccountInfo
+  VaultPersonalInfo | VaultAddressInfo | VaultBankAccountInfo
 
 export interface VaultMetadata {
   version: number

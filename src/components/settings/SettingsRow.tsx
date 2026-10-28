@@ -67,8 +67,8 @@ const SettingsRowComponent = (props: Props) => {
           disabled
             ? styles.disabledText
             : dangerous
-            ? styles.dangerText
-            : styles.text
+              ? styles.dangerText
+              : styles.text
         }
       >
         {label}

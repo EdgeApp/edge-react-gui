@@ -17,8 +17,7 @@ async function fetchRevolut(
   init?: RequestInit
 ): Promise<unknown> {
   const revolut = pluginMaps.guiApiKeys.revolut as
-    | { apiKey?: string }
-    | undefined
+    { apiKey?: string } | undefined
   const apiKey = revolut?.apiKey
   if (apiKey == null || apiKey === '') {
     throw new Error('No Revolut API key found')

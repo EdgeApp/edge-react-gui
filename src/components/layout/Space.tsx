@@ -110,21 +110,21 @@ export const Space = React.memo((props: SpaceProps) => {
     leftFill && rightFill
       ? 'center'
       : rightFill
-      ? 'flex-start'
-      : leftFill
-      ? 'flex-end'
-      : undefined
+        ? 'flex-start'
+        : leftFill
+          ? 'flex-end'
+          : undefined
   const verticalAlignment =
     topFill && bottomFill
       ? 'center'
       : bottomFill
-      ? 'flex-start'
-      : topFill
-      ? 'flex-end'
-      : undefined
+        ? 'flex-start'
+        : topFill
+          ? 'flex-end'
+          : undefined
   const alignItems = row ? verticalAlignment : horizontalAlignment
   const justifyContent = row
-    ? horizontalAlignment ?? (expand ? 'space-between' : undefined)
+    ? (horizontalAlignment ?? (expand ? 'space-between' : undefined))
     : verticalAlignment
 
   // Flex:

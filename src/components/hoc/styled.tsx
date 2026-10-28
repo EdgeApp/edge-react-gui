@@ -25,8 +25,7 @@ type ValidStyles = ImageStyle | TextStyle | ViewStyle
 // AnimatedStyle includes). Only the dynamic `theme => props => style` path may
 // return these; the cached `theme => style` and static-object paths stay plain.
 type DynamicStyles =
-  | ValidStyles
-  | AnimatedStyle<ImageStyle | TextStyle | ViewStyle>
+  ValidStyles | AnimatedStyle<ImageStyle | TextStyle | ViewStyle>
 
 type Styler<Props> =
   | ValidStyles

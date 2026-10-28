@@ -141,8 +141,7 @@ export function updateExchangeInfo(): ThunkAction<Promise<void>> {
       // `swap.disableAssetsByPlugin` key and drops it. This cleaner is ours,
       // so parsing the raw payload keeps the field without a package bump.
       const rollup = infoServerData.rollupRaw as
-        | { exchangeInfo?: unknown }
-        | undefined
+        { exchangeInfo?: unknown } | undefined
       const data = asExchangeInfo(rollup?.exchangeInfo)
       dispatch({ type: 'UPDATE_EXCHANGE_INFO', data })
     } catch (e: any) {

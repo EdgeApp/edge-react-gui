@@ -30,12 +30,7 @@ const textHeights = {
 }
 
 export type RowActionIcon =
-  | 'copy'
-  | 'editable'
-  | 'questionable'
-  | 'none'
-  | 'touchable'
-  | 'delete'
+  'copy' | 'editable' | 'questionable' | 'none' | 'touchable' | 'delete'
 
 interface Props {
   body?: string
@@ -151,7 +146,7 @@ export const EdgeRow: React.FC<Props> = (props: Props) => {
             size="large"
           />
         ) : (
-          children ??
+          (children ??
           (body == null ? null : (
             <EdgeText
               style={styles.textBody}
@@ -160,7 +155,7 @@ export const EdgeRow: React.FC<Props> = (props: Props) => {
             >
               {body}
             </EdgeText>
-          ))
+          )))
         )}
       </View>
       {

@@ -113,7 +113,7 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   const name =
     metadataName != null && metadataName !== ''
       ? metadataName
-      : reverseName?.name ?? metadataName
+      : (reverseName?.name ?? metadataName)
   const isSentTransaction = direction === 'send'
 
   const cryptoAmount = div(
@@ -149,7 +149,7 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
   )
   const amountFiat =
     (defaultAmountFiat ?? 0) > 0
-      ? defaultAmountFiat ?? 0
+      ? (defaultAmountFiat ?? 0)
       : historicalRate * Number(cryptoExchangeAmount)
   const fiatAmount = displayFiatAmount(amountFiat)
   const fiatSymbol = getFiatSymbol(defaultIsoFiat)
@@ -231,8 +231,8 @@ const TransactionViewInner: React.FC<TransactionViewInnerProps> = props => {
     transaction.confirmations === 'confirmed'
       ? null
       : transaction.confirmations === 'failed'
-      ? styles.failedText
-      : styles.unconfirmedText
+        ? styles.failedText
+        : styles.unconfirmedText
 
   // Transaction Category
   let categoryText

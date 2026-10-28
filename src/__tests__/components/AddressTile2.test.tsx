@@ -26,7 +26,7 @@ const makeWallet = (
     id,
     type: ethConfig.currencyInfo.walletType,
     watch: () => () => {}
-  } as unknown as EdgeCurrencyWallet)
+  }) as unknown as EdgeCurrencyWallet
 
 describe('AddressTile2 "Myself" picker', () => {
   it("asks a picked token row for the token's own receive address", async () => {

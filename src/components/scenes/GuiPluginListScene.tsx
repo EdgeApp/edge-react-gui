@@ -549,11 +549,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       forcedWalletResult.type !== 'wallet' ||
       forcedWallet == null
         ? lstrings.cryptocurrency
-        : getCurrencyCodeWithAccount(
+        : (getCurrencyCodeWithAccount(
             account,
             forcedWallet.currencyInfo.pluginId,
             forcedWalletResult.tokenId
-          ) ?? ''
+          ) ?? '')
 
     const countryCard =
       stateProvinceData == null ? (

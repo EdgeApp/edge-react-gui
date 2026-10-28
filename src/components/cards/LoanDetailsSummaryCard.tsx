@@ -41,8 +41,8 @@ export const LoanDetailsSummaryCard = (props: Props) => {
               index === 0
                 ? 'flex-start'
                 : index === details.length - 1
-                ? 'flex-end'
-                : 'center'
+                  ? 'flex-end'
+                  : 'center'
 
             return (
               <View key={detail.label} style={styles.detail}>

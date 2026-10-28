@@ -48,8 +48,8 @@ export function Alert(props: Props) {
     type === 'warning'
       ? theme.warningText
       : type === 'error'
-      ? theme.dangerText
-      : theme.primaryText
+        ? theme.dangerText
+        : theme.primaryText
 
   const handlePress = useHandler(() => {
     if (onPress != null)

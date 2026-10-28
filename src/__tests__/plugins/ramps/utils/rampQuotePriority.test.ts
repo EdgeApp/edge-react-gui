@@ -38,7 +38,7 @@ const makeQuote = ({
       min: { value: 0, unit: 'minutes' },
       max: { value: 10, unit: 'minutes' }
     }
-  } as unknown as RampQuote)
+  }) as unknown as RampQuote
 
 const idsOf = (quotes: RampQuote[]): string[] =>
   quotes.map(quote => `${quote.pluginId}:${quote.paymentType}`)

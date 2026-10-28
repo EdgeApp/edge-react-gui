@@ -63,8 +63,8 @@ export const SafeSlider: React.FC<Props> = props => {
   const sliderText = locked
     ? lockedText
     : !sliderDisabled
-    ? confirmText ?? lstrings.send_confirmation_slide_to_confirm
-    : disabledText ?? lstrings.select_exchange_amount_short
+      ? (confirmText ?? lstrings.send_confirmation_slide_to_confirm)
+      : (disabledText ?? lstrings.select_exchange_amount_short)
 
   const translateX = useSharedValue(upperBound)
 
