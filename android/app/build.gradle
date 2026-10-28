@@ -91,6 +91,14 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "co.edgesecure.app"
+
+    lint {
+        // Release lint (lintVital) OOMs on this large project and isn't needed
+        // for benchmark/release APKs; CI runs lint separately.
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "co.edgesecure.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -452,11 +460,13 @@ preBuild.dependsOn("generateEdgeApiKeyHeaders")
 
 // edge_api_secret.c is gitignored but listed in CMakeLists.txt, and the CMake
 // configure/build tasks do not run behind preBuild, so wire them up directly
-// or a fresh checkout fails with "Cannot find source file".
+// or a fresh checkout fails with "Cannot find source file". The same goes
+// for React Native's generated Android-autolinking.cmake, which
+// CMakeLists.txt only links into libappmodules.so if it exists by then:
 tasks.matching {
     it.name.startsWith("configureCMake") ||
         it.name.startsWith("buildCMake") ||
         it.name.startsWith("externalNativeBuild")
 }.configureEach {
-    dependsOn("generateEdgeApiSigner")
+    dependsOn("generateEdgeApiSigner", "generateAutolinkingNewArchitectureFiles")
 }

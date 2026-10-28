@@ -122,7 +122,11 @@ const palette = {
   goldOp50: 'rgba(214, 190, 48, 0.5)',
 
   giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
-  giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
+  giftCardOverlayLight: 'rgba(0, 0, 0, .5)',
+
+  // Solid stand-ins for blur where it cannot render (Android below 12):
+  noBlurModal: '#2b2b2b',
+  noBlurChrome: '#161616'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -198,6 +202,8 @@ export const edgeDark: Theme = {
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
   modalBackground: palette.whiteOp37,
+  modalBackgroundNoBlur: palette.noBlurModal,
+  chromeBackgroundNoBlur: palette.noBlurChrome,
   modalSceneOverlayColor: palette.black,
   modalDragbarColor: palette.darkGrayOp30,
 

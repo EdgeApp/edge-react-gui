@@ -476,7 +476,9 @@ describe('SendScene2 recipient network', () => {
       </FakeProviders>
     )
     const tileProps = (): React.ComponentProps<typeof AddressTile2> =>
-      rendered.UNSAFE_getByType(AddressTile2).props
+      rendered.UNSAFE_getByType(AddressTile2).props as React.ComponentProps<
+        typeof AddressTile2
+      >
     const recipientGetsRow = (): React.ComponentProps<typeof EdgeRow> => {
       const row = rendered
         .UNSAFE_getAllByType(EdgeRow)

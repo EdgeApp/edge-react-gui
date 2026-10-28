@@ -1,5 +1,6 @@
 import childProcess from 'child_process'
 import fs from 'fs'
+import { tmpdir } from 'os'
 import { join } from 'path'
 import { sprintf } from 'sprintf-js'
 
@@ -698,7 +699,15 @@ function buildCommonPost(buildObj: BuildObj): void {
     const changes = cmd(
       `git diff HEAD^ HEAD CHANGELOG.md | { grep '^+[^+]' || true; }`
     )
-    const changelog = encodeURIComponent(changes)
+    // The changelog goes in a form field read from a file, not the query
+    // string: a release merge brings the whole release section along, and
+    // the 4.52.0 one made the URL long enough for Zealot's proxy to answer
+    // 502 without storing the build.
+    const changelogFile = join(
+      fs.mkdtempSync(join(tmpdir(), 'zealot-')),
+      'changelog.txt'
+    )
+    fs.writeFileSync(changelogFile, changes)
     mylog(`\n\nUploading to Zealot: ${zealotUrl}`)
     mylog(
       '***********************************************************************\n'
@@ -707,7 +716,7 @@ function buildCommonPost(buildObj: BuildObj): void {
     const token = encodeURIComponent(zealotApiToken)
     const encodedChannelKey = encodeURIComponent(channelKey)
     callRedacted(
-      `curl -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${encodedChannelKey}&branch=${branch}&git_commit=${gitCommit}&changelog=${changelog}" -F "file=@${buildObj.ipaFile}"`,
+      `curl --fail-with-body -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${encodedChannelKey}&branch=${branch}&git_commit=${gitCommit}" -F "changelog=<${changelogFile}" -F "file=@${buildObj.ipaFile}"`,
       [token, encodedChannelKey]
     )
     mylog('\n*** Upload to Zealot Complete ***')
@@ -731,7 +740,7 @@ function buildCommonPost(buildObj: BuildObj): void {
       const channelKey = encodeURIComponent(abiChannelKey)
       mylog(`\n\nUploading ${abi} APK to Zealot: ${zealotUrl}`)
       callRedacted(
-        `curl -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${channelKey}&branch=${branch}&git_commit=${gitCommit}" -F "file=@${apkFile}"`,
+        `curl --fail-with-body -X POST "${zealotUrl}/api/apps/upload?token=${token}&channel_key=${channelKey}&branch=${branch}&git_commit=${gitCommit}" -F "file=@${apkFile}"`,
         [token, channelKey]
       )
       mylog(`\n*** Upload of ${abi} APK to Zealot Complete ***`)

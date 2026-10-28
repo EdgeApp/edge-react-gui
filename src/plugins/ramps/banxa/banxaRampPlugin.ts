@@ -1082,7 +1082,7 @@ export const banxaRampPlugin: RampPluginFactory = (
               const maxPrices = asBanxaPricesResponse(maxResponse)
               const maxPriceRow = maxPrices.data.prices.find(p => {
                 return (
-                  p.payment_method_id === paymentObj!.id &&
+                  p.payment_method_id === paymentObj.id &&
                   p.coin_code === banxaCoin &&
                   p.fiat_code === fiatCode
                 )
@@ -1170,7 +1170,7 @@ export const banxaRampPlugin: RampPluginFactory = (
           const banxaPrices = asBanxaPricesResponse(response)
           const priceRow = banxaPrices.data.prices.find(p => {
             return (
-              p.payment_method_id === paymentObj!.id &&
+              p.payment_method_id === paymentObj.id &&
               p.coin_code === banxaCoin &&
               p.fiat_code === fiatCode
             )

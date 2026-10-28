@@ -2,7 +2,6 @@ import type { EdgeAccount } from 'edge-core-js'
 import { type InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -35,9 +34,6 @@ export interface LoginParams {
   loginUiInitialRoute?: InitialRouteName
 }
 
-// @ts-expect-error Sneak the BlurView over to the login UI:
-global.ReactNativeBlurView = BlurView
-
 interface Props extends RootSceneProps<'login'> {}
 
 let firstRun = true
@@ -68,6 +64,11 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
+    // The core context is an empty placeholder object until EdgeCoreManager
+    // finishes booting. On release builds this scene mounts first, so bail
+    // WITHOUT disarming firstRun; the context dep re-runs this effect once
+    // the real context lands, and YOLO can fire then.
+    if (context.loginWithPassword == null) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN, YOLO_OTP_KEY } = CONFIG
 
     const yoloLogin = (login: () => Promise<EdgeAccount>): void => {
