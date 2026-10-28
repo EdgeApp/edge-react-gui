@@ -275,6 +275,7 @@
   "packageManager": "npm@11.15.0",
   "reanimated": {
     "staticFeatureFlags": {
+      "ANDROID_SYNCHRONOUSLY_UPDATE_UI_PROPS": true,
       "DISABLE_COMMIT_PAUSING_MECHANISM": true
     }
   }
