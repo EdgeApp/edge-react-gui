@@ -40,6 +40,7 @@ import type {
   WalletsTabParamList
 } from '../types/routerTypes'
 import { isMaestro } from '../util/maestro'
+import { usePerfRender } from '../util/perfTrace'
 import { logEvent } from '../util/tracking'
 import { getUkCompliantString } from '../util/ukComplianceUtils'
 import { hasYoloAccountLogin } from '../util/yoloLogin'
@@ -670,6 +671,7 @@ const EdgeTabs: React.FC = () => {
 // -------------------------------------------------------------------------
 
 const EdgeAppStackComponent: React.FC = () => {
+  usePerfRender('EdgeAppStack')
   const countryCode = useSelector(state => state.ui.countryCode)
 
   return (

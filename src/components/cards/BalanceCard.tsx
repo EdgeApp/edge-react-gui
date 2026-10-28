@@ -13,6 +13,7 @@ import { lstrings } from '../../locales/strings'
 import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
+import { perfBalanceCommitted } from '../../util/perfTrace'
 import {
   getTotalFiatAmountFromExchangeRates,
   removeIsoPrefix,
@@ -58,6 +59,9 @@ export const BalanceCard: React.FC<Props> = props => {
   const isBalanceVisible = useSelector(
     state => state.ui.settings.isAccountBalanceVisible
   )
+  React.useLayoutEffect(() => {
+    perfBalanceCommitted(isBalanceVisible)
+  }, [isBalanceVisible])
   const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const fiatAmount = useSelector(state =>
     getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat)

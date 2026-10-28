@@ -22,6 +22,7 @@ import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 import { onInfoRollup } from '../../util/network'
+import { usePerfRender } from '../../util/perfTrace'
 import {
   height,
   ratioHorizontal,
@@ -59,6 +60,7 @@ const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
  * which provide some background tasks and exterior functionality for the app.
  */
 const ServicesComponent: React.FC<Props> = props => {
+  usePerfRender('Services')
   const dispatch = useDispatch()
   const account = useSelector(state =>
     state.core.account !== defaultAccount ? state.core.account : undefined
