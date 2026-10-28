@@ -135,6 +135,7 @@ function buildSwapPlugins(): EdgeCorePluginsInit {
     mptrade: swapInit('mptrade'),
     nexchange: swapInit('nexchange'),
     sideshift: swapInit('sideshift'),
+    stealthex: swapInit('stealthex'),
     swapter: swapInit('swapter'),
     swapuz: swapInit('swapuz'),
     xgram: swapInit('xgram'),
