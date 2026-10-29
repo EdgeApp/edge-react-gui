@@ -61,6 +61,14 @@ export interface DirectionSupportData {
   readonly deepPath: string
   /** A set of query parameters to pass to a plugin. */
   readonly deepQuery?: Record<string, string>
+  /**
+   * Resolves extra query parameters when the user approves a quote, such as
+   * a provider login session. Returned parameters override `deepQuery`;
+   * returning undefined opens the plain deep link.
+   */
+  readonly resolveDeepQuery?: (
+    request: RampQuoteRequest
+  ) => Promise<Record<string, string> | undefined>
 }
 
 /**
@@ -159,10 +167,14 @@ export function createExternalRampPlugin(
           specialQuoteRateMessage: lstrings.tap_to_view_quote_amount_and_rate,
           approveQuote: async () => {
             // Launch!
+            const resolvedQuery = await support.resolveDeepQuery?.(request)
             const navigationProps: PluginViewParams = {
               plugin: externalConfig.guiPlugin,
               deepPath: support.deepPath,
-              deepQuery: support.deepQuery
+              deepQuery:
+                resolvedQuery == null
+                  ? support.deepQuery
+                  : { ...support.deepQuery, ...resolvedQuery }
             }
 
             if (request.direction === 'buy') {
