@@ -177,7 +177,7 @@ index 57af20c..e5d3d9a 100644
    );
  }
 diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
-index a77a7fb..21f1892 100644
+index a77a7fb..48e16aa 100644
 --- a/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
 +++ b/node_modules/@react-navigation/drawer/src/views/modern/Overlay.tsx
 @@ -1,5 +1,5 @@
@@ -215,7 +215,24 @@ index a77a7fb..21f1892 100644
      onPress,
      style,
      accessibilityLabel = 'Close drawer',
-@@ -42,6 +54,47 @@ const Overlay = React.forwardRef(function Overlay(
+@@ -26,9 +38,13 @@ const Overlay = React.forwardRef(function Overlay(
+   const animatedStyle = useAnimatedStyle(() => {
+     return {
+       opacity: progress.value,
+-      // We don't want the user to be able to press through the overlay when drawer is open
+-      // We can send the overlay behind the screen to avoid it
+-      zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
++      // PATCHED (Edge): no animated zIndex. Under the new architecture, moving
++      // the overlay from behind the screen to in front of it reorders the native
++      // views, which blanks the whole app for a frame as the drawer opens. If
++      // opacity reaches the native view outside a commit, the overlay can also
++      // stay behind the screen until the drawer has opened, then pop in. The
++      // animated pointerEvents below already keep the closed overlay from
++      // taking touches.
+     };
+   });
+ 
+@@ -42,6 +58,47 @@ const Overlay = React.forwardRef(function Overlay(
      } as const;
    });
  
@@ -263,7 +280,7 @@ index a77a7fb..21f1892 100644
    return (
      <Animated.View
        {...props}
-@@ -49,12 +102,7 @@ const Overlay = React.forwardRef(function Overlay(
+@@ -49,12 +106,7 @@ const Overlay = React.forwardRef(function Overlay(
        style={[styles.overlay, overlayStyle, animatedStyle, style]}
        animatedProps={animatedProps}
      >
@@ -277,7 +294,7 @@ index a77a7fb..21f1892 100644
      </Animated.View>
    );
  });
-@@ -70,7 +118,7 @@ const overlayStyle = Platform.select<Record<string, string>>({
+@@ -70,7 +122,7 @@ const overlayStyle = Platform.select<Record<string, string>>({
  
  const styles = StyleSheet.create({
    overlay: {
