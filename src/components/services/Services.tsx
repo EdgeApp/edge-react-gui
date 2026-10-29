@@ -58,7 +58,7 @@ const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
  */
-export const Services: React.FC<Props> = props => {
+const ServicesComponent: React.FC<Props> = props => {
   const dispatch = useDispatch()
   const account = useSelector(state =>
     state.core.account !== defaultAccount ? state.core.account : undefined
@@ -228,3 +228,8 @@ export const Services: React.FC<Props> = props => {
     </>
   )
 }
+
+// The side menu hosts these services, and re-renders whenever the drawer
+// opens or closes. Without the memo, every toggle re-ran every service,
+// including the expensive SortedWalletList, before the drawer could move.
+export const Services = React.memo(ServicesComponent)
