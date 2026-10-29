@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { BackHandler, Dimensions, Keyboard, View } from 'react-native'
+import { BackHandler, Dimensions, Keyboard, Platform, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 import {
   Gesture,
@@ -18,6 +18,7 @@ import Animated, {
   useSharedValue,
   withTiming
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { runOnJS } from 'react-native-worklets'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -149,6 +150,15 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
     []
   )
 
+  // The Airship layer measures the safe area only on iOS, and edge-to-edge
+  // Android draws the window under both system bars, so keep the sheet clear
+  // of them here. iOS already gets this from the layer, so adding it there
+  // would double the gap. While open, the keyboard covers the navigation bar:
+  const insets = useSafeAreaInsets()
+  const isAndroid = Platform.OS === 'android'
+  const insetTop = isAndroid ? insets.top : 0
+  const insetBottom = isAndroid && !isKeyboardOpen ? insets.bottom : 0
+
   const gesture = Gesture.Pan()
     .onUpdate(e => {
       offset.value = e.translationY
@@ -183,9 +193,10 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
   const modalLayout = {
     borderColor: warning ? theme.warningText : theme.modalBorderColor,
     borderWidth: warning ? 4 : theme.modalBorderWidth,
+    marginTop: insetTop,
     marginBottom: -bottomGap,
     paddingTop: isHeaderless ? halfRem : 0, // If there's a header; either close button or a title, the custom paddingTop will be added to the bottom of the title container.
-    paddingBottom: bottomGap + (scroll ? 0 : halfRem) // Ignore padding on bottom for scrollable content so we don't have a cutoff gap when scrolling content
+    paddingBottom: bottomGap + insetBottom + (scroll ? 0 : halfRem) // Ignore padding on bottom for scrollable content so we don't have a cutoff gap when scrolling content
   }
 
   return (
