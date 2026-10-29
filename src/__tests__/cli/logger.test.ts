@@ -259,6 +259,25 @@ describe('EngineLogger roll', () => {
     await closed(logger)
     expect(fs.existsSync(`${logger.logPath}.1`)).toBe(false)
   })
+
+  it('keeps writing through two rolls inside the retry window', async () => {
+    // The retry window spaces out attempts after a failed reopen. Every
+    // successful reopen started it too, and every roll reopens, so a roll
+    // within `REOPEN_RETRY_MS` of the one before found the window still
+    // open: `roll()` had already nulled the stream, and every line was
+    // dropped until the window passed. Under the fake clock both rolls here
+    // happen at the same instant.
+    const { EngineLogger } = load()
+    seedCurrentLog('quickrolls', 100)
+    const logger = new EngineLogger('quickrolls', 150)
+    logger.info('the line that fills the first generation')
+    logger.info('x'.repeat(200))
+    logger.info('the line after the second roll')
+    await closed(logger)
+    expect(fs.readFileSync(logger.logPath, 'utf8')).toContain(
+      'the line after the second roll'
+    )
+  })
 })
 
 /**
