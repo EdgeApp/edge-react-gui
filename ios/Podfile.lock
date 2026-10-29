@@ -2718,7 +2718,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNWorklets (0.10.0):
+  - RNWorklets (0.10.4):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2739,10 +2739,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNWorklets/apple (= 0.10.0)
-    - RNWorklets/common (= 0.10.0)
+    - RNWorklets/apple (= 0.10.4)
+    - RNWorklets/common (= 0.10.4)
     - Yoga
-  - RNWorklets/apple (0.10.0):
+  - RNWorklets/apple (0.10.4):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2764,7 +2764,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNWorklets/common (0.10.0):
+  - RNWorklets/common (0.10.4):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -3581,7 +3581,7 @@ SPEC CHECKSUMS:
   RNStoreReview: 6acb6bf05fcc90f471753d4c128954a1426018b2
   RNSVG: 02c4605f1656727c3a83059ef119dc7e469df182
   RNVectorIcons: 0763c0f64e1ec73fe18f4ed2fb1e485f96417009
-  RNWorklets: 5babf83fcbca84cab18fc630519510371686ca8f
+  RNWorklets: 2edea1057f56731bfc6a0db525b40468ec6e7a07
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
@@ -3608,4 +3608,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 365a18a922b38c76e66709be6b33864f794d6f54
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0
