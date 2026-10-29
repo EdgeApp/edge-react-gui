@@ -21,6 +21,7 @@
 - changed: Upgrade edge-login-ui-rn to v4.0.0
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - changed: On Android 16 and above, the back button and back gesture reach the app through predictive back, which React Native 0.86 supports, so the app no longer opts out of it.
+- changed: Upgrade react-native-worklets to 0.10.4, which stops the animation loop from running while the app is in the background on Android and fixes crashes when the JavaScript runtime shuts down.
 - changed: Rename the HoudiniSwap provider to Houdini and link its privacy pages on docs.houdini.com
 - fixed: Swaps with no exact receive quote switch to a send amount of the same value with a toast, not a no-provider error
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
