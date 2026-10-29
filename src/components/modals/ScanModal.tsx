@@ -1,8 +1,11 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { launchImageLibrary } from 'react-native-image-picker'
-import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets
+} from 'react-native-safe-area-context'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import {
   Camera,
@@ -166,6 +169,13 @@ export const ScanModal: React.FC<Props> = props => {
   }
 
   const airshipMarginTop = theme.rem(3)
+
+  // AirshipModal measures the safe area only on iOS, so keep the footer above
+  // edge-to-edge Android's navigation bar here:
+  const insets = useSafeAreaInsets()
+  const bottomSpaceStyle = {
+    height: theme.rem(1.5) + (Platform.OS === 'android' ? insets.bottom : 0)
+  }
   const [headerContainerLayout, handleLayoutHeaderContainer] = useLayout()
   const [cameraContainerLayout, handleLayoutCameraContainer] = useLayout()
   const [peepholeSpaceLayout, handleLayoutPeepholeSpace] = useLayout()
@@ -282,13 +292,12 @@ export const ScanModal: React.FC<Props> = props => {
     >
       {renderModalContent()}
       <ModalFooter onPress={handleClose} />
-      <View style={styles.bottomSpace} />
+      <View style={bottomSpaceStyle} />
     </AirshipModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  bottomSpace: { height: theme.rem(1.5) },
   // Camera View
   cameraContainer: {
     position: 'absolute',
