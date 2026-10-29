@@ -16,6 +16,7 @@ import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -183,22 +184,21 @@ const ServicesComponent: React.FC<Props> = props => {
     'Services 3'
   )
 
-  // Methods to call periodically
-  useRefresher(
-    async () => {
-      dispatch(updateExchangeInfo()).catch((error: unknown) => {
-        console.warn(error)
-      })
-      dispatch(updateGiftCardInfo()).catch((error: unknown) => {
-        console.warn(error)
-      })
-      dispatch(updateHoudiniChains()).catch((error: unknown) => {
-        console.warn(error)
-      })
-    },
-    undefined,
-    REFRESH_INFO_SERVER_MS
-  )
+  // Methods to call periodically. `useRefresher` restarts, and calls this
+  // right away, whenever the callback changes, so keep it stable or every
+  // render re-dispatches all three to every subscriber:
+  const handleRefreshInfo = useHandler(async () => {
+    dispatch(updateExchangeInfo()).catch((error: unknown) => {
+      console.warn(error)
+    })
+    dispatch(updateGiftCardInfo()).catch((error: unknown) => {
+      console.warn(error)
+    })
+    dispatch(updateHoudiniChains()).catch((error: unknown) => {
+      console.warn(error)
+    })
+  })
+  useRefresher(handleRefreshInfo, undefined, REFRESH_INFO_SERVER_MS)
 
   const startLoanManager = CONFIG.BETA_FEATURES && account != null
 
