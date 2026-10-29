@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { ViewProps } from 'react-native'
+import { Platform, type ViewProps } from 'react-native'
 import Animated, {
   type BaseAnimationBuilder,
   type ComplexAnimationBuilder,
@@ -25,6 +25,14 @@ export const DEFAULT_ANIMATION_DURATION_MS = 300
 export const LAYOUT_ANIMATION = LinearTransition.duration(
   DEFAULT_ANIMATION_DURATION_MS
 )
+
+// On Android under the new architecture, Reanimated's layout transition can
+// leave a view at its old position after its siblings change. On slow
+// startups, Home's rows stayed where they were before the promo card
+// appeared above them, so the card drew over the Buy and Sell tiles. Only
+// animate layout changes by default on iOS:
+const DEFAULT_LAYOUT_ANIMATION =
+  Platform.OS === 'android' ? undefined : LAYOUT_ANIMATION
 export const MAX_LIST_ITEMS_ANIM = 10
 
 // Commonly used enter/exit animations. Use these to prevent
@@ -100,7 +108,7 @@ interface Props {
   exit?: Anim
 
   /**
-   * The animation to use for all layout changes. (defaults {@link LAYOUT_ANIMATION})
+   * The animation to use for all layout changes. (defaults to {@link LAYOUT_ANIMATION} on iOS, none on Android)
    *
    * TODO: Remove default once we have audited all instances of EdgeAnim
    * explicitly enabling the default LAYOUT_ANIMATION for those instances.
@@ -176,7 +184,7 @@ export const EdgeAnim = ({
   disableAnimation,
   enter,
   exit,
-  layout = LAYOUT_ANIMATION,
+  layout = DEFAULT_LAYOUT_ANIMATION,
   noLayoutAnimation = false,
   visible = true,
   ...rest

@@ -18,6 +18,7 @@
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
 - fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
+- fixed: Home's promo card no longer covers the Buy and Sell tiles on Android when it appears after the screen loads.
 - fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
