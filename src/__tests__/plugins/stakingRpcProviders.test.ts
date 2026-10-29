@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it, jest } from '@jest/globals'
+import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { ethers } from 'ethers'
 
 import { makeStakingProvider } from '../../plugins/stake-plugins/util/rpcProviders'
@@ -79,8 +79,9 @@ const makeProvider = (
 }
 
 describe('makeStakingProvider', () => {
-  // The provider schedules its stall checks with real timers:
-  beforeAll(() => {
+  // The provider schedules its stall checks with real timers. The stall
+  // tests fake them, so they don't wait out the stall timeout:
+  beforeEach(() => {
     jest.useRealTimers()
   })
 
@@ -97,9 +98,12 @@ describe('makeStakingProvider', () => {
   })
 
   it('also asks another node when one stalls', async () => {
+    jest.useFakeTimers()
     const { provider } = makeProvider([hung, healthy])
-    expect(await provider.call(call)).toBe(callResult)
-  }, 10000)
+    const result = provider.call(call)
+    await jest.runAllTimersAsync()
+    expect(await result).toBe(callResult)
+  })
 
   it('reports a contract revert instead of asking another node', async () => {
     const { provider, requests } = makeProvider([reverting, reverting])
@@ -174,14 +178,18 @@ describe('makeStakingProvider', () => {
   })
 
   it('stays on the node that won when a stalled node answers late', async () => {
+    jest.useFakeTimers()
     const { provider, requests } = makeProvider([slow, healthy])
-    await provider.call(call)
-    // Let the stalled first node finish its late answer:
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    const first = provider.call(call)
+    // Run the stall timeout and the stalled first node's late answer:
+    await jest.runAllTimersAsync()
+    await first
     requests.length = 0
-    await provider.call(call)
+    const second = provider.call(call)
+    await jest.runAllTimersAsync()
+    await second
     expect(requests).toEqual(['1:eth_call'])
-  }, 10000)
+  })
 
   it('never asks a node for the chain id', async () => {
     const { provider, requests } = makeProvider([healthy, healthy])
