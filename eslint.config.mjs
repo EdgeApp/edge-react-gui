@@ -501,6 +501,9 @@ export default [
   {
     ignores: [
       '**/scratch.*',
+      // Typed by @mason/types, which is not on npm. A pattern rather than
+      // the file's name, which updateEslintWarnings.ts would remove:
+      'Masonfile.*',
       'android/*',
       'artifacts/*',
       'ios/*',
