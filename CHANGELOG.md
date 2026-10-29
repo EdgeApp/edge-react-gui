@@ -47,6 +47,7 @@
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
+- fixed: Home's promo card no longer covers the Buy and Sell tiles when it appears after the screen loads. Reanimated dropped the last frame of layout animations, which left moved views just short of their target, or at their starting point on a busy device.
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
 - fixed: Change Username opens right after the password prompt, with no second tap.
