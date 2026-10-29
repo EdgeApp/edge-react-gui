@@ -16,6 +16,7 @@
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - changed: On Android 16 and above, the back button and back gesture reach the app through predictive back, which React Native 0.86 supports, so the app no longer opts out of it.
 - changed: Upgrade react-native-worklets to 0.10.4, which stops the animation loop from running while the app is in the background on Android and fixes crashes when the JavaScript runtime shuts down.
+- changed: Upgrade react-native-reanimated to 4.5.5, fixing a crash when an event arrives for a view that has just unmounted, an iOS crash at launch, and scroll-driven animations on Android jumping back a frame.
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
 - fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
