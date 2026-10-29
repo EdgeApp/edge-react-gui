@@ -76,8 +76,13 @@ export const consoleReporter: EngineReporter = {
 export class EngineLogger {
   private stream: fs.WriteStream | null = null
   private bytesWritten = 0
-  /** When `reopen` last tried, so a persistent failure is not per-line. */
-  private lastReopenAttempt = 0
+  /**
+   * When `reopen` last failed, so a persistent failure costs one attempt per
+   * `REOPEN_RETRY_MS` rather than one per line. Only a failure starts the
+   * window: every roll reopens, and a roll inside the window of the one
+   * before it would otherwise drop every line until the window passed.
+   */
+  private lastReopenFailure = 0
   /**
    * Every rolled generation's flush, so `close` can wait for them all.
    *
@@ -301,14 +306,14 @@ export class EngineLogger {
    */
   private reopen(): boolean {
     const now = Date.now()
-    if (now - this.lastReopenAttempt < REOPEN_RETRY_MS) return false
-    this.lastReopenAttempt = now
+    if (now - this.lastReopenFailure < REOPEN_RETRY_MS) return false
     try {
       this.stream = this.openStream()
       this.watchStream(this.stream)
       this.bytesWritten = 0
       return true
     } catch (error) {
+      this.lastReopenFailure = now
       this.stream = null
       console.error(
         `[edge-engine] could not open the log: ${errorMessage(error)}`
