@@ -13,7 +13,8 @@ import {
 import { getExchangeRate } from '../selectors/WalletSelectors'
 import type { ThunkAction } from '../types/reduxTypes'
 import type { NavigationBase } from '../types/routerTypes'
-import { calculateSpamThreshold, convertNativeToDisplay } from '../util/utils'
+import { calculateSpamThreshold } from '../util/spamThreshold'
+import { convertNativeToDisplay } from '../util/utils'
 import { playReceiveSound } from './SoundActions'
 import { selectWalletToken } from './WalletActions'
 

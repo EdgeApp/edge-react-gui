@@ -1,7 +1,6 @@
 import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
 import { format } from 'date-fns'
-import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 
 import { asBiggystring } from '../util/cleaners'
@@ -35,11 +34,6 @@ export const SHORT_DATE_FMT: string = 'PP' // Apr 29, 1453
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
 export const locale: IntlLocaleType = { ...EN_US_LOCALE }
-
-// Set the locale at boot:
-const [firstLocale = { languageTag: 'en_US' }] = getLocales()
-const numberFormat = getNumberFormatSettings()
-setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
 
 /**
  * Formats number input according to user locale
@@ -277,23 +271,56 @@ export function formatTimeDate(date: Date, dateFormat?: string): string {
   return `${formatTime(date)}, ${formatDate(date, dateFormat)}`
 }
 
-export function setIntlLocale(l: IntlLocaleType): void {
+/**
+ * Install a locale, and answer with the one that was installed.
+ *
+ * The return value is not the argument: an empty identifier is replaced with
+ * the English one and empty marks with the English marks, *independently* —
+ * the number format and the language are separate failures, and an OS that
+ * reports no separators says nothing about the language or the other way
+ * round. `bootLocale.ts` stored the *requested* separators in
+ * `AppliedLocale`, so on a device whose OS reports an empty separator —
+ * which is the case this substitution exists for — `getAppliedLocale()`
+ * answered `decimalSeparator: ''` while `intl.locale.decimalSeparator` was
+ * `'.'`, and `GET /engine/status` published the wrong one of the two as "the
+ * decimal mark for that locale".
+ */
+export function setIntlLocale(l: IntlLocaleType): IntlLocaleType {
   if (l == null) {
     throw new Error('Please select locale for internationalization')
   }
 
-  if (
-    l.decimalSeparator === '' ||
-    l.groupingSeparator === '' ||
-    l.localeIdentifier === ''
-  ) {
+  // One pass, each field replaced only when it is empty. Separate arms with
+  // an early `return` in each meant a locale that was empty in *all three*
+  // fields — the likeliest shape, since one failed read of the OS locale
+  // usually fails all of them — took the identifier arm and installed the
+  // empty separators: `formatNumber(1234.56)` then answered `123456`,
+  // because the decimal mark is interpolated, and `isValidInput` threw
+  // `SyntaxError: Invalid regular expression` on `new RegExp('\\' + '')`.
+  // Only `applyLocale` substituting a default language tag before this runs
+  // kept it out of the app.
+  //
+  // Each failure keeps its own warning, because they are different failures:
+  // an unusable language says nothing about the separators the OS reported
+  // perfectly well. Discarding the whole locale for either one is what made
+  // `getLocaleOrDefaultString` resolve info-server strings in English on a
+  // device whose only problem was its separators.
+  const next = { ...l }
+  if (next.localeIdentifier === '') {
     console.warn(
       'Cannot recognize user locale preferences. Default will be used.'
     )
-    Object.assign(locale, EN_US_LOCALE)
-  } else {
-    Object.assign(locale, l)
+    next.localeIdentifier = EN_US_LOCALE.localeIdentifier
   }
+  if (next.decimalSeparator === '' || next.groupingSeparator === '') {
+    console.warn(
+      'Cannot recognize user number format preferences. Default will be used.'
+    )
+    next.decimalSeparator = EN_US_LOCALE.decimalSeparator
+    next.groupingSeparator = EN_US_LOCALE.groupingSeparator
+  }
+  Object.assign(locale, next)
+  return { ...locale }
 }
 
 export function toLocaleDate(date: Date): string {
@@ -402,8 +429,7 @@ export const pickLanguage = (
 export const getLocaleOrDefaultString = (
   localizedStrings: Record<string, string>
 ): string | undefined => {
-  const [firstLocale = { languageTag: DEFAULT_LOCALE_ID }] = getLocales()
-  const { languageTag } = firstLocale
+  const languageTag = locale.localeIdentifier
   const localizedStringKeys = Object.keys(localizedStrings)
 
   let localeId = pickLanguage(languageTag, localizedStringKeys)

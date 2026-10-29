@@ -12,12 +12,7 @@ import {
 import { COUNTRY_CODES } from '../constants/CountryConstants'
 import { lstrings } from '../locales/strings'
 import type { ThunkAction } from '../types/reduxTypes'
-import {
-  readSyncedSettings,
-  type SyncedAccountSettings,
-  updateOneSetting,
-  writeSyncedSettings
-} from './SettingsActions'
+import { updateOneSetting, updateSyncedSettings } from './SettingsActions'
 
 /**
  * Checks if the countryCode and stateProvinceCode are valid. If not, show a
@@ -121,7 +116,6 @@ export const showCountrySelectionModal =
           }
         }
 
-        const syncedSettings = await readSyncedSettings(account)
         // When skipStateProvince is true and country didn't change, preserve
         // existing stateProvinceCode. If country changed, clear it since the
         // old state is no longer valid for the new country.
@@ -129,18 +123,19 @@ export const showCountrySelectionModal =
           skipStateProvince === true && selectedCountryCode === countryCode
             ? stateProvinceCode
             : selectedStateProvince
-        const updatedSettings: SyncedAccountSettings = {
+        // The file first, then Redux: a country the file refused must not
+        // become the session's country while the file keeps the old one.
+        await updateSyncedSettings(account, syncedSettings => ({
           ...syncedSettings,
           countryCode: selectedCountryCode,
           stateProvinceCode: newStateProvinceCode
-        }
+        }))
         dispatch(
           updateOneSetting({
             countryCode: selectedCountryCode,
             stateProvinceCode: newStateProvinceCode
           })
         )
-        await writeSyncedSettings(account, updatedSettings)
       } catch (error: any) {
         showError(error)
       }
