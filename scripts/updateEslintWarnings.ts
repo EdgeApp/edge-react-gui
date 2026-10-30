@@ -7,6 +7,29 @@ import path from 'path'
 const rootDir = path.resolve(__dirname, '..')
 const eslintConfigPath = path.join(rootDir, 'eslint.config.mjs')
 
+// Concluding one of these operations fires pre-commit with a staged set that
+// is not this commit's own edits: a merge stages the whole incoming delta, and
+// a cherry-pick or revert replays a commit whose list changes it already carries
+const inProgressOperations: Array<[string, string]> = [
+  ['MERGE_HEAD', 'merge'],
+  ['CHERRY_PICK_HEAD', 'cherry-pick'],
+  ['REVERT_HEAD', 'revert']
+]
+
+// Get the merge, cherry-pick, or revert in progress, if any.
+// Asking git keeps this correct inside a worktree, where .git is a file.
+function getInProgressOperation(): string | undefined {
+  for (const [ref, operation] of inProgressOperations) {
+    try {
+      execSync(`git rev-parse -q --verify ${ref}`, { stdio: 'ignore' })
+      return operation
+    } catch {
+      // The ref is missing, so this operation is not in progress
+    }
+  }
+  return undefined
+}
+
 // Get list of staged files
 function getStagedFiles(): string[] {
   try {
@@ -104,7 +127,14 @@ function removeStagedFilesFromWarningsList(): void {
 
 // Main execution
 try {
-  removeStagedFilesFromWarningsList()
+  const operation = getInProgressOperation()
+  if (operation != null) {
+    console.log(
+      `Skipping ESLint warnings list update: a ${operation} is in progress`
+    )
+  } else {
+    removeStagedFilesFromWarningsList()
+  }
 } catch (error) {
   console.error('Error:', error)
   process.exit(1)
