@@ -132,7 +132,6 @@ export default [
       'scripts/patchFiles.ts',
       'scripts/secretFiles.ts',
 
-      'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
 
       'src/actions/CreateWalletActions.tsx',
