@@ -218,13 +218,6 @@ android {
         dex {
             useLegacyPackaging true
         }
-
-        // Edge hacks for zcash and piratechain conflicts:
-        resources {
-            pickFirst 'compact_formats.proto'
-            pickFirst 'darkside.proto'
-            pickFirst 'service.proto'
-        }
     }
 }
 
