@@ -1,22 +1,17 @@
-// This script sets up the version numbers for a release build.
+// This script puts a release build's version numbers into the native
+// projects.
 //
-// Run it as `node -r sucrase/register ./scripts/updateVersion.ts [<branch>]`
+// Run it as `node -r sucrase/register ./scripts/updateVersion.ts`
 //
 // Each production build has a version number and a build number.
 // The version number is a human-readable string like, "1.2.3-d",
 // while the build number is a machine-readable integer like 18010203,
 // based on the current date and an incrementing counter.
 //
-// The version number comes from package.json, plus an optional suffix
-// based on the current branch name, which this script takes as a parameter.
-//
-// Once this script determines the version information,
-// it writes to to a file called release-version.json.
-// It is important that the CI system preserves this file between builds,
-// since it contains the auto-incrementing build number.
-//
-// Finally, this script inserts the build number and version into
-// the native project files, leaving the project ready for a release build.
+// Both come from release-version.json, which scripts/gitVersionFile.ts
+// writes. This script inserts them into the native project files, leaving
+// the project ready for a release build. Any failure exits non-zero, so a
+// build never goes ahead with the wrong version.
 
 import childProcess from 'child_process'
 import { type Disklet, makeNodeDisklet } from 'disklet'
@@ -24,7 +19,7 @@ import path from 'path'
 
 import { asVersionFile, type VersionFile } from './cleaners'
 
-async function main() {
+async function main(): Promise<void> {
   const cwd = path.join(__dirname, '..')
   const disklet = makeNodeDisklet(cwd)
 
@@ -45,18 +40,36 @@ async function updateAndroid(
   disklet: Disklet,
   versionFile: VersionFile
 ): Promise<void> {
-  let gradle = await disklet.getText('android/app/build.gradle')
-
-  gradle = gradle.replace(
-    /versionName "[0-9.]+"/g,
-    `versionName "${versionFile.version}"`
+  const gradle = await disklet.getText('android/app/build.gradle')
+  await disklet.setText(
+    'android/app/build.gradle',
+    stampGradle(gradle, versionFile)
   )
-  gradle = gradle.replace(
+}
+
+/**
+ * Puts the version and build number into build.gradle's text. A line that
+ * is missing throws, so the old version is never left in place.
+ */
+export function stampGradle(
+  gradle: string,
+  versionFile: Pick<VersionFile, 'version' | 'build'>
+): string {
+  const replace = (text: string, pattern: RegExp, line: string): string => {
+    if (text.search(pattern) < 0) {
+      throw new Error(`android/app/build.gradle has no ${String(pattern)}`)
+    }
+    return text.replace(pattern, line)
+  }
+  return replace(
+    replace(
+      gradle,
+      /versionName "[^"]*"/g,
+      `versionName "${versionFile.version}"`
+    ),
     /versionCode [0-9]+/g,
     `versionCode ${versionFile.build}`
   )
-
-  await disklet.setText('android/app/build.gradle', gradle)
 }
 
 /**
@@ -76,6 +89,9 @@ function updateIos(cwd: string, versionFile: VersionFile): void {
   })
 }
 
-main().catch(error => {
-  console.log(error)
-})
+if (require.main === module) {
+  main().catch((error: unknown) => {
+    console.error(error)
+    process.exit(1)
+  })
+}
