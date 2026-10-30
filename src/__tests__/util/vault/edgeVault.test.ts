@@ -25,10 +25,10 @@ let vault: EdgeVault
 const createMockDisklet = (baseDisklet: Disklet): Disklet => {
   return {
     ...baseDisklet,
-    setText: jest.fn(baseDisklet.setText.bind(baseDisklet)) as any,
-    getText: jest.fn(baseDisklet.getText.bind(baseDisklet)) as any,
-    delete: jest.fn(baseDisklet.delete.bind(baseDisklet)) as any,
-    list: jest.fn(baseDisklet.list.bind(baseDisklet)) as any
+    setText: jest.fn(baseDisklet.setText.bind(baseDisklet)),
+    getText: jest.fn(baseDisklet.getText.bind(baseDisklet)),
+    delete: jest.fn(baseDisklet.delete.bind(baseDisklet)),
+    list: jest.fn(baseDisklet.list.bind(baseDisklet))
   }
 }
 

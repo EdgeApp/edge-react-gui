@@ -32,11 +32,7 @@ const ZOOM_FACTOR = 1.025
  * - redeemed: User has marked as redeemed
  */
 export type GiftCardStatus =
-  | 'confirming'
-  | 'pending'
-  | 'available'
-  | 'failed'
-  | 'redeemed'
+  'confirming' | 'pending' | 'available' | 'failed' | 'redeemed'
 
 interface Props {
   order: PhazeDisplayOrder

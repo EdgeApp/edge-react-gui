@@ -165,8 +165,8 @@ export const makePhazeApi = (config: PhazeApiConfig): PhazeApi => {
       typeof input === 'string'
         ? input
         : input instanceof URL
-        ? input.href
-        : input.url
+          ? input.href
+          : input.url
 
     // Debug logging - only logs when 'phaze' category is enabled, with masked headers
     const rawHeaders = (init?.headers as Record<string, string>) ?? {}

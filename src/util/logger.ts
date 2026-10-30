@@ -37,10 +37,10 @@ const normalize = (...info: unknown[]): string =>
   `${getTime()} | ${info
     .map(item =>
       isError(item)
-        ? item.stack ?? item.message
+        ? (item.stack ?? item.message)
         : isObject(item)
-        ? JSON.stringify(item)
-        : item
+          ? JSON.stringify(item)
+          : item
     )
     .join(' ')}`
 

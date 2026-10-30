@@ -35,8 +35,10 @@ interface Props {
   wallet?: EdgeCurrencyWallet
 }
 
-interface EditWalletSettingsProps
-  extends Omit<Props, 'pluginId' | 'initialSettings' | 'initialName'> {
+interface EditWalletSettingsProps extends Omit<
+  Props,
+  'pluginId' | 'initialSettings' | 'initialName'
+> {
   wallet: EdgeCurrencyWallet
 }
 

@@ -252,20 +252,20 @@ describe('resolvePluginMaps', () => {
   it('uses the keys object when config enables a plugin with true', () => {
     const config = { corePlugins: { bitcoin: true } }
     const keys = { corePlugins: { bitcoin: { nowNodesApiKey: 'abc' } } }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(maps.corePlugins.bitcoin).toEqual({ nowNodesApiKey: 'abc' })
   })
 
   it('keeps true when config is true and keys has no entry', () => {
     const config = { corePlugins: { bitcoin: true } }
-    const maps = resolvePluginMaps(config as any, {})
+    const maps = resolvePluginMaps(config, {})
     expect(maps.corePlugins.bitcoin).toBe(true)
   })
 
   it('keeps a disabled (false) core plugin disabled despite secrets', () => {
     const config = { corePlugins: { bitcoin: false } }
     const keys = { corePlugins: { bitcoin: { nowNodesApiKey: 'abc' } } }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(maps.corePlugins.bitcoin).toBe(false)
   })
 
@@ -283,7 +283,7 @@ describe('resolvePluginMaps', () => {
       guiApiKeys: { banxa: false },
       rampPlugins: { infinite: false }
     }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(maps.corePlugins.bitcoin).toBe(true)
     expect(maps.swapPlugins.thorchain).toBe(true)
     expect(maps.guiApiKeys.banxa).toBe(true)
@@ -293,7 +293,7 @@ describe('resolvePluginMaps', () => {
   it('keeps a ramp plugin enabled with defaults when keys hold {}', () => {
     const config = { rampPlugins: { bitsofgold: true, libertyx: true } }
     const keys = { rampPlugins: { bitsofgold: {}, libertyx: {} } }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(maps.rampPlugins.bitsofgold).toEqual({})
     expect(maps.rampPlugins.libertyx).toEqual({})
   })
@@ -307,7 +307,7 @@ describe('resolvePluginMaps', () => {
     const overlay = { rampPlugins: { simplex: {}, banxa: {} } }
     const merged = mergeKeysOverlay(baked, overlay) as Record<string, unknown>
     const config = { rampPlugins: { simplex: true, banxa: true } }
-    const maps = resolvePluginMaps(config as any, merged)
+    const maps = resolvePluginMaps(config, merged)
     expect(maps.rampPlugins.simplex).toBe(true)
     expect(maps.rampPlugins.banxa).toEqual({ apiKey: 'b' })
   })
@@ -317,7 +317,7 @@ describe('resolvePluginMaps', () => {
       guiApiKeys: { banxa: { apiKey: 'def' } },
       rampPlugins: { infinite: { orgId: 'org_1' } }
     }
-    const maps = resolvePluginMaps({} as any, keys)
+    const maps = resolvePluginMaps({}, keys)
     expect(maps.guiApiKeys.banxa).toEqual({ apiKey: 'def' })
     expect(maps.rampPlugins.infinite).toEqual({ orgId: 'org_1' })
   })
@@ -333,7 +333,7 @@ describe('resolvePluginMaps', () => {
       swapPlugins: { thorchain: { ninerealmsClientId: 'xyz' } },
       guiApiKeys: { banxa: { apiKey: 'def' } }
     }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(Object.keys(maps.guiApiKeys)).toEqual(['banxa'])
     expect(maps.guiApiKeys.banxa).toEqual({ apiKey: 'def' })
     expect(maps.corePlugins.bitcoin).toEqual({ nowNodesApiKey: 'abc' })
@@ -345,7 +345,7 @@ describe('resolvePluginMaps', () => {
     const keys = {
       swapPlugins: { changelly: { partnerId: 'edge', apiKey: 'hunter2' } }
     }
-    const maps = resolvePluginMaps(config as any, keys)
+    const maps = resolvePluginMaps(config, keys)
     expect(maps.swapPlugins.changelly).toEqual({
       partnerId: 'edge',
       apiKey: 'hunter2'
@@ -465,9 +465,7 @@ describe('config.json and keys.json', () => {
 
   itIfPresent('resolves plugin maps without throwing', () => {
     const cleanedConfig = asConfigJson.withRest(config)
-    const cleanedKeys = nestGlobalKeys(
-      asKeysJson.withRest(keys) as unknown as Record<string, unknown>
-    )
+    const cleanedKeys = nestGlobalKeys(asKeysJson.withRest(keys))
     const maps = resolvePluginMaps(cleanedConfig, cleanedKeys)
     expect(maps.corePlugins).toBeDefined()
     expect(maps.swapPlugins).toBeDefined()
@@ -476,8 +474,8 @@ describe('config.json and keys.json', () => {
   })
 
   itIfPresent('does not put currency or swap ids in guiApiKeys', () => {
-    const coreIds = Object.keys((config.corePlugins ?? {}) as object)
-    const swapIds = Object.keys((config.swapPlugins ?? {}) as object)
+    const coreIds = Object.keys(config.corePlugins ?? {})
+    const swapIds = Object.keys(config.swapPlugins ?? {})
     const guiConfig = (config.guiApiKeys ?? {}) as Record<string, unknown>
     const guiKeys = (keys.guiApiKeys ?? {}) as Record<string, unknown>
     for (const id of [...coreIds, ...swapIds]) {

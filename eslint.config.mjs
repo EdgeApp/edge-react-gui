@@ -22,6 +22,9 @@ export default [
       // Tweak builtin rules:
       'react/jsx-handler-names': 'warn',
 
+      // `bun fmt` checks formatting instead:
+      'prettier/prettier': 'off',
+
       // Add the React Native plugin:
       ...rnPlugin.configs.all.rules,
       'react-hooks/exhaustive-deps': [
@@ -119,6 +122,18 @@ export default [
           allow: ['runOnJS']
         }
       ]
+    }
+  },
+
+  // `bun lint` runs newer typescript-eslint rules than our installed
+  // plugin, so these rules find problems ESLint never reported.
+  // Keep them as warnings until that code is cleaned up:
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/await-thenable': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'warn',
+      '@typescript-eslint/unbound-method': 'warn'
     }
   },
 
@@ -267,7 +282,6 @@ export default [
       'src/components/scenes/DuressModeHowToScene.tsx',
       'src/components/scenes/DuressModeSettingScene.tsx',
 
-      'src/components/scenes/EditTokenScene.tsx',
       'src/components/scenes/ExtraTabScene.tsx',
 
       'src/components/scenes/Fio/FioAddressListScene.tsx',
@@ -294,8 +308,6 @@ export default [
       'src/components/scenes/Loans/LoanStatusScene.tsx',
 
       'src/components/scenes/NotificationScene.tsx',
-
-      'src/components/scenes/OtpSettingsScene.tsx',
 
       'src/components/scenes/PromotionSettingsScene.tsx',
 
@@ -442,7 +454,6 @@ export default [
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
 
       'src/plugins/stake-plugins/metadataCache.ts',
-      'src/plugins/stake-plugins/stakePlugins.ts',
 
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',

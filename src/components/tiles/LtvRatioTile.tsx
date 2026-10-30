@@ -32,8 +32,8 @@ export const getLtvColorValue = (ltvValue: number, theme: Theme): string => {
   return ltvValue > 0.7
     ? theme.dangerText
     : ltvValue > 0.6
-    ? theme.warningText
-    : ltvValue > 0
-    ? theme.positiveText
-    : theme.deactivatedText
+      ? theme.warningText
+      : ltvValue > 0
+        ? theme.positiveText
+        : theme.deactivatedText
 }

@@ -156,7 +156,7 @@ describe('updateExchangeInfo', () => {
     const dispatch = jest.fn()
     await updateExchangeInfo()(
       dispatch as unknown as Dispatch,
-      () => ({} as unknown as RootState)
+      () => ({}) as unknown as RootState
     )
     const action = dispatch.mock.calls[0][0] as {
       data: ReturnType<typeof asExchangeInfo>

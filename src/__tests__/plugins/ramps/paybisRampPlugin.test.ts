@@ -75,7 +75,7 @@ const jsonResponse = (body: unknown): Response =>
     ok: true,
     json: async () => body,
     text: async () => JSON.stringify(body)
-  } as unknown as Response)
+  }) as unknown as Response
 
 const quoteMethod = (body: QuoteBody): object => {
   const amount = { amount: body.amount, currencyCode: 'USD' }

@@ -336,11 +336,14 @@ export const LoanManagerService = (props: Props) => {
   // Always periodically send fresh push events in case price bounces around
   // the liquidation threshold while the app is open
   React.useEffect(() => {
-    const task = makePeriodicTask(async () => {
-      for (const loanAccountId of Object.keys(loanAccountMap)) {
-        await uploadLiquidationPushEvents(loanAccountId, true)
-      }
-    }, 10 * 60 * 1000)
+    const task = makePeriodicTask(
+      async () => {
+        for (const loanAccountId of Object.keys(loanAccountMap)) {
+          await uploadLiquidationPushEvents(loanAccountId, true)
+        }
+      },
+      10 * 60 * 1000
+    )
     task.start({ wait: true })
     return () => {
       task.stop()

@@ -21,8 +21,7 @@ export const initialState: SettingsState = {
 }
 
 export interface SettingsState
-  extends LocalAccountSettings,
-    SyncedAccountSettings {
+  extends LocalAccountSettings, SyncedAccountSettings {
   changesLocked: boolean
   settingsLoaded: boolean | null
 

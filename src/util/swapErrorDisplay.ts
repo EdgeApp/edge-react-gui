@@ -181,7 +181,7 @@ function trackSwapError(
   const toCurrency =
     toWallet != null
       ? getCurrencyCode(toWallet, swapRequest.toTokenId)
-      : toCurrencyCode ?? 'unknown'
+      : (toCurrencyCode ?? 'unknown')
 
   captureException(error, scope => {
     // This is a warning level error because it's expected to occur but not wanted.

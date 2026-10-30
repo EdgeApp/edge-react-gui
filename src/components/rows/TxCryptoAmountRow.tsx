@@ -57,7 +57,7 @@ export function TxCryptoAmountRow(props: Props) {
       const symbolString =
         currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
           ? walletDefaultDenom.symbol
-          : swapData?.payoutCurrencyCode ?? ''
+          : (swapData?.payoutCurrencyCode ?? '')
 
       return `${symbolString} ${convertedAmount}`
     }

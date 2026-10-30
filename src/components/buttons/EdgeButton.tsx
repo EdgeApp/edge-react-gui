@@ -165,8 +165,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
               type === 'primary'
                 ? styles.labelPrimary
                 : type === 'secondary'
-                ? styles.labelSecondary
-                : styles.labelTertiary,
+                  ? styles.labelSecondary
+                  : styles.labelTertiary,
               children == null ? null : styles.labelWithIcon
             ]}
             numberOfLines={1}
@@ -185,8 +185,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
               type === 'primary'
                 ? theme.primaryButtonText
                 : type === 'secondary'
-                ? theme.secondaryButtonText
-                : theme.escapeButtonText
+                  ? theme.secondaryButtonText
+                  : theme.escapeButtonText
             }
           />
         </View>

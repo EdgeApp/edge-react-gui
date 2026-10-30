@@ -47,9 +47,5 @@ export type CoinRankingDataPercentChange = ReturnType<
 >
 
 export type PercentChangeTimeFrame =
-  | 'hours1'
-  | 'hours24'
-  | 'days7'
-  | 'days30'
-  | 'year1'
+  'hours1' | 'hours24' | 'days7' | 'days30' | 'year1'
 export type AssetSubText = 'marketCap' | 'volume24h'

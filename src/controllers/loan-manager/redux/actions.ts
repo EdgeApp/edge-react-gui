@@ -35,9 +35,7 @@ interface UpdateSyncRatio {
 }
 
 export type LoanManagerActions =
-  | SetLoanAccountAction
-  | DeleteLoanAccountAction
-  | UpdateSyncRatio
+  SetLoanAccountAction | DeleteLoanAccountAction | UpdateSyncRatio
 
 /**
  * Returns a loan account selected from the redux store, or creates a new loan

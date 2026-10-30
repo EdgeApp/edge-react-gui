@@ -84,10 +84,10 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const paymentDenominationSymbol =
     activationPaymentInfo == null
       ? ''
-      : getExchangeDenom(
+      : (getExchangeDenom(
           existingWallet.currencyConfig,
           activationPaymentInfo.tokenId
-        ).symbol ?? ''
+        ).symbol ?? '')
 
   const [
     walletAccountActivationQuoteError,

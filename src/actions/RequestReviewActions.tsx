@@ -106,9 +106,8 @@ export const readReviewTriggerData = async (
     // No review trigger data exists. Check for legacy file
     try {
       // Check if old swap count file exists and migrate data
-      const swapCountDataStr = await account.disklet.getText(
-        SWAP_COUNT_DATA_FILE
-      )
+      const swapCountDataStr =
+        await account.disklet.getText(SWAP_COUNT_DATA_FILE)
       const swapCountData = JSON.parse(swapCountDataStr)
 
       // Initialize new data structure with old swap count data

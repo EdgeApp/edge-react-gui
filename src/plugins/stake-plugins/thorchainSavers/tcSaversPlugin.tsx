@@ -1869,7 +1869,7 @@ const getPrimaryAddress = async (
 
   return {
     primaryAddress: publicAddress,
-    addressBalance: hasSingleAddress ? assetBalance : nativeBalance ?? '0',
+    addressBalance: hasSingleAddress ? assetBalance : (nativeBalance ?? '0'),
     parentBalance: wallet.balanceMap.get(null) ?? '0'
   }
 }

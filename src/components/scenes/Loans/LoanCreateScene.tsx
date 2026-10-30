@@ -184,15 +184,15 @@ export const LoanCreateScene = (props: Props): React.ReactElement => {
     srcToken != null
       ? srcToken.displayName
       : srcWallet != null
-      ? srcWallet.currencyInfo.displayName
-      : ''
+        ? srcWallet.currencyInfo.displayName
+        : ''
 
   const srcDenoms =
     srcToken != null
       ? srcToken.denominations
       : srcWallet?.currencyInfo != null
-      ? srcWallet.currencyInfo.denominations
-      : null
+        ? srcWallet.currencyInfo.denominations
+        : null
   const srcExchangeMultiplier =
     srcDenoms == null ? '0' : srcDenoms[0].multiplier
 

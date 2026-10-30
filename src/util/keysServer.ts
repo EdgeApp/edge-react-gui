@@ -36,8 +36,7 @@ const FETCH_TIMEOUT_MS = 5000
  * rather than two optional fields: a caller cannot pass neither.
  */
 export type FetchCredentials =
-  | { apiSigner: EdgeApiSigner }
-  | { apiKey: string; secret: Uint8Array }
+  { apiSigner: EdgeApiSigner } | { apiKey: string; secret: Uint8Array }
 
 /**
  * A non-OK answer to the signed infoRollup request. Carries the status and the

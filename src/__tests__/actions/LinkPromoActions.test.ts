@@ -125,10 +125,7 @@ describe('releaseLinkPromo', () => {
 
 describe('waitForWallets', () => {
   type Prop =
-    | 'loggedIn'
-    | 'activeWalletIds'
-    | 'currencyWallets'
-    | 'currencyWalletErrors'
+    'loggedIn' | 'activeWalletIds' | 'currencyWallets' | 'currencyWalletErrors'
 
   /** A stand-in account whose wallet maps change and notify watchers. */
   function makeAccount(activeWalletIds: string[]): {

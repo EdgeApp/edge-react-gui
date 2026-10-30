@@ -91,8 +91,8 @@ export function useNotifCount(): number | undefined {
     return priorityCount === 0 && incompleteCount === 0
       ? undefined
       : priorityCount > 0
-      ? 0
-      : incompleteCount
+        ? 0
+        : incompleteCount
   }, [notifState, isDuressAccount])
 }
 

@@ -227,9 +227,8 @@ export class FioAddressRegister extends React.Component<Props, State> {
 
       try {
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${domain}`
-        const isAvailable = await fioPlugin.otherMethods.validateAccount(
-          fullAddress
-        )
+        const isAvailable =
+          await fioPlugin.otherMethods.validateAccount(fullAddress)
         this.setState({
           isValid: true,
           isAvailable,

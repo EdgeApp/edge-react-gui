@@ -9,14 +9,15 @@
 
 ## Build/Test/Lint Commands
 
-- `npm run lint` - Run ESLint on entire codebase
-- `npm run fix` - Auto-fix linting issues and dedupe the dependency tree
+- `npm run lint` - Lint the entire codebase with `bun lint`, which runs the rules in `eslint.config.mjs`
+- `npm run fix` - Format, auto-fix linting issues, and dedupe the dependency tree
 - `npm test` - Run Jest tests (single run)
 - `npm run watch` - Run Jest tests in watch mode
 - `npm test -- --testNamePattern="test name"` - Run specific test by name
-- `npm run verify` - Run lint, typechain, tsc, and test (full verification)
-- `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
-- `tsc` - TypeScript type checking (via package.json script)
+- `npm run verify` - Run format check, lint, typechain, type check, and test (full verification)
+- `npm run precommit` - Full pre-commit check (localize, format check and lint staged files, type check, test)
+- `bun check` - TypeScript type checking, with the same errors as `tsc`
+- `bun fmt` - Format JavaScript and TypeScript the way Prettier 3 does, using `.prettierrc.json` (`bun fmt --check` only checks)
 
 ## Swap Provider Integration
 

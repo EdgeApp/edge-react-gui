@@ -14,7 +14,10 @@ import { AlertCardUi4 } from './AlertCard'
  * An error that is localized and can be displayed to the user.
  */
 export class I18nError extends Error {
-  constructor(public readonly title: string, public readonly message: string) {
+  constructor(
+    public readonly title: string,
+    public readonly message: string
+  ) {
     super(message)
     this.name = 'I18nError'
   }
@@ -94,14 +97,14 @@ export const ErrorCard: React.FC<Props> = props => {
           onPress: handleShowError
         }
       : reportSent
-      ? {
-          label: copyLabel,
-          onPress: handleCopyEventId
-        }
-      : {
-          label: lstrings.string_report_error,
-          onPress: handleReportError
-        }
+        ? {
+            label: copyLabel,
+            onPress: handleCopyEventId
+          }
+        : {
+            label: lstrings.string_report_error,
+            onPress: handleReportError
+          }
 
   const idLabel =
     errorIdentifier != null && 'eventId' in errorIdentifier

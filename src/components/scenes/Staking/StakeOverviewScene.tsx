@@ -220,8 +220,9 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       allocationType === 'staked'
         ? sprintf(lstrings.stake_s_staked, currencyCode)
         : allocationType === 'earned'
-        ? claimablePolicyLabel ?? sprintf(lstrings.stake_s_earned, currencyCode)
-        : sprintf(lstrings.stake_s_unstaked, currencyCode)
+          ? (claimablePolicyLabel ??
+            sprintf(lstrings.stake_s_earned, currencyCode))
+          : sprintf(lstrings.stake_s_unstaked, currencyCode)
     const title = `${titleBase}${getAllocationLocktimeMessage(item)}`
     const denomination = displayDenomMap[currencyCode]
 

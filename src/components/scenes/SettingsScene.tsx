@@ -756,8 +756,8 @@ export const SettingsScene: React.FC<Props> = props => {
                   themeMode === 'light'
                     ? lstrings.settings_theme_light
                     : themeMode === 'dark'
-                    ? lstrings.settings_theme_dark
-                    : lstrings.settings_theme_system
+                      ? lstrings.settings_theme_dark
+                      : lstrings.settings_theme_system
                 }
                 label={lstrings.settings_theme}
                 onPress={handleSelectTheme}

@@ -575,15 +575,15 @@ export const infiniteRampPlugin: RampPluginFactory = (
             ? { asset: cleanFiatCode, amount: fiatAmount! }
             : { asset: cleanFiatCode }
           : isCryptoAmountType
-          ? {
-              asset: targetCurrency.currencyCode,
-              network: infiniteNetwork,
-              amount: cryptoAmount!
-            }
-          : {
-              asset: targetCurrency.currencyCode,
-              network: infiniteNetwork
-            }
+            ? {
+                asset: targetCurrency.currencyCode,
+                network: infiniteNetwork,
+                amount: cryptoAmount!
+              }
+            : {
+                asset: targetCurrency.currencyCode,
+                network: infiniteNetwork
+              }
 
       const targetParams =
         request.direction === 'buy'
@@ -593,8 +593,8 @@ export const infiniteRampPlugin: RampPluginFactory = (
               ...(isCryptoAmountType ? { amount: cryptoAmount! } : {})
             }
           : isFiatAmountType
-          ? { asset: cleanFiatCode, amount: fiatAmount! }
-          : { asset: cleanFiatCode }
+            ? { asset: cleanFiatCode, amount: fiatAmount! }
+            : { asset: cleanFiatCode }
 
       const quoteParams = {
         flow,

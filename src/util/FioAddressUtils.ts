@@ -174,9 +174,8 @@ const getConnectedWalletsFromFile = async (
   fioWallet: EdgeCurrencyWallet
 ): Promise<Record<string, DiskletConnectedWallets>> => {
   try {
-    const savedConnectedWalletsText = await fioWallet.disklet.getText(
-      CONNECTED_WALLETS
-    )
+    const savedConnectedWalletsText =
+      await fioWallet.disklet.getText(CONNECTED_WALLETS)
     return JSON.parse(savedConnectedWalletsText)
   } catch (e: any) {
     return {}
@@ -601,7 +600,8 @@ export const checkPubAddress = async (
     ) {
       throw new FioError(
         lstrings.send_fio_request_error_addr_not_exist,
-        fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_EXIST
+        fioPlugin.currencyInfo.defaultSettings?.errorCodes
+          .FIO_ADDRESS_IS_NOT_EXIST
       )
     }
     if (
@@ -612,7 +612,8 @@ export const checkPubAddress = async (
     ) {
       throw new FioError(
         sprintf(lstrings.err_address_not_linked_title, tokenCode),
-        fioPlugin.currencyInfo.defaultSettings?.errorCodes.FIO_ADDRESS_IS_NOT_LINKED
+        fioPlugin.currencyInfo.defaultSettings?.errorCodes
+          .FIO_ADDRESS_IS_NOT_LINKED
       )
     }
     throw new Error(lstrings.fio_connect_wallets_err)
@@ -765,9 +766,8 @@ export const getFioDomains = async (
   chainCode: string,
   tokenCode: string
 ): Promise<string> => {
-  const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(
-    fioAddress
-  )
+  const isFioAddress =
+    await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
   try {
     if (isFioAddress === true) {
       const { public_address: publicAddress } =
