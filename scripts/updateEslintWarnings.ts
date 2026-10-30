@@ -6,6 +6,8 @@ import path from 'path'
 // Get the root directory
 const rootDir = path.resolve(__dirname, '..')
 const eslintConfigPath = path.join(rootDir, 'eslint.config.mjs')
+const warningsListMarker =
+  '// Turn several TypeScript lint errors into warnings:'
 
 // Get list of staged files
 function getStagedFiles(): string[] {
@@ -36,6 +38,17 @@ function removeStagedFilesFromWarningsList(): void {
 
   // Read the config file
   let configContent = fs.readFileSync(eslintConfigPath, 'utf8')
+
+  // Only touch the warnings list, since a file can also appear in other
+  // config blocks, such as the icon wrappers' import exemption:
+  const markerIndex = configContent.indexOf(warningsListMarker)
+  if (markerIndex < 0) {
+    throw new Error(`Cannot find "${warningsListMarker}" in eslint.config.mjs`)
+  }
+  const listEnd = configContent.indexOf(']', markerIndex) + 1
+  const before = configContent.slice(0, markerIndex)
+  const after = configContent.slice(listEnd)
+  configContent = configContent.slice(markerIndex, listEnd)
 
   // Track what was removed
   let removedCount = 0
@@ -81,7 +94,7 @@ function removeStagedFilesFromWarningsList(): void {
     configContent = configContent.replace(/,(\s*\])/g, '$1')
 
     // Write the updated config
-    fs.writeFileSync(eslintConfigPath, configContent, 'utf8')
+    fs.writeFileSync(eslintConfigPath, before + configContent + after, 'utf8')
 
     // Stage the updated ESLint config
     try {
