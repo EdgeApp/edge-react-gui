@@ -2,7 +2,6 @@ import type { EdgeTokenId } from 'edge-core-js'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import {
   walletListMenuAction,
@@ -27,6 +26,7 @@ import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { UnscaledText } from '../text/UnscaledText'
 import { ModalTitle } from '../themed/ModalParts'
+import { VectorIcon } from '../themed/VectorIcon'
 import { EdgeModal } from './EdgeModal'
 
 interface Option {
@@ -111,7 +111,9 @@ export const WALLET_LIST_MENU: Array<{
       'telos',
       'ufo',
       'vertcoin',
-      'wax'
+      'wax',
+      'ecashbitcoin',
+      'ecashbitcoinbetanet'
     ],
     label: lstrings.fragment_wallets_view_xpub,
     value: 'viewXPub'
@@ -132,6 +134,8 @@ export const WALLET_LIST_MENU: Array<{
       'dogecoin',
       'eboost',
       'ecash',
+      'ecashbitcoin',
+      'ecashbitcoinbetanet',
       'feathercoin',
       'groestlcoin',
       'litecoin',
@@ -377,7 +381,9 @@ export const WalletListMenuModal: React.FC<Props> = props => {
                 size={theme.rem(1)}
               />
             ) : (
-              <AntDesignIcon
+              <VectorIcon
+                color={theme.primaryText}
+                font="anticon"
                 name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
                 size={theme.rem(1)}
                 style={

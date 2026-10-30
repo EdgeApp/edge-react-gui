@@ -489,6 +489,14 @@ const strings = {
   percent_complete_1s: '%1$s Complete',
   sync_status_title: 'Sync in Progress',
   sync_status_blocks: 'Syncing blocks %1$s/%2$s',
+  ecash_split_confirm_title: 'Split to eCash',
+  ecash_split_confirm_message:
+    "This creates an eCash (ECX) wallet from this Bitcoin wallet's keys. Once it syncs, Edge sends any ECX to itself in a replay protection transaction, so your BTC and ECX can be spent separately. This costs a small ECX network fee. Until that transaction confirms, sending from this Bitcoin wallet can also move your ECX.",
+  ecash_split_pending_title: 'eCash Split Pending',
+  ecash_split_pending_body:
+    'An eCash (ECX) wallet split from this wallet is still separating its coins. Until its replay protection transaction confirms, sending from this wallet can also move your ECX. Wait for it to confirm before sending.',
+  ecash_split_unsent_body:
+    'An eCash (ECX) wallet split from this wallet has not sent its replay protection transaction yet. Edge sends it once that wallet finishes syncing. Until it confirms, sending from this wallet can also move your ECX.',
   large_utxo_wallet_title: 'Large Tx History',
   large_utxo_wallet_body:
     'Syncing may take a while. Keep this wallet open, as the balance may be inaccurate until it finishes.',
@@ -779,6 +787,8 @@ const strings = {
   string_first_dash_wallet_name: 'My Dash',
   string_first_digibyte_wallet_name: 'My DigiByte',
   string_first_ecash_wallet_name: 'My eCash',
+  string_first_ecash_bitcoin_wallet_name: 'My eCash (ECX)',
+  string_first_ecash_bitcoin_betanet_wallet_name: 'My eCash Betanet',
   string_first_eos_wallet_name: 'My EOS',
   string_first_holesky_wallet_name: 'My Holesky',
   string_first_hyperevm_wallet_name: 'My HyperEVM',

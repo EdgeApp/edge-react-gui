@@ -1,5 +1,6 @@
 import type { EdgeCorePluginsInit, JsonObject } from 'edge-core-js'
 
+import { CONFIG } from '../config'
 import { pluginMaps } from '../pluginMaps'
 
 // Read a plugin init from the pluginMaps map, falling back to a default
@@ -95,6 +96,11 @@ function buildUtxoPlugins(): EdgeCorePluginsInit {
     dogecoin: coreInit('dogecoin'),
     eboost: true,
     ecash: coreInit('ecash'),
+    ecashbitcoin: coreInit('ecashbitcoin'),
+    // A test network, so only beta builds offer it, even as a Bitcoin split:
+    ecashbitcoinbetanet: CONFIG.BETA_FEATURES
+      ? coreInit('ecashbitcoinbetanet')
+      : false,
     feathercoin: true,
     groestlcoin: coreInit('groestlcoin'),
     litecoin: coreInit('litecoin'),
