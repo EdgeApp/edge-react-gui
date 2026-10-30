@@ -242,9 +242,9 @@ export const TransactionListTop: React.FC<Props> = props => {
     await dispatch(toggleAccountBalanceVisibility())
   })
 
-  const handleOpenWalletListModal = useHandler((): void => {
+  const handleOpenWalletListModal = useHandler(async (): Promise<void> => {
     triggerHaptic('impactLight')
-    Airship.show<WalletListResult>(bridge => (
+    await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         parentWalletId={tokenId == null ? undefined : wallet.id}
@@ -265,9 +265,9 @@ export const TransactionListTop: React.FC<Props> = props => {
       })
   })
 
-  const handleMenu = useHandler((): void => {
+  const handleMenu = useHandler(async (): Promise<void> => {
     triggerHaptic('impactLight')
-    Airship.show(bridge => (
+    await Airship.show(bridge => (
       <WalletListMenuModal
         bridge={bridge}
         tokenId={tokenId}

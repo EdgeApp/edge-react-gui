@@ -10,7 +10,7 @@ import { useTheme } from '../services/ThemeContext'
 interface Props {
   children: React.ReactNode
   paddingRem?: number[] | number
-  onPress: () => void
+  onPress: () => void | Promise<void>
 }
 
 /**

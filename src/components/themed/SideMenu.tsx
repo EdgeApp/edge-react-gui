@@ -164,9 +164,9 @@ export function SideMenuComponent(props: Props): React.ReactElement {
     navigation.dispatch(DrawerActions.closeDrawer())
   }
 
-  const handleScanQr = (): void => {
+  const handleScanQr = async (): Promise<void> => {
     navigation.dispatch(DrawerActions.closeDrawer())
-    dispatch(
+    await dispatch(
       showScanModal({
         scanModalTitle: lstrings.scan_qr_label,
         textModalAutoFocus: false,
@@ -303,9 +303,7 @@ export function SideMenuComponent(props: Props): React.ReactElement {
       title: lstrings.wc_walletconnect_title
     },
     {
-      handlePress: () => {
-        handleScanQr()
-      },
+      handlePress: handleScanQr,
       iconName: 'control-panel-scan-qr',
       title: lstrings.drawer_scan_qr_send
     },

@@ -26,7 +26,7 @@ interface Props {
   displayDenomination: EdgeDenomination
   lockInputs: boolean
   compressed?: boolean
-  onPress: () => void
+  onPress: () => void | Promise<void>
 }
 
 export const EditableAmountTile: React.FC<Props> = props => {

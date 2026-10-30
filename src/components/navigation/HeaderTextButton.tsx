@@ -23,12 +23,12 @@ export const HeaderTextButton: React.FC<Props> = props => {
   const { type } = props
   const navigation = useNavigation<NavigationBase>()
 
-  const handlePress = useHandler(() => {
+  const handlePress = useHandler(async (): Promise<void> => {
     triggerHaptic('impactLight')
     if (type === 'exit') {
       navigation.goBack()
     } else if (type === 'help') {
-      showHelpModal(navigation).catch((err: unknown) => {
+      await showHelpModal(navigation).catch((err: unknown) => {
         showError(err)
       })
     }

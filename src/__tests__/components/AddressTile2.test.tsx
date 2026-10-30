@@ -1,5 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals'
-import { fireEvent, render, waitFor } from '@testing-library/react-native'
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native'
 import type { EdgeAddress, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
@@ -96,4 +96,74 @@ describe('AddressTile2 "Myself" picker', () => {
     showSpy.mockRestore()
     rendered.unmount()
   })
+})
+
+describe('AddressTile2 spam taps', () => {
+  it.each(['addressTileEnter', 'addressTileMyself'])(
+    'opens one modal when %s is tapped repeatedly',
+    async testId => {
+      const sourceWallet = makeWallet('source', async () => [])
+      const otherWallet = makeWallet('other', async () => [])
+      let closeModal: (result: undefined) => void = () => {}
+      const showSpy = jest.spyOn(Airship, 'show').mockImplementation(
+        async () =>
+          await new Promise(resolve => {
+            closeModal = resolve
+          })
+      )
+
+      const rootState: FakeState = {
+        core: {
+          account: {
+            currencyConfig: { ethereum: ethConfig },
+            currencyWallets: { source: sourceWallet, other: otherWallet },
+            watch: () => () => {}
+          }
+        }
+      }
+      const rendered = render(
+        <FakeProviders initialState={rootState}>
+          <AddressTile2
+            coreWallet={sourceWallet}
+            tokenId={null}
+            title="Send to"
+            recipientAddress=""
+            onChangeAddress={async () => {}}
+            resetSendTransaction={() => {}}
+            isCameraOpen={false}
+            navigation={fakeNavigation}
+            selfTransfer={{
+              allowedAssets: [{ pluginId: 'ethereum', tokenId: null }],
+              onPickAsset: async () => true
+            }}
+          />
+        </FakeProviders>
+      )
+
+      fireEvent.press(rendered.getByTestId(testId))
+      await waitFor(() => {
+        expect(showSpy).toHaveBeenCalledTimes(1)
+      })
+      fireEvent.press(rendered.getByTestId(testId))
+      fireEvent.press(rendered.getByTestId(testId))
+      expect(showSpy).toHaveBeenCalledTimes(1)
+
+      // Closing the modal makes the button usable again:
+      await act(async () => {
+        closeModal(undefined)
+        await Promise.resolve()
+      })
+      fireEvent.press(rendered.getByTestId(testId))
+      await waitFor(() => {
+        expect(showSpy).toHaveBeenCalledTimes(2)
+      })
+
+      await act(async () => {
+        closeModal(undefined)
+        await Promise.resolve()
+      })
+      showSpy.mockRestore()
+      rendered.unmount()
+    }
+  )
 })

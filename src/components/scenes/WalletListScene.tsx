@@ -65,8 +65,8 @@ export const WalletListScene: React.FC<Props> = props => {
   // Handlers
   //
 
-  const handleSort = useHandler(() => {
-    Airship.show<SortOption>(bridge => (
+  const handleSort = useHandler(async (): Promise<void> => {
+    await Airship.show<SortOption>(bridge => (
       <WalletListSortModal sortOption={sortOption} bridge={bridge} />
     ))
       .then(sort => {

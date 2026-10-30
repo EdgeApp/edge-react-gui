@@ -1773,14 +1773,15 @@ const SendComponent: React.FC<Props> = props => {
   })
 
   const handleFlipInputModal =
-    (index: number, spendTarget: EdgeSpendTarget) => (): void => {
+    (index: number, spendTarget: EdgeSpendTarget) =>
+    async (): Promise<void> => {
       const { noChangeMiningFee } = getSpecialCurrencyInfo(pluginId)
       // A max spend only has a defined meaning for a single recipient: it
       // consumes the entire spendable balance. Once the send has more than one
       // target there is nothing left over for the others, so the button is
       // hidden rather than allowed to produce an insufficient-funds spend.
       const isMultipleTargets = spendInfo.spendTargets.length > 1
-      Airship.show<FlipInputModalResult>(bridge => (
+      await Airship.show<FlipInputModalResult>(bridge => (
         <FlipInputModal2
           ref={flipInputModalRef}
           bridge={bridge}
@@ -1863,8 +1864,8 @@ const SendComponent: React.FC<Props> = props => {
     return out
   }
 
-  const handleWalletPress = useHandler((): void => {
-    Airship.show<WalletListResult>(bridge => (
+  const handleWalletPress = useHandler(async (): Promise<void> => {
+    await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
         headerTitle={lstrings.fio_src_wallet}
@@ -2127,7 +2128,7 @@ const SendComponent: React.FC<Props> = props => {
     seedStealth
   ])
 
-  const handlePickRecipientAsset = useHandler((): void => {
+  const handlePickRecipientAsset = useHandler(async (): Promise<void> => {
     if (multipleTargets) return
     // Rows are keyed on the ASSET, never on its label: several chains share a
     // currency code (ETH on Base / Arbitrum / Ethereum) and a token can share
@@ -2164,7 +2165,7 @@ const SendComponent: React.FC<Props> = props => {
       ]
     })
 
-    Airship.show<string | undefined>(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <RecipientAssetListModal
         bridge={bridge}
         title={lstrings.stealth_recipient_receives}
@@ -2222,8 +2223,8 @@ const SendComponent: React.FC<Props> = props => {
   // and the plain send's already do. It is also the denomination the decision
   // is made in here: the provider states its floors in USD, and the two sides
   // of a cross-asset send have no common crypto unit to compare in.
-  const handleEditYouSend = useHandler((): void => {
-    Airship.show<FlipInputModalResult>(bridge => (
+  const handleEditYouSend = useHandler(async (): Promise<void> => {
+    await Airship.show<FlipInputModalResult>(bridge => (
       <FlipInputModal2
         bridge={bridge}
         wallet={coreWallet}
@@ -2258,7 +2259,7 @@ const SendComponent: React.FC<Props> = props => {
     wallet => wallet.currencyInfo.pluginId === destPluginId
   )
 
-  const handleEditRecipientGets = useHandler((): void => {
+  const handleEditRecipientGets = useHandler(async (): Promise<void> => {
     if (destExchangeDenom == null) return
     // The pair is known to have no receive-priced route, so an exact receive
     // amount cannot be honored. Explain rather than opening an editor whose
@@ -2268,7 +2269,7 @@ const SendComponent: React.FC<Props> = props => {
       return
     }
     if (destFlipWallet != null) {
-      Airship.show<FlipInputModalResult>(bridge => (
+      await Airship.show<FlipInputModalResult>(bridge => (
         <FlipInputModal2
           bridge={bridge}
           wallet={destFlipWallet}
@@ -2299,7 +2300,7 @@ const SendComponent: React.FC<Props> = props => {
             destExchangeDenom.multiplier,
             DECIMAL_PRECISION
           )
-    Airship.show<string | undefined>(bridge => (
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         title={lstrings.stealth_recipient_gets}
@@ -2319,8 +2320,8 @@ const SendComponent: React.FC<Props> = props => {
       })
   })
 
-  const handleEditDestinationTag = useHandler((): void => {
-    Airship.show<string | undefined>(bridge => (
+  const handleEditDestinationTag = useHandler(async (): Promise<void> => {
+    await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
         title={lstrings.memo_destination_tag_title}
@@ -2358,7 +2359,7 @@ const SendComponent: React.FC<Props> = props => {
     displayAmount: string,
     displayCode: string,
     isGuaranteed: boolean,
-    onPress: () => void,
+    onPress: () => void | Promise<void>,
     fiat: SwapRowFiat | undefined,
     editDeactivated: boolean = false
   ): React.ReactElement => (

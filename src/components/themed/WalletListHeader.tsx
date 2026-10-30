@@ -20,7 +20,7 @@ interface OwnProps {
   navigation: NavigationBase
   sorting: boolean
   searching: boolean
-  openSortModal: () => void
+  openSortModal: () => void | Promise<void>
 }
 
 type Props = OwnProps & ThemeProps

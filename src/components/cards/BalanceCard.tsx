@@ -124,7 +124,7 @@ export const BalanceCard: React.FC<Props> = props => {
         })
       }
     } else {
-      Airship.show(bridge => (
+      await Airship.show(bridge => (
         <TransferModal
           depositOrSend="send"
           bridge={bridge}
@@ -153,7 +153,7 @@ export const BalanceCard: React.FC<Props> = props => {
         navigation.navigate('request', { tokenId, walletId })
       }
     } else {
-      Airship.show(bridge => (
+      await Airship.show(bridge => (
         <TransferModal
           depositOrSend="deposit"
           bridge={bridge}

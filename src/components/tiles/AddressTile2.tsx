@@ -537,7 +537,7 @@ export const AddressTile2 = React.forwardRef(
       }
     })
 
-    const handleScan = useHandler(() => {
+    const handleScan = useHandler(async (): Promise<void> => {
       const title = sprintf(
         lstrings.send_scan_modal_text_modal_title_s,
         currencyCode
@@ -546,7 +546,7 @@ export const AddressTile2 = React.forwardRef(
         lstrings.send_scan_modal_text_modal_message_s,
         currencyCode
       )
-      dispatch(
+      await dispatch(
         showScanModal({
           scanModalTitle: lstrings.scan_qr_label,
           textModalHint: lstrings.send_scan_modal_text_modal_hint,
@@ -577,7 +577,7 @@ export const AddressTile2 = React.forwardRef(
             )
           : lstrings.scan_address_modal_title
 
-      Airship.show<string | undefined>(bridge => (
+      await Airship.show<string | undefined>(bridge => (
         <AddressModal
           bridge={bridge}
           walletId={coreWallet.id}
@@ -595,11 +595,11 @@ export const AddressTile2 = React.forwardRef(
         })
     })
 
-    const handleSelfTransfer = useHandler(() => {
+    const handleSelfTransfer = useHandler(async (): Promise<void> => {
       const { currencyWallets } = account
       const { pluginId } = coreWallet.currencyInfo
       const sourceAsset = { pluginId, tokenId }
-      Airship.show<WalletListResult>(bridge => (
+      await Airship.show<WalletListResult>(bridge => (
         <WalletListModal
           bridge={bridge}
           headerTitle={lstrings.your_wallets}
@@ -674,7 +674,11 @@ export const AddressTile2 = React.forwardRef(
     // ---------------------------------------------------------------------------
 
     useMount(() => {
-      if (isCameraOpen) handleScan()
+      if (isCameraOpen) {
+        handleScan().catch((error: unknown) => {
+          showError(error)
+        })
+      }
     })
 
     React.useImperativeHandle(ref, () => ({
