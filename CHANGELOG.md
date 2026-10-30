@@ -2,8 +2,6 @@
 
 ## Unreleased (develop)
 
-- added: eCash (ECX) currency info, off unless the plugin config enables it, and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
-- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
@@ -44,6 +42,11 @@
 - changed: Large Tx History card shows only while syncing and can be closed for good
 - changed: (Bridgeless) Keep quotes 1% inside the bridge's withdrawal limits
 - fixed: (Bridgeless) Minimum deposit and 'to' quote amounts cover the bridge commission exactly
+
+## 4.52.1 (2026-10-30)
+
+- added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
+- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 
 ## 4.52.0 (2026-10-21)
 
