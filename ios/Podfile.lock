@@ -11,7 +11,7 @@ PODS:
   - CNIOWindows (2.40.0)
   - disklet (0.6.0):
     - React
-  - edge-core-js (2.53.0):
+  - edge-core-js (2.54.0):
     - React-Core
   - edge-currency-accountbased (4.103.0):
     - React-Core
@@ -3429,7 +3429,7 @@ SPEC CHECKSUMS:
   CNIOLinux: 62e3505f50de558c393dc2f273dde71dcce518da
   CNIOWindows: 3047f2d8165848a3936a0a755fee27c6b5ee479b
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
-  edge-core-js: 2fec6c80cfbe2fdeb0d51e631e250a8f56c4ff27
+  edge-core-js: 90484bac6809d980556046b5f0554a39b6921c9f
   edge-currency-accountbased: fdaaa3fb8bd0bf22518f8f577d624376930a024b
   edge-currency-plugins: 0042425374909a6ae28f0da67552749b6f88395f
   edge-exchange-plugins: 968043c256b89f3291116d757d674c5ba1305a3e
