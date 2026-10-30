@@ -1646,7 +1646,7 @@ exports[`BalanceCard should render with loading props 1`] = `
               ]
             }
           >
-            Deposit
+            Receive
           </Text>
         </View>
       </View>
