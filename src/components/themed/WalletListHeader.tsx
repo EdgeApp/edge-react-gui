@@ -26,7 +26,7 @@ interface OwnProps {
 type Props = OwnProps & ThemeProps
 
 export class WalletListHeaderComponent extends React.PureComponent<Props> {
-  render() {
+  render(): React.ReactElement {
     const { navigation, sorting, searching, theme } = this.props
     const styles = getStyles(theme)
 

@@ -19,7 +19,7 @@ const title = {
   help: lstrings.string_help
 }
 
-export const HeaderTextButton = (props: Props) => {
+export const HeaderTextButton: React.FC<Props> = props => {
   const { type } = props
   const navigation = useNavigation<NavigationBase>()
 
@@ -28,7 +28,7 @@ export const HeaderTextButton = (props: Props) => {
     if (type === 'exit') {
       navigation.goBack()
     } else if (type === 'help') {
-      showHelpModal(navigation).catch(err => {
+      showHelpModal(navigation).catch((err: unknown) => {
         showError(err)
       })
     }

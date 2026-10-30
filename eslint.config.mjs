@@ -194,8 +194,6 @@ export default [
       'src/components/FioAddress/FioName.tsx',
       'src/components/hoc/maybeComponent.tsx',
 
-      'src/components/hoc/withExtendedTouchable.tsx',
-
       'src/components/icons/FiatIcon.tsx',
       'src/components/icons/IconBadge.tsx',
       'src/components/icons/PairIcons.tsx',
@@ -242,9 +240,8 @@ export default [
       'src/components/navigation/FlashNotification.tsx',
       'src/components/navigation/GuiPluginBackButton.tsx',
 
-      'src/components/navigation/HeaderTextButton.tsx',
       'src/components/navigation/HeaderTitle.tsx',
-      'src/components/navigation/NavigationButton.tsx',
+
       'src/components/navigation/ParamHeaderTitle.tsx',
       'src/components/navigation/SideMenuButton.tsx',
       'src/components/navigation/TransactionDetailsTitle.tsx',
@@ -363,7 +360,7 @@ export default [
       'src/components/themed/VectorIcon.tsx',
 
       'src/components/themed/WalletListErrorRow.tsx',
-      'src/components/themed/WalletListHeader.tsx',
+
       'src/components/themed/WalletListLoadingRow.tsx',
       'src/components/themed/WalletListSectionHeader.tsx',
       'src/components/themed/WalletListSortable.tsx',
