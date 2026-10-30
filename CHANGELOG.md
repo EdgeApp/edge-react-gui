@@ -4,6 +4,11 @@
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 
+## 4.52.2 (2026-10-30)
+
+- added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
+- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
+
 ## 4.52.1 (2026-10-23)
 
 - added: (Bridgeless) Reject quotes above the destination token's withdrawal cap
