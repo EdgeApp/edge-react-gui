@@ -2,20 +2,32 @@ import type { Setup, Stage } from '@mason/types'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-// Builds Edge for iOS on a macOS arm64 machine and for Android on a Linux
-// x86_64 machine. Both come from the master's temporary cloud pools: a
-// stage's node type is what starts a pool machine, and its os and arch
-// keep it on the right kind of machine.
+// Runs the Jest suite, then builds Edge for iOS on a macOS arm64 machine and
+// for Android on a Linux x86_64 machine, or on a Mac when no Linux machine is
+// free. All come from the master's temporary cloud pools: a stage's node type
+// is what starts a pool machine, and its os and arch keep it on the right
+// kind of machine. The tests take whichever of the two is free, Linux first,
+// and a failure stops the builds.
+//
+// Every tool the builds use is in the stages' tools. Node, Java, the Android
+// SDK (its licences accepted here) and CocoaPods install on demand, so a
+// fresh pool machine needs no setup for them; Xcode >=26 comes with the
+// macOS pool's image, or through the helper on a Mac that runs one.
 //
 // Each run has one build number, which both platforms stamp into their
 // native projects themselves (setAndroidVersion, setIosVersion), with the
-// version package.json and the branch give.
+// version package.json and the branch give. On master, the only branch that
+// builds the per-ABI APKs, a run reserves three numbers (Jenkins steps every
+// branch by three for the same reason): the universal APK is N, and the
+// per-ABI APKs android/app/build.gradle gives N+1 and N+2 are published as
+// variants of the same build. The AAB is kept as the run's artifact.
 //
-// These builds are not yet signed for distribution or uploaded: the iOS
-// archive is built without code signing, and the Android release APKs carry
-// the repository's test keystore (android/app/airbitz.keystore), as a plain
-// `assembleRelease` does. Signing moves to the master once it holds Edge's
-// Apple team and Android keystore.
+// These builds are not yet signed for distribution or sent to the stores:
+// the iOS archive is built without code signing, and the Android release
+// APKs, published to Mason's install page, carry the repository's test
+// keystore (android/app/airbitz.keystore), as a plain `assembleRelease`
+// does. Signing moves to the master once it holds Edge's Apple team and
+// Android keystore.
 //
 // Of the files scripts/secretFiles.ts copies in from Jenkins' secret folders,
 // those a build reads are project secret files on the Mason master, one name
@@ -41,7 +53,9 @@ import { join } from 'node:path'
 // share with a shipped Jenkins build would otherwise symbolicate its crashes
 // against these files.
 //
-// This needs a Mason master with stage configs and ctx.writeSecretFile.
+// This needs a Mason master with stage configs, ctx.writeSecretFile,
+// build-number blocks, published variants, node selector lists and the
+// cocoapods and androidLicenses tools.
 
 const APP = 'co.edgesecure.app'
 
@@ -84,14 +98,29 @@ export function configsFor(branch: string): string[] {
 const MAC = { type: 'macos-arm64', os: 'macos', arch: 'arm64' } as const
 const LINUX = { type: 'linux-x86', os: 'linux', arch: 'x64' } as const
 
+/** The per-ABI APKs a master build publishes; build.gradle numbers them N+1 and N+2. */
+const ABI_SPLITS = ['armeabi-v7a', 'arm64-v8a']
+
 export function setup(m: Setup) {
   m.apiVersion(1)
-  // Date and a counter (26102901), stepping by 1; iOS and Android of one run
-  // share the number. android/app/build.gradle gives the split APKs this
-  // number +1 and +2 (Jenkins steps by 3 to leave room for them), so before
-  // these Android builds go to Play, the split APKs need version codes that
-  // cannot meet the next build's.
-  m.buildNumber(APP, { format: 'YYMMDDCC', timeZone: 'America/Los_Angeles' })
+  // Date and a counter (26102901); iOS and Android of one run share the
+  // number. A master run takes three (26102901 to 26102903), leaving room
+  // for the per-ABI APKs' version codes; other branches take one.
+  m.buildNumber(APP, {
+    format: 'YYMMDDCC',
+    timeZone: 'America/Los_Angeles',
+    block: m.branch === 'master' ? 3 : 1
+  })
+
+  // `npm run prepare` makes the config and API signer it needs without
+  // secrets, so the tests run on any free machine.
+  m.stage('test', {
+    on: [LINUX, MAC],
+    tools: { node: '22' },
+    timeout: '1h',
+    activityTimeout: '30m',
+    run: runTests
+  })
 
   const configs = configsFor(m.branch)
   // A cold pool machine installs, pods and archives within this; a hung step
@@ -104,7 +133,7 @@ export function setup(m: Setup) {
     {
       ios: {
         on: MAC,
-        tools: { node: '22', xcode: '>=26', brew: ['cocoapods'] },
+        tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
         configs,
         secrets: IOS_SECRETS,
         env,
@@ -113,27 +142,40 @@ export function setup(m: Setup) {
         run: buildIos
       },
       android: {
-        on: LINUX,
+        // Gradle and the Android SDK run on either; Linux is cheaper.
+        on: [LINUX, MAC],
         tools: {
           node: '22',
           java: '17',
+          // Library modules still compile against 35.
           android: [
             'platforms;android-36',
+            'platforms;android-35',
             'build-tools;36.1.0',
+            'build-tools;35.0.0',
             'ndk;27.1.12297006',
             'cmake;3.22.1'
-          ]
+          ],
+          androidLicenses: 'accept'
         },
         configs,
         secrets: ANDROID_SECRETS,
         env,
         ...limits,
-        buildNumbers: [APP],
+        publishes: [APP],
         run: buildAndroid
       }
     },
     { failFast: false }
   )
+}
+
+/** The Jest suite, prepared as the Jenkinsfile's preTest runs it. */
+export async function runTests(ctx: Stage) {
+  // The repository's .npmrc turns install scripts off, so `prepare` runs here.
+  await ctx.sh('npm ci')
+  await ctx.sh('npm run prepare')
+  await ctx.sh('npm test -- --ci')
 }
 
 /**
@@ -226,18 +268,49 @@ export async function buildIos(ctx: Stage) {
   await ctx.artifacts.save('ios-archive', 'build/edge.xcarchive/**')
 }
 
+/**
+ * Builds the release APK. On master, as Jenkins does, it also builds the AAB
+ * and the per-ABI APKs: the universal APK is the build's default variant and
+ * each ABI's APK is a variant with its own version code.
+ */
 export async function buildAndroid(ctx: Stage) {
   await prepare(ctx, ANDROID_SECRETS)
-  await setAndroidVersion(
-    ctx.workspace,
-    await versionOf(ctx),
-    ctx.getBuildNumber(APP)
-  )
-  await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
+  const version = await versionOf(ctx)
+  await setAndroidVersion(ctx.workspace, version, ctx.getBuildNumber(APP))
+  const apks = 'android/app/build/outputs/apk/release'
+  const changelog = `${ctx.run.branch} ${version}`
+  if (ctx.run.branch !== 'master') {
+    await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
+    await ctx.publish({
+      app: APP,
+      platform: 'android',
+      path: `${apks}/app-release.apk`,
+      changelog
+    })
+    return
+  }
+  await ctx.sh('./gradlew bundleRelease assembleRelease -PabiSplits', {
+    cwd: 'android'
+  })
   await ctx.artifacts.save(
-    'android-apks',
-    'android/app/build/outputs/apk/release/*.apk'
+    'android-aab',
+    'android/app/build/outputs/bundle/release/*.aab'
   )
+  await ctx.publish({
+    app: APP,
+    platform: 'android',
+    path: `${apks}/app-universal-release.apk`,
+    changelog
+  })
+  for (const abi of ABI_SPLITS) {
+    await ctx.publish({
+      app: APP,
+      platform: 'android',
+      variant: abi,
+      path: `${apks}/app-${abi}-release.apk`,
+      changelog
+    })
+  }
 }
 
 /** The version suffix scripts/gitVersionFile.ts gives a branch. */
