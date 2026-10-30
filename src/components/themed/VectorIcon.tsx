@@ -64,7 +64,7 @@ interface Props {
   style?: any
 }
 
-export function VectorIcon(props: Props) {
+export const VectorIcon: React.FC<Props> = props => {
   const { name, font, size, color, style, ...props2 } = props
 
   const glyph = getStringForIcon(font, name)
@@ -94,9 +94,7 @@ const getStringForIcon = (fontFamily: string, iconName: string): string => {
   const iconObj = fontMap[fontFamily]
   if (iconObj == null) return ''
   const glyphMap = iconObj.icon.getRawGlyphMap()
-  let glyph = iconName ? glyphMap[iconName] || '?' : ''
-  if (typeof glyph === 'number') {
-    glyph = String.fromCodePoint(glyph)
-  }
-  return glyph
+  if (iconName === '') return ''
+  const glyph = glyphMap[iconName] ?? '?'
+  return typeof glyph === 'number' ? String.fromCodePoint(glyph) : glyph
 }
