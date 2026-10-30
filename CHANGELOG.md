@@ -35,6 +35,10 @@
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 
+## 4.52.3
+
+- fixed: Missing wallet options menu icons on Android
+
 ## 4.52.2 (2026-10-30)
 
 - added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
