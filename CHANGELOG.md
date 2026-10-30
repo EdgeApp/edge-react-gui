@@ -2,8 +2,6 @@
 
 ## Unreleased (develop)
 
-- added: eCash (ECX) currency info, off unless the plugin config enables it, and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
-- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
@@ -36,6 +34,11 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+
+## 4.52.2 (2026-10-30)
+
+- added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
+- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 
 ## 4.52.1 (2026-10-23)
 
