@@ -378,8 +378,6 @@ export default [
       'src/components/themed/Title.tsx',
       'src/components/themed/TransactionListComponents.tsx',
 
-      'src/components/themed/VectorIcon.tsx',
-
       'src/components/themed/WalletListErrorRow.tsx',
       'src/components/themed/WalletListHeader.tsx',
       'src/components/themed/WalletListLoadingRow.tsx',
