@@ -112,7 +112,7 @@
     "detect-bundler": "^1.1.0",
     "disklet": "^0.6.0",
     "edge-core-js": "^2.54.0",
-    "edge-currency-accountbased": "4.103.0",
+    "edge-currency-accountbased": "4.104.0",
     "edge-currency-plugins": "^3.17.0",
     "edge-exchange-plugins": "^2.60.0",
     "edge-info-server": "^3.16.0",
@@ -177,7 +177,6 @@
     "react-native-wheel-picker-android": "^2.0.6",
     "react-native-worklets": "0.10.0",
     "react-native-zano": "^0.6.0",
-    "react-native-zcash": "0.13.6",
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
     "redux-thunk": "^2.3.0",
@@ -191,6 +190,7 @@
     "use-context-selector": "^2.0.0",
     "yaob": "^0.4.0",
     "yavent": "^0.1.5",
+    "zcash-native": "0.1.0",
     "zcashname-sdk": "^0.7.2"
   },
   "devDependencies": {

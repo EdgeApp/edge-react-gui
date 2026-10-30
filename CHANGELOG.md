@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Replace react-native-zcash with zcash-native
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
