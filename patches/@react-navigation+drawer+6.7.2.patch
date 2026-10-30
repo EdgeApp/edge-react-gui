@@ -26,7 +26,7 @@ index a4dec47..a1e8ed6 100644
    },
    pressable: {
 diff --git a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
-index 57af20c..e5d3d9a 100644
+index 57af20c..e6157f8 100644
 --- a/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
 +++ b/node_modules/@react-navigation/drawer/src/views/modern/Drawer.tsx
 @@ -11,20 +11,15 @@ import {
@@ -159,7 +159,21 @@ index 57af20c..e5d3d9a 100644
        >
          {/* Immediate child of gesture handler needs to be an Animated.View */}
          <Animated.View
-@@ -377,6 +355,7 @@ export default function Drawer({
+@@ -364,6 +342,13 @@ export default function Drawer({
+         >
+           <Animated.View style={[styles.content, contentAnimatedStyle]}>
+             <View
++              // PATCHED (Edge): never flatten this wrapper. Its accessibility
++              // props flip with the drawer, and under the new architecture a
++              // View that gains or loses them is created or flattened away,
++              // which moves the whole app to a new native parent on every
++              // open and close. Some devices draw a frame of that move with
++              // the app missing.
++              collapsable={false}
+               accessibilityElementsHidden={isOpen && drawerType !== 'permanent'}
+               importantForAccessibility={
+                 isOpen && drawerType !== 'permanent'
+@@ -377,6 +362,7 @@ export default function Drawer({
              {drawerType !== 'permanent' ? (
                <Overlay
                  progress={progress}
@@ -167,7 +181,7 @@ index 57af20c..e5d3d9a 100644
                  onPress={() =>
                    toggleDrawer({ open: false, isUserInitiated: true })
                  }
-@@ -400,7 +379,7 @@ export default function Drawer({
+@@ -400,7 +386,7 @@ export default function Drawer({
              {renderDrawerContent()}
            </Animated.View>
          </Animated.View>
