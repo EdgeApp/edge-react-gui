@@ -14,27 +14,9 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Zocial from 'react-native-vector-icons/Zocial'
 
-import type { MapObject } from '../../types/types'
 import { UnscaledText } from '../text/UnscaledText'
 
-// Vector icons font family name reference
-
-// Material Design Icons
-// anticon
-// Entypo
-// EvilIcons
-// Feather
-// FontAwesome
-// Fontisto
-// fontcustom
-// Ionicons
-// Material Icons
-// Octicons
-// simple-line-icons
-// zocial
-
-const iconFamily = [
-  MaterialCommunityIcons,
+const iconFonts = {
   AntDesign,
   Entypo,
   EvilIcons,
@@ -43,22 +25,16 @@ const iconFamily = [
   Fontisto,
   Foundation,
   Ionicons,
+  MaterialCommunityIcons,
   MaterialIcons,
   Octicons,
   SimpleLineIcons,
   Zocial
-]
-
-const fontMap: MapObject<{ icon: typeof AntDesign }> = {}
-
-for (const icon of iconFamily) {
-  const fontFamily = icon.getFontFamily()
-  fontMap[fontFamily] = { icon }
 }
 
 interface Props {
   name: string
-  font: string
+  font: keyof typeof iconFonts
   size: number
   color: string
   style?: any
@@ -67,7 +43,8 @@ interface Props {
 export const VectorIcon: React.FC<Props> = props => {
   const { name, font, size, color, style, ...props2 } = props
 
-  const glyph = getStringForIcon(font, name)
+  const icon = iconFonts[font]
+  const glyph = getStringForIcon(icon, name)
 
   const styleDefaults = {
     fontSize: size,
@@ -75,7 +52,8 @@ export const VectorIcon: React.FC<Props> = props => {
   }
 
   const styleOverrides = {
-    fontFamily: font,
+    // Render with the name the current platform uses:
+    fontFamily: icon.getFontFamily(),
     fontWeight: 'normal',
     fontStyle: 'normal'
   }
@@ -90,10 +68,8 @@ export const VectorIcon: React.FC<Props> = props => {
   )
 }
 
-const getStringForIcon = (fontFamily: string, iconName: string): string => {
-  const iconObj = fontMap[fontFamily]
-  if (iconObj == null) return ''
-  const glyphMap = iconObj.icon.getRawGlyphMap()
+const getStringForIcon = (icon: typeof AntDesign, iconName: string): string => {
+  const glyphMap = icon.getRawGlyphMap()
   if (iconName === '') return ''
   const glyph = glyphMap[iconName] ?? '?'
   return typeof glyph === 'number' ? String.fromCodePoint(glyph) : glyph

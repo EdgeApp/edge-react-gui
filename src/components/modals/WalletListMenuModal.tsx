@@ -383,7 +383,7 @@ export const WalletListMenuModal: React.FC<Props> = props => {
             ) : (
               <VectorIcon
                 color={theme.primaryText}
-                font="anticon"
+                font="AntDesign"
                 name={icons[option.value]} // for split keys like splitBCH, splitETH, etc.
                 size={theme.rem(1)}
                 style={

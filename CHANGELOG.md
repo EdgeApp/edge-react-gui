@@ -38,6 +38,7 @@
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
+- fixed: Missing wallet options menu icons on Android
 
 ## 4.52.1 (2026-10-23)
 
