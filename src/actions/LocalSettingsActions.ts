@@ -103,7 +103,9 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
     const currentAccountBalanceVisibility =
       state.ui.settings.isAccountBalanceVisible
     const isAccountBalanceVisible = !currentAccountBalanceVisibility
-    await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
+
+    // Flip the UI first: the settings write goes through the core, which
+    // can take seconds to answer while a large account is syncing.
     dispatch({
       type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
       data: { isAccountBalanceVisible }
@@ -113,6 +115,16 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
     // thinking their funds are gone, so explain how to get them back:
     if (!isAccountBalanceVisible) {
       showToast(lstrings.fragment_wallets_balance_hidden_toast, TOAST_HIDE_MS)
+    }
+
+    try {
+      await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
+    } catch (error: unknown) {
+      dispatch({
+        type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+        data: { isAccountBalanceVisible: currentAccountBalanceVisibility }
+      })
+      throw error
     }
   }
 }

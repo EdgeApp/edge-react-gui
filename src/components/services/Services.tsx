@@ -16,6 +16,7 @@ import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
 import { defaultAccount } from '../../reducers/CoreReducer'
@@ -58,7 +59,7 @@ const REFRESH_INFO_SERVER_MS = 10 * 60 * 1000 // 10 minutes
  * Provides various services to the application. These are non-visual components
  * which provide some background tasks and exterior functionality for the app.
  */
-export const Services: React.FC<Props> = props => {
+const ServicesComponent: React.FC<Props> = props => {
   const dispatch = useDispatch()
   const account = useSelector(state =>
     state.core.account !== defaultAccount ? state.core.account : undefined
@@ -183,22 +184,21 @@ export const Services: React.FC<Props> = props => {
     'Services 3'
   )
 
-  // Methods to call periodically
-  useRefresher(
-    async () => {
-      dispatch(updateExchangeInfo()).catch((error: unknown) => {
-        console.warn(error)
-      })
-      dispatch(updateGiftCardInfo()).catch((error: unknown) => {
-        console.warn(error)
-      })
-      dispatch(updateHoudiniChains()).catch((error: unknown) => {
-        console.warn(error)
-      })
-    },
-    undefined,
-    REFRESH_INFO_SERVER_MS
-  )
+  // Methods to call periodically. `useRefresher` restarts, and calls this
+  // right away, whenever the callback changes, so keep it stable or every
+  // render re-dispatches all three to every subscriber:
+  const handleRefreshInfo = useHandler(async () => {
+    dispatch(updateExchangeInfo()).catch((error: unknown) => {
+      console.warn(error)
+    })
+    dispatch(updateGiftCardInfo()).catch((error: unknown) => {
+      console.warn(error)
+    })
+    dispatch(updateHoudiniChains()).catch((error: unknown) => {
+      console.warn(error)
+    })
+  })
+  useRefresher(handleRefreshInfo, undefined, REFRESH_INFO_SERVER_MS)
 
   const startLoanManager = CONFIG.BETA_FEATURES && account != null
 
@@ -228,3 +228,8 @@ export const Services: React.FC<Props> = props => {
     </>
   )
 }
+
+// The side menu hosts these services, and re-renders whenever the drawer
+// opens or closes. Without the memo, every toggle re-ran every service,
+// including the expensive SortedWalletList, before the drawer could move.
+export const Services = React.memo(ServicesComponent)
