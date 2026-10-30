@@ -1,6 +1,8 @@
+import { NavigationContext } from '@react-navigation/native'
 import React, {
   type ComponentType,
   type ReactNode,
+  useContext,
   useEffect,
   useRef,
   useState
@@ -49,6 +51,12 @@ export function withExtendedTouchable<
     const [isDebouncing, setIsDebouncing] = useState<boolean>(false)
     const [isAwaiting, setIsAwaiting] = useState<boolean>(false)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const navigation = useContext(NavigationContext)
+
+    // The press guards read these refs instead of the state above, since state
+    // stays stale until the next render and a second tap can land before that:
+    const isDebouncingRef = useRef<boolean>(false)
+    const isAwaitingRef = useRef<boolean>(false)
 
     useEffect(() => {
       return () => {
@@ -63,22 +71,31 @@ export function withExtendedTouchable<
       pressFn?: PressFn
     ): void => {
       if (pressFn == null) return
-      if (isDebouncing || isAwaiting) return
+      if (isDebouncingRef.current || isAwaitingRef.current) return
+
+      // A press that navigated away leaves this scene unfocused but still on
+      // screen until the transition ends, so later taps must not stack scenes:
+      if (navigation != null && !navigation.isFocused()) return
 
       // Set debounce state before we even know if onPress is async or not to
       // guarantee we cannot call onPress twice in quick succession.
-      if (debounce) setIsDebouncing(true)
+      if (debounce) {
+        isDebouncingRef.current = true
+        setIsDebouncing(true)
+      }
 
       try {
         const result = pressFn(event)
         // Async onPress. Always show busy form until promise resolves
         if (typeof result?.then === 'function') {
+          isAwaitingRef.current = true
           setIsAwaiting(true)
           result
             .catch((e: unknown) => {
               showError(e)
             })
             .finally(() => {
+              isAwaitingRef.current = false
               setIsAwaiting(false)
             })
         }
@@ -86,6 +103,7 @@ export function withExtendedTouchable<
         // Also layer on debounce state toggling if enabled
         if (debounce) {
           timeoutRef.current = setTimeout(() => {
+            isDebouncingRef.current = false
             setIsDebouncing(false)
           }, DEBOUNCE_DELAY)
         }
@@ -93,6 +111,8 @@ export function withExtendedTouchable<
         showError(err)
 
         // Always reset the busy state no matter what
+        isDebouncingRef.current = false
+        isAwaitingRef.current = false
         setIsDebouncing(false)
         setIsAwaiting(false)
       }
