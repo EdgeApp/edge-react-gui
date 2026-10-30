@@ -1,6 +1,6 @@
 import { gt, mul, toBns, toFixed } from 'biggystring'
 import { asMaybe } from 'cleaners'
-import { format } from 'date-fns'
+import format from 'date-fns/format'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 import { sprintf } from 'sprintf-js'
 

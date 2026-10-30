@@ -28,7 +28,6 @@ jest.mock('@react-native-firebase/messaging', () => {
   })
   return { __esModule: true, default: messaging }
 })
-require('react-native-reanimated').setUpTests()
 
 // --------------------------------------------------------------------
 // Environment hacks

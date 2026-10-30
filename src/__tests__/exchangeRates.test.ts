@@ -3,7 +3,6 @@ import fetch from 'node-fetch'
 
 import { getHistoricalCryptoRate } from '../util/exchangeRates'
 import { mswServer } from '../util/mswServer'
-import { snooze } from '../util/utils'
 
 // Uncomment for testing under Node w/o Jest
 // const { getHistoricalRate } = require('../util/exchangeRates')
@@ -12,7 +11,6 @@ import { snooze } from '../util/utils'
 // })
 
 beforeAll(() => {
-  jest.useRealTimers()
   mswServer.listen()
 })
 afterAll(() => {
@@ -89,7 +87,10 @@ it('get bulk rates', async () => {
     })
   )
 
-  await snooze(2000)
+  // Send the queued requests, which go out after a 1 second delay, and let
+  // them finish:
+  await jest.advanceTimersByTimeAsync(2000)
+  await Promise.all(promises)
 
   promises.push(
     getHistoricalCryptoRate(
@@ -117,7 +118,7 @@ it('get bulk rates', async () => {
     })
   )
 
-  await snooze(1000)
+  await jest.advanceTimersByTimeAsync(1000)
 
   promises.push(
     getHistoricalCryptoRate(
