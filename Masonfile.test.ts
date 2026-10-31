@@ -76,6 +76,12 @@ function recordStage(branch: string): {
     artifacts: {
       save: async (...args: unknown[]) => calls.push(['save', ...args])
     },
+    log: {
+      section: async (title: string, body: () => Promise<unknown>) => {
+        calls.push(['section', title])
+        return await body()
+      }
+    },
     fs: {
       read: async (path: string) => readFileSync(join(root, path), 'utf8')
     }
@@ -160,6 +166,43 @@ describe('Masonfile', () => {
       'npm ci',
       'npm run prepare',
       'npm test -- --ci'
+    ])
+  })
+
+  it('names each stage’s phases, in order, as Jenkins did', async () => {
+    const sections = async (
+      branch: string,
+      stage: (ctx: any) => Promise<void>
+    ): Promise<unknown[]> => {
+      const { calls, ctx } = recordStage(branch)
+      await stage(ctx)
+      return calls.filter(([kind]) => kind === 'section').map(call => call[1])
+    }
+    expect(await sections('develop', runTests)).toEqual([
+      'Install packages',
+      'Prepare',
+      'Jest'
+    ])
+    const prepared = ['Secret files', 'Install packages', 'Prepare']
+    expect(await sections('develop', buildIos)).toEqual([
+      ...prepared,
+      'Version 4.53.0-d (26103001)',
+      'CocoaPods',
+      'Archive',
+      'Save the archive'
+    ])
+    expect(await sections('develop', buildAndroid)).toEqual([
+      ...prepared,
+      'Version 4.53.0-d (26103001)',
+      'Build the APK',
+      'Publish'
+    ])
+    expect(await sections('master', buildAndroid)).toEqual([
+      ...prepared,
+      'Version 4.53.0 (26103001)',
+      'Build the AAB and APKs',
+      'Save the AAB',
+      'Publish'
     ])
   })
 
@@ -268,6 +311,12 @@ describe('Masonfile', () => {
     ])
     const sh = commands(calls)
     expect(sh.slice(-2)[0]).toBe('npm run prepare.ios')
+    // CocoaPods runs without forced colour, so podspecs read plain output.
+    expect(
+      calls.find(
+        ([kind, line]) => kind === 'sh' && line === 'npm run prepare.ios'
+      )
+    ).toEqual(['sh', 'npm run prepare.ios', { color: false }])
     expect(sh.at(-1)).toMatch(/^xcodebuild archive /)
     expect(calls.at(-1)).toEqual([
       'save',
