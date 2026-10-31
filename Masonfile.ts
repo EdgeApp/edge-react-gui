@@ -11,8 +11,10 @@ import { join } from 'node:path'
 //
 // Every tool the builds use is in the stages' tools. Node, Java, the Android
 // SDK (its licences accepted here) and CocoaPods install on demand, so a
-// fresh pool machine needs no setup for them; Xcode >=26 comes with the
-// macOS pool's image, or through the helper on a Mac that runs one.
+// fresh pool machine needs no setup for them; Xcode 26 comes with the
+// macOS pool's image, or through the helper on a Mac that runs one. Not 27
+// yet: under it, Expo SDK 57's ExpoModulesJSI build phase reports its
+// warnings as a failure (expo/expo#50279), fixed only in SDK 58.
 //
 // Each run has one build number, which both platforms stamp into their
 // native projects themselves (setAndroidVersion, setIosVersion), with the
@@ -156,7 +158,7 @@ export function setup(m: Setup) {
     {
       ios: {
         on: MAC,
-        tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
+        tools: { node: '22', xcode: '>=26 <27', cocoapods: '1.16.2' },
         configs,
         secrets: IOS_SECRETS,
         env,
