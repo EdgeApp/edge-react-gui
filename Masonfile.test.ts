@@ -11,6 +11,8 @@ import { tmpdir } from 'os'
 import { join } from 'path'
 
 import {
+  androidApks,
+  androidSigning,
   buildAndroid,
   buildIos,
   configsFor,
@@ -18,6 +20,7 @@ import {
   secretDirectory,
   setAndroidVersion,
   setup,
+  signAndroid,
   versionSuffix,
   writeSecrets
 } from './Masonfile'
@@ -75,6 +78,17 @@ function recordStage(branch: string): {
     },
     artifacts: {
       save: async (...args: unknown[]) => calls.push(['save', ...args])
+    },
+    stash: async (...args: unknown[]) => calls.push(['stash', ...args]),
+    unstash: async (...args: unknown[]) => calls.push(['unstash', ...args]),
+    // A declared secret file, written where the worker would keep it.
+    secretFile: (name: string) => {
+      calls.push(['secretFile', name])
+      return join(root, 'secrets', name)
+    },
+    output: async (stage: string) => {
+      calls.push(['output', stage])
+      return { version: '4.53.0-d' }
     },
     log: {
       section: async (title: string, body: () => Promise<unknown>) => {
@@ -139,9 +153,12 @@ describe('Masonfile', () => {
         cocoapods: '1.16.2'
       })
       expect(stages.ios.on).toEqual(mac)
-      expect(stages.android.on).toEqual([linux, mac])
+      // Android builds on a pool machine, then signs on the signing node.
+      const [build, sign] = stages.android
+      expect(build.name).toBe('build')
+      expect(build.on).toEqual([linux, mac])
       // Until these builds ship, they upload nothing to Sentry.
-      for (const stage of [stages.ios, stages.android]) {
+      for (const stage of [stages.ios, build]) {
         expect(stage.env).toEqual({ SENTRY_DISABLE_AUTO_UPLOAD: 'true' })
         expect([stage.timeout, stage.activityTimeout]).toEqual(['3h', '30m'])
       }
@@ -149,13 +166,45 @@ describe('Masonfile', () => {
       expect(stages.ios.secrets).toContain('GoogleService-Info.plist')
       expect(stages.ios.publishes).toBeUndefined()
       expect(stages.ios.buildNumbers).toEqual(['co.edgesecure.app'])
-      expect(stages.android.tools.androidLicenses).toBe('accept')
-      expect(stages.android.tools.android).toEqual(
+      expect(build.tools.androidLicenses).toBe('accept')
+      expect(build.tools.android).toEqual(
         expect.arrayContaining(['platforms;android-35', 'build-tools;35.0.0'])
       )
-      expect(stages.android.configs).toEqual(configs)
-      expect(stages.android.secrets).toContain('google-services.json')
-      expect(stages.android.publishes).toEqual(['co.edgesecure.app'])
+      expect(build.configs).toEqual(configs)
+      expect(build.secrets).toContain('google-services.json')
+      expect(build.publishes).toBeUndefined()
+      expect(build.buildNumbers).toEqual(['co.edgesecure.app'])
+      expect(build.run).toBe(buildAndroid)
+      // Only the sign stage, on the signing node and with no checkout, gets
+      // the keystores and deploy-config.json; no other stage declares them.
+      expect(sign).toMatchObject({
+        name: 'sign',
+        on: { labels: ['android-signing'] },
+        checkout: false,
+        configs,
+        publishes: ['co.edgesecure.app'],
+        run: signAndroid
+      })
+      expect(sign.secrets).toEqual([
+        'deploy-config.json',
+        'edge-release-keystore.jks',
+        'edge-beta-keystore.jks',
+        'edge-develop-keystore.jks',
+        'coinhub-keystore.jks',
+        'airbitzbd-keystore.jks'
+      ])
+      expect(sign.tools).toEqual({
+        java: '17',
+        android: ['build-tools;36.1.0'],
+        androidLicenses: 'accept'
+      })
+      for (const stage of [test, stages.ios, build])
+        expect(
+          (stage.secrets ?? []).some(
+            (name: string) =>
+              name.endsWith('.jks') || name === 'deploy-config.json'
+          )
+        ).toBe(false)
     }
   })
 
@@ -172,7 +221,7 @@ describe('Masonfile', () => {
   it('names each stage’s phases, in order, as Jenkins did', async () => {
     const sections = async (
       branch: string,
-      stage: (ctx: any) => Promise<void>
+      stage: (ctx: any) => Promise<unknown>
     ): Promise<unknown[]> => {
       const { calls, ctx } = recordStage(branch)
       await stage(ctx)
@@ -195,20 +244,20 @@ describe('Masonfile', () => {
       ...prepared,
       'Version 4.53.0-d (26103001)',
       'Build the APK',
-      'Publish'
+      'Stash the APKs for signing'
     ])
     expect(await sections('master', buildAndroid)).toEqual([
       ...prepared,
       'Version 4.53.0 (26103001)',
       'Build the AAB and APKs',
       'Save the AAB',
-      'Publish'
+      'Stash the APKs for signing'
     ])
   })
 
-  it('publishes master’s universal APK and its two ABI variants', async () => {
+  it('builds master’s universal APK and its two ABI APKs, and stashes them for signing', async () => {
     const { calls, ctx, root } = recordStage('master')
-    await buildAndroid(ctx)
+    expect(await buildAndroid(ctx)).toEqual({ version: '4.53.0' })
     expect(commands(calls)).toEqual([
       'npm ci',
       'npm run prepare',
@@ -227,30 +276,19 @@ describe('Masonfile', () => {
     expect(calls.filter(([kind]) => kind === 'save')).toEqual([
       ['save', 'android-aab', 'android/app/build/outputs/bundle/release/*.aab']
     ])
+    // Nothing is published from the pool machine: the APKs go to signing.
+    expect(calls.filter(([kind]) => kind === 'publish')).toEqual([])
     const apks = 'android/app/build/outputs/apk/release'
-    expect(
-      calls.filter(([kind]) => kind === 'publish').map(call => call[1])
-    ).toEqual([
-      {
-        app: 'co.edgesecure.app',
-        platform: 'android',
-        path: `${apks}/app-universal-release.apk`,
-        changelog: 'master 4.53.0'
-      },
-      {
-        app: 'co.edgesecure.app',
-        platform: 'android',
-        variant: 'armeabi-v7a',
-        path: `${apks}/app-armeabi-v7a-release.apk`,
-        changelog: 'master 4.53.0'
-      },
-      {
-        app: 'co.edgesecure.app',
-        platform: 'android',
-        variant: 'arm64-v8a',
-        path: `${apks}/app-arm64-v8a-release.apk`,
-        changelog: 'master 4.53.0'
-      }
+    expect(calls.filter(([kind]) => kind === 'stash')).toEqual([
+      [
+        'stash',
+        'android-apks',
+        [
+          `${apks}/app-universal-release.apk`,
+          `${apks}/app-armeabi-v7a-release.apk`,
+          `${apks}/app-arm64-v8a-release.apk`
+        ]
+      ]
     ])
     // The Firebase config ships in the app, so it is readable; the rest stay owner-only.
     expect(calls.filter(([kind]) => kind === 'writeSecretFile')).toEqual([
@@ -266,24 +304,133 @@ describe('Masonfile', () => {
     ])
   })
 
-  it('publishes one APK on other branches', async () => {
+  it('builds one APK on other branches and stashes it', async () => {
     const { calls, ctx, root } = recordStage('develop')
-    await buildAndroid(ctx)
+    expect(await buildAndroid(ctx)).toEqual({ version: '4.53.0-d' })
     expect(commands(calls)).toContain('./gradlew assembleRelease')
     expect(calls.filter(([kind]) => kind === 'save')).toEqual([])
-    expect(
-      calls.filter(([kind]) => kind === 'publish').map(call => call[1])
-    ).toEqual([
-      {
-        app: 'co.edgesecure.app',
-        platform: 'android',
-        path: 'android/app/build/outputs/apk/release/app-release.apk',
-        changelog: 'develop 4.53.0-d'
-      }
+    expect(calls.filter(([kind]) => kind === 'stash')).toEqual([
+      [
+        'stash',
+        'android-apks',
+        ['android/app/build/outputs/apk/release/app-release.apk']
+      ]
     ])
     expect(
       readFileSync(join(root, 'android/app/build.gradle'), 'utf8')
     ).toContain('versionName "4.53.0-d"')
+  })
+
+  it('signs the stashed APKs with the branch’s keystore and publishes them', async () => {
+    const deployConfig = {
+      edge: {
+        androidKeyStore: 'edge-release-keystore.jks',
+        androidKeyStoreAlias: 'edge',
+        androidKeyStorePassword: 'release-pass',
+        android: {
+          develop: {
+            androidKeyStore: 'edge-develop-keystore.jks',
+            androidKeyStorePassword: 'develop-pass'
+          }
+        }
+      }
+    }
+    const sign = async (branch: string) => {
+      const { calls, ctx, root } = recordStage(branch)
+      mkdirSync(join(root, 'secrets'))
+      writeFileSync(
+        join(root, 'secrets', 'deploy-config.json'),
+        JSON.stringify(deployConfig)
+      )
+      await signAndroid(ctx)
+      return { calls, root }
+    }
+    const { calls, root } = await sign('develop')
+    expect(calls[0]).toEqual(['section', 'Unstash the APKs'])
+    expect(calls[1]).toEqual(['unstash', 'android-apks'])
+    expect(calls.filter(([kind]) => kind === 'output')).toEqual([
+      ['output', 'build/android/build']
+    ])
+    expect(calls.filter(([kind]) => kind === 'secretFile')).toEqual([
+      ['secretFile', 'deploy-config.json'],
+      ['secretFile', 'edge-develop-keystore.jks']
+    ])
+    const keystore = join(root, 'secrets', 'edge-develop-keystore.jks')
+    const apksigner = '"$ANDROID_HOME/build-tools/36.1.0/apksigner"'
+    // The password and alias reach apksigner by its environment, never its arguments.
+    expect(calls.filter(([kind]) => kind === 'sh')).toEqual([
+      ['sh', 'mkdir -p signed'],
+      [
+        'sh',
+        `${apksigner} sign --ks "${keystore}" --ks-key-alias "$KEY_ALIAS" --ks-pass env:KEY_PASSWORD --key-pass env:KEY_PASSWORD --out signed/app-release.apk android/app/build/outputs/apk/release/app-release.apk`,
+        { env: { KEY_ALIAS: 'edge', KEY_PASSWORD: 'develop-pass' } }
+      ],
+      ['sh', `${apksigner} verify signed/app-release.apk`]
+    ])
+    expect(calls.filter(([kind]) => kind === 'publish')).toEqual([
+      [
+        'publish',
+        {
+          app: 'co.edgesecure.app',
+          platform: 'android',
+          path: 'signed/app-release.apk',
+          changelog: 'develop 4.53.0-d'
+        }
+      ]
+    ])
+    expect(
+      calls.filter(([kind]) => kind === 'section').map(call => call[1])
+    ).toEqual([
+      'Unstash the APKs',
+      'Sign with edge-develop-keystore.jks',
+      'Publish'
+    ])
+    // master signs and publishes the universal APK and each ABI's as a variant.
+    const master = await sign('master')
+    expect(
+      master.calls.filter(([kind]) => kind === 'publish').map(call => call[1])
+    ).toEqual([
+      expect.objectContaining({ path: 'signed/app-universal-release.apk' }),
+      expect.objectContaining({
+        variant: 'armeabi-v7a',
+        path: 'signed/app-armeabi-v7a-release.apk'
+      }),
+      expect.objectContaining({
+        variant: 'arm64-v8a',
+        path: 'signed/app-arm64-v8a-release.apk'
+      })
+    ])
+    expect(
+      master.calls.find(
+        ([kind, line]) => kind === 'sh' && String(line).includes(' sign ')
+      )![2]
+    ).toEqual({ env: { KEY_ALIAS: 'edge', KEY_PASSWORD: 'release-pass' } })
+  })
+
+  it('merges a branch’s Android signing as scripts/deploy.ts does, and refuses a gap', () => {
+    const config = {
+      edge: {
+        androidKeyStore: 'a.jks',
+        androidKeyStoreAlias: 'top',
+        android: {
+          androidKeyStorePassword: 'android-pass',
+          beta: { androidKeyStore: 'b.jks' }
+        }
+      }
+    }
+    expect(androidSigning(config, 'beta')).toEqual({
+      keystore: 'b.jks',
+      alias: 'top',
+      password: 'android-pass'
+    })
+    expect(androidSigning(config, 'feature/x').keystore).toBe('a.jks')
+    expect(() => androidSigning({}, 'develop')).toThrow(
+      'deploy-config.json has no androidKeyStore for develop'
+    )
+    expect(() => androidSigning(null, 'develop')).toThrow(
+      'deploy-config.json has no androidKeyStore for develop'
+    )
+    expect(androidApks('develop')).toEqual([{ file: 'app-release.apk' }])
   })
 
   it('stamps the iOS version with agvtool and archives', async () => {
