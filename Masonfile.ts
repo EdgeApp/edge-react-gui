@@ -172,10 +172,10 @@ export function setup(m: Setup) {
 
 /** The Jest suite, prepared as the Jenkinsfile's preTest runs it. */
 export async function runTests(ctx: Stage) {
+  await ctx.log.section('Install packages', async () => await ctx.sh('npm ci'))
   // The repository's .npmrc turns install scripts off, so `prepare` runs here.
-  await ctx.sh('npm ci')
-  await ctx.sh('npm run prepare')
-  await ctx.sh('npm test -- --ci')
+  await ctx.log.section('Prepare', async () => await ctx.sh('npm run prepare'))
+  await ctx.log.section('Jest', async () => await ctx.sh('npm test -- --ci'))
 }
 
 /**
@@ -185,17 +185,36 @@ export async function runTests(ctx: Stage) {
  * stamps its own version.
  */
 async function prepare(ctx: Stage, secrets: string[]): Promise<void> {
-  await writeSecrets(ctx, secrets)
+  await ctx.log.section(
+    'Secret files',
+    async () => await writeSecrets(ctx, secrets)
+  )
   // The repository's .npmrc turns install scripts off, so `prepare` runs below.
-  await ctx.sh('npm ci')
-  await ctx.exec('node', [
-    '-r',
-    'sucrase/register',
-    './scripts/patchFiles.ts',
-    'edge',
-    ctx.run.branch
-  ])
-  await ctx.sh('npm run prepare')
+  await ctx.log.section('Install packages', async () => await ctx.sh('npm ci'))
+  await ctx.log.section('Prepare', async () => {
+    await ctx.exec('node', [
+      '-r',
+      'sucrase/register',
+      './scripts/patchFiles.ts',
+      'edge',
+      ctx.run.branch
+    ])
+    await ctx.sh('npm run prepare')
+  })
+}
+
+/** Stamps the run's version and build number, under a section that names them. */
+async function stampVersion(
+  ctx: Stage,
+  stamp: (version: string, build: string) => Promise<void>
+): Promise<string> {
+  const version = await versionOf(ctx)
+  const build = ctx.getBuildNumber(APP)
+  await ctx.log.section(
+    `Version ${version} (${build})`,
+    async () => await stamp(version, build)
+  )
+  return version
 }
 
 /** The run's version: package.json's, with the branch's suffix. */
@@ -252,20 +271,36 @@ export async function writeSecrets(
 
 export async function buildIos(ctx: Stage) {
   await prepare(ctx, IOS_SECRETS)
-  await setIosVersion(ctx, await versionOf(ctx), ctx.getBuildNumber(APP))
-  await ctx.sh('npm run prepare.ios')
-  await ctx.sh(
-    [
-      'xcodebuild archive',
-      '-workspace ios/edge.xcworkspace',
-      '-scheme edge',
-      '-configuration Release',
-      "-destination 'generic/platform=iOS'",
-      '-archivePath build/edge.xcarchive',
-      'CODE_SIGNING_ALLOWED=NO'
-    ].join(' ')
+  await stampVersion(
+    ctx,
+    async (version, build) => await setIosVersion(ctx, version, build)
   )
-  await ctx.artifacts.save('ios-archive', 'build/edge.xcarchive/**')
+  // Without colour: VisionCamera's podspec reads `node --print` output, and
+  // forced colour wraps its `undefined` in escapes, which it takes for a path.
+  await ctx.log.section(
+    'CocoaPods',
+    async () => await ctx.sh('npm run prepare.ios', { color: false })
+  )
+  await ctx.log.section(
+    'Archive',
+    async () =>
+      await ctx.sh(
+        [
+          'xcodebuild archive',
+          '-workspace ios/edge.xcworkspace',
+          '-scheme edge',
+          '-configuration Release',
+          "-destination 'generic/platform=iOS'",
+          '-archivePath build/edge.xcarchive',
+          'CODE_SIGNING_ALLOWED=NO'
+        ].join(' ')
+      )
+  )
+  await ctx.log.section(
+    'Save the archive',
+    async () =>
+      await ctx.artifacts.save('ios-archive', 'build/edge.xcarchive/**')
+  )
 }
 
 /**
@@ -275,42 +310,60 @@ export async function buildIos(ctx: Stage) {
  */
 export async function buildAndroid(ctx: Stage) {
   await prepare(ctx, ANDROID_SECRETS)
-  const version = await versionOf(ctx)
-  await setAndroidVersion(ctx.workspace, version, ctx.getBuildNumber(APP))
+  const version = await stampVersion(
+    ctx,
+    async (version, build) =>
+      await setAndroidVersion(ctx.workspace, version, build)
+  )
   const apks = 'android/app/build/outputs/apk/release'
   const changelog = `${ctx.run.branch} ${version}`
   if (ctx.run.branch !== 'master') {
-    await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
-    await ctx.publish({
-      app: APP,
-      platform: 'android',
-      path: `${apks}/app-release.apk`,
-      changelog
-    })
+    await ctx.log.section(
+      'Build the APK',
+      async () => await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
+    )
+    await ctx.log.section(
+      'Publish',
+      async () =>
+        await ctx.publish({
+          app: APP,
+          platform: 'android',
+          path: `${apks}/app-release.apk`,
+          changelog
+        })
+    )
     return
   }
-  await ctx.sh('./gradlew bundleRelease assembleRelease -PabiSplits', {
-    cwd: 'android'
+  await ctx.log.section('Build the AAB and APKs', async () => {
+    await ctx.sh('./gradlew bundleRelease assembleRelease -PabiSplits', {
+      cwd: 'android'
+    })
   })
-  await ctx.artifacts.save(
-    'android-aab',
-    'android/app/build/outputs/bundle/release/*.aab'
+  await ctx.log.section(
+    'Save the AAB',
+    async () =>
+      await ctx.artifacts.save(
+        'android-aab',
+        'android/app/build/outputs/bundle/release/*.aab'
+      )
   )
-  await ctx.publish({
-    app: APP,
-    platform: 'android',
-    path: `${apks}/app-universal-release.apk`,
-    changelog
-  })
-  for (const abi of ABI_SPLITS) {
+  await ctx.log.section('Publish', async () => {
     await ctx.publish({
       app: APP,
       platform: 'android',
-      variant: abi,
-      path: `${apks}/app-${abi}-release.apk`,
+      path: `${apks}/app-universal-release.apk`,
       changelog
     })
-  }
+    for (const abi of ABI_SPLITS) {
+      await ctx.publish({
+        app: APP,
+        platform: 'android',
+        variant: abi,
+        path: `${apks}/app-${abi}-release.apk`,
+        changelog
+      })
+    }
+  })
 }
 
 /** The version suffix scripts/gitVersionFile.ts gives a branch. */
