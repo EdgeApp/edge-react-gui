@@ -1,3 +1,28 @@
+diff --git a/node_modules/expo-modules-jsi/apple/Package.swift b/node_modules/expo-modules-jsi/apple/Package.swift
+index 5798eaf..9c62e5a 100644
+--- a/node_modules/expo-modules-jsi/apple/Package.swift
++++ b/node_modules/expo-modules-jsi/apple/Package.swift
+@@ -106,6 +106,12 @@ let package = Package(
+           // API Notes
+           "-Xcc", "-iapinotes-modules",
+           "-Xcc", apiNotesPath,
++
++          // Xcode 27 reports a compile that leaves only warnings as "the following
++          // command failed with exit code 0" and fails the archive; build this
++          // prebuilt framework without warnings (expo/expo#50279).
++          "-suppress-warnings",
++          "-Xcc", "-w",
+         ]),
+ 
+         .unsafeFlags(swiftIncludeFlags),
+@@ -131,6 +137,7 @@ let package = Package(
+         // matches how external consumers import them via `<ExpoModulesJSI/NativeState.h>`.
+         .headerSearchPath("include/Public"),
+         .unsafeFlags(cxxIncludeFlags),
++        .unsafeFlags(["-w"]),
+       ],
+     ),
+ 
 diff --git a/node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI-Cxx/include/RuntimeScheduler.h b/node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI-Cxx/include/RuntimeScheduler.h
 index 6115e87..957527c 100644
 --- a/node_modules/expo-modules-jsi/apple/Sources/ExpoModulesJSI-Cxx/include/RuntimeScheduler.h
