@@ -22,12 +22,17 @@ import { join } from 'node:path'
 // per-ABI APKs android/app/build.gradle gives N+1 and N+2 are published as
 // variants of the same build. The AAB is kept as the run's artifact.
 //
-// These builds are not yet signed for distribution or sent to the stores:
-// the iOS archive is built without code signing, and the Android release
-// APKs, published to Mason's install page, carry the repository's test
-// keystore (android/app/airbitz.keystore), as a plain `assembleRelease`
-// does. Signing moves to the master once it holds Edge's Apple team and
-// Android keystore.
+// Android is built on a pool machine and signed on the local network: the
+// build stage stashes its APKs, which go over its link to the master, and
+// the sign stage, on the node labelled android-signing (Jack3's own worker),
+// takes them without a checkout, signs each with the branch's release
+// keystore and publishes the signed APKs to Mason's install page. Only that
+// stage declares the keystores and deploy-config.json, which holds their
+// aliases and passwords, so they reach no other node. The AAB, kept as the
+// run's artifact, still carries the repository's test keystore
+// (android/app/airbitz.keystore), as a plain Gradle build signs it. The iOS
+// archive is built without code signing until the master holds Edge's
+// Apple team. Nothing is sent to the stores.
 //
 // Of the files scripts/secretFiles.ts copies in from Jenkins' secret folders,
 // those a build reads are project secret files on the Mason master, one name
@@ -38,10 +43,7 @@ import { join } from 'node:path'
 // are merged into config.json variants too (beta's feature flags, yolo's
 // login). Each stage's configs are its branch when the branch has variants,
 // so it gets that branch's files and the defaults for the rest. fastlane.json
-// is not one: Mason replaces fastlane. deploy-config.json and the keystores
-// are secrets on the master too, but no stage declares them until signing
-// lands, on a signing node, so they never reach a pool machine for nothing.
-// Both native builds embed the API key and secret from edgeKey.json and fail
+// is not one: Mason replaces fastlane. Both native builds embed the API key and secret from edgeKey.json and fail
 // without it (scripts/makeApiSigner.ts).
 //
 // keys.json carries Edge's Sentry upload token, which scripts/patchFiles.ts
@@ -54,8 +56,9 @@ import { join } from 'node:path'
 // against these files.
 //
 // This needs a Mason master with stage configs, ctx.writeSecretFile,
-// build-number blocks, published variants, node selector lists and the
-// cocoapods and androidLicenses tools.
+// build-number blocks, published variants, node selector lists, the
+// cocoapods and androidLicenses tools, and the setup label (so the signing
+// node, which lacks it, never runs a branch's setup).
 
 const APP = 'co.edgesecure.app'
 
@@ -86,6 +89,24 @@ export function secretDirectory(name: string): string | undefined {
 const SHARED_SECRETS = ['config.json', 'edgeKey.json', 'keys.json']
 const IOS_SECRETS = [...SHARED_SECRETS, 'GoogleService-Info.plist']
 const ANDROID_SECRETS = [...SHARED_SECRETS, 'google-services.json']
+/**
+ * What signing an Android build reads, on the signing node only: each
+ * branch's keystore, alias and password are in deploy-config.json, and the
+ * keystore it names is one of these.
+ */
+const SIGNING_SECRETS = [
+  'deploy-config.json',
+  'edge-release-keystore.jks',
+  'edge-beta-keystore.jks',
+  'edge-develop-keystore.jks',
+  'coinhub-keystore.jks',
+  'airbitzbd-keystore.jks'
+]
+/** The Android build-tools whose apksigner signs the APKs. */
+const BUILD_TOOLS = '36.1.0'
+/** The stash the Android build leaves its unsigned-for-release APKs in. */
+const UNSIGNED_APKS = 'android-apks'
+const APK_DIR = 'android/app/build/outputs/apk/release'
 /** Branches with their own variants of some secret files. */
 const CONFIG_BRANCHES = ['develop', 'beta', 'coinhub', 'airbitz', 'yolo']
 
@@ -97,6 +118,8 @@ export function configsFor(branch: string): string[] {
 /** The machines the pools make: Macs for Xcode, Linux for the rest. */
 const MAC = { type: 'macos-arm64', os: 'macos', arch: 'arm64' } as const
 const LINUX = { type: 'linux-x86', os: 'linux', arch: 'x64' } as const
+/** The node that signs Android builds, on the local network. */
+const ANDROID_SIGNER = { labels: ['android-signing'] }
 
 /** The per-ABI APKs a master build publishes; build.gradle numbers them N+1 and N+2. */
 const ABI_SPLITS = ['armeabi-v7a', 'arm64-v8a']
@@ -141,30 +164,51 @@ export function setup(m: Setup) {
         buildNumbers: [APP],
         run: buildIos
       },
-      android: {
-        // Gradle and the Android SDK run on either; Linux is cheaper.
-        on: [LINUX, MAC],
-        tools: {
-          node: '22',
-          java: '17',
-          // Library modules still compile against 35.
-          android: [
-            'platforms;android-36',
-            'platforms;android-35',
-            'build-tools;36.1.0',
-            'build-tools;35.0.0',
-            'ndk;27.1.12297006',
-            'cmake;3.22.1'
-          ],
-          androidLicenses: 'accept'
+      // Built on a pool machine, then signed on the local network.
+      android: [
+        {
+          name: 'build',
+          // Gradle and the Android SDK run on either; Linux is cheaper.
+          on: [LINUX, MAC],
+          tools: {
+            node: '22',
+            java: '17',
+            // Library modules still compile against 35.
+            android: [
+              'platforms;android-36',
+              'platforms;android-35',
+              `build-tools;${BUILD_TOOLS}`,
+              'build-tools;35.0.0',
+              'ndk;27.1.12297006',
+              'cmake;3.22.1'
+            ],
+            androidLicenses: 'accept'
+          },
+          configs,
+          secrets: ANDROID_SECRETS,
+          env,
+          ...limits,
+          buildNumbers: [APP],
+          run: buildAndroid
         },
-        configs,
-        secrets: ANDROID_SECRETS,
-        env,
-        ...limits,
-        publishes: [APP],
-        run: buildAndroid
-      }
+        {
+          name: 'sign',
+          on: ANDROID_SIGNER,
+          // Only the stashed APKs: no repository on the signing node.
+          checkout: false,
+          tools: {
+            java: '17',
+            android: [`build-tools;${BUILD_TOOLS}`],
+            androidLicenses: 'accept'
+          },
+          configs,
+          secrets: SIGNING_SECRETS,
+          timeout: '30m',
+          activityTimeout: '10m',
+          publishes: [APP],
+          run: signAndroid
+        }
+      ]
     },
     { failFast: false }
   )
@@ -315,54 +359,126 @@ export async function buildAndroid(ctx: Stage) {
     async (version, build) =>
       await setAndroidVersion(ctx.workspace, version, build)
   )
-  const apks = 'android/app/build/outputs/apk/release'
-  const changelog = `${ctx.run.branch} ${version}`
   if (ctx.run.branch !== 'master') {
     await ctx.log.section(
       'Build the APK',
       async () => await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
     )
-    await ctx.log.section(
-      'Publish',
-      async () =>
-        await ctx.publish({
-          app: APP,
-          platform: 'android',
-          path: `${apks}/app-release.apk`,
-          changelog
-        })
-    )
-    return
-  }
-  await ctx.log.section('Build the AAB and APKs', async () => {
-    await ctx.sh('./gradlew bundleRelease assembleRelease -PabiSplits', {
-      cwd: 'android'
+  } else {
+    await ctx.log.section('Build the AAB and APKs', async () => {
+      await ctx.sh('./gradlew bundleRelease assembleRelease -PabiSplits', {
+        cwd: 'android'
+      })
     })
-  })
+    await ctx.log.section(
+      'Save the AAB',
+      async () =>
+        await ctx.artifacts.save(
+          'android-aab',
+          'android/app/build/outputs/bundle/release/*.aab'
+        )
+    )
+  }
   await ctx.log.section(
-    'Save the AAB',
+    'Stash the APKs for signing',
     async () =>
-      await ctx.artifacts.save(
-        'android-aab',
-        'android/app/build/outputs/bundle/release/*.aab'
+      await ctx.stash(
+        UNSIGNED_APKS,
+        androidApks(ctx.run.branch).map(apk => `${APK_DIR}/${apk.file}`)
       )
   )
+  return { version }
+}
+
+/**
+ * The APKs a branch's build makes and publishes: the release APK, or on
+ * master the universal APK as the default variant and each ABI's APK as a
+ * variant with its own version code.
+ */
+export function androidApks(
+  branch: string
+): Array<{ file: string; variant?: string }> {
+  if (branch !== 'master') return [{ file: 'app-release.apk' }]
+  return [
+    { file: 'app-universal-release.apk' },
+    ...ABI_SPLITS.map(abi => ({ file: `app-${abi}-release.apk`, variant: abi }))
+  ]
+}
+
+/**
+ * The keystore file, key alias and password deploy-config.json gives a
+ * branch's Android build, merged as scripts/deploy.ts merges them: the edge
+ * entry, then its android entry, then the branch's.
+ */
+export function androidSigning(
+  config: unknown,
+  branch: string
+): { keystore: string; alias: string; password: string } {
+  const at = (value: unknown, key: string): Record<string, unknown> => {
+    const out =
+      value != null && typeof value === 'object'
+        ? (value as Record<string, unknown>)[key]
+        : undefined
+    return out != null && typeof out === 'object'
+      ? (out as Record<string, unknown>)
+      : {}
+  }
+  const edge = at(config, 'edge')
+  const android = at(edge, 'android')
+  const merged = { ...edge, ...android, ...at(android, branch) }
+  const text = (key: string): string => {
+    const value = merged[key]
+    if (typeof value !== 'string' || value === '')
+      throw new Error(`deploy-config.json has no ${key} for ${branch}`)
+    return value
+  }
+  return {
+    keystore: text('androidKeyStore'),
+    alias: text('androidKeyStoreAlias'),
+    password: text('androidKeyStorePassword')
+  }
+}
+
+/**
+ * Signs the stashed APKs with the branch's release keystore on the signing
+ * node and publishes them. apksigner replaces the test keystore's signature
+ * Gradle gave them; the password reaches it through its environment.
+ */
+export async function signAndroid(ctx: Stage) {
+  await ctx.log.section(
+    'Unstash the APKs',
+    async () => await ctx.unstash(UNSIGNED_APKS)
+  )
+  const { version } = await ctx.output<{ version: string }>(
+    'build/android/build'
+  )
+  const signing = androidSigning(
+    JSON.parse(await readFile(ctx.secretFile('deploy-config.json'), 'utf8')),
+    ctx.run.branch
+  )
+  const keystore = ctx.secretFile(signing.keystore)
+  const apksigner = `"$ANDROID_HOME/build-tools/${BUILD_TOOLS}/apksigner"`
+  const apks = androidApks(ctx.run.branch)
+  await ctx.log.section(`Sign with ${signing.keystore}`, async () => {
+    await ctx.sh('mkdir -p signed')
+    for (const apk of apks) {
+      await ctx.sh(
+        `${apksigner} sign --ks "${keystore}" --ks-key-alias "$KEY_ALIAS" --ks-pass env:KEY_PASSWORD --key-pass env:KEY_PASSWORD --out signed/${apk.file} ${APK_DIR}/${apk.file}`,
+        { env: { KEY_ALIAS: signing.alias, KEY_PASSWORD: signing.password } }
+      )
+      await ctx.sh(`${apksigner} verify signed/${apk.file}`)
+    }
+  })
+  const changelog = `${ctx.run.branch} ${version}`
   await ctx.log.section('Publish', async () => {
-    await ctx.publish({
-      app: APP,
-      platform: 'android',
-      path: `${apks}/app-universal-release.apk`,
-      changelog
-    })
-    for (const abi of ABI_SPLITS) {
+    for (const apk of apks)
       await ctx.publish({
         app: APP,
         platform: 'android',
-        variant: abi,
-        path: `${apks}/app-${abi}-release.apk`,
+        ...(apk.variant == null ? {} : { variant: apk.variant }),
+        path: `signed/${apk.file}`,
         changelog
       })
-    }
   })
 }
 
