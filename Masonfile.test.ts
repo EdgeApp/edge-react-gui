@@ -149,7 +149,7 @@ describe('Masonfile', () => {
       const configs = configsFor(branch)
       expect(stages.ios.tools).toEqual({
         node: '22',
-        xcode: '>=26 <27',
+        xcode: '>=26',
         cocoapods: '1.16.2'
       })
       expect(stages.ios.on).toEqual(mac)
