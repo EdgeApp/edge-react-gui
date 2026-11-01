@@ -16,9 +16,8 @@ import { useSelector } from '../../types/reactRedux'
 import {
   DECIMAL_PRECISION,
   getDenomFromIsoCode,
-  maxPrimaryCurrencyConversionDecimals,
-  precisionAdjust,
-  removeIsoPrefix
+  removeIsoPrefix,
+  roundToFiatPrecision
 } from '../../util/utils'
 import { PillButton } from '../buttons/PillButton'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -186,32 +185,13 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
         exchangeAmountLong,
         cryptoExchangeDenom.multiplier
       )
-      const displayAmountLong = div(
-        nativeAmountLong,
-        cryptoDisplayDenom.multiplier,
-        DECIMAL_PRECISION
-      )
-
-      const precisionAdjustVal = precisionAdjust({
-        primaryExchangeMultiplier: cryptoExchangeDenom.multiplier,
-        secondaryExchangeMultiplier: fiatDenom.multiplier,
-        exchangeSecondaryToPrimaryRatio: getExchangeRate(
-          exchangeRates,
-          wallet.currencyInfo.pluginId,
-          tokenId,
-          defaultIsoFiat
-        )
+      const { displayAmount, nativeAmount } = roundToFiatPrecision({
+        nativeAmount: nativeAmountLong,
+        displayMultiplier: cryptoDisplayDenom.multiplier,
+        exchangeMultiplier: cryptoExchangeDenom.multiplier,
+        fiatMultiplier: fiatDenom.multiplier,
+        exchangeRate
       })
-      const cryptoMaxPrecision = maxPrimaryCurrencyConversionDecimals(
-        log10(cryptoDisplayDenom.multiplier),
-        precisionAdjustVal
-      )
-
-      // Apply cryptoMaxPrecision to remove extraneous sub-penny precision
-      const displayAmount = round(displayAmountLong, -cryptoMaxPrecision)
-
-      // Convert back to native and exchange amounts after cryptoMaxPrecision has been applied
-      const nativeAmount = mul(displayAmount, cryptoDisplayDenom.multiplier)
       const exchangeAmount = div(
         nativeAmount,
         cryptoExchangeDenom.multiplier,

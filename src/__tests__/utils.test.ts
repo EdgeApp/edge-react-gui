@@ -17,6 +17,7 @@ import {
   MILLISECONDS_PER_DAY,
   precisionAdjust,
   roundedFee,
+  roundToFiatPrecision,
   roundUpToLeastSignificant,
   sanitizeDecimalAmount,
   truncateDecimals,
@@ -340,6 +341,35 @@ describe('precisionAdjust', function () {
       ).toBe(output.maxPrimaryCurrencyConversionDecimals)
     })
   }
+})
+
+describe('roundToFiatPrecision', function () {
+  test('keeps the decimals that matter at the rate', function () {
+    expect(
+      roundToFiatPrecision({
+        nativeAmount: '17710602793722079',
+        displayMultiplier: '1000000000000000000',
+        exchangeMultiplier: '1000000000000000000',
+        fiatMultiplier: '100',
+        exchangeRate: 2258.5
+      })
+    ).toEqual({
+      displayAmount: '0.0177106',
+      nativeAmount: '17710600000000000'
+    })
+  })
+
+  test('rounds in the display denomination', function () {
+    expect(
+      roundToFiatPrecision({
+        nativeAmount: '44444444',
+        displayMultiplier: '100000',
+        exchangeMultiplier: '100000000',
+        fiatMultiplier: '100',
+        exchangeRate: 3000
+      })
+    ).toEqual({ displayAmount: '444.4444', nativeAmount: '44444440' })
+  })
 })
 
 describe('getDisplayDenomination', function () {
