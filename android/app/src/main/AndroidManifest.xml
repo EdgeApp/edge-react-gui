@@ -8,6 +8,8 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.READ_CONTACTS" />
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.USE_FINGERPRINT" />
   <uses-permission android:name="android.permission.BLUETOOTH" />
   <uses-permission android:name="android.permission.CAMERA" />
@@ -18,6 +20,7 @@
   <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
   <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
   <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+  <uses-feature android:name="android.hardware.microphone" android:required="false" />
   <uses-feature android:name="android.hardware.location" android:required="false" />
 
   <queries>
