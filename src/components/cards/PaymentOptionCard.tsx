@@ -6,7 +6,7 @@ import { lstrings } from '../../locales/strings'
 import type { ImageProp } from '../../types/Theme'
 import { PillButton } from '../buttons/PillButton'
 import { EdgeCard } from '../cards/EdgeCard'
-import { BestRateBadge } from '../icons/BestRateBadge'
+import { BurstBadge } from '../icons/BurstBadge'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -48,7 +48,9 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
             {props.title}
           </EdgeText>
         </View>
-        {props.isBestOption === true ? <BestRateBadge /> : null}
+        {props.isBestOption === true ? (
+          <BurstBadge label={lstrings.string_best_rate_badge_text} />
+        ) : null}
       </View>
       <View style={styles.subtitleView}>
         <EdgeText style={styles.totalAmountText}>{props.totalAmount}</EdgeText>

@@ -2,12 +2,16 @@ import * as React from 'react'
 import { type LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import Svg, { Polygon } from 'react-native-svg'
 
-import { lstrings } from '../../locales/strings'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-// TODO: Render a badge icon
-export const BestRateBadge: React.FC = () => {
+interface Props {
+  label: string
+}
+
+/** A short label inside a star-shaped burst. */
+export const BurstBadge: React.FC<Props> = props => {
+  const { label } = props
   const theme = useTheme()
 
   const [dimensions, setDimensions] = React.useState({ width: 0, height: 0 })
@@ -71,9 +75,7 @@ export const BestRateBadge: React.FC = () => {
           strokeWidth={2}
         />
       </Svg>
-      <EdgeText style={styles.text}>
-        {lstrings.string_best_rate_badge_text}
-      </EdgeText>
+      <EdgeText style={styles.text}>{label}</EdgeText>
     </View>
   )
 }
