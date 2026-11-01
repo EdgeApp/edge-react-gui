@@ -7,6 +7,7 @@
 ## 4.53.0 (staging)
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
+- added: Live Chat in the Help modal opens inside the app and tells support the app version, build, and OS version
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - added: Banxa VietQR payment method for VND buys
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.

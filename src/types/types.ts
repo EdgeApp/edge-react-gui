@@ -455,6 +455,12 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
+  /**
+   * The workspace region's Messenger host.
+   * Defaults to https://api-iam.intercom.io.
+   */
+  intercomApiBase?: string
+  intercomAppId?: string
   supportChatSite?: string
 }
 

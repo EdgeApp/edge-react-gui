@@ -20,6 +20,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
+import { showIntercomChatModal } from './IntercomChatModal'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
@@ -54,6 +55,27 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
       // logged-in scene:
       await openBrowserUri(uri)
     }
+  })
+
+  // This modal stays mounted through its close animation,
+  // so a second tap must not open a second chat:
+  const isChatOpening = React.useRef(false)
+
+  const handleLiveChatPress = useHandler(async () => {
+    const { intercomApiBase, intercomAppId, supportChatSite } = config
+    if (supportChatSite == null) return
+    if (intercomAppId == null) {
+      await openBrowserUri(supportChatSite)
+      return
+    }
+    if (isChatOpening.current) return
+    isChatOpening.current = true
+    bridge.resolve()
+    await showIntercomChatModal({
+      appId: intercomAppId,
+      apiBase: intercomApiBase,
+      siteUri: supportChatSite
+    })
   })
 
   React.useEffect(() => {
@@ -112,10 +134,7 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
           }
           title={lstrings.help_live_chat}
           subTitle={lstrings.help_live_chat_text}
-          onPress={async () => {
-            if (config.supportChatSite == null) return
-            await openBrowserUri(config.supportChatSite)
-          }}
+          onPress={handleLiveChatPress}
         />
       )}
 
