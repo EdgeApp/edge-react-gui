@@ -7,6 +7,7 @@ import {
   type TextStyle,
   View
 } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
@@ -31,6 +32,9 @@ export interface EdgeLoginParams {
 
 interface Props extends EdgeAppSceneProps<'edgeLogin'> {}
 
+/** Gives the person time to read the warning before they can approve. */
+const APPROVE_DELAY_SECONDS = 5
+
 export const EdgeLoginScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { lobbyId } = route.params
@@ -39,6 +43,7 @@ export const EdgeLoginScene: React.FC<Props> = props => {
 
   const account = useSelector(state => state.core.account)
   const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
+  const [secondsLeft, setSecondsLeft] = React.useState(APPROVE_DELAY_SECONDS)
 
   useAsyncEffect(
     async () => {
@@ -62,6 +67,17 @@ export const EdgeLoginScene: React.FC<Props> = props => {
     [lobbyId],
     'EdgeLoginScene'
   )
+
+  // The countdown starts once the warning is on screen:
+  React.useEffect(() => {
+    if (lobby == null || secondsLeft <= 0) return
+    const timeout = setTimeout(() => {
+      setSecondsLeft(secondsLeft - 1)
+    }, 1000)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [lobby, secondsLeft])
 
   const handleAccept = useHandler(async () => {
     if (lobby?.loginRequest == null) return
@@ -149,7 +165,15 @@ export const EdgeLoginScene: React.FC<Props> = props => {
           visible={lobby != null}
         >
           <EdgeButton
-            label={lstrings.edge_login_grant_access_button}
+            disabled={secondsLeft > 0}
+            label={
+              secondsLeft > 0
+                ? sprintf(
+                    lstrings.edge_login_grant_access_countdown_1s,
+                    secondsLeft
+                  )
+                : lstrings.edge_login_grant_access_button
+            }
             layout="column"
             onPress={handleAccept}
             type="destructive"

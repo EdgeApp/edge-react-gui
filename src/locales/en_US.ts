@@ -1261,6 +1261,7 @@ const strings = {
   edge_login_warning_do_not_approve:
     'DO NOT approve a QR code given to you by someone else',
   edge_login_grant_access_button: 'Grant Full Access',
+  edge_login_grant_access_countdown_1s: 'Grant Full Access (%1$s)',
   edge_login_fail_stale_qr:
     'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message:

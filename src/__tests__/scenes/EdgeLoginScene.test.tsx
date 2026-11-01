@@ -26,6 +26,15 @@ const flush = async (): Promise<void> => {
   })
 }
 
+/** Steps one second at a time, since each tick schedules the next one. */
+const advanceSeconds = async (seconds: number): Promise<void> => {
+  for (let i = 0; i < seconds; ++i) {
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(1000)
+    })
+  }
+}
+
 const renderLoadedScene = async (
   approve: () => Promise<void>
 ): Promise<RenderResult> => {
@@ -75,15 +84,28 @@ describe('EdgeLoginScene', () => {
     rendered.getByText(lstrings.edge_login_warning_title)
     rendered.getByText(lstrings.edge_login_warning_irreversible)
     rendered.getByText(lstrings.edge_login_warning_do_not_approve)
-    rendered.getByText(lstrings.edge_login_grant_access_button)
+    rendered.getByText('Grant Full Access (5)')
     rendered.getByText(lstrings.string_deny)
     rendered.unmount()
   })
 
-  it('approves the login from Grant Full Access', async () => {
+  it('blocks Grant Full Access during the countdown', async () => {
     const approve = jest.fn(async () => {})
     const rendered = await renderLoadedScene(approve)
 
+    await advanceSeconds(4)
+    fireEvent.press(rendered.getByText('Grant Full Access (1)'))
+    await flush()
+
+    expect(approve).not.toHaveBeenCalled()
+    rendered.unmount()
+  })
+
+  it('approves the login once the countdown ends', async () => {
+    const approve = jest.fn(async () => {})
+    const rendered = await renderLoadedScene(approve)
+
+    await advanceSeconds(5)
     fireEvent.press(rendered.getByText(lstrings.edge_login_grant_access_button))
     await flush()
 
@@ -91,7 +113,7 @@ describe('EdgeLoginScene', () => {
     rendered.unmount()
   })
 
-  it('leaves the scene without approving from Deny', async () => {
+  it('allows Deny during the countdown without approving', async () => {
     const approve = jest.fn(async () => {})
     const goBack = jest.spyOn(fakeNavigation, 'goBack')
     goBack.mockClear()
