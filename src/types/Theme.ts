@@ -232,6 +232,17 @@ export interface Theme {
   secondaryButtonFontSizeRem: number
   secondaryButtonFont: string
 
+  dangerButtonOutline: string
+  dangerButtonOutlineWidth: number
+  dangerButton: GradientColors
+  dangerButtonColorStart: GradientCoords
+  dangerButtonColorEnd: GradientCoords
+  dangerButtonText: string
+  dangerButtonTextShadow: TextShadowParams
+  dangerButtonShadow: ThemeShadowParams
+  dangerButtonFontSizeRem: number
+  dangerButtonFont: string
+
   escapeButtonOutline: string
   escapeButtonOutlineWidth: number
   escapeButton: GradientColors
@@ -268,10 +279,6 @@ export interface Theme {
   // glassButtonIcon: string,
   // glassButtonDark: string,
   // glassButtonDarkIcon: string,
-
-  // dangerButtonOutline: string,
-  // dangerButton: string,
-  // dangerButtonText: string,
 
   // Card
   // cardBackground: string,

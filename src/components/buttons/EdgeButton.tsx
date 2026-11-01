@@ -21,7 +21,11 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'
+export type EdgeButtonType =
+  | 'primary'
+  | 'secondary'
+  | 'destructive'
+  | 'tertiary'
 
 interface Props {
   children?: React.ReactNode
@@ -138,17 +142,25 @@ export const EdgeButton: React.FC<Props> = props => {
       {type === 'tertiary' ? null : (
         <LinearGradient
           colors={
-            type === 'primary' ? theme.primaryButton : theme.secondaryButton
+            type === 'primary'
+              ? theme.primaryButton
+              : type === 'secondary'
+              ? theme.secondaryButton
+              : theme.dangerButton
           }
           start={
             type === 'primary'
               ? theme.primaryButtonColorStart
-              : theme.secondaryButtonColorStart
+              : type === 'secondary'
+              ? theme.secondaryButtonColorStart
+              : theme.dangerButtonColorStart
           }
           end={
             type === 'primary'
               ? theme.primaryButtonColorEnd
-              : theme.secondaryButtonColorEnd
+              : type === 'secondary'
+              ? theme.secondaryButtonColorEnd
+              : theme.dangerButtonColorEnd
           }
           style={styles.pillBackground}
         />
@@ -166,6 +178,8 @@ export const EdgeButton: React.FC<Props> = props => {
                 ? styles.labelPrimary
                 : type === 'secondary'
                 ? styles.labelSecondary
+                : type === 'destructive'
+                ? styles.labelDestructive
                 : styles.labelTertiary,
               children == null ? null : styles.labelWithIcon
             ]}
@@ -186,6 +200,8 @@ export const EdgeButton: React.FC<Props> = props => {
                 ? theme.primaryButtonText
                 : type === 'secondary'
                 ? theme.secondaryButtonText
+                : type === 'destructive'
+                ? theme.dangerButtonText
                 : theme.escapeButtonText
             }
           />
@@ -275,6 +291,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       color: theme.secondaryButtonText,
       fontFamily: theme.secondaryButtonFont,
       fontSize: theme.rem(theme.secondaryButtonFontSizeRem)
+    },
+    labelDestructive: {
+      color: theme.dangerButtonText,
+      fontFamily: theme.dangerButtonFont,
+      fontSize: theme.rem(theme.dangerButtonFontSizeRem)
     },
     labelTertiary: {
       color: theme.escapeButtonText,
