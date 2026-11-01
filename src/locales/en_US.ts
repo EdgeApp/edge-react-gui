@@ -188,8 +188,6 @@ const strings = {
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message:
     'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  access_wallet_description: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
-  edge_description_warning: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_success: 'Your exchange is being processed!',
@@ -202,7 +200,6 @@ const strings = {
   managetokens_detected_tokens_header: 'Auto Detected Tokens',
   managetokens_all_tokens_header: 'All Tokens',
   managetokens_top_instructions: 'Select tokens to display in wallet:',
-  accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
   addtoken_invalid_information:
@@ -1258,6 +1255,12 @@ const strings = {
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   error_must_select_state_province_s: 'Must select state/province for %1$s',
   edge_login_failed: 'Failed to Login',
+  edge_login_warning_title: 'Warning!',
+  edge_login_warning_irreversible:
+    'You are about to grant full access to your account on another device - this action is NOT reversible',
+  edge_login_warning_do_not_approve:
+    'DO NOT approve a QR code given to you by someone else',
+  edge_login_grant_access_button: 'Grant Full Access',
   edge_login_fail_stale_qr:
     'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message:
