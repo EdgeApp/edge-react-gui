@@ -44,9 +44,7 @@ interface IconChoice {
   name: string
 }
 
-function AnimatedFontIcon(
-  props: AnimatedIconProps & IconChoice
-): React.ReactElement {
+const AnimatedFontIcon: React.FC<AnimatedIconProps & IconChoice> = props => {
   const { accessible, color, IconComponent, name, size } = props
   const theme = useTheme()
   const defaultColor = theme.icon
@@ -80,7 +78,7 @@ function AnimatedFontIcon(
   )
 }
 
-function ThemedFontIcon(props: IconProps & IconChoice): React.ReactElement {
+const ThemedFontIcon: React.FC<IconProps & IconChoice> = props => {
   const theme = useTheme()
   const {
     accessible,
@@ -114,29 +112,35 @@ function makeAnimatedFontIcon(
   IconComponent: typeof Icon,
   name: string
 ): AnimatedIconComponent {
-  return props => AnimatedFontIcon({ ...props, IconComponent, name })
+  return props => (
+    <AnimatedFontIcon {...props} IconComponent={IconComponent} name={name} />
+  )
 }
 
 function makeFontIcon(IconComponent: typeof Icon, name: string): IconComponent {
-  return props => ThemedFontIcon({ ...props, IconComponent, name })
+  return props => (
+    <ThemedFontIcon {...props} IconComponent={IconComponent} name={name} />
+  )
 }
 
 //
 // Font Icons
 //
 
-export function EyeIconAnimated(
-  props: AnimatedIconProps & { off: boolean }
-): React.ReactElement {
+export const EyeIconAnimated: React.FC<
+  AnimatedIconProps & { off: boolean }
+> = props => {
   const { off, ...rest } = props
 
   // Swapping between two icons causes rendering glitches,
   // so we recycle the same component with different props:
-  return AnimatedFontIcon({
-    ...rest,
-    IconComponent: Ionicons,
-    name: off ? 'eye-off-outline' : 'eye-outline'
-  })
+  return (
+    <AnimatedFontIcon
+      {...rest}
+      IconComponent={Ionicons}
+      name={off ? 'eye-off-outline' : 'eye-outline'}
+    />
+  )
 }
 
 export const ChevronLeftAnimated = makeAnimatedFontIcon(Feather, 'chevron-left')

@@ -60,7 +60,7 @@ interface Props {
  * - Typically to be used as a child of ButtonsViewUi4.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
-export function EdgeButton(props: Props): React.ReactElement | null {
+export const EdgeButton: React.FC<Props> = props => {
   const {
     layout = 'solo',
     children,
