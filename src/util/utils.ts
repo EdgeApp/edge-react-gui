@@ -1,4 +1,15 @@
-import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
+import {
+  add,
+  div,
+  eq,
+  gt,
+  gte,
+  log10,
+  lt,
+  mul,
+  round,
+  toFixed
+} from 'biggystring'
 import type {
   EdgeCurrencyConfig,
   EdgeCurrencyInfo,
@@ -495,6 +506,33 @@ export function maxPrimaryCurrencyConversionDecimals(
 ): number {
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
+}
+
+/**
+ * Rounds a crypto amount to the decimals that still matter at its fiat rate,
+ * removing extraneous sub-penny precision.
+ */
+export function roundToFiatPrecision(params: {
+  nativeAmount: string
+  displayMultiplier: string
+  exchangeMultiplier: string
+  fiatMultiplier: string
+  exchangeRate: number
+}): { displayAmount: string; nativeAmount: string } {
+  const { displayMultiplier } = params
+  const maxDecimals = maxPrimaryCurrencyConversionDecimals(
+    log10(displayMultiplier),
+    precisionAdjust({
+      primaryExchangeMultiplier: params.exchangeMultiplier,
+      secondaryExchangeMultiplier: params.fiatMultiplier,
+      exchangeSecondaryToPrimaryRatio: params.exchangeRate
+    })
+  )
+  const displayAmount = round(
+    div(params.nativeAmount, displayMultiplier, DECIMAL_PRECISION),
+    -maxDecimals
+  )
+  return { displayAmount, nativeAmount: mul(displayAmount, displayMultiplier) }
 }
 
 export const feeStyle = {
