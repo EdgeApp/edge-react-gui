@@ -2298,6 +2298,8 @@ const strings = {
   trade_option_no_quotes_title: 'No quotes available',
   trade_option_no_quotes_body:
     'Please try again later. No providers are currently available.',
+  trade_option_insufficient_funds_body:
+    'This wallet cannot cover this amount. Add funds to complete this sale.',
   trade_option_total_label: 'Total',
   trade_option_settlement_label: 'Settlement',
   trade_option_powered_by_label: 'Powered By:',
