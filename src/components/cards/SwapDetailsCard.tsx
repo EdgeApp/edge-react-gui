@@ -15,10 +15,7 @@ import { useHandler } from '../../hooks/useHandler'
 import { useWalletName } from '../../hooks/useWalletName'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
-import {
-  getExchangeDenom,
-  selectDisplayDenom
-} from '../../selectors/DenominationSelectors'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { getCurrencyCode, getTokenId } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
@@ -93,11 +90,10 @@ export const SwapDetailsCard: React.FC<Props> = props => {
   const { memos = [], spendTargets = [], tokenId } = transaction
   const { currencyInfo } = wallet
   const walletName = useWalletName(wallet)
-  const walletDefaultDenom = useSelector(state =>
-    transaction.tokenId === null
-      ? getExchangeDenom(wallet.currencyConfig, tokenId)
-      : selectDisplayDenom(state, wallet.currencyConfig, tokenId)
-  )
+  // Exchange details always read in the exchange denomination, whatever the
+  // user picked for display. The labels below name the exchange currency, and
+  // the same text goes to the provider's support team.
+  const walletDefaultDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
 
   // A send pays out to an address rather than a wallet, and the wallet may
   // also have been deleted:
@@ -196,12 +192,8 @@ export const SwapDetailsCard: React.FC<Props> = props => {
     }
   }
 
-  const destinationDenomination = useSelector(state =>
-    payoutConfig == null || payoutTokenId === undefined
-      ? undefined
-      : selectDisplayDenom(state, payoutConfig, payoutTokenId)
-  )
-  if (destinationDenomination == null) return null
+  if (payoutConfig == null || payoutTokenId === undefined) return null
+  const destinationDenomination = getExchangeDenom(payoutConfig, payoutTokenId)
 
   const sourceAmount = convertNativeToDisplay(walletDefaultDenom.multiplier)(
     getSwapSourceNativeAmount(transaction, currencyInfo.pluginId)
@@ -217,7 +209,7 @@ export const SwapDetailsCard: React.FC<Props> = props => {
     destinationDenomination.multiplier
   )(swapData.payoutNativeAmount)
   const destinationAssetName =
-    payoutTokenId == null || payoutConfig == null
+    payoutTokenId == null
       ? payoutCurrencyCode
       : `${payoutCurrencyCode} (${getExchangeDenom(payoutConfig, null).name})`
 
