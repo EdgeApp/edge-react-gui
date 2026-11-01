@@ -175,6 +175,21 @@ export const SettingsScene: React.FC<Props> = props => {
     await showBackupModal({ navigation: navigation as NavigationBase })
   })
 
+  /**
+   * Prompts for the password and returns it once validated.
+   * `showUnlockSettingsModal` unlocks the settings on success.
+   */
+  const unlockSettings = async (): Promise<string | undefined> => {
+    const password = await handleShowUnlockSettingsModal().catch(
+      (error: unknown) => {
+        showError(error)
+        return undefined
+      }
+    )
+    setValidatedPassword(password)
+    return password
+  }
+
   const handleLockUnlock = useHandler(async () => {
     if (!isLocked) {
       dispatch({
@@ -183,30 +198,14 @@ export const SettingsScene: React.FC<Props> = props => {
       })
       setValidatedPassword(undefined)
     } else {
-      const password = await handleShowUnlockSettingsModal().catch(
-        (error: unknown) => {
-          showError(error)
-          return undefined
-        }
-      )
-      setValidatedPassword(password)
+      await unlockSettings()
     }
   })
 
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
-    if (isLocked) {
-      const password = await handleShowUnlockSettingsModal().catch(
-        (error: unknown) => {
-          showError(error)
-          return undefined
-        }
-      )
-      if (password == null) return true
-      // `showUnlockSettingsModal` already unlocked the settings.
-      setValidatedPassword(password)
-    }
-    return false
+    if (!isLocked) return false
+    return (await unlockSettings()) == null
   }
 
   const handleUpdateTouchId = useHandler(async () => {
