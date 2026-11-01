@@ -1,8 +1,86 @@
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebChromeClient.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebChromeClient.java
+index 07f73fd..3cc716a 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebChromeClient.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebChromeClient.java
+@@ -79,6 +79,15 @@ public class RNCWebChromeClient extends WebChromeClient implements LifecycleEven
+     protected RNCWebView.ProgressChangedFilter progressChangedFilter = null;
+     protected boolean mAllowsProtectedMedia = false;
+ 
++    // !patch: the app holds RECORD_AUDIO for one WebView, so pages in the
++    // others must not inherit the microphone once the user allows it there
++    protected boolean mAllowsAudioCapture = false;
++
++    // !patch: with grantIfSameHostElsePrompt, only frames on the host the
++    // source names get the microphone, so a page that replaces it does not
++    protected boolean mAudioCaptureSameHostOnly = false;
++    protected String mSourceHost = null;
++
+     protected boolean mHasOnOpenWindowEvent = false;
+ 
+     public RNCWebChromeClient(RNCWebView webView) {
+@@ -152,6 +161,7 @@ public class RNCWebChromeClient extends WebChromeClient implements LifecycleEven
+             String androidPermission = null;
+ 
+             if (requestedResource.equals(PermissionRequest.RESOURCE_AUDIO_CAPTURE)) {
++                if (!allowsAudioCapture(request)) continue;
+                 androidPermission = Manifest.permission.RECORD_AUDIO;
+             } else if (requestedResource.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE)) {
+                 androidPermission = Manifest.permission.CAMERA;
+@@ -180,6 +190,11 @@ public class RNCWebChromeClient extends WebChromeClient implements LifecycleEven
+ 
+         // If all the permissions are already granted, send the response to the WebView synchronously
+         if (requestedAndroidPermissions.isEmpty()) {
++            if (grantedPermissions.isEmpty()) {
++                request.deny();
++                grantedPermissions = null;
++                return;
++            }
+             request.grant(grantedPermissions.toArray(new String[0]));
+             grantedPermissions = null;
+             return;
+@@ -366,6 +381,37 @@ public class RNCWebChromeClient extends WebChromeClient implements LifecycleEven
+       mAllowsProtectedMedia = enabled;
+     }
+ 
++    public void setAllowsAudioCapture(boolean enabled) {
++      mAllowsAudioCapture = enabled;
++    }
++
++    public boolean getAllowsAudioCapture() {
++      return mAllowsAudioCapture;
++    }
++
++    public void setAudioCaptureSameHostOnly(boolean enabled) {
++      mAudioCaptureSameHostOnly = enabled;
++    }
++
++    public boolean getAudioCaptureSameHostOnly() {
++      return mAudioCaptureSameHostOnly;
++    }
++
++    public void setSourceHost(String host) {
++      mSourceHost = host;
++    }
++
++    public String getSourceHost() {
++      return mSourceHost;
++    }
++
++    private boolean allowsAudioCapture(PermissionRequest request) {
++      if (!mAllowsAudioCapture) return false;
++      if (!mAudioCaptureSameHostOnly) return true;
++      String host = request.getOrigin().getHost();
++      return host != null && host.equals(mSourceHost);
++    }
++
+     public void setHasOnOpenWindowEvent(boolean hasEvent) {
+       mHasOnOpenWindowEvent = hasEvent;
+     }
 diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewClient.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewClient.java
-index 251939e..485418c 100644
+index 0287e1c..5f6a553 100644
 --- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewClient.java
 +++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewClient.java
-@@ -96,6 +96,12 @@ public class RNCWebViewClient extends WebViewClient {
+@@ -92,6 +92,12 @@ public class RNCWebViewClient extends WebViewClient {
  
      @Override
      public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -15,7 +93,7 @@ index 251939e..485418c 100644
          final RNCWebView rncWebView = (RNCWebView) view;
          final boolean isJsDebugging = rncWebView.getReactApplicationContext().getJavaScriptContextHolder().get() == 0;
  
-@@ -105,6 +111,7 @@ public class RNCWebViewClient extends WebViewClient {
+@@ -101,6 +107,7 @@ public class RNCWebViewClient extends WebViewClient {
              final AtomicReference<RNCWebViewModuleImpl.ShouldOverrideUrlLoadingLock.ShouldOverrideCallbackState> lockObject = lock.second;
  
              final WritableMap event = createWebViewEvent(view, url);
@@ -23,7 +101,7 @@ index 251939e..485418c 100644
              event.putDouble("lockIdentifier", lockIdentifier);
              rncWebView.dispatchDirectShouldStartLoadWithRequest(event);
  
-@@ -136,9 +143,11 @@ public class RNCWebViewClient extends WebViewClient {
+@@ -132,9 +139,11 @@ public class RNCWebViewClient extends WebViewClient {
              progressChangedFilter.setWaitingForCommandLoadUrl(true);
  
              int reactTag = RNCWebViewWrapper.getReactTagFromWebView(view);
@@ -36,7 +114,7 @@ index 251939e..485418c 100644
              return true;
          }
      }
-@@ -147,7 +156,7 @@ public class RNCWebViewClient extends WebViewClient {
+@@ -143,7 +152,7 @@ public class RNCWebViewClient extends WebViewClient {
      @Override
      public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
          final String url = request.getUrl().toString();
@@ -45,6 +123,77 @@ index 251939e..485418c 100644
      }
  
      @Override
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
+index f83033b..9e9c6c7 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
+@@ -142,6 +142,11 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+         webView: RNCWebView,
+     ) {
+         val activity = webView.themedReactContext.currentActivity
++        // !patch: a rebuilt client keeps the view's microphone settings
++        val previousClient = webView.webChromeClient as? RNCWebChromeClient
++        val allowsAudioCapture = previousClient?.getAllowsAudioCapture() ?: false
++        val audioCaptureSameHostOnly = previousClient?.getAudioCaptureSameHostOnly() ?: false
++        val sourceHost = previousClient?.getSourceHost()
+         if (mAllowsFullscreenVideo && activity != null) {
+             val initialRequestedOrientation = activity.requestedOrientation
+             val webChromeClient: RNCWebChromeClient =
+@@ -207,6 +212,9 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+                     }
+                 }
+             webChromeClient.setAllowsProtectedMedia(mAllowsProtectedMedia);
++            webChromeClient.setAllowsAudioCapture(allowsAudioCapture);
++            webChromeClient.setAudioCaptureSameHostOnly(audioCaptureSameHostOnly);
++            webChromeClient.setSourceHost(sourceHost);
+             webChromeClient.setHasOnOpenWindowEvent(mHasOnOpenWindowEvent);
+             webView.webChromeClient = webChromeClient
+         } else {
+@@ -218,6 +226,9 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+                 }
+             }
+             webChromeClient.setAllowsProtectedMedia(mAllowsProtectedMedia);
++            webChromeClient.setAllowsAudioCapture(allowsAudioCapture);
++            webChromeClient.setAudioCaptureSameHostOnly(audioCaptureSameHostOnly);
++            webChromeClient.setSourceHost(sourceHost);
+             webChromeClient.setHasOnOpenWindowEvent(mHasOnOpenWindowEvent);
+             webView.webChromeClient = webChromeClient
+         }
+@@ -385,6 +396,13 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+     private fun loadSource(viewWrapper: RNCWebViewWrapper, source: ReadableMap?) {
+         val view = viewWrapper.webView
+         if (source != null) {
++            // !patch: remember the host the source names, for the microphone
++            val sourceUrl = when {
++                source.hasKey("html") -> if (source.hasKey("baseUrl")) source.getString("baseUrl") else null
++                source.hasKey("uri") -> source.getString("uri")
++                else -> null
++            }
++            (view.webChromeClient as? RNCWebChromeClient)?.setSourceHost(sourceUrl?.let { Uri.parse(it).host })
+             if (source.hasKey("html")) {
+                 val html = source.getString("html")
+                 val baseUrl = if (source.hasKey("baseUrl")) source.getString("baseUrl") else ""
+@@ -651,6 +669,20 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+       }
+     }
+ 
++    // !patch: only a WebView set to grant media capture gets the microphone,
++    // and with grantIfSameHostElsePrompt only for frames on its source's host.
++    // The flags live on the view's own client, since this manager is shared
++    // by every WebView and a field here would leak the grant to new ones:
++    fun setMediaCapturePermissionGrantType(viewWrapper: RNCWebViewWrapper, value: String?) {
++      val view = viewWrapper.webView
++      val client = view.webChromeClient
++      if (client != null && client is RNCWebChromeClient) {
++        val sameHostOnly = value == "grantIfSameHostElsePrompt"
++        client.setAllowsAudioCapture(value == "grant" || sameHostOnly)
++        client.setAudioCaptureSameHostOnly(sameHostOnly)
++      }
++    }
++
+     fun setMenuCustomItems(viewWrapper: RNCWebViewWrapper, value: ReadableArray?) {
+         val view = viewWrapper.webView
+         when (value) {
 diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
 index 951749c..b1a54ff 100644
 --- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModuleImpl.java
@@ -75,6 +224,38 @@ index da4eb96..e25b49f 100644
    }
  
    override fun getEventName(): String = EVENT_NAME
+diff --git a/node_modules/react-native-webview/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/node_modules/react-native-webview/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+index 4709e28..dd96864 100644
+--- a/node_modules/react-native-webview/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
++++ b/node_modules/react-native-webview/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+@@ -424,7 +424,10 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
+     public void setHasOnFileDownload(RNCWebViewWrapper view, boolean value) {}
+ 
+     @Override
+-    public void setMediaCapturePermissionGrantType(RNCWebViewWrapper view, @Nullable String value) {}
++    @ReactProp(name = "mediaCapturePermissionGrantType")
++    public void setMediaCapturePermissionGrantType(RNCWebViewWrapper view, @Nullable String value) {
++        mRNCWebViewManagerImpl.setMediaCapturePermissionGrantType(view, value);
++    }
+ 
+     @Override
+     public void setFraudulentWebsiteWarningEnabled(RNCWebViewWrapper view, boolean value) {}
+diff --git a/node_modules/react-native-webview/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/node_modules/react-native-webview/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+index 974337f..67ed273 100644
+--- a/node_modules/react-native-webview/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
++++ b/node_modules/react-native-webview/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+@@ -72,6 +72,11 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper> {
+         mRNCWebViewManagerImpl.setAllowsProtectedMedia(view, value);
+     }
+ 
++    @ReactProp(name = "mediaCapturePermissionGrantType")
++    public void setMediaCapturePermissionGrantType(RNCWebViewWrapper view, @Nullable String value) {
++        mRNCWebViewManagerImpl.setMediaCapturePermissionGrantType(view, value);
++    }
++
+     @ReactProp(name = "androidLayerType")
+     public void setAndroidLayerType(RNCWebViewWrapper view, @Nullable String value) {
+         mRNCWebViewManagerImpl.setAndroidLayerType(view, value);
 diff --git a/node_modules/react-native-webview/src/WebViewShared.tsx b/node_modules/react-native-webview/src/WebViewShared.tsx
 index 3b0a38b..835a648 100644
 --- a/node_modules/react-native-webview/src/WebViewShared.tsx
