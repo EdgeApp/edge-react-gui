@@ -10,8 +10,6 @@ import {
 import * as React from 'react'
 import { Appearance, InteractionManager, Platform } from 'react-native'
 import { check } from 'react-native-permissions'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
@@ -64,6 +62,7 @@ import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
+import { VectorIcon } from '../themed/VectorIcon'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
@@ -553,8 +552,9 @@ export const SettingsScene: React.FC<Props> = props => {
         <>
           <SettingsHeaderRow
             icon={
-              <FontAwesomeIcon
+              <VectorIcon
                 color={theme.icon}
+                font="FontAwesome"
                 name="user-o"
                 size={iconSize}
               />
@@ -625,7 +625,14 @@ export const SettingsScene: React.FC<Props> = props => {
         </>
         <>
           <SettingsHeaderRow
-            icon={<IonIcon color={theme.icon} name="options" size={iconSize} />}
+            icon={
+              <VectorIcon
+                color={theme.icon}
+                font="Ionicons"
+                name="options"
+                size={iconSize}
+              />
+            }
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
