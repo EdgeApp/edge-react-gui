@@ -1,23 +1,29 @@
 import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, View } from 'react-native'
-import { sprintf } from 'sprintf-js'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  type TextStyle,
+  View
+} from 'react-native'
 
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
-import { config } from '../../theme/appConfig'
 import { useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../types/routerTypes'
-import { WarningCard } from '../cards/WarningCard'
+import { EdgeButton } from '../buttons/EdgeButton'
+import { EdgeCard } from '../cards/EdgeCard'
 import { CrossFade } from '../common/CrossFade'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { WarningIcon } from '../icons/ThemedIcons'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { TitleText } from '../text/TitleText'
-import { MainButton } from '../themed/MainButton'
+import { EdgeText } from '../themed/EdgeText'
 
 export interface EdgeLoginParams {
   lobbyId: string
@@ -33,14 +39,6 @@ export const EdgeLoginScene: React.FC<Props> = props => {
 
   const account = useSelector(state => state.core.account)
   const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
-
-  const warningMessage =
-    lobby?.loginRequest?.appId === ''
-      ? sprintf(
-          lstrings.edge_description_warning,
-          lobby?.loginRequest?.displayName
-        )
-      : sprintf(lstrings.access_wallet_description, config.appName)
 
   useAsyncEffect(
     async () => {
@@ -97,47 +95,96 @@ export const EdgeLoginScene: React.FC<Props> = props => {
 
   return (
     <SceneWrapper>
-      <View style={styles.topArea}>
-        <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
-          <View key="loader" style={styles.header}>
-            <ActivityIndicator
-              color={theme.iconTappable}
-              size="large"
-              accessibilityHint={lstrings.spinner_hint}
-            />
-          </View>
-          <View key="logo" style={styles.header}>
-            <Image
-              style={styles.logo}
-              source={{ uri: logoUri }}
-              resizeMode="contain"
-              accessibilityHint={lstrings.app_logo_hint}
-            />
-            <TitleText style={styles.appName}>
-              {lobby?.loginRequest?.displayName}
-            </TitleText>
-          </View>
-        </CrossFade>
-      </View>
-      <EdgeAnim enter={{ type: 'fadeIn', delay: 125 }} visible={lobby != null}>
-        <WarningCard title={lstrings.string_warning} header={warningMessage} />
-      </EdgeAnim>
-      <EdgeAnim enter={{ type: 'fadeIn', delay: 250 }} visible={lobby != null}>
-        <MainButton
-          label={lstrings.accept_button_text}
-          onPress={handleAccept}
-          marginRem={1}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.topArea}>
+          <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
+            <View key="loader" style={styles.header}>
+              <ActivityIndicator
+                color={theme.iconTappable}
+                size="large"
+                accessibilityHint={lstrings.spinner_hint}
+              />
+            </View>
+            <View key="logo" style={styles.header}>
+              <Image
+                style={styles.logo}
+                source={{ uri: logoUri }}
+                resizeMode="contain"
+                accessibilityHint={lstrings.app_logo_hint}
+              />
+              <TitleText style={styles.appName}>
+                {lobby?.loginRequest?.displayName}
+              </TitleText>
+            </View>
+          </CrossFade>
+        </View>
+        <EdgeAnim
+          enter={{ type: 'fadeIn', delay: 125 }}
+          visible={lobby != null}
+        >
+          <EdgeCard gradientBackground={theme.cardGradientWarning}>
+            <View style={styles.warning}>
+              <View style={styles.warningTitleRow}>
+                <WarningIcon color={theme.primaryText} size={theme.rem(1.5)} />
+                <ScalableText style={styles.warningTitle}>
+                  {lstrings.edge_login_warning_title}
+                </ScalableText>
+              </View>
+              <ScalableText style={styles.warningText}>
+                {lstrings.edge_login_warning_irreversible}
+              </ScalableText>
+              <ScalableText style={styles.warningEmphasis}>
+                {lstrings.edge_login_warning_do_not_approve}
+              </ScalableText>
+            </View>
+          </EdgeCard>
+        </EdgeAnim>
+      </ScrollView>
+      <View style={styles.buttons}>
+        <EdgeAnim
+          enter={{ type: 'fadeIn', delay: 250 }}
+          visible={lobby != null}
+        >
+          <EdgeButton
+            label={lstrings.edge_login_grant_access_button}
+            layout="column"
+            onPress={handleAccept}
+            type="destructive"
+          />
+        </EdgeAnim>
+        <EdgeButton
+          label={lstrings.string_deny}
+          layout="column"
+          onPress={handleDecline}
+          type="secondary"
         />
-      </EdgeAnim>
-      <MainButton
-        label={lstrings.string_cancel_cap}
-        onPress={handleDecline}
-        type="escape"
-        marginRem={[0, 1, 1]}
-      />
+      </View>
     </SceneWrapper>
   )
 }
+
+/**
+ * Follows the OS text size, unlike the rest of the app, and wraps rather than
+ * shrinks. A person who needs large text must still be able to read the warning.
+ * The cap keeps the title on one line and, on larger phones, the whole warning
+ * above the buttons, since Grant Full Access unlocks whether or not they
+ * scrolled to the rest of it.
+ */
+const ScalableText: React.FC<{
+  children: string
+  style: TextStyle
+}> = props => (
+  <EdgeText
+    allowFontScaling
+    disableFontScaling
+    maxFontSizeMultiplier={1.75}
+    numberOfLines={0}
+    {...props}
+  />
+)
 
 const showOkModal = async (
   title: string,
@@ -154,8 +201,16 @@ const showOkModal = async (
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  topArea: {
+  scroll: {
     flex: 1
+  },
+  scrollContent: {
+    flexGrow: 1
+  },
+  // CrossFade children are absolutely positioned. This area sets their size:
+  topArea: {
+    flexGrow: 1,
+    minHeight: theme.rem(7)
   },
   header: {
     alignItems: 'center',
@@ -170,5 +225,30 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   appName: {
     padding: theme.rem(1)
+  },
+  warning: {
+    gap: theme.rem(0.75),
+    margin: theme.rem(0.5)
+  },
+  warningTitleRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: theme.rem(0.5)
+  },
+  warningTitle: {
+    flexShrink: 1,
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1.25)
+  },
+  warningText: {
+    fontSize: theme.rem(1)
+  },
+  warningEmphasis: {
+    fontFamily: theme.fontFaceMedium,
+    fontSize: theme.rem(1)
+  },
+  buttons: {
+    gap: theme.rem(0.5),
+    margin: theme.rem(1)
   }
 }))

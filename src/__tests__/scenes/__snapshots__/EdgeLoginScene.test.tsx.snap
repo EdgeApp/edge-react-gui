@@ -236,178 +236,230 @@ exports[`EdgeLoginScene should render with loading props 1`] = `
       </RNSVGGroup>
     </RNSVGSvgView>
   </ExpoLinearGradient>
-  <View
+  <RCTScrollView
+    contentContainerStyle={
+      {
+        "flexGrow": 1,
+      }
+    }
     style={
       {
         "flex": 1,
       }
     }
   >
-    <View
-      collapsable={false}
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {
-            "opacity": 1,
-          },
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-        ]
-      }
-      style={
-        [
-          {
-            "bottom": 0,
-            "left": 0,
-            "position": "absolute",
-            "right": 0,
-            "top": 0,
-          },
-          {
-            "opacity": 1,
-          },
-        ]
-      }
-    >
+    <View>
       <View
         style={
           {
-            "alignItems": "center",
             "flexGrow": 1,
-            "justifyContent": "center",
+            "minHeight": 157,
           }
         }
       >
-        <ActivityIndicator
-          accessibilityHint="Loading"
-          color="#00f1a2"
-          size="large"
-        />
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      [
-        {
-          "alignItems": "center",
-          "justifyContent": "center",
-        },
-        {
-          "marginBottom": 22,
-          "marginLeft": 22,
-          "marginRight": 22,
-          "marginTop": 0,
-        },
-      ]
-    }
-  >
-    <View
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": false,
-          "expanded": undefined,
-          "selected": undefined,
-        }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      hitSlop={
-        {
-          "bottom": 11,
-          "left": 10000,
-          "right": 10000,
-          "top": 11,
-        }
-      }
-      onClick={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "alignItems": "center",
-          "backgroundColor": "transparent",
-          "borderRadius": 34,
-          "height": 34,
-          "justifyContent": "center",
-          "opacity": 1,
-          "overflow": "visible",
-          "paddingHorizontal": 17,
-          "paddingVertical": 0,
-          "position": "relative",
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "opacity": 1,
+        <View
+          collapsable={false}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
           }
-        }
-      >
-        <Text
-          adjustsFontSizeToFit={true}
-          allowFontScaling={false}
-          minimumFontScale={0.65}
-          minimumFontSize={14.3}
-          numberOfLines={1}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 1,
+              },
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+            ]
+          }
           style={
             [
               {
-                "color": "#FFFFFF",
-                "fontFamily": "Quicksand-Regular",
-                "fontSize": 22,
-                "includeFontPadding": false,
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
               },
-              [
-                {
-                  "includeFontPadding": false,
-                },
-                {
-                  "color": "#00f1a2",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                },
-                null,
-              ],
-              null,
+              {
+                "opacity": 1,
+              },
             ]
           }
         >
-          Cancel
-        </Text>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexGrow": 1,
+                "justifyContent": "center",
+              }
+            }
+          >
+            <ActivityIndicator
+              accessibilityHint="Loading"
+              color="#00f1a2"
+              size="large"
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+  <View
+    style={
+      {
+        "gap": 11,
+        "margin": 22,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "stretch",
+            "alignSelf": "stretch",
+            "flexBasis": "auto",
+            "flexGrow": 0,
+            "flexShrink": 0,
+            "padding": undefined,
+          },
+          {
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "marginTop": 0,
+          },
+        ]
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        hitSlop={11}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "alignSelf": "stretch",
+            "borderRadius": 34,
+            "height": 67,
+            "justifyContent": "center",
+            "opacity": 1,
+            "overflow": "visible",
+            "paddingHorizontal": 34,
+            "paddingVertical": 0,
+            "position": "relative",
+          }
+        }
+      >
+        <ExpoLinearGradient
+          colors={
+            [
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
+            ]
+          }
+          end={
+            {
+              "x": 1,
+              "y": 1,
+            }
+          }
+          start={
+            {
+              "x": 0,
+              "y": 0,
+            }
+          }
+          style={
+            {
+              "borderRadius": 34,
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "opacity": 1,
+            }
+          }
+        >
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            minimumFontScale={0.65}
+            minimumFontSize={14.3}
+            numberOfLines={1}
+            style={
+              [
+                {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "includeFontPadding": false,
+                },
+                [
+                  {
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                  },
+                  null,
+                ],
+                null,
+              ]
+            }
+          >
+            Deny
+          </Text>
+        </View>
       </View>
     </View>
   </View>

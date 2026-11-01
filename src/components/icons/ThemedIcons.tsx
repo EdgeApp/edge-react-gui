@@ -163,6 +163,7 @@ export const SearchIconAnimated = makeAnimatedFontIcon(AntDesignIcon, 'search1')
 
 export const GridIcon = makeFontIcon(Ionicons, 'grid-outline')
 export const ListIcon = makeFontIcon(Ionicons, 'list')
+export const WarningIcon = makeFontIcon(Ionicons, 'warning-outline')
 
 export const InformationCircleIcon = makeFontIcon(
   Ionicons,
