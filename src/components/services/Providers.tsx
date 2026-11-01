@@ -20,6 +20,7 @@ import { perfLogger } from '../../util/middleware/perfLogger'
 import { BlurTarget, BlurTargetProvider } from '../common/BlurBackground'
 import { Main } from '../Main'
 import { Airship } from './AirshipInstance'
+import { PushLoginIdsService } from './PushLoginIdsService'
 import { useTheme } from './ThemeContext'
 
 interface Props {
@@ -84,6 +85,7 @@ export const Providers: React.FC<Props> = props => {
                 <BlurTarget>
                   <Main />
                 </BlurTarget>
+                <PushLoginIdsService context={context} />
               </Airship>
             </BlurTargetProvider>
           )}

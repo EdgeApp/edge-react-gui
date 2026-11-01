@@ -30,6 +30,7 @@
 - fixed: Android app icon showing as a blank dark circle when drawn small, such as on Wear OS watch notifications
 - fixed: Stealth Swap transactions titled "Swap Funds" instead of "Stealth Swap"
 - fixed: Runaway log requests in dev builds when the `LOG_SERVER` listener is down
+- fixed: Login approval notifications no longer reach devices that forgot the account
 - fixed: The app no longer installs two copies of react-native-airship and react-native-patina (one nested under edge-login-ui-rn).
 - fixed: Labels that shrink to fit stop at their minimum size again. The new architecture ignores `minimumFontScale` on both platforms and shrank long labels as far as 4 points; the app now also passes the absolute floor the renderers do honor, via a small `react-native` patch, so labels shrink no further than before.
 - fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
