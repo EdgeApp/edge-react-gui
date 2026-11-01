@@ -1782,6 +1782,8 @@ const strings = {
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message:
     'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_quote_body:
+    'This wallet cannot cover this amount plus fees. Add funds to complete this exchange.',
   exchange_insufficient_funds_below_balance:
     'Wallet balance is below the amount entered.',
   exchange_pending_funds_error:

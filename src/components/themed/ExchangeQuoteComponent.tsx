@@ -10,7 +10,11 @@ import { lstrings } from '../../locales/strings'
 import { convertCurrency } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
-import { DECIMAL_PRECISION, removeIsoPrefix } from '../../util/utils'
+import {
+  DECIMAL_PRECISION,
+  removeIsoPrefix,
+  zeroString
+} from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { CurrencyRow } from '../rows/CurrencyRow'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -128,6 +132,13 @@ export const ExchangeQuote: React.FC<Props> = props => {
   })
   const minFiatAmountText = `(${minFiatAmount})`
 
+  // A quote the wallet cannot pay for may have no fee estimate at all, which
+  // is different from a zero fee:
+  const feeText =
+    quote.insufficientFunds != null && zeroString(feeNativeAmount)
+      ? lstrings.n_a
+      : `${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`
+
   const renderRow = (
     label: React.ReactNode,
     value: React.ReactNode,
@@ -150,9 +161,7 @@ export const ExchangeQuote: React.FC<Props> = props => {
         <View style={styles.bottomContainer}>
           {renderRow(
             <EdgeText style={feeTextStyle}>{lstrings.mining_fee}</EdgeText>,
-            <EdgeText
-              style={feeTextStyle}
-            >{`${feeCryptoText} (${feeFiatText} ${fiatCurrencyCode})`}</EdgeText>,
+            <EdgeText style={feeTextStyle}>{feeText}</EdgeText>,
             {
               ...sidesToMargin(mapSides(fixSides([0.75, 0, 0], 0), theme.rem))
             }
