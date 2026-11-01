@@ -198,7 +198,22 @@ export function walletListMenuAction(
     }
 
     case 'resync': {
-      return async dispatch => {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const wallet = state.core.account.currencyWallets[walletId]
+
+        // Not isEvmWallet, which misses EVM chains with no WalletConnect entry:
+        if (wallet.currencyInfo.evmChainId != null) {
+          await wallet.resyncBlockchain()
+          showToast(
+            sprintf(
+              lstrings.fragment_wallets_resync_started_toast_1s,
+              getWalletName(wallet)
+            )
+          )
+          return
+        }
+
         await dispatch(showResyncWalletModal(walletId))
       }
     }

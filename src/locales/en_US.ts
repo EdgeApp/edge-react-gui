@@ -335,6 +335,7 @@ const strings = {
   fragment_wallets_pubkey_copied_title: 'XPub Address Copied',
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_rename_wallet: 'Rename Wallet',
+  fragment_wallets_resync_started_toast_1s: 'Resyncing %1$s',
   fragment_wallets_resync_wallet_first_confirm_message_mobile:
     'Are you sure you want to resync \n',
   fragment_wallets_get_seed_title: 'Reveal Master Private Key',
