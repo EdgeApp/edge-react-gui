@@ -34,6 +34,8 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+- fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
+- fixed: WalletConnect and staking fiat values scaled by the display denomination
 
 ## 4.52.2 (2026-10-30)
 
