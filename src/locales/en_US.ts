@@ -2347,6 +2347,7 @@ const strings = {
   spei_bank_transfer: 'SPEI Bank Transfer',
   turkish_bank_transfer: 'Turkish Bank Transfer',
   venmo: 'Venmo',
+  vietqr: 'VietQR',
   bank_wire_transfer: 'Bank Wire Transfer',
 
   // #region UK Compliance
