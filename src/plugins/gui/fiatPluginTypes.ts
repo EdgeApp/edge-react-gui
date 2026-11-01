@@ -69,6 +69,7 @@ export const asFiatPaymentType = asValue(
   'spei',
   'turkishbank',
   'venmo',
+  'vietqr',
   'wire'
 )
 export type FiatPaymentType = ReturnType<typeof asFiatPaymentType>
