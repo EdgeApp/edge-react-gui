@@ -454,6 +454,7 @@ export interface Theme {
   paymentTypeLogoSofort: ImageProp
   paymentTypeLogoUpi: ImageProp
   paymentTypeLogoVenmo: ImageProp
+  paymentTypeLogoVietQr: ImageProp
   paymentTypeVisa: ImageProp
 
   primaryLogo: ImageProp
