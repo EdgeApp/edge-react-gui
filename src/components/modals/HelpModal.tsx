@@ -20,6 +20,7 @@ import { EdgeText } from '../themed/EdgeText'
 import { ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { EdgeModal } from './EdgeModal'
+import { showSupportChatModal } from './SupportChatModal'
 
 const buildNumber = getBuildNumber()
 const versionNumber = getVersion()
@@ -54,6 +55,17 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
       // logged-in scene:
       await openBrowserUri(uri)
     }
+  })
+
+  const handleLiveChatPress = useHandler(async () => {
+    const { intercomAppId, supportChatSite } = config
+    if (supportChatSite == null) return
+    if (intercomAppId == null) {
+      await openBrowserUri(supportChatSite)
+      return
+    }
+    bridge.resolve()
+    await showSupportChatModal(intercomAppId, supportChatSite)
   })
 
   React.useEffect(() => {
@@ -112,10 +124,7 @@ export const HelpModal: React.FC<Props> = (props: Props) => {
           }
           title={lstrings.help_live_chat}
           subTitle={lstrings.help_live_chat_text}
-          onPress={async () => {
-            if (config.supportChatSite == null) return
-            await openBrowserUri(config.supportChatSite)
-          }}
+          onPress={handleLiveChatPress}
         />
       )}
 

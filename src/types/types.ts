@@ -455,6 +455,7 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
+  intercomAppId?: string
   supportChatSite?: string
 }
 
