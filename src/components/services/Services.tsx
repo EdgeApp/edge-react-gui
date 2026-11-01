@@ -49,6 +49,7 @@ import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
 
 interface Props {
+  // TODO: Replace NavigationBase with useNavigation() or callbacks. Requires v7 navigation migration.
   navigation: NavigationBase
 }
 
@@ -74,11 +75,15 @@ export const Services: React.FC<Props> = props => {
   }, [])
 
   // The refresher below runs at mount, which can beat the launch rollup.
-  // Reload Houdini's list whenever a rollup lands, so Stealth shows as soon
-  // as the list arrives rather than on the next refresher tick:
+  // Reload what the rollup feeds whenever one lands, so Stealth and the ramp
+  // "New" badges show as soon as it arrives rather than on the next refresher
+  // tick:
   React.useEffect(
     () =>
       onInfoRollup(() => {
+        dispatch(updateExchangeInfo()).catch((error: unknown) => {
+          console.warn(error)
+        })
         dispatch(updateHoudiniChains()).catch((error: unknown) => {
           console.warn(error)
         })

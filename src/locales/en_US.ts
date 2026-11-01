@@ -1561,6 +1561,7 @@ const strings = {
   string_report_sent: 'The report has been sent successfully.',
   string_show_error: 'Show Error',
   string_best_rate_badge_text: 'Best\nRate',
+  string_new_badge_text: 'New',
 
   step_prefix_s: 'Step %s:',
   scan_as_in_scan_barcode: 'Scan',

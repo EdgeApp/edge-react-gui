@@ -23,6 +23,8 @@ interface Props {
   }
   /** Show "Best Rate" badge */
   isBestOption?: boolean
+  /** Show "New" badge, unless the card already shows "Best Rate" */
+  isNew?: boolean
   /** Applied to the partner pill, which opens the provider picker */
   providerTestID?: string
 
@@ -50,6 +52,8 @@ export const PaymentOptionCard: React.FC<Props> = (props: Props) => {
         </View>
         {props.isBestOption === true ? (
           <BurstBadge label={lstrings.string_best_rate_badge_text} />
+        ) : props.isNew === true ? (
+          <BurstBadge label={lstrings.string_new_badge_text} />
         ) : null}
       </View>
       <View style={styles.subtitleView}>

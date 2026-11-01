@@ -3,10 +3,12 @@ import type { Action } from '../types/reduxTypes'
 
 export const initialState: ExchangeInfo = {
   buy: {
-    disablePlugins: {}
+    disablePlugins: {},
+    newPaymentTypes: {}
   },
   sell: {
-    disablePlugins: {}
+    disablePlugins: {},
+    newPaymentTypes: {}
   },
   swap: {
     disableAssets: {
