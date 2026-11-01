@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard'
-import type { EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeTokenId } from 'edge-core-js'
 import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -47,7 +47,10 @@ export type WalletListMenuKey =
   | 'getRawKeys'
   | 'rawDelete'
   | 'togglePause'
+  | 'viewInExplorer'
   | string // for split keys like splitbitcoincash, splitethereum, etc.
+
+const HEDERA_PLUGIN_IDS = ['hedera', 'hederatestnet']
 
 export function walletListMenuAction(
   navigation: WalletsTabSceneProps<
@@ -285,6 +288,32 @@ export function walletListMenuAction(
       }
     }
 
+    case 'viewInExplorer': {
+      return async (dispatch, getState) => {
+        const state = getState()
+        const wallet = state.core.account.currencyWallets[walletId]
+        const addresses = await wallet.getAddresses({ tokenId: null })
+        const publicAddress = addresses[0]?.publicAddress
+        if (publicAddress == null || publicAddress === '') {
+          throw new Error(lstrings.wallet_menu_explorer_no_address_error)
+        }
+        if (isUncreatedHederaAccount(wallet.currencyInfo, publicAddress)) {
+          await Airship.show<'ok' | undefined>(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={lstrings.wallet_menu_explorer_no_account_title}
+              message={lstrings.wallet_menu_explorer_no_account_message}
+              buttons={{ ok: { label: lstrings.string_ok } }}
+            />
+          ))
+          return
+        }
+        await Linking.openURL(
+          sprintf(wallet.currencyInfo.addressExplorer, publicAddress)
+        )
+      }
+    }
+
     case 'getSeed': {
       return async (dispatch, getState) => {
         const state = getState()
@@ -407,4 +436,19 @@ export function walletListMenuAction(
     default:
       return async () => {}
   }
+}
+
+/**
+ * Hedera engines report `0.0.<public key>` as the address until an account
+ * exists on chain, then switch to the numeric `shard.realm.num` id.
+ * Explorers only accept the numeric id.
+ */
+function isUncreatedHederaAccount(
+  currencyInfo: EdgeCurrencyInfo,
+  publicAddress: string
+): boolean {
+  return (
+    HEDERA_PLUGIN_IDS.includes(currencyInfo.pluginId) &&
+    !/^\d+\.\d+\.\d+$/.test(publicAddress)
+  )
 }
