@@ -315,7 +315,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       return fiatValue === '0' ? 'crypto' : forceField
     }, [convertCurrencyHandler, defaultIsoFiat, forceField, tokenId, wallet])
 
-    const renderHeader = (): React.ReactNode => {
+    const renderHeader = (): React.ReactElement => {
       return (
         <View style={styles.header}>
           <EdgeText style={styles.cardHeading}>{heading}</EdgeText>
@@ -335,7 +335,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       )
     }
 
-    const renderFooter = (): React.ReactNode => {
+    const renderFooter = (): React.ReactElement => {
       return <View style={styles.footerSpace} />
     }
 
