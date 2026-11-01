@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
-import { fireEvent, render, waitFor } from '@testing-library/react-native'
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native'
 import * as React from 'react'
 
 import * as DeviceSettingsActions from '../../actions/DeviceSettingsActions'
@@ -65,5 +65,95 @@ describe('SettingsScene', () => {
       expect(write).toHaveBeenCalledWith('light')
     })
     rendered.unmount()
+  })
+
+  describe('Change Username', () => {
+    interface SceneHarness {
+      navigate: unknown
+      rendered: ReturnType<typeof render>
+      tap: (label: string) => Promise<void>
+    }
+
+    const renderScene = (initialState: FakeState = mockState): SceneHarness => {
+      const props = fakeEdgeAppSceneProps('settingsOverview', undefined)
+      const navigate = jest.spyOn(props.navigation, 'navigate')
+      const rendered = render(
+        <FakeProviders initialState={initialState}>
+          <SettingsScene {...props} />
+        </FakeProviders>
+      )
+      // The async act flush lets the press handler finish:
+      const tap = async (label: string): Promise<void> => {
+        fireEvent.press(rendered.getByText(label))
+        await act(async () => {
+          await Promise.resolve()
+        })
+      }
+      return { navigate, rendered, tap }
+    }
+
+    it('opens after the password prompt when locked', async () => {
+      const show = jest
+        .spyOn(Airship, 'show')
+        .mockResolvedValue('secret' as never)
+      const { navigate, rendered, tap } = renderScene()
+
+      await tap(lstrings.settings_button_change_username)
+
+      expect(show).toHaveBeenCalledTimes(1)
+      expect(navigate).toHaveBeenCalledWith('changeUsername', {
+        password: 'secret'
+      })
+      rendered.unmount()
+    })
+
+    it('stays on settings when the password prompt is canceled', async () => {
+      const show = jest
+        .spyOn(Airship, 'show')
+        .mockResolvedValue(undefined as never)
+      const { navigate, rendered, tap } = renderScene()
+
+      await tap(lstrings.settings_button_change_username)
+
+      expect(show).toHaveBeenCalledTimes(1)
+      expect(navigate).not.toHaveBeenCalled()
+      rendered.getByText(lstrings.settings_button_unlock_settings)
+      rendered.unmount()
+    })
+
+    it('uses the password from unlocking without prompting again', async () => {
+      const show = jest
+        .spyOn(Airship, 'show')
+        .mockResolvedValue('secret' as never)
+      const { navigate, rendered, tap } = renderScene()
+
+      await tap(lstrings.settings_button_unlock_settings)
+      rendered.getByText(lstrings.settings_button_lock_settings)
+      await tap(lstrings.settings_button_change_username)
+
+      expect(show).toHaveBeenCalledTimes(1)
+      expect(navigate).toHaveBeenCalledWith('changeUsername', {
+        password: 'secret'
+      })
+      rendered.unmount()
+    })
+
+    it('prompts when already unlocked without a password', async () => {
+      const show = jest
+        .spyOn(Airship, 'show')
+        .mockResolvedValue('secret' as never)
+      const { navigate, rendered, tap } = renderScene({
+        ...mockState,
+        ui: { settings: { ...initialSettings, changesLocked: false } }
+      })
+
+      await tap(lstrings.settings_button_change_username)
+
+      expect(show).toHaveBeenCalledTimes(1)
+      expect(navigate).toHaveBeenCalledWith('changeUsername', {
+        password: 'secret'
+      })
+      rendered.unmount()
+    })
   })
 })

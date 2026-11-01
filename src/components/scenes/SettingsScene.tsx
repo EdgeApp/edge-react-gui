@@ -356,11 +356,13 @@ export const SettingsScene: React.FC<Props> = props => {
   })
 
   const handleChangeUsername = useHandler(async (): Promise<void> => {
-    // Check if settings are locked
-    if ((await hasLock()) || validatedPassword == null) return
+    // A remounted scene can be unlocked without holding the password. This
+    // prompts whenever the settings show locked or no password is held.
+    const heldPassword = isLocked ? undefined : validatedPassword
+    const password = heldPassword ?? (await unlockSettings())
+    if (password == null) return
 
-    // Navigate to change username with the validated password
-    navigation.navigate('changeUsername', { password: validatedPassword })
+    navigation.navigate('changeUsername', { password })
   })
 
   const handleChangeOtp = useHandler(async (): Promise<void> => {
