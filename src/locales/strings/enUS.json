@@ -335,6 +335,7 @@
   "help_official_site": "Visit Official Site",
   "help_official_site_text": "Learn more about %1$s",
   "loading": "Loading…",
+  "percent_amount_1s": "%1$s%%",
   "percent_complete_1s": "%1$s Complete",
   "sync_status_title": "Sync in Progress",
   "sync_status_blocks": "Syncing blocks %1$s/%2$s",
