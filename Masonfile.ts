@@ -1,4 +1,4 @@
-import type { Setup, Stage } from '@mason/types'
+import type { Setup, Stage, Tools } from '@mason/types'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -118,6 +118,40 @@ const BUILD_TOOLS = '36.1.0'
 const UNSIGNED_IOS = 'ios-build'
 const IOS_ARCHIVE = 'build/edge.xcarchive'
 const IOS_ENTITLEMENTS = 'ios/edge/edge.entitlements'
+/** What the Android build installs. Library modules still compile against 35. */
+const ANDROID_TOOLS: Tools = {
+  node: '22',
+  java: '17',
+  android: [
+    'platforms;android-36',
+    'platforms;android-35',
+    `build-tools;${BUILD_TOOLS}`,
+    'build-tools;35.0.0',
+    'ndk;27.1.12297006',
+    'cmake;3.22.1'
+  ],
+  androidLicenses: 'accept'
+}
+/** What signing an Android build installs: apksigner. */
+const SIGNING_TOOLS: Tools = {
+  java: '17',
+  android: [`build-tools;${BUILD_TOOLS}`],
+  androidLicenses: 'accept'
+}
+/** The branches whose builds also have a Maestro variant, as the Jenkinsfile's buildMaestro. */
+export const MAESTRO_BRANCHES = [
+  'develop',
+  'staging',
+  'master',
+  'beta',
+  'testMaestro'
+]
+/** The stash the Android Maestro build leaves its unsigned APK in. */
+const UNSIGNED_MAESTRO_APK = 'android-maestro-apk'
+/** The iPhone Simulator app the iOS Maestro build makes, and the zip it publishes. */
+const SIMULATOR_APP =
+  'build/derivedData/Build/Products/Release-iphonesimulator/Edge.app'
+const MAESTRO_ZIP = 'build/edge-maestro.zip'
 /** The stash the Android build leaves its unsigned-for-release APKs in. */
 const UNSIGNED_APKS = 'android-apks'
 const APK_DIR = 'android/app/build/outputs/apk/release'
@@ -225,20 +259,7 @@ export function setup(m: Setup) {
               name: 'build',
               // Gradle and the Android SDK run on either; Linux is cheaper.
               on: [LINUX, MAC],
-              tools: {
-                node: '22',
-                java: '17',
-                // Library modules still compile against 35.
-                android: [
-                  'platforms;android-36',
-                  'platforms;android-35',
-                  `build-tools;${BUILD_TOOLS}`,
-                  'build-tools;35.0.0',
-                  'ndk;27.1.12297006',
-                  'cmake;3.22.1'
-                ],
-                androidLicenses: 'accept'
-              },
+              tools: ANDROID_TOOLS,
               configs,
               secrets: ANDROID_SECRETS,
               env,
@@ -251,11 +272,7 @@ export function setup(m: Setup) {
               on: ANDROID_SIGNER,
               // Only the stashed APKs: no repository on the signing node.
               checkout: false,
-              tools: {
-                java: '17',
-                android: [`build-tools;${BUILD_TOOLS}`],
-                androidLicenses: 'accept'
-              },
+              tools: SIGNING_TOOLS,
               configs,
               secrets: SIGNING_SECRETS,
               timeout: '30m',
@@ -263,7 +280,49 @@ export function setup(m: Setup) {
               publishes: [app],
               run: signAndroid
             }
-          ]
+          ],
+          // Maestro variants of the same app, with the Maestro flag set: an
+          // iPhone Simulator build, and an APK signed as the branch's is.
+          ...(MAESTRO_BRANCHES.includes(m.branch)
+            ? {
+                'ios-maestro': {
+                  on: MAC,
+                  tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
+                  configs,
+                  secrets: IOS_SECRETS,
+                  env,
+                  ...limits,
+                  buildNumbers: [app],
+                  publishes: [app],
+                  run: buildIosMaestro
+                },
+                'android-maestro': [
+                  {
+                    name: 'build',
+                    on: [LINUX, MAC],
+                    tools: ANDROID_TOOLS,
+                    configs,
+                    secrets: ANDROID_SECRETS,
+                    env,
+                    ...limits,
+                    buildNumbers: [app],
+                    run: buildAndroidMaestro
+                  },
+                  {
+                    name: 'sign',
+                    on: ANDROID_SIGNER,
+                    checkout: false,
+                    tools: SIGNING_TOOLS,
+                    configs,
+                    secrets: SIGNING_SECRETS,
+                    timeout: '30m',
+                    activityTimeout: '10m',
+                    publishes: [app],
+                    run: signAndroidMaestro
+                  }
+                ]
+              }
+            : {})
         },
         { failFast: false }
       )
@@ -285,11 +344,20 @@ export async function runTests(ctx: Stage) {
  * patched packages, generated signer and contract code). Each platform
  * stamps its own version.
  */
-async function prepare(ctx: Stage, secrets: string[]): Promise<void> {
+async function prepare(
+  ctx: Stage,
+  secrets: string[],
+  options: { maestro?: boolean } = {}
+): Promise<void> {
   await ctx.log.section(
     'Secret files',
     async () => await writeSecrets(ctx, secrets)
   )
+  if (options.maestro === true)
+    await ctx.log.section(
+      'Maestro',
+      async () => await setMaestroFlag(ctx.workspace)
+    )
   // The repository's .npmrc turns install scripts off, so `prepare` runs below.
   await ctx.log.section('Install packages', async () => await ctx.sh('npm ci'))
   await ctx.log.section('Prepare', async () => {
@@ -534,6 +602,90 @@ export async function buildAndroid(ctx: Stage) {
   return { version }
 }
 
+/** Sets the Maestro flag in config.json, as scripts/deploy.ts does for a Maestro build. */
+export async function setMaestroFlag(root: string): Promise<void> {
+  const file = join(root, 'config.json')
+  const config = JSON.parse(await readFile(file, 'utf8'))
+  await writeFile(
+    file,
+    JSON.stringify({ ...config, ENABLE_MAESTRO_BUILD: true }, null, 2)
+  )
+}
+
+/**
+ * Builds the iOS Maestro variant as the Jenkinsfile does: the app with the
+ * Maestro flag, for the iPhone Simulator, zipped and published as the
+ * branch app's maestro variant (a download, never installed on a phone).
+ */
+export async function buildIosMaestro(ctx: Stage) {
+  await prepare(ctx, IOS_SECRETS, { maestro: true })
+  const version = await stampVersion(
+    ctx,
+    async (version, build) => await setIosVersion(ctx, version, build)
+  )
+  await ctx.log.section(
+    'CocoaPods',
+    async () => await ctx.sh('npm run prepare.ios', { color: false })
+  )
+  await ctx.log.section(
+    'Build for the iPhone Simulator',
+    async () =>
+      await ctx.sh(
+        [
+          'xcodebuild build',
+          '-workspace ios/edge.xcworkspace',
+          '-scheme edge',
+          '-sdk iphonesimulator',
+          '-configuration Release',
+          '-derivedDataPath build/derivedData'
+        ].join(' ')
+      )
+  )
+  await ctx.log.section(
+    'Zip the app',
+    async () =>
+      await ctx.exec('ditto', [
+        '-c',
+        '-k',
+        '--keepParent',
+        SIMULATOR_APP,
+        MAESTRO_ZIP
+      ])
+  )
+  await ctx.log.section(
+    'Publish',
+    async () =>
+      await ctx.publish({
+        app: appFor(ctx.run.branch),
+        platform: 'ios',
+        variant: 'maestro',
+        path: MAESTRO_ZIP,
+        changelog: `${ctx.run.branch} ${version}`
+      })
+  )
+  return { version }
+}
+
+/** Builds the Android Maestro variant: the release APK with the Maestro flag, signed on the signing node. */
+export async function buildAndroidMaestro(ctx: Stage) {
+  await prepare(ctx, ANDROID_SECRETS, { maestro: true })
+  const version = await stampVersion(
+    ctx,
+    async (version, build) =>
+      await setAndroidVersion(ctx.workspace, version, build)
+  )
+  await ctx.log.section(
+    'Build the APK',
+    async () => await ctx.sh('./gradlew assembleRelease', { cwd: 'android' })
+  )
+  await ctx.log.section(
+    'Stash the APK for signing',
+    async () =>
+      await ctx.stash(UNSIGNED_MAESTRO_APK, [`${APK_DIR}/app-release.apk`])
+  )
+  return { version }
+}
+
 /**
  * The APKs a branch's build makes and publishes: the release APK, or on
  * master the universal APK as the default variant and each ABI's APK as a
@@ -589,20 +741,43 @@ export function androidSigning(
  * Gradle gave them; the password reaches it through its environment.
  */
 export async function signAndroid(ctx: Stage) {
+  await signApks(ctx, {
+    stash: UNSIGNED_APKS,
+    built: 'build/android/build',
+    apks: androidApks(ctx.run.branch)
+  })
+}
+
+/** Signs the Android Maestro build's APK as the branch's own and publishes it as the maestro variant. */
+export async function signAndroidMaestro(ctx: Stage) {
+  await signApks(ctx, {
+    stash: UNSIGNED_MAESTRO_APK,
+    built: 'build/android-maestro/build',
+    apks: [{ file: 'app-release.apk', variant: 'maestro' }]
+  })
+}
+
+/** Signs a stash's APKs with the branch's keystore from deploy-config.json and publishes them. */
+async function signApks(
+  ctx: Stage,
+  options: {
+    stash: string
+    built: string
+    apks: Array<{ file: string; variant?: string }>
+  }
+): Promise<void> {
   await ctx.log.section(
     'Unstash the APKs',
-    async () => await ctx.unstash(UNSIGNED_APKS)
+    async () => await ctx.unstash(options.stash)
   )
-  const { version } = await ctx.output<{ version: string }>(
-    'build/android/build'
-  )
+  const { version } = await ctx.output<{ version: string }>(options.built)
   const signing = androidSigning(
     JSON.parse(await readFile(ctx.secretFile('deploy-config.json'), 'utf8')),
     ctx.run.branch
   )
   const keystore = ctx.secretFile(signing.keystore)
   const apksigner = `"$ANDROID_HOME/build-tools/${BUILD_TOOLS}/apksigner"`
-  const apks = androidApks(ctx.run.branch)
+  const { apks } = options
   await ctx.log.section(`Sign with ${signing.keystore}`, async () => {
     await ctx.sh('mkdir -p signed')
     for (const apk of apks) {
