@@ -418,6 +418,8 @@ export async function signIos(ctx: Stage) {
     async () =>
       await ctx.apple.testflight({
         path: ipa,
+        // As every Edge build in App Store Connect answers export compliance.
+        usesNonExemptEncryption: false,
         whatToTest: `${
           ctx.run.branch
         } ${version} (${build}), ${ctx.run.commit.slice(0, 9)}`
