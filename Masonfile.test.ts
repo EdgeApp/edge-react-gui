@@ -22,6 +22,7 @@ import {
   setup,
   signAndroid,
   signIos,
+  appStoreVersion,
   uploadsToTestflight,
   versionSuffix,
   writeSecrets
@@ -519,6 +520,12 @@ describe('Masonfile', () => {
     ])
   })
 
+  it('gives the App Store the numeric version without the branch suffix', () => {
+    expect(appStoreVersion('4.53.0-d')).toBe('4.53.0')
+    expect(appStoreVersion('4.53.0-paul-mason')).toBe('4.53.0')
+    expect(appStoreVersion('4.53.0')).toBe('4.53.0')
+  })
+
   it('signs the stashed archive for the App Store, and only master uploads it to TestFlight', async () => {
     for (const branch of ['master', 'develop', 'feature/x']) {
       const { calls, ctx } = recordStage(branch)
@@ -548,7 +555,8 @@ describe('Masonfile', () => {
           {
             path: 'build/edge.xcarchive',
             output: 'build/edge-appstore.ipa',
-            entitlements: { 'co.edgesecure.app': 'ios/edge/edge.entitlements' }
+            entitlements: { 'co.edgesecure.app': 'ios/edge/edge.entitlements' },
+            version: '4.53.0'
           }
         ],
         ['save', 'ios-appstore-ipa', 'build/edge-appstore.ipa'],
