@@ -589,6 +589,13 @@ const CoinRankingDetailsSceneComponent: React.FC<Props> = props => {
       // tokenId:
       for (const balanceTokenId of wallet.balanceMap.keys()) {
         if (balanceTokenId === tokenId && wallet.id === walletId) continue
+        // The core keeps a disabled token's last balance in the map:
+        if (
+          balanceTokenId != null &&
+          !wallet.enabledTokenIds.includes(balanceTokenId)
+        ) {
+          continue
+        }
 
         const dollarValue = new CryptoAmount({
           currencyConfig: wallet.currencyConfig,

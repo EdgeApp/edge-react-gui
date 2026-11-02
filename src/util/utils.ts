@@ -361,6 +361,9 @@ export const getTotalFiatAmountFromExchangeRates = (
       } wallet=${wallet.id.slice(0, 5)} isoFiat=${isoFiatCurrencyCode}`
     )
     for (const tokenId of wallet.balanceMap.keys()) {
+      // The core keeps a disabled token's last balance in the map:
+      if (tokenId != null && !wallet.enabledTokenIds.includes(tokenId)) continue
+
       const nativeBalance = wallet.balanceMap.get(tokenId) ?? '0'
       const currencyCode = getCurrencyCode(wallet, tokenId)
       const rate = getExchangeRate(
