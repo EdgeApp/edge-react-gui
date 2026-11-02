@@ -21,6 +21,8 @@ import {
   setAndroidVersion,
   setup,
   signAndroid,
+  signIos,
+  uploadsToTestflight,
   versionSuffix,
   writeSecrets
 } from './Masonfile'
@@ -88,7 +90,7 @@ function recordStage(branch: string): {
     },
     output: async (stage: string) => {
       calls.push(['output', stage])
-      return { version: '4.53.0-d' }
+      return { version: '4.53.0-d', build: '26103001' }
     },
     log: {
       section: async (title: string, body: () => Promise<unknown>) => {
@@ -147,25 +149,38 @@ describe('Masonfile', () => {
       expect(group).toBe('build')
       expect(options).toEqual({ failFast: false })
       const configs = configsFor(branch)
-      expect(stages.ios.tools).toEqual({
+      // iOS archives unsigned on a pool Mac, then signs for the App Store.
+      const [ios, iosSign] = stages.ios
+      expect(ios.name).toBe('build')
+      expect(ios.tools).toEqual({
         node: '22',
         xcode: '>=26',
         cocoapods: '1.16.2'
       })
-      expect(stages.ios.on).toEqual(mac)
+      expect(ios.on).toEqual(mac)
+      expect(ios.run).toBe(buildIos)
+      expect(iosSign).toEqual({
+        name: 'sign',
+        on: mac,
+        checkout: false,
+        apple: { distribution: 'appStore', app: 'co.edgesecure.app' },
+        timeout: '2h',
+        activityTimeout: '30m',
+        run: signIos
+      })
       // Android builds on a pool machine, then signs on the signing node.
       const [build, sign] = stages.android
       expect(build.name).toBe('build')
       expect(build.on).toEqual([linux, mac])
       // Until these builds ship, they upload nothing to Sentry.
-      for (const stage of [stages.ios, build]) {
+      for (const stage of [ios, build]) {
         expect(stage.env).toEqual({ SENTRY_DISABLE_AUTO_UPLOAD: 'true' })
         expect([stage.timeout, stage.activityTimeout]).toEqual(['3h', '30m'])
       }
-      expect(stages.ios.configs).toEqual(configs)
-      expect(stages.ios.secrets).toContain('GoogleService-Info.plist')
-      expect(stages.ios.publishes).toBeUndefined()
-      expect(stages.ios.buildNumbers).toEqual(['co.edgesecure.app'])
+      expect(ios.configs).toEqual(configs)
+      expect(ios.secrets).toContain('GoogleService-Info.plist')
+      expect(ios.publishes).toBeUndefined()
+      expect(ios.buildNumbers).toEqual(['co.edgesecure.app'])
       expect(build.tools.androidLicenses).toBe('accept')
       expect(build.tools.android).toEqual(
         expect.arrayContaining(['platforms;android-35', 'build-tools;35.0.0'])
@@ -198,7 +213,7 @@ describe('Masonfile', () => {
         android: ['build-tools;36.1.0'],
         androidLicenses: 'accept'
       })
-      for (const stage of [test, stages.ios, build])
+      for (const stage of [test, ios, iosSign, build])
         expect(
           (stage.secrets ?? []).some(
             (name: string) =>
@@ -238,7 +253,8 @@ describe('Masonfile', () => {
       'Version 4.53.0-d (26103001)',
       'CocoaPods',
       'Archive',
-      'Save the archive'
+      'Save the archive',
+      'Stash the archive for signing'
     ])
     expect(await sections('develop', buildAndroid)).toEqual([
       ...prepared,
@@ -435,7 +451,10 @@ describe('Masonfile', () => {
 
   it('stamps the iOS version with agvtool and archives', async () => {
     const { calls, ctx } = recordStage('yolo')
-    await buildIos(ctx)
+    expect(await buildIos(ctx)).toEqual({
+      version: '4.53.0-yolo',
+      build: '26103001'
+    })
     expect(calls.filter(([kind]) => kind === 'exec').slice(-2)).toEqual([
       [
         'exec',
@@ -465,11 +484,72 @@ describe('Masonfile', () => {
       )
     ).toEqual(['sh', 'npm run prepare.ios', { color: false }])
     expect(sh.at(-1)).toMatch(/^xcodebuild archive /)
-    expect(calls.at(-1)).toEqual([
-      'save',
-      'ios-archive',
-      'build/edge.xcarchive/**'
+    // The archive is kept, and stashed with the entitlements for signing.
+    expect(calls.slice(-5)).toEqual([
+      ['section', 'Save the archive'],
+      ['save', 'ios-archive', 'build/edge.xcarchive/**'],
+      ['section', 'Stash the archive for signing'],
+      [
+        'stash',
+        'ios-build',
+        ['build/edge.xcarchive/**', 'ios/edge/edge.entitlements']
+      ],
+      // Handed to the sign stage, which reserves no number of its own.
+      ['getBuildNumber', 'co.edgesecure.app']
     ])
+  })
+
+  it('signs the stashed archive for the App Store, and only master uploads it to TestFlight', async () => {
+    for (const branch of ['master', 'develop', 'feature/x']) {
+      const { calls, ctx } = recordStage(branch)
+      ctx.run.commit = '0123456789abcdef'
+      // Like Mason, a stage without buildNumbers has no build number.
+      ctx.getBuildNumber = (key: string) => {
+        throw new Error(`Stage build/ios/sign has no build number for ${key}`)
+      }
+      ctx.apple = {
+        resign: async (...args: unknown[]) => {
+          calls.push(['resign', ...args])
+          return { ipa: 'build/edge-appstore.ipa', bundles: [] }
+        },
+        testflight: async (...args: unknown[]) => {
+          calls.push(['testflight', ...args])
+          return { buildId: 'b', version: '4.53.0', buildNumber: '26103001' }
+        }
+      }
+      const out = await signIos(ctx)
+      const upload = branch === 'master'
+      expect(uploadsToTestflight(branch)).toBe(upload)
+      expect(calls.filter(([kind]) => kind !== 'section')).toEqual([
+        ['unstash', 'ios-build'],
+        ['output', 'build/ios/build'],
+        [
+          'resign',
+          {
+            path: 'build/edge.xcarchive',
+            output: 'build/edge-appstore.ipa',
+            entitlements: { 'co.edgesecure.app': 'ios/edge/edge.entitlements' }
+          }
+        ],
+        ['save', 'ios-appstore-ipa', 'build/edge-appstore.ipa'],
+        ...(upload
+          ? [
+              [
+                'testflight',
+                {
+                  path: 'build/edge-appstore.ipa',
+                  whatToTest: 'master 4.53.0-d (26103001), 012345678'
+                }
+              ]
+            ]
+          : [])
+      ])
+      expect(out).toEqual(
+        upload
+          ? { version: '4.53.0-d', testflight: '26103001' }
+          : { version: '4.53.0-d' }
+      )
+    }
   })
 
   it('refuses a build.gradle missing its version name or code', async () => {
