@@ -107,6 +107,10 @@ const SIGNING_SECRETS = [
 ]
 /** The Android build-tools whose apksigner signs the APKs. */
 const BUILD_TOOLS = '36.1.0'
+/** The stash the iOS build leaves its unsigned archive and entitlements in. */
+const UNSIGNED_IOS = 'ios-build'
+const IOS_ARCHIVE = 'build/edge.xcarchive'
+const IOS_ENTITLEMENTS = 'ios/edge/edge.entitlements'
 /** The stash the Android build leaves its unsigned-for-release APKs in. */
 const UNSIGNED_APKS = 'android-apks'
 const APK_DIR = 'android/app/build/outputs/apk/release'
@@ -157,16 +161,31 @@ export function setup(m: Setup) {
   m.parallel(
     'build',
     {
-      ios: {
-        on: MAC,
-        tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
-        configs,
-        secrets: IOS_SECRETS,
-        env,
-        ...limits,
-        buildNumbers: [APP],
-        run: buildIos
-      },
+      // Archived unsigned, then signed for the App Store with the master's
+      // distribution certificate and profile; master's go to TestFlight.
+      ios: [
+        {
+          name: 'build',
+          on: MAC,
+          tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
+          configs,
+          secrets: IOS_SECRETS,
+          env,
+          ...limits,
+          buildNumbers: [APP],
+          run: buildIos
+        },
+        {
+          name: 'sign',
+          on: MAC,
+          // Only the stashed archive: no repository on the signing Mac.
+          checkout: false,
+          apple: { distribution: 'appStore', app: APP },
+          timeout: '2h',
+          activityTimeout: '30m',
+          run: signIos
+        }
+      ],
       // Built on a pool machine, then signed on the local network.
       android: [
         {
@@ -318,7 +337,7 @@ export async function writeSecrets(
 
 export async function buildIos(ctx: Stage) {
   await prepare(ctx, IOS_SECRETS)
-  await stampVersion(
+  const version = await stampVersion(
     ctx,
     async (version, build) => await setIosVersion(ctx, version, build)
   )
@@ -345,9 +364,58 @@ export async function buildIos(ctx: Stage) {
   )
   await ctx.log.section(
     'Save the archive',
-    async () =>
-      await ctx.artifacts.save('ios-archive', 'build/edge.xcarchive/**')
+    async () => await ctx.artifacts.save('ios-archive', `${IOS_ARCHIVE}/**`)
   )
+  await ctx.log.section(
+    'Stash the archive for signing',
+    async () =>
+      await ctx.stash(UNSIGNED_IOS, [`${IOS_ARCHIVE}/**`, IOS_ENTITLEMENTS])
+  )
+  // The sign stage reserves no number of its own, so it names the build by this.
+  return { version, build: ctx.getBuildNumber(APP) }
+}
+
+/**
+ * Signs the stashed archive for the App Store with the stage's distribution
+ * certificate and profile, keeps the IPA, and on master uploads it to
+ * TestFlight. The unsigned archive carries no entitlements, so the
+ * project's are given; the profile decides aps-environment.
+ */
+export async function signIos(ctx: Stage) {
+  await ctx.log.section(
+    'Unstash the archive',
+    async () => await ctx.unstash(UNSIGNED_IOS)
+  )
+  const { version, build } = await ctx.output<{
+    version: string
+    build: string
+  }>('build/ios/build')
+  const { ipa } = await ctx.apple.resign({
+    path: IOS_ARCHIVE,
+    output: 'build/edge-appstore.ipa',
+    entitlements: { [APP]: IOS_ENTITLEMENTS }
+  })
+  await ctx.log.section(
+    'Save the IPA',
+    async () => await ctx.artifacts.save('ios-appstore-ipa', ipa)
+  )
+  if (!uploadsToTestflight(ctx.run.branch)) return { version }
+  const uploaded = await ctx.log.section(
+    'Upload to TestFlight',
+    async () =>
+      await ctx.apple.testflight({
+        path: ipa,
+        whatToTest: `${
+          ctx.run.branch
+        } ${version} (${build}), ${ctx.run.commit.slice(0, 9)}`
+      })
+  )
+  return { version, testflight: uploaded.buildNumber }
+}
+
+/** Only master's builds go to TestFlight. */
+export function uploadsToTestflight(branch: string): boolean {
+  return branch === 'master'
 }
 
 /**
