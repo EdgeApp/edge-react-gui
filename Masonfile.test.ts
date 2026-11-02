@@ -558,6 +558,7 @@ describe('Masonfile', () => {
                 'testflight',
                 {
                   path: 'build/edge-appstore.ipa',
+                  usesNonExemptEncryption: false,
                   whatToTest: 'master 4.53.0-d (26103001), 012345678'
                 }
               ]
