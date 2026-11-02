@@ -40,11 +40,20 @@ const makeWallet = (
     },
     id: pluginId,
     publicWalletInfo: { id: pluginId, type: `wallet:${pluginId}`, keys },
-    streamTransactions: async function* () {
-      try {
-        yield transactions
-      } finally {
-        onStreamClosed?.()
+    // Like core's stream on React Native 0.79, whose Hermes lacks
+    // Symbol.asyncIterator, this only works through next() and return():
+    streamTransactions: () => {
+      let isDone = false
+      return {
+        next: async () => {
+          if (isDone) return { done: true, value: undefined }
+          isDone = true
+          return { done: false, value: transactions }
+        },
+        return: async () => {
+          onStreamClosed?.()
+          return { done: true, value: undefined }
+        }
       }
     }
   } as unknown as EdgeCurrencyWallet

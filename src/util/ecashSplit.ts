@@ -87,14 +87,21 @@ async function getSweepStatus(
     tokenId: null,
     searchString: txid
   })
-  // Leaving the loop early closes the stream over the core bridge:
-  for await (const transactions of stream) {
-    const sweep = transactions.find(transaction => transaction.txid === txid)
-    if (sweep != null) {
-      return sweep.confirmations === 'confirmed' ? 'settled' : 'unconfirmed'
+  // React Native 0.79's Hermes lacks Symbol.asyncIterator, so core's stream
+  // only works through next() and return() there, not `for await`:
+  try {
+    while (true) {
+      const result = await stream.next()
+      if (result.done === true) return 'unconfirmed'
+      const sweep = result.value.find(transaction => transaction.txid === txid)
+      if (sweep != null) {
+        return sweep.confirmations === 'confirmed' ? 'settled' : 'unconfirmed'
+      }
     }
+  } finally {
+    // Closes the stream over the core bridge:
+    await stream.return?.()
   }
-  return 'unconfirmed'
 }
 
 async function loadProtectionFile(
