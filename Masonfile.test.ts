@@ -23,6 +23,11 @@ import {
   signAndroid,
   signIos,
   appFor,
+  MAESTRO_BRANCHES,
+  buildIosMaestro,
+  buildAndroidMaestro,
+  signAndroidMaestro,
+  setMaestroFlag,
   appStoreVersion,
   uploadIos,
   uploadsToTestflight,
@@ -637,6 +642,163 @@ describe('Masonfile', () => {
           path: 'build/edge-appstore.ipa',
           usesNonExemptEncryption: false,
           whatToTest: 'master 4.53.0-d (26103001), 012345678'
+        }
+      ]
+    ])
+  })
+
+  it('builds Maestro variants only on the Jenkinsfile’s Maestro branches', () => {
+    const mac = { type: 'macos-arm64', os: 'macos', arch: 'arm64' }
+    const linux = { type: 'linux-x86', os: 'linux', arch: 'x64' }
+    for (const branch of [
+      'develop',
+      'staging',
+      'master',
+      'beta',
+      'testMaestro',
+      'yolo',
+      'feature/x'
+    ]) {
+      const { calls, m } = recordSetup(branch)
+      setup(m)
+      const stages = calls[4][2] as any
+      const maestro = MAESTRO_BRANCHES.includes(branch)
+      expect(Object.keys(stages)).toEqual(
+        maestro
+          ? ['ios', 'android', 'ios-maestro', 'android-maestro']
+          : ['ios', 'android']
+      )
+      if (!maestro) continue
+      const app = appFor(branch)
+      expect(stages['ios-maestro']).toMatchObject({
+        on: mac,
+        secrets: expect.arrayContaining(['config.json']),
+        buildNumbers: [app],
+        publishes: [app],
+        run: buildIosMaestro
+      })
+      const [build, sign] = stages['android-maestro']
+      expect(build).toMatchObject({
+        name: 'build',
+        on: [linux, mac],
+        buildNumbers: [app],
+        run: buildAndroidMaestro
+      })
+      expect(sign).toMatchObject({
+        name: 'sign',
+        on: { labels: ['android-signing'] },
+        checkout: false,
+        publishes: [app],
+        run: signAndroidMaestro
+      })
+    }
+  })
+
+  it('sets the Maestro flag in config.json and keeps the rest', async () => {
+    const { root } = recordStage('develop')
+    writeFileSync(
+      join(root, 'config.json'),
+      '{"A":1,"ENABLE_MAESTRO_BUILD":false}'
+    )
+    await setMaestroFlag(root)
+    expect(JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))).toEqual(
+      {
+        A: 1,
+        ENABLE_MAESTRO_BUILD: true
+      }
+    )
+  })
+
+  it('builds the iOS Maestro variant for the iPhone Simulator and publishes the zipped app', async () => {
+    const { calls, ctx, root } = recordStage('develop')
+    writeFileSync(join(root, 'config.json'), '{"A":1}')
+    expect(await buildIosMaestro(ctx)).toEqual({ version: '4.53.0-d' })
+    expect(JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))).toEqual(
+      {
+        A: 1,
+        ENABLE_MAESTRO_BUILD: true
+      }
+    )
+    expect(commands(calls).slice(-2)).toEqual([
+      'npm run prepare.ios',
+      'xcodebuild build -workspace ios/edge.xcworkspace -scheme edge -sdk iphonesimulator -configuration Release -derivedDataPath build/derivedData'
+    ])
+    expect(calls.filter(([kind]) => kind === 'exec').at(-1)).toEqual([
+      'exec',
+      'ditto',
+      [
+        '-c',
+        '-k',
+        '--keepParent',
+        'build/derivedData/Build/Products/Release-iphonesimulator/Edge.app',
+        'build/edge-maestro.zip'
+      ]
+    ])
+    expect(calls.filter(([kind]) => kind === 'publish')).toEqual([
+      [
+        'publish',
+        {
+          app: 'app.edge.develop',
+          platform: 'ios',
+          variant: 'maestro',
+          path: 'build/edge-maestro.zip',
+          changelog: 'develop 4.53.0-d'
+        }
+      ]
+    ])
+  })
+
+  it('builds the Android Maestro APK with the flag and stashes it for signing', async () => {
+    const { calls, ctx, root } = recordStage('master')
+    writeFileSync(join(root, 'config.json'), '{}')
+    expect(await buildAndroidMaestro(ctx)).toEqual({ version: '4.53.0' })
+    expect(
+      JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))
+        .ENABLE_MAESTRO_BUILD
+    ).toBe(true)
+    // No split APKs: a Maestro build is the plain release APK.
+    expect(commands(calls).at(-1)).toBe('./gradlew assembleRelease')
+    expect(calls.filter(([kind]) => kind === 'stash')).toEqual([
+      [
+        'stash',
+        'android-maestro-apk',
+        ['android/app/build/outputs/apk/release/app-release.apk']
+      ]
+    ])
+  })
+
+  it('signs the Android Maestro APK with the branch’s keystore and publishes it as the maestro variant', async () => {
+    const { calls, ctx, root } = recordStage('beta')
+    mkdirSync(join(root, 'secrets'))
+    writeFileSync(
+      join(root, 'secrets', 'deploy-config.json'),
+      JSON.stringify({
+        edge: {
+          androidKeyStore: 'edge-release-keystore.jks',
+          androidKeyStoreAlias: 'edge',
+          androidKeyStorePassword: 'release-pass',
+          android: { beta: { androidKeyStore: 'edge-beta-keystore.jks' } }
+        }
+      })
+    )
+    await signAndroidMaestro(ctx)
+    expect(calls[1]).toEqual(['unstash', 'android-maestro-apk'])
+    expect(calls.filter(([kind]) => kind === 'output')).toEqual([
+      ['output', 'build/android-maestro/build']
+    ])
+    expect(calls.filter(([kind]) => kind === 'secretFile')).toContainEqual([
+      'secretFile',
+      'edge-beta-keystore.jks'
+    ])
+    expect(calls.filter(([kind]) => kind === 'publish')).toEqual([
+      [
+        'publish',
+        {
+          app: 'app.edge.beta',
+          platform: 'android',
+          variant: 'maestro',
+          path: 'signed/app-release.apk',
+          changelog: 'beta 4.53.0-d'
         }
       ]
     ])
