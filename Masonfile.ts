@@ -142,97 +142,110 @@ export function setup(m: Setup) {
     block: m.branch === 'master' ? 3 : 1
   })
 
-  // `npm run prepare` makes the config and API signer it needs without
-  // secrets, so the tests run on any free machine.
-  m.stage('test', {
-    on: [LINUX, MAC],
-    tools: { node: '22' },
-    timeout: '1h',
-    activityTimeout: '30m',
-    run: runTests
-  })
-
-  const configs = configsFor(m.branch)
-  // A cold pool machine installs, pods and archives within this; a hung step
-  // (a pod repo update, a Gradle daemon) stops printing long before.
-  const limits = { timeout: '3h', activityTimeout: '30m' } as const
-  const env = { SENTRY_DISABLE_AUTO_UPLOAD: 'true' }
-  // Each platform reports its own result, as the Jenkinsfile's parallel did.
-  m.parallel(
+  // As the Jenkinsfile's branches did: these build on every push, and any
+  // other branch on request. The master's rule (`*` automatic) is the ceiling.
+  m.workflow(
     'build',
     {
-      // Archived unsigned, then signed for the App Store with the master's
-      // distribution certificate and profile; master's go to TestFlight.
-      ios: [
-        {
-          name: 'build',
-          on: MAC,
-          tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
-          configs,
-          secrets: IOS_SECRETS,
-          env,
-          ...limits,
-          buildNumbers: [APP],
-          run: buildIos
-        },
-        {
-          name: 'sign',
-          on: MAC,
-          // Only the stashed archive: no repository on the signing Mac.
-          checkout: false,
-          apple: { distribution: 'appStore', app: APP },
-          timeout: '2h',
-          activityTimeout: '30m',
-          run: signIos
-        }
-      ],
-      // Built on a pool machine, then signed on the local network.
-      android: [
-        {
-          name: 'build',
-          // Gradle and the Android SDK run on either; Linux is cheaper.
-          on: [LINUX, MAC],
-          tools: {
-            node: '22',
-            java: '17',
-            // Library modules still compile against 35.
-            android: [
-              'platforms;android-36',
-              'platforms;android-35',
-              `build-tools;${BUILD_TOOLS}`,
-              'build-tools;35.0.0',
-              'ndk;27.1.12297006',
-              'cmake;3.22.1'
-            ],
-            androidLicenses: 'accept'
-          },
-          configs,
-          secrets: ANDROID_SECRETS,
-          env,
-          ...limits,
-          buildNumbers: [APP],
-          run: buildAndroid
-        },
-        {
-          name: 'sign',
-          on: ANDROID_SIGNER,
-          // Only the stashed APKs: no repository on the signing node.
-          checkout: false,
-          tools: {
-            java: '17',
-            android: [`build-tools;${BUILD_TOOLS}`],
-            androidLicenses: 'accept'
-          },
-          configs,
-          secrets: SIGNING_SECRETS,
-          timeout: '30m',
-          activityTimeout: '10m',
-          publishes: [APP],
-          run: signAndroid
-        }
+      triggers: [
+        { push: true, branches: ['master', 'develop', 'staging', 'beta'] },
+        { request: true }
       ]
     },
-    { failFast: false }
+    w => {
+      // `npm run prepare` makes the config and API signer it needs without
+      // secrets, so the tests run on any free machine.
+      w.stage('test', {
+        on: [LINUX, MAC],
+        tools: { node: '22' },
+        timeout: '1h',
+        activityTimeout: '30m',
+        run: runTests
+      })
+
+      const configs = configsFor(m.branch)
+      // A cold pool machine installs, pods and archives within this; a hung step
+      // (a pod repo update, a Gradle daemon) stops printing long before.
+      const limits = { timeout: '3h', activityTimeout: '30m' } as const
+      const env = { SENTRY_DISABLE_AUTO_UPLOAD: 'true' }
+      // Each platform reports its own result, as the Jenkinsfile's parallel did.
+      w.parallel(
+        'build',
+        {
+          // Archived unsigned, then signed for the App Store with the master's
+          // distribution certificate and profile; master's go to TestFlight.
+          ios: [
+            {
+              name: 'build',
+              on: MAC,
+              tools: { node: '22', xcode: '>=26', cocoapods: '1.16.2' },
+              configs,
+              secrets: IOS_SECRETS,
+              env,
+              ...limits,
+              buildNumbers: [APP],
+              run: buildIos
+            },
+            {
+              name: 'sign',
+              on: MAC,
+              // Only the stashed archive: no repository on the signing Mac.
+              checkout: false,
+              apple: { distribution: 'appStore', app: APP },
+              timeout: '2h',
+              activityTimeout: '30m',
+              run: signIos
+            }
+          ],
+          // Built on a pool machine, then signed on the local network.
+          android: [
+            {
+              name: 'build',
+              // Gradle and the Android SDK run on either; Linux is cheaper.
+              on: [LINUX, MAC],
+              tools: {
+                node: '22',
+                java: '17',
+                // Library modules still compile against 35.
+                android: [
+                  'platforms;android-36',
+                  'platforms;android-35',
+                  `build-tools;${BUILD_TOOLS}`,
+                  'build-tools;35.0.0',
+                  'ndk;27.1.12297006',
+                  'cmake;3.22.1'
+                ],
+                androidLicenses: 'accept'
+              },
+              configs,
+              secrets: ANDROID_SECRETS,
+              env,
+              ...limits,
+              buildNumbers: [APP],
+              run: buildAndroid
+            },
+            {
+              name: 'sign',
+              on: ANDROID_SIGNER,
+              // Only the stashed APKs: no repository on the signing node.
+              checkout: false,
+              tools: {
+                java: '17',
+                android: [`build-tools;${BUILD_TOOLS}`],
+                androidLicenses: 'accept'
+              },
+              configs,
+              secrets: SIGNING_SECRETS,
+              timeout: '30m',
+              activityTimeout: '10m',
+              publishes: [APP],
+              run: signAndroid
+            }
+          ]
+        },
+        { failFast: false }
+      )
+    }
   )
 }
 
