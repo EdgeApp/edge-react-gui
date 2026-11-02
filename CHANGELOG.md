@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Scam warning before sending to a FIO handle the account has never interacted with
 - changed: Replace react-native-zcash with zcash-native
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Missing wallet options menu icons on Android
