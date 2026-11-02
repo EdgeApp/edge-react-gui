@@ -65,6 +65,13 @@ import { join } from 'node:path'
 
 const APP = 'co.edgesecure.app'
 
+/** The app ID a branch builds: develop and beta have their own, as their deploy patches set. */
+export function appFor(branch: string): string {
+  if (branch === 'develop') return 'app.edge.develop'
+  if (branch === 'beta') return 'app.edge.beta'
+  return APP
+}
+
 // The app bundles the Firebase configs as resources, which must be readable
 // on the device, so they are written 0644; the rest stay owner-only.
 const SHIPPED = ['GoogleService-Info.plist', 'google-services.json']
@@ -136,7 +143,8 @@ export function setup(m: Setup) {
   // Date and a counter (26102901); iOS and Android of one run share the
   // number. A master run takes three (26102901 to 26102903), leaving room
   // for the per-ABI APKs' version codes; other branches take one.
-  m.buildNumber(APP, {
+  const app = appFor(m.branch)
+  m.buildNumber(app, {
     format: 'YYMMDDCC',
     timeZone: 'America/Los_Angeles',
     block: m.branch === 'master' ? 3 : 1
@@ -172,8 +180,8 @@ export function setup(m: Setup) {
       w.parallel(
         'build',
         {
-          // Archived unsigned, then signed for the App Store with the master's
-          // distribution certificate and profile; master's go to TestFlight.
+          // Archived unsigned, then signed ad hoc and published for testers;
+          // master's is also signed for the App Store and sent to TestFlight.
           ios: [
             {
               name: 'build',
@@ -183,7 +191,7 @@ export function setup(m: Setup) {
               secrets: IOS_SECRETS,
               env,
               ...limits,
-              buildNumbers: [APP],
+              buildNumbers: [app],
               run: buildIos
             },
             {
@@ -191,11 +199,25 @@ export function setup(m: Setup) {
               on: MAC,
               // Only the stashed archive: no repository on the signing Mac.
               checkout: false,
-              apple: { distribution: 'appStore', app: APP },
+              apple: { distribution: 'adHoc', app },
               timeout: '2h',
               activityTimeout: '30m',
+              publishes: [app],
               run: signIos
-            }
+            },
+            ...(uploadsToTestflight(m.branch)
+              ? [
+                  {
+                    name: 'testflight',
+                    on: MAC,
+                    checkout: false,
+                    apple: { distribution: 'appStore', app },
+                    timeout: '2h',
+                    activityTimeout: '30m',
+                    run: uploadIos
+                  } as const
+                ]
+              : [])
           ],
           // Built on a pool machine, then signed on the local network.
           android: [
@@ -221,7 +243,7 @@ export function setup(m: Setup) {
               secrets: ANDROID_SECRETS,
               env,
               ...limits,
-              buildNumbers: [APP],
+              buildNumbers: [app],
               run: buildAndroid
             },
             {
@@ -238,7 +260,7 @@ export function setup(m: Setup) {
               secrets: SIGNING_SECRETS,
               timeout: '30m',
               activityTimeout: '10m',
-              publishes: [APP],
+              publishes: [app],
               run: signAndroid
             }
           ]
@@ -288,7 +310,7 @@ async function stampVersion(
   stamp: (version: string, build: string) => Promise<void>
 ): Promise<string> {
   const version = await versionOf(ctx)
-  const build = ctx.getBuildNumber(APP)
+  const build = ctx.getBuildNumber(appFor(ctx.run.branch))
   await ctx.log.section(
     `Version ${version} (${build})`,
     async () => await stamp(version, build)
@@ -385,16 +407,47 @@ export async function buildIos(ctx: Stage) {
       await ctx.stash(UNSIGNED_IOS, [`${IOS_ARCHIVE}/**`, IOS_ENTITLEMENTS])
   )
   // The sign stage reserves no number of its own, so it names the build by this.
-  return { version, build: ctx.getBuildNumber(APP) }
+  return { version, build: ctx.getBuildNumber(appFor(ctx.run.branch)) }
 }
 
 /**
- * Signs the stashed archive for the App Store with the stage's distribution
- * certificate and profile, keeps the IPA, and on master uploads it to
- * TestFlight. The unsigned archive carries no entitlements, so the
+ * Signs the stashed archive ad hoc with the stage's distribution certificate
+ * and ad hoc profile, so the devices registered on the host can install it,
+ * and publishes it. The unsigned archive carries no entitlements, so the
  * project's are given; the profile decides aps-environment.
  */
 export async function signIos(ctx: Stage) {
+  const app = appFor(ctx.run.branch)
+  await ctx.log.section(
+    'Unstash the archive',
+    async () => await ctx.unstash(UNSIGNED_IOS)
+  )
+  const { version } = await ctx.output<{ version: string }>('build/ios/build')
+  const { ipa } = await ctx.apple.resign({
+    path: IOS_ARCHIVE,
+    output: 'build/edge-adhoc.ipa',
+    entitlements: { [app]: IOS_ENTITLEMENTS }
+  })
+  await ctx.log.section(
+    'Publish',
+    async () =>
+      await ctx.publish({
+        app,
+        platform: 'ios',
+        path: ipa,
+        changelog: `${ctx.run.branch} ${version}`
+      })
+  )
+  return { version }
+}
+
+/**
+ * Signs the stashed archive for the App Store and uploads it to TestFlight,
+ * on the branches that upload (master). App Store Connect takes only a
+ * numeric version, without the branch's suffix.
+ */
+export async function uploadIos(ctx: Stage) {
+  const app = appFor(ctx.run.branch)
   await ctx.log.section(
     'Unstash the archive',
     async () => await ctx.unstash(UNSIGNED_IOS)
@@ -406,15 +459,13 @@ export async function signIos(ctx: Stage) {
   const { ipa } = await ctx.apple.resign({
     path: IOS_ARCHIVE,
     output: 'build/edge-appstore.ipa',
-    entitlements: { [APP]: IOS_ENTITLEMENTS },
-    // App Store Connect takes only a numeric version, without the branch's suffix.
+    entitlements: { [app]: IOS_ENTITLEMENTS },
     version: appStoreVersion(version)
   })
   await ctx.log.section(
     'Save the IPA',
     async () => await ctx.artifacts.save('ios-appstore-ipa', ipa)
   )
-  if (!uploadsToTestflight(ctx.run.branch)) return { version }
   const uploaded = await ctx.log.section(
     'Upload to TestFlight',
     async () =>
@@ -566,7 +617,7 @@ export async function signAndroid(ctx: Stage) {
   await ctx.log.section('Publish', async () => {
     for (const apk of apks)
       await ctx.publish({
-        app: APP,
+        app: appFor(ctx.run.branch),
         platform: 'android',
         ...(apk.variant == null ? {} : { variant: apk.variant }),
         path: `signed/${apk.file}`,

@@ -22,7 +22,9 @@ import {
   setup,
   signAndroid,
   signIos,
+  appFor,
   appStoreVersion,
+  uploadIos,
   uploadsToTestflight,
   versionSuffix,
   writeSecrets
@@ -148,6 +150,8 @@ describe('Masonfile', () => {
           ]
         }
       ])
+      // Each branch numbers its own app ID's builds.
+      expect(calls[1][1]).toBe(appFor(branch))
       expect(calls[1][2]).toEqual({
         format: 'YYMMDDCC',
         timeZone: 'America/Los_Angeles',
@@ -171,7 +175,8 @@ describe('Masonfile', () => {
       expect(options).toEqual({ failFast: false })
       const configs = configsFor(branch)
       // iOS archives unsigned on a pool Mac, then signs for the App Store.
-      const [ios, iosSign] = stages.ios
+      const app = appFor(branch)
+      const [ios, iosSign, iosUpload] = stages.ios
       expect(ios.name).toBe('build')
       expect(ios.tools).toEqual({
         node: '22',
@@ -184,11 +189,24 @@ describe('Masonfile', () => {
         name: 'sign',
         on: mac,
         checkout: false,
-        apple: { distribution: 'appStore', app: 'co.edgesecure.app' },
+        apple: { distribution: 'adHoc', app },
         timeout: '2h',
         activityTimeout: '30m',
+        publishes: [app],
         run: signIos
       })
+      // Only master's build is signed for the App Store and sent to TestFlight.
+      expect(stages.ios.length).toBe(uploadsToTestflight(branch) ? 3 : 2)
+      if (uploadsToTestflight(branch))
+        expect(iosUpload).toEqual({
+          name: 'testflight',
+          on: mac,
+          checkout: false,
+          apple: { distribution: 'appStore', app },
+          timeout: '2h',
+          activityTimeout: '30m',
+          run: uploadIos
+        })
       // Android builds on a pool machine, then signs on the signing node.
       const [build, sign] = stages.android
       expect(build.name).toBe('build')
@@ -201,7 +219,7 @@ describe('Masonfile', () => {
       expect(ios.configs).toEqual(configs)
       expect(ios.secrets).toContain('GoogleService-Info.plist')
       expect(ios.publishes).toBeUndefined()
-      expect(ios.buildNumbers).toEqual(['co.edgesecure.app'])
+      expect(ios.buildNumbers).toEqual([app])
       expect(build.tools.androidLicenses).toBe('accept')
       expect(build.tools.android).toEqual(
         expect.arrayContaining(['platforms;android-35', 'build-tools;35.0.0'])
@@ -209,7 +227,7 @@ describe('Masonfile', () => {
       expect(build.configs).toEqual(configs)
       expect(build.secrets).toContain('google-services.json')
       expect(build.publishes).toBeUndefined()
-      expect(build.buildNumbers).toEqual(['co.edgesecure.app'])
+      expect(build.buildNumbers).toEqual([app])
       expect(build.run).toBe(buildAndroid)
       // Only the sign stage, on the signing node and with no checkout, gets
       // the keystores and deploy-config.json; no other stage declares them.
@@ -218,7 +236,7 @@ describe('Masonfile', () => {
         on: { labels: ['android-signing'] },
         checkout: false,
         configs,
-        publishes: ['co.edgesecure.app'],
+        publishes: [app],
         run: signAndroid
       })
       expect(sign.secrets).toEqual([
@@ -408,7 +426,7 @@ describe('Masonfile', () => {
       [
         'publish',
         {
-          app: 'co.edgesecure.app',
+          app: 'app.edge.develop',
           platform: 'android',
           path: 'signed/app-release.apk',
           changelog: 'develop 4.53.0-d'
@@ -526,10 +544,20 @@ describe('Masonfile', () => {
     expect(appStoreVersion('4.53.0')).toBe('4.53.0')
   })
 
-  it('signs the stashed archive for the App Store, and only master uploads it to TestFlight', async () => {
-    for (const branch of ['master', 'develop', 'feature/x']) {
+  it('builds each branch under its app ID: develop and beta their own', () => {
+    expect(appFor('develop')).toBe('app.edge.develop')
+    expect(appFor('beta')).toBe('app.edge.beta')
+    for (const branch of ['master', 'staging', 'feature/x'])
+      expect(appFor(branch)).toBe('co.edgesecure.app')
+  })
+
+  it('signs the stashed archive ad hoc and publishes it under the branch’s app ID', async () => {
+    for (const [branch, app] of [
+      ['develop', 'app.edge.develop'],
+      ['beta', 'app.edge.beta'],
+      ['master', 'co.edgesecure.app']
+    ]) {
       const { calls, ctx } = recordStage(branch)
-      ctx.run.commit = '0123456789abcdef'
       // Like Mason, a stage without buildNumbers has no build number.
       ctx.getBuildNumber = (key: string) => {
         throw new Error(`Stage build/ios/sign has no build number for ${key}`)
@@ -537,16 +565,10 @@ describe('Masonfile', () => {
       ctx.apple = {
         resign: async (...args: unknown[]) => {
           calls.push(['resign', ...args])
-          return { ipa: 'build/edge-appstore.ipa', bundles: [] }
-        },
-        testflight: async (...args: unknown[]) => {
-          calls.push(['testflight', ...args])
-          return { buildId: 'b', version: '4.53.0', buildNumber: '26103001' }
+          return { ipa: 'build/edge-adhoc.ipa', bundles: [] }
         }
       }
-      const out = await signIos(ctx)
-      const upload = branch === 'master'
-      expect(uploadsToTestflight(branch)).toBe(upload)
+      expect(await signIos(ctx)).toEqual({ version: '4.53.0-d' })
       expect(calls.filter(([kind]) => kind !== 'section')).toEqual([
         ['unstash', 'ios-build'],
         ['output', 'build/ios/build'],
@@ -554,31 +576,70 @@ describe('Masonfile', () => {
           'resign',
           {
             path: 'build/edge.xcarchive',
-            output: 'build/edge-appstore.ipa',
-            entitlements: { 'co.edgesecure.app': 'ios/edge/edge.entitlements' },
-            version: '4.53.0'
+            output: 'build/edge-adhoc.ipa',
+            entitlements: { [app]: 'ios/edge/edge.entitlements' }
           }
         ],
-        ['save', 'ios-appstore-ipa', 'build/edge-appstore.ipa'],
-        ...(upload
-          ? [
-              [
-                'testflight',
-                {
-                  path: 'build/edge-appstore.ipa',
-                  usesNonExemptEncryption: false,
-                  whatToTest: 'master 4.53.0-d (26103001), 012345678'
-                }
-              ]
-            ]
-          : [])
+        [
+          'publish',
+          {
+            app,
+            platform: 'ios',
+            path: 'build/edge-adhoc.ipa',
+            changelog: `${branch} 4.53.0-d`
+          }
+        ]
       ])
-      expect(out).toEqual(
-        upload
-          ? { version: '4.53.0-d', testflight: '26103001' }
-          : { version: '4.53.0-d' }
+    }
+  })
+
+  it('signs master’s archive for the App Store and uploads it to TestFlight', async () => {
+    expect(uploadsToTestflight('master')).toBe(true)
+    for (const branch of ['develop', 'beta', 'staging', 'feature/x'])
+      expect(uploadsToTestflight(branch)).toBe(false)
+    const { calls, ctx } = recordStage('master')
+    ctx.run.commit = '0123456789abcdef'
+    ctx.getBuildNumber = (key: string) => {
+      throw new Error(
+        `Stage build/ios/testflight has no build number for ${key}`
       )
     }
+    ctx.apple = {
+      resign: async (...args: unknown[]) => {
+        calls.push(['resign', ...args])
+        return { ipa: 'build/edge-appstore.ipa', bundles: [] }
+      },
+      testflight: async (...args: unknown[]) => {
+        calls.push(['testflight', ...args])
+        return { buildId: 'b', version: '4.53.0', buildNumber: '26103001' }
+      }
+    }
+    expect(await uploadIos(ctx)).toEqual({
+      version: '4.53.0-d',
+      testflight: '26103001'
+    })
+    expect(calls.filter(([kind]) => kind !== 'section')).toEqual([
+      ['unstash', 'ios-build'],
+      ['output', 'build/ios/build'],
+      [
+        'resign',
+        {
+          path: 'build/edge.xcarchive',
+          output: 'build/edge-appstore.ipa',
+          entitlements: { 'co.edgesecure.app': 'ios/edge/edge.entitlements' },
+          version: '4.53.0'
+        }
+      ],
+      ['save', 'ios-appstore-ipa', 'build/edge-appstore.ipa'],
+      [
+        'testflight',
+        {
+          path: 'build/edge-appstore.ipa',
+          usesNonExemptEncryption: false,
+          whatToTest: 'master 4.53.0-d (26103001), 012345678'
+        }
+      ]
+    ])
   })
 
   it('refuses a build.gradle missing its version name or code', async () => {
