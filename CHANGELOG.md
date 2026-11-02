@@ -39,6 +39,8 @@
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
 - fixed: Missing wallet options menu icons on Android
+- fixed: Total Balance counting tokens the user has disabled
+- fixed: Market details Swap defaulting to a disabled token as the source
 
 ## 4.52.1 (2026-10-23)
 
