@@ -86,7 +86,8 @@ const makeWallet = (
         }
       }
     },
-    balanceMap
+    balanceMap,
+    enabledTokenIds: ['unknown-token']
   } as unknown as EdgeCurrencyWallet
 }
 

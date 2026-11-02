@@ -1,7 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
-import { log10 } from 'biggystring'
+import { eq, log10 } from 'biggystring'
+import type { EdgeTokenId } from 'edge-core-js'
 
 import { selectDisplayDenom } from '../selectors/DenominationSelectors'
+import type { RootState } from '../types/reduxTypes'
 import { btcCurrencyInfo } from '../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../util/fake/fakeCurrencyConfig'
 import { ethCurrencyInfo } from '../util/fake/fakeEthInfo'
@@ -12,6 +14,7 @@ import {
   daysBetween,
   getNewArrayWithItem,
   getSupportedFiats,
+  getTotalFiatAmountFromExchangeRates,
   isValidInput,
   maxPrimaryCurrencyConversionDecimals,
   MILLISECONDS_PER_DAY,
@@ -22,6 +25,60 @@ import {
   truncateDecimals,
   zerosAfterDecimal
 } from '../util/utils'
+
+describe('getTotalFiatAmountFromExchangeRates', function () {
+  const tokenId = 'dc035d45d973e3ec169d2276ddab16f1e407384f'
+
+  /** One wallet holding 2 ETH at $100 and 3 tokens at $1. */
+  const makeState = (enabledTokenIds: string[]): RootState =>
+    ({
+      core: {
+        account: {
+          currencyWallets: {
+            walletId: {
+              id: 'walletId',
+              balanceMap: new Map<EdgeTokenId, string>([
+                [null, '2000000000000000000'],
+                [tokenId, '3000000']
+              ]),
+              currencyConfig: {
+                allTokens: {
+                  [tokenId]: {
+                    currencyCode: 'TOKEN',
+                    denominations: [{ name: 'TOKEN', multiplier: '1000000' }]
+                  }
+                }
+              },
+              currencyInfo: ethCurrencyInfo,
+              enabledTokenIds
+            }
+          }
+        }
+      },
+      exchangeRates: {
+        crypto: {
+          [ethCurrencyInfo.pluginId]: {
+            '': { 'iso:USD': { current: 100 } },
+            [tokenId]: { 'iso:USD': { current: 1 } }
+          }
+        },
+        fiat: {}
+      }
+    } as unknown as RootState)
+
+  test('counts an enabled token', function () {
+    const total = getTotalFiatAmountFromExchangeRates(
+      makeState([tokenId]),
+      'iso:USD'
+    )
+    expect(eq(total, '203')).toBe(true)
+  })
+
+  test('skips a disabled token that still has a balance', function () {
+    const total = getTotalFiatAmountFromExchangeRates(makeState([]), 'iso:USD')
+    expect(eq(total, '200')).toBe(true)
+  })
+})
 
 describe('isValidInput', function () {
   describe('when input is valid', function () {
