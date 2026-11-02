@@ -406,7 +406,9 @@ export async function signIos(ctx: Stage) {
   const { ipa } = await ctx.apple.resign({
     path: IOS_ARCHIVE,
     output: 'build/edge-appstore.ipa',
-    entitlements: { [APP]: IOS_ENTITLEMENTS }
+    entitlements: { [APP]: IOS_ENTITLEMENTS },
+    // App Store Connect takes only a numeric version, without the branch's suffix.
+    version: appStoreVersion(version)
   })
   await ctx.log.section(
     'Save the IPA',
@@ -426,6 +428,11 @@ export async function signIos(ctx: Stage) {
       })
   )
   return { version, testflight: uploaded.buildNumber }
+}
+
+/** The App Store's version of a branch's version: its numeric part, 4.53.0 of 4.53.0-d. */
+export function appStoreVersion(version: string): string {
+  return version.replace(/-.*$/, '')
 }
 
 /** Only master's builds go to TestFlight. */
