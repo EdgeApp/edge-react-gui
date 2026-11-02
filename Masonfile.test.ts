@@ -38,7 +38,12 @@ function recordSetup(branch: string): { calls: Call[]; m: any } {
     apiVersion: (...args: unknown[]) => calls.push(['apiVersion', ...args]),
     buildNumber: (...args: unknown[]) => calls.push(['buildNumber', ...args]),
     stage: (...args: unknown[]) => calls.push(['stage', ...args]),
-    parallel: (...args: unknown[]) => calls.push(['parallel', ...args])
+    parallel: (...args: unknown[]) => calls.push(['parallel', ...args]),
+    // The workflow's stages are recorded as if declared on `m`.
+    workflow: (name: string, options: unknown, declare: (w: any) => void) => {
+      calls.push(['workflow', name, options])
+      declare(m)
+    }
   }
   return { calls, m }
 }
@@ -124,8 +129,23 @@ describe('Masonfile', () => {
       expect(calls.map(call => call[0])).toEqual([
         'apiVersion',
         'buildNumber',
+        'workflow',
         'stage',
         'parallel'
+      ])
+      // Pushes to these branches build; any other branch on request.
+      expect(calls[2]).toEqual([
+        'workflow',
+        'build',
+        {
+          triggers: [
+            {
+              push: true,
+              branches: ['master', 'develop', 'staging', 'beta']
+            },
+            { request: true }
+          ]
+        }
       ])
       expect(calls[1][2]).toEqual({
         format: 'YYMMDDCC',
@@ -136,7 +156,7 @@ describe('Masonfile', () => {
       // The node type is what starts a pool machine; Linux is asked first.
       const linux = { type: 'linux-x86', os: 'linux', arch: 'x64' }
       const mac = { type: 'macos-arm64', os: 'macos', arch: 'arm64' }
-      const [, name, test] = calls[2] as [string, string, any]
+      const [, name, test] = calls[3] as [string, string, any]
       expect(name).toBe('test')
       expect(test.on).toEqual([linux, mac])
       expect(test.tools).toEqual({ node: '22' })
@@ -145,7 +165,7 @@ describe('Masonfile', () => {
       expect(test.secrets).toBeUndefined()
       expect(test.run).toBe(runTests)
 
-      const [, group, stages, options] = calls[3] as [string, string, any, any]
+      const [, group, stages, options] = calls[4] as [string, string, any, any]
       expect(group).toBe('build')
       expect(options).toEqual({ failFast: false })
       const configs = configsFor(branch)
