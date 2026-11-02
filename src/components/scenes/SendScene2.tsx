@@ -75,11 +75,14 @@ import {
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
   addToFioAddressCache,
+  addToFioSentAddresses,
   checkRecordSendFee,
   FIO_FEE_EXCEEDS_SUPPLIED_MAXIMUM,
   FIO_NO_BUNDLED_ERR_CODE,
   FioError,
-  recordSend
+  getAcceptedFioSends,
+  recordSend,
+  type TileFioRecipient
 } from '../../util/FioAddressUtils'
 import {
   detectHoudiniChains,
@@ -292,6 +295,13 @@ const SendComponent: React.FC<Props> = props => {
   const styles = getStyles(theme)
 
   const needsScrollToEnd = React.useRef<boolean>(false)
+  /**
+   * The FIO handle the address tile resolved for each spend target, kept out
+   * of `otherParams`, which the scene's caller can fill.
+   */
+  const tileFioRecipients = React.useRef(
+    new WeakMap<EdgeSpendTarget, TileFioRecipient>()
+  )
   const makeSpendCounter = React.useRef<number>(0)
   const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
   const isSendingRef = React.useRef<boolean>(false)
@@ -1000,6 +1010,7 @@ const SendComponent: React.FC<Props> = props => {
         addressEntryMethod,
         parsedUri,
         fioAddress,
+        fioPublicAddress,
         alias,
         resolvedName,
         crossChainNativeAmount,
@@ -1139,6 +1150,14 @@ const SendComponent: React.FC<Props> = props => {
           fioAddress,
           zanoAlias: alias,
           resolvedName
+        }
+        if (fioAddress != null && fioPublicAddress != null) {
+          tileFioRecipients.current.set(spendTarget, {
+            paidAddress: spendTarget.publicAddress,
+            send: { fioAddress, publicAddress: fioPublicAddress }
+          })
+        } else {
+          tileFioRecipients.current.delete(spendTarget)
         }
 
         // We can assume the spendTarget object came from the Component spendInfo so simply resetting the spendInfo
@@ -3342,6 +3361,17 @@ const SendComponent: React.FC<Props> = props => {
           playSendSound().catch((error: unknown) => {
             console.log(error) // Fail quietly
           })
+          // The quote pays the spend target, so a handle the user accepted in
+          // the address tile counts as sent to, the same as a plain send:
+          addToFioSentAddresses(
+            account,
+            getAcceptedFioSends(
+              spendInfo.spendTargets,
+              tileFioRecipients.current
+            )
+          ).catch((error: unknown) => {
+            console.log(error) // The swap went through either way
+          })
           // Delay navigation until gesture interactions finish to prevent
           // possible crashes, the same as the plain-send path below. The
           // slider stays latched either way, so the extra frame cannot let a
@@ -3528,6 +3558,12 @@ const SendComponent: React.FC<Props> = props => {
           }
         }
         await addToFioAddressCache(account, payeeFioAddresses)
+        await addToFioSentAddresses(
+          account,
+          getAcceptedFioSends(spendInfo.spendTargets, tileFioRecipients.current)
+        ).catch((error: unknown) => {
+          console.log(error) // The send went through either way
+        })
 
         broadcastedTx.metadata ??= {}
         if (

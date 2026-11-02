@@ -482,7 +482,6 @@ export default [
 
       'src/util/exchangeRates.ts',
 
-      'src/util/FioAddressUtils.ts',
       'src/util/getAccountUsername.ts',
       'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
