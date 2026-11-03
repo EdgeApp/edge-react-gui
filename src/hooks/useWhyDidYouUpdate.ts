@@ -6,25 +6,22 @@ export const useWhyDidYouUpdate = <T extends object>(
 ) => {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.
-  const previousProps = React.useRef({})
+  const previousProps = React.useRef<Record<string, unknown>>({})
   React.useEffect(() => {
+    const currentProps = props as Record<string, unknown>
     if (previousProps.current) {
       // Get all keys from previous and current props
       const allKeys = Object.keys({ ...previousProps.current, ...props })
       // Use this object to keep track of changed props
-      const changesObj = {}
+      const changesObj: Record<string, { from: unknown; to: unknown }> = {}
       // Iterate through keys
       allKeys.forEach(key => {
         // If previous is different from current
-        // @ts-expect-error
-        if (previousProps.current[key] !== props[key]) {
+        if (previousProps.current[key] !== currentProps[key]) {
           // Add to changesObj
-          // @ts-expect-error
           changesObj[key] = {
-            // @ts-expect-error
             from: previousProps.current[key],
-            // @ts-expect-error
-            to: props[key]
+            to: currentProps[key]
           }
         }
       })
@@ -34,6 +31,6 @@ export const useWhyDidYouUpdate = <T extends object>(
       }
     }
     // Finally update previousProps with current props for next hook call
-    previousProps.current = props
+    previousProps.current = currentProps
   })
 }

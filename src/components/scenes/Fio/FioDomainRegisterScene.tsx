@@ -197,10 +197,9 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   handleFioWalletChange = (walletId: string) => {
     this.setState({
-      // @ts-expect-error
-      selectedWallet: this.props.fioWallets.find(
-        fioWallet => fioWallet.id === walletId
-      )
+      selectedWallet:
+        this.props.fioWallets.find(fioWallet => fioWallet.id === walletId) ??
+        null
     })
   }
 

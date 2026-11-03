@@ -28,8 +28,8 @@ export const AutoLogout = () => {
     const appForegrounded = !stateRef.current.isAppForeground && isAppForeground
     // Check if time for logout has expired
     const timestamp = new Date()
-    // @ts-expect-error
-    const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
+    const differenceInSeconds =
+      (timestamp.getTime() - stateRef.current.timestamp.getTime()) / 1000
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met
     if (appForegrounded && settingsLoaded && timeExpired)

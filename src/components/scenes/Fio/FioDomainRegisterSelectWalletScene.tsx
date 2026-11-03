@@ -306,8 +306,6 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
               title={lstrings.create_wallet_account_select_wallet}
               body={paymentWalletBody}
               onPress={this.onWalletPress}
-              // @ts-expect-error
-              disabled={!activationCost || activationCost === 0}
             />
           </EdgeCard>
           {!loading && paymentWallet?.id && (

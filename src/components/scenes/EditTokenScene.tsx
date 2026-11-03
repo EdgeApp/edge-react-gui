@@ -90,14 +90,13 @@ function EditTokenSceneComponent(props: Props) {
     if (tokenId == null) return
     await Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
         bridge={bridge}
         title={lstrings.string_delete}
         message={lstrings.edittoken_delete_prompt}
         buttons={{
           ok: {
             label: lstrings.string_delete,
-            async onPress() {
+            onPress: async () => {
               await wallet.currencyConfig.removeCustomToken(tokenId)
               logActivity(
                 `Delete Custom Token: ${account.username} -- ${getWalletName(

@@ -66,14 +66,13 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
         bridge={bridge}
         title={lstrings.otp_modal_headline}
         message={lstrings.otp_modal_body}
         buttons={{
           ok: {
             label: lstrings.otp_disable,
-            async onPress() {
+            onPress: async () => {
               await account.disableOtp()
               logActivity(`2FA Disable: ${account.username}`)
               return true

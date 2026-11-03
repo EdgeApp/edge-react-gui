@@ -376,12 +376,11 @@ const approveBityQuote = async (
       throw new Error('Could not complete transaction. Code: 400')
     }
     if (signedTransactionResponse.status === 204) {
-      const bankDetailsReq = {
+      const bankDetailsReq: RequestInit = {
         method: 'GET',
         credentials: 'include'
       }
       const detailUrl = orderUrl + '/' + orderData.id
-      // @ts-expect-error
       const bankDetailRes = await fetch(detailUrl, bankDetailsReq)
       if (bankDetailRes.status === 200) {
         const bankDetailResJson = await bankDetailRes.json()

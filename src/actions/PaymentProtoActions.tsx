@@ -195,17 +195,14 @@ export const PAYMENT_PROTOCOL_MAP: MapObject<EdgeAsset> = {
  */
 async function fetchPaymentProtoJsonResponse(
   uri: string,
-  init: object
+  init: RequestInit
 ): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
-    // @ts-expect-error
     const typeHack: any = init.headers
     const headers = typeHack
-    // @ts-expect-error
     const body = init.body ? JSON.stringify(init.body) : ''
-    // @ts-expect-error
     const method = init.method
 
     // Parse a useful header string

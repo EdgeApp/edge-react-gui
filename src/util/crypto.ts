@@ -11,7 +11,7 @@ export const sha512HashAndSign = (
   // Prepare the signature with RSA and PSS padding
   const sig = new jsrsasign.KJUR.crypto.Signature({
     alg: 'SHA512withRSAandMGF1',
-    // @ts-expect-error
+    // @ts-expect-error jsrsasign's types leave out the prov option
     prov: 'cryptojs/jsrsa'
   })
 

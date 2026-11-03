@@ -91,7 +91,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
   }
 
   handleChange = (event: unknown, date?: Date) => {
-    // @ts-expect-error
+    // @ts-expect-error onChange types the date as optional
     this.setState({ date })
   }
 
