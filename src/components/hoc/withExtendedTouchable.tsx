@@ -72,7 +72,7 @@ export function withExtendedTouchable<
         if (typeof result?.then === 'function') {
           setIsAwaiting(true)
           result
-            .catch(e => {
+            .catch((e: unknown) => {
               showError(e)
             })
             .finally(() => {

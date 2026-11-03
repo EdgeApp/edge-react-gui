@@ -460,7 +460,7 @@ export const bityProvider: FiatProviderFactory = {
         if (isCheckDue()) {
           const response = await fetch(
             `https://exchange.api.bity.com/v2/currencies`
-          ).catch(e => undefined)
+          ).catch((e: unknown) => undefined)
           if (!response?.ok) {
             console.error(
               `Bity getSupportedAssets response error: ${await response?.text()}`

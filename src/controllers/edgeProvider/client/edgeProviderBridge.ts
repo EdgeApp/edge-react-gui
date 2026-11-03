@@ -110,7 +110,7 @@ if (window.edgeProviderBridge == null) {
       document.dispatchEvent(new Event('edgeProviderReady'))
     })
     // Use console logging because this exists in a web-view without access to RN
-    .catch(err => {
+    .catch((err: unknown) => {
       console.error(err)
     })
 }

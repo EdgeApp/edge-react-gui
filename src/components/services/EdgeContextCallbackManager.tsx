@@ -42,7 +42,7 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
             .then(() => {
               errorShown = false
             })
-            .catch(err => {
+            .catch((err: unknown) => {
               showDevError(err)
             })
         }

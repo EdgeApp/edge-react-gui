@@ -35,7 +35,7 @@ export function useBackButtonToast() {
       () => {
         // Allow back if logged out or this is the second back press:
         if (account === defaultAccount || backPressedOnce.current) {
-          dispatch(logoutRequest(navigation)).catch(err => {
+          dispatch(logoutRequest(navigation)).catch((err: unknown) => {
             showError(err)
           })
           return
@@ -53,7 +53,7 @@ export function useBackButtonToast() {
           .then(() => {
             backPressedOnce.current = false
           })
-          .catch(err => {
+          .catch((err: unknown) => {
             showError(err)
           })
 

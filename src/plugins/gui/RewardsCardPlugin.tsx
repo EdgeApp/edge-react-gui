@@ -87,7 +87,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         userRewardsCards = { activeCards, archivedCards }
         await showDashboard({ showLoading: false })
       })
-      .catch(async error => {
+      .catch(async (error: unknown) => {
         console.error(`Error refreshing rewards cards: ${String(error)}`)
         await refreshRewardsCards(retries + 1)
       })
@@ -119,12 +119,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .then(async () => {
             await showUi.showToast(lstrings.fragment_copied)
           })
-          .catch(e => {
+          .catch((e: unknown) => {
             showError(e)
           })
       },
       onCardPress({ url }) {
-        showUi.openExternalWebView({ url }).catch(err => {
+        showUi.openExternalWebView({ url }).catch((err: unknown) => {
           showError(err)
         })
       },
@@ -268,12 +268,12 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
           .approveQuote({ showUi, coreWallet: wallet })
           .then(async () => {
             await showDashboard({ showLoading: true })
-            await refreshRewardsCards(0).catch(error => {
+            await refreshRewardsCards(0).catch((error: unknown) => {
               showError(error)
             })
             await showDashboard({ showLoading: false })
           })
-          .catch(error => {
+          .catch((error: unknown) => {
             if (String(error).includes('Error: User cancelled quote')) {
               logActivity(String(error))
               return
@@ -340,7 +340,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
       // Auth User:
       const isAuthenticated = await provider.otherMethods
         .authenticate()
-        .catch(error => {
+        .catch((error: unknown) => {
           console.error(error)
           throw new Error(lstrings.rewards_card_error_authenticate)
         })
@@ -350,7 +350,7 @@ export const makeRewardsCardPlugin: FiatPluginFactory = async params => {
         userRewardsCards = await showUi.showToastSpinner(
           lstrings.loading,
           runWithTimeout(
-            provider.otherMethods.getRewardsCards().catch(error => {
+            provider.otherMethods.getRewardsCards().catch((error: unknown) => {
               console.error(error)
               throw new Error(lstrings.rewards_card_error_retrieving_cards)
             }),

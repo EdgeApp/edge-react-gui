@@ -539,8 +539,8 @@ export const LoanManageSceneComponent = (props: Props) => {
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })
-      .catch(e => {
-        showError(e.message)
+      .catch((e: unknown) => {
+        showError(e instanceof Error ? e.message : e)
       })
   })
 

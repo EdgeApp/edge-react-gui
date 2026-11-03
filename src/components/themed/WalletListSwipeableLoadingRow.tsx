@@ -48,7 +48,7 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
         walletId={walletId}
         tokenId={null}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   })

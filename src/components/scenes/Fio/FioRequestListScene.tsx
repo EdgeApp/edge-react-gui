@@ -87,7 +87,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
-    this.props.refreshAllFioAddresses().catch(err => {
+    this.props.refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
     this.state = {
@@ -108,13 +108,13 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
       () => {
-        this.getFioRequestsPending().catch(err => {
+        this.getFioRequestsPending().catch((err: unknown) => {
           showError(err)
         })
-        this.getFioRequestsSent().catch(err => {
+        this.getFioRequestsSent().catch((err: unknown) => {
           showError(err)
         })
-        this.props.refreshAllFioAddresses().catch(err => {
+        this.props.refreshAllFioAddresses().catch((err: unknown) => {
           showError(err)
         })
       }
@@ -144,9 +144,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       addressArray.push(request.payer_fio_address)
     }
 
-    addToFioAddressCache(this.props.account, addressArray).catch(err => {
-      showError(err)
-    })
+    addToFioAddressCache(this.props.account, addressArray).catch(
+      (err: unknown) => {
+        showError(err)
+      }
+    )
 
     this.setState({ addressCachedUpdated: true })
   }
@@ -602,7 +604,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       (prevPendingAmount < fioRequestsPending.length ||
         (distanceFromEnd < 0 && fioRequestsPending.length > 0))
     ) {
-      this.getFioRequestsPending().catch(err => {
+      this.getFioRequestsPending().catch((err: unknown) => {
         showError(err)
       })
     }
@@ -615,7 +617,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       (prevSentAmount < fioRequestsSent.length ||
         (distanceFromEnd < 0 && fioRequestsSent.length > 0))
     ) {
-      this.getFioRequestsSent().catch(err => {
+      this.getFioRequestsSent().catch((err: unknown) => {
         showError(err)
       })
     }

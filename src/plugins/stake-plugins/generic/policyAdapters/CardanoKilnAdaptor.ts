@@ -138,7 +138,7 @@ export const makeCardanoKilnAdapter = (
       do {
         const stakeTransaction = await kiln
           .adaStakeTransaction(walletAddress, adapterConfig.poolId, accountId)
-          .catch(error => {
+          .catch((error: unknown) => {
             if (error instanceof KilnError) {
               if (
                 /Value \d+ less than the minimum UTXO value \d+/.test(

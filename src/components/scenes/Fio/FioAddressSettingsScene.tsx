@@ -81,7 +81,7 @@ export class FioAddressSettingsComponent extends React.Component<
   componentDidMount() {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
-    refreshAllFioAddresses().catch(err => {
+    refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
     if (showAddBundledTxs) {
@@ -92,7 +92,7 @@ export class FioAddressSettingsComponent extends React.Component<
   afterAddBundledTxsSuccess = () => {
     const { refreshAllFioAddresses, navigation } = this.props
 
-    refreshAllFioAddresses().catch(err => {
+    refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
 
@@ -189,7 +189,7 @@ export class FioAddressSettingsComponent extends React.Component<
       },
       onDone: err => {
         if (!err) {
-          this.afterTransferSuccess().catch(err => {
+          this.afterTransferSuccess().catch((err: unknown) => {
             showError(err)
           })
         }

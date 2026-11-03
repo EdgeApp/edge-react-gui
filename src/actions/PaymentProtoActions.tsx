@@ -296,8 +296,8 @@ export async function launchPaymentProto(
       account,
       assets: paymentAssets,
       navigation
-    }).catch(e => {
-      if (e.message !== ErrorNoMatchingWallets) throw e
+    }).catch((e: unknown) => {
+      if (!(e instanceof Error) || e.message !== ErrorNoMatchingWallets) throw e
     })
     if (result?.type !== 'wallet') {
       throw new PaymentProtoError('NoPaymentOption', {

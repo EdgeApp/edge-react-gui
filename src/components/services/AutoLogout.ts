@@ -33,7 +33,7 @@ export const AutoLogout = () => {
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met
     if (appForegrounded && settingsLoaded && timeExpired)
-      dispatch(logoutRequest(navigation)).catch(err => {
+      dispatch(logoutRequest(navigation)).catch((err: unknown) => {
         console.warn(
           sprintf(lstrings.auto_log_off_failed_message_s, String(err))
         )

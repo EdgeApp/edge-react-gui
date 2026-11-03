@@ -42,7 +42,7 @@ export function WalletListSortable(props: Props) {
         const walletId = newOrder[i]
         keyStates[walletId] = { sortIndex: i }
       }
-      account.changeWalletStates(keyStates).catch(error => {
+      account.changeWalletStates(keyStates).catch((error: unknown) => {
         showError(error)
       })
     }

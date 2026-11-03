@@ -53,7 +53,7 @@ export function Alert(props: Props) {
 
   const handlePress = useHandler(() => {
     if (onPress != null)
-      onPress()?.catch(err => {
+      onPress()?.catch((err: unknown) => {
         showError(err)
       })
   })

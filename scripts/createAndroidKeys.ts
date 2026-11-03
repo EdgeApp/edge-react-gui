@@ -70,6 +70,6 @@ function chdir(path: string) {
   _currentPath = path
 }
 
-main().catch(e => {
-  console.log(e.message)
+main().catch((e: unknown) => {
+  console.log(e instanceof Error ? e.message : e)
 })

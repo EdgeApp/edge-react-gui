@@ -36,7 +36,7 @@ export function showError(
     return
   Airship.show(bridge => (
     <AlertDropdown bridge={bridge} message={translatedMessage} error={error} />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -84,7 +84,7 @@ export function showDevError(
   error: unknown,
   options: ShowErrorWarningOptions = {}
 ): void {
-  showDevErrorAsync(error, options).catch(err => {
+  showDevErrorAsync(error, options).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -109,7 +109,7 @@ export function showWarning(
   )
   Airship.show(bridge => (
     <AlertDropdown bridge={bridge} message={translatedError} warning />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -121,7 +121,7 @@ export function showWarning(
 export function showToast(message: string, autoHideMs?: number): void {
   Airship.show(bridge => (
     <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -150,7 +150,7 @@ export async function showToastSpinner<T>(
         <ActivityIndicator />
       </AirshipToast>
     )
-  }).catch(err => {
+  }).catch((err: unknown) => {
     console.error(err)
   })
   return await activity

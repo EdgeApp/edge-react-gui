@@ -25,7 +25,7 @@ export const WipeLogsService = () => {
       console.log('Checking for expired logs')
       const dataItem = await disklet
         .getText(LOG_WIPE_INFO_FILENAME)
-        .catch(err => {
+        .catch((err: unknown) => {
           console.warn(
             `Failed to access ${LOG_WIPE_INFO_FILENAME} data: ${String(err)}`
           )
@@ -51,7 +51,7 @@ export const WipeLogsService = () => {
       }
     }
 
-    handler().catch(err => {
+    handler().catch((err: unknown) => {
       console.error(err)
       showError(`Failed to wipe logs: ${String(err)}`)
     })

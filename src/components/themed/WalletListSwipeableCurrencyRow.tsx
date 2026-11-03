@@ -59,7 +59,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
         navigation={navigation}
         walletId={wallet.id}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   })
@@ -80,7 +80,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
             navigation.navigate('request', { tokenId, walletId: wallet.id })
           }
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           showError(err)
         })
     }
@@ -104,7 +104,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           })
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
   })
@@ -131,7 +131,7 @@ function WalletListSwipeableCurrencyRowComponent(props: Props) {
           })
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
   })

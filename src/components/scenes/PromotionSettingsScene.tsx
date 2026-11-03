@@ -109,7 +109,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
           return true
         }}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   }

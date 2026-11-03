@@ -74,8 +74,8 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
         .then(result => {
           bridge.resolve(result)
         })
-        .catch(error => {
-          bridge.reject(error)
+        .catch((error: unknown) => {
+          bridge.reject(error as Error)
         })
         .finally(() => {
           hide()

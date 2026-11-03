@@ -74,7 +74,7 @@ export async function requestContactsPermission(
       // Handle any other potential failure in enabling the permission
       // progmatically from within Edge by redirecting to the system settings
       // instead. Any manual change in system settings causes an app restart.
-      .catch(async _e => {
+      .catch(async (_e: unknown) => {
         await openSettings()
       })
   } else if (!contactsPermissionOn && currentContactsPermissionOn) {
@@ -158,7 +158,7 @@ export async function requestPermissionOnSettings(
           [data]: permissionLimit + 1
         })
       )
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
 

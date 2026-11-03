@@ -107,7 +107,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => {
+    this.getRegInfo().catch((err: unknown) => {
       showError(err)
     })
   }
@@ -240,7 +240,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
                     )}
                     buttons={{ ok: { label: lstrings.string_ok_cap } }}
                   />
-                )).catch(err => {
+                )).catch((err: unknown) => {
                   showError(err)
                 })
                 onLogEvent('Fio_Domain_Register', {
