@@ -4,7 +4,6 @@ import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
@@ -33,6 +32,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { SceneHeader } from '../themed/SceneHeader'
+import { VectorIcon } from '../themed/VectorIcon'
 
 interface Props extends EdgeAppSceneProps<'wcConnections'> {}
 
@@ -203,7 +203,8 @@ export const WcConnectionsScene: React.FC<Props> = props => {
                 </EdgeText>
               </View>
               <View style={styles.arrow}>
-                <AntDesignIcon
+                <VectorIcon
+                  font="AntDesign"
                   name="right"
                   size={theme.rem(1)}
                   color={theme.icon}
