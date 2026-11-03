@@ -35,6 +35,7 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+- fixed: WalletConnect dApps without usable artwork show the WalletConnect icon instead of a blank space
 
 ## 4.52.2 (2026-10-30)
 
