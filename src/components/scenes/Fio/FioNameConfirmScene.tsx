@@ -98,11 +98,11 @@ class FioNameConfirm extends React.PureComponent<Props> {
             response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR &&
             response.code === 400
           ) {
-            const publicDomains = await fioPlugin.otherMethods.getDomains(
-              fioPlugin.currencyInfo.defaultSettings?.fallbackRef
-            )
+            const publicDomains: Array<{ domain: string; free: boolean }> =
+              await fioPlugin.otherMethods.getDomains(
+                fioPlugin.currencyInfo.defaultSettings?.fallbackRef
+              )
             const domainExists = publicDomains.find(
-              // @ts-expect-error
               domain =>
                 domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1]
             )
@@ -166,8 +166,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }
           })
 
-          // @ts-expect-error
-          window.requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName
             })
@@ -191,8 +190,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }
           })
 
-          // @ts-expect-error
-          window.requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             navigation.navigate('fioAddressRegisterSuccess', {
               fioName,
               expiration

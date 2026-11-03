@@ -88,6 +88,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   const handleEmail = useHandler(() => {
     const email = supportEmail
+    if (email == null) return
     const body = createExchangeDataString('<br />')
 
     Mailer.mail(
@@ -96,7 +97,6 @@ export function FiatExchangeDetailsCard(props: Props) {
           lstrings.transaction_details_exchange_support_request,
           providerDisplayName
         ),
-        // @ts-expect-error
         recipients: [email],
         body,
         isHTML: true

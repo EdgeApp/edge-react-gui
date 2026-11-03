@@ -160,8 +160,7 @@ export async function showToastSpinner<T>(
  * Makes text red in dev mode.
  */
 export function redText(message: string): string {
-  // @ts-expect-error
-  if (!global.__DEV__) return message
+  if (!__DEV__) return message
   return `\x1b[31m${message}\x1b[39m`
 }
 
@@ -169,7 +168,6 @@ export function redText(message: string): string {
  * Makes text yellow in dev mode.
  */
 export function yellowText(message: string): string {
-  // @ts-expect-error
-  if (!global.__DEV__) return message
+  if (!__DEV__) return message
   return `\x1b[33m${message}\x1b[39m`
 }
