@@ -89,45 +89,44 @@ export function WarningCard({
   )
 }
 
-const getStyles = (theme: Theme) =>
-  cacheStyles((theme: Theme) => ({
-    warning: {
-      borderWidth: theme.cardBorder,
-      borderColor: theme.warningText,
-      borderRadius: theme.cardBorderRadius,
-      margin: theme.rem(1),
-      alignSelf: 'stretch'
-    },
-    titleContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    title: {
-      fontSize: theme.rem(0.75),
-      marginLeft: theme.rem(0.25),
-      fontFamily: theme.fontFaceBold,
-      color: theme.warningText
-    },
-    icon: {
-      marginRight: theme.rem(0.5)
-    },
-    text: {
-      fontSize: theme.rem(0.75),
-      marginTop: theme.rem(1),
-      fontFamily: theme.fontFaceDefault,
-      color: theme.warningText
-    },
-    bulletpoints: {
-      marginTop: theme.rem(0.5)
-    },
-    bulletpointRow: {
-      flexDirection: 'row'
-    },
-    bulletpointText: {
-      marginLeft: theme.rem(0.2),
-      fontSize: theme.rem(0.75),
-      color: theme.warningText,
-      fontFamily: theme.fontFaceDefault
-    }
-  }))(theme)
+const getStyles = cacheStyles((theme: Theme) => ({
+  warning: {
+    borderWidth: theme.cardBorder,
+    borderColor: theme.warningText,
+    borderRadius: theme.cardBorderRadius,
+    margin: theme.rem(1),
+    alignSelf: 'stretch'
+  },
+  titleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  title: {
+    fontSize: theme.rem(0.75),
+    marginLeft: theme.rem(0.25),
+    fontFamily: theme.fontFaceBold,
+    color: theme.warningText
+  },
+  icon: {
+    marginRight: theme.rem(0.5)
+  },
+  text: {
+    fontSize: theme.rem(0.75),
+    marginTop: theme.rem(1),
+    fontFamily: theme.fontFaceDefault,
+    color: theme.warningText
+  },
+  bulletpoints: {
+    marginTop: theme.rem(0.5)
+  },
+  bulletpointRow: {
+    flexDirection: 'row'
+  },
+  bulletpointText: {
+    marginLeft: theme.rem(0.2),
+    fontSize: theme.rem(0.75),
+    color: theme.warningText,
+    fontFamily: theme.fontFaceDefault
+  }
+}))
