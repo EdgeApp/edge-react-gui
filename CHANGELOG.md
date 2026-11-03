@@ -32,6 +32,7 @@
 - fixed: Hiding or showing balances takes effect right away instead of waiting for the setting to save, which could take several seconds on a large account.
 - fixed: The side menu's dimming overlay fades in with the menu on Android again, instead of blanking the screen for a frame as the menu starts to open.
 - fixed: The side menu no longer flashes an empty screen as it opens or closes on some Android devices.
+- fixed: Long tickers in Markets shrink to fit their column instead of running into the 24-hour change on Android.
 - fixed: Modals and the QR scanner no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above).
 - fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
