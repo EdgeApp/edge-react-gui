@@ -167,14 +167,15 @@ export const StyledButtonContainer = styled(View)<{
     margin: marginSize
   }
 
-  const absoluteStyle: ViewStyle = absolute
-    ? {
-        position: 'absolute',
-        bottom: 0,
-        left: marginSize,
-        right: marginSize
-      }
-    : {}
+  const absoluteStyle: ViewStyle =
+    absolute === true
+      ? {
+          position: 'absolute',
+          bottom: 0,
+          left: marginSize,
+          right: marginSize
+        }
+      : {}
 
   /** @deprecated Instead of a soloStyle case here, create a separate `SoloButton` component */
   const soloStyle: ViewStyle =

@@ -35,7 +35,7 @@ export const useCryptoText = ({
     exchangeRate: assetToFiatRate,
     fiatDenomination,
     nativeAmount,
-    currencyCode: withSymbol ? undefined : displayDenomination.name,
+    currencyCode: withSymbol === true ? undefined : displayDenomination.name,
     hideBalance
   })
 

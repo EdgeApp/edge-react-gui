@@ -101,10 +101,11 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   onConfirm = async (reset: () => void): Promise<void> => {
     const { onSubmit, onSuccess, successMessage, addressTitles } = this.props
     const { paymentWallet, fee } = this.state
-    if (!paymentWallet) {
-      const msg = addressTitles
-        ? lstrings.fio_wallet_missing_for_fio_address
-        : lstrings.fio_wallet_missing_for_fio_domain
+    if (paymentWallet == null) {
+      const msg =
+        addressTitles === true
+          ? lstrings.fio_wallet_missing_for_fio_address
+          : lstrings.fio_wallet_missing_for_fio_domain
       showError(msg)
       this.setState({ error: msg })
       reset()
@@ -121,13 +122,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     try {
       this.setState({ loading: true })
       let result: ActionResult = {}
-      if (onSubmit) {
+      if (onSubmit != null) {
         result = await onSubmit(paymentWallet, fee)
       }
 
       this.setState({ loading: false })
-      if (onSuccess) await onSuccess(result)
-      if (successMessage) showToast(successMessage)
+      if (onSuccess != null) await onSuccess(result)
+      if (successMessage != null && successMessage !== '')
+        showToast(successMessage)
     } catch (e: any) {
       this.setState({ loading: false })
       showError(e)
@@ -148,7 +150,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       .then(result => {
         if (result?.type === 'wallet') {
           const { walletId } = result
-          this.props.currencyWallets[walletId] &&
+          this.props.currencyWallets[walletId] != null &&
             this.setState(
               { paymentWallet: this.props.currencyWallets[walletId] },
               () => {
@@ -171,12 +173,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     let fee = null
     let displayFee = 0
     let showSlider = false
-    if (paymentWallet) {
+    if (paymentWallet != null) {
       this.setState({ feeLoading: true })
       try {
         fee = await getOperationFee(paymentWallet)
-        if (fee) {
-          if (goTo) {
+        if (fee !== 0) {
+          if (goTo != null) {
             this.setState({ feeLoading: false })
             goTo({ fee })
             return
@@ -195,12 +197,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   setBalance = (): void => {
     const { addressTitles } = this.props
     const { paymentWallet } = this.state
-    if (paymentWallet) {
+    if (paymentWallet != null) {
       const availbleBalance = getAvailableBalance(paymentWallet, null)
       this.setState({ balance: this.formatFio(availbleBalance) })
     } else {
       showError(
-        addressTitles
+        addressTitles === true
           ? lstrings.fio_wallet_missing_for_fio_address
           : lstrings.fio_wallet_missing_for_fio_domain
       )
@@ -220,26 +222,26 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const { feeLoading, displayFee, balance, error, showSlider } = this.state
     const styles = getStyles(theme)
 
-    if (!feeLoading && error) {
+    if (!feeLoading && error !== '') {
       return <EdgeText style={styles.errorMessage}>{error}</EdgeText>
     }
 
     if (feeLoading || !showSlider) return null
 
-    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${
-      balance ? lstrings.fio_address_confirm_screen_fio_label : ''
+    const balanceText = `${balance !== 0 ? balance.toFixed(2) : '0'} ${
+      balance !== 0 ? lstrings.fio_address_confirm_screen_fio_label : ''
     }`
     return (
       <EdgeCard sections>
         <EdgeRow
           title={lstrings.fio_action_fee_label}
           body={
-            displayFee
+            displayFee !== 0
               ? `${displayFee} ${lstrings.fio_address_confirm_screen_fio_label}`
               : lstrings.fio_address_confirm_screen_free_label
           }
         />
-        {displayFee ? (
+        {displayFee !== 0 ? (
           <EdgeRow title={lstrings.fio_address_confirm_screen_balance_label}>
             <EdgeText
               style={
@@ -277,14 +279,16 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
             size="small"
           />
         )}
-        {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
-        {showPaymentWalletPicker && fioWallets.length > 1 ? (
+        {title != null && title !== '' ? (
+          <EdgeText style={styles.actionTitle}>{title}</EdgeText>
+        ) : null}
+        {showPaymentWalletPicker === true && fioWallets.length > 1 ? (
           <EdgeCard>
             <EdgeRow
               rightButtonType="editable"
               title={lstrings.select_wallet}
               onPress={this.handleWalletPress}
-              body={paymentWallet ? getWalletName(paymentWallet) : ''}
+              body={paymentWallet != null ? getWalletName(paymentWallet) : ''}
             />
           </EdgeCard>
         ) : null}

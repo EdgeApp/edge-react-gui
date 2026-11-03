@@ -164,7 +164,7 @@ export function useTransactionList(
           result => {
             busy = false
             if (closed) return
-            if (result.done) {
+            if (result.done === true) {
               atEnd = true
               streamedTxs.splice(offset, Infinity) // Trim stragglers
               requestRender()

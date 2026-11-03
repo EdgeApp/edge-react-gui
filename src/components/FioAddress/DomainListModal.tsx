@@ -112,7 +112,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     for (const item of domains) {
       const { label, value } = item
 
-      if (value) {
+      if (value != null) {
         const labelString = label.toLowerCase()
         if (labelString.includes(inputLowerCase)) {
           filteredRecords.push(item)
@@ -143,7 +143,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const { value, label, createNew } = item
     const styles = getStyles(theme)
-    if (createNew) {
+    if (createNew === true) {
       return (
         <View style={styles.registerDomainRow}>
           <ButtonsView
@@ -155,7 +155,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
         </View>
       )
     }
-    if (value) {
+    if (value != null) {
       return (
         <EdgeTouchableOpacity
           onPress={() => {
@@ -165,7 +165,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>
-              {value.isFree ? lstrings.fio_domain_free : ''}
+              {value.isFree === true ? lstrings.fio_domain_free : ''}
             </EdgeText>
           </View>
         </EdgeTouchableOpacity>

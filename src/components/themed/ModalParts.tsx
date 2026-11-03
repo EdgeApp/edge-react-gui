@@ -28,11 +28,13 @@ export const ModalTitle: React.FC<ModalTitleProps> = props => {
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
   const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
-  const centerStyle = center ? styles.titleCenter : null
+  const centerStyle = center === true ? styles.titleCenter : null
 
   return (
     <View style={styles.titleContainer}>
-      {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
+      {icon != null && icon !== false ? (
+        <View style={styles.titleIconContainer}>{icon}</View>
+      ) : null}
       <UnscaledText
         style={[styles.titleText, centerStyle, padding, androidAdjust]}
       >

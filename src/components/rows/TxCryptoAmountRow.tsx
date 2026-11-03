@@ -55,7 +55,9 @@ export const TxCryptoAmountRow: React.FC<Props> = props => {
         walletDefaultDenom.multiplier
       )(absoluteAmount)
       const symbolString =
-        currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+        currencyInfo.currencyCode === currencyCode &&
+        walletDefaultDenom.symbol != null &&
+        walletDefaultDenom.symbol !== ''
           ? walletDefaultDenom.symbol
           : swapData?.payoutCurrencyCode ?? ''
 
@@ -64,7 +66,9 @@ export const TxCryptoAmountRow: React.FC<Props> = props => {
 
     // It's a send, so the symbol is weirdly different for some reason:
     const symbolString =
-      currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+      currencyInfo.currencyCode === currencyCode &&
+      walletDefaultDenom.symbol != null &&
+      walletDefaultDenom.symbol !== ''
         ? walletDefaultDenom.symbol
         : currencyCode
 
@@ -79,16 +83,17 @@ export const TxCryptoAmountRow: React.FC<Props> = props => {
           convertNativeToDisplay(walletDefaultDenom.multiplier)(networkFee)
         )
       )
-      const feeString = symbolString
-        ? sprintf(
-            lstrings.fragment_tx_detail_mining_fee_with_symbol,
-            convertedFee
-          )
-        : sprintf(
-            lstrings.fragment_tx_detail_mining_fee_with_denom,
-            convertedFee,
-            walletDefaultDenom.name
-          )
+      const feeString =
+        symbolString !== ''
+          ? sprintf(
+              lstrings.fragment_tx_detail_mining_fee_with_symbol,
+              convertedFee
+            )
+          : sprintf(
+              lstrings.fragment_tx_detail_mining_fee_with_denom,
+              convertedFee,
+              walletDefaultDenom.name
+            )
 
       return `${symbolString} ${convertedAmount} (${feeString})`
     }

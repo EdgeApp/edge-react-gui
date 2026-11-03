@@ -218,7 +218,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     requestsType: 'PENDING' | 'SENT'
   ): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
-    if (fioWallets.length) {
+    if (fioWallets.length > 0) {
       try {
         for (const wallet of fioWallets) {
           const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
@@ -298,7 +298,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       wallet => wallet.id === request.fioWalletId
     )
 
-    if (fioWallet) {
+    if (fioWallet != null) {
       try {
         let edgeTx = await fioMakeSpend(fioWallet, 'rejectFundsRequest', {
           fioRequestId: request.fio_request_id,
@@ -334,7 +334,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       wallet => wallet.id === request.fioWalletId
     )
 
-    if (fioWallet) {
+    if (fioWallet != null) {
       try {
         await cancelFioRequest(
           fioWallet,
@@ -394,7 +394,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   headerRowUsingTitle = (sectionObj: {
     section: { title: string }
   }): React.ReactElement | null => {
-    if (!sectionObj.section.title) return null
+    if (sectionObj.section.title === '') return null
     return <SectionHeader title={sectionObj.section.title} />
   }
 
@@ -536,7 +536,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         }
       },
       onDone: (err, edgeTransaction) => {
-        if (!err && edgeTransaction != null) {
+        if (err == null && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
           navigation.replace('transactionDetails', {
             edgeTransaction,
@@ -570,7 +570,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     let requestsInSection: FioRequest[] = []
     let previousTimestamp = '0'
     let previousTitle = ''
-    if (fioRequests) {
+    if (fioRequests != null) {
       // Sort newest to oldest
       const sortedArrayFioRequests = fioRequests.sort(
         (requestA, requestB) =>
@@ -681,12 +681,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
           <View style={styles.row}>
             <SceneHeader title={lstrings.fio_pending_requests} underline />
             <View style={styles.container}>
-              {!loadingPending && !fioRequestsPending.length ? (
+              {!loadingPending && fioRequestsPending.length === 0 ? (
                 <EdgeText style={styles.emptyListText}>
                   {lstrings.fio_no_requests_label}
                 </EdgeText>
               ) : null}
-              {loadingPending && !fioRequestsPending.length && (
+              {loadingPending && fioRequestsPending.length === 0 && (
                 <ActivityIndicator
                   color={theme.iconTappable}
                   style={styles.loading}
@@ -712,12 +712,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.container}>
-              {!loadingSent && !fioRequestsSent.length ? (
+              {!loadingSent && fioRequestsSent.length === 0 ? (
                 <EdgeText style={styles.emptyListText}>
                   {lstrings.fio_no_requests_label}
                 </EdgeText>
               ) : null}
-              {loadingSent && !fioRequestsSent.length && (
+              {loadingSent && fioRequestsSent.length === 0 && (
                 <ActivityIndicator
                   color={theme.iconTappable}
                   style={styles.loading}

@@ -43,7 +43,7 @@ const SettingsTappableRowComponent: React.FC<Props> = props => {
   } = props
   const theme = useTheme()
   const style = {
-    color: disabled ? theme.iconDeactivated : theme.iconTappable,
+    color: disabled === true ? theme.iconDeactivated : theme.iconTappable,
     fontSize: theme.rem(1),
     marginHorizontal: theme.rem(0.5)
   }

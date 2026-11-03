@@ -79,7 +79,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
   componentDidMount(): void {
     const { showRenew } = this.props.route.params
-    if (showRenew) {
+    if (showRenew === true) {
       this.setState({ showRenew: true })
     }
   }
@@ -94,7 +94,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { theme, navigation, route } = this.props
     const { fioDomainName } = route.params
     const styles = getStyles(theme)
-    const domainName = `@${fioDomainName || ''}`
+    const domainName = `@${fioDomainName ?? ''}`
     const transferredMessage = ` ${lstrings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
@@ -179,7 +179,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   goToTransfer = (params: { fee: number }): void => {
     const { navigation, wallet: fioWallet } = this.props
     const { fee: transferFee } = params
-    if (!transferFee) {
+    if (transferFee === 0) {
       showError(lstrings.fio_get_fee_err_msg)
       return
     }
@@ -200,7 +200,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         }
       },
       onDone: err => {
-        if (!err) {
+        if (err == null) {
           this.afterTransferSuccess().catch((err: unknown) => {
             showError(err)
           })

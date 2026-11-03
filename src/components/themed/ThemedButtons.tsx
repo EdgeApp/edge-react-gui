@@ -73,7 +73,7 @@ export const Radio: React.FC<RadioButtonProps> = props => {
         activeOpacity={theme.underlayOpacity}
         onPress={onPress}
       >
-        <View style={[styles.radio, right && styles.radioRight]}>
+        <View style={[styles.radio, right === true && styles.radioRight]}>
           <RadioIcon value={value} />
           {children}
         </View>

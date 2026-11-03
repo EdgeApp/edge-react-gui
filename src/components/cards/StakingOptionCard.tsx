@@ -45,7 +45,7 @@ export const StakingOptionCard: React.FC<StakingOptionCardProps> = ({
     )
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? (
+        {swapProviderIcon !== '' ? (
           <FastImage
             style={styles.swapProviderIcon}
             resizeMode={FastImage.resizeMode.contain}

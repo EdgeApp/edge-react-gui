@@ -188,7 +188,7 @@ export function createAccountTransaction(
           )
         },
         onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-          if (error) {
+          if (error != null) {
             console.log(error)
             setTimeout(() => {
               Airship.show<'ok' | undefined>(bridge => (
@@ -201,7 +201,7 @@ export function createAccountTransaction(
                 />
               )).catch(() => {})
             }, 750)
-          } else if (edgeTransaction) {
+          } else if (edgeTransaction != null) {
             dispatch(
               logEvent('Activate_Wallet_Done', {
                 createdWalletCurrencyCode

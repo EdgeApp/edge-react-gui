@@ -85,7 +85,7 @@ export const Alert: React.FC<Props> = props => {
     </View>
   )
 
-  return onPress ? (
+  return onPress != null ? (
     <EdgeTouchableOpacity onPress={handlePress}>{result}</EdgeTouchableOpacity>
   ) : (
     result

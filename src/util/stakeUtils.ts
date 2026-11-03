@@ -173,7 +173,7 @@ export const getPluginFromPolicyId = (
   return stakePlugins.find(plugin =>
     plugin
       .getPolicies(filter)
-      .find(policy => policy.stakePolicyId === stakePolicyId)
+      .some(policy => policy.stakePolicyId === stakePolicyId)
   )
 }
 
@@ -280,13 +280,13 @@ export const getPoliciesFromPlugins = (
       })
       .filter(
         stakePolicy =>
-          (!stakePolicy.deprecated &&
+          (stakePolicy.deprecated !== true &&
             stakePolicy.stakeAssets.some(
               asset =>
                 asset.pluginId === wallet.currencyInfo.pluginId &&
                 asset.tokenId === tokenId
             )) ||
-          (stakePolicy.deprecated &&
+          (stakePolicy.deprecated === true &&
             stakePositionMap[stakePolicy.stakePolicyId]?.allocations.some(
               allocation =>
                 allocation.pluginId === wallet.currencyInfo.pluginId &&

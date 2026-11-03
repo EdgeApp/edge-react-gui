@@ -187,7 +187,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         )}
         <View style={styles.container}>
           <SafeSlider
-            disabled={isSending || !!error}
+            disabled={isSending || error != null}
             onSlidingComplete={this.handleConfirmation}
             disabledText={
               lstrings.transaction_details_accelerate_transaction_slider_disabled

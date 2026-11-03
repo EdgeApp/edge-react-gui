@@ -115,11 +115,11 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>(
     // Callback bouncers:
     const handleLeftSwipe: AnimationCallback = done => {
       'worklet'
-      if (done) runOnJS(onLeftSwipe)()
+      if (done === true) runOnJS(onLeftSwipe)()
     }
     const handleRightSwipe: AnimationCallback = done => {
       'worklet'
-      if (done) runOnJS(onRightSwipe)()
+      if (done === true) runOnJS(onRightSwipe)()
     }
 
     // Imperative methods:

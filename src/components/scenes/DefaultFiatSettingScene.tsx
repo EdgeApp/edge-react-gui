@@ -59,7 +59,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
   ): React.ReactElement | null => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
-    if (!fiatCountry) {
+    if (fiatCountry == null) {
       return null
     }
 
@@ -70,7 +70,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         icon={
-          fiatCountry.logoUrl ? (
+          fiatCountry.logoUrl !== '' ? (
             <FastImage
               source={{ uri: fiatCountry.logoUrl }}
               style={styles.cryptoTypeLogo}
@@ -143,7 +143,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
   onSelectFiat = ({ value: selectedFiat }: { value: string }): void => {
     const { navigation } = this.props
-    if (!this.isValidFiat(selectedFiat)) {
+    if (this.isValidFiat(selectedFiat) == null) {
       showToast(lstrings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })

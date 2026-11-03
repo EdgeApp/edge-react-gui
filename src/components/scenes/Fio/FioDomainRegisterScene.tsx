@@ -110,7 +110,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     } = this.state
     if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
-        if (!selectedWallet) {
+        if (selectedWallet == null) {
           showError(lstrings.create_wallet_failed_message)
           return
         }
@@ -156,9 +156,10 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
       try {
         const { fioPlugin } = this.props
-        const isAvailable = fioPlugin.otherMethods
-          ? await fioPlugin.otherMethods.validateAccount(fioDomain, true)
-          : false
+        const isAvailable =
+          fioPlugin.otherMethods != null
+            ? await fioPlugin.otherMethods.validateAccount(fioDomain, true)
+            : false
         this.setState({
           isAvailable,
           isValid: true,
@@ -228,13 +229,14 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         autoCorrect={false}
       />
     ))
-    if (fioDomain) this.handleFioDomainChange(fioDomain)
+    if (fioDomain != null && fioDomain !== '')
+      this.handleFioDomainChange(fioDomain)
   }
 
   renderButton(): React.ReactElement | null {
     const { isValid, isAvailable, loading, walletLoading } = this.state
 
-    if (isValid && isAvailable && !loading) {
+    if (isValid && isAvailable === true && !loading) {
       return (
         <EdgeAnim enter={fadeIn} exit={fadeOut}>
           <MainButton
@@ -255,7 +257,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   renderFioWallets(): React.ReactElement | undefined {
     const { fioWallets } = this.props
     const { selectedWallet } = this.state
-    if (fioWallets && fioWallets.length > 1) {
+    if (fioWallets != null && fioWallets.length > 1) {
       return (
         <EdgeRow
           rightButtonType="touchable"
@@ -277,15 +279,15 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
-    if (fioDomain && !this.props.isConnected) {
+    if (fioDomain !== '' && !this.props.isConnected) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_cant_check
     }
-    if (fioDomain && isAvailable === false) {
+    if (fioDomain !== '' && isAvailable === false) {
       chooseHandleErrorMessage =
         lstrings.fio_address_register_screen_not_available
     }
 
-    if (fioDomain && !isValid && errorMessage) {
+    if (fioDomain !== '' && !isValid && errorMessage !== '') {
       chooseHandleErrorMessage = errorMessage
     }
 

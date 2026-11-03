@@ -14,7 +14,8 @@ import { ButtonBox } from './ThemedButtons'
 const transactionListUnsupportedPluginIds = Object.keys(
   SPECIAL_CURRENCY_INFO
 ).filter(
-  pluginId => !!SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported
+  pluginId =>
+    SPECIAL_CURRENCY_INFO[pluginId].isTransactionListUnsupported === true
 )
 
 interface OwnProps {

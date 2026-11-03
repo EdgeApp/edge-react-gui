@@ -116,7 +116,8 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
   const [walletId, setWalletId] = React.useState('')
 
   const paymentWallet = account.currencyWallets[walletId]
-  const isRenderSelect = walletId === '' || walletAccountActivationQuoteError
+  const isRenderSelect =
+    walletId === '' || walletAccountActivationQuoteError !== ''
   const paymentTokenId = activationPaymentInfo?.tokenId ?? null
 
   const handleRenameAndReturnWallet = useHandler(async () => {
@@ -246,7 +247,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
         {isRenderSelect ? (
           <ButtonsView
             primary={{
-              disabled: !activationCost || activationCost === '',
+              disabled: activationCost === '',
               onPress: handleSelect,
               label: lstrings.create_wallet_account_select_wallet
             }}

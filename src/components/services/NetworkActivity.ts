@@ -17,7 +17,7 @@ export function NetworkActivity(props: Props): null {
         type: 'NETWORK/NETWORK_STATUS',
         data: { isConnected: info.isConnected ?? false }
       })
-      if (!info.isConnected) {
+      if (info.isConnected !== true) {
         showError(lstrings.network_alert_title, { trackError: false })
       }
     }

@@ -17,8 +17,10 @@ export const LineTextDividerComponent: React.FC<Props> = props => {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
-      {title ? (
-        <EdgeText style={[styles.title, lowerCased ? styles.lowerCase : null]}>
+      {title != null && title !== '' ? (
+        <EdgeText
+          style={[styles.title, lowerCased === true ? styles.lowerCase : null]}
+        >
           {title}
         </EdgeText>
       ) : null}
