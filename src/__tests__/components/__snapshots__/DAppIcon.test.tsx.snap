@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DAppIcon shows the fallback without artwork 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+      },
+      {
+        "height": 45,
+        "width": 45,
+      },
+    ]
+  }
+  testID="dAppIconFallback"
+>
+  <Text
+    allowFontScaling={false}
+    selectable={false}
+    style={
+      [
+        {
+          "color": "#FFFFFF",
+          "fontSize": 45,
+        },
+        undefined,
+        {
+          "fontFamily": "custom",
+          "fontStyle": "normal",
+          "fontWeight": "normal",
+        },
+        {},
+      ]
+    }
+  >
+    
+  </Text>
+</View>
+`;
