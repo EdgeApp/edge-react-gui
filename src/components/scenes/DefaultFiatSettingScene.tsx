@@ -146,7 +146,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat).catch(err => {
+      this.props.onSelectFiat(selectedFiat).catch((err: unknown) => {
         showDevError(err)
       })
       navigation.goBack()

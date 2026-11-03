@@ -31,7 +31,7 @@ export const useIconColor = (edgeAsset: EdgeAsset): string | undefined => {
           setColor(colors.vibrant)
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         console.warn(err)
       })
   }, [primaryCurrencyIconUrl])

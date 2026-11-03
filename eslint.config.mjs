@@ -440,8 +440,7 @@ export default [
     },
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/strict-boolean-expressions': 'warn',
-      '@typescript-eslint/use-unknown-in-catch-callback-variable': 'warn'
+      '@typescript-eslint/strict-boolean-expressions': 'warn'
     }
   },
 

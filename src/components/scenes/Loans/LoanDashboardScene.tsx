@@ -184,8 +184,8 @@ export const LoanDashboardScene = (props: Props) => {
             borrowPlugin: newBorrowPlugin
           })
         })
-        .catch(err => {
-          redText(err.message)
+        .catch((err: unknown) => {
+          redText(err instanceof Error ? err.message : String(err))
         })
         .finally(() => {
           setIsNewLoanLoading(false)

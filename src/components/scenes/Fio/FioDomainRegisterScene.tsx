@@ -76,7 +76,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet().catch(err => {
+      this.createFioWallet().catch((err: unknown) => {
         showError(err)
       })
     }

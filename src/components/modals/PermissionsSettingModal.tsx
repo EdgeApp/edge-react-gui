@@ -49,7 +49,7 @@ export function PermissionsSettingModal(props: {
   )
 
   const handlePress = () => {
-    openSettings().catch(error => {
+    openSettings().catch((error: unknown) => {
       showError(error)
     })
     if (!mandatory) handleClose()

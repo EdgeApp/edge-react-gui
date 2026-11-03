@@ -116,9 +116,9 @@ export function FiatExchangeDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: orderUri })
           else await Linking.openURL(orderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(orderUri).catch(err => {
+          Linking.openURL(orderUri).catch((err: unknown) => {
             showError(err)
           })
         })

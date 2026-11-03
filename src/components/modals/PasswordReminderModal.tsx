@@ -87,7 +87,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<
           })
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
   }

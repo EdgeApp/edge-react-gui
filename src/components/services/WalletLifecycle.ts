@@ -92,7 +92,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
         Object.keys(currencyWallets).map(async walletId => {
           await currencyWallets[walletId].changePaused(true)
         })
-      ).catch(error => {
+      ).catch((error: unknown) => {
         showError(error)
       })
     }
@@ -199,7 +199,7 @@ function bootWallet(
         out.close()
       }, 5000)
     })
-    .catch(error => {
+    .catch((error: unknown) => {
       showError(error)
     })
 

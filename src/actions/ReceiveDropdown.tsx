@@ -89,7 +89,7 @@ export function showReceiveDropdown(
               walletId,
               tokenId
             })
-          ).catch(error => {
+          ).catch((error: unknown) => {
             showError(error)
           })
 

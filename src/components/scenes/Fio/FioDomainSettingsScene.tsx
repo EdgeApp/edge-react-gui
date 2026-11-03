@@ -195,7 +195,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       },
       onDone: err => {
         if (!err) {
-          this.afterTransferSuccess().catch(err => {
+          this.afterTransferSuccess().catch((err: unknown) => {
             showError(err)
           })
         }

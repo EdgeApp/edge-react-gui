@@ -231,7 +231,7 @@ export function createAccountTransaction(
                 tokenId,
                 metadata: edgeMetadata
               })
-              .catch(err => {
+              .catch((err: unknown) => {
                 console.warn(err)
               })
             navigation.navigate('walletsTab', { screen: 'walletList' })

@@ -129,7 +129,7 @@ export const ActionQueueService = () => {
             })
           )
             // Use console.warn to not spam user
-            .catch(err => {
+            .catch((err: unknown) => {
               console.warn(err)
             })
           return false
@@ -156,7 +156,7 @@ export const ActionQueueService = () => {
           context,
           program,
           state
-        ).catch((error): ExecutionResults => {
+        ).catch((error: unknown): ExecutionResults => {
           const cleanError = asCleanError(error)
           console.warn(
             new Error('Action Program Exception: ' + cleanError.message)

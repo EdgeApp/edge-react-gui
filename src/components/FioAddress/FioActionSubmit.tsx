@@ -87,7 +87,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
   componentDidMount(): void {
     this.setBalance()
-    this.setFee().catch(err => {
+    this.setFee().catch((err: unknown) => {
       showError(err)
     })
   }
@@ -153,14 +153,14 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
               { paymentWallet: this.props.currencyWallets[walletId] },
               () => {
                 this.setBalance()
-                this.setFee().catch(err => {
+                this.setFee().catch((err: unknown) => {
                   showError(err)
                 })
               }
             )
         }
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         console.log(error)
       })
   }

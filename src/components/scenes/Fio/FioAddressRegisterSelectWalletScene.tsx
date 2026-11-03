@@ -108,7 +108,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => {
+    this.getRegInfo().catch((err: unknown) => {
       showError(err)
     })
   }

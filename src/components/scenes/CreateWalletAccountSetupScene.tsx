@@ -60,13 +60,14 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   const handleSubmit = () => {
     setSpinning(true)
     checkHandle()
-      .catch(error => {
+      .catch((error: unknown) => {
         console.log('checkHandleAvailability error: ', error)
-        if (error.name === 'ErrorAccountUnavailable') {
+        const name = error instanceof Error ? error.name : undefined
+        if (name === 'ErrorAccountUnavailable') {
           setErrorMessage(
             lstrings.create_wallet_account_account_name_unavailable
           )
-        } else if (error.name === 'ErrorInvalidAccountName') {
+        } else if (name === 'ErrorInvalidAccountName') {
           setErrorMessage(lstrings.create_wallet_account_invalid_account_name)
         } else {
           setErrorMessage(lstrings.create_wallet_account_unknown_error)

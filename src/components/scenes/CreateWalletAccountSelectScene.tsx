@@ -163,7 +163,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
           setActivationPaymentInfo(activationInfo)
         }
       })
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
   })
@@ -179,7 +179,7 @@ export const CreateWalletAccountSelectScene = withWallet((props: Props) => {
         walletId,
         activationPaymentInfo
       )
-    ).catch(err => {
+    ).catch((err: unknown) => {
       showError(err)
     })
   })

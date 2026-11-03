@@ -99,7 +99,7 @@ export const LoanManagerService = (props: Props) => {
     const routine = () => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
-          dispatch(deleteLoanAccount(loanAccount)).catch(err => {
+          dispatch(deleteLoanAccount(loanAccount)).catch((err: unknown) => {
             console.warn(err)
           })
 
@@ -242,7 +242,7 @@ export const LoanManagerService = (props: Props) => {
 
       // TODO: Implement a true way to clear the push event
       if (cachedLoanAssetsMap[loanAccountId] === '') {
-        uploadLiquidationEvent('WBTC', 0).catch(err => {
+        uploadLiquidationEvent('WBTC', 0).catch((err: unknown) => {
           console.warn(err)
         })
         return

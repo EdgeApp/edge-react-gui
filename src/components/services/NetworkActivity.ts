@@ -25,7 +25,7 @@ export function NetworkActivity(props: Props): null {
     const netInfoUnsubscribe = NetInfo.addEventListener(handleNetworkState)
     NetInfo.fetch()
       .then(handleNetworkState)
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
 

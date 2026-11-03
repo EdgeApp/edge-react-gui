@@ -152,7 +152,7 @@ export function useTransactionList(
       cleanupStream = () => {
         closed = true
         if (stream.return != null)
-          stream.return().catch(err => {
+          stream.return().catch((err: unknown) => {
             showError(err)
           })
       }
@@ -176,7 +176,7 @@ export function useTransactionList(
               if (offset < streamedTxs.length) requestMore.current()
             }
           },
-          error => {
+          (error: unknown) => {
             busy = false
             showError(error)
           }

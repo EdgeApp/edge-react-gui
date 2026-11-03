@@ -76,6 +76,6 @@ function updateIos(cwd: string, versionFile: VersionFile): void {
   })
 }
 
-main().catch(error => {
+main().catch((error: unknown) => {
   console.log(error)
 })
