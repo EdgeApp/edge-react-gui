@@ -13,7 +13,7 @@ import { EdgeText } from '../themed/EdgeText'
 
 interface Props extends EdgeAppSceneProps<'duressModeHowTo'> {}
 
-export const DuressModeHowToScene = (props: Props) => {
+export const DuressModeHowToScene: React.FC<Props> = props => {
   const { navigation } = props
 
   const handleDone = useHandler(() => {

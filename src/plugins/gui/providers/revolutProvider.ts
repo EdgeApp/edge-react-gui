@@ -329,7 +329,7 @@ function addRevolutPaymentMethod(
 function addRevolutFiat(
   supportedAssets: ProviderSupportStore,
   fiat: RevolutFiat
-) {
+): void {
   const fiatKey = `iso:${fiat.currency}`
   supportedAssets.add.direction('*').region('*').fiat(fiatKey).payment('*')
   supportedAssets.addFiatInfo(fiatKey, fiat)
@@ -339,7 +339,7 @@ export function processRevolutConfig(
   configData: RevolutConfig,
   getTokenIdFromContract: FiatProviderGetTokenIdFromContract,
   supportedAssets: ProviderSupportStore
-) {
+): void {
   configData.countries.forEach(country => {
     supportedAssets.add.direction('*').region(country).fiat('*').payment('*')
   })

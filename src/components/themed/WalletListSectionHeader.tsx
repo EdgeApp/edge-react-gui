@@ -4,10 +4,10 @@ import { View } from 'react-native'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export function WalletListSectionHeader(props: {
+export const WalletListSectionHeader: React.FC<{
   title: string
   rightTitle?: string
-}) {
+}> = props => {
   const styles = getStyles(useTheme())
   const { title, rightTitle = '' } = props
   return (

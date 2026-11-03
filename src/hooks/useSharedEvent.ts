@@ -10,7 +10,7 @@ import { type SharedValue, useAnimatedReaction } from 'react-native-reanimated'
 export const useSharedEvent = <T>(
   sharedEvent: SharedValue<T> | undefined,
   handler: (event: T) => void
-) => {
+): void => {
   useAnimatedReaction(
     () => {
       'worklet'

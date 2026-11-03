@@ -5,10 +5,10 @@ import type { BorrowEngine } from '../../plugins/borrow-plugins/types'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { PercentageChangeArrowTile } from './PercentageChangeArrowTile'
 
-export const LtvRatioTile = (props: {
+export const LtvRatioTile: React.FC<{
   borrowEngine: BorrowEngine
   futureValue: string
-}) => {
+}> = props => {
   const theme = useTheme()
   const { borrowEngine, futureValue } = props
   const currentValue = borrowEngine.loanToValue

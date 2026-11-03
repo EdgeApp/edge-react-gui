@@ -24,7 +24,7 @@ interface OwnProps {
 
 type Props = OwnProps
 
-export const ExplorerCard = (props: Props) => {
+export const ExplorerCard: React.FC<Props> = props => {
   const { wallet, tokenId } = props
   const theme = useTheme()
   const styles = getStyles(theme)

@@ -3,7 +3,7 @@ import * as React from 'react'
 export const useWhyDidYouUpdate = <T extends object>(
   name: string,
   props: T
-) => {
+): void => {
   // Get a mutable ref object where we can store props ...
   // ... for comparison next time this hook runs.
   const previousProps = React.useRef<Record<string, unknown>>({})

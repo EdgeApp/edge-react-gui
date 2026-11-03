@@ -12,14 +12,14 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { EdgeCard } from './EdgeCard'
 
-const UnderlinedNumInputCardComponent = (props: {
+const UnderlinedNumInputCardComponent: React.FC<{
   currencyCode: string
   emptyPlaceholder?: string
   formattedAmount: string
   iconUri: string
   onPress?: () => void | Promise<void>
   title: string
-}) => {
+}> = props => {
   const {
     currencyCode,
     emptyPlaceholder = lstrings.string_amount,
@@ -36,7 +36,7 @@ const UnderlinedNumInputCardComponent = (props: {
   // exponent width from the total valueContainer view width to get the textBase
   // width.
   const [exponentTextWidth, setExponentTextWidth] = React.useState(1)
-  const handleExponentLayout = (event: any) => {
+  const handleExponentLayout = (event: any): void => {
     setExponentTextWidth(event.nativeEvent.layout.width)
   }
 

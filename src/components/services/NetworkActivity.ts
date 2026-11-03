@@ -11,7 +11,7 @@ export function NetworkActivity(props: Props): null {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    const handleNetworkState = (info: NetInfoState) => {
+    const handleNetworkState = (info: NetInfoState): void => {
       console.log('NetworkActivity - isConnected changed: ', info.isConnected)
       dispatch({
         type: 'NETWORK/NETWORK_STATUS',

@@ -51,7 +51,7 @@ interface FioConnectWalletsProps {
 
 let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.
 
-export const ConnectWallets = (props: FioConnectWalletsProps) => {
+export const ConnectWallets: React.FC<FioConnectWalletsProps> = props => {
   const { disabled, fioAddressName, fioWallet, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)

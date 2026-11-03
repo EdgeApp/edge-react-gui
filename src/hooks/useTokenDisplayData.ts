@@ -1,4 +1,8 @@
-import type { EdgeCurrencyConfig, EdgeTokenId } from 'edge-core-js'
+import type {
+  EdgeCurrencyConfig,
+  EdgeDenomination,
+  EdgeTokenId
+} from 'edge-core-js'
 
 import {
   getExchangeRate,
@@ -6,6 +10,16 @@ import {
 } from '../selectors/WalletSelectors'
 import { useSelector } from '../types/reactRedux'
 import { getDenomFromIsoCode } from '../util/utils'
+
+interface TokenDisplayData {
+  currencyCode: string
+  denomination: EdgeDenomination
+  fiatDenomination: EdgeDenomination
+  isoFiatCurrencyCode: string
+  assetToFiatRate: number
+  usdToWalletFiatRate: number
+  assetToYestUsdRate: number
+}
 
 /**
  * Returns data from tokens relevant for display
@@ -18,7 +32,7 @@ import { getDenomFromIsoCode } from '../util/utils'
 export const useTokenDisplayData = (props: {
   tokenId: EdgeTokenId
   currencyConfig: EdgeCurrencyConfig
-}) => {
+}): TokenDisplayData => {
   const { tokenId, currencyConfig } = props
   const { allTokens } = currencyConfig
   const isoFiatCurrencyCode = useSelector(

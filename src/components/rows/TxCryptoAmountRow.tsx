@@ -25,7 +25,7 @@ interface Props {
  * Renders the crypto amount for a transaction object.
  * Used on the transaction details scene.
  */
-export function TxCryptoAmountRow(props: Props) {
+export const TxCryptoAmountRow: React.FC<Props> = props => {
   const { transaction, wallet } = props
   const { currencyInfo } = wallet
   const { currencyCode, nativeAmount, networkFee, swapData, tokenId } =

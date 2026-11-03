@@ -59,7 +59,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     }
   }
 
-  signBroadcastAndSave = async () => {
+  signBroadcastAndSave = async (): Promise<void> => {
     const { acceleratedTx, wallet } = this.props
 
     this.setState({ status: 'sending' })
@@ -81,7 +81,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     }
   }
 
-  closeModal = (signedTx: EdgeTransaction | null, err?: Error) => {
+  closeModal = (signedTx: EdgeTransaction | null, err?: Error): void => {
     this.setState({
       mounted: false
     })
@@ -89,11 +89,11 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     else this.props.bridge.resolve(signedTx)
   }
 
-  handleCancel = () => {
+  handleCancel = (): void => {
     this.closeModal(null)
   }
 
-  handleConfirmation = async (reset: () => void) => {
+  handleConfirmation = async (reset: () => void): Promise<void> => {
     try {
       await this.signBroadcastAndSave()
     } finally {
@@ -127,7 +127,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
     return feeSyntax
   }
 
-  render() {
+  render(): React.ReactElement {
     const { acceleratedTx, bridge, replacedTx, theme } = this.props
     const { error, status } = this.state
 

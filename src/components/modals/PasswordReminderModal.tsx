@@ -43,7 +43,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<
     this.state = { checkingPassword: false, password: '' }
   }
 
-  handleCancel = () => {
+  handleCancel = (): void => {
     if (!this.state.checkingPassword) {
       this.props.dispatch({
         type: 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
@@ -52,7 +52,7 @@ export class PasswordReminderModalComponent extends React.PureComponent<
     }
   }
 
-  handleRequestChangePassword = () => {
+  handleRequestChangePassword = (): void => {
     if (!this.state.checkingPassword) {
       this.props.bridge.resolve()
       this.props.dispatch({
@@ -92,11 +92,11 @@ export class PasswordReminderModalComponent extends React.PureComponent<
       })
   }
 
-  handleChangeText = (password: string) => {
+  handleChangeText = (password: string): void => {
     this.setState({ password })
   }
 
-  render() {
+  render(): React.ReactElement {
     const { bridge } = this.props
     const { errorMessage, password, checkingPassword } = this.state
 

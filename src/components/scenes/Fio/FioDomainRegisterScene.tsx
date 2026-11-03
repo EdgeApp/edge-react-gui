@@ -69,7 +69,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     walletLoading: false
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { fioWallets } = this.props
     if (fioWallets.length > 0) {
       this.setState({
@@ -124,15 +124,15 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  onDomainPress = async () => {
+  onDomainPress = async (): Promise<void> => {
     await this.setDomain()
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     await this.selectFioWallet()
   }
 
-  checkFioDomain(fioDomain: string) {
+  checkFioDomain(fioDomain: string): void {
     this.setState({
       loading: true
     })
@@ -178,7 +178,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }, 1000)
   }
 
-  handleFioDomainChange = (fioDomainChanged: string) => {
+  handleFioDomainChange = (fioDomainChanged: string): void => {
     if (!this.props.isConnected) {
       this.setState({
         fioDomain: fioDomainChanged,
@@ -195,7 +195,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  handleFioWalletChange = (walletId: string) => {
+  handleFioWalletChange = (walletId: string): void => {
     this.setState({
       selectedWallet:
         this.props.fioWallets.find(fioWallet => fioWallet.id === walletId) ??
@@ -203,7 +203,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  selectFioWallet = async () => {
+  selectFioWallet = async (): Promise<void> => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -218,7 +218,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  setDomain = async () => {
+  setDomain = async (): Promise<void> => {
     const fioDomain = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -231,7 +231,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
 
-  renderButton() {
+  renderButton(): React.ReactElement | null {
     const { isValid, isAvailable, loading, walletLoading } = this.state
 
     if (isValid && isAvailable && !loading) {
@@ -252,7 +252,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     return null
   }
 
-  renderFioWallets() {
+  renderFioWallets(): React.ReactElement | undefined {
     const { fioWallets } = this.props
     const { selectedWallet } = this.state
     if (fioWallets && fioWallets.length > 1) {
@@ -271,7 +271,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const { fioDomain, isAvailable, loading, errorMessage, isValid } =
       this.state

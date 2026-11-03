@@ -25,7 +25,9 @@ export interface SelectableAsset {
   wallet?: EdgeCurrencyWallet
 }
 
-const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
+const TappableAccountCardComponent: React.FC<
+  TappableAccountCardProps
+> = props => {
   const { emptyLabel, onPress, selectedAsset, marginRem } = props
   const { paymentMethod, tokenId, wallet, customAsset } = selectedAsset
   const theme = useTheme()
@@ -35,12 +37,12 @@ const TappableAccountCardComponent = (props: TappableAccountCardProps) => {
     onPress()
   }, [onPress])
 
-  const renderInitial = () =>
+  const renderInitial = (): React.ReactElement | null =>
     paymentMethod == null && wallet == null ? (
       <EdgeText style={styles.textInitial}>{emptyLabel}</EdgeText>
     ) : null
 
-  const renderAccount = () => (
+  const renderAccount = (): React.ReactElement => (
     <View style={styles.currencyRow}>
       {paymentMethod != null ? (
         <PaymentMethodRow

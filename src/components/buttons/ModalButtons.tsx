@@ -9,6 +9,6 @@ import { ButtonsView, type ButtonsViewProps } from './ButtonsView'
 
 interface Props extends Omit<Omit<ButtonsViewProps, 'parentType'>, 'layout'> {}
 
-export const ModalButtons = (props: Props) => {
+export const ModalButtons: React.FC<Props> = props => {
   return <ButtonsView {...props} layout="column" parentType="modal" />
 }

@@ -10,7 +10,9 @@ import type { ScrollView } from 'react-native'
  * When the `ready` parameter becomes true,
  * we will scroll that view to the bottom.
  */
-export function useScrollToEnd(ready: boolean) {
+export function useScrollToEnd(
+  ready: boolean
+): React.RefObject<ScrollView | null> {
   const ref = React.useRef<ScrollView | null>(null)
   React.useEffect(() => {
     if (ready && ref.current != null) ref.current.scrollToEnd()

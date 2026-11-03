@@ -22,7 +22,7 @@ interface Props {
  * The only reason this needs to be a component is to get access
  * to the `useAnimatedStyle` hook, so we keep the features minimal here.
  */
-export function SwipeableRowIcon(props: Props) {
+export const SwipeableRowIcon: React.FC<Props> = props => {
   const { children, isActive, minWidth } = props
 
   const style = useAnimatedStyle(() => ({

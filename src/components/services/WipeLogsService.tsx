@@ -1,4 +1,5 @@
 import { asDate, asJSON, asMaybe, asObject, uncleaner } from 'cleaners'
+import type * as React from 'react'
 import { useEffect } from 'react'
 
 import { clearAllLogs } from '../../actions/LogActions'
@@ -16,12 +17,12 @@ const asLogWipeInfo = asJSON(
 )
 const wasLogWipeInfo = uncleaner(asLogWipeInfo)
 
-export const WipeLogsService = () => {
+export const WipeLogsService: React.FC = () => {
   const dispatch = useDispatch()
   const disklet = useSelector(state => state.core.disklet)
 
   useEffect(() => {
-    const handler = async () => {
+    const handler = async (): Promise<void> => {
       console.log('Checking for expired logs')
       const dataItem = await disklet
         .getText(LOG_WIPE_INFO_FILENAME)

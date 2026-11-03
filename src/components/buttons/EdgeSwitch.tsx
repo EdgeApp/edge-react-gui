@@ -20,7 +20,7 @@ export const EdgeSwitch: React.FC<EdgeSwitchProps> = (
 
   const [isASelected, setIsASelected] = useState(true)
 
-  const handlePress = () => {
+  const handlePress = (): void => {
     if (isASelected) {
       onSelectB()
     } else {

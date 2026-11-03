@@ -12,7 +12,7 @@ interface Props {
   text: string
 }
 
-export function Title(props: Props) {
+export const Title: React.FC<Props> = props => {
   const { leftIcon, text, rightIcon, styleLeftIcon, styleRightIcon } = props
 
   const theme = useTheme()

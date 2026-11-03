@@ -31,7 +31,7 @@ interface Props {
 /**
  * A toggle-able button in 'minimalist' style
  */
-const MinimalButtonComponent = (props: Props) => {
+const MinimalButtonComponent: React.FC<Props> = props => {
   const { highlighted, disabled = false, label, marginRem, onPress } = props
 
   const [pending, handlePress] = usePendingPress(onPress)

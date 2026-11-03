@@ -36,7 +36,7 @@ interface Props {
 
 type RadioButtonProps = Props & { value: boolean; right?: boolean }
 
-export function ButtonBox(props: Props) {
+export const ButtonBox: React.FC<Props> = props => {
   const { children, marginRem, paddingRem, onPress } = props
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
@@ -60,7 +60,7 @@ export function ButtonBox(props: Props) {
   )
 }
 
-export function Radio(props: RadioButtonProps) {
+export const Radio: React.FC<RadioButtonProps> = props => {
   const { children, marginRem, paddingRem, value, right, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -82,7 +82,7 @@ export function Radio(props: RadioButtonProps) {
   )
 }
 
-export function RadioIcon(props: { value: boolean }) {
+export const RadioIcon: React.FC<{ value: boolean }> = props => {
   const { value } = props
   const theme = useTheme()
 

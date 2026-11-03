@@ -75,7 +75,7 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
     type: EdgeButtonType,
     buttonProps?: ButtonInfo,
     index: number = 0
-  ) => {
+  ): React.ReactElement | null => {
     if (buttonProps == null) return null
     const { label, onPress, disabled, spinner, testID } = buttonProps
 

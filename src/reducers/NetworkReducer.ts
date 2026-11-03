@@ -8,7 +8,10 @@ export interface NetworkState {
   isConnected: boolean
 }
 
-export const network = (state: NetworkState = initialState, action: Action) => {
+export const network = (
+  state: NetworkState = initialState,
+  action: Action
+): NetworkState => {
   switch (action.type) {
     case 'NETWORK/NETWORK_STATUS': {
       return {

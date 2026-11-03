@@ -24,7 +24,7 @@ import path from 'path'
 
 import { asVersionFile, type VersionFile } from './cleaners'
 
-async function main() {
+async function main(): Promise<void> {
   const cwd = path.join(__dirname, '..')
   const disklet = makeNodeDisklet(cwd)
 

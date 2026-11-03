@@ -23,7 +23,7 @@ interface Props {
 /**
  * A Card representing an archived wallet
  */
-export const WalletRestoreCard = (props: Props) => {
+export const WalletRestoreCard: React.FC<Props> = props => {
   const { walletInfo, onPress } = props
 
   const theme = useTheme()

@@ -78,7 +78,7 @@ export class FioAddressSettingsComponent extends React.Component<
     showTransfer: false
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { refreshAllFioAddresses, route } = this.props
     const { showAddBundledTxs } = route.params
     refreshAllFioAddresses().catch((err: unknown) => {
@@ -89,7 +89,7 @@ export class FioAddressSettingsComponent extends React.Component<
     }
   }
 
-  afterAddBundledTxsSuccess = () => {
+  afterAddBundledTxsSuccess = (): void => {
     const { refreshAllFioAddresses, navigation } = this.props
 
     refreshAllFioAddresses().catch((err: unknown) => {
@@ -101,7 +101,7 @@ export class FioAddressSettingsComponent extends React.Component<
     navigation.goBack() // todo: fix goBack, now it is not going back to address details scene
   }
 
-  afterTransferSuccess = async () => {
+  afterTransferSuccess = async (): Promise<void> => {
     const { navigation, route } = this.props
     const { fioAddressName = '' } = route.params
 
@@ -119,25 +119,25 @@ export class FioAddressSettingsComponent extends React.Component<
     navigation.navigate('fioAddressList')
   }
 
-  onTransferPress = () => {
+  onTransferPress = (): void => {
     this.setState({ showTransfer: true })
   }
 
-  onAddBundledTxsPress = () => {
+  onAddBundledTxsPress = (): void => {
     this.setState({ showAddBundledTxs: true })
   }
 
-  cancelOperation = () => {
+  cancelOperation = (): void => {
     this.setState({ showTransfer: false, showAddBundledTxs: false })
   }
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet): Promise<number> =>
     await getTransferFee(fioWallet)
 
   onAddBundledTxsSubmit = async (
     fioWallet: EdgeCurrencyWallet,
     fee: number
-  ) => {
+  ): Promise<void> => {
     const { isConnected, route, onLogEvent } = this.props
     const { fioAddressName } = route.params
 
@@ -159,7 +159,7 @@ export class FioAddressSettingsComponent extends React.Component<
     })
   }
 
-  goToTransfer = (params: { fee: number }) => {
+  goToTransfer = (params: { fee: number }): void => {
     const { isConnected, navigation, route, wallet: fioWallet } = this.props
     const { fioAddressName } = route.params
 
@@ -210,7 +210,7 @@ export class FioAddressSettingsComponent extends React.Component<
     navigation.navigate('send2', sendParams)
   }
 
-  render() {
+  render(): React.ReactElement {
     const { route, theme, wallet: fioWallet } = this.props
     const { fioAddressName, bundledTxs } = route.params
     const { showTransfer, showAddBundledTxs } = this.state

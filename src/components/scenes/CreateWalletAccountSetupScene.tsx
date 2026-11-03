@@ -41,12 +41,12 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   const [spinning, setSpinning] = React.useState(false)
   const [text, setText] = React.useState(initialValue)
 
-  const handleChangeText = (text: string) => {
+  const handleChangeText = (text: string): void => {
     setText(text)
     setErrorMessage(undefined)
   }
 
-  async function checkHandle() {
+  async function checkHandle(): Promise<void> {
     const currencyPlugin = account.currencyConfig[existingPluginId]
     const data = await currencyPlugin.otherMethods.validateAccount(text)
     if (data.result === 'AccountAvailable') {
@@ -57,7 +57,7 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     setSpinning(true)
     checkHandle()
       .catch((error: unknown) => {

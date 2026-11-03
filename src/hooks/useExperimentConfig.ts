@@ -9,7 +9,7 @@ import { isMaestro } from '../util/maestro'
 import { useAsyncEffect } from './useAsyncEffect'
 
 // TODO: Create a new provider instead to serve the experimentConfig globally
-export const useExperimentConfig = () => {
+export const useExperimentConfig = (): ExperimentConfig | undefined => {
   const [experimentConfig, setExperimentConfig] = useState<
     ExperimentConfig | undefined
   >(isMaestro() ? DEFAULT_EXPERIMENT_CONFIG : undefined)

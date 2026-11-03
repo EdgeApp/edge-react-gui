@@ -35,21 +35,21 @@ interface Props {
  *  | This is the footer text   |
  *  |___________________________|
  */
-export function WarningCard({
+export const WarningCard: React.FC<Props> = ({
   title,
   header,
   points,
   footer,
   marginRem,
   paddingRem
-}: Props) {
+}) => {
   const theme = useTheme()
   const margin = sidesToMargin(mapSides(fixSides(marginRem, 1), theme.rem))
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 1), theme.rem))
 
   const styles = getStyles(theme)
 
-  const renderBulletpoint = (message: string) => {
+  const renderBulletpoint = (message: string): React.ReactElement => {
     return (
       <View style={styles.bulletpointRow} key={message}>
         <EdgeText style={styles.bulletpointText}>{'\u2022 '}</EdgeText>

@@ -16,12 +16,12 @@ import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { EdgeModal } from './EdgeModal'
 
-export function PermissionsSettingModal(props: {
+export const PermissionsSettingModal: React.FC<{
   bridge: AirshipBridge<boolean> // returns true if mandatory and denied
   mandatory: boolean
   name: string
   permission: Permission
-}) {
+}> = props => {
   const { bridge, mandatory, name, permission } = props
   const isAppForeground = useIsAppForeground()
 
@@ -48,14 +48,14 @@ export function PermissionsSettingModal(props: {
     'PermissionsSettingModal'
   )
 
-  const handlePress = () => {
+  const handlePress = (): void => {
     openSettings().catch((error: unknown) => {
       showError(error)
     })
     if (!mandatory) handleClose()
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     bridge.resolve(mandatory)
   }
 

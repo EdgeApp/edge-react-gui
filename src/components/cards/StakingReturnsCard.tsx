@@ -19,16 +19,16 @@ interface StakingReturnsCardParams {
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingReturnsCard({
+export const StakingReturnsCard: React.FC<StakingReturnsCardParams> = ({
   fromCurrencyLogos,
   toCurrencyLogos,
   apy,
   stakeProviderInfo
-}: StakingReturnsCardParams) {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderArrow = () => {
+  const renderArrow = (): React.ReactElement => {
     return (
       <View style={styles.arrowContainer}>
         <View style={styles.arrowTopLine} />
@@ -38,7 +38,7 @@ export function StakingReturnsCard({
     )
   }
 
-  const renderEstimatedReturn = () => {
+  const renderEstimatedReturn = (): React.ReactElement | null => {
     if (apy == null || apy <= 0) return null
     const estimatedReturnMsg = toFixed(apy.toString(), 1, 1) + '% APR'
     return (
@@ -48,7 +48,7 @@ export function StakingReturnsCard({
     )
   }
 
-  const renderStakeProvider = () => {
+  const renderStakeProvider = (): React.ReactElement | null => {
     if (stakeProviderInfo == null) return null
     const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
     const swapProviderIcon = getStakeProviderIcon(

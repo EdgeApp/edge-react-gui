@@ -51,7 +51,9 @@ interface InsufficientFeesModalNoSwapBuyProps {
  * Show this modal when the wallet doesn't have enough funds to cover fees.
  * If UK and swaps are disabled, shows a simple modal without a swap CTA.
  */
-export const showInsufficientFeesModal = async (props: ShowModalProps) => {
+export const showInsufficientFeesModal = async (
+  props: ShowModalProps
+): Promise<void> => {
   const { countryCode, coreError, navigation, wallet, onSwap } = props
 
   if (config.disableSwaps === true && countryCode === 'GB') {
@@ -80,9 +82,9 @@ export const showInsufficientFeesModal = async (props: ShowModalProps) => {
  * Shows a simple modal notifying the user that they don't have enough funds to
  * cover fees, without any CTA to buy or swap.
  */
-function InsufficientFeesModalNoSwapBuy(
-  props: InsufficientFeesModalNoSwapBuyProps
-) {
+const InsufficientFeesModalNoSwapBuy: React.FC<
+  InsufficientFeesModalNoSwapBuyProps
+> = props => {
   const { bridge, wallet, coreError } = props
   const { tokenId, networkFee = '' } = coreError
   const currencyCode = getCurrencyCode(wallet, tokenId)
@@ -118,7 +120,7 @@ function InsufficientFeesModalNoSwapBuy(
  * Shows a modal notifying the user that they don't have enough funds to cover
  * fees, with a CTA to buy or swap, depending on configuration and country.
  */
-function InsufficientFeesModal(props: InsufficientFeesModalProps) {
+const InsufficientFeesModal: React.FC<InsufficientFeesModalProps> = props => {
   const { bridge, countryCode, coreError, navigation, wallet, onSwap } = props
 
   // Get the display amount:

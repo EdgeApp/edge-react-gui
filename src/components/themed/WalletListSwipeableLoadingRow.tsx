@@ -26,7 +26,7 @@ const THREE_DOTS = '...'
  * A spinning row on the wallet list scene,
  * which can be swiped to reveal the menu button.
  */
-function WalletListSwipeableLoadingRowComponent(props: Props) {
+const WalletListSwipeableLoadingRowComponent: React.FC<Props> = props => {
   const { navigation, walletId } = props
 
   const account = useSelector(state => state.core.account)
@@ -57,7 +57,9 @@ function WalletListSwipeableLoadingRowComponent(props: Props) {
 
   const iconWidth = theme.rem(2.5)
 
-  const renderMenuUnderlay = (isActive: SharedValue<boolean>) => {
+  const renderMenuUnderlay = (
+    isActive: SharedValue<boolean>
+  ): React.ReactElement => {
     return (
       <EdgeTouchableOpacity style={styles.menuUnderlay} onPress={handleMenu}>
         <SwipeableRowIcon isActive={isActive} minWidth={iconWidth}>

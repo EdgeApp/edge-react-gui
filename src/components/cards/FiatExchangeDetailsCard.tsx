@@ -30,7 +30,7 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
-export function FiatExchangeDetailsCard(props: Props) {
+export const FiatExchangeDetailsCard: React.FC<Props> = props => {
   const { action, assetAction, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,7 +50,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   const { assetActionType: direction } = assetAction
 
-  const createExchangeDataString = (nl: string = '\n') => {
+  const createExchangeDataString = (nl: string = '\n'): string => {
     const { dateTime } = unixToLocaleDateTime(transaction.date)
 
     const exchangeData = [
@@ -107,7 +107,7 @@ export function FiatExchangeDetailsCard(props: Props) {
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (orderUri == null) return
 
     if (Platform.OS === 'ios') {

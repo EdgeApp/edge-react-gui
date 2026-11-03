@@ -40,7 +40,7 @@ const ACTIVITY_INDICATOR_FADE_IN_DELAY = 100
  * A settings row places an interactive control next to a description,
  * which can be some combination of React children and a plain text label.
  */
-const SettingsRowComponent = (props: Props) => {
+const SettingsRowComponent: React.FC<Props> = props => {
   const {
     children,
     disabled = false,

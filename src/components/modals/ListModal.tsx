@@ -68,21 +68,21 @@ export function ListModal<T>({
   onViewableItemsChanged,
   label: placeholder,
   ...textProps
-}: Props<T>) {
+}: Props<T>): React.ReactElement {
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) =>
     rowComponent ? rowComponent(item) : null
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     bridge.resolve(undefined)
   }
-  const handleChangeText = (text: string) => {
+  const handleChangeText = (text: string): void => {
     setText(text)
     setFilteredRows(text)
   }
 
-  const handleSubmitEditing = () => {
+  const handleSubmitEditing = (): void => {
     onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text)
   }
 

@@ -54,7 +54,9 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     })
   }
 
-  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
+  renderFiatTypeResult = (
+    data: FlatListItem<GuiFiatType>
+  ): React.ReactElement | null => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
     if (!fiatCountry) {
@@ -86,7 +88,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       const key = `currency_label_${entry.value}`
       const subTitle = lstrings[key as keyof typeof lstrings] ?? ''
@@ -139,7 +141,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     )
   }
 
-  onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
+  onSelectFiat = ({ value: selectedFiat }: { value: string }): void => {
     const { navigation } = this.props
     if (!this.isValidFiat(selectedFiat)) {
       showToast(lstrings.fragment_create_wallet_select_valid)
@@ -153,7 +155,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     }
   }
 
-  isValidFiat = (selectedFiat: string) => {
+  isValidFiat = (selectedFiat: string): GuiFiatType | undefined => {
     const { supportedFiats } = this.state
 
     const isValid = supportedFiats.find(fiat => fiat.value === selectedFiat)
@@ -161,7 +163,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return isValid
   }
 
-  keyExtractor = (item: GuiFiatType) => `${item.label}${item.value}`
+  keyExtractor = (item: GuiFiatType): string => `${item.label}${item.value}`
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

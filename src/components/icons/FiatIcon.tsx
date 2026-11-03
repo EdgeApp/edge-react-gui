@@ -22,7 +22,7 @@ interface Props {
  * Dynamic icon where the wallet's fiat symbol is overlayed on top of a
  * background of a blank green circle icon.
  */
-export const FiatIconComponent = (props: Props) => {
+export const FiatIconComponent: React.FC<Props> = props => {
   const { marginRem, mono = false, sizeRem = 2, fiatCurrencyCode } = props
   const theme = useTheme()
   const styles = getStyles(theme)

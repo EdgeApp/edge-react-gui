@@ -3,7 +3,7 @@ import { sprintf } from 'sprintf-js'
 
 import { lstrings } from '../locales/strings'
 
-export const getUserInfoUsername = (userInfo: EdgeUserInfo) =>
+export const getUserInfoUsername = (userInfo: EdgeUserInfo): string =>
   userInfo.username ??
   sprintf(
     lstrings.guest_account_id_1s,

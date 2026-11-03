@@ -14,7 +14,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
  * Shows a bar indicating the the number of wallets that are fully synced across
  * the entire account.
  */
-export const AccountSyncBar = () => {
+export const AccountSyncBar: React.FC = () => {
   const theme = useTheme()
   const style = getStyles(theme)
 

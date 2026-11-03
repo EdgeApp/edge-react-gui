@@ -65,7 +65,7 @@ export function useTransactionList(
 
     // Sends the mutable state to React,
     // merging the two transaction lists together:
-    function requestRender() {
+    function requestRender(): void {
       const mergedTxs = streamedTxs.filter(tx => !changedTxs.has(tx.txid))
       mergedTxs.push(...changedTxs.values())
       mergedTxs.sort((a, b) => b.date - a.date)
@@ -126,8 +126,8 @@ export function useTransactionList(
     })
 
     // Constructs a new stream, then updates `cleanupStream` and `requestMore`:
-    let cleanupStream = () => {}
-    function restartStream() {
+    let cleanupStream = (): void => {}
+    function restartStream(): void {
       // If this gets set to `true`, the current stream is closed,
       // so we shouldn't do any more state updates,
       // even if a lingering promise resolves:

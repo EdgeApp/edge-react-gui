@@ -137,7 +137,7 @@ interface Props extends EdgeAppSceneProps<'loanManage'> {
   loanAccount: LoanAccount
 }
 
-export const LoanManageSceneComponent = (props: Props) => {
+export const LoanManageSceneComponent: React.FC<Props> = props => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------

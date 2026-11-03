@@ -63,7 +63,7 @@ interface ChildProps {
   duration: number
 }
 
-function CrossFadeChild(props: ChildProps) {
+const CrossFadeChild: React.FC<ChildProps> = props => {
   const { activeKey, childKey, children, duration } = props
   const active = childKey === activeKey
 
