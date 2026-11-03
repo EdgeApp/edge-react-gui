@@ -32,6 +32,7 @@ import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { zeroString } from '../../util/utils'
 import { AlertCardUi4 } from '../cards/AlertCard'
 import { EdgeCard } from '../cards/EdgeCard'
+import { DAppIcon, pickDAppIconUri } from '../icons/DAppIcon'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -62,7 +63,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
   const styles = getStyles(theme)
   const walletConnect = useWalletConnect()
   const dAppName = dApp.peerMeta.name
-  const iconUri = dApp.peerMeta.icons[0]
+  const iconUri = pickDAppIconUri(dApp.peerMeta.icons)
 
   const walletName = getWalletName(wallet)
 
@@ -291,7 +292,7 @@ export const WcSmartContractModal: React.FC<Props> = (props: Props) => {
         <EdgeCard icon={walletImageUri}>
           <EdgeRow title={lstrings.wc_smartcontract_wallet} body={walletName} />
         </EdgeCard>
-        <EdgeCard icon={iconUri}>
+        <EdgeCard icon={<DAppIcon uri={iconUri} sizeRem={1.5} />}>
           <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </EdgeCard>
         {zeroString(networkFee) ? null : (

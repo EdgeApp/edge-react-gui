@@ -3,7 +3,6 @@ import type { Web3WalletTypes } from '@walletconnect/web3wallet'
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { checkAndShowLightBackupModal } from '../../actions/BackupModalActions'
@@ -23,6 +22,7 @@ import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
 import type { EdgeAsset, WcConnectionInfo } from '../../types/types'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { DAppIcon } from '../icons/DAppIcon'
 import {
   WalletListModal,
   type WalletListResult
@@ -186,11 +186,7 @@ export const WcConnectionsScene: React.FC<Props> = props => {
                 handleActiveConnectionPress(dAppConnection)
               }}
             >
-              <FastImage
-                resizeMode="contain"
-                style={styles.currencyLogo}
-                source={{ uri: dAppConnection.icon }}
-              />
+              <DAppIcon uri={dAppConnection.icon} />
               <View style={styles.info}>
                 <EdgeText style={styles.infoTitle}>
                   {dAppConnection.dAppName}
@@ -222,11 +218,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5),
     paddingTop: theme.rem(1)
-  },
-  currencyLogo: {
-    height: theme.rem(2),
-    width: theme.rem(2),
-    resizeMode: 'contain'
   },
   arrow: {
     display: 'flex',

@@ -13,6 +13,7 @@ import { getCurrencyIconUris } from '../../util/CdnUris'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { ModalButtons } from '../buttons/ModalButtons'
 import { EdgeCard } from '../cards/EdgeCard'
+import { DAppIcon } from '../icons/DAppIcon'
 import { FlashNotification } from '../navigation/FlashNotification'
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -23,7 +24,8 @@ import { EdgeModal } from './EdgeModal'
 
 interface Props {
   bridge: AirshipBridge<void>
-  dAppIcon: string
+  /** Drawable artwork from `pickDAppIconUri`, if the dApp has any */
+  dAppIcon?: string
   dAppName: string
   message: string
   /** The bip122 signing protocol the dapp asked for. */
@@ -136,7 +138,7 @@ export const WcSignMessageModal: React.FC<Props> = props => {
           message={lstrings.wc_sign_message_warning_text}
           type="warning"
         />
-        <EdgeCard icon={dAppIcon}>
+        <EdgeCard icon={<DAppIcon uri={dAppIcon} sizeRem={1.5} />}>
           <EdgeRow title={lstrings.wc_smartcontract_dapp} body={dAppName} />
         </EdgeCard>
         <EdgeCard icon={walletImageUri}>

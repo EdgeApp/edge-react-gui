@@ -62,6 +62,7 @@
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
 - fixed: Change Username opens right after the password prompt, with no second tap.
 - fixed: Changing the username after changing the password keeps the new password.
+- fixed: WalletConnect dApps without usable artwork show the WalletConnect icon instead of a blank space
 
 ## 4.52.3 (2026-11-04)
 

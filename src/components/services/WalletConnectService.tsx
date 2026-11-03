@@ -27,6 +27,7 @@ import { globalKeys } from '../../keys'
 import { asEdgeTokenId } from '../../types/types'
 import { snooze } from '../../util/utils'
 import { readActiveSessionWallets } from '../../util/walletConnectSessionStore'
+import { pickDAppIconUri } from '../icons/DAppIcon'
 import { WcSignMessageModal } from '../modals/WcSignMessageModal'
 import { WcSmartContractModal } from '../modals/WcSmartContractModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -94,10 +95,7 @@ export const WalletConnectService: React.FC<Props> = props => {
           return
         }
 
-        const iconUri = session.peer.metadata.icons[0] ?? '.svg'
-        const dAppIcon = iconUri.endsWith('.svg')
-          ? 'https://content.edge.app/walletConnectLogo.png'
-          : iconUri
+        const dAppIcon = pickDAppIconUri(session.peer.metadata.icons)
         await Airship.show(bridge => (
           <WcSignMessageModal
             bridge={bridge}
@@ -167,12 +165,11 @@ export const WalletConnectService: React.FC<Props> = props => {
         )
       const { nativeAmount, networkFee, tokenId } =
         payloadAmounts(parsedPayload)
-      const iconUri = session.peer.metadata.icons[0] ?? '.svg'
-      const icon = iconUri.endsWith('.svg')
-        ? 'https://content.edge.app/walletConnectLogo.png'
-        : iconUri
       const dApp = {
-        peerMeta: { name: session.peer.metadata.name, icons: [icon] }
+        peerMeta: {
+          name: session.peer.metadata.name,
+          icons: session.peer.metadata.icons
+        }
       }
       await Airship.show(bridge => (
         <WcSmartContractModal
