@@ -11,7 +11,7 @@ export const useLayout = (): [
     width: 0,
     height: 0
   })
-  const handleLayout = (event: LayoutChangeEvent) => {
+  const handleLayout = (event: LayoutChangeEvent): void => {
     setLayout(event.nativeEvent.layout)
   }
   return [layout, handleLayout]

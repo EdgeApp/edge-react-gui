@@ -19,16 +19,16 @@ interface Props {
  * An (optionally) tappable card that displays its children in up to two left/right
  * sections.
  */
-const TappableCardComponent = ({
+const TappableCardComponent: React.FC<Props> = ({
   children,
   disabled = false,
   onPress,
   ...cardProps
-}: Props) => {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderTouchableChildren = () => (
+  const renderTouchableChildren = (): React.ReactElement => (
     <View style={styles.container}>
       <View style={styles.childrenContainer}>{children}</View>
       {onPress == null ? null : (

@@ -1,7 +1,7 @@
 import type { RootState } from '../types/reduxTypes'
 import { removeIsoPrefix } from '../util/utils'
 
-export const getDefaultFiat = (state: RootState) => {
+export const getDefaultFiat = (state: RootState): string => {
   const defaultIsoFiat: string = state.ui.settings.defaultIsoFiat
   return removeIsoPrefix(defaultIsoFiat)
 }
@@ -12,7 +12,7 @@ export const getDefaultFiat = (state: RootState) => {
  * but we need history for both the crypto and the fiat sides
  * to make an accurate chart. If this isn't possible, fall back to USD.
  */
-export const getCoingeckoFiat = (state: RootState) => {
+export const getCoingeckoFiat = (state: RootState): string => {
   const defaultIsoFiat: string = state.ui.settings.defaultIsoFiat
   const defaultFiat = removeIsoPrefix(defaultIsoFiat)
   return COINGECKO_SUPPORTED_FIATS[

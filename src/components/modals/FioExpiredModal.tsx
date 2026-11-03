@@ -6,10 +6,10 @@ import { Paragraph } from '../themed/EdgeText'
 import { MainButton } from '../themed/MainButton'
 import { EdgeModal } from './EdgeModal'
 
-export function FioExpiredModal(props: {
+export const FioExpiredModal: React.FC<{
   bridge: AirshipBridge<boolean>
   fioName: string
-}) {
+}> = props => {
   const { bridge, fioName } = props
   const title = `${lstrings.fio_address_confirm_screen_fio_label} ${lstrings.string_expiration}`
 

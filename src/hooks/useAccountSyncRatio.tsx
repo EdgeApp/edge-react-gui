@@ -10,7 +10,7 @@ import { useWatch } from './useWatch'
 /**
  * Returns the overall sync progress for all wallets in an account
  */
-export const useAccountSyncRatio = () => {
+export const useAccountSyncRatio = (): number => {
   const account = useSelector(state => state.core.account)
   const userPausedWalletsSet = useSelector(
     state => state.ui.settings.userPausedWalletsSet

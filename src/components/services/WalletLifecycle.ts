@@ -42,7 +42,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Forgets about any booting wallets.
    */
-  cancelBoot() {
+  cancelBoot(): void {
     for (const boot of this.booting) boot.close()
     this.booting = []
   }
@@ -50,7 +50,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Unsubscribes from the account & context callbacks.
    */
-  unsubscribe() {
+  unsubscribe(): void {
     for (const cleanup of this.cleanups) cleanup()
     this.cleanups = []
   }
@@ -58,7 +58,7 @@ export class WalletLifecycleComponent extends React.Component<Props> {
   /**
    * Figures out what has changed and adapts.
    */
-  handleChange = () => {
+  handleChange = (): void => {
     const { account, context, sortedWalletList, userPausedWalletsSet } =
       this.props
 
@@ -134,20 +134,20 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.handleChange()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     this.handleChange()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.cancelBoot()
     this.unsubscribe()
   }
 
-  render() {
+  render(): null {
     return null
   }
 }

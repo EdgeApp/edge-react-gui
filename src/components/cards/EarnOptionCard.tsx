@@ -25,7 +25,7 @@ interface Props {
   onPress?: () => Promise<void>
 }
 
-export function EarnOptionCard(props: Props) {
+export const EarnOptionCard: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

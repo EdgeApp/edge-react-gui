@@ -12,7 +12,7 @@ export const useAsyncNavigation = <Nav extends NavigationProp<any>>(
   const [isNavigating, setIsNavigating] = React.useState(false)
 
   React.useEffect(() => {
-    const handleNavComplete = () => {
+    const handleNavComplete = (): void => {
       setIsNavigating(false)
     }
 

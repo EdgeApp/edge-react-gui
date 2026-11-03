@@ -27,7 +27,7 @@ import type { ThunkAction } from '../../types/reduxTypes'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
 
-export const PermissionsManager = () => {
+export const PermissionsManager: React.FC = () => {
   const dispatch = useDispatch()
   const statePermissions = useSelector(state => state.permissions)
   const isAppForeground = useIsAppForeground()
@@ -106,7 +106,9 @@ export const checkAndRequestPermission =
     return status
   }
 
-export const checkIfDenied = (status: PermissionStatus) =>
+export const checkIfDenied = (
+  status: PermissionStatus
+): status is 'unavailable' | 'blocked' | 'denied' =>
   status === 'blocked' || status === 'denied' || status === 'unavailable'
 
 // Returns true if denied, false if accepted

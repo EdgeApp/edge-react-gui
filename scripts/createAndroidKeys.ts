@@ -54,7 +54,7 @@ const main = async (): Promise<void> => {
 
 const mylog = console.log
 
-function call(cmdstring: string) {
+function call(cmdstring: string): void {
   // console.log('call: ' + cmdstring)
   childProcess.execSync(cmdstring, {
     encoding: 'utf8',
@@ -65,7 +65,7 @@ function call(cmdstring: string) {
   })
 }
 
-function chdir(path: string) {
+function chdir(path: string): void {
   console.log('chdir: ' + path)
   _currentPath = path
 }

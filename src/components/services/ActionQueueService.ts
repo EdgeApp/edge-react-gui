@@ -28,7 +28,7 @@ type ServiceProgramStates = Record<
   }
 >
 
-export const ActionQueueService = () => {
+export const ActionQueueService: React.FC = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
@@ -102,7 +102,7 @@ export const ActionQueueService = () => {
     const serviceProgramStates = serviceProgramStatesRef.current
 
     // Loop function
-    const task = async () => {
+    const task = async (): Promise<void> => {
       // Programs that require immediate attention
       const urgentProgramIds = activeProgramIds.filter(programId => {
         const { state } = actionQueueMap[programId]

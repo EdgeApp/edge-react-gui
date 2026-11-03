@@ -61,7 +61,8 @@ export const asObjectIn = <K extends string | number | symbol, T>(
 export const asObjectInOrTrue = <K extends string | number | symbol, T>(
   asKey: Cleaner<K>,
   asT: Cleaner<T>
-) => asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
+): Cleaner<true | Record<K, T>> =>
+  asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
 
 // -----------------------------------------------------------------------------
 // Internal functions taken from `cleaners` package

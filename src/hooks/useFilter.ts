@@ -12,7 +12,7 @@ export function useFilter<T>(
   >(new Map([['', allData]]))
   const [fifoCache, setFifoCache] = React.useState([''])
 
-  const setFilter = (filter: string) => {
+  const setFilter = (filter: string): void => {
     // If already existing in cache just return the existing sort
     const filteredDataCacheForFilter = filteredDataCache.get(filter)
     if (filteredDataCacheForFilter != null) {

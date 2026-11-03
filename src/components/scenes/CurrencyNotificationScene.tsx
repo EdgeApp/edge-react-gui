@@ -21,7 +21,7 @@ export interface CurrencyNotificationParams {
 
 interface Props extends EdgeAppSceneProps<'currencyNotificationSettings'> {}
 
-export const CurrencyNotificationScene = (props: Props) => {
+export const CurrencyNotificationScene: React.FC<Props> = props => {
   const { route } = props
   const { currencyInfo } = route.params
   const { pluginId } = currencyInfo

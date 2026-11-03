@@ -37,13 +37,13 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.subscription = Appearance.addChangeListener(({ colorScheme }) => {
       this.setState({ darkMode: colorScheme === 'dark' })
     })
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.subscription != null) this.subscription.remove()
   }
 
@@ -52,7 +52,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
    * This modal doesn't use the normal theme colors,
    * since the native component inside uses its own phone-based colors.
    */
-  render() {
+  render(): React.ReactElement {
     const { bridge, theme } = this.props
     const { darkMode, date } = this.state
 
@@ -90,12 +90,12 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
     )
   }
 
-  handleChange = (event: unknown, date?: Date) => {
+  handleChange = (event: unknown, date?: Date): void => {
     // @ts-expect-error onChange types the date as optional
     this.setState({ date })
   }
 
-  handleDone = () => {
+  handleDone = (): void => {
     this.props.bridge.resolve(this.state.date)
   }
 }
@@ -104,7 +104,7 @@ export class DateModalIos extends React.Component<Props & ThemeProps, State> {
  * Displays the native Android date picker modal,
  * using the Airship system to manage its lifetime.
  */
-export function DateModalAndroid(props: Props) {
+export const DateModalAndroid: React.FC<Props> = props => {
   const { bridge, initialValue } = props
 
   return (

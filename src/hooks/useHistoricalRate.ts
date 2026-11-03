@@ -10,7 +10,7 @@ export const useHistoricalRate = (
   date: string,
   maxQuerySize?: number,
   doFetch?: EdgeFetchFunction
-) => {
+): number => {
   const [historicalRate = 0] = useAsyncValue(async (): Promise<number> => {
     return await getHistoricalCryptoRate(
       pluginId,

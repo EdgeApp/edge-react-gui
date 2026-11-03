@@ -20,7 +20,7 @@ interface Props {
 /**
  * A wallet list that can be dragged to sort the items inside.
  */
-export function WalletListSortable(props: Props) {
+export const WalletListSortable: React.FC<Props> = props => {
   const { insetStyle } = props
 
   // Subscribe to account state:

@@ -205,7 +205,7 @@ const addToQueue = (
   resolve: Function,
   maxQuerySize: number,
   doFetch?: EdgeFetchFunction
-) => {
+): void => {
   const rateKeyResolver = resolverMap.get(rateKey)
   if (rateKeyResolver == null) {
     // Create a new entry in the map for this pair/date

@@ -12,7 +12,7 @@ interface Props {
  * Displays instructional text for a settings section.
  * Place this below a settings header row.
  */
-export function SettingsSubHeader(props: Props) {
+export const SettingsSubHeader: React.FC<Props> = props => {
   const { label } = props
   const theme = useTheme()
   const styles = getStyles(theme)

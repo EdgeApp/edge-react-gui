@@ -20,7 +20,7 @@ export interface Props {
   tokenId?: string | null
 }
 
-export function ShareButtons(props: Props) {
+export const ShareButtons: React.FC<Props> = props => {
   const {
     copyToClipboard,
     openShareModal,
@@ -74,11 +74,11 @@ export function ShareButtons(props: Props) {
   )
 }
 
-function ShareButton(props: {
+const ShareButton: React.FC<{
   text: string
   onPress: () => Promise<void>
   icon: string
-}) {
+}> = props => {
   const { icon, text, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

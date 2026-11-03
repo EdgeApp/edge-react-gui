@@ -10,7 +10,7 @@ interface Props {
   lowerCased?: boolean
 }
 
-export const LineTextDividerComponent = (props: Props) => {
+export const LineTextDividerComponent: React.FC<Props> = props => {
   const { title, children, lowerCased } = props
   const theme = useTheme()
   const styles = getStyles(theme)

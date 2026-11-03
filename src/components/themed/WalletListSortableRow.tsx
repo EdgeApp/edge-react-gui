@@ -31,7 +31,7 @@ interface Props {
   wallet?: EdgeCurrencyWallet
 }
 
-function WalletListSortableRowComponent(props: Props) {
+const WalletListSortableRowComponent: React.FC<Props> = props => {
   const { wallet } = props
 
   const handleDrag = useReorderableDrag()

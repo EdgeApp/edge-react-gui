@@ -27,7 +27,7 @@ interface Props {
   onPress?: () => Promise<void> | void
 }
 
-export function Alert(props: Props) {
+export const Alert: React.FC<Props> = props => {
   const {
     children,
     marginRem,

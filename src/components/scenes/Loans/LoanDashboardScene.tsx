@@ -45,7 +45,7 @@ interface Props extends EdgeAppSceneProps<'loanDashboard'> {}
 const SUPPORTED_WALLET_PLUGIN_IDS = ['polygon']
 if (__DEV__) SUPPORTED_WALLET_PLUGIN_IDS.push('ethereum')
 
-export const LoanDashboardScene = (props: Props) => {
+export const LoanDashboardScene: React.FC<Props> = props => {
   const { navigation } = props
 
   const theme = useTheme()
@@ -204,7 +204,7 @@ export const LoanDashboardScene = (props: Props) => {
     const loanAccount: LoanAccount = item.item
     const iconUri = getBorrowPluginIconUri(loanAccount.borrowPlugin.borrowInfo)
 
-    const handleLoanPress = () => {
+    const handleLoanPress = (): void => {
       navigation.navigate('loanDetails', { loanAccountId: loanAccount.id })
     }
     return (
@@ -217,7 +217,7 @@ export const LoanDashboardScene = (props: Props) => {
     )
   })
 
-  const renderFooter = () => {
+  const renderFooter = (): React.ReactElement => {
     return (
       <>
         {isNewLoanLoading ? (

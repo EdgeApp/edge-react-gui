@@ -14,7 +14,7 @@ interface Props {
   onPress?: () => void
 }
 
-export function FlashNotification(props: Props) {
+export const FlashNotification: React.FC<Props> = props => {
   const { bridge, message, icon, onPress = () => {} } = props
   const theme = useTheme()
   const styles = getStyles(theme)

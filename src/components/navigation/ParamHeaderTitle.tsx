@@ -13,7 +13,7 @@ interface Props<
 
 export function ParamHeaderTitle<RouteName extends keyof AppParamList>(
   props: Props<RouteName>
-) {
+): React.ReactElement {
   const route = useRoute<RouteProp<RouteName>>()
   const title = props.fromParams(route.params)
   return <HeaderTitle title={title} />

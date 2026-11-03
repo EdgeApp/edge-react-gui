@@ -99,7 +99,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
   }
 
-  getItems = () => {
+  getItems = (): Item[] => {
     const { domains, input } = this.state
 
     if (input === '') {
@@ -122,24 +122,24 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return filteredRecords
   }
 
-  selectCustom = () => {
+  selectCustom = (): void => {
     const { input } = this.state
     const fioDomain = { ...FIO_DOMAIN_DEFAULT, name: input }
 
     this.props.bridge.resolve(fioDomain)
   }
 
-  registerNewDomain = () => {
+  registerNewDomain = (): void => {
     const { bridge, navigation } = this.props
     bridge.resolve(undefined)
     navigation.navigate('fioDomainRegister')
   }
 
-  selectItem = (value: any) => {
+  selectItem = (value: any): void => {
     this.props.bridge.resolve(value)
   }
 
-  renderItem = ({ item }: FlatListItem<Item>) => {
+  renderItem = ({ item }: FlatListItem<Item>): React.ReactElement | null => {
     const { theme } = this.props
     const { value, label, createNew } = item
     const styles = getStyles(theme)
@@ -174,12 +174,12 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return null
   }
 
-  keyExtractor = (item: Item) => item.value.name
-  onSearchFilterChange = (input: string) => {
+  keyExtractor = (item: Item): string => item.value.name
+  onSearchFilterChange = (input: string): void => {
     this.setState({ input })
   }
 
-  render() {
+  render(): React.ReactElement {
     const { bridge, theme } = this.props
     const { input } = this.state
     const items = this.getItems()

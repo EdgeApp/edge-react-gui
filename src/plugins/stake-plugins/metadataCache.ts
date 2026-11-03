@@ -13,7 +13,7 @@ export const cacheTxMetadata = (
   txid: string,
   currencyCode: string,
   metadata: EdgeMetadata
-) => {
+): void => {
   // Add metadata cache entry:
   const key = txid.toLowerCase()
   const cacheEntries = stakeMetadataCache.get(key)

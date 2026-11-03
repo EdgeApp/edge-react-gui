@@ -25,7 +25,7 @@ interface Props {
 /**
  * A settings row with a smaller text on the right side.
  */
-export const SettingsLabelRowComponent = (props: Props) => {
+export const SettingsLabelRowComponent: React.FC<Props> = props => {
   const { children, disabled, label, right, onPress } = props
   const theme = useTheme()
   const style = {

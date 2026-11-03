@@ -58,7 +58,10 @@ export function withExtendedTouchable<
       }
     }, [])
 
-    const runPress = (event: GestureResponderEvent, pressFn?: PressFn) => {
+    const runPress = (
+      event: GestureResponderEvent,
+      pressFn?: PressFn
+    ): void => {
       if (pressFn == null) return
       if (isDebouncing || isAwaiting) return
 

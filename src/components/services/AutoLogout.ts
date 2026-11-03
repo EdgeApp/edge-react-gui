@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 
-export const AutoLogout = () => {
+export const AutoLogout: React.FC = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationBase>()
   const stateRef = React.useRef({

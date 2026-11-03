@@ -25,7 +25,7 @@ const MAX_OBT_DATA_CHECKS = 15
 export const refreshConnectedWallets = async (
   dispatch: Dispatch,
   getState: GetState
-) => {
+): Promise<void> => {
   const wallets: EdgeCurrencyWallet[] = []
   const fioWallets: EdgeCurrencyWallet[] = getState().ui.fio.fioWallets
   const currencyWallets = getState().core.account.currencyWallets
@@ -130,7 +130,7 @@ export const showFioExpiredModal = async (
   navigation: NavigationBase,
   fioWallet: EdgeCurrencyWallet,
   fioDomain: FioDomain
-) => {
+): Promise<void> => {
   const answer = await Airship.show<boolean>(bridge => (
     <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />
   ))

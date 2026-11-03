@@ -21,7 +21,7 @@ export interface WcDisconnectParams {
   wcConnectionInfo: WcConnectionInfo
 }
 
-export const WcDisconnectScene = (props: Props) => {
+export const WcDisconnectScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { wcConnectionInfo } = route.params
   const theme = useTheme()
@@ -29,7 +29,7 @@ export const WcDisconnectScene = (props: Props) => {
 
   const walletConnect = useWalletConnect()
 
-  const handleDisconnect = async () => {
+  const handleDisconnect = async (): Promise<void> => {
     try {
       await walletConnect.disconnectSession(wcConnectionInfo.uri)
     } catch (e: any) {

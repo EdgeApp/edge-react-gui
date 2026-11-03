@@ -11,7 +11,7 @@ import { useTheme } from '../services/ThemeContext'
  * background. Use LoadingScene for rendering a loading state at the scene
  * level (e.g. in HOC).
  */
-export const LoadingSplashScreen = () => {
+export const LoadingSplashScreen: React.FC = () => {
   const theme = useTheme()
   return (
     <ViewContainer>

@@ -277,7 +277,7 @@ class BityError extends Error {
   }
 }
 
-const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
+const fetchBityQuote = async (bodyData: BityQuoteRequest): Promise<unknown> => {
   const request = {
     method: 'POST',
     headers: {
@@ -839,7 +839,7 @@ const completeSellOrder = async (
   showUi: FiatPluginUi,
   fiatCurrencyCode: string,
   tokenId: EdgeTokenId
-) => {
+): Promise<void> => {
   const {
     input,
     id,
@@ -902,7 +902,7 @@ const completeSellOrder = async (
 const completeBuyOrder = async (
   approveQuoteRes: BityApproveQuoteResponse,
   showUi: FiatPluginUi
-) => {
+): Promise<void> => {
   const {
     input,
     output,
@@ -1026,7 +1026,7 @@ const executeBuyOrderFetch = async (
   )
 }
 
-function isUtxoWallet(wallet: EdgeCurrencyWallet) {
+function isUtxoWallet(wallet: EdgeCurrencyWallet): boolean {
   return [
     'wallet:badcoin',
     'wallet:bitcoin',

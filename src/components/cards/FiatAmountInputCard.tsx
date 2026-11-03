@@ -23,14 +23,14 @@ interface Props {
  * and taking fiat as an input, and returns the result in both fiat and crypto,
  * based on the given wallet.
  */
-const FiatAmountInputCardComponent = ({
+const FiatAmountInputCardComponent: React.FC<Props> = ({
   wallet,
   iconUri,
   inputModalMessage,
   title,
   tokenId,
   onAmountChanged
-}: Props) => {
+}) => {
   const [sanitizedFiatAmount, setSanitizedFiatAmount] = React.useState('0')
 
   const { assetToFiatRate: destToFiatRate } = useTokenDisplayData({

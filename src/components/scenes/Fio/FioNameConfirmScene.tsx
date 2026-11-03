@@ -60,17 +60,17 @@ type Props = StateProps & OwnProps & ThemeProps & DispatchProps
 const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 
 class FioNameConfirm extends React.PureComponent<Props> {
-  isFioAddress = () => {
+  isFioAddress = (): boolean => {
     const { fioName } = this.props.route.params
     return fioName.includes(FIO_ADDRESS_DELIMITER)
   }
 
-  getFee = async () => {
+  getFee = async (): Promise<number> => {
     const { fee } = this.props.route.params
     return fee
   }
 
-  saveFioName = async () => {
+  saveFioName = async (): Promise<void> => {
     const { navigation, route, wallet: paymentWallet, onLogEvent } = this.props
     const { fioName, ownerPublicKey, fee } = route.params
 
@@ -203,7 +203,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
     }
   }
 
-  render() {
+  render(): React.ReactElement {
     const { route, theme, navigation, wallet: paymentWallet } = this.props
     const { fioName } = route.params
     const styles = getStyles(theme)

@@ -32,7 +32,7 @@ interface Props {
  * A settings row with an icon on the right side.
  * The default icon is a navigation arrow, but other options are available.
  */
-const SettingsTappableRowComponent = (props: Props) => {
+const SettingsTappableRowComponent: React.FC<Props> = props => {
   const {
     action = 'navigate',
     children,

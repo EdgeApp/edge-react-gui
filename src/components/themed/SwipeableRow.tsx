@@ -79,7 +79,7 @@ export const SwipeableRow = React.forwardRef<SwipableRowRef, Props>(
   (props: Props, ref) => {
     // Tracks the width of the row:
     const width = useSharedValue(0)
-    const handleLayout = (event: LayoutChangeEvent) => {
+    const handleLayout = (event: LayoutChangeEvent): void => {
       width.value = event.nativeEvent.layout.width
     }
 

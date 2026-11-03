@@ -92,13 +92,13 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     })
   }
 
-  resetSlider = () => {
+  resetSlider = (): void => {
     this.setState({ showSlider: false }, () => {
       this.setState({ showSlider: true })
     })
   }
 
-  onConfirm = async (reset: () => void) => {
+  onConfirm = async (reset: () => void): Promise<void> => {
     const { onSubmit, onSuccess, successMessage, addressTitles } = this.props
     const { paymentWallet, fee } = this.state
     if (!paymentWallet) {
@@ -136,7 +136,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     }
   }
 
-  handleWalletPress = () => {
+  handleWalletPress = (): void => {
     Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -215,7 +215,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     )
   }
 
-  renderFeeAndBalance() {
+  renderFeeAndBalance(): React.ReactElement | null {
     const { theme } = this.props
     const { feeLoading, displayFee, balance, error, showSlider } = this.state
     const styles = getStyles(theme)
@@ -256,7 +256,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const { title, showPaymentWalletPicker, fioWallets, theme } = this.props
     const {
       loading,

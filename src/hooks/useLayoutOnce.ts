@@ -8,7 +8,7 @@ export const useLayoutOnce = (): [
   const [layout, setLayout] = React.useState<LayoutRectangle | undefined>(
     undefined
   )
-  const handleLayout = (event: LayoutChangeEvent) => {
+  const handleLayout = (event: LayoutChangeEvent): void => {
     if (layout != null) return
     setLayout(event.nativeEvent.layout)
   }

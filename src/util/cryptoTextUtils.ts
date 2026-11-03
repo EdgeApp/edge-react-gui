@@ -38,7 +38,7 @@ export const getCryptoText = ({
   fiatDenomination,
   hideBalance,
   nativeAmount
-}: GetCryptoTextParams) => {
+}: GetCryptoTextParams): string => {
   // Early exits if no balance hidden or zero
   const { multiplier: displayMultiplier, symbol } = displayDenomination
   const finalSymbol = symbol ? symbol + ' ' : ''

@@ -113,7 +113,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     })
   }
 
-  getRegInfo = async () => {
+  getRegInfo = async (): Promise<void> => {
     this.setState({ loading: true })
     const { fioDisplayDenomination, route, wallet: selectedWallet } = this.props
     const { fioAddress, selectedDomain, isFallback } = route.params
@@ -168,14 +168,14 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     }
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     const { activationCost } = this.state
     if (!activationCost || activationCost === 0) return
 
     await this.selectWallet()
   }
 
-  selectWallet = async () => {
+  selectWallet = async (): Promise<void> => {
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
@@ -192,7 +192,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     }
   }
 
-  proceed = async (walletId: string, tokenId: EdgeTokenId) => {
+  proceed = async (walletId: string, tokenId: EdgeTokenId): Promise<void> => {
     const {
       account,
       isConnected,
@@ -273,7 +273,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     }
   }
 
-  renderSelectWallet = () => {
+  renderSelectWallet = (): React.ReactElement => {
     const { account, route } = this.props
     const { selectedDomain, fioAddress } = route.params
     const { activationCost, paymentWallet, loading } = this.state
@@ -318,7 +318,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const { errorMessage } = this.state
     const styles = getStyles(theme)

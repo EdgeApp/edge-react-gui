@@ -112,7 +112,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     })
   }
 
-  getRegInfo = async () => {
+  getRegInfo = async (): Promise<void> => {
     this.setState({ loading: true })
     const { fioPlugin, fioDisplayDenomination, route, wallet } = this.props
     const { fioDomain } = route.params
@@ -146,7 +146,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     this.setState({ loading: false })
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     const { activationCost, loading } = this.state
 
     if (!activationCost || activationCost === 0 || loading) return
@@ -154,7 +154,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     await this.selectWallet()
   }
 
-  selectWallet = async () => {
+  selectWallet = async (): Promise<void> => {
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
@@ -260,7 +260,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     }
   }
 
-  render() {
+  render(): React.ReactElement {
     const { account, theme, route } = this.props
     const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
