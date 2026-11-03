@@ -17,7 +17,10 @@ import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface Props extends EdgeAppSceneProps<'notificationSettings'> {}
 
-type NotificationSettingToggleSetting = keyof NotificationSettings
+type NotificationSettingToggleSetting = Exclude<
+  keyof NotificationSettings,
+  'plugins'
+>
 
 export const NotificationScene: React.FC<Props> = props => {
   const { navigation } = props

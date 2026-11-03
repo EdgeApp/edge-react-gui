@@ -79,22 +79,22 @@ class FioNameConfirm extends React.PureComponent<Props> {
       throw new Error(lstrings.fio_network_alert_text)
     }
 
-    if (!fee) {
+    if (fee === 0) {
       if (this.isFioAddress()) {
-        if (!fioPlugin) {
+        if (fioPlugin == null) {
           throw new Error(lstrings.fio_register_address_err_msg)
         }
-        const response = await fioPlugin.otherMethods.buyAddressRequest(
-          {
-            address: fioName,
-            referralCode: fioPlugin.currencyInfo.defaultSettings?.defaultRef,
-            publicKey: ownerPublicKey
-          },
-          true
-        )
-        if (response.error) {
+        const response: { error?: string; errorCode?: string; code?: number } =
+          await fioPlugin.otherMethods.buyAddressRequest(
+            {
+              address: fioName,
+              referralCode: fioPlugin.currencyInfo.defaultSettings?.defaultRef,
+              publicKey: ownerPublicKey
+            },
+            true
+          )
+        if (response.error != null && response.error !== '') {
           if (
-            response.errorCode &&
             response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR &&
             response.code === 400
           ) {
@@ -106,7 +106,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
               domain =>
                 domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1]
             )
-            if (domainExists && !domainExists.free) {
+            if (domainExists != null && !domainExists.free) {
               await Airship.show<'ok' | undefined>(bridge => (
                 <ButtonsModal
                   bridge={bridge}

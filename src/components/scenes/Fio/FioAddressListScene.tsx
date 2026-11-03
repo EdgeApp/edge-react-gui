@@ -143,7 +143,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.list}>
-              {!fioAddresses.length && (
+              {fioAddresses.length === 0 && (
                 <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>
               )}
               {fioAddresses.map((address: FioAddress) => (
@@ -166,7 +166,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.list}>
-              {!fioDomains.length && (
+              {fioDomains.length === 0 && (
                 <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>
               )}
               {fioDomains.map((domain: FioDomain) => (

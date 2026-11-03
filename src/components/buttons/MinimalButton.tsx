@@ -61,7 +61,7 @@ const MinimalButtonComponent: React.FC<Props> = props => {
           adjustsFontSizeToFit
           minimumFontScale={0.25}
           numberOfLines={1}
-          style={highlighted ? styles.labelSelected : styles.label}
+          style={highlighted === true ? styles.labelSelected : styles.label}
         >
           {label}
         </UnscaledText>

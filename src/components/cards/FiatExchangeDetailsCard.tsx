@@ -102,7 +102,7 @@ export const FiatExchangeDetailsCard: React.FC<Props> = props => {
         isHTML: true
       },
       (error, event) => {
-        if (error) showError(error)
+        if (error != null && error !== '') showError(error)
       }
     )
   })

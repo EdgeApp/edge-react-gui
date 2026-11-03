@@ -265,7 +265,7 @@ export const FioStakingOverviewScene = connect<
       stakingDefaultCryptoAmount
     )
     const stakingFiatBalanceFormat = formatNumber(
-      stakingFiatBalance && gt(stakingFiatBalance, '0.000001')
+      stakingFiatBalance !== '' && gt(stakingFiatBalance, '0.000001')
         ? stakingFiatBalance
         : 0,
       { toFixed: 2 }

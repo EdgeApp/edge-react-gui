@@ -9,7 +9,7 @@ export const useWhyDidYouUpdate = <T extends object>(
   const previousProps = React.useRef<Record<string, unknown>>({})
   React.useEffect(() => {
     const currentProps = props as Record<string, unknown>
-    if (previousProps.current) {
+    if (previousProps.current != null) {
       // Get all keys from previous and current props
       const allKeys = Object.keys({ ...previousProps.current, ...props })
       // Use this object to keep track of changed props
@@ -26,7 +26,7 @@ export const useWhyDidYouUpdate = <T extends object>(
         }
       })
       // If changesObj not empty then output to console
-      if (Object.keys(changesObj).length) {
+      if (Object.keys(changesObj).length > 0) {
         console.log('[why-did-you-update]', name, changesObj)
       }
     }

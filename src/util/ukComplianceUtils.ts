@@ -43,7 +43,7 @@ const UK_COMPLIANT_STRING_MAP: Record<
 const formatString = (template: string, values: string[]): string => {
   return template.replace(
     /%(\d+)\$s/g,
-    (_, index) => values[parseInt(index) - 1] || ''
+    (_, index) => values[parseInt(index) - 1] ?? ''
   )
 }
 

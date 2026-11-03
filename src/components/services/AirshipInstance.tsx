@@ -98,9 +98,10 @@ export function showWarning(
   options: ShowErrorWarningOptions = {}
 ): void {
   const { trackError: doTrackError = true, tag } = options
-  const translatedError = tag
-    ? `Tag: ${tag}. ` + translateError(error)
-    : translateError(error)
+  const translatedError =
+    tag != null && tag !== ''
+      ? `Tag: ${tag}. ` + translateError(error)
+      : translateError(error)
   if (doTrackError) {
     trackError(error, tag)
   }

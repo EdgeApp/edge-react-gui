@@ -140,7 +140,7 @@ const InsufficientFeesModal: React.FC<InsufficientFeesModalProps> = props => {
     bridge.resolve()
   })
   const handleSwap = useHandler(async () => {
-    if (onSwap) onSwap()
+    if (onSwap != null) onSwap()
     navigation.navigate('swapTab', {
       screen: 'swapCreate',
       params: { toWalletId: wallet.id, toTokenId: tokenId }

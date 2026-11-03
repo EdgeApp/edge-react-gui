@@ -29,7 +29,7 @@ export const SettingsLabelRowComponent: React.FC<Props> = props => {
   const { children, disabled, label, right, onPress } = props
   const theme = useTheme()
   const style = {
-    color: disabled ? theme.deactivatedText : theme.textLink,
+    color: disabled === true ? theme.deactivatedText : theme.textLink,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     marginHorizontal: theme.rem(0.5)

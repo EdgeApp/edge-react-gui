@@ -127,7 +127,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })
@@ -163,7 +163,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
               clog(`${n} deleting ${key}`)
               resolverMap.delete(key)
-              if (resolvers.length) {
+              if (resolvers.length > 0) {
                 resolvers.forEach((r, i) => {
                   r(rate)
                 })

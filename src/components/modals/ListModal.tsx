@@ -73,7 +73,7 @@ export function ListModal<T>({
   const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) =>
-    rowComponent ? rowComponent(item) : null
+    rowComponent != null ? rowComponent(item) : null
   const handleCancel = (): void => {
     bridge.resolve(undefined)
   }

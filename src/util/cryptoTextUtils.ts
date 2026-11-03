@@ -41,12 +41,12 @@ export const getCryptoText = ({
 }: GetCryptoTextParams): string => {
   // Early exits if no balance hidden or zero
   const { multiplier: displayMultiplier, symbol } = displayDenomination
-  const finalSymbol = symbol ? symbol + ' ' : ''
-  const finalCurrencyCode = currencyCode ? ' ' + currencyCode : ''
-  if (hideBalance)
+  const finalSymbol = symbol != null && symbol !== '' ? symbol + ' ' : ''
+  const finalCurrencyCode =
+    currencyCode != null && currencyCode !== '' ? ' ' + currencyCode : ''
+  if (hideBalance === true)
     return `${finalSymbol}${lstrings.redacted_placeholder}${finalCurrencyCode}`
-  if (zeroString(nativeAmount))
-    return `${symbol ? symbol + ' ' : ''}0${finalCurrencyCode}`
+  if (zeroString(nativeAmount)) return `${finalSymbol}0${finalCurrencyCode}`
 
   const { multiplier: exchangeMultiplier } = exchangeDenomination
 

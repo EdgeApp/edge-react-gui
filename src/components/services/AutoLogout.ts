@@ -18,8 +18,10 @@ export const AutoLogout: React.FC = () => {
   const settingsLoaded = useSelector(
     state => state.ui.settings.settingsLoaded ?? false
   )
-  const autoLogoutTimeInSeconds = useSelector(
-    state => state.ui.settings.autoLogoutTimeInSeconds || Infinity
+  const autoLogoutTimeInSeconds = useSelector(state =>
+    state.ui.settings.autoLogoutTimeInSeconds === 0
+      ? Infinity
+      : state.ui.settings.autoLogoutTimeInSeconds
   )
   const isAppForeground = useIsAppForeground()
 

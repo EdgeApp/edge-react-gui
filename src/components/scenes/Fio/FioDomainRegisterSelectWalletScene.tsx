@@ -149,7 +149,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
   onWalletPress = async (): Promise<void> => {
     const { activationCost, loading } = this.state
 
-    if (!activationCost || activationCost === 0 || loading) return
+    if (activationCost === 0 || loading) return
 
     await this.selectWallet()
   }
@@ -188,7 +188,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
       paymentWallet
     } = this.state
 
-    if (!paymentWallet?.id) return
+    if (paymentWallet?.id == null || paymentWallet.id === '') return
 
     const { id: walletId, tokenId } = paymentWallet
     const wallet = account.currencyWallets[walletId]
@@ -308,7 +308,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
               onPress={this.onWalletPress}
             />
           </EdgeCard>
-          {!loading && paymentWallet?.id && (
+          {!loading && paymentWallet?.id != null && paymentWallet.id !== '' && (
             <MainButton
               label={lstrings.string_next_capitalized}
               marginRem={[2, 0, 2]}

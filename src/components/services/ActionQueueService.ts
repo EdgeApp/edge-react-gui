@@ -111,14 +111,14 @@ export const ActionQueueService: React.FC = () => {
         // impacting program heing handled by other clients.
         if (state.clientId !== clientId) return false
         // Don't execute programs which are currently being executed by service
-        if (state.executing && serviceProgramStates[programId]) {
+        if (state.executing && serviceProgramStates[programId] != null) {
           return false
         }
         // Detect program interruption if service is not evaluating the program
         // and program evaluation was executing an action op.
         if (
           state.executing &&
-          !serviceProgramStates[programId] &&
+          serviceProgramStates[programId] == null &&
           state.effective
         ) {
           dispatch(
@@ -148,9 +148,8 @@ export const ActionQueueService: React.FC = () => {
         await updateProgramState(state, true)
 
         // Use mock execution function if program is marked as mockMode
-        const context = program.mockMode
-          ? executionContextMock
-          : executionContext
+        const context =
+          program.mockMode === true ? executionContextMock : executionContext
 
         const { nextState } = await executeActionProgram(
           context,

@@ -84,7 +84,7 @@ export class FioAddressSettingsComponent extends React.Component<
     refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
-    if (showAddBundledTxs) {
+    if (showAddBundledTxs === true) {
       this.setState({ showAddBundledTxs: true })
     }
   }
@@ -169,7 +169,7 @@ export class FioAddressSettingsComponent extends React.Component<
     }
 
     const { fee: transferFee } = params
-    if (!transferFee) {
+    if (transferFee === 0) {
       showError(lstrings.fio_get_fee_err_msg)
       return
     }
@@ -188,7 +188,7 @@ export class FioAddressSettingsComponent extends React.Component<
         }
       },
       onDone: err => {
-        if (!err) {
+        if (err == null) {
           this.afterTransferSuccess().catch((err: unknown) => {
             showError(err)
           })

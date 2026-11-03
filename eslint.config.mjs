@@ -438,9 +438,7 @@ export default [
         tsconfigRootDir: import.meta.dirname
       }
     },
-    rules: {
-      '@typescript-eslint/strict-boolean-expressions': 'warn'
-    }
+    rules: {}
   },
 
   // Global ignores need to be in their own block:
