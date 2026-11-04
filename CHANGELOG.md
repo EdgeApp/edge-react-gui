@@ -6,6 +6,7 @@
 - fixed: Missing wallet options menu icons on Android
 - fixed: Total Balance counting tokens the user has disabled
 - fixed: Market details Swap defaulting to a disabled token as the source
+- fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
 
 ## 4.53.0 (staging)
 
