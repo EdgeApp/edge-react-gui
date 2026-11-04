@@ -51,6 +51,21 @@ function fakeHome(config: unknown): void {
 }
 
 describe('loadAppConfig', () => {
+  it('keeps a file that only declares corePlugins', () => {
+    // `buildPluginsInit` honours `corePlugins.ethereum: false`. The loader
+    // used to latch only on `swapPlugins`, so a config.json that followed
+    // the app's shape and named only `corePlugins` was dropped and the
+    // engine booted with the empty default.
+    fakeHome({ name: 'something else' })
+    const here = tempDir()
+    fs.writeFileSync(
+      path.join(here, 'config.json'),
+      JSON.stringify({ corePlugins: { ethereum: false } })
+    )
+    process.chdir(here)
+    expect(loadAppConfig().corePlugins).toStrictEqual({ ethereum: false })
+  })
+
   it('prefers a working-directory file that declares swapPlugins', () => {
     fakeHome({ swapPlugins: { changenow: false } })
     const here = tempDir()
@@ -64,14 +79,18 @@ describe('loadAppConfig', () => {
 
   it('is not shadowed by an unrelated config.json', () => {
     // The GUI's own repo-root `config.json`, a container's, a tool's — none
-    // of them says anything about swap plugins.
-    fakeHome({ swapPlugins: { changenow: false } })
+    // of them says anything about swap or core plugins.
+    fakeHome({
+      corePlugins: { ethereum: false },
+      swapPlugins: { changenow: false }
+    })
     const here = tempDir()
     fs.writeFileSync(
       path.join(here, 'config.json'),
       JSON.stringify({ name: 'my-app', version: 1 })
     )
     process.chdir(here)
+    expect(loadAppConfig().corePlugins).toStrictEqual({ ethereum: false })
     expect(loadAppConfig().swapPlugins).toStrictEqual({ changenow: false })
   })
 
@@ -119,9 +138,10 @@ describe('loadAppConfig', () => {
 
   it('reports null when a config.json was read and ignored', () => {
     // The asymmetry worth stating: `path` is `null` whenever no file
-    // *declared* `swapPlugins`, including when one was read and dropped —
-    // the shadowing case this field was added for. An operator reading
-    // `engine-config` sees "no file decided this", not "no file was found".
+    // *declared* `corePlugins` or `swapPlugins`, including when one was
+    // read and dropped — the shadowing case this field was added for. An
+    // operator reading `engine-config` sees "no file decided this", not
+    // "no file was found".
     fakeHome({ name: 'something else' })
     const here = tempDir()
     fs.writeFileSync(

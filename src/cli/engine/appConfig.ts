@@ -31,19 +31,19 @@ function readAppConfigFile(path: string): AppConfigFile | null {
  * Missing files are skipped. Present but invalid JSON/cleaner failures throw,
  * matching loadKeys, so a typo cannot silently disable every swap plugin.
  *
- * A file that parses but declares no `swapPlugins` does not shadow a later
- * one that does — the same latch `loadKeys` applies to `edgeApiKey`, and for
- * the same reason. `asAppConfigFile` drops unknown keys, so *any*
- * `config.json` in the working directory parsed to `{}` and was returned:
- * a user who disabled a swap plugin in `~/.edge-cli/config.json` got it
- * enabled again by running from a directory that happened to hold an
+ * A file that parses but declares neither `corePlugins` nor `swapPlugins`
+ * does not shadow a later one that does — the same latch `loadKeys` applies
+ * to `edgeApiKey`, and for the same reason. `asAppConfigFile` drops unknown
+ * keys, so *any* `config.json` in the working directory parsed to `{}` and
+ * was returned: a user who disabled a plugin in `~/.edge-cli/config.json`
+ * got it enabled again by running from a directory that happened to hold an
  * unrelated `config.json`, with nothing said.
  *
- * The throw stays for a file whose `swapPlugins` is the wrong *type*: a typo
- * in the user's own file would otherwise silently re-enable every plugin
- * they turned off, which is what it is for. `readJsonConfig` names the path,
- * so a `config.json` belonging to something else is diagnosable from the
- * message.
+ * The throw stays for a file whose `corePlugins` or `swapPlugins` is the
+ * wrong *type*: a typo in the user's own file would otherwise silently
+ * re-enable every plugin they turned off, which is what it is for.
+ * `readJsonConfig` names the path, so a `config.json` belonging to something
+ * else is diagnosable from the message.
  */
 export function loadAppConfig(): AppConfigFile {
   return loadAppConfigFrom().config
@@ -65,7 +65,9 @@ export function loadAppConfigFrom(): {
 } {
   for (const path of appConfigSearchPaths()) {
     const parsed = readAppConfigFile(path)
-    if (parsed?.swapPlugins != null) return { config: parsed, path }
+    if (parsed?.corePlugins != null || parsed?.swapPlugins != null) {
+      return { config: parsed, path }
+    }
   }
   return { config: asAppConfigFile({}), path: null }
 }
