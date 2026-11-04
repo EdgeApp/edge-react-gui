@@ -31,7 +31,7 @@ const asOtpResetBody = asObject({
   username: doc(asString, 'Whose 2FA to reset.'),
   otpResetToken: doc(
     asString,
-    'From `details.resetToken` on an `OTP_REQUIRED` error.'
+    'From `details.resetToken` on an `OTP_REQUIRED` error. The CLI saves it to `~/.edge-cli/otp-reset-token` rather than printing it; pass it with `EDGE_CLI_OTP_RESET_TOKEN`.'
   )
 }).withRest
 /**
