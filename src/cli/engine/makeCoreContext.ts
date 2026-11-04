@@ -12,7 +12,11 @@ import accountbasedPluginsImport from 'edge-currency-accountbased'
 import currencyPluginsImport from 'edge-currency-plugins'
 import exchangePluginsImport from 'edge-exchange-plugins'
 
-import { mergePluginInit } from '../../configKeysMerge'
+import { mergePluginInit, resolvePluginMaps } from '../../configKeysMerge'
+import {
+  buildCurrencyPlugins,
+  buildSwapPlugins
+} from '../../util/corePluginsTable'
 import { configureInfoServer } from '../../util/network'
 import { isPlainObject } from '../../util/predicates'
 import { withDeadline } from '../../util/withDeadline'
@@ -133,13 +137,62 @@ export function pluginInitFor(
   keysValue: unknown,
   warn: ((message: string) => void) | undefined
 ): boolean | JsonObject {
-  const merged = mergePluginInit(configValue, keysValue)
+  return toPluginInit(
+    `swap plugin ${pluginId}`,
+    mergePluginInit(configValue, keysValue),
+    warn
+  )
+}
+
+/**
+ * One merged init, narrowed to what core takes.
+ *
+ * Everything that is not a boolean, including something core cannot take
+ * such as a server sending the string `"false"`, goes through
+ * `initFromKeysEntry`, which disables a plugin whose entry it cannot read.
+ */
+function toPluginInit(
+  what: string,
+  merged: unknown,
+  warn: ((message: string) => void) | undefined
+): boolean | JsonObject {
   if (typeof merged === 'boolean') return merged
   if (merged == null) return false
-  // Everything else — including something core cannot take, such as a server
-  // sending the string `"false"` — goes through the same arms the currency
-  // path uses, which is the only reason they are a function.
-  return initFromKeysEntry(`swap plugin ${pluginId}`, merged, warn)
+  return initFromKeysEntry(what, merged, warn)
+}
+
+/**
+ * Every plugin's init, as the app builds it.
+ *
+ * `corePluginsTable.ts` is the app's table: which plugins exist, which turn
+ * on without keys, and the ones on or off whatever the keys say. It is fed
+ * the app's merge, `config.json`'s enablement over the keys through
+ * `resolvePluginMaps`, so the engine enables what the app enables. The keys
+ * are one map here, core and swap ids together, which the table tells apart.
+ */
+export function buildPluginsInit(opts: {
+  appConfig: {
+    corePlugins?: Record<string, unknown>
+    swapPlugins?: Record<string, unknown>
+  }
+  pluginApiKeys: Record<string, unknown>
+  warn: ((message: string) => void) | undefined
+}): EdgeCorePluginsInit {
+  const maps = resolvePluginMaps(
+    {
+      corePlugins: opts.appConfig.corePlugins ?? {},
+      swapPlugins: opts.appConfig.swapPlugins ?? {}
+    },
+    { corePlugins: opts.pluginApiKeys, swapPlugins: opts.pluginApiKeys }
+  )
+  const out: EdgeCorePluginsInit = {}
+  for (const [id, init] of Object.entries(buildCurrencyPlugins(maps))) {
+    out[id] = toPluginInit(`plugin ${id}`, init, opts.warn)
+  }
+  for (const [id, init] of Object.entries(buildSwapPlugins(maps))) {
+    out[id] = toPluginInit(`swap plugin ${id}`, init, opts.warn)
+  }
+  return out
 }
 
 const currencyPlugins = unwrapPlugins(
@@ -433,59 +486,17 @@ export async function makeCoreContext(
     })
   )
 
-  // One adapter, because `initFromKeysEntry` takes a plain function and both
-  // loops hand it the same logger.
-  const warnToLog =
-    opts.logger != null ? (m: string) => opts.logger?.warn(m) : undefined
-
-  const applyCurrencyPluginKeys = (pluginId: string): void => {
-    const pluginKeys = keysConfig.pluginApiKeys[pluginId]
-    if (pluginKeys === false) {
-      pluginsInit[pluginId] = false
-      return
-    }
-    if (pluginKeys == null) {
-      pluginsInit[pluginId] = true
-      return
-    }
-    // `true` is this repo's spelling for "enabled, no init options": it is
-    // what `src/configKeysMerge.ts` documents, what core's own `pluginsInit`
-    // takes, and what `mergePluginInit` accepts on the swap path a few
-    // functions above. `asPluginKeysEntry` is an `asObject`, so a boolean
-    // failed it and fell into the disable-on-garbage arm below — one line in
-    // a log file, and the currency silently gone from `currencyPluginIds`,
-    // so the user's wallets of that type never loaded.
-    if (pluginKeys === true) {
-      pluginsInit[pluginId] = true
-      return
-    }
-    // Neither `false`, nor absent, nor `true`. Treating such a value as
-    // "enabled" is how a server sending `"monero": "false"` — the string —
-    // switched the plugin *on* with no keys instead of disabling it.
-    pluginsInit[pluginId] = initFromKeysEntry(
-      `plugin ${pluginId}`,
-      pluginKeys,
-      warnToLog
-    )
-  }
-
-  for (const pluginId of Object.keys(currencyPlugins)) {
-    applyCurrencyPluginKeys(pluginId)
-  }
-
-  for (const pluginId of Object.keys(accountbasedPlugins)) {
-    applyCurrencyPluginKeys(pluginId)
-  }
-
-  const swapConfig = appConfig.swapPlugins ?? {}
-  for (const pluginId of Object.keys(exchangePlugins)) {
-    pluginsInit[pluginId] = pluginInitFor(
-      pluginId,
-      swapConfig[pluginId],
-      keysConfig.pluginApiKeys[pluginId],
-      warnToLog
-    )
-  }
+  Object.assign(
+    pluginsInit,
+    buildPluginsInit({
+      appConfig,
+      pluginApiKeys: keysConfig.pluginApiKeys,
+      warn:
+        opts.logger != null
+          ? (message: string) => opts.logger?.warn(message)
+          : undefined
+    })
+  )
 
   const moneroInit = pluginsInit.monero
   // Through the cleaner, like the reading seventy lines above this one:

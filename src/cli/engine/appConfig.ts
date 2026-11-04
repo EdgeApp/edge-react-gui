@@ -1,5 +1,5 @@
 /**
- * Load GUI-style config.json (swapPlugins).
+ * Load GUI-style config.json (corePlugins, swapPlugins).
  * Searches ./config.json then ~/.edge-cli/config.json.
  */
 import { asObject, asOptional, asUnknown } from 'cleaners'
@@ -7,6 +7,7 @@ import { asObject, asOptional, asUnknown } from 'cleaners'
 import { configSearchPaths, readJsonConfig } from './readJsonConfig'
 
 const asAppConfigFile = asObject({
+  corePlugins: asOptional(asObject(asUnknown)),
   swapPlugins: asOptional(asObject(asUnknown))
 })
 
