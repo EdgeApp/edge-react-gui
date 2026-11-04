@@ -385,6 +385,22 @@ export async function buildSpendInfo(
         400
       )
     }
+    // An amount in the body beside a payment request that names one: refused
+    // when they differ, like `useMax` above. A wrapper that always sets
+    // `--amount` would otherwise pay `bitcoin:<address>?amount=0.001` with
+    // `--amount=0.5`, 500 times the invoice.
+    if (
+      amount != null &&
+      parsed.nativeAmount != null &&
+      !eq(amount, parsed.nativeAmount)
+    ) {
+      throw engineError(
+        'BAD_REQUEST',
+        `The amount given (${amount}) and the amount in to ` +
+          `(${parsed.nativeAmount}) disagree. Drop one of them.`,
+        400
+      )
+    }
     const nativeAmount = amount ?? parsed.nativeAmount
     if (opts.requireAmount && nativeAmount == null) {
       throw engineError(
