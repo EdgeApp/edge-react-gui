@@ -75,7 +75,7 @@ export function getKeysAppId(cliAppId: string): string {
 // never calls. A latched cache nothing reads and nothing refreshes is a
 // lifetime policy for a value that has none.
 
-function cliOsParams(): {
+export function cliOsParams(): {
   os: 'ios' | 'android'
   osVersion: string
   appVersion: string
