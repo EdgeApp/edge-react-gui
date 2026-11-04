@@ -1506,7 +1506,7 @@
         },
         "nativeAmount": {
           "pass": "--native-amount=<nativeAmount>",
-          "doc": "How much, in native units.",
+          "doc": "How much, in native units. Refused beside a payment request in `to` that names a different amount.",
           "optional": false
         },
         "fromTokenId": {
@@ -1745,7 +1745,7 @@
         },
         "nativeAmount": {
           "pass": "[--native-amount=<nativeAmount>]",
-          "doc": "How much, in native units.",
+          "doc": "How much, in native units. Refused beside a payment request in `to` that names a different amount.",
           "optional": true
         },
         "amount": {
@@ -2391,7 +2391,7 @@
         },
         "nativeAmount": {
           "pass": "[--native-amount=<nativeAmount>]",
-          "doc": "How much, in native units.",
+          "doc": "How much, in native units. Refused beside a payment request in `to` that names a different amount.",
           "optional": true
         },
         "amount": {
@@ -3109,7 +3109,7 @@
         },
         "nativeAmount": {
           "pass": "[--native-amount=<nativeAmount>]",
-          "doc": "How much, in native units.",
+          "doc": "How much, in native units. Refused beside a payment request in `to` that names a different amount.",
           "optional": true
         },
         "amount": {
@@ -3194,7 +3194,7 @@
         },
         "nativeAmount": {
           "pass": "[--native-amount=<nativeAmount>]",
-          "doc": "How much, in native units.",
+          "doc": "How much, in native units. Refused beside a payment request in `to` that names a different amount.",
           "optional": true
         },
         "amount": {

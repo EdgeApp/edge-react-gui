@@ -7397,7 +7397,7 @@
                   },
                   "nativeAmount": {
                     "type": "string",
-                    "description": "How much, in native units."
+                    "description": "How much, in native units. Refused beside a payment request in `to` that names a different amount."
                   },
                   "amount": {
                     "type": "string",
@@ -7641,7 +7641,7 @@
                   },
                   "nativeAmount": {
                     "type": "string",
-                    "description": "How much, in native units."
+                    "description": "How much, in native units. Refused beside a payment request in `to` that names a different amount."
                   },
                   "amount": {
                     "type": "string",
@@ -7892,7 +7892,7 @@
                   },
                   "nativeAmount": {
                     "type": "string",
-                    "description": "How much, in native units."
+                    "description": "How much, in native units. Refused beside a payment request in `to` that names a different amount."
                   },
                   "amount": {
                     "type": "string",
@@ -8974,7 +8974,7 @@
                   },
                   "nativeAmount": {
                     "type": "string",
-                    "description": "How much, in native units."
+                    "description": "How much, in native units. Refused beside a payment request in `to` that names a different amount."
                   },
                   "fromTokenId": {
                     "anyOf": [

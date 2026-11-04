@@ -28,7 +28,8 @@ export const SPEND_TO_DOC =
   'Address or BIP21 URI, run through `wallet.parseUri`.'
 
 /** How much to send, in the convenience shorthand. */
-export const SPEND_AMOUNT_DOC = 'How much, in native units.'
+export const SPEND_AMOUNT_DOC =
+  'How much, in native units. Refused beside a payment request in `to` that names a different amount.'
 
 /** The alias the `to` shorthand accepts for `nativeAmount`. */
 export const SPEND_AMOUNT_ALIAS_DOC =
