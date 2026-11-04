@@ -40,10 +40,8 @@ import type { NavigationBase } from '../types/routerTypes'
 import type { MapObject } from '../types/types'
 import { getCurrencyCode, isKeysOnlyPlugin } from '../util/CurrencyInfoHelpers'
 import { getWalletName } from '../util/CurrencyWalletHelpers'
-import { errorMessage } from '../util/errorMessage'
 import { getMigrateWalletItemList } from '../util/getMigrateWalletItemList'
 import { fetchInfo } from '../util/network'
-import { reportWarning } from '../util/reportWarning'
 
 export interface SelectWalletTokenParams {
   navigation: NavigationBase
@@ -184,9 +182,9 @@ export function updateMostRecentWalletsSelected(
         })
       })
       .catch((error: unknown) => {
-        reportWarning(
-          `Could not save the most recent wallets: ${errorMessage(error)}`
-        )
+        // Shown, because Redux already has the new order and it reverts at
+        // the next login unless the user is told the save failed.
+        showError(error)
       })
   }
 }
