@@ -102,7 +102,12 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
   // means this build is too old for the login server — there is no exit code
   // for "upgrade me" and inventing one would be a new public contract.
   INTERNAL_ERROR: EXIT.GENERIC,
-  OBSOLETE_API: EXIT.GENERIC
+  OBSOLETE_API: EXIT.GENERIC,
+  // A swap whose `approve` failed where the funds may have moved. Generic,
+  // not NETWORK, because a script that retries network failures would
+  // approve a fresh quote on top of a send that went through. The caller
+  // has to look at `get-transactions` first, and no exit code says that.
+  SWAP_OUTCOME_UNKNOWN: EXIT.GENERIC
 }
 
 /**

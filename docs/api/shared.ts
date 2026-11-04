@@ -165,6 +165,13 @@ export const errorCodes: ErrorCode[] = [
     details: '`details.quoteExpirationDate`'
   },
   {
+    code: 'SWAP_OUTCOME_UNKNOWN',
+    status: 502,
+    origin: 'engine',
+    doc: 'A swap\u2019s `approve` failed in a way that does not say whether the funds left the wallet: the plugin signs and broadcasts before its own bookkeeping, and an error after the send looks the same as one before it. Check `get-transactions` on the source wallet for the send before fetching another quote; approving a fresh quote after a send that went through swaps the funds twice. Exit code 1, so a retry loop keyed on network failures leaves it alone.',
+    details: '`objectId`, `pluginId`, `fromWalletId`'
+  },
+  {
     code: 'OBJECT_IN_USE',
     status: 409,
     origin: 'engine',

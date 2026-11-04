@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
 import type { EdgeAccount, EdgeSwapQuote } from 'edge-core-js'
+import { InsufficientFundsError } from 'edge-core-js'
 
 import { ObjectHandleStore } from '../../cli/engine/objectHandles'
 import { approveSwapQuote, closeSwapQuote } from '../../cli/engine/routes/swap'
@@ -44,6 +45,8 @@ function makeCtx(quote: Quote): {
     prefix: 'swap_',
     sessionId: 'session-1',
     value: {
+      pluginId: 'stubswap',
+      request: { fromWallet: { id: 'wallet-1' } },
       ...quote,
       close: async () => {
         closed.push('closed')
@@ -119,12 +122,39 @@ describe('approve-swap-quote', () => {
     })
   })
 
+  it('answers SWAP_OUTCOME_UNKNOWN for a failure that may follow the send', async () => {
+    // A timeout after the plugin broadcast read as a network error, the code
+    // a script retries, and the retry was a fresh quote approved on top of a
+    // send that went through: the funds swapped twice.
+    const { ctx, objectId } = makeCtx({
+      approve: async () => {
+        throw new Error('socket hang up')
+      },
+      close: async () => {}
+    })
+    await expect(approveSwapQuote.handler(ctx)).rejects.toMatchObject({
+      code: 'SWAP_OUTCOME_UNKNOWN',
+      status: 502,
+      details: { objectId, pluginId: 'stubswap', fromWalletId: 'wallet-1' }
+    })
+  })
+
+  it('keeps the code of a failure core places before the send', async () => {
+    const { ctx } = makeCtx({
+      approve: async () => {
+        throw new InsufficientFundsError({ tokenId: null })
+      },
+      close: async () => {}
+    })
+    await expect(approveSwapQuote.handler(ctx)).rejects.toMatchObject({
+      name: 'InsufficientFundsError'
+    })
+  })
+
   it('releases the handle on failure too', async () => {
-    // The route's own `@note`: "from outside the plugin an error after the
-    // money moved cannot be told from one before it — so a retry has to
-    // start from a fresh quote rather than risk a second broadcast". That is
-    // only true if the failing path releases the handle, which nothing
-    // checked.
+    // The route's own `@note`: a retry on the same handle answers
+    // `OBJECT_NOT_FOUND` rather than approving twice. That is only true if
+    // the failing path releases the handle.
     const { ctx, objectId, objects } = makeCtx({
       approve: async () => {
         throw new Error('the exchange refused')
