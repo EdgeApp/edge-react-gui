@@ -549,6 +549,49 @@ describe('nativeAmount beside its alias', () => {
   })
 })
 
+describe('an amount beside a payment request', () => {
+  // `--to='bitcoin:<address>?amount=0.001' --amount=0.5` paid 500 times the
+  // invoice: the body's amount won and nothing said so.
+  it('refuses the two when they disagree', async () => {
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet()
+    const error = await thrown(
+      async () =>
+        await spend.handler(
+          makeCtx({
+            objects,
+            wallets: [wallet],
+            body: body({
+              to: 'bitcoin:bc1qexample?amount=0.001',
+              nativeAmount: '50000000'
+            })
+          })
+        )
+    )
+    expect(error.code).toBe('BAD_REQUEST')
+    expect(error.message).toContain('(50000000)')
+    expect(error.message).toContain('(100000)')
+    expect(calls.makeSpend).toStrictEqual([])
+    expect(calls.broadcastTx).toStrictEqual([])
+  })
+
+  it('accepts the two when they name the same amount', async () => {
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet()
+    await spend.handler(
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: body({
+          to: 'bitcoin:bc1qexample?amount=0.001',
+          nativeAmount: '100000'
+        })
+      })
+    )
+    expect(calls.makeSpend[0].spendTargets[0].nativeAmount).toBe('100000')
+  })
+})
+
 describe('spendInfo beside the shorthand', () => {
   // Refused rather than ranked. `spendInfo` was used as-is and the four
   // shorthand fields were never read, so on three irreversible routes a
