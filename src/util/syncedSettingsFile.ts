@@ -9,7 +9,15 @@
  * Node-safe, like everything the CLI shares: no react-native, no Redux, no
  * Airship.
  */
-import { asMaybe, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  asMaybe,
+  asNumber,
+  asObject,
+  asOptional,
+  asString,
+  asValue,
+  type Cleaner
+} from 'cleaners'
 
 import { isMissingFile } from './predicates'
 import { asJsonObject } from './syncedFileForWrite'
@@ -53,6 +61,8 @@ type DenominationSettingsSubset = ReturnType<
  * same defaults — `syncedSettingsFile.test.ts` asserts the two agree, so the
  * subset cannot drift from the file the GUI writes.
  */
+const asSwapPluginType: Cleaner<'CEX' | 'DEX'> = asValue('CEX', 'DEX')
+
 export const asSyncedSettingsSubset = asObject({
   autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
   defaultIsoFiat: asMaybe(asString, 'iso:USD'),
@@ -65,7 +75,11 @@ export const asSyncedSettingsSubset = asObject({
   denominationSettings: asMaybe<DenominationSettingsSubset>(
     asDenominationSettingsSubset,
     () => ({})
-  )
+  ),
+  // The swap provider the user prefers, which `fetch-swap-quotes` passes to
+  // core as the app does. The app's cleaners for the two fields.
+  preferredSwapPluginId: asMaybe(asString),
+  preferredSwapPluginType: asMaybe(asSwapPluginType)
 }).withRest
 
 /**
