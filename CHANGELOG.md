@@ -14,6 +14,8 @@
 - fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
 - fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
 - fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise. Such a pair is priced at zero for five minutes before it is asked again.
+- fixed: A settings change made while the account's settings could not be read is refused with a message, where it was written over them with defaults, and for synced settings those defaults reached every device.
+- fixed: Choosing a wallet no longer replaces the saved list of recent wallets with that one wallet when the account's settings failed to load at login.
 
 ## 4.53.0 (staging)
 
