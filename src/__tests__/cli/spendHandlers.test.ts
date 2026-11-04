@@ -799,6 +799,62 @@ describe('the staged flow', () => {
     expect(calls.accelerate).toHaveLength(1)
   })
 
+  it('answers a repeat broadcast-tx without sending again', async () => {
+    // A client that timed out or lost the socket after the engine sent asks
+    // again. Sending again reached the plugin, which answers "already known"
+    // or "missing inputs", so a payment that went through was reported as
+    // failed.
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet()
+    const staged: any = await makeSpend.handler(
+      makeCtx({ objects, wallets: [wallet], body: body() })
+    )
+    const ctxFor = (): any =>
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: { objectId: staged.objectId }
+      })
+    await signTx.handler(ctxFor())
+    const first: any = await broadcastTx.handler(ctxFor())
+    const again: any = await broadcastTx.handler(ctxFor())
+    expect(calls.broadcastTx).toHaveLength(1)
+    expect(again.objectId).toBe(first.objectId)
+    expect(again.transaction.txid).toBe('tx-broadcast')
+  })
+
+  it('reports a failed broadcast-tx as BROADCAST_FAILED and keeps the handle', async () => {
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet({ broadcastFailsOnce: true })
+    const staged: any = await makeSpend.handler(
+      makeCtx({ objects, wallets: [wallet], body: body() })
+    )
+    const ctxFor = (): any =>
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: { objectId: staged.objectId },
+        warnings: []
+      })
+    await signTx.handler(ctxFor())
+    const failure = await thrown(
+      async () => await broadcastTx.handler(ctxFor())
+    )
+    // The code a script must not retry blindly, with the txid to check and
+    // the handle that re-sends the same bytes.
+    expect(failure.code).toBe('BROADCAST_FAILED')
+    expect(failure.status).toBe(502)
+    expect(failure.details?.txid).toBe('tx-signed')
+    expect(failure.details?.objectId).toBe(staged.objectId)
+    expect(objects.size).toBe(1)
+
+    await broadcastTx.handler(ctxFor())
+    const saved: any = await saveTx.handler(ctxFor())
+    expect(saved.saved).toBe(true)
+    expect(calls.broadcastTx).toHaveLength(2)
+    expect(calls.broadcastTx[1].txid).toBe('tx-signed')
+  })
+
   it('will not save a bump nobody has broadcast', async () => {
     // `broadcast-tx` marks the handle sent, then `accelerate` puts an unsent
     // replacement into the same handle. The mark has to go with the

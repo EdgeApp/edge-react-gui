@@ -514,7 +514,7 @@
       "params": {
         "objectId": {
           "pass": "<objectId>",
-          "doc": "From `sign-tx`.",
+          "doc": "From `sign-tx`, or `details.objectId` of a `BROADCAST_FAILED`.",
           "optional": false
         }
       },
@@ -529,11 +529,12 @@
       },
       "returnsDoc": "The handle survives, so `save-tx` can still run.",
       "notes": [
-        "Broadcasting does not record the transaction locally. Follow with `save-tx`, or it stays missing from history until a sync finds it."
+        "Broadcasting does not record the transaction locally. Follow with `save-tx`, or it stays missing from history until a sync finds it.",
+        "Safe to repeat. On a handle already sent it answers the first call's result and sends nothing, so a client that lost the response can ask again. A failed broadcast keeps the handle and answers `BROADCAST_FAILED`: the transaction may still have reached the network, so check its txid before anything else, and run this again to re-send the same bytes rather than building a new transaction."
       ],
       "errors": [
         "BAD_REQUEST",
-        "NETWORK_ERROR",
+        "BROADCAST_FAILED",
         "OBJECT_NOT_FOUND",
         "OBJECT_EXPIRED",
         "OBJECT_KIND_MISMATCH",
