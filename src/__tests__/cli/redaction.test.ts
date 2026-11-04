@@ -7,6 +7,9 @@ import {
   jest
 } from '@jest/globals'
 import { OtpError } from 'edge-core-js'
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
 
 import { ApiClientError } from '../../cli/client/apiClient'
 import { EXIT } from '../../cli/client/exitCodes'
@@ -16,16 +19,36 @@ import { toErrorBody } from '../../cli/engine/errors'
 
 let errors: string[]
 let spy: jest.SpiedFunction<typeof console.error>
+// `printError` writes an OTP reset token under the home directory, so every
+// case runs against a temporary one rather than the developer's own.
+let home: string
+let homedir: jest.SpiedFunction<typeof os.homedir>
 
 beforeEach(() => {
   errors = []
   spy = jest.spyOn(console, 'error').mockImplementation((...args: any[]) => {
     errors.push(args.map(String).join(' '))
   })
+  home = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-redaction-'))
+  homedir = jest.spyOn(os, 'homedir').mockReturnValue(home)
 })
 afterEach(() => {
   spy.mockRestore()
+  homedir.mockRestore()
+  fs.rmSync(home, { recursive: true, force: true })
 })
+
+/** For the cases that depend on POSIX file modes. */
+const itPosix = process.platform === 'win32' ? it.skip : it
+
+/** An `OTP_REQUIRED` error carrying a reset token. */
+const otpRequired = (resetToken: string): ApiClientError =>
+  new ApiClientError({
+    code: 'OTP_REQUIRED',
+    message: 'Invalid OTP token',
+    status: 401,
+    details: { reason: 'otp', resetToken }
+  })
 
 /** The envelope `printError` wrote. */
 function written(): any {
@@ -34,6 +57,24 @@ function written(): any {
 }
 
 describe('printError redaction', () => {
+  it('saves the reset token for request-otp-reset and names the file', () => {
+    // Redacted and nowhere else, a CLI user could not run
+    // `request-otp-reset` at all: the token only reached a REST caller.
+    printError(otpRequired('SECRET-RESET-TOKEN'))
+    const file = path.join(home, '.edge-cli', 'otp-reset-token')
+    expect(fs.readFileSync(file, 'utf8')).toBe('SECRET-RESET-TOKEN')
+    const body = written()
+    expect(body.error.details.resetToken).toContain(file)
+    expect(body.error.details.resetToken).toContain('EDGE_CLI_OTP_RESET_TOKEN')
+    expect(errors[0]).not.toContain('SECRET-RESET-TOKEN')
+  })
+
+  itPosix('saves the reset token readable only by the user', () => {
+    printError(otpRequired('SECRET-RESET-TOKEN'))
+    const file = path.join(home, '.edge-cli', 'otp-reset-token')
+    expect(fs.statSync(file).mode & 0o777).toBe(0o600)
+  })
+
   it('replaces the two secrets in OTP details and keeps the rest', () => {
     // These are the only thing stopping a `resetToken` — which starts a 2FA
     // reset on the account — and a `voucherAuth` — which authorises a

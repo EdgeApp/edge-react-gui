@@ -261,6 +261,7 @@ says `@env`:
 | `--data-key` | `EDGE_CLI_DATA_KEY` |
 | `--otp-key` | `EDGE_CLI_OTP_KEY` |
 | `--recovery-key` | `EDGE_CLI_RECOVERY_KEY` |
+| `--otp-reset-token` | `EDGE_CLI_OTP_RESET_TOKEN` |
 | `--answer` on `login-with-recovery` (a JSON array of strings) | `EDGE_CLI_RECOVERY_ANSWERS` |
 | `--answer` on `change-recovery` (a JSON array of strings) | `EDGE_CLI_NEW_RECOVERY_ANSWERS` |
 | `--import-text` on `create-currency-wallet` | `EDGE_CLI_IMPORT_TEXT` |
@@ -269,6 +270,12 @@ says `@env`:
 | `--spend-info` on `sweep-private-keys` | `EDGE_CLI_SWEEP_SPEND_INFO` |
 | `--uri` on `parse-uri` | `EDGE_CLI_URI` |
 | `--text` on `admin-repo-set` | `EDGE_CLI_REPO_TEXT` |
+
+The reset token an `OTP_REQUIRED` error carries is a credential too, so the
+CLI does not print it: it writes it to `~/.edge-cli/otp-reset-token`,
+readable only by you, and names that file in the error. `request-otp-reset`
+reads it back from the variable:
+`EDGE_CLI_OTP_RESET_TOKEN="$(cat ~/.edge-cli/otp-reset-token)"`.
 
 The rows with a command name are inputs that can carry a seed phrase, a
 private key or recovery answers, so each has a variable on that command
