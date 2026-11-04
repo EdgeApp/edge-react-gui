@@ -16,7 +16,7 @@ import type { EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
 
 import { doc } from '../doc'
 import { WALLET_ERRORS } from '../errorGroups'
-import { engineError } from '../errors'
+import { engineError, errorMessage, mapCoreError } from '../errors'
 import { SPEND_AMOUNT_DOC, TOKEN_ID_DOC } from '../fieldDocs'
 import { assertTokenId, findWallet } from '../resolve'
 import { asObjectStrict, route } from '../route'
@@ -244,6 +244,27 @@ export const getSwapQuote = route({
 })
 
 /**
+ * What core says about a swap that failed before anything was sent.
+ *
+ * `approve()` builds the spend before it signs it, and these come from that
+ * build or from the exchange refusing the order, so the funds have not moved
+ * and fetching a fresh quote is safe.
+ */
+const SWAP_NOT_SENT_CODES = new Set([
+  'INSUFFICIENT_FUNDS',
+  'DUST_SPEND',
+  'PENDING_FUNDS',
+  'SPEND_TO_SELF',
+  'NO_AMOUNT_SPECIFIED',
+  'SWAP_ABOVE_LIMIT',
+  'SWAP_BELOW_LIMIT',
+  'SWAP_CURRENCY',
+  'SWAP_PERMISSION',
+  'SWAP_ADDRESS',
+  'SAME_CURRENCY'
+])
+
+/**
  * Execute a quote.
  *
  * Moves funds. The handle is released afterwards whether or not the response
@@ -258,8 +279,10 @@ export const getSwapQuote = route({
  * @note A failure releases the handle too, and a retry answers
  *   `OBJECT_NOT_FOUND`. `approve()` signs, broadcasts and then does its own
  *   bookkeeping, and from outside the plugin an error after the money moved
- *   cannot be told from one before it — so a retry has to start from a fresh
- *   quote rather than risk a second broadcast.
+ *   cannot be told from one before it. A failure core places before the
+ *   send keeps its own code, and a fresh quote is safe. Anything else
+ *   answers `SWAP_OUTCOME_UNKNOWN`: check `get-transactions` on the source
+ *   wallet for the send before quoting again.
  * @note The plugin attaches its own savedAction and assetAction metadata; the
  *   engine adds none.
  */
@@ -292,7 +315,7 @@ export const approveSwapQuote = route({
     'OBJECT_IN_USE',
     'QUOTE_EXPIRED',
     'INSUFFICIENT_FUNDS',
-    'NETWORK_ERROR'
+    'SWAP_OUTCOME_UNKNOWN'
   ],
 
   async handler(ctx) {
@@ -313,10 +336,26 @@ export const approveSwapQuote = route({
         { quoteExpirationDate: expirationDate.toISOString() }
       )
     }
-    const result = await ctx.state.objects.consume(
-      record,
-      async quote => await quote.approve()
-    )
+    const result = await ctx.state.objects.consume(record, async quote => {
+      try {
+        return await quote.approve()
+      } catch (error: unknown) {
+        const code = mapCoreError(error)?.body.error.code
+        if (code != null && SWAP_NOT_SENT_CODES.has(code)) throw error
+        // Possibly after the send. Reported as a network error, this was the
+        // code a script retries, and the retry is a fresh quote approved on
+        // top of a send that went through: the funds swapped twice.
+        const fromWalletId = quote.request.fromWallet.id
+        throw engineError(
+          'SWAP_OUTCOME_UNKNOWN',
+          `The swap's approve failed: ${errorMessage(error)}. It may already ` +
+            `have sent the funds. Check get-transactions on wallet ` +
+            `${fromWalletId} for the send before fetching another quote.`,
+          502,
+          { objectId: record.objectId, pluginId: quote.pluginId, fromWalletId }
+        )
+      }
+    })
     return {
       ok: true,
       objectId: ctx.params.objectId,
