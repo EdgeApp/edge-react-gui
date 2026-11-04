@@ -11,7 +11,11 @@ import {
   updateSyncedSettings,
   writeMostRecentWalletSelected
 } from '../../actions/SettingsActions'
+import { updateMostRecentWalletsSelected } from '../../actions/WalletActions'
+import { showError } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Action, Dispatch } from '../../types/reduxTypes'
 import { makeFakeDiskletAccount } from '../../util/fake/fakeDisklet'
 
 jest.mock('../../components/services/AirshipInstance', () => ({
@@ -361,5 +365,29 @@ describe('collection writes', () => {
     await expect(
       updateSyncedSettings(account, latest => latest)
     ).rejects.toThrow(lstrings.settings_not_saved_synced_unreadable)
+  })
+})
+
+describe('updateMostRecentWalletsSelected', () => {
+  it('shows the error when the new order cannot be saved', async () => {
+    // Redux takes the new order at once, so the user sees it. A save that
+    // fails is shown, or the order reverts at the next login unexplained.
+    jest.mocked(showError).mockClear()
+    const account = makeFakeDiskletAccount({ syncedError: corrupt() })
+    const actions: Action[] = []
+    const dispatch = ((action: Action) => {
+      actions.push(action)
+      return action
+    }) as Dispatch
+    const state = {
+      core: { account },
+      ui: { settings: { mostRecentWallets: [] } }
+    } as unknown as RootState
+
+    updateMostRecentWalletsSelected('wallet-1', null)(dispatch, () => state)
+    await jest.advanceTimersByTimeAsync(0)
+
+    expect(actions).toHaveLength(1)
+    expect(showError).toHaveBeenCalledTimes(1)
   })
 })
