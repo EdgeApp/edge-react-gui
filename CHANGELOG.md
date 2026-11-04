@@ -4,6 +4,8 @@
 
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Missing wallet options menu icons on Android
+- fixed: Total Balance counting tokens the user has disabled
+- fixed: Market details Swap defaulting to a disabled token as the source
 
 ## 4.53.0 (staging)
 
