@@ -7,12 +7,12 @@
 - changed: `npm run precommit`, `npm run verify` and CI gained the CLI's gates. The husky hook runs the five documentation gates, `cli:manifest:check`, `cli:plugins:check`, `test:cli:node-safe` and `test:cli:offline` only when a commit stages one of the paths `scripts/util/cliGatePaths.js` lists, so a commit elsewhere pays nothing. `verify` adds those plus `test:all`, which builds the rollup bundle and runs the offline suites against it. Travis runs all of them unconditionally, plus `docs:api:committed`, which fails on a stale committed artifact. The offline suites spawn a real engine daemon on a Unix socket under a temporary data directory; they need no network and no API key.
 - changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
-- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
 - fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
 - fixed: `splitCategory` keeps an unrecognised category exactly as stored, where a one-character prefix such as `X:` was dropped and a bare name gained a trailing colon, and opening and saving the transaction wrote either change back.
 - fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
 - fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise. Such a pair is priced at zero for five minutes before it is asked again.
 
 ## 4.53.0 (staging)
 
