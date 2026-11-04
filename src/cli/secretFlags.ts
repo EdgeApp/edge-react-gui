@@ -25,6 +25,7 @@ export const SECRET_FLAG_ENV: Record<string, string> = {
   'login-key': 'EDGE_CLI_LOGIN_KEY',
   'data-key': 'EDGE_CLI_DATA_KEY',
   'otp-key': 'EDGE_CLI_OTP_KEY',
+  'otp-reset-token': 'EDGE_CLI_OTP_RESET_TOKEN',
   'recovery-key': 'EDGE_CLI_RECOVERY_KEY'
 }
 
