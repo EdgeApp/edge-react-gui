@@ -536,10 +536,16 @@ function stagedTx(
  */
 function txHandleResponse(
   ctx: RouteContext,
-  objectId: string,
-  transaction: EdgeTransaction
+  record: HandleRecord<EdgeTransaction>,
+  transaction: EdgeTransaction,
+  opts: { broadcast?: boolean } = {}
 ): ObjectHandleInfo & { transaction: EdgeTransaction } {
-  const info = ctx.state.objects.update(objectId, transaction)
+  const info = ctx.state.objects.update(record.objectId, transaction)
+  // `broadcast` describes the transaction it was set for. Only
+  // `broadcast-tx` passes it: a transaction `sign-tx` or `accelerate` puts
+  // in the handle has not been sent, and `save-tx` must not record it as
+  // sent.
+  record.broadcast = opts.broadcast === true
   return {
     ...info,
     transaction
@@ -947,14 +953,13 @@ export const signTx = route({
 
   async handler(ctx) {
     const {
-      objectId,
       wallet,
       transaction: unsigned,
       record
     } = stagedTx(ctx, ctx.body.objectId)
     return await ctx.state.objects.hold(record, async () => {
       const transaction = await wallet.signTx(unsigned)
-      return txHandleResponse(ctx, objectId, transaction)
+      return txHandleResponse(ctx, record, transaction)
     })
   }
 })
@@ -983,15 +988,13 @@ export const broadcastTx = route({
 
   async handler(ctx) {
     const {
-      objectId,
       wallet,
       transaction: signed,
       record
     } = stagedTx(ctx, ctx.body.objectId)
     return await ctx.state.objects.hold(record, async () => {
       const transaction = await wallet.broadcastTx(signed)
-      record.broadcast = true
-      return txHandleResponse(ctx, objectId, transaction)
+      return txHandleResponse(ctx, record, transaction, { broadcast: true })
     })
   }
 })
@@ -1166,7 +1169,7 @@ export const accelerate = route({
             400
           )
         }
-        return txHandleResponse(ctx, objectId, bumped)
+        return txHandleResponse(ctx, staged.record, bumped)
       })
     }
     if (ctx.body.transaction != null) {
