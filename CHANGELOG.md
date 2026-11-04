@@ -8,12 +8,12 @@
 - changed: Moved transaction display metadata, denominations, spam-threshold resolution, local settings, the transaction export pipeline, transaction tagging, locale selection, exchange rates and the network helpers out of GUI-only modules so they load under plain Node, with no behaviour change to the app.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Missing wallet options menu icons on Android
-- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise.
 - fixed: Historical rate requests are capped below the rates server's 100-asset limit, where the previous check let a batch reach 101 and the rejection priced the whole page at zero.
 - fixed: An unusable OS number format no longer also falls the language back to English when resolving info-server localized strings.
 - fixed: `splitCategory` keeps an unrecognised category exactly as stored, where a one-character prefix such as `X:` was dropped and a bare name gained a trailing colon, and opening and saving the transaction wrote either change back.
 - fixed: Transaction fiat amounts are fetched in one batch rather than in groups of ten, each of which paid a fresh one-second debounce.
 - fixed: QBO exports escape a non-ASCII payee or memo, so the `ENCODING:USASCII` header the file declares is true.
+- fixed: Historical rates no longer re-query a pair the server has answered but cannot price, which looped without delay and never settled the caller's promise. Such a pair is priced at zero for five minutes before it is asked again.
 
 ## 4.53.0 (staging)
 
