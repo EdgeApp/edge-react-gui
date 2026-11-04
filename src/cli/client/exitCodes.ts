@@ -68,6 +68,10 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
   NO_AMOUNT_SPECIFIED: EXIT.VALIDATION,
   AMBIGUOUS_WALLET_ID: EXIT.VALIDATION,
   USERNAME_ERROR: EXIT.VALIDATION,
+  // A 403 that is not about credentials: a geo restriction, missing
+  // verification or an asset that needs activating. By its status it was
+  // AUTH, and a script that logs in again on AUTH would loop on it.
+  SWAP_PERMISSION: EXIT.VALIDATION,
 
   NETWORK_ERROR: EXIT.NETWORK,
   // The client's own two: a deadline it set, and a connection that went
@@ -142,7 +146,9 @@ export const EXIT_BY_STATUS: Record<number, number> = {
   405: EXIT.VALIDATION,
   409: EXIT.VALIDATION,
   // `OBJECT_EXPIRED`: the handle is gone, which is the "start again" signal
-  // and the same answer as a handle that was never there.
+  // and the same answer as a handle that was never there. `QUOTE_EXPIRED`
+  // is the same signal, since the quote's handle is released; its code tells
+  // the two apart.
   410: EXIT.NOT_FOUND,
   413: EXIT.VALIDATION,
   415: EXIT.VALIDATION,
