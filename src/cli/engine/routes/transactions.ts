@@ -226,7 +226,7 @@ export const getTransactions = route({
   }).withRest,
   returns: doc(
     asCoreValue,
-    '`{ transactions, total, isoFiat, unpricedCount }`, or `{ ok, isoFiat, total, files }` when exportFormat is set. `unpricedCount` is how many of the returned transactions the rates queue gave up on rather than priced — their `metadata.exchangeAmount` is left as it was instead of being written as `0`; an export refuses with `RATES_INCOMPLETE` in that case rather than writing a file with a zero fiat amount in part of the range. Each transaction carries `metadata.name`, `metadata.category` and `metadata.notes` as **localized prose** in the engine\u2019s boot locale \u2014 the engine has no per-request locale, so a second shell with a different `LANG` reuses the first engine and gets its language. `displayInfo` beside them carries the machine values the prose was derived from (`direction`, `assetActionType`, `actionType`, and the `category` split whose `category` member is one of `transfer`, `exchange`, `expense`, `income`), so a caller can render its own text.'
+    '`{ transactions, total, isoFiat, unpricedCount }`, or `{ ok, isoFiat, total, files }` when exportFormat is set, with `exportPrefsError` when `saveExportPrefs` could not save the preferences. `unpricedCount` is how many of the returned transactions the rates queue gave up on rather than priced — their `metadata.exchangeAmount` is left as it was instead of being written as `0`; an export refuses with `RATES_INCOMPLETE` in that case rather than writing a file with a zero fiat amount in part of the range. Each transaction carries `metadata.name`, `metadata.category` and `metadata.notes` as **localized prose** in the engine\u2019s boot locale \u2014 the engine has no per-request locale, so a second shell with a different `LANG` reuses the first engine and gets its language. `displayInfo` beside them carries the machine values the prose was derived from (`direction`, `assetActionType`, `actionType`, and the `category` split whose `category` member is one of `transfer`, `exchange`, `expense`, `income`), so a caller can render its own text.'
   ),
   errors: [
     'BAD_REQUEST',
@@ -527,20 +527,33 @@ export const getTransactions = route({
     // switches untouched. Persisting is still opt-in: writing unasked turned
     // a one-off `--bitwave-account-id` into the user's saved account id and
     // flipped "Export to Bitwave" on for them.
+    // A side errand, as the export scene treats it: `mergeExportTxInfo`
+    // refuses to write over a file it could not read, and that refusal
+    // must not cost the caller the files the whole fill was for. The
+    // response says why the preferences were not saved.
+    let exportPrefsError: string | undefined
     if (ctx.query.valid.saveExportPrefs) {
-      await mergeExportTxInfo(wallet, tokenId, {
-        // Safe to pass when absent: `mergeExportTxInfo` reads every field as
-        // `patch.x ?? prev?.x`, so an undefined id keeps whatever was saved
-        // rather than clearing it for a caller who never mentioned bitwave.
-        bitwaveAccountId,
-        // The same field set the GUI writes, so one record keeps one
-        // meaning: a partial patch left isExportCsv/isExportQbo at `false`
-        // on a first write and the record no longer described the last
-        // export either tool ran.
-        isExportBitwave: formats.includes('bitwave'),
-        isExportCsv: formats.includes('csv'),
-        isExportQbo: formats.includes('qbo')
-      })
+      try {
+        await mergeExportTxInfo(wallet, tokenId, {
+          // Safe to pass when absent: `mergeExportTxInfo` reads every field as
+          // `patch.x ?? prev?.x`, so an undefined id keeps whatever was saved
+          // rather than clearing it for a caller who never mentioned bitwave.
+          bitwaveAccountId,
+          // The same field set the GUI writes, so one record keeps one
+          // meaning: a partial patch left isExportCsv/isExportQbo at `false`
+          // on a first write and the record no longer described the last
+          // export either tool ran.
+          isExportBitwave: formats.includes('bitwave'),
+          isExportCsv: formats.includes('csv'),
+          isExportQbo: formats.includes('qbo')
+        })
+      } catch (error: unknown) {
+        exportPrefsError = errorMessage(error)
+        ctx.state.logger.warn('exportTxInfo.json not saved', {
+          walletId: wallet.id,
+          error: exportPrefsError
+        })
+      }
     }
 
     // One dispatch, shared with the GUI's export scene. This was an
@@ -564,7 +577,8 @@ export const getTransactions = route({
       ok: true,
       isoFiat,
       total: transactions.length,
-      files
+      files,
+      ...(exportPrefsError == null ? {} : { exportPrefsError })
     }
   }
 })
