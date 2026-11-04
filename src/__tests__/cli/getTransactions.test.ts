@@ -558,6 +558,23 @@ describe('a saved export record that cannot be read', () => {
     expect(String(failure?.message)).toMatch(/Unexpected end of JSON input/)
   })
 
+  it('still exports when the preferences cannot be saved over it', async () => {
+    // `mergeExportTxInfo` refuses to write over a file it could not read, and
+    // that refusal took the files with it after the whole fill. The export
+    // scene saves the preferences as a side errand and exports anyway.
+    const walletWrites: Array<{ path: string; text: string }> = []
+    const result = await run(
+      { exportFormat: 'csv', saveExportPrefs: true },
+      { walletReadError: corrupt(), walletWrites }
+    )
+    expect(result.ok).toBe(true)
+    expect(result.files.map((f: { format: string }) => f.format)).toStrictEqual(
+      ['csv']
+    )
+    expect(result.exportPrefsError).toMatch(/Unexpected end of JSON input/)
+    expect(walletWrites).toStrictEqual([])
+  })
+
   it('is still reported as a missing id when the file is simply absent', async () => {
     // The other half: the common case must keep its own answer, which is
     // the caller's to fix.
