@@ -51,7 +51,11 @@ const SHARED_MODULES = [
   'src/cli/engine/nodeApiSigner.ts',
   'src/util/keysServer.ts',
   'src/cli/engine/fetchPluginKeys.ts',
-  'src/cli/engine/makeCoreContext.ts'
+  'src/cli/engine/makeCoreContext.ts',
+  // The swap request options and the referral files `fetch-swap-quotes`
+  // builds them from, shared with the app's swap scenes.
+  'src/util/swapRequestOptions.ts',
+  'src/util/accountReferralFiles.ts'
 ]
 
 /**
@@ -101,7 +105,12 @@ const GATE_PATHS = [
   'src/configKeysMerge.ts',
   'src/configKeysSchema.ts',
   'src/selectors/WalletSelectors.ts',
-  'src/types/types.ts'
+  'src/types/types.ts',
+  // The info server's swap disables and the referral tweaks'
+  // cleaners, which `fetch-swap-quotes` reads.
+  'src/actions/ExchangeInfoActions.ts',
+  'src/types/AppleAdsAttributionTypes.ts',
+  'src/types/TweakTypes.ts'
 ]
 
 /** Whether a repo-relative path is one the gates watch. */
