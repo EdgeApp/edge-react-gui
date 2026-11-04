@@ -2,7 +2,7 @@ import type { EdgeSwapRequestOptions } from 'edge-core-js'
 import { useMemo } from 'react'
 
 import { useSelector } from '../../types/reactRedux'
-import { bestOfPlugins } from '../../util/ReferralHelpers'
+import { makeSwapRequestOptions } from '../../util/swapRequestOptions'
 
 /**
  * Finds the current swap settings,
@@ -22,29 +22,21 @@ export const useSwapRequestOptions = (): EdgeSwapRequestOptions => {
   )
 
   return useMemo((): EdgeSwapRequestOptions => {
-    // Find preferred swap provider:
-    const activePlugins = bestOfPlugins(
-      referralCache.accountPlugins,
+    const { options, swapSource } = makeSwapRequestOptions({
+      accountPlugins: referralCache.accountPlugins,
       accountReferral,
-      preferredSwapPluginId
-    )
-    const preferPluginId = activePlugins.preferredSwapPluginId
-    if (preferPluginId != null) {
-      const { swapSource } = activePlugins
+      preferredSwapPluginId,
+      preferredSwapPluginType,
+      disablePlugins
+    })
+    if (options.preferPluginId != null) {
       const reason =
         swapSource.type === 'promotion'
           ? 'promo ' + swapSource.installerId
           : swapSource.type
-      console.log(`Preferring ${preferPluginId} from ${reason}`)
+      console.log(`Preferring ${options.preferPluginId} from ${reason}`)
     }
-    return {
-      disabled: { ...activePlugins.disabled, ...disablePlugins },
-      noResponseMs: 60 * 1000,
-      preferPluginId,
-      preferType: preferredSwapPluginType,
-      promoCodes: activePlugins.promoCodes,
-      slowResponseMs: 10 * 1000
-    }
+    return options
   }, [
     accountReferral,
     disablePlugins,

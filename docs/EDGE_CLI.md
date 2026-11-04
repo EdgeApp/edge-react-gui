@@ -752,6 +752,7 @@ src/cli/
     keysConfig.ts      # keys.json search path
     appConfig.ts       # appId / app config
     fetchPluginKeys.ts # Remote plugin keys over the signed infoRollup
+    exchangeInfo.ts    # The info server's swap disables, for fetch-swap-quotes
     nodeApiSigner.ts   # Node HMAC signer for the Edge API
     apiCredentials.ts  # Which key and which signer every request uses
     testerServers.ts   # Re-export of src/util/testerServers

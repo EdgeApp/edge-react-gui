@@ -12,11 +12,28 @@ import {
   asString,
   asValue
 } from 'cleaners'
-import type { EdgeSwapQuote, EdgeSwapRequest } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeSwapQuote,
+  EdgeSwapRequest,
+  EdgeTokenId
+} from 'edge-core-js'
 
+import {
+  type DisableAsset,
+  isAssetDisabled
+} from '../../../actions/ExchangeInfoActions'
+import { readAccountReferral } from '../../../util/accountReferralFiles'
+import {
+  makeSwapRequestOptions,
+  withAssetDisabledPlugins
+} from '../../../util/swapRequestOptions'
+import { readSyncedSettings } from '../../../util/syncedSettingsFile'
+import { currencyCodeForToken } from '../../../util/txDisplay/currencyCodes'
 import { doc } from '../doc'
 import { WALLET_ERRORS } from '../errorGroups'
 import { engineError, errorMessage, mapCoreError } from '../errors'
+import { currentExchangeInfo } from '../exchangeInfo'
 import { SPEND_AMOUNT_DOC, TOKEN_ID_DOC } from '../fieldDocs'
 import { assertTokenId, findWallet } from '../resolve'
 import { asObjectStrict, route } from '../route'
@@ -69,6 +86,29 @@ function summarizeQuote(
 }
 
 /**
+ * Refuse an asset Edge has turned off for every exchange.
+ *
+ * `SWAP_CURRENCY`, the code core gives when no exchange supports the pair,
+ * with the message the app's swap scene shows for the same refusal.
+ */
+function assertSwapAssetEnabled(
+  disableAssets: DisableAsset[],
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId
+): void {
+  if (!isAssetDisabled(disableAssets, wallet.currencyInfo.pluginId, tokenId)) {
+    return
+  }
+  throw engineError(
+    'SWAP_CURRENCY',
+    `No enabled exchanges support ${currencyCodeForToken(wallet, tokenId)} ` +
+      `(on ${wallet.currencyInfo.displayName}) at this time`,
+    422,
+    { tokenId }
+  )
+}
+
+/**
  * Fetch swap quotes.
  *
  * Polls every enabled swap plugin and parks each result under its own `swap_`
@@ -114,7 +154,12 @@ export const fetchSwapQuotes = route({
         ),
         'from'
       ),
-      preferPluginId: asOptional(doc(asString, 'Restrict to one exchange.'))
+      preferPluginId: asOptional(
+        doc(
+          asString,
+          'Prefer this exchange: its quote sorts first. Overrides the account’s preferred exchange.'
+        )
+      )
     })
   ),
   strictBody: true,
@@ -171,12 +216,38 @@ export const fetchSwapQuotes = route({
       quoteFor
     }
 
-    // `undefined` rather than `{ preferPluginId: undefined }`: core reads
-    // the key's presence, so an object with the field unset is not the same
-    // as no options at all.
+    // The app's swap gating, from the same inputs: the info server's
+    // `exchangeInfo`, the account's referral and promotions, and its
+    // preferred exchange. An asset Edge turned off for every exchange is
+    // refused with the swap scene's message rather than asked of exchanges
+    // that are all disabled for it.
+    const exchangeInfo = await currentExchangeInfo()
+    const { disableAssets, disableAssetsByPlugin, disablePlugins } =
+      exchangeInfo.swap
+    assertSwapAssetEnabled(disableAssets.source, fromWallet, fromTokenId)
+    assertSwapAssetEnabled(disableAssets.destination, toWallet, toTokenId)
+    const [{ cache, referral }, settings] = await Promise.all([
+      readAccountReferral(account),
+      readSyncedSettings(account)
+    ])
+    const { options } = makeSwapRequestOptions({
+      accountPlugins: cache.accountPlugins,
+      accountReferral: referral,
+      preferredSwapPluginId: settings.preferredSwapPluginId,
+      preferredSwapPluginType: settings.preferredSwapPluginType,
+      disablePlugins
+    })
+    const requestOptions = withAssetDisabledPlugins(
+      options,
+      disableAssetsByPlugin,
+      request
+    )
+    // The caller's own preference, over the account's.
+    if (preferPluginId != null) requestOptions.preferPluginId = preferPluginId
+
     const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(
       request,
-      preferPluginId != null ? { preferPluginId } : undefined
+      requestOptions
     )
 
     const results = []
