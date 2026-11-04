@@ -9009,7 +9009,7 @@
                   },
                   "preferPluginId": {
                     "type": "string",
-                    "description": "Restrict to one exchange."
+                    "description": "Prefer this exchange: its quote sorts first. Overrides the account’s preferred exchange."
                   }
                 },
                 "required": [

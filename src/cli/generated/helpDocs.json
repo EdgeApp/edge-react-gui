@@ -1526,7 +1526,7 @@
         },
         "preferPluginId": {
           "pass": "[--plugin-id=<preferPluginId>]",
-          "doc": "Restrict to one exchange.",
+          "doc": "Prefer this exchange: its quote sorts first. Overrides the account’s preferred exchange.",
           "optional": true
         }
       },

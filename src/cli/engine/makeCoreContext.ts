@@ -13,6 +13,7 @@ import currencyPluginsImport from 'edge-currency-plugins'
 import exchangePluginsImport from 'edge-exchange-plugins'
 
 import { mergePluginInit } from '../../configKeysMerge'
+import { configureInfoServer } from '../../util/network'
 import { isPlainObject } from '../../util/predicates'
 import { withDeadline } from '../../util/withDeadline'
 import { resolveApiCredentials } from './apiCredentials'
@@ -21,8 +22,9 @@ import { defaultDirectory } from './cliConfig'
 import { cliHomeFile } from './cliHome'
 import { errorMessage } from './errors'
 import type { EventHub } from './events'
+import { configureExchangeInfo, makeRollupExchangeInfo } from './exchangeInfo'
 import { FAKE_SERVERS } from './fakeServers'
-import { fetchPluginKeys } from './fetchPluginKeys'
+import { cliOsParams, fetchPluginKeys, getKeysAppId } from './fetchPluginKeys'
 import { keysSearchPaths, loadKeysFrom, mergePluginApiKeys } from './keysConfig'
 import type { EngineLogger } from './logger'
 import { hasNodeApiSigner, makeNodeApiSigner } from './nodeApiSigner'
@@ -412,6 +414,24 @@ export async function makeCoreContext(
       `infoRollup appKeys fetch failed; using local plugin keys: ${message}`
     )
   }
+
+  // The public rollup, for the swap routes' `exchangeInfo`, from the info
+  // servers `fetchPluginKeys` configured and with the device fields its signed
+  // fetch sends.
+  const osParams = cliOsParams()
+  configureInfoServer({
+    osType: osParams.os,
+    osVersion: osParams.osVersion,
+    appVersion: osParams.appVersion,
+    appId: getKeysAppId(appId)
+  })
+  configureExchangeInfo(
+    makeRollupExchangeInfo({
+      warn: message => {
+        opts.logger?.warn(message)
+      }
+    })
+  )
 
   // One adapter, because `initFromKeysEntry` takes a plain function and both
   // loops hand it the same logger.
