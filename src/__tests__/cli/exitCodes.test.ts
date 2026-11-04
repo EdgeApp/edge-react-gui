@@ -27,6 +27,16 @@ describe('exitCodeForApiError', () => {
     expect(exitCodeForApiError('NETWORK_ERROR', 503)).toBe(EXIT.NETWORK)
   })
 
+  it('keeps a swap the exchange refused off the auth exit', () => {
+    // A geo restriction or missing verification is a 403, and AUTH is the
+    // exit a script answers by logging in again, which would loop.
+    expect(exitCodeForApiError('SWAP_PERMISSION', 403)).toBe(EXIT.VALIDATION)
+    // An expired quote is a released handle, like OBJECT_EXPIRED.
+    expect(exitCodeForApiError('QUOTE_EXPIRED', 410)).toBe(
+      exitCodeForApiError('OBJECT_EXPIRED', 410)
+    )
+  })
+
   it('falls back to NETWORK for any other 503, and GENERIC otherwise', () => {
     expect(exitCodeForApiError('SOMETHING_NEW', 503)).toBe(EXIT.NETWORK)
     expect(exitCodeForApiError('SOMETHING_NEW', 500)).toBe(EXIT.GENERIC)
