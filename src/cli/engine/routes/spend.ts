@@ -971,6 +971,12 @@ export const signTx = route({
  *
  * @note Broadcasting does not record the transaction locally. Follow with
  *   `save-tx`, or it stays missing from history until a sync finds it.
+ * @note Safe to repeat. On a handle already sent it answers the first
+ *   call's result and sends nothing, so a client that lost the response can
+ *   ask again. A failed broadcast keeps the handle and answers
+ *   `BROADCAST_FAILED`: the transaction may still have reached the network,
+ *   so check its txid before anything else, and run this again to re-send
+ *   the same bytes rather than building a new transaction.
  */
 export const broadcastTx = route({
   core: 'wallet.broadcastTx',
@@ -978,13 +984,16 @@ export const broadcastTx = route({
   path: '/account/{sessionId}/broadcast-tx',
   cli: { command: 'broadcast-tx', positional: 'objectId' },
   body: asObject({
-    objectId: doc(asString, 'From `sign-tx`.')
+    objectId: doc(
+      asString,
+      'From `sign-tx`, or `details.objectId` of a `BROADCAST_FAILED`.'
+    )
   }).withRest,
   returns: doc(
     asTransactionHandle,
     'The handle survives, so `save-tx` can still run.'
   ),
-  errors: ['BAD_REQUEST', 'NETWORK_ERROR', ...HANDLE_ERRORS],
+  errors: ['BAD_REQUEST', 'BROADCAST_FAILED', ...HANDLE_ERRORS],
 
   async handler(ctx) {
     const {
@@ -993,7 +1002,45 @@ export const broadcastTx = route({
       record
     } = stagedTx(ctx, ctx.body.objectId)
     return await ctx.state.objects.hold(record, async () => {
-      const transaction = await wallet.broadcastTx(signed)
+      // Sent already. A repeat call is most likely a client that timed out
+      // or lost the socket after the engine sent, and sending again reaches
+      // the plugin, which answers "already known" or "missing inputs": a
+      // failure report for a payment that went through.
+      if (record.broadcast === true) {
+        return { ...ctx.state.objects.toInfo(record), transaction: signed }
+      }
+      let transaction: EdgeTransaction
+      try {
+        transaction = await wallet.broadcastTx(signed)
+      } catch (error: unknown) {
+        // The same uncertainty as `spend`'s broadcast: a timeout after the
+        // node accepted the transaction looks the same as one before it.
+        // The handle keeps the signed transaction, so a retry sends the same
+        // bytes and cannot pay twice.
+        const message = errorMessage(error)
+        ctx.state.logger.warn('broadcastTx failed', {
+          walletId: wallet.id,
+          txid: signed.txid,
+          error: message
+        })
+        throw engineError(
+          'BROADCAST_FAILED',
+          `The transaction was signed but the broadcast failed: ${message}. ` +
+            'It may still have reached the network. Check txid ' +
+            `${signed.txid} on the chain before retrying. To retry, run ` +
+            `broadcast-tx ${record.objectId} again, which re-sends this same ` +
+            'transaction; building a new one pays the recipient twice on an ' +
+            'account-based chain.',
+          502,
+          {
+            txid: signed.txid,
+            signedTx: signed.signedTx,
+            objectId: record.objectId,
+            expiresAt: ctx.state.objects.toInfo(record).expiresAt,
+            saved: false
+          }
+        )
+      }
       return txHandleResponse(ctx, record, transaction, { broadcast: true })
     })
   }
