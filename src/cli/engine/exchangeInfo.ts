@@ -61,7 +61,7 @@ export function makeRollupExchangeInfo(
     // A rollup that arrived is a new object, so the same one means none did.
     if (raw === before) return current?.info ?? asExchangeInfo({})
     try {
-      const info = asExchangeInfo(raw?.exchangeInfo ?? {})
+      const info = asExchangeInfo(raw?.exchangeInfo)
       current = { info, at: Date.now() }
       return info
     } catch (error: unknown) {

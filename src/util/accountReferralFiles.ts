@@ -102,8 +102,14 @@ export async function readAccountReferral(account: {
       account.localDisklet.getText(REFERRAL_CACHE_FILE).catch(() => '{}'),
       account.disklet.getText(ACCOUNT_REFERRAL_FILE)
     ])
+    let cache: ReferralCache
+    try {
+      cache = asDiskReferralCache(JSON.parse(cacheText))
+    } catch {
+      cache = { accountMessages: [], accountPlugins: [] }
+    }
     return {
-      cache: asDiskReferralCache(JSON.parse(cacheText)),
+      cache,
       referral: unpackAccountReferral(JSON.parse(referralText))
     }
   } catch {

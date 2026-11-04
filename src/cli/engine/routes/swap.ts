@@ -242,8 +242,12 @@ export const fetchSwapQuotes = route({
       disableAssetsByPlugin,
       request
     )
-    // The caller's own preference, over the account's.
-    if (preferPluginId != null) requestOptions.preferPluginId = preferPluginId
+    // The caller's own preference, over the account's. Clear preferType so
+    // a named CEX is not dropped when the account prefers DEX.
+    if (preferPluginId != null) {
+      requestOptions.preferPluginId = preferPluginId
+      requestOptions.preferType = undefined
+    }
 
     const quotes: EdgeSwapQuote[] = await account.fetchSwapQuotes(
       request,
