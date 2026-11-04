@@ -1,7 +1,14 @@
 import { describe, expect, it, jest } from '@jest/globals'
 
-import { pluginInitFor } from '../../cli/engine/makeCoreContext'
+import {
+  buildPluginsInit,
+  pluginInitFor
+} from '../../cli/engine/makeCoreContext'
 import { mergePluginInit } from '../../configKeysMerge'
+import {
+  buildCurrencyPlugins,
+  buildSwapPlugins
+} from '../../util/corePluginsTable'
 
 /** `{}`, or an object whose every value is `undefined`. */
 function isEmptyInit(value: unknown): boolean {
@@ -126,5 +133,75 @@ describe('a keys entry on the swap path', () => {
     expect(
       pluginInitFor('changelly', undefined, { enabled: true }, undefined)
     ).toBe(true)
+  })
+})
+
+/**
+ * The engine enables the plugins the app enables.
+ *
+ * It derived enablement on its own: with no keys every currency plugin came
+ * on, the three testnets the app turns off included, and swap plugins
+ * followed `config.json` alone, so `unizen` and `spookySwap` could be on while
+ * `transfer`, `cosmosibc`, `velodrome` and `fantomsonicupgrade`, which the app
+ * always enables, were off. It reads the app's table now.
+ */
+describe('buildPluginsInit', () => {
+  const none = { appConfig: {}, pluginApiKeys: {}, warn: undefined }
+
+  it('is the app’s table when there are no keys and no config.json', () => {
+    // With the engine's one narrowing: an init with no options, such as the
+    // table's `{ referralId: undefined }` for `bridgeless`, is `true`.
+    const empty = { corePlugins: {}, swapPlugins: {} }
+    const table = { ...buildCurrencyPlugins(empty), ...buildSwapPlugins(empty) }
+    const expected = Object.fromEntries(
+      Object.entries(table).map(([id, init]) => [
+        id,
+        isEmptyInit(init) ? true : init
+      ])
+    )
+    expect(buildPluginsInit(none)).toStrictEqual(expected)
+  })
+
+  it('turns on and off what the app does, keys or not', () => {
+    const init = buildPluginsInit(none)
+    for (const id of [
+      'liberlandtestnet',
+      'bitcoincashtestnet',
+      'bitcoingoldtestnet',
+      'unizen',
+      'spookySwap'
+    ]) {
+      expect({ id, init: init[id] }).toStrictEqual({ id, init: false })
+    }
+    for (const id of [
+      'transfer',
+      'cosmosibc',
+      'velodrome',
+      'fantomsonicupgrade'
+    ]) {
+      expect({ id, init: init[id] }).toStrictEqual({ id, init: true })
+    }
+  })
+
+  it('keeps the app’s off switches whatever config.json says', () => {
+    const init = buildPluginsInit({
+      ...none,
+      appConfig: { swapPlugins: { unizen: true, spookySwap: true } }
+    })
+    expect(init.unizen).toBe(false)
+    expect(init.spookySwap).toBe(false)
+  })
+
+  it('enables a keyed plugin with its keys, and disables one config.json turns off', () => {
+    const init = buildPluginsInit({
+      ...none,
+      appConfig: { corePlugins: { ethereum: false } },
+      pluginApiKeys: {
+        arbitrum: { evmScanApiKey: ['abc'] },
+        ethereum: { evmScanApiKey: ['abc'] }
+      }
+    })
+    expect(init.arbitrum).toStrictEqual({ evmScanApiKey: ['abc'] })
+    expect(init.ethereum).toBe(false)
   })
 })
