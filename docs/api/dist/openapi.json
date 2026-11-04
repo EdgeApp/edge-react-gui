@@ -8053,7 +8053,7 @@
             "name": "objectId",
             "in": "path",
             "required": true,
-            "description": "From `sign-tx`.",
+            "description": "From `sign-tx`, or `details.objectId` of a `BROADCAST_FAILED`.",
             "schema": {
               "type": "string"
             }
@@ -8107,7 +8107,7 @@
             }
           },
           "default": {
-            "description": "BAD_REQUEST, NETWORK_ERROR, OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_WALLET_MISMATCH, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
+            "description": "BAD_REQUEST, BROADCAST_FAILED, OBJECT_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH, OBJECT_WALLET_MISMATCH, OBJECT_SESSION_MISMATCH, INVALID_SESSION, SESSION_EXPIRED",
             "content": {
               "application/json": {
                 "schema": {
