@@ -433,7 +433,7 @@
       },
       "notes": [
         "A quote whose `quoteExpirationDate` has passed is refused with `QUOTE_EXPIRED` and released, as the GUI's confirmation scene refuses it: most exchanges price a quote for 60 seconds, well inside the handle's 5 minutes, and a fixed-rate order funded late is refunded or refilled at another rate, while a DEX transaction past its deadline reverts and still costs its fee. Fetch a fresh quote.",
-        "A failure releases the handle too, and a retry answers `OBJECT_NOT_FOUND`. `approve()` signs, broadcasts and then does its own bookkeeping, and from outside the plugin an error after the money moved cannot be told from one before it — so a retry has to start from a fresh quote rather than risk a second broadcast.",
+        "A failure releases the handle too, and a retry answers `OBJECT_NOT_FOUND`. `approve()` signs, broadcasts and then does its own bookkeeping, and from outside the plugin an error after the money moved cannot be told from one before it. A failure core places before the send keeps its own code, and a fresh quote is safe. Anything else answers `SWAP_OUTCOME_UNKNOWN`: check `get-transactions` on the source wallet for the send before quoting again.",
         "The plugin attaches its own savedAction and assetAction metadata; the engine adds none."
       ],
       "errors": [
@@ -444,7 +444,7 @@
         "OBJECT_IN_USE",
         "QUOTE_EXPIRED",
         "INSUFFICIENT_FUNDS",
-        "NETWORK_ERROR",
+        "SWAP_OUTCOME_UNKNOWN",
         "INVALID_SESSION",
         "SESSION_EXPIRED"
       ]
