@@ -69,9 +69,15 @@ describe('the published exit-code table', () => {
     //
     // `INTERNAL_ERROR` and `OBSOLETE_API` are generic on purpose: one is the
     // unmapped failure by definition, and the other means "this build is too
-    // old", which has no exit code and should not get an invented one. Every
-    // other published code has to resolve to something.
-    const genericByDesign = new Set(['INTERNAL_ERROR', 'OBSOLETE_API'])
+    // old", which has no exit code and should not get an invented one.
+    // `SWAP_OUTCOME_UNKNOWN` is generic so that a loop retrying network
+    // failures leaves alone a swap that may already have sent. Every other
+    // published code has to resolve to something.
+    const genericByDesign = new Set([
+      'INTERNAL_ERROR',
+      'OBSOLETE_API',
+      'SWAP_OUTCOME_UNKNOWN'
+    ])
     const unclassified = errorCodes
       .filter(
         entry =>
