@@ -272,6 +272,8 @@ export const loginWithPin = route({
     'USERNAME_ERROR',
     'USER_NOT_FOUND',
     'BAD_REQUEST',
+    'OTP_REQUIRED',
+    'CHALLENGE_REQUIRED',
     'NETWORK_ERROR'
   ],
 
@@ -373,6 +375,8 @@ export const loginWithKey = route({
     'PASSWORD_ERROR',
     'USERNAME_ERROR',
     'USER_NOT_FOUND',
+    'OTP_REQUIRED',
+    'CHALLENGE_REQUIRED',
     'NETWORK_ERROR'
   ],
 
@@ -419,7 +423,13 @@ export const loginWithRecovery = route({
     ...loginOptionFields
   }).withRest,
   returns: doc(asSession, 'A session with `loginMethod: "recovery"`.'),
-  errors: ['PASSWORD_ERROR', 'USERNAME_ERROR', 'NETWORK_ERROR'],
+  errors: [
+    'PASSWORD_ERROR',
+    'USERNAME_ERROR',
+    'OTP_REQUIRED',
+    'CHALLENGE_REQUIRED',
+    'NETWORK_ERROR'
+  ],
 
   async handler(ctx) {
     return await createSession(

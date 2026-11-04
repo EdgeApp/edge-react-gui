@@ -1260,7 +1260,7 @@
             }
           },
           "default": {
-            "description": "PASSWORD_ERROR, PIN_DISABLED, USERNAME_ERROR, USER_NOT_FOUND, BAD_REQUEST, NETWORK_ERROR",
+            "description": "PASSWORD_ERROR, PIN_DISABLED, USERNAME_ERROR, USER_NOT_FOUND, BAD_REQUEST, OTP_REQUIRED, CHALLENGE_REQUIRED, NETWORK_ERROR",
             "content": {
               "application/json": {
                 "schema": {
@@ -1405,7 +1405,7 @@
             }
           },
           "default": {
-            "description": "BAD_REQUEST, PASSWORD_ERROR, USERNAME_ERROR, USER_NOT_FOUND, NETWORK_ERROR",
+            "description": "BAD_REQUEST, PASSWORD_ERROR, USERNAME_ERROR, USER_NOT_FOUND, OTP_REQUIRED, CHALLENGE_REQUIRED, NETWORK_ERROR",
             "content": {
               "application/json": {
                 "schema": {
@@ -1557,7 +1557,7 @@
             }
           },
           "default": {
-            "description": "PASSWORD_ERROR, USERNAME_ERROR, NETWORK_ERROR",
+            "description": "PASSWORD_ERROR, USERNAME_ERROR, OTP_REQUIRED, CHALLENGE_REQUIRED, NETWORK_ERROR",
             "content": {
               "application/json": {
                 "schema": {
