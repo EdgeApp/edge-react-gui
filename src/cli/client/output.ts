@@ -1,3 +1,6 @@
+import fs from 'fs'
+
+import { cliHome, cliHomeFile } from '../engine/cliHome'
 import { errorMessage, type ErrorResponse } from '../engine/errors'
 import { ApiClientError, ClientRequestError } from './apiClient'
 import { EXIT, exitCodeForApiError, printErrorEnvelope } from './exitCodes'
@@ -40,10 +43,42 @@ function redactDetails(
 ): Record<string, unknown> {
   const out: Record<string, unknown> = { ...details }
   for (const field of SECRET_DETAIL_FIELDS) {
-    if (out[field] != null)
-      out[field] = '[redacted: read it from the REST body]'
+    if (out[field] == null) continue
+    const saved =
+      field === 'resetToken' && typeof out[field] === 'string'
+        ? saveOtpResetToken(out[field])
+        : undefined
+    out[field] =
+      saved != null
+        ? `[redacted: saved to ${saved}; pass it to request-otp-reset as EDGE_CLI_OTP_RESET_TOKEN]`
+        : '[redacted: read it from the REST body]'
   }
   return out
+}
+
+/**
+ * Where an `OTP_REQUIRED` error's reset token is kept for `request-otp-reset`.
+ *
+ * Its own file, readable only by the user, because the token starts a 2FA
+ * reset: printed, it reaches the terminal, a shell history or a CI log, and
+ * a CLI user who never sees it cannot start the reset at all.
+ */
+export function otpResetTokenFile(): string {
+  return cliHomeFile('otp-reset-token')
+}
+
+/** Write the token owner-only, and answer its path, or nothing on failure. */
+function saveOtpResetToken(token: string): string | undefined {
+  try {
+    fs.mkdirSync(cliHome(), { recursive: true, mode: 0o700 })
+    const file = otpResetTokenFile()
+    fs.writeFileSync(file, token, { mode: 0o600 })
+    // `mode` applies only when the file is created.
+    fs.chmodSync(file, 0o600)
+    return file
+  } catch {
+    return undefined
+  }
 }
 
 /**
