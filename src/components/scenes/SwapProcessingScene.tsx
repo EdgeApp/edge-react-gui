@@ -8,7 +8,6 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { getDisabledSwapPlugins } from '../../actions/ExchangeInfoActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -16,6 +15,7 @@ import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
+import { withAssetDisabledPlugins } from '../../util/swapRequestOptions'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { showPendingTxModal } from '../modals/PendingTxModal'
@@ -51,13 +51,14 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   )
 
   const doWork = async (isCancelled: () => boolean): Promise<void> => {
-    const quotes = await account.fetchSwapQuotes(swapRequest, {
-      ...swapRequestOptions,
-      disabled: {
-        ...swapRequestOptions.disabled,
-        ...getDisabledSwapPlugins(disableAssetsByPlugin, swapRequest)
-      }
-    })
+    const quotes = await account.fetchSwapQuotes(
+      swapRequest,
+      withAssetDisabledPlugins(
+        swapRequestOptions,
+        disableAssetsByPlugin,
+        swapRequest
+      )
+    )
     if (isCancelled()) return
     if (quotes.length === 0) {
       // fetchSwapQuotes usually throws when nothing can route, but it resolves

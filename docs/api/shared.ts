@@ -300,7 +300,7 @@ export const errorCodes: ErrorCode[] = [
     code: 'SWAP_CURRENCY',
     status: 422,
     origin: 'core',
-    doc: 'The plugin does not support that pair.',
+    doc: 'The plugin does not support that pair. `fetch-swap-quotes` also answers it, with `details.tokenId`, when Edge has turned off swaps of one of the pair\u2019s assets for every exchange.',
     details: '`pluginId`, `fromTokenId`, `toTokenId`'
   },
   {

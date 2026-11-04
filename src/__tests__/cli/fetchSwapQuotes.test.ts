@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals'
+import { afterEach, describe, expect, it } from '@jest/globals'
 import type {
   EdgeAccount,
   EdgeCurrencyWallet,
@@ -7,9 +7,14 @@ import type {
   EdgeSwapRequestOptions
 } from 'edge-core-js'
 
+import { asExchangeInfo } from '../../actions/ExchangeInfoActions'
+import { configureExchangeInfo } from '../../cli/engine/exchangeInfo'
 import { ObjectHandleStore } from '../../cli/engine/objectHandles'
 import { fetchSwapQuotes } from '../../cli/engine/routes/swap'
-import type { ThrownEngineError } from '../../util/fake/thrownEngineError'
+import {
+  thrown,
+  type ThrownEngineError
+} from '../../util/fake/thrownEngineError'
 
 /**
  * The success path of `fetch-swap-quotes`, which nothing reached.
@@ -28,9 +33,25 @@ import type { ThrownEngineError } from '../../util/fake/thrownEngineError'
 function makeWallet(id: string, pluginId: string): EdgeCurrencyWallet {
   return {
     id,
-    currencyInfo: { pluginId, currencyCode: pluginId.toUpperCase() },
+    currencyInfo: {
+      pluginId,
+      currencyCode: pluginId.toUpperCase(),
+      displayName: `${pluginId} chain`
+    },
     currencyConfig: { allTokens: {} }
   } as unknown as EdgeCurrencyWallet
+}
+
+/** A disklet that answers by path, and is missing everything else. */
+function diskletOf(files: Record<string, unknown>): {
+  getText: (path: string) => Promise<string>
+} {
+  return {
+    async getText(path: string) {
+      if (files[path] == null) throw new Error(`Cannot load "${path}"`)
+      return JSON.stringify(files[path])
+    }
+  }
 }
 
 function makeQuote(
@@ -75,6 +96,10 @@ function makeCtx(opts: {
     request: EdgeSwapRequest
     opts: EdgeSwapRequestOptions | undefined
   }>
+  /** `account.disklet`'s files, by path. */
+  synced?: Record<string, unknown>
+  /** `account.localDisklet`'s files, by path. */
+  local?: Record<string, unknown>
 }): any {
   const fromWallet = makeWallet('wallet-from', 'bitcoin')
   const toWallet = makeWallet('wallet-to', 'ethereum')
@@ -83,6 +108,8 @@ function makeCtx(opts: {
       'wallet-from': fromWallet,
       'wallet-to': toWallet
     },
+    disklet: diskletOf(opts.synced ?? {}),
+    localDisklet: diskletOf(opts.local ?? {}),
     async fetchSwapQuotes(
       request: EdgeSwapRequest,
       requestOptions?: EdgeSwapRequestOptions
@@ -138,9 +165,16 @@ describe('fetch-swap-quotes', () => {
     expect(request.toTokenId).toBeNull()
     expect(request.nativeAmount).toBe('1000')
     expect(request.quoteFor).toBe('max')
-    // `undefined`, not `{ preferPluginId: undefined }`: core reads the key's
-    // presence, so an object with the field unset is not the same as none.
-    expect(asked[0].opts).toBeUndefined()
+    // The app's options for an account with no referral, no preference and
+    // nothing disabled: its two timeouts, and nothing else set.
+    expect(asked[0].opts).toStrictEqual({
+      disabled: {},
+      noResponseMs: 60000,
+      preferPluginId: undefined,
+      preferType: undefined,
+      promoCodes: {},
+      slowResponseMs: 10000
+    })
   })
 
   it('passes preferPluginId through as the request options', async () => {
@@ -156,7 +190,7 @@ describe('fetch-swap-quotes', () => {
       asked
     })
     await fetchSwapQuotes.handler(ctx)
-    expect(asked[0].opts).toStrictEqual({ preferPluginId: 'changenow' })
+    expect(asked[0].opts?.preferPluginId).toBe('changenow')
   })
 
   it('parks every quote under its own handle and publishes the summary', async () => {
@@ -268,5 +302,102 @@ describe('fetch-swap-quotes', () => {
       caught = error as ThrownEngineError
     }
     expect(caught?.code).toBe('WALLET_NOT_FOUND')
+  })
+
+  describe('with the app’s gating', () => {
+    afterEach(() => {
+      configureExchangeInfo(undefined)
+    })
+    const exchangeInfo = (swap: Record<string, unknown>): void => {
+      configureExchangeInfo(async () => asExchangeInfo({ swap }))
+    }
+    type Asked = Array<{
+      request: EdgeSwapRequest
+      opts: EdgeSwapRequestOptions | undefined
+    }>
+
+    it('turns off the exchanges Edge disabled, for every asset and for this one', async () => {
+      // The info server's remote switch. Without it the CLI could quote and
+      // execute through an exchange Edge had turned off for an outage.
+      exchangeInfo({
+        disablePlugins: { changehero: true },
+        disableAssetsByPlugin: {
+          godex: { source: [{ pluginId: 'bitcoin' }], destination: [] },
+          exolix: { source: [{ pluginId: 'litecoin' }], destination: [] }
+        }
+      })
+      const asked: Asked = []
+      await fetchSwapQuotes.handler(
+        makeCtx({
+          objects: new ObjectHandleStore(),
+          quotes: [makeQuote('changenow', [])],
+          asked
+        })
+      )
+      expect(asked[0].opts?.disabled).toStrictEqual({
+        changehero: true,
+        godex: true
+      })
+    })
+
+    it('refuses an asset Edge turned off for every exchange', async () => {
+      exchangeInfo({
+        disableAssets: { source: [], destination: [{ pluginId: 'ethereum' }] }
+      })
+      const asked: Asked = []
+      const error = await thrown(
+        async () =>
+          await fetchSwapQuotes.handler(
+            makeCtx({
+              objects: new ObjectHandleStore(),
+              quotes: [makeQuote('changenow', [])],
+              asked
+            })
+          )
+      )
+      expect(error.code).toBe('SWAP_CURRENCY')
+      expect(error.status).toBe(422)
+      expect(error.message).toContain('ETHEREUM (on ethereum chain)')
+      expect(asked).toStrictEqual([])
+    })
+
+    it('asks with the account’s referral, promo codes and preferred exchange', async () => {
+      const asked: Asked = []
+      await fetchSwapQuotes.handler(
+        makeCtx({
+          objects: new ObjectHandleStore(),
+          quotes: [makeQuote('changenow', [])],
+          asked,
+          synced: {
+            'Settings.json': {
+              preferredSwapPluginId: 'letsexchange',
+              preferredSwapPluginType: 'DEX'
+            },
+            'CreationReason.json': {
+              installerId: 'affiliate',
+              promotions: [
+                {
+                  installerId: 'promo',
+                  plugins: [
+                    {
+                      pluginId: 'sideshift',
+                      promoCode: 'PROMO1',
+                      durationDays: 3650
+                    },
+                    { pluginId: 'swapuz', disabled: true, durationDays: 3650 }
+                  ]
+                }
+              ]
+            }
+          }
+        })
+      )
+      expect(asked[0].opts).toMatchObject({
+        disabled: { swapuz: true },
+        preferPluginId: 'letsexchange',
+        preferType: 'DEX',
+        promoCodes: { sideshift: 'PROMO1' }
+      })
+    })
   })
 })
