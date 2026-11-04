@@ -799,6 +799,40 @@ describe('the staged flow', () => {
     expect(calls.accelerate).toHaveLength(1)
   })
 
+  it('will not save a bump nobody has broadcast', async () => {
+    // `broadcast-tx` marks the handle sent, then `accelerate` puts an unsent
+    // replacement into the same handle. The mark has to go with the
+    // transaction it described: kept, it let `save-tx` record the
+    // replacement as sent, a phantom pending send with its inputs marked
+    // spent until a resync.
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet()
+    const ctxFor = (extra: Record<string, unknown> = {}): any =>
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: { objectId: staged.objectId, ...extra }
+      })
+    const staged: any = await makeSpend.handler(
+      makeCtx({ objects, wallets: [wallet], body: body() })
+    )
+    await signTx.handler(ctxFor())
+    await broadcastTx.handler(ctxFor())
+    await accelerate.handler(ctxFor({ walletId: 'wallet-1' }))
+
+    const error = await thrown(async () => await saveTx.handler(ctxFor()))
+    expect(error.code).toBe('BAD_REQUEST')
+    expect(calls.saveTx).toHaveLength(0)
+
+    // Signed and sent, the replacement records as usual.
+    await signTx.handler(ctxFor())
+    await broadcastTx.handler(ctxFor())
+    const saved: any = await saveTx.handler(ctxFor())
+    expect(saved.saved).toBe(true)
+    expect(calls.broadcastTx).toHaveLength(2)
+    expect(calls.saveTx).toHaveLength(1)
+  })
+
   it('says so when the plugin cannot accelerate', async () => {
     const objects = new ObjectHandleStore()
     const { wallet } = makeWallet({ accelerateAnswers: null })
