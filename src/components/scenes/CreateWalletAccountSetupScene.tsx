@@ -41,12 +41,12 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
   const [spinning, setSpinning] = React.useState(false)
   const [text, setText] = React.useState(initialValue)
 
-  const handleChangeText = (text: string) => {
+  const handleChangeText = (text: string): void => {
     setText(text)
     setErrorMessage(undefined)
   }
 
-  async function checkHandle() {
+  async function checkHandle(): Promise<void> {
     const currencyPlugin = account.currencyConfig[existingPluginId]
     const data = await currencyPlugin.otherMethods.validateAccount(text)
     if (data.result === 'AccountAvailable') {
@@ -57,16 +57,17 @@ export const CreateWalletAccountSetupScene = withWallet((props: Props) => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     setSpinning(true)
     checkHandle()
-      .catch(error => {
+      .catch((error: unknown) => {
         console.log('checkHandleAvailability error: ', error)
-        if (error.name === 'ErrorAccountUnavailable') {
+        const name = error instanceof Error ? error.name : undefined
+        if (name === 'ErrorAccountUnavailable') {
           setErrorMessage(
             lstrings.create_wallet_account_account_name_unavailable
           )
-        } else if (error.name === 'ErrorInvalidAccountName') {
+        } else if (name === 'ErrorInvalidAccountName') {
           setErrorMessage(lstrings.create_wallet_account_invalid_account_name)
         } else {
           setErrorMessage(lstrings.create_wallet_account_unknown_error)

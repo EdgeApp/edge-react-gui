@@ -195,23 +195,22 @@ export const PAYMENT_PROTOCOL_MAP: MapObject<EdgeAsset> = {
  */
 async function fetchPaymentProtoJsonResponse(
   uri: string,
-  init: object
+  init: RequestInit
 ): Promise<Response> {
   const fetchResponse = await fetch(uri, init)
   if (!fetchResponse.ok || fetchResponse.status !== 200) {
     const statusCode = fetchResponse.status.toString()
-    // @ts-expect-error
     const typeHack: any = init.headers
-    const headers = typeHack
-    // @ts-expect-error
-    const body = init.body ? JSON.stringify(init.body) : ''
-    // @ts-expect-error
+    const headers: Record<string, string | undefined> = typeHack
+    const body =
+      init.body != null && init.body !== '' ? JSON.stringify(init.body) : ''
     const method = init.method
 
     // Parse a useful header string
     let header = ''
-    if (headers.Accept) header = headers.Accept
-    else if (headers['Content-Type']) header = headers['Content-Type']
+    if (headers.Accept != null && headers.Accept !== '') header = headers.Accept
+    else if (headers['Content-Type'] != null && headers['Content-Type'] !== '')
+      header = headers['Content-Type']
     const trimmedHeader = 'application/'
     if (header.includes(trimmedHeader)) header = header.split(trimmedHeader)[1]
 
@@ -299,8 +298,8 @@ export async function launchPaymentProto(
       account,
       assets: paymentAssets,
       navigation
-    }).catch(e => {
-      if (e.message !== ErrorNoMatchingWallets) throw e
+    }).catch((e: unknown) => {
+      if (!(e instanceof Error) || e.message !== ErrorNoMatchingWallets) throw e
     })
     if (result?.type !== 'wallet') {
       throw new PaymentProtoError('NoPaymentOption', {
@@ -348,14 +347,18 @@ export async function launchPaymentProto(
   }
   const invoiceInstruction = invoiceResponse.instructions[0]
   errorData = { ...errorData, invoiceInstruction }
-  if (!invoiceInstruction.outputs || invoiceInstruction.outputs.length === 0) {
+  if (
+    invoiceInstruction.outputs == null ||
+    invoiceInstruction.outputs.length === 0
+  ) {
     throw new PaymentProtoError('EmptyOutputInvoice', { errorData })
   }
 
   const paymentIdString = sprintf(lstrings.bitpay_metadata_name, paymentId)
-  metadata.notes = metadata.notes
-    ? metadata.notes + '\n\n' + paymentIdString
-    : paymentIdString
+  metadata.notes =
+    metadata.notes != null && metadata.notes !== ''
+      ? metadata.notes + '\n\n' + paymentIdString
+      : paymentIdString
 
   // Make the spend to generate the tx hexes
   let requiredFeeRate = invoiceInstruction.requiredFeeRate
@@ -365,7 +368,7 @@ export async function launchPaymentProto(
 
   if (
     typeof requiredFeeRate === 'number' &&
-    SPECIAL_CURRENCY_INFO[pluginId].hasSegwit
+    SPECIAL_CURRENCY_INFO[pluginId].hasSegwit === true
   )
     requiredFeeRate *= 1.8
   const spendInfo: EdgeSpendInfo = {
@@ -383,7 +386,7 @@ export async function launchPaymentProto(
   }
 
   // RBF transactions aren't supported so it needs to be disabled
-  if (selectedWallet.currencyInfo.canReplaceByFee) {
+  if (selectedWallet.currencyInfo.canReplaceByFee === true) {
     Object.assign(spendInfo, {
       otherParams: {
         enableRbf: false
@@ -406,7 +409,7 @@ export async function launchPaymentProto(
     lockTilesMap: { amount: true, address: true, fee: requiredFeeRate != null },
     onBack,
     onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
-      if (error)
+      if (error != null)
         showError(
           `${lstrings.create_wallet_account_error_sending_transaction}: ${error.message}`
         )

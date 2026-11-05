@@ -63,7 +63,7 @@ const USD_BASED_TOKEN_IDS: string[] = [
 ]
 const ALERT_THRESHOLD_LTV = '0.7'
 
-export const LoanManagerService = (props: Props) => {
+export const LoanManagerService: React.FC<Props> = props => {
   const { account } = props
   const dispatch = useDispatch()
   const clientId: string = useSelector(state => state.core.context.clientId)
@@ -96,10 +96,10 @@ export const LoanManagerService = (props: Props) => {
   //
 
   React.useEffect(() => {
-    const routine = () => {
+    const routine = (): void => {
       for (const loanAccount of Object.values(loanAccountMap)) {
         if (!checkLoanHasFunds(loanAccount) && loanAccount.closed) {
-          dispatch(deleteLoanAccount(loanAccount)).catch(err => {
+          dispatch(deleteLoanAccount(loanAccount)).catch((err: unknown) => {
             console.warn(err)
           })
 
@@ -220,7 +220,7 @@ export const LoanManagerService = (props: Props) => {
       const uploadLiquidationEvent = async (
         currencyPair: string,
         thresholdRate: number
-      ) => {
+      ): Promise<void> => {
         const eventId = `${loanAccountId}:ltv_alert`
         const trigger: PushTrigger = {
           type: 'price-level',
@@ -242,7 +242,7 @@ export const LoanManagerService = (props: Props) => {
 
       // TODO: Implement a true way to clear the push event
       if (cachedLoanAssetsMap[loanAccountId] === '') {
-        uploadLiquidationEvent('WBTC', 0).catch(err => {
+        uploadLiquidationEvent('WBTC', 0).catch((err: unknown) => {
           console.warn(err)
         })
         return

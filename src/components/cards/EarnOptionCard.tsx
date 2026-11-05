@@ -25,7 +25,7 @@ interface Props {
   onPress?: () => Promise<void>
 }
 
-export function EarnOptionCard(props: Props) {
+export const EarnOptionCard: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -42,12 +42,15 @@ export function EarnOptionCard(props: Props) {
     .join(', ')
 
   const stakeText = sprintf(
-    isOpenPosition ? lstrings.stake_staked_1s : lstrings.stake_stake_1s,
+    isOpenPosition === true
+      ? lstrings.stake_staked_1s
+      : lstrings.stake_stake_1s,
     stakeCurrencyCodes
   )
-  const rewardText = isOpenPosition
-    ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
-    : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
+  const rewardText =
+    isOpenPosition === true
+      ? sprintf(lstrings.stake_earning_1s, rewardCurrencyCodes)
+      : getUkCompliantString(countryCode, 'stake_earn_1s', rewardCurrencyCodes)
 
   const policyIcons = getPolicyIconUris(currencyConfig, stakePolicy)
 

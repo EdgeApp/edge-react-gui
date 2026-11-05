@@ -77,24 +77,24 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     showTransfer: false
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { showRenew } = this.props.route.params
-    if (showRenew) {
+    if (showRenew === true) {
       this.setState({ showRenew: true })
     }
   }
 
-  afterSuccess = async () => {
+  afterSuccess = async (): Promise<void> => {
     const { navigation } = this.props
     await this.props.refreshAllFioAddresses()
     navigation.goBack()
   }
 
-  afterTransferSuccess = async () => {
+  afterTransferSuccess = async (): Promise<void> => {
     const { theme, navigation, route } = this.props
     const { fioDomainName } = route.params
     const styles = getStyles(theme)
-    const domainName = `@${fioDomainName || ''}`
+    const domainName = `@${fioDomainName ?? ''}`
     const transferredMessage = ` ${lstrings.fio_domain_transferred.toLowerCase()}`
     await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
@@ -111,19 +111,19 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     navigation.navigate('fioAddressList')
   }
 
-  onVisibilityPress = () => {
+  onVisibilityPress = (): void => {
     this.setState({ showVisibility: true })
   }
 
-  onRenewPress = () => {
+  onRenewPress = (): void => {
     this.setState({ showRenew: true })
   }
 
-  onTransferPress = () => {
+  onTransferPress = (): void => {
     this.setState({ showTransfer: true })
   }
 
-  cancelOperation = () => {
+  cancelOperation = (): void => {
     this.setState({
       showRenew: false,
       showVisibility: false,
@@ -131,13 +131,16 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) =>
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet): Promise<number> =>
     await getRenewalFee(fioWallet)
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet): Promise<number> =>
     await getTransferFee(fioWallet, true)
 
-  setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
+  setDomainVisibility = async (
+    fioWallet: EdgeCurrencyWallet,
+    fee: number
+  ): Promise<void> => {
     const { isConnected, route } = this.props
     const { fioDomainName, isPublic } = route.params
 
@@ -148,7 +151,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     await setDomainVisibility(fioWallet, fioDomainName, !isPublic, fee)
   }
 
-  renewDomain = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
+  renewDomain = async (
+    fioWallet: EdgeCurrencyWallet,
+    renewalFee: number
+  ): Promise<void> => {
     const { isConnected, route, onLogEvent } = this.props
     const { fioDomainName } = route.params
 
@@ -170,10 +176,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     })
   }
 
-  goToTransfer = (params: { fee: number }) => {
+  goToTransfer = (params: { fee: number }): void => {
     const { navigation, wallet: fioWallet } = this.props
     const { fee: transferFee } = params
-    if (!transferFee) {
+    if (transferFee === 0) {
       showError(lstrings.fio_get_fee_err_msg)
       return
     }
@@ -194,8 +200,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         }
       },
       onDone: err => {
-        if (!err) {
-          this.afterTransferSuccess().catch(err => {
+        if (err == null) {
+          this.afterTransferSuccess().catch((err: unknown) => {
             showError(err)
           })
         }
@@ -216,7 +222,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     navigation.navigate('send2', sendParams)
   }
 
-  render() {
+  render(): React.ReactElement {
     const { route, theme, wallet: fioWallet } = this.props
     const { fioDomainName, expiration, isPublic } = route.params
 

@@ -61,7 +61,8 @@ export const asObjectIn = <K extends string | number | symbol, T>(
 export const asObjectInOrTrue = <K extends string | number | symbol, T>(
   asKey: Cleaner<K>,
   asT: Cleaner<T>
-) => asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
+): Cleaner<true | Record<K, T>> =>
+  asEither(asObjectIn(asKey, asT), asValue<[true]>(true))
 
 // -----------------------------------------------------------------------------
 // Internal functions taken from `cleaners` package
@@ -100,20 +101,16 @@ function showValue(value: any): string {
  */
 function locateError(error: unknown, step: string, offset: number): unknown {
   if (error instanceof Error) {
-    // @ts-expect-error
-    if (error.insertStepAt == null) {
-      error.message += ' at '
-      // @ts-expect-error
-      error.insertStepAt = error.message.length
+    const located: Error & { insertStepAt?: number } = error
+    if (located.insertStepAt == null) {
+      located.message += ' at '
+      located.insertStepAt = located.message.length
     }
-    error.message =
-      // @ts-expect-error
-      error.message.slice(0, error.insertStepAt) +
+    located.message =
+      located.message.slice(0, located.insertStepAt) +
       step +
-      // @ts-expect-error
-      error.message.slice(error.insertStepAt)
-    // @ts-expect-error
-    error.insertStepAt += offset
+      located.message.slice(located.insertStepAt)
+    located.insertStepAt += offset
   }
   return error
 }

@@ -67,7 +67,9 @@ export function showReceiveDropdown(
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
     const message = sprintf(
       lstrings.bitcoin_received,
-      `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`
+      `${
+        symbol != null && symbol !== '' ? symbol + ' ' : ''
+      }${displayAmount} ${name}`
     )
 
     // Display the dropdown:
@@ -89,7 +91,7 @@ export function showReceiveDropdown(
               walletId,
               tokenId
             })
-          ).catch(error => {
+          ).catch((error: unknown) => {
             showError(error)
           })
 

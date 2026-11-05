@@ -15,7 +15,7 @@ interface Props {
   url: string
 }
 
-export function SupportCard(props: Props) {
+export const SupportCard: React.FC<Props> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

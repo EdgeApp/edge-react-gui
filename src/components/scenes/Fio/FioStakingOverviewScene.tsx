@@ -63,7 +63,7 @@ interface Lock {
 }
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
-export const FioStakingOverviewSceneComponent = (props: Props) => {
+export const FioStakingOverviewSceneComponent: React.FC<Props> = props => {
   const {
     navigation,
     theme,
@@ -118,14 +118,14 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     )
   }, [stakingStatus, currencyDenomination])
 
-  const handlePressStake = () => {
+  const handlePressStake = (): void => {
     navigation.navigate('fioStakingChange', {
       assetActionType: 'stake',
       tokenId,
       walletId
     })
   }
-  const handlePressUnstake = () => {
+  const handlePressUnstake = (): void => {
     navigation.navigate('fioStakingChange', {
       assetActionType: 'unstake',
       tokenId,
@@ -133,7 +133,7 @@ export const FioStakingOverviewSceneComponent = (props: Props) => {
     })
   }
 
-  const renderItems = () =>
+  const renderItems = (): React.ReactElement[] =>
     locks.map(item => {
       const amount = `${item.amount} ${currencyCode}`
       return (
@@ -265,7 +265,7 @@ export const FioStakingOverviewScene = connect<
       stakingDefaultCryptoAmount
     )
     const stakingFiatBalanceFormat = formatNumber(
-      stakingFiatBalance && gt(stakingFiatBalance, '0.000001')
+      stakingFiatBalance !== '' && gt(stakingFiatBalance, '0.000001')
         ? stakingFiatBalance
         : 0,
       { toFixed: 2 }

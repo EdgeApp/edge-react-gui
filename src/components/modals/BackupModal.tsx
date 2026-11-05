@@ -24,12 +24,12 @@ export type BackupModalResult = 'upgrade' | 'learnMore' | 'dismiss'
 export type BackupForTransferModalResult = 'upgrade' | 'learnMore'
 
 /** Common backup modal content format */
-const BackupModalContent = (props: {
+const BackupModalContent: React.FC<{
   title: string
   body: string
   bodyCont?: string
   subText?: string
-}) => {
+}> = props => {
   const { title, body, bodyCont, subText } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -56,9 +56,9 @@ const BackupModalContent = (props: {
 /**
  * Informational modal prompting the user to back up their account
  */
-export const BackupForTransferModal = (props: {
+export const BackupForTransferModal: React.FC<{
   bridge: AirshipBridge<BackupForTransferModalResult | undefined>
-}) => {
+}> = props => {
   const { bridge } = props
 
   const handleLearnMorePress = useHandler(async () => {
@@ -92,10 +92,10 @@ export const BackupForTransferModal = (props: {
  * Informational modal prompting the user to back up their account before accessing settings,
  * deleting light accounts, and receiving fio requests
  */
-export const BackupForAccountModal = (props: {
+export const BackupForAccountModal: React.FC<{
   bridge: AirshipBridge<BackupModalResult | undefined>
   forgetLoginId?: string
-}) => {
+}> = props => {
   const { bridge, forgetLoginId } = props
   const showForgetAccount = forgetLoginId != null
 

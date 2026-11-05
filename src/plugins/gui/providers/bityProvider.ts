@@ -277,7 +277,7 @@ class BityError extends Error {
   }
 }
 
-const fetchBityQuote = async (bodyData: BityQuoteRequest) => {
+const fetchBityQuote = async (bodyData: BityQuoteRequest): Promise<unknown> => {
   const request = {
     method: 'POST',
     headers: {
@@ -376,12 +376,11 @@ const approveBityQuote = async (
       throw new Error('Could not complete transaction. Code: 400')
     }
     if (signedTransactionResponse.status === 204) {
-      const bankDetailsReq = {
+      const bankDetailsReq: RequestInit = {
         method: 'GET',
         credentials: 'include'
       }
       const detailUrl = orderUrl + '/' + orderData.id
-      // @ts-expect-error
       const bankDetailRes = await fetch(detailUrl, bankDetailsReq)
       if (bankDetailRes.status === 200) {
         const bankDetailResJson = await bankDetailRes.json()
@@ -461,8 +460,8 @@ export const bityProvider: FiatProviderFactory = {
         if (isCheckDue()) {
           const response = await fetch(
             `https://exchange.api.bity.com/v2/currencies`
-          ).catch(e => undefined)
-          if (!response?.ok) {
+          ).catch((e: unknown) => undefined)
+          if (response?.ok !== true) {
             console.error(
               `Bity getSupportedAssets response error: ${await response?.text()}`
             )
@@ -840,7 +839,7 @@ const completeSellOrder = async (
   showUi: FiatPluginUi,
   fiatCurrencyCode: string,
   tokenId: EdgeTokenId
-) => {
+): Promise<void> => {
   const {
     input,
     id,
@@ -903,7 +902,7 @@ const completeSellOrder = async (
 const completeBuyOrder = async (
   approveQuoteRes: BityApproveQuoteResponse,
   showUi: FiatPluginUi
-) => {
+): Promise<void> => {
   const {
     input,
     output,
@@ -1027,7 +1026,7 @@ const executeBuyOrderFetch = async (
   )
 }
 
-function isUtxoWallet(wallet: EdgeCurrencyWallet) {
+function isUtxoWallet(wallet: EdgeCurrencyWallet): boolean {
   return [
     'wallet:badcoin',
     'wallet:bitcoin',

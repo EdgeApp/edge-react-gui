@@ -26,7 +26,7 @@ interface Props {
 /**
  * A settings row with a radio selector on the right side.
  */
-const SettingsRadioRowComponent = (props: Props) => {
+const SettingsRadioRowComponent: React.FC<Props> = props => {
   const { children, disabled = false, label, value, onPress } = props
   const theme = useTheme()
 

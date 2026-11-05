@@ -13,7 +13,7 @@ interface Props {
   maxLength: number
 }
 
-export function PinDots({ maxLength, pinLength }: Props) {
+export const PinDots: React.FC<Props> = ({ maxLength, pinLength }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

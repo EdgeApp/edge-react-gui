@@ -34,7 +34,7 @@ const unitLabelsAndroid: string[] = unitLabelValueList.map(
   option => option.label
 )
 
-export const AutoLogoutModal = (props: Props) => {
+export const AutoLogoutModal: React.FC<Props> = props => {
   const { autoLogoutTimeInSeconds, bridge } = props
   const theme = useTheme()
   const styles = getStyles(theme)

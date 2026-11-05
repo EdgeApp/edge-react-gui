@@ -4,14 +4,14 @@ import jsrsasign, { hextob64 } from 'jsrsasign'
 export const sha512HashAndSign = (
   verifiableData: string,
   privateKey: string
-) => {
+): string => {
   // Create a SHA-512 hash of the data
   const hashedData = jsrsasign.KJUR.crypto.Util.sha512(verifiableData)
 
   // Prepare the signature with RSA and PSS padding
   const sig = new jsrsasign.KJUR.crypto.Signature({
     alg: 'SHA512withRSAandMGF1',
-    // @ts-expect-error
+    // @ts-expect-error jsrsasign's types leave out the prov option
     prov: 'cryptojs/jsrsa'
   })
 

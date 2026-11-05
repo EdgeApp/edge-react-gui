@@ -29,7 +29,7 @@ interface Props {
  * Similar to a CardUi4/RowUi4 combination, but emphasizes the first row instead
  * of the second row with primary colors.
  */
-export const SelectableRow = (props: Props) => {
+export const SelectableRow: React.FC<Props> = props => {
   const {
     icon,
     title,

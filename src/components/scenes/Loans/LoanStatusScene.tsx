@@ -44,7 +44,7 @@ interface Props extends EdgeAppSceneProps<'loanStatus'> {
   loanAccount: LoanAccount
 }
 
-export const LoanStatusSceneComponent = (props: Props) => {
+export const LoanStatusSceneComponent: React.FC<Props> = props => {
   const { navigation, route, loanAccount } = props
   const loanAccountId = loanAccount.id
   const { actionQueueId } = route.params

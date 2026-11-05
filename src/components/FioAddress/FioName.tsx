@@ -16,12 +16,12 @@ interface FioNameProps {
   onPress: () => void
 }
 
-export const FioNameRow = (props: FioNameProps) => {
+export const FioNameRow: React.FC<FioNameProps> = props => {
   const { name, expiration, bundledTxs, onPress, icon } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderSubTitle = () => {
+  const renderSubTitle = (): React.ReactElement | null => {
     if (expiration != null) {
       const subTitle = `${
         lstrings.fio_address_details_screen_expires

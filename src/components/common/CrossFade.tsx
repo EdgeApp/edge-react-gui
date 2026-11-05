@@ -63,7 +63,7 @@ interface ChildProps {
   duration: number
 }
 
-function CrossFadeChild(props: ChildProps) {
+const CrossFadeChild: React.FC<ChildProps> = props => {
   const { activeKey, childKey, children, duration } = props
   const active = childKey === activeKey
 
@@ -86,7 +86,7 @@ function CrossFadeChild(props: ChildProps) {
         if (!active) {
           setMode('hiding')
           opacity.value = withTiming(0, { duration }, finished => {
-            if (finished) runOnJS(setMode)('hidden')
+            if (finished === true) runOnJS(setMode)('hidden')
           })
         }
     }

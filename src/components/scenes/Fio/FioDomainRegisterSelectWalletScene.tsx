@@ -107,12 +107,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => {
+    this.getRegInfo().catch((err: unknown) => {
       showError(err)
     })
   }
 
-  getRegInfo = async () => {
+  getRegInfo = async (): Promise<void> => {
     this.setState({ loading: true })
     const { fioPlugin, fioDisplayDenomination, route, wallet } = this.props
     const { fioDomain } = route.params
@@ -146,15 +146,15 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     this.setState({ loading: false })
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     const { activationCost, loading } = this.state
 
-    if (!activationCost || activationCost === 0 || loading) return
+    if (activationCost === 0 || loading) return
 
     await this.selectWallet()
   }
 
-  selectWallet = async () => {
+  selectWallet = async (): Promise<void> => {
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
@@ -188,7 +188,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
       paymentWallet
     } = this.state
 
-    if (!paymentWallet?.id) return
+    if (paymentWallet?.id == null || paymentWallet.id === '') return
 
     const { id: walletId, tokenId } = paymentWallet
     const wallet = account.currencyWallets[walletId]
@@ -240,7 +240,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
                     )}
                     buttons={{ ok: { label: lstrings.string_ok_cap } }}
                   />
-                )).catch(err => {
+                )).catch((err: unknown) => {
                   showError(err)
                 })
                 onLogEvent('Fio_Domain_Register', {
@@ -260,7 +260,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
     }
   }
 
-  render() {
+  render(): React.ReactElement {
     const { account, theme, route } = this.props
     const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
@@ -306,11 +306,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<
               title={lstrings.create_wallet_account_select_wallet}
               body={paymentWalletBody}
               onPress={this.onWalletPress}
-              // @ts-expect-error
-              disabled={!activationCost || activationCost === 0}
             />
           </EdgeCard>
-          {!loading && paymentWallet?.id && (
+          {!loading && paymentWallet?.id != null && paymentWallet.id !== '' && (
             <MainButton
               label={lstrings.string_next_capitalized}
               marginRem={[2, 0, 2]}

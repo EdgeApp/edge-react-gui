@@ -22,7 +22,7 @@ interface Props {
   onChangePin: (newPin: string) => void
 }
 
-export const DigitInput = (props: Props) => {
+export const DigitInput: React.FC<Props> = props => {
   const {
     testID,
     pin,
@@ -37,7 +37,7 @@ export const DigitInput = (props: Props) => {
 
   const inputRef = React.useRef<TextInput | null>(null)
 
-  const handleRefocus = () => {
+  const handleRefocus = (): void => {
     if (inputRef.current != null) {
       // We don't lose focus when the user closes the keyboard
       // with the hardware back button, so blur first to fix that:

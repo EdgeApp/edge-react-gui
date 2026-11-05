@@ -46,7 +46,7 @@
     "maestro": "node -r sucrase/register ./scripts/runMaestro.ts",
     "maestro:ios": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,ios maestro",
     "maestro:android": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,android maestro",
-    "precommit": "npm run localize && npm run update-eslint-warnings && lint-staged && tsc && npm test",
+    "precommit": "npm run localize && lint-staged && tsc && npm test",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare": "husky install && ./scripts/prepare.sh",
     "rates-cache-replay": "node -r sucrase/register scripts/ratesCacheReplay.ts",
@@ -60,8 +60,7 @@
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
     "verify": "npm run lint && npm run typechain && tsc && npm run test",
-    "watch": "npm test -- --watch",
-    "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts"
+    "watch": "npm test -- --watch"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"

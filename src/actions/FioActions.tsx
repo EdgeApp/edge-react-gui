@@ -25,7 +25,7 @@ const MAX_OBT_DATA_CHECKS = 15
 export const refreshConnectedWallets = async (
   dispatch: Dispatch,
   getState: GetState
-) => {
+): Promise<void> => {
   const wallets: EdgeCurrencyWallet[] = []
   const fioWallets: EdgeCurrencyWallet[] = getState().ui.fio.fioWallets
   const currencyWallets = getState().core.account.currencyWallets
@@ -34,12 +34,12 @@ export const refreshConnectedWallets = async (
   }
 
   for (const fioWallet of fioWallets) {
-    if (!getState().core.account.id) break
+    if (getState().core.account.id == null) break
     const fioAddresses: FioAddress[] =
       await fioWallet.otherMethods.fetchFioAddresses()
     const fioAddressNames = fioAddresses.map(fioAddress => fioAddress.name)
     for (const fioAddressName of fioAddressNames) {
-      if (!getState().core.account.id) break
+      if (getState().core.account.id == null) break
       const ccWalletMap = await refreshConnectedWalletsForFioAddress(
         fioAddressName,
         fioWallet,
@@ -85,7 +85,11 @@ export function checkFioObtData(
         const edgeMetadata: EdgeMetadata = transaction.metadata ?? { notes: '' }
         try {
           const { name } = edgeMetadata
-          if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
+          if (
+            name != null &&
+            name !== '' &&
+            (await fioPlugin.otherMethods.isFioAddressValid(name)) === true
+          ) {
             await addToFioAddressCache(state.core.account, [name])
           }
         } catch (err: any) {
@@ -103,7 +107,7 @@ export function checkFioObtData(
         )
         if (obtForTx.content.memo != null && obtForTx.content.memo !== '')
           fioNotes += `\n${lstrings.fio_sender_memo_label}: ${obtForTx.content.memo}`
-        edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
+        edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes}`
         edgeMetadata.name = obtForTx.payer_fio_address
 
         await addToFioAddressCache(state.core.account, [
@@ -130,7 +134,7 @@ export const showFioExpiredModal = async (
   navigation: NavigationBase,
   fioWallet: EdgeCurrencyWallet,
   fioDomain: FioDomain
-) => {
+): Promise<void> => {
   const answer = await Airship.show<boolean>(bridge => (
     <FioExpiredModal bridge={bridge} fioName={fioDomain.name} />
   ))

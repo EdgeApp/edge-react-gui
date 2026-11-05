@@ -11,18 +11,16 @@ export function withWatchableProps<T extends Watchable<any>>(
   const [watch, emit]: Events<T> = makeEvents<T>()
   const out: T = { ...original, watch } as any
 
-  for (const key of Object.keys(original)) {
+  const keys = Object.keys(original) as Array<keyof typeof original & string>
+  for (const key of keys) {
     Object.defineProperty(out, key, {
       configurable: true,
       enumerable: true,
       get() {
-        // @ts-expect-error
         return original[key]
       },
       set(x) {
-        // @ts-expect-error
         original[key] = x
-        // @ts-expect-error
         emit(key, x)
       }
     })

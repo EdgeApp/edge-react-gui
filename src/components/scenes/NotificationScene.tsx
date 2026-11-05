@@ -17,9 +17,12 @@ import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 
 interface Props extends EdgeAppSceneProps<'notificationSettings'> {}
 
-type NotificationSettingToggleSetting = keyof NotificationSettings
+type NotificationSettingToggleSetting = Exclude<
+  keyof NotificationSettings,
+  'plugins'
+>
 
-export const NotificationScene = (props: Props) => {
+export const NotificationScene: React.FC<Props> = props => {
   const { navigation } = props
   const dispatch = useDispatch()
 
@@ -30,7 +33,7 @@ export const NotificationScene = (props: Props) => {
 
   const handlePressToggleSetting = async (
     toggleSetting: NotificationSettingToggleSetting
-  ) => {
+  ): Promise<void> => {
     try {
       await dispatch(
         updateNotificationSettings({
@@ -72,7 +75,7 @@ export const NotificationScene = (props: Props) => {
         const { currencyInfo } = currencyConfigs[pluginId]
         const { keysOnlyMode = false } = SPECIAL_CURRENCY_INFO[pluginId] ?? {}
 
-        const handlePress = () => {
+        const handlePress = (): void => {
           if (!settings.ignorePriceChanges) {
             navigation.navigate('currencyNotificationSettings', {
               currencyInfo

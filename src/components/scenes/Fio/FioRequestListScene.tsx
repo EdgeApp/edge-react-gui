@@ -76,6 +76,11 @@ interface DispatchProps {
   refreshAllFioAddresses: () => Promise<void>
 }
 
+interface RequestSection {
+  title: string
+  data: FioRequest[]
+}
+
 type OwnProps = EdgeAppSceneProps<'fioRequestList'>
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
@@ -87,7 +92,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
 
   constructor(props: Props) {
     super(props)
-    this.props.refreshAllFioAddresses().catch(err => {
+    this.props.refreshAllFioAddresses().catch((err: unknown) => {
       showError(err)
     })
     this.state = {
@@ -104,17 +109,17 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount = (): void => {
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
       () => {
-        this.getFioRequestsPending().catch(err => {
+        this.getFioRequestsPending().catch((err: unknown) => {
           showError(err)
         })
-        this.getFioRequestsSent().catch(err => {
+        this.getFioRequestsSent().catch((err: unknown) => {
           showError(err)
         })
-        this.props.refreshAllFioAddresses().catch(err => {
+        this.props.refreshAllFioAddresses().catch((err: unknown) => {
           showError(err)
         })
       }
@@ -125,7 +130,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     if (this.willFocusSubscription != null) this.willFocusSubscription()
   }
 
-  componentDidUpdate = () => {
+  componentDidUpdate = (): void => {
     if (
       this.state.addressCachedUpdated ||
       this.state.loadingPending ||
@@ -144,14 +149,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
       addressArray.push(request.payer_fio_address)
     }
 
-    addToFioAddressCache(this.props.account, addressArray).catch(err => {
-      showError(err)
-    })
+    addToFioAddressCache(this.props.account, addressArray).catch(
+      (err: unknown) => {
+        showError(err)
+      }
+    )
 
     this.setState({ addressCachedUpdated: true })
   }
 
-  getFioRequestsPending = async () => {
+  getFioRequestsPending = async (): Promise<void> => {
     const { fioWallets = [], fioAddresses } = this.props
     const { pendingRequestPaging, fioRequestsPending } = this.state
     this.setState({
@@ -183,7 +190,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  getFioRequestsSent = async () => {
+  getFioRequestsSent = async (): Promise<void> => {
     const { fioWallets = [] } = this.props
     const { fioRequestsSent, sentRequestPaging } = this.state
     this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
@@ -211,7 +218,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     requestsType: 'PENDING' | 'SENT'
   ): Promise<FioRequest[]> => {
     const nextFioRequests: FioRequest[] = []
-    if (fioWallets.length) {
+    if (fioWallets.length > 0) {
       try {
         for (const wallet of fioWallets) {
           const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
@@ -240,7 +247,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   showNoBundledTxsAlert = async (
     fioWallet: EdgeCurrencyWallet,
     fioAddressName: string
-  ) => {
+  ): Promise<void> => {
     const { navigation } = this.props
     const answer = await Airship.show<'ok' | undefined>(bridge => (
       <ButtonsModal
@@ -279,7 +286,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  rejectFioRequest = async (request: FioRequest) => {
+  rejectFioRequest = async (request: FioRequest): Promise<void> => {
     const payerFioAddress = request.payer_fio_address
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -291,7 +298,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       wallet => wallet.id === request.fioWalletId
     )
 
-    if (fioWallet) {
+    if (fioWallet != null) {
       try {
         let edgeTx = await fioMakeSpend(fioWallet, 'rejectFundsRequest', {
           fioRequestId: request.fio_request_id,
@@ -315,7 +322,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  cancelFioRequest = async (request: FioRequest) => {
+  cancelFioRequest = async (request: FioRequest): Promise<void> => {
     const payeeFioAddress = request.payee_fio_address
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -327,7 +334,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       wallet => wallet.id === request.fioWalletId
     )
 
-    if (fioWallet) {
+    if (fioWallet != null) {
       try {
         await cancelFioRequest(
           fioWallet,
@@ -350,7 +357,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fullScreenLoader: false })
   }
 
-  rejectRowConfirm = async (request: FioRequest) => {
+  rejectRowConfirm = async (request: FioRequest): Promise<void> => {
     const answer = await Airship.show<'yes' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -367,7 +374,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  cancelRowConfirm = async (request: FioRequest) => {
+  cancelRowConfirm = async (request: FioRequest): Promise<void> => {
     const answer = await Airship.show<'yes' | 'no' | undefined>(bridge => (
       <ButtonsModal
         bridge={bridge}
@@ -384,12 +391,14 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
   }
 
-  headerRowUsingTitle = (sectionObj: { section: { title: string } }) => {
-    if (!sectionObj.section.title) return null
+  headerRowUsingTitle = (sectionObj: {
+    section: { title: string }
+  }): React.ReactElement | null => {
+    if (sectionObj.section.title === '') return null
     return <SectionHeader title={sectionObj.section.title} />
   }
 
-  selectPendingRequest = async (fioRequest: FioRequest) => {
+  selectPendingRequest = async (fioRequest: FioRequest): Promise<void> => {
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
       return
@@ -460,7 +469,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     pendingRequest: FioRequest,
     walletId: string,
     tokenId: EdgeTokenId
-  ) => {
+  ): Promise<void> => {
     const { fioWallets = [], currencyWallets, navigation } = this.props
     const fioWallet = fioWallets.find(
       wallet => wallet.id === pendingRequest.fioWalletId
@@ -527,7 +536,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         }
       },
       onDone: (err, edgeTransaction) => {
-        if (!err && edgeTransaction != null) {
+        if (err == null && edgeTransaction != null) {
           this.removeFioPendingRequest(pendingRequest.fio_request_id)
           navigation.replace('transactionDetails', {
             edgeTransaction,
@@ -539,7 +548,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     navigation.navigate('send2', sendParams)
   }
 
-  selectSentRequest = (fioRequest: FioRequest) => {
+  selectSentRequest = (fioRequest: FioRequest): void => {
     const { navigation } = this.props
     if (!this.props.isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -550,17 +559,18 @@ class FioRequestList extends React.Component<Props, LocalState> {
     })
   }
 
-  pendingRequestHeaders = () =>
+  pendingRequestHeaders = (): RequestSection[] =>
     this.requestHeaders(this.state.fioRequestsPending)
 
-  sentRequestHeaders = () => this.requestHeaders(this.state.fioRequestsSent)
+  sentRequestHeaders = (): RequestSection[] =>
+    this.requestHeaders(this.state.fioRequestsSent)
 
-  requestHeaders = (fioRequests: FioRequest[]) => {
-    const headers: Array<{ title: string; data: FioRequest[] }> = []
+  requestHeaders = (fioRequests: FioRequest[]): RequestSection[] => {
+    const headers: RequestSection[] = []
     let requestsInSection: FioRequest[] = []
     let previousTimestamp = '0'
     let previousTitle = ''
-    if (fioRequests) {
+    if (fioRequests != null) {
       // Sort newest to oldest
       const sortedArrayFioRequests = fioRequests.sort(
         (requestA, requestB) =>
@@ -591,37 +601,41 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return headers
   }
 
-  listKeyExtractor = (item: FioRequest) => {
+  listKeyExtractor = (item: FioRequest): string => {
     return `${item.fio_request_id.toString()}${item.fioWalletId}`
   }
 
-  pendingLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+  pendingLazyLoad = ({
+    distanceFromEnd
+  }: {
+    distanceFromEnd: number
+  }): void => {
     const { loadingPending, fioRequestsPending, prevPendingAmount } = this.state
     if (
       !loadingPending &&
       (prevPendingAmount < fioRequestsPending.length ||
         (distanceFromEnd < 0 && fioRequestsPending.length > 0))
     ) {
-      this.getFioRequestsPending().catch(err => {
+      this.getFioRequestsPending().catch((err: unknown) => {
         showError(err)
       })
     }
   }
 
-  sentLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+  sentLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }): void => {
     const { loadingSent, fioRequestsSent, prevSentAmount } = this.state
     if (
       !loadingSent &&
       (prevSentAmount < fioRequestsSent.length ||
         (distanceFromEnd < 0 && fioRequestsSent.length > 0))
     ) {
-      this.getFioRequestsSent().catch(err => {
+      this.getFioRequestsSent().catch((err: unknown) => {
         showError(err)
       })
     }
   }
 
-  renderPending = (listItem: { item: FioRequest }) => {
+  renderPending = (listItem: { item: FioRequest }): React.ReactElement => {
     const { item } = listItem
 
     return (
@@ -634,7 +648,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     )
   }
 
-  renderSent = (listItem: { item: FioRequest }) => {
+  renderSent = (listItem: { item: FioRequest }): React.ReactElement => {
     const { item } = listItem
 
     return (
@@ -647,7 +661,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const {
       loadingPending,
@@ -667,12 +681,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
           <View style={styles.row}>
             <SceneHeader title={lstrings.fio_pending_requests} underline />
             <View style={styles.container}>
-              {!loadingPending && !fioRequestsPending.length ? (
+              {!loadingPending && fioRequestsPending.length === 0 ? (
                 <EdgeText style={styles.emptyListText}>
                   {lstrings.fio_no_requests_label}
                 </EdgeText>
               ) : null}
-              {loadingPending && !fioRequestsPending.length && (
+              {loadingPending && fioRequestsPending.length === 0 && (
                 <ActivityIndicator
                   color={theme.iconTappable}
                   style={styles.loading}
@@ -698,12 +712,12 @@ class FioRequestList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.container}>
-              {!loadingSent && !fioRequestsSent.length ? (
+              {!loadingSent && fioRequestsSent.length === 0 ? (
                 <EdgeText style={styles.emptyListText}>
                   {lstrings.fio_no_requests_label}
                 </EdgeText>
               ) : null}
-              {loadingSent && !fioRequestsSent.length && (
+              {loadingSent && fioRequestsSent.length === 0 && (
                 <ActivityIndicator
                   color={theme.iconTappable}
                   style={styles.loading}

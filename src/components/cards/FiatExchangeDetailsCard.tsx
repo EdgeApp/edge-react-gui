@@ -30,7 +30,7 @@ interface Props {
   wallet: EdgeCurrencyWallet
 }
 
-export function FiatExchangeDetailsCard(props: Props) {
+export const FiatExchangeDetailsCard: React.FC<Props> = props => {
   const { action, assetAction, transaction, wallet } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -50,7 +50,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   const { assetActionType: direction } = assetAction
 
-  const createExchangeDataString = (nl: string = '\n') => {
+  const createExchangeDataString = (nl: string = '\n'): string => {
     const { dateTime } = unixToLocaleDateTime(transaction.date)
 
     const exchangeData = [
@@ -88,6 +88,7 @@ export function FiatExchangeDetailsCard(props: Props) {
 
   const handleEmail = useHandler(() => {
     const email = supportEmail
+    if (email == null) return
     const body = createExchangeDataString('<br />')
 
     Mailer.mail(
@@ -96,18 +97,17 @@ export function FiatExchangeDetailsCard(props: Props) {
           lstrings.transaction_details_exchange_support_request,
           providerDisplayName
         ),
-        // @ts-expect-error
         recipients: [email],
         body,
         isHTML: true
       },
       (error, event) => {
-        if (error) showError(error)
+        if (error != null && error !== '') showError(error)
       }
     )
   })
 
-  const handleLink = async () => {
+  const handleLink = async (): Promise<void> => {
     if (orderUri == null) return
 
     if (Platform.OS === 'ios') {
@@ -116,9 +116,9 @@ export function FiatExchangeDetailsCard(props: Props) {
           if (available) await SafariView.show({ url: orderUri })
           else await Linking.openURL(orderUri)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           showError(error)
-          Linking.openURL(orderUri).catch(err => {
+          Linking.openURL(orderUri).catch((err: unknown) => {
             showError(err)
           })
         })

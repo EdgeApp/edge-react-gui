@@ -9,11 +9,11 @@ interface PluginScene {
 }
 let currentPlugin: PluginScene | undefined
 
-export function setPluginScene(plugin: PluginScene | undefined) {
+export function setPluginScene(plugin: PluginScene | undefined): void {
   currentPlugin = plugin
 }
 
-export function PluginBackButton() {
+export const PluginBackButton: React.FC = () => {
   const handlePress = useHandler(() => {
     if (currentPlugin != null) currentPlugin.goBack()
   })
