@@ -17,6 +17,7 @@ import {
   getDeviceSettings,
   writeDisableAnimations,
   writeForceLightAccountCreate,
+  writeSlidersAsButtons,
   writeThemeMode
 } from '../../actions/DeviceSettingsActions'
 import {
@@ -153,6 +154,9 @@ export const SettingsScene: React.FC<Props> = props => {
   )
   const [forceLightAccountCreate, setForceLightAccountCreate] =
     useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [slidersAsButtons, setSlidersAsButtons] = useState<boolean>(
+    getDeviceSettings().slidersAsButtons
+  )
   const [touchIdText, setTouchIdText] = React.useState<string>(
     lstrings.settings_button_use_touchID
   )
@@ -493,6 +497,10 @@ export const SettingsScene: React.FC<Props> = props => {
     setForceLightAccountCreate(!forceLightAccountCreate)
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
+  const handleToggleSlidersAsButtons = useHandler(async () => {
+    setSlidersAsButtons(!slidersAsButtons)
+    await writeSlidersAsButtons(!slidersAsButtons)
+  })
 
   useAsyncEffect(
     async () => {
@@ -765,6 +773,14 @@ export const SettingsScene: React.FC<Props> = props => {
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
+              />
+            )}
+            {developerModeOn && (
+              <SettingsSwitchRow
+                key="slidersAsButtons"
+                label={lstrings.settings_developer_options_sliders_as_buttons}
+                value={slidersAsButtons}
+                onPress={handleToggleSlidersAsButtons}
               />
             )}
             {developerModeOn && (
