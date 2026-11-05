@@ -845,7 +845,9 @@ export const spend = route({
             `${signedTx.txid} on the chain before retrying. To retry, run ` +
             `broadcast-tx ${parked.objectId}, which re-sends this same ` +
             `transaction${save ? ', then save-tx' : ''}; building a new ` +
-            'one pays the recipient twice on an account-based chain.',
+            'one pays the recipient twice on an account-based chain. If ' +
+            'the chain already has it, pass broadcastElsewhere to ' +
+            `save-tx ${parked.objectId}.`,
           502,
           {
             txid: signedTx.txid,
@@ -981,6 +983,27 @@ export const signTx = route({
 })
 
 /**
+ * Plugin answers that mean this transaction is already on the network.
+ *
+ * A timeout after the node accepted the transaction looks the same as one
+ * before it. The retry then hits the plugin, which answers "already known"
+ * or "missing inputs" — a failure report for a payment that went through.
+ * Mapping those as another `BROADCAST_FAILED` left `record.broadcast`
+ * unset, so `save-tx` refused the handle the engine had just issued.
+ */
+const ALREADY_ON_NETWORK_MESSAGES = [
+  'already known',
+  'missing inputs',
+  'txn-already',
+  'inputs-missingorspent'
+]
+
+function isAlreadyOnNetwork(error: unknown): boolean {
+  const message = errorMessage(error).toLowerCase()
+  return ALREADY_ON_NETWORK_MESSAGES.some(text => message.includes(text))
+}
+
+/**
  * Broadcast a signed transaction.
  *
  * The irreversible step: once this returns, the funds have left the wallet.
@@ -1034,6 +1057,12 @@ export const broadcastTx = route({
         // The handle keeps the signed transaction, so a retry sends the same
         // bytes and cannot pay twice.
         const message = errorMessage(error)
+        if (isAlreadyOnNetwork(error)) {
+          // The answers the short-circuit above exists to avoid: the node
+          // already has this transaction. The payment went through; mark
+          // it sent so `save-tx` can record it.
+          return txHandleResponse(ctx, record, signed, { broadcast: true })
+        }
         ctx.state.logger.warn('broadcastTx failed', {
           walletId: wallet.id,
           txid: signed.txid,
@@ -1046,7 +1075,8 @@ export const broadcastTx = route({
             `${signed.txid} on the chain before retrying. To retry, run ` +
             `broadcast-tx ${record.objectId} again, which re-sends this same ` +
             'transaction; building a new one pays the recipient twice on an ' +
-            'account-based chain.',
+            'account-based chain. If the chain already has it, pass ' +
+            `broadcastElsewhere to save-tx ${record.objectId}.`,
           502,
           {
             txid: signed.txid,

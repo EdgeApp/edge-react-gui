@@ -53,6 +53,8 @@ function makeWallet(
     broadcastFails?: boolean
     /** Fail the first broadcast only, so a retry can succeed. */
     broadcastFailsOnce?: boolean
+    /** Throw these in order; a missing entry succeeds. */
+    broadcastFailSequence?: Array<string | undefined>
     accelerateAnswers?: EdgeTransaction | null
   } = {}
 ): { wallet: EdgeCurrencyWallet; calls: Calls } {
@@ -107,9 +109,15 @@ function makeWallet(
     },
     async broadcastTx(tx: EdgeTransaction) {
       calls.broadcastTx.push(tx)
+      const attempt = calls.broadcastTx.length
+      const sequenced = opts.broadcastFailSequence?.[attempt - 1]
+      if (sequenced != null) {
+        throw new Error(sequenced)
+      }
       if (
-        opts.broadcastFails === true ||
-        (opts.broadcastFailsOnce === true && calls.broadcastTx.length === 1)
+        opts.broadcastFailSequence == null &&
+        (opts.broadcastFails === true ||
+          (opts.broadcastFailsOnce === true && attempt === 1))
       ) {
         // What a socket timeout looks like from here, and the whole problem:
         // indistinguishable from a node that accepted the transaction and
@@ -316,6 +324,10 @@ describe('spend', () => {
     expect(failure.message).toContain(
       `broadcast-tx ${String(failure.details?.objectId)}`
     )
+    // The uncertain case: the node may already have it, and a retry of
+    // `broadcast-tx` then answers "already known". Without this, the
+    // handle cannot be recorded.
+    expect(failure.message).toContain('broadcastElsewhere')
     expect(objects.size).toBe(1)
     expect(calls.broadcastTx).toHaveLength(1)
     // Nothing was written to local history, which the envelope says.
@@ -896,6 +908,69 @@ describe('the staged flow', () => {
     expect(saved.saved).toBe(true)
     expect(calls.broadcastTx).toHaveLength(2)
     expect(calls.broadcastTx[1].txid).toBe('tx-signed')
+  })
+
+  for (const pluginMessage of ['already known', 'missing inputs']) {
+    it(`treats "${pluginMessage}" from broadcast-tx as sent`, async () => {
+      // A timeout after the node accepted the transaction, then a retry
+      // that hits the plugin: those answers mean the payment went through.
+      // Mapping them as another BROADCAST_FAILED left record.broadcast
+      // unset, so save-tx refused the handle.
+      const objects = new ObjectHandleStore()
+      const { wallet, calls } = makeWallet({
+        broadcastFailSequence: [pluginMessage]
+      })
+      const staged: any = await makeSpend.handler(
+        makeCtx({ objects, wallets: [wallet], body: body() })
+      )
+      const ctxFor = (): any =>
+        makeCtx({
+          objects,
+          wallets: [wallet],
+          body: { objectId: staged.objectId }
+        })
+      await signTx.handler(ctxFor())
+      const sent: any = await broadcastTx.handler(ctxFor())
+      expect(sent.transaction.txid).toBe('tx-signed')
+      const saved: any = await saveTx.handler(ctxFor())
+      expect(saved.saved).toBe(true)
+      expect(calls.broadcastTx).toHaveLength(1)
+    })
+  }
+
+  it('records a spend whose retry says the network already has it', async () => {
+    // spend parks after a timeout. The node had accepted the transaction,
+    // so broadcast-tx answers "already known". That has to count as sent
+    // or save-tx cannot record a payment that already left the wallet.
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet({
+      broadcastFailSequence: ['socket hang up', 'already known']
+    })
+    const failure = await thrown(
+      async () =>
+        await spend.handler(
+          makeCtx({
+            objects,
+            wallets: [wallet],
+            body: body(),
+            warnings: []
+          })
+        )
+    )
+    expect(failure.code).toBe('BROADCAST_FAILED')
+    const objectId = String(failure.details?.objectId)
+
+    const sent: any = await broadcastTx.handler(
+      makeCtx({ objects, wallets: [wallet], body: { objectId } })
+    )
+    expect(sent.transaction.txid).toBe('tx-signed')
+    expect(calls.broadcastTx).toHaveLength(2)
+
+    const saved: any = await saveTx.handler(
+      makeCtx({ objects, wallets: [wallet], body: { objectId } })
+    )
+    expect(saved.saved).toBe(true)
+    expect(objects.size).toBe(0)
   })
 
   it('will not save a bump nobody has broadcast', async () => {
