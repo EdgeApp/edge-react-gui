@@ -548,6 +548,7 @@ const strings = {
   select_wallet_to_send_from: 'Select Wallet to Send From',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_button_confirm: 'Confirm',
   send_confirmation_balance: 'Balance',
   send_confirmation_zero_amount_title: 'Send Zero Amount?',
   send_confirmation_zero_amount_message:
