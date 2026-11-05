@@ -507,7 +507,7 @@ function buildIosMaestro(buildObj: BuildObj): void {
   chdir(guiPlatformDir)
 
   let cmdStr
-  cmdStr = `xcodebuild -workspace ${xcodeWorkspace} -scheme ${xcodeScheme} -sdk iphonesimulator -configuration Release -derivedDataPath ${buildDir}`
+  cmdStr = `xcodebuild -workspace ${xcodeWorkspace} -scheme ${xcodeScheme} -sdk iphonesimulator -arch arm64 -configuration Release -derivedDataPath ${buildDir}`
   if (process.env.DISABLE_XCPRETTY === 'false')
     cmdStr = cmdStr + ' | xcbeautify'
   cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
