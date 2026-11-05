@@ -69,7 +69,7 @@ import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { CountryStateButton } from '../buttons/RegionButton'
 import { AlertCardUi4 } from '../cards/AlertCard'
-import { ErrorCard, I18nError } from '../cards/ErrorCard'
+import { ErrorCard } from '../cards/ErrorCard'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { CryptoIcon } from '../icons/CryptoIcon'
@@ -377,21 +377,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       return null
     }
 
-    // Early-branch: For sell with crypto-entered amount exceeding balance, do not fetch quotes
-    if (
-      direction === 'sell' &&
-      lastUsedInput === 'crypto' &&
-      denomination != null &&
-      !('max' in amountQuery || 'maxExchangeAmount' in amountQuery)
-    ) {
-      const tokenId: EdgeTokenId = selectedCrypto?.tokenId ?? null
-      const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
-      const walletCryptoAmount = convertNativeToDenomination(
-        denomination.multiplier
-      )(nativeBalance)
-      if (gt(amountQuery.exchangeAmount, walletCryptoAmount)) return null
-    }
-
     return {
       wallet: selectedWallet,
       pluginId: selectedWallet.currencyInfo.pluginId,
@@ -417,8 +402,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     stateProvinceCode,
     amountTypeSupport.onlyCrypto,
     amountTypeSupport.onlyFiat,
-    direction,
-    denomination
+    direction
   ])
 
   // Providers this account's affiliation prefers, from the info server
@@ -503,30 +487,31 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     }
   }, [bestQuote])
 
-  // Compute insufficient funds error for non-max sell path
-  const insufficientFundsError = React.useMemo(() => {
-    if (direction !== 'sell') return null
-    if (selectedWallet == null) return null
-    if (selectedCrypto == null) return null
-    if (denomination == null) return null
-    if ('empty' in amountQuery) return null
-    if ('max' in amountQuery) return null
-    if ('maxExchangeAmount' in amountQuery) return null
-    if (lastUsedInput == null) return null
+  // Warn on a non-max sell above the balance. Quotes still load so the user can
+  // compare them, and the option scene blocks the sale itself.
+  const isSellAboveBalance = React.useMemo(() => {
+    if (direction !== 'sell') return false
+    if (selectedWallet == null) return false
+    if (selectedCrypto == null) return false
+    if (denomination == null) return false
+    if ('empty' in amountQuery) return false
+    if ('max' in amountQuery) return false
+    if ('maxExchangeAmount' in amountQuery) return false
+    if (lastUsedInput == null) return false
 
     // Determine requested crypto amount
     let requestedCryptoAmount: string | null = null
     if (lastUsedInput === 'crypto') {
       requestedCryptoAmount = amountQuery.exchangeAmount
     } else if (lastUsedInput === 'fiat') {
-      if (quoteExchangeRate === 0) return null
+      if (quoteExchangeRate === 0) return false
       requestedCryptoAmount = div(
         amountQuery.exchangeAmount,
         quoteExchangeRate.toString(),
         DECIMAL_PRECISION
       )
     }
-    if (requestedCryptoAmount == null) return null
+    if (requestedCryptoAmount == null) return false
 
     const tokenId: EdgeTokenId = selectedCrypto.tokenId ?? null
     const nativeBalance = selectedWallet.balanceMap.get(tokenId) ?? '0'
@@ -534,13 +519,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
       denomination.multiplier
     )(nativeBalance)
 
-    if (gt(requestedCryptoAmount, walletCryptoAmount)) {
-      return new I18nError(
-        lstrings.exchange_insufficient_funds_title,
-        lstrings.exchange_insufficient_funds_below_balance
-      )
-    }
-    return null
+    return gt(requestedCryptoAmount, walletCryptoAmount)
   }, [
     direction,
     selectedWallet,
@@ -976,9 +955,6 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     isPluginsLoading || isCheckingSupport || isLoadingQuotes || isFetchingQuotes
 
   const errorForDisplay = React.useMemo(() => {
-    // Prioritize showing insufficient funds on sell flow even while loading
-    if (insufficientFundsError != null) return insufficientFundsError
-
     if (
       isResultLoading ||
       allQuotes.length !== 0 ||
@@ -1014,8 +990,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     lastUsedInput,
     selectedCryptoCurrencyCode,
     selectedFiatCurrencyCode,
-    direction,
-    insufficientFundsError
+    direction
   ])
 
   // Render region selection view
@@ -1214,7 +1189,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           // Nothing was returned
           allQuotes.length === 0 &&
           quoteErrors.length === 0 &&
-          // No other error to show (e.g., insufficient funds)
+          // No other error to show
           errorForDisplay == null &&
           // User has queried
           !('empty' in amountQuery) &&
@@ -1238,6 +1213,14 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
             />
           ) : null
         }
+
+        {isSellAboveBalance ? (
+          <AlertCardUi4
+            type="warning"
+            title={lstrings.exchange_insufficient_funds_title}
+            body={lstrings.exchange_insufficient_funds_below_balance}
+          />
+        ) : null}
 
         {errorForDisplay != null ? <ErrorCard error={errorForDisplay} /> : null}
       </SceneContainer>

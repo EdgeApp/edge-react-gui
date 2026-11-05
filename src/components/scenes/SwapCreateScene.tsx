@@ -214,9 +214,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
     fromWallet == null ||
     toWallet == null ||
     // Don't show next button if the amount is zero:
-    zeroString(inputNativeAmount) ||
-    // Don't show next button if the amount exceeds the balance:
-    checkAmountExceedsBalance()
+    zeroString(inputNativeAmount)
 
   //
   // Effects
@@ -528,7 +526,10 @@ export const SwapCreateScene: React.FC<Props> = props => {
       return
     }
 
+    // The confirmation scene blocks any quote the wallet cannot pay for, so an
+    // amount above the balance can still shop for rates:
     const request: EdgeSwapRequest = {
+      allowInsufficientFunds: true,
       fromTokenId,
       fromWallet,
       nativeAmount: inputNativeAmount,
@@ -536,8 +537,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
       toTokenId,
       toWallet
     }
-
-    if (checkAmountExceedsBalance()) return
 
     getQuote(request)
   })
@@ -638,7 +637,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
         <AlertCardUi4
           title={lstrings.exchange_insufficient_funds_title}
           body={lstrings.exchange_insufficient_funds_below_balance}
-          type="error"
+          type="warning"
         />
       )
     }

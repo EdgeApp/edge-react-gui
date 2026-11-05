@@ -28,6 +28,7 @@ import {
   rampQuoteHasAmounts,
   type RampQuotePriority
 } from '../../plugins/ramps/utils/rampQuotePriority'
+import { isRampQuoteUnfunded } from '../../plugins/ramps/utils/rampQuoteUnfunded'
 import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
@@ -41,7 +42,7 @@ import { SectionHeader } from '../common/SectionHeader'
 import { SceneContainer } from '../layout/SceneContainer'
 import { CardListModal } from '../modals/CardListModal'
 import { ShimmerCard } from '../progress-indicators/ShimmerCard'
-import { Airship, showError } from '../services/AirshipInstance'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
@@ -185,6 +186,10 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
   const handleQuotePress = useHandler(
     async (quote: RampQuote): Promise<void> => {
+      if (isRampQuoteUnfunded(quote, rampQuoteRequest)) {
+        showToast(lstrings.trade_option_insufficient_funds_body)
+        return
+      }
       setIsApprovingQuote(true)
       try {
         await quote.approveQuote({
@@ -232,6 +237,10 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
 
     return grouped
   }, [allQuotes, direction, quotePriority])
+
+  const hasUnfundedQuote = allQuotes.some(quote =>
+    isRampQuoteUnfunded(quote, rampQuoteRequest)
+  )
 
   // Only show loading state if we have no quotes to display
   const showLoadingState =
@@ -298,6 +307,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
           </>
         ) : (
           <>
+            {hasUnfundedQuote ? (
+              <AlertCardUi4
+                type="warning"
+                title={lstrings.exchange_insufficient_funds_title}
+                body={lstrings.trade_option_insufficient_funds_body}
+                marginRem={[0.5, 0.5]}
+              />
+            ) : null}
             {allQuotes.length === 0 && failedQuotes.length === 0 ? (
               <AlertCardUi4
                 type="warning"

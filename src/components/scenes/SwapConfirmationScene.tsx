@@ -190,6 +190,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     2
   )
   const showFeeWarning = gt(feeFiat, '0.01') && gte(feePercent, '0.05')
+  const isUnfunded = isQuoteUnfunded(selectedQuote)
 
   const requote = useHandler(() => {
     navigation.replace('swapProcessing', {
@@ -274,6 +275,13 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   })
 
   const handleSlideComplete = async (reset: () => void): Promise<void> => {
+    // The slider is disabled for these, so this only guards a slide that was
+    // already in progress when the selection changed:
+    if (isQuoteUnfunded(selectedQuote)) {
+      reset()
+      showToast(lstrings.exchange_insufficient_funds_quote_body)
+      return
+    }
     // A retry after a failed approval, a return from the success scene, or a
     // slide after the timer expired while the scene was unfocused all land
     // on a quote that cannot be approved, so fetch fresh quotes instead:
@@ -495,6 +503,15 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
   return (
     <SceneWrapper hasTabs hasNotifications scroll>
       <SceneContainer headerTitle={lstrings.title_exchange}>
+        {isUnfunded ? (
+          <EdgeAnim enter={fadeInUp60}>
+            <AlertCardUi4
+              title={lstrings.exchange_insufficient_funds_title}
+              body={lstrings.exchange_insufficient_funds_quote_body}
+              type="warning"
+            />
+          </EdgeAnim>
+        ) : null}
         {showPriceImpact && showFeeWarning ? (
           <EdgeAnim enter={fadeInUp60}>
             <AlertCardUi4
@@ -571,7 +588,12 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <SafeSlider
             parentStyle={styles.slider}
             onSlidingComplete={handleSlideComplete}
-            disabled={pending || expired}
+            disabled={pending || expired || isUnfunded}
+            disabledText={
+              isUnfunded
+                ? lstrings.exchange_insufficient_funds_title
+                : undefined
+            }
           />
         </EdgeAnim>
         {renderTimer()}
@@ -727,6 +749,17 @@ const getSwapInfo = (
 const isQuoteExpired = (quote: EdgeSwapQuote): boolean =>
   quote.expirationDate != null && quote.expirationDate.valueOf() <= Date.now()
 
+/**
+ * True when the wallet cannot pay for this quote. Plugins flag the quotes they
+ * could not build a spend for; the balance check covers plugins that quote
+ * without building one.
+ */
+const isQuoteUnfunded = (quote: EdgeSwapQuote): boolean => {
+  const { fromTokenId, fromWallet } = quote.request
+  const balance = fromWallet.balanceMap.get(fromTokenId) ?? '0'
+  return quote.insufficientFunds != null || gt(quote.fromNativeAmount, balance)
+}
+
 const getBetterQuoteRate = (
   quoteA: EdgeSwapQuote,
   quoteB: EdgeSwapQuote
@@ -748,13 +781,16 @@ const getBetterQuoteRate = (
  * Picks the quote to select when the confirmation scene opens. A preferred
  * provider - pinned by a deep link, chosen in the swap settings, or set by an
  * active promotion - is selected outright when it returned a quote. Otherwise
- * the DEX/CEX preference narrows the field, and the best rate wins.
+ * the DEX/CEX preference narrows the field, and the best rate wins. A quote the
+ * wallet can pay for always beats one flagged as unfunded.
  */
 export const pickBestQuoteWithPreference = (
-  quotes: EdgeSwapQuote[],
+  allQuotes: EdgeSwapQuote[],
   swapRequestOptions: EdgeSwapRequestOptions
 ): EdgeSwapQuote => {
   const { preferPluginId, preferType } = swapRequestOptions
+  const fundedQuotes = allQuotes.filter(q => q.insufficientFunds == null)
+  const quotes = fundedQuotes.length > 0 ? fundedQuotes : allQuotes
   if (preferPluginId != null) {
     const preferredQuote = quotes.find(
       quote => quote.pluginId === preferPluginId

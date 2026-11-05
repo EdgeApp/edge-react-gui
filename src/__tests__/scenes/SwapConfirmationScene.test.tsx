@@ -106,13 +106,20 @@ beforeAll(async () => {
   ethWallet = await account.waitForCurrencyWallet(ethInfo.id)
 })
 
+/** The fake wallet holds nothing, so this wraps it with enough to pay a quote. */
+const makeFundedWallet = (): EdgeCurrencyWallet =>
+  Object.create(btcWallet ?? null, {
+    balanceMap: { value: new Map([[null, '10000']]) }
+  })
+
 describe('SwapConfirmationScene', () => {
   it('should render with loading props', () => {
     if (btcWallet == null || ethWallet == null) return
     const rootState: FakeState = { ...fakeRootState, core: { account } }
 
     const fakeRequest: any = {
-      fromWallet: btcWallet,
+      fromTokenId: null,
+      fromWallet: makeFundedWallet(),
       toWallet: ethWallet
     }
 
@@ -187,6 +194,7 @@ describe('SwapConfirmationScene', () => {
       replace: jest.SpiedFunction<typeof fakeNavigation.replace>
       showToast: jest.SpiedFunction<typeof AirshipInstance.showToast>
       slide: () => Promise<void>
+      isSliderDisabled: () => boolean
       unmount: () => void
     } => {
       const rootState: FakeState = { ...fakeRootState, core: { account } }
@@ -215,14 +223,26 @@ describe('SwapConfirmationScene', () => {
             .props.onSlidingComplete(() => undefined)
         })
       }
-      return { replace, showToast, slide, unmount: rendered.unmount }
+      const isSliderDisabled = (): boolean =>
+        rendered.UNSAFE_getByType(SafeSlider).props.disabled
+      return {
+        replace,
+        showToast,
+        slide,
+        isSliderDisabled,
+        unmount: rendered.unmount
+      }
     }
 
     const makeQuote = (
       approve: EdgeSwapQuote['approve'],
       expirationDate?: Date
     ): EdgeSwapQuote => {
-      const fakeRequest: any = { fromWallet: btcWallet, toWallet: ethWallet }
+      const fakeRequest: any = {
+        fromTokenId: null,
+        fromWallet: makeFundedWallet(),
+        toWallet: ethWallet
+      }
       return {
         swapInfo: dummySwapInfo,
         request: fakeRequest,
@@ -236,6 +256,63 @@ describe('SwapConfirmationScene', () => {
         close: jest.fn(async () => {})
       }
     }
+
+    it('blocks a quote the plugin flagged as unfunded', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const approve = jest.fn(async () => {
+        throw new Error('unreachable')
+      })
+      const quote: EdgeSwapQuote = {
+        ...makeQuote(approve),
+        insufficientFunds: { tokenId: null }
+      }
+      const { replace, showToast, slide, isSliderDisabled, unmount } =
+        renderScene(quote)
+
+      expect(isSliderDisabled()).toBe(true)
+      await slide()
+      expect(approve).not.toHaveBeenCalled()
+      expect(replace).not.toHaveBeenCalled()
+      expect(showToast).toHaveBeenCalledWith(
+        lstrings.exchange_insufficient_funds_quote_body
+      )
+
+      unmount()
+    })
+
+    it('blocks an unflagged quote above the wallet balance', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const approve = jest.fn(async () => {
+        throw new Error('unreachable')
+      })
+      const quote: EdgeSwapQuote = {
+        ...makeQuote(approve),
+        fromNativeAmount: '10001'
+      }
+      const { slide, isSliderDisabled, unmount } = renderScene(quote)
+
+      expect(isSliderDisabled()).toBe(true)
+      await slide()
+      expect(approve).not.toHaveBeenCalled()
+
+      unmount()
+    })
+
+    it('leaves a funded quote approvable', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      const approve = jest.fn(async () => {
+        throw new Error('Broadcast failed')
+      })
+      const { slide, isSliderDisabled, unmount } = renderScene(
+        makeQuote(approve)
+      )
+
+      expect(isSliderDisabled()).toBe(false)
+      await slide()
+      expect(approve).toHaveBeenCalledTimes(1)
+
+      unmount()
+    })
 
     it('requotes a retry after a failed approval', async () => {
       if (btcWallet == null || ethWallet == null) return
@@ -585,6 +662,24 @@ describe('SwapConfirmationScene', () => {
       fromNativeAmount: '1000',
       toNativeAmount: '9000'
     }
+
+    it('selects a funded quote over a flagged provider or better rate', () => {
+      const flagged = {
+        ...pinned,
+        insufficientFunds: { tokenId: null },
+        toNativeAmount: '99999'
+      }
+      expect(
+        pickBestQuoteWithPreference([flagged, cheaper] as any, {
+          preferPluginId: 'changenow'
+        })
+      ).toEqual(cheaper)
+    })
+
+    it('still selects a flagged quote when none is funded', () => {
+      const flagged = { ...pinned, insufficientFunds: { tokenId: null } }
+      expect(pickBestQuoteWithPreference([flagged] as any, {})).toEqual(flagged)
+    })
 
     it('selects the preferred provider over a better rate', () => {
       expect(
