@@ -632,6 +632,7 @@ const strings = {
   settings_developer_options_force_la: 'Force Light Account Creation',
   swap_fixed_to_unavailable_toast:
     'No provider can quote an exact receive amount for this pair. Your send amount is fixed instead, at about the same value.',
+  settings_developer_options_sliders_as_buttons: 'Replace Sliders with Buttons',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
