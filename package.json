@@ -115,7 +115,7 @@
     "edge-currency-accountbased": "^4.104.0",
     "edge-currency-plugins": "^3.17.0",
     "edge-exchange-plugins": "^2.60.1",
-    "edge-info-server": "^3.16.0",
+    "edge-info-server": "^3.16.1",
     "edge-login-ui-rn": "^4.0.0",
     "ethers": "^5.7.2",
     "expo": "^57.0.7",
