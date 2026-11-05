@@ -208,7 +208,7 @@ export function EdgeModal<T>(props: EdgeModalProps<T>): React.ReactElement {
                   {title}
                 </EdgeText>
               ) : (
-                title ?? undefined
+                (title ?? undefined)
               )}
               {onCancel == null ? null : (
                 <EdgeTouchableOpacity

@@ -15,10 +15,7 @@ import {
 import { readSyncedSettings } from './SettingsActions'
 
 export type GiftCardDestination =
-  | 'bitrefill'
-  | 'giftCardList'
-  | 'giftCardMarket'
-  | 'unavailable'
+  'bitrefill' | 'giftCardList' | 'giftCardMarket' | 'unavailable'
 
 interface GiftCardDestinationParams {
   disablePlugins: NestedDisableMap

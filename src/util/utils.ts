@@ -567,8 +567,8 @@ export const convertTransactionFeeToDisplayFee = (
         parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD
           ? feeStyle.danger
           : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD
-          ? feeStyle.warning
-          : undefined
+            ? feeStyle.warning
+            : undefined
     }
 
     return {
@@ -638,8 +638,7 @@ export interface MiniCurrencyConfig {
   currencyInfo: EdgeCurrencyInfo
 }
 export type CurrencyConfigMap =
-  | EdgePluginMap<EdgeCurrencyConfig>
-  | EdgePluginMap<MiniCurrencyConfig>
+  EdgePluginMap<EdgeCurrencyConfig> | EdgePluginMap<MiniCurrencyConfig>
 
 export const shuffleArray = <T>(array: T[]): T[] => {
   let currentIndex = array.length

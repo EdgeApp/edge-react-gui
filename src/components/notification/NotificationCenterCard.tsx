@@ -80,8 +80,8 @@ const NotificationCenterCard: React.FC<NotificationCenterCardProps> = props => {
     iconUri = type === 'warning'
       ? getThemedIconUri(theme, 'notifications/icon-warning')
       : type === 'general'
-      ? getThemedIconUri(theme, 'notifications/icon-bell')
-      : getThemedIconUri(theme, 'notifications/icon-info')
+        ? getThemedIconUri(theme, 'notifications/icon-bell')
+        : getThemedIconUri(theme, 'notifications/icon-info')
   } = props
 
   const handlePress = useHandler(async () => {

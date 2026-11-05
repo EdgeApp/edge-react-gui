@@ -1,0 +1,10 @@
+# Only format JavaScript and TypeScript, the files we lint.
+# Our JSON, YAML and Markdown files are generated, vendored or hand-written:
+*
+!*/
+!*.js
+!*.jsx
+!*.mjs
+!*.cjs
+!*.ts
+!*.tsx

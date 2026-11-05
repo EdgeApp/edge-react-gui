@@ -152,24 +152,23 @@ export const MenuTabs = (props: BottomTabBarProps): React.ReactElement => {
 
 const Container = styled(Animated.View)<{ shiftY: SharedValue<number> }>(
   () =>
-    ({ shiftY }) =>
-      [
-        {
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'flex-end',
-          overflow: 'visible'
-        },
-        useAnimatedStyle(() => ({
-          transform: [
-            {
-              translateY: shiftY.value
-            }
-          ]
-        }))
-      ]
+    ({ shiftY }) => [
+      {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'flex-end',
+        overflow: 'visible'
+      },
+      useAnimatedStyle(() => ({
+        transform: [
+          {
+            translateY: shiftY.value
+          }
+        ]
+      }))
+    ]
 )
 
 const Background = styled(Animated.View)<{

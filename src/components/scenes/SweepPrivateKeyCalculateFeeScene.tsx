@@ -216,8 +216,7 @@ const SweepPrivateKeyCalculateFeeComponent: React.FC<Props> = props => {
       let enableSlider = false
       if (
         ((memoryWallet as any).otherMethods?.makeMaxSpend as
-          | MakeMaxSpendMethod
-          | undefined) != null
+          MakeMaxSpendMethod | undefined) != null
       ) {
         try {
           const tokenIds = sweepPrivateKeyList.map(item => item.tokenId)

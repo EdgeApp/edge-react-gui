@@ -10,7 +10,6 @@ const asPhazeConfig = asMaybe(
 )
 
 export function getPhazeConfig():
-  | { apiKey?: string; baseUrl?: string }
-  | undefined {
+  { apiKey?: string; baseUrl?: string } | undefined {
   return asPhazeConfig(pluginMaps.guiApiKeys.phaze) ?? undefined
 }

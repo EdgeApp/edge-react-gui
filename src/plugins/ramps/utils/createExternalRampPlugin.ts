@@ -142,38 +142,36 @@ export function createExternalRampPlugin(
         return []
       }
 
-      return support.paymentTypes.map(
-        (paymentType): RampQuote => ({
-          pluginId,
-          partnerIcon: externalConfig.partnerIcon,
-          pluginDisplayName: externalConfig.guiPlugin.displayName,
-          displayCurrencyCode: request.displayCurrencyCode,
-          cryptoAmount: '0',
-          isEstimate: true,
-          fiatCurrencyCode: request.fiatCurrencyCode,
-          fiatAmount: '0',
-          direction: request.direction,
-          regionCode: request.regionCode,
-          paymentType,
-          settlementRange: support.settlementRange,
-          specialQuoteRateMessage: lstrings.tap_to_view_quote_amount_and_rate,
-          approveQuote: async () => {
-            // Launch!
-            const navigationProps: PluginViewParams = {
-              plugin: externalConfig.guiPlugin,
-              deepPath: support.deepPath,
-              deepQuery: support.deepQuery
-            }
+      return support.paymentTypes.map((paymentType): RampQuote => ({
+        pluginId,
+        partnerIcon: externalConfig.partnerIcon,
+        pluginDisplayName: externalConfig.guiPlugin.displayName,
+        displayCurrencyCode: request.displayCurrencyCode,
+        cryptoAmount: '0',
+        isEstimate: true,
+        fiatCurrencyCode: request.fiatCurrencyCode,
+        fiatAmount: '0',
+        direction: request.direction,
+        regionCode: request.regionCode,
+        paymentType,
+        settlementRange: support.settlementRange,
+        specialQuoteRateMessage: lstrings.tap_to_view_quote_amount_and_rate,
+        approveQuote: async () => {
+          // Launch!
+          const navigationProps: PluginViewParams = {
+            plugin: externalConfig.guiPlugin,
+            deepPath: support.deepPath,
+            deepQuery: support.deepQuery
+          }
 
-            if (request.direction === 'buy') {
-              config.navigation.navigate('pluginViewBuy', navigationProps)
-            } else {
-              config.navigation.navigate('pluginViewSell', navigationProps)
-            }
-          },
-          closeQuote: async () => {}
-        })
-      )
+          if (request.direction === 'buy') {
+            config.navigation.navigate('pluginViewBuy', navigationProps)
+          } else {
+            config.navigation.navigate('pluginViewSell', navigationProps)
+          }
+        },
+        closeQuote: async () => {}
+      }))
     }
   }
 }

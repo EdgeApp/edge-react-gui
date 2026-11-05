@@ -102,8 +102,8 @@ const Component = (props: Props) => {
           <Path
             d={`
               M ${holeX + strokeWidth} ${
-              holeY + cornerRadius + strokeWidth + cornerLegroom
-            }
+                holeY + cornerRadius + strokeWidth + cornerLegroom
+              }
               l 0 ${-cornerLegroom}
               q 0 ${-cornerRadius} ${cornerRadius} ${-cornerRadius}
               l ${cornerLegroom} 0
@@ -134,8 +134,8 @@ const Component = (props: Props) => {
           <Path
             d={`
               M ${holeX + holeSize + strokeWidth} ${
-              holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom
-            }
+                holeY + holeSize - cornerRadius + strokeWidth - cornerLegroom
+              }
               l 0 ${cornerLegroom}
               q 0 ${cornerRadius} ${-cornerRadius} ${cornerRadius}
               l ${-cornerLegroom} 0
@@ -150,8 +150,8 @@ const Component = (props: Props) => {
           <Path
             d={`
               M ${holeX + cornerRadius + strokeWidth + cornerLegroom} ${
-              holeY + holeSize + strokeWidth
-            }
+                holeY + holeSize + strokeWidth
+              }
               l ${-cornerLegroom} 0
               q ${-cornerRadius} 0 ${-cornerRadius} ${-cornerRadius}
               l 0 ${-cornerLegroom}

@@ -6,7 +6,7 @@ import { getSignerSeed } from '../../plugins/stake-plugins/util/signer'
 const privateKey = '1234567890abcdef'.repeat(4)
 
 const makeAccount = (keys: object): EdgeAccount =>
-  ({ getRawPrivateKey: async () => keys } as unknown as EdgeAccount)
+  ({ getRawPrivateKey: async () => keys }) as unknown as EdgeAccount
 
 const wallet = {
   id: 'wallet-id',

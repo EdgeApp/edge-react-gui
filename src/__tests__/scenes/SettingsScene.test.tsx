@@ -51,7 +51,7 @@ describe('SettingsScene', () => {
     const write = jest
       .spyOn(DeviceSettingsActions, 'writeThemeMode')
       .mockResolvedValue(undefined)
-    jest.spyOn(Airship, 'show').mockResolvedValue('light' as never)
+    jest.spyOn(Airship, 'show').mockResolvedValue('light')
 
     const rendered = render(
       <FakeProviders initialState={developerState}>

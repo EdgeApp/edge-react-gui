@@ -27,7 +27,10 @@ export function normalizeError(error: unknown): Error {
 // This is a temporary patch for AggregateError until it is available in Hermes.
 // FIX: Remove this in newer versions of hermes.
 export class AggregateErrorFix extends Error {
-  constructor(public errors: Error[], message?: string) {
+  constructor(
+    public errors: Error[],
+    message?: string
+  ) {
     super(message)
     this.name = 'AggregateError'
   }

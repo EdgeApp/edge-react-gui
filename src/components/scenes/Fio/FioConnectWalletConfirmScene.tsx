@@ -34,8 +34,7 @@ export interface FioConnectWalletConfirmParams {
   walletsToDisconnect: FioConnectionWalletItem[]
 }
 
-interface FioConnectWalletConfirmProps
-  extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
+interface FioConnectWalletConfirmProps extends EdgeAppSceneProps<'fioConnectToWalletsConfirm'> {
   wallet: EdgeCurrencyWallet
 }
 

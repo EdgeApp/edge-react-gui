@@ -31,11 +31,7 @@ import { UnscaledText } from '../text/UnscaledText'
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export type SimpleTextInputReturnKeyType =
-  | 'done'
-  | 'go'
-  | 'next'
-  | 'search'
-  | 'send' // Defaults to 'done'
+  'done' | 'go' | 'next' | 'search' | 'send' // Defaults to 'done'
 
 export interface SimpleTextInputProps extends LayoutStyleProps {
   // Contents:
@@ -255,8 +251,8 @@ export const SimpleTextInput = React.forwardRef<
     return disabled
       ? theme.textInputPlaceholderColorDisabled
       : isFocused
-      ? theme.textInputPlaceholderColorFocused
-      : theme.textInputPlaceholderColor
+        ? theme.textInputPlaceholderColorFocused
+        : theme.textInputPlaceholderColor
   }, [
     disabled,
     isFocused,
@@ -304,8 +300,8 @@ export const SimpleTextInput = React.forwardRef<
     const scale = !hasIcon
       ? 0
       : valueRef.value !== '' && active !== true
-      ? 0
-      : 1 - focusAnimation.value
+        ? 0
+        : 1 - focusAnimation.value
     return {
       transform: [{ scale }],
       marginRight: (scale - 1) * themeRem

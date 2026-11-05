@@ -27,7 +27,7 @@ export const useTotalFiatAmount = (
   return React.useMemo(() => {
     return borrowArray.reduce((total, obj) => {
       const { currencyCode, denominations } =
-        obj.tokenId == null ? currencyInfo : allTokens[obj.tokenId] ?? {}
+        obj.tokenId == null ? currencyInfo : (allTokens[obj.tokenId] ?? {})
       const denom = denominations.find(denom => denom.name === currencyCode)
       const multiplier = denom?.multiplier ?? '1'
       return add(

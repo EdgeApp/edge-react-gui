@@ -554,8 +554,10 @@ const styles = StyleSheet.create({
   }
 })
 
-interface SceneWrapperScrollViewProps
-  extends Pick<SceneWrapperProps, 'keyboardShouldPersistTaps' | 'padding'> {
+interface SceneWrapperScrollViewProps extends Pick<
+  SceneWrapperProps,
+  'keyboardShouldPersistTaps' | 'padding'
+> {
   children: React.ReactNode
   keyboardAwareStyle: AnimatedStyle<ViewStyle>
   insetStyle: InsetStyle
@@ -601,10 +603,9 @@ const SceneWrapperScrollViewComponent: React.FC<SceneWrapperScrollViewProps> = (
 }
 const SceneWrapperScrollView = React.memo(SceneWrapperScrollViewComponent)
 
-interface SceneWrapperFooterContainerProps
-  extends Required<
-    Pick<SceneWrapperProps, 'footerHeight' | 'hasTabs' | 'renderFooter'>
-  > {
+interface SceneWrapperFooterContainerProps extends Required<
+  Pick<SceneWrapperProps, 'footerHeight' | 'hasTabs' | 'renderFooter'>
+> {
   sceneWrapperInfo: SceneWrapperInfo
 }
 

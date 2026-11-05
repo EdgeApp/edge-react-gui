@@ -85,9 +85,8 @@ export const FioService: React.FC<Props> = props => {
       }
 
       const namesToCheck: FioDomain[] = []
-      const { fioDomains, fioWalletsById } = await refreshFioNames(
-        walletsToCheck
-      )
+      const { fioDomains, fioWalletsById } =
+        await refreshFioNames(walletsToCheck)
       expiredLastChecks.current ??= await getFioExpiredCheckFromDisklet(disklet)
       for (const fioDomain of fioDomains) {
         if (needToCheckExpired(expiredLastChecks.current, fioDomain.name)) {

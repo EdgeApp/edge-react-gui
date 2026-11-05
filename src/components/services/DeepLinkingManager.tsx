@@ -57,10 +57,10 @@ export const DeepLinkingManager: React.FC<Props> = props => {
     loggedIn && accountReferralLoaded && allWalletsLoaded
       ? 'wallets'
       : loggedIn && accountReferralLoaded
-      ? 'referral'
-      : loggedIn
-      ? 'account'
-      : 'loggedOut'
+        ? 'referral'
+        : loggedIn
+          ? 'account'
+          : 'loggedOut'
 
   // Each link type waits only for the state it actually uses. Wallets are the
   // slowest thing to load, so a link that merely navigates - such as the ramps

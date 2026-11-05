@@ -23,8 +23,8 @@ const INFO_SERVERS =
   CONFIG.INFO_SERVER != null && CONFIG.INFO_SERVER.length > 0
     ? CONFIG.INFO_SERVER
     : shouldUseTestServers()
-    ? [INFO_TEST_SERVER]
-    : ['https://info1.edge.app', 'https://info2.edge.app']
+      ? [INFO_TEST_SERVER]
+      : ['https://info1.edge.app', 'https://info2.edge.app']
 const RATES_SERVERS = ['https://rates3.edge.app', 'https://rates4.edge.app']
 const RATES_SERVER_V2 = ['https://rates1.edge.app', 'https://rates2.edge.app']
 

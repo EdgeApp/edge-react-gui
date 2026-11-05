@@ -117,7 +117,7 @@ describe('RequestReviewActions', () => {
       ...defaultAccount,
       disklet: mockDisklet,
       localDisklet: mockDisklet
-    } as unknown as EdgeAccount
+    }
   })
 
   describe('updateDepositAmount', () => {

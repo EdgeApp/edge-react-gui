@@ -48,7 +48,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { account } = this.props
     this.cleanups = [
       account.watch('otpKey', otpKey => {
@@ -57,7 +57,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     ]
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.cleanups != null) this.cleanups.forEach(f => f())
   }
 
@@ -66,7 +66,6 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
     Airship.show<'ok' | 'cancel' | undefined>(bridge => (
       <ButtonsModal
-        // @ts-expect-error
         bridge={bridge}
         title={lstrings.otp_modal_headline}
         message={lstrings.otp_modal_body}
@@ -82,7 +81,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
           cancel: { label: lstrings.string_cancel_cap }
         }}
       />
-    )).catch(error => {
+    )).catch((error: unknown) => {
       showError(error)
     })
   }
@@ -97,13 +96,13 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     this.setState(state => ({ showKey: !state.showKey }))
   }
 
-  handleCopyKey = () => {
+  handleCopyKey = (): void => {
     const { otpKey = '' } = this.state
     Clipboard.setString(otpKey)
     showToast(lstrings.otp_copied_msg)
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const { otpKey } = this.state
     const styles = getStyles(theme)
@@ -153,7 +152,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
     )
   }
 
-  renderKey(otpKey: string) {
+  renderKey(otpKey: string): React.ReactElement {
     const { theme } = this.props
     const { showKey } = this.state
     const styles = getStyles(theme)

@@ -35,7 +35,7 @@ describe('logToServer', () => {
     const fetchMock = jest.fn(async () => {
       throw new TypeError('Network request failed')
     })
-    global.fetch = fetchMock as unknown as typeof fetch
+    global.fetch = fetchMock
 
     // Redirect the console the way src/app.ts does when LOG_SERVER is set.
     // Metro's inline requires load the logger on the first redirected call,

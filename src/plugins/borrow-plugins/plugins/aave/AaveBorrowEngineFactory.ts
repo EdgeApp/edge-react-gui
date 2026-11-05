@@ -115,9 +115,8 @@ export const makeAaveBorrowEngineFactory = (
       return tokenAddress
     }
     const updateLtv = async (): Promise<void> => {
-      const userData = await aaveNetwork.lendingPool.getUserAccountData(
-        walletAddress
-      )
+      const userData =
+        await aaveNetwork.lendingPool.getUserAccountData(walletAddress)
       const { totalCollateralETH, totalDebtETH } = userData
       const loanToValue =
         parseFloat(totalDebtETH.toString()) /
@@ -623,9 +622,8 @@ export const makeAaveBorrowEngineFactory = (
           actions.push(mutateStateAction)
         } else {
           // Repay with wallet funds
-          const tokenContract = await aaveNetwork.makeTokenContract(
-            debtTokenAddress
-          )
+          const tokenContract =
+            await aaveNetwork.makeTokenContract(debtTokenAddress)
 
           const approveTx = await getApproveAllowanceTx(
             amountToCover.toString(),
@@ -696,9 +694,8 @@ export const makeAaveBorrowEngineFactory = (
           )
         }
 
-        const { variableApr } = await aaveNetwork.getReserveTokenAprRates(
-          tokenAddress
-        )
+        const { variableApr } =
+          await aaveNetwork.getReserveTokenAprRates(tokenAddress)
 
         return variableApr
       },

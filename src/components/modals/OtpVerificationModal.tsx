@@ -107,7 +107,7 @@ export const showOtpVerificationModal = async <T,>(
       message={message}
       inputLabel={inputLabel}
       submitLabel={submitLabel}
-      onVerify={onVerify as (code: string) => Promise<unknown>}
+      onVerify={onVerify}
     />
   ))
 }

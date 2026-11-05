@@ -274,11 +274,11 @@ export const LoanManageSceneComponent = (props: Props) => {
     async () => {
       const currentLoanAssetNativeAmount =
         manageActionData.actionSide === 'collaterals'
-          ? collaterals.find(
+          ? (collaterals.find(
               collateral => collateral.tokenId === selectedAsset.tokenId
-            )?.nativeAmount ?? '0'
-          : debts.find(debt => debt.tokenId === selectedAsset.tokenId)
-              ?.nativeAmount ?? '0'
+            )?.nativeAmount ?? '0')
+          : (debts.find(debt => debt.tokenId === selectedAsset.tokenId)
+              ?.nativeAmount ?? '0')
 
       setPendingDebtOrCollateral({
         nativeAmount: max(

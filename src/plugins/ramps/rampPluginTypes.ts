@@ -38,9 +38,7 @@ export interface RampSupportResult {
 }
 
 export type RampQouteAmount =
-  | RampQuoteMaxAmount
-  | RampQuoteMaxLimitAmount
-  | RampQuoteExactAmount
+  RampQuoteMaxAmount | RampQuoteMaxLimitAmount | RampQuoteExactAmount
 
 interface RampQuoteMaxAmount {
   /**

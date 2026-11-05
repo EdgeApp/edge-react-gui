@@ -320,7 +320,7 @@ export const getTxActionDisplayInfo = (
   const displayName =
     tokenId == null
       ? currencyInfo.assetDisplayName
-      : currencyConfig.allTokens[tokenId]?.displayName ?? ''
+      : (currencyConfig.allTokens[tokenId]?.displayName ?? '')
 
   const action = savedAction ?? chainAction
   const assetAct = assetAction ?? chainAssetAction
@@ -487,8 +487,8 @@ export const getTxActionDisplayInfo = (
             payeeText = !action.privacy
               ? lstrings.transaction_details_swap_and_send
               : sameAsset
-              ? lstrings.transaction_details_stealth_send
-              : lstrings.transaction_details_stealth_swap_and_send
+                ? lstrings.transaction_details_stealth_send
+                : lstrings.transaction_details_stealth_swap_and_send
             edgeCategory = {
               category: 'exchange',
               subcategory: sprintf(

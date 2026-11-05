@@ -21,7 +21,7 @@ export const getStakePlugins = async (
   const thorchainInit = pluginMaps.swapPlugins.thorchain
   const tcInitOptions: JsonObject =
     typeof thorchainInit === 'object' && thorchainInit != null
-      ? (thorchainInit as JsonObject)
+      ? thorchainInit
       : {}
 
   const promises = [
@@ -44,9 +44,9 @@ export const getStakePlugins = async (
     ...genericPlugins.map(async genericPlugin => {
       for (const config of genericPlugin.policyConfigs) {
         if (config.parentPluginId === pluginId) {
-          return await makeGenericStakePlugin(
-            genericPlugin
-          )(/* INIT OPTIONS */).catch((e: unknown) => {
+          return await makeGenericStakePlugin(genericPlugin)(
+            /* INIT OPTIONS */
+          ).catch((e: unknown) => {
             console.error(String(e))
           })
         }

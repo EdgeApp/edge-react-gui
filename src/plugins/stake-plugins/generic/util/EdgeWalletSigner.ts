@@ -47,9 +47,8 @@ export class EdgeWalletSigner extends ethers.Signer {
   async signTransaction(
     transaction: ethers.utils.Deferrable<ethers.providers.TransactionRequest>
   ): Promise<string> {
-    const edgeTransaction = await this.ethersTransactionToEdgeTransaction(
-      transaction
-    )
+    const edgeTransaction =
+      await this.ethersTransactionToEdgeTransaction(transaction)
     const signedEdgeTransaction = await this.wallet.signTx(edgeTransaction)
     this._lastSignedEdgeTransaction = signedEdgeTransaction
     return signedEdgeTransaction.signedTx
@@ -103,8 +102,8 @@ export class EdgeWalletSigner extends ethers.Signer {
       data == null
         ? undefined
         : typeof data === 'string'
-        ? data.replace('0x', '')
-        : base16.stringify(data)
+          ? data.replace('0x', '')
+          : base16.stringify(data)
     const memos: EdgeMemo[] =
       memoHexValue == null ? [] : [{ type: 'hex', value: memoHexValue }]
 

@@ -57,10 +57,7 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
 type CoinRankingDataValueType =
-  | string
-  | number
-  | CoinRankingDataPercentChange
-  | undefined
+  string | number | CoinRankingDataPercentChange | undefined
 
 export interface CoinRankingDetailsParams {
   assetId: string

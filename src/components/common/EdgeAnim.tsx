@@ -68,24 +68,13 @@ interface AnimBuilder {
   delay: (durationMs: number) => BaseAnimationBuilder
 }
 type AnimTypeFadeIns =
-  | 'fadeIn'
-  | 'fadeInDown'
-  | 'fadeInUp'
-  | 'fadeInLeft'
-  | 'fadeInRight'
+  'fadeIn' | 'fadeInDown' | 'fadeInUp' | 'fadeInLeft' | 'fadeInRight'
 type AnimTypeFadeOuts =
-  | 'fadeOut'
-  | 'fadeOutDown'
-  | 'fadeOutUp'
-  | 'fadeOutLeft'
-  | 'fadeOutRight'
+  'fadeOut' | 'fadeOutDown' | 'fadeOutUp' | 'fadeOutLeft' | 'fadeOutRight'
 type AnimTypeStretchIns = 'stretchInY'
 type AnimTypeStretchOuts = 'stretchOutY'
 type AnimType =
-  | AnimTypeFadeIns
-  | AnimTypeFadeOuts
-  | AnimTypeStretchIns
-  | AnimTypeStretchOuts
+  AnimTypeFadeIns | AnimTypeFadeOuts | AnimTypeStretchIns | AnimTypeStretchOuts
 
 export interface Anim {
   type: AnimType

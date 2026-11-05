@@ -24,10 +24,7 @@ export interface ParActionOp {
   displayKey?: ParActionOpDisplayKey
 }
 export type ParActionOpDisplayKey =
-  | 'borrow'
-  | 'close'
-  | 'create'
-  | 'swap-deposit-fees'
+  'borrow' | 'close' | 'create' | 'swap-deposit-fees'
 
 export interface BroadcastTxActionOp {
   type: 'broadcast-tx'

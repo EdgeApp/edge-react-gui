@@ -72,7 +72,7 @@ export function getCurrencyIconUris(
   const iconFile =
     showChainIcon && tokenId === null
       ? `chain_${pluginId}`
-      : tokenId ?? pluginId
+      : (tokenId ?? pluginId)
   const currencyPath = `${pluginId}/${removeHexPrefix(iconFile)}`.toLowerCase()
   return {
     symbolImage: `${edgeLight.iconServerBaseUri}/currencyIconsV3/${currencyPath}.png`,

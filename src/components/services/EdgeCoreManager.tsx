@@ -129,8 +129,8 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
   const jsPair = !isUsableApiKey(apiKey)
     ? undefined
     : hasSecret
-    ? { apiKey, apiSecret }
-    : { apiKey }
+      ? { apiKey, apiSecret }
+      : { apiKey }
   debugLog(
     'keys',
     `apiSigner native=${nativeApiSigner != null} keysFallback=${jsPair != null}`
@@ -147,7 +147,7 @@ async function buildContextOptions(): Promise<EdgeContextOptions> {
   return {
     ...(nativeApiSigner != null
       ? { apiSigner: nativeApiSigner }
-      : jsPair ?? {}),
+      : (jsPair ?? {})),
     appId: '',
     appVersion: getVersion(),
     deviceDescription: `${getBrand()} ${getDeviceId()}`,

@@ -120,8 +120,8 @@ export const makeInfiniteApi = (config: InfiniteApiConfig): InfiniteApi => {
       typeof input === 'string'
         ? new URL(input, config.apiUrl).toString()
         : input instanceof URL
-        ? new URL(input.toString(), config.apiUrl).toString()
-        : input
+          ? new URL(input.toString(), config.apiUrl).toString()
+          : input
 
     // Debugging/development only:
     const urlStr = typeof url === 'string' ? url : url.url

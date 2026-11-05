@@ -31,9 +31,7 @@ interface UpdateProgramStateAction {
 }
 
 export type ActionQueueAction =
-  | LoadActionQueueStateAction
-  | ScheduleProgramAction
-  | UpdateProgramStateAction
+  LoadActionQueueStateAction | ScheduleProgramAction | UpdateProgramStateAction
 
 export function scheduleActionProgram(
   program: ActionProgram

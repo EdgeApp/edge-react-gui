@@ -19,7 +19,7 @@ const makeFakeWallet = (opts: {
   ({
     currencyInfo: { pluginId: opts.pluginId },
     otherMethods: opts.otherMethods ?? {}
-  } as any)
+  }) as any
 
 describe('zcashMigration util', () => {
   it('returns status for a migration-capable zcash wallet', async () => {

@@ -1129,9 +1129,8 @@ export const moonpayRampPlugin: RampPluginFactory = (
                             }
                             broadcastAttempted = true
                             try {
-                              broadcastTx = await coreWallet.broadcastTx(
-                                signedTx
-                              )
+                              broadcastTx =
+                                await coreWallet.broadcastTx(signedTx)
                               return broadcastTx
                             } catch (e: unknown) {
                               // The wallet refused the spend before

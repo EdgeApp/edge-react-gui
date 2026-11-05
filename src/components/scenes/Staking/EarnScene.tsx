@@ -515,7 +515,7 @@ export const EarnScene = (props: Props): React.ReactElement => {
           .currencyInfo
       return isPortfolioSelected
         ? renderPortfolioItem(info.item as PortfolioStakeInfo, currencyInfo)
-        : renderDiscoverItem(info.item as DiscoverStakeInfo, currencyInfo)
+        : renderDiscoverItem(info.item, currencyInfo)
     },
     [
       currencyConfigMap,

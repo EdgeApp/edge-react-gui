@@ -90,8 +90,8 @@ export const getPolicyTitleName = (
     yieldType === 'stable'
       ? ` ${lstrings.stake_stable_yield}`
       : yieldType === 'variable'
-      ? ` ${lstrings.stake_variable_yield}`
-      : ''
+        ? ` ${lstrings.stake_variable_yield}`
+        : ''
 
   return `${getUkCompliantString(
     countryCode,

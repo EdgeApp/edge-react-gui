@@ -188,8 +188,7 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
 
           if (
             (oldWallet.otherMethods.makeMaxSpend as
-              | MakeMaxSpendMethod
-              | undefined) != null
+              MakeMaxSpendMethod | undefined) != null
           ) {
             try {
               const tokenIds = bundle.map(item => item.tokenId)

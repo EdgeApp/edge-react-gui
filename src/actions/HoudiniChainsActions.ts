@@ -13,8 +13,7 @@ export function updateHoudiniChains(): ThunkAction<Promise<void>> {
       // `giftCardInfo` is read. `asHoudiniChains` drops a malformed chain and
       // keeps the others, where the rollup's cleaner would reject them all.
       const rollup = infoServerData.rollupRaw as
-        | { houdiniAssets?: unknown }
-        | undefined
+        { houdiniAssets?: unknown } | undefined
       // The server omits the field until its first complete fetch, and before
       // the rollup loads there is no field either. Both mean no chains, which
       // keeps Stealth hidden:

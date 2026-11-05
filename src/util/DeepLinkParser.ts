@@ -1,5 +1,4 @@
 import { asOptional } from 'cleaners'
-import type { EdgeTokenId } from 'edge-core-js'
 import URL from 'url-parse'
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins'
@@ -481,7 +480,7 @@ function parseEdgeAppLink(url: URL<string>): DeepLink {
           return {
             type: 'rewards',
             pluginId,
-            tokenId: tokenId as EdgeTokenId
+            tokenId
           }
         }
       }

@@ -355,8 +355,7 @@ const QuoteResult: React.FC<{
   // State for the which provider quote for this payment type to be displayed
   const [providerQuoteIndex, setProviderQuoteIndex] = React.useState(0)
   const providerQuote = providerQuotes[providerQuoteIndex] as
-    | RampQuote
-    | undefined
+    RampQuote | undefined
 
   const handlePress = useHandler(async () => {
     if (isApprovingQuote || providerQuote == null) return
@@ -382,8 +381,8 @@ const QuoteResult: React.FC<{
           : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formatFiatString({
               fiatAmount: quote.fiatAmount
             })} ${fiatCurrencyCode}`
-        : quote.specialQuoteRateMessage ??
-          lstrings.failed_to_calculate_quote_rate
+        : (quote.specialQuoteRateMessage ??
+          lstrings.failed_to_calculate_quote_rate)
 
       return {
         key: quote.pluginId,
@@ -483,8 +482,8 @@ const QuoteResult: React.FC<{
                 ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
                 : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
             )
-          : providerQuote.specialQuoteRateMessage ??
-            lstrings.tap_to_view_quote_amount_and_rate
+          : (providerQuote.specialQuoteRateMessage ??
+            lstrings.tap_to_view_quote_amount_and_rate)
       }
       settlementTime={formatSettlementTime(providerQuote.settlementRange)}
       partner={{

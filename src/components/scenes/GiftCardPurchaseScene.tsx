@@ -431,9 +431,9 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
     // Get currency code for display (used in warnings, success, and error messages)
     const currencyCode =
       tokenId != null
-        ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
+        ? (account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
             tokenId
-          ]?.currencyCode ?? wallet.currencyInfo.currencyCode
+          ]?.currencyCode ?? wallet.currencyInfo.currencyCode)
         : wallet.currencyInfo.currencyCode
 
     // Check minimum amount for selected token
@@ -494,10 +494,10 @@ export const GiftCardPurchaseScene: React.FC<Props> = props => {
       // The quantity is in the token's standard units (e.g., BTC, ETH)
       const multiplier =
         tokenId != null
-          ? account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
+          ? (account.currencyConfig[wallet.currencyInfo.pluginId]?.allTokens[
               tokenId
-            ]?.denominations[0]?.multiplier ?? '1'
-          : wallet.currencyInfo.denominations[0]?.multiplier ?? '1'
+            ]?.denominations[0]?.multiplier ?? '1')
+          : (wallet.currencyInfo.denominations[0]?.multiplier ?? '1')
 
       // Quantity from API is in decimal units, convert to native.
       // HACK: Pad by 0.00000002 to guarantee we never underpay due to either

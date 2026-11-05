@@ -37,8 +37,8 @@ export const SectionView = (props: Props): React.ReactElement | null => {
     marginRem != null
       ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
       : extendRight
-      ? styles.marginScene
-      : styles.marginCard
+        ? styles.marginScene
+        : styles.marginCard
 
   const nonNullChildren = React.Children.map(
     children,

@@ -25,7 +25,7 @@ export const CountryListModal = ({
   const styles = getStyles(theme)
 
   const countryCode =
-    rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
+    rawCountryCode === '' ? (getCountry() ?? 'US') : rawCountryCode
 
   const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')

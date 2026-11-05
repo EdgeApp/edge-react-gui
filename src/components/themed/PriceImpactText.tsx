@@ -85,8 +85,8 @@ export const PriceImpactText: React.FC<Props> = props => {
         priceImpact >= 0.15
           ? styles.priceImpactHigh
           : priceImpact >= PRICE_IMPACT_WARNING_THRESHOLD
-          ? styles.priceImpactMedium
-          : styles.priceImpactLow
+            ? styles.priceImpactMedium
+            : styles.priceImpactLow
       }
     >
       {` (${formatNumber(priceImpact * 100, { toFixed: 2 })}%)`}

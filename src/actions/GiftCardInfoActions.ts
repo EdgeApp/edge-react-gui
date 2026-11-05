@@ -36,8 +36,7 @@ export function updateGiftCardInfo(): ThunkAction<Promise<void>> {
       // resolve, so the bump is blocked. This cleaner is ours, so parsing the
       // raw payload here needs neither.
       const rollup = infoServerData.rollupRaw as
-        | { giftCardInfo?: unknown }
-        | undefined
+        { giftCardInfo?: unknown } | undefined
       const data = asGiftCardInfo(rollup?.giftCardInfo ?? {})
       dispatch({ type: 'UPDATE_GIFT_CARD_INFO', data })
     } catch (e: unknown) {

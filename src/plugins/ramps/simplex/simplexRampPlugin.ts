@@ -162,8 +162,8 @@ const platformPaymentTypes =
   Platform.OS === 'ios'
     ? (['applepay'] as const)
     : Platform.OS === 'android'
-    ? (['googlepay'] as const)
-    : ([] as const)
+      ? (['googlepay'] as const)
+      : ([] as const)
 const paymentTypes = [...basePaymentTypes, ...platformPaymentTypes]
 
 interface SimplexPluginState {

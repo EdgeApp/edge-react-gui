@@ -105,8 +105,8 @@ export const FioStakingChangeScene = withWallet((props: Props) => {
     assetActionType === 'stake'
       ? sprintf(lstrings.staking_change_add_header, currencyCode)
       : assetActionType === 'unstake'
-      ? sprintf(lstrings.staking_change_remove_header, currencyCode)
-      : undefined
+        ? sprintf(lstrings.staking_change_remove_header, currencyCode)
+        : undefined
   const headerTitleChildren =
     headerTitle != null ? (
       <Image style={styles.currencyLogo} source={fioLogo} />

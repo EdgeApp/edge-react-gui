@@ -112,7 +112,8 @@ const experimentConfigPromise: Promise<ExperimentConfig> =
  * Can be overridden by isMaestro or env config: 'EXPERIMENT_CONFIG_OVERRIDE'
  */
 export const getExperimentConfig = async (): Promise<ExperimentConfig> => {
-  if (isMaestro()) return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
+  if (isMaestro())
+    return DEFAULT_EXPERIMENT_CONFIG // Test with forced defaults
   else if (
     CONFIG.EXPERIMENT_CONFIG_OVERRIDE != null &&
     Object.keys(CONFIG.EXPERIMENT_CONFIG_OVERRIDE).length > 0

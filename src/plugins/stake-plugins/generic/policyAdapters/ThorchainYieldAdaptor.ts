@@ -127,9 +127,8 @@ export const makeThorchainYieldAdapter = (
           ]
         }
       }
-      const edgeTx: EdgeTransaction = await wallet.otherMethods.makeTx(
-        makeTxParams
-      )
+      const edgeTx: EdgeTransaction =
+        await wallet.otherMethods.makeTx(makeTxParams)
       edgeTx.metadata = {
         name: metadataName,
         category: 'Transfer:Staking',
@@ -208,9 +207,8 @@ export const makeThorchainYieldAdapter = (
           ]
         }
       }
-      const edgeTx: EdgeTransaction = await wallet.otherMethods.makeTx(
-        makeTxParams
-      )
+      const edgeTx: EdgeTransaction =
+        await wallet.otherMethods.makeTx(makeTxParams)
       edgeTx.metadata = {
         name: metadataName,
         category: 'Transfer:Unstaking',

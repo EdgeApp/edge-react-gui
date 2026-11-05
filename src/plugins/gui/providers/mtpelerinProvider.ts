@@ -556,8 +556,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
             ): void => {
               const run = `
                           window.wallet._response('${eventName}', ${JSON.stringify(
-                response
-              )});
+                            response
+                          )});
                           true;
                           `
               injecteJs(run)
@@ -565,9 +565,8 @@ export const mtpelerinProvider: FiatProviderFactory = {
 
             // This is the state of the user-journey through the quoting process
             let userFlowStatus:
-              | 'preparing-quote'
-              | 'submitted-quote'
-              | 'navigating-back' = 'preparing-quote'
+              'preparing-quote' | 'submitted-quote' | 'navigating-back' =
+              'preparing-quote'
 
             const onMessage: FiatPluginOpenWebViewParams['onMessage'] = (
               eventMessage: string,
@@ -738,12 +737,10 @@ export const mtpelerinProvider: FiatProviderFactory = {
                       userFlowStatus = 'submitted-quote'
                     }
                     send().catch((e: unknown) => {
-                      if (
-                        !(
-                          e instanceof Error &&
-                          e.message.includes(SendErrorBackPressed)
-                        )
-                      ) {
+                      if (!(
+                        e instanceof Error &&
+                        e.message.includes(SendErrorBackPressed)
+                      )) {
                         showError(e)
                       }
                     })

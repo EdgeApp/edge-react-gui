@@ -53,7 +53,9 @@ export const WalletListCreateRowComponent = (
     walletType
   } = createItem
   const createWalletIds =
-    createWalletId != null ? [createWalletId] : createItem.createWalletIds ?? []
+    createWalletId != null
+      ? [createWalletId]
+      : (createItem.createWalletIds ?? [])
 
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')

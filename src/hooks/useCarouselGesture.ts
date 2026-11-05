@@ -42,8 +42,8 @@ export const useCarouselGesture = (
         event.translationX > completeThreshold
           ? -1
           : event.translationX < -completeThreshold
-          ? 1
-          : 0
+            ? 1
+            : 0
 
       // Snap to the nearest offset, with clamping:
       const destValue = Math.max(

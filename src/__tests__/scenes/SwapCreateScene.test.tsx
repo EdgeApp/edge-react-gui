@@ -412,7 +412,7 @@ describe('SwapCreateScene Stealth Swap bans', () => {
       name: id,
       type: currencyConfig.currencyInfo.walletType,
       watch: () => () => {}
-    } as unknown as EdgeCurrencyWallet)
+    }) as unknown as EdgeCurrencyWallet
 
   interface RenderedSwap {
     navigate: ReturnType<typeof jest.spyOn>

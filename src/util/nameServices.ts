@@ -89,7 +89,7 @@ const reverseLookupUnstoppable = async (
   } catch (err: unknown) {
     const code =
       err != null && typeof err === 'object' && 'code' in err
-        ? String((err as { code: unknown }).code)
+        ? String(err.code)
         : undefined
     if (code != null && UD_NO_RECORD_CODES.has(code)) return null
     throw err

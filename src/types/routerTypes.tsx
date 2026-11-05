@@ -148,8 +148,7 @@ export interface TradeTabParamList {
 export type EdgeTabsParamList = {} & {
   home: undefined
   walletsTab:
-    | NavigationCore.NavigatorScreenParams<WalletsTabParamList>
-    | undefined
+    NavigationCore.NavigatorScreenParams<WalletsTabParamList> | undefined
   buyTab: NavigationCore.NavigatorScreenParams<BuySellTabParamList> | undefined
   sellTab: NavigationCore.NavigatorScreenParams<BuySellTabParamList> | undefined
   swapTab: NavigationCore.NavigatorScreenParams<SwapTabParamList> | undefined
@@ -263,8 +262,7 @@ export type EdgeAppStackParamList = {} & {
 // A drawer router that contains the main `edgeAppStack`
 export type DrawerParamList = {} & {
   edgeAppStack:
-    | NavigationCore.NavigatorScreenParams<EdgeAppStackParamList>
-    | undefined
+    NavigationCore.NavigatorScreenParams<EdgeAppStackParamList> | undefined
 }
 
 export type RootParamList = {} & {

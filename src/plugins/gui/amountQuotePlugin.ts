@@ -360,7 +360,7 @@ export const amountQuoteFiatPlugin: FiatPluginFactory = async (
 
       const startingFiatAmount = isLightAccount
         ? DEFAULT_FIAT_AMOUNT_LIGHT_ACCOUNT
-        : defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT
+        : (defaultFiatAmount ?? DEFAULT_FIAT_AMOUNT)
       const isoNow = new Date().toISOString()
       const initialValue1 = requireCrypto
         ? undefined

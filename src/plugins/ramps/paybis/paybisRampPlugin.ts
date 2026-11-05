@@ -855,8 +855,8 @@ export const paybisRampPlugin: RampPluginFactory = (
           const paymentMethod =
             direction === 'buy'
               ? REVERSE_PAYMENT_METHOD_MAP[paymentType]
-              : sellPayoutMethodIds[paymentType] ??
-                SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType]
+              : (sellPayoutMethodIds[paymentType] ??
+                SELL_REVERSE_PAYMENT_METHOD_MAP[paymentType])
 
           if (paymentMethod == null) continue // Skip unsupported payment types
 

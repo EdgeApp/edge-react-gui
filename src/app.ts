@@ -34,8 +34,8 @@ const environment: Environment =
   __DEV__ || appVersion === '99.99.99'
     ? 'development'
     : appVersion.includes('-')
-    ? 'testing'
-    : 'production'
+      ? 'testing'
+      : 'production'
 
 if (KEYS.SENTRY_ORGANIZATION_SLUG.includes('SENTRY_ORGANIZATION')) {
   console.log('Sentry keys not set. Sentry disabled.')

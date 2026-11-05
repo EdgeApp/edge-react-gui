@@ -528,7 +528,7 @@ const NodesWalletSection: React.FC<NodesWalletSectionProps> = props => {
   const walletLabel = getWalletLabel(wallet)
 
   const data = dumpResult?.dump?.data
-  const pluginState = data?.pluginState as Record<string, unknown> | undefined
+  const pluginState = data?.pluginState
 
   return (
     <View>

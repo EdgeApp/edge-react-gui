@@ -228,9 +228,8 @@ export const NotificationService: React.FC<Props> = (props: Props) => {
       } else {
         // Non-light account: mark complete if notification exists and isn't
         // already complete (handles upgrade from light account)
-        const { notifState: currentNotifState } = await getLocalAccountSettings(
-          account
-        )
+        const { notifState: currentNotifState } =
+          await getLocalAccountSettings(account)
         const existing = currentNotifState.lightAccountReminder
         if (existing != null && !existing.isCompleted) {
           await writeAccountNotifInfo(account, 'lightAccountReminder', {

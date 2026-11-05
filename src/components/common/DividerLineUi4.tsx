@@ -33,8 +33,8 @@ export const DividerLineUi4 = (props: Props): React.ReactElement => {
     marginRem != null
       ? sidesToMargin(mapSides(fixSides(marginRem, 0), theme.rem))
       : extendRight
-      ? styles.extendRight
-      : styles.default
+        ? styles.extendRight
+        : styles.default
 
   return (
     <LinearGradient

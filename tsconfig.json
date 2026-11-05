@@ -2,6 +2,9 @@
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "allowJs": false,
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "msw/node": ["./node_modules/msw/lib/node/index.d.mts"]
+    }
   }
 }

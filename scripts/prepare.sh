@@ -13,6 +13,11 @@ node -r sucrase/register ./scripts/configure.ts
 ## Fix broken packages:
 npx patch-package
 
+# Link the Bun binary behind `npm run lint`, since our .npmrc skips Bun's
+# postinstall script. Linting is a dev tool, so don't fail the build:
+node ./node_modules/bun/install.js ||
+  echo 'Warning: Could not install Bun, so `npm run lint` will not work'
+
 # Fix Android dependency import statments:
 # Old native Android dependencies use outdated package names for their imports
 # that were later renamed by Google.

@@ -170,9 +170,7 @@ function applyKeys(keys: unknown): boolean {
     stripLocalOnlyFields(keepKeysFields(mergeable))
   )
   const mergedKeys = mergeKeysOverlay(bakedKeys, nestedOverlay) as RuntimeKeys
-  applyRuntimeKeys(
-    nestGlobalKeys(mergedKeys as unknown as Record<string, unknown>)
-  )
+  applyRuntimeKeys(nestGlobalKeys(mergedKeys))
   rebuildPluginMaps()
   rebuildAllPlugins()
   return true

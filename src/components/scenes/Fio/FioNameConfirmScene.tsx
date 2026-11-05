@@ -46,8 +46,9 @@ interface StateProps {
   isConnected: boolean
 }
 
-interface OwnProps
-  extends EdgeAppSceneProps<'fioDomainConfirm' | 'fioNameConfirm'> {
+interface OwnProps extends EdgeAppSceneProps<
+  'fioDomainConfirm' | 'fioNameConfirm'
+> {
   wallet: EdgeCurrencyWallet
 }
 

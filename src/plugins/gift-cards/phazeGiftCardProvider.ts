@@ -583,12 +583,9 @@ export const makePhazeGiftCardProvider = (
         return existingUser
       } catch (err: unknown) {
         // 401 "Partner user not found." means user doesn't exist - proceed to register
-        if (
-          !(
-            err instanceof Error &&
-            err.message.includes('Partner user not found')
-          )
-        ) {
+        if (!(
+          err instanceof Error && err.message.includes('Partner user not found')
+        )) {
           throw err
         }
       }

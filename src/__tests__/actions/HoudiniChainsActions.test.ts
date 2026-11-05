@@ -19,7 +19,7 @@ const run = async (
 ): Promise<HoudiniChains | undefined> => {
   const dispatch = jest.fn()
   const getState = (): RootState =>
-    ({ ui: { houdiniChains } } as unknown as RootState)
+    ({ ui: { houdiniChains } }) as unknown as RootState
   await updateHoudiniChains()(dispatch as unknown as Dispatch, getState)
   if (dispatch.mock.calls.length === 0) return
   const action = dispatch.mock.calls[0][0] as { data: HoudiniChains }
