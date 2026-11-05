@@ -11,7 +11,7 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { useState } from 'react'
-import { Keyboard, View } from 'react-native'
+import { Keyboard } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -31,6 +31,7 @@ import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
+import { getPercentNativeAmount } from '../../util/amountPercent'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import {
@@ -45,6 +46,7 @@ import {
 } from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
 import { zeroString } from '../../util/utils'
+import { AmountPercentButtons } from '../buttons/AmountPercentButtons'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -57,9 +59,7 @@ import {
   fadeInDown90,
   fadeInUp60
 } from '../common/EdgeAnim'
-import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { styled } from '../hoc/styled'
 import { SwapVerticalIcon } from '../icons/ThemedIcons'
 import { SceneContainer } from '../layout/SceneContainer'
 import {
@@ -69,7 +69,6 @@ import {
 import { Airship, showToast, showWarning } from '../services/AirshipInstance'
 import { useTheme } from '../services/ThemeContext'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
-import { UnscaledText } from '../text/UnscaledText'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { StealthInfoText } from '../themed/StealthInfoText'
 import {
@@ -497,7 +496,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
     }
 
     if (fromWallet == null) {
-      // Shouldn't ever happen because max button UI is disabled when no
+      // Shouldn't ever happen because the percent pills only show once a
       // fromWallet is selected
       showWarning(lstrings.exchange_select_sending_wallet, {
         trackError: false
@@ -515,6 +514,18 @@ export const SwapCreateScene: React.FC<Props> = props => {
     }
 
     getQuote(request)
+  })
+
+  const handlePercentPress = useHandler((percent: string) => {
+    const nativeAmount = getPercentNativeAmount(
+      fromWalletBalanceMap.get(fromTokenId) ?? '0',
+      percent
+    )
+    if (zeroString(nativeAmount)) {
+      showToast(lstrings.exchange_insufficient_funds_title)
+      return
+    }
+    fromInputRef.current?.setNativeAmount(nativeAmount)
   })
 
   const handleNext = useHandler(() => {
@@ -682,6 +693,12 @@ export const SwapCreateScene: React.FC<Props> = props => {
             ) : (
               <SwapInput
                 ref={fromInputRef}
+                footer={
+                  <AmountPercentButtons
+                    onMaxPress={hasMaxSpend ? handleMaxPress : undefined}
+                    onPercentPress={handlePercentPress}
+                  />
+                }
                 heading={lstrings.exchange_title_sending}
                 forceField="fiat"
                 walletPlaceholderText={fromHeaderText}
@@ -707,13 +724,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
                   size={theme.rem(2)}
                 />
               </ButtonBox>
-              {hasMaxSpend ? (
-                <MaxButtonContainerView>
-                  <EdgeTouchableOpacity onPress={handleMaxPress}>
-                    <MaxButtonText>{lstrings.string_max_cap}</MaxButtonText>
-                  </EdgeTouchableOpacity>
-                </MaxButtonContainerView>
-              ) : null}
             </LineTextDivider>
           </EdgeAnim>
           <EdgeAnim enter={fadeInDown30}>
@@ -783,19 +793,6 @@ export const SwapCreateScene: React.FC<Props> = props => {
     </SceneWrapper>
   )
 }
-
-const MaxButtonContainerView = styled(View)(theme => ({
-  position: 'absolute',
-  right: theme.rem(1),
-  top: -theme.rem(0.5)
-}))
-
-const MaxButtonText = styled(UnscaledText)(theme => ({
-  color: theme.escapeButtonText,
-  fontFamily: theme.fontFaceDefault,
-  fontSize: theme.rem(0.75),
-  includeFontPadding: false
-}))
 
 /**
  * True when Houdini serves the wallet's asset and the info server has not

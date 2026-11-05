@@ -35,6 +35,8 @@ export type ExchangeFlipInputFields = 'fiat' | 'crypto'
 
 export interface SwapInputCardInputRef {
   setAmount: (field: ExchangeFlipInputFields, value: string) => void
+  /** Fills the amount from a native value and reports it like typed input. */
+  setNativeAmount: (nativeAmount: string) => void
   triggerConvertValue: () => void
 }
 
@@ -47,6 +49,8 @@ export interface SwapInputCardAmounts {
 
 export interface Props {
   disabled?: boolean
+  /** Rendered inside the card, under the amount. */
+  footer?: React.ReactNode
   heading: string
   forceField?: 'fiat' | 'crypto'
   keyboardVisible?: boolean
@@ -73,6 +77,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
   (props: Props, ref) => {
     const {
       disabled,
+      footer,
       forceField = 'crypto',
       heading,
       keyboardVisible = true,
@@ -294,6 +299,17 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
           flipInputRef.current?.setAmounts([displayAmount, value])
         }
       },
+      setNativeAmount: nativeAmount => {
+        const { displayAmount, exchangeAmount, fiatAmount } =
+          convertFromCryptoNative(nativeAmount)
+        flipInputRef.current?.setAmounts([displayAmount, fiatAmount])
+        onAmountChanged({
+          exchangeAmount,
+          nativeAmount,
+          fiatAmount,
+          fieldChanged: 'crypto'
+        })
+      },
       triggerConvertValue: () => {
         flipInputRef.current?.triggerConvertValue()
       }
@@ -315,7 +331,7 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       return fiatValue === '0' ? 'crypto' : forceField
     }, [convertCurrencyHandler, defaultIsoFiat, forceField, tokenId, wallet])
 
-    const renderHeader = (): React.ReactNode => {
+    const renderHeader = (): React.ReactElement => {
       return (
         <View style={styles.header}>
           <EdgeText style={styles.cardHeading}>{heading}</EdgeText>
@@ -335,8 +351,13 @@ const SwapInputComponent = React.forwardRef<SwapInputCardInputRef, Props>(
       )
     }
 
-    const renderFooter = (): React.ReactNode => {
-      return <View style={styles.footerSpace} />
+    const renderFooter = (): React.ReactElement => {
+      return (
+        <>
+          {footer}
+          <View style={styles.footerSpace} />
+        </>
+      )
     }
 
     return (

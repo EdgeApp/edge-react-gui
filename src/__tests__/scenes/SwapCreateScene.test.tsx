@@ -195,7 +195,7 @@ describe('SwapCreateScene', () => {
     }
 
     fireEvent.press(rendered.getByText(lstrings.stealth_swap_toggle))
-    fireEvent.press(rendered.getByText(lstrings.string_max_cap))
+    fireEvent.press(rendered.getByTestId('amountPercent100'))
     const stealthParams = lastProcessingParams()
     expect(stealthParams.swapRequest.privacy).toBe('required')
 
@@ -212,7 +212,7 @@ describe('SwapCreateScene', () => {
       confirmationParams.onStealthTermsDeclined?.()
     })
 
-    fireEvent.press(rendered.getByText(lstrings.string_max_cap))
+    fireEvent.press(rendered.getByTestId('amountPercent100'))
     const nextParams = lastProcessingParams()
     expect(nextParams).not.toBe(stealthParams)
     expect(nextParams.swapRequest.privacy).toBeUndefined()
@@ -234,6 +234,7 @@ describe('SwapCreateScene', () => {
 
     expect(rendered.getByText(lstrings.stealth_swap_toggle)).toBeTruthy()
     expect(rendered.queryByText(stealthInfo(), { exact: false })).toBeNull()
+    expect(rendered.queryByTestId('amountPercent50')).toBeNull()
     rendered.unmount()
   })
 
@@ -390,6 +391,14 @@ describe('SwapCreateScene Stealth Swap bans', () => {
   const btcConfig = makeFakeCurrencyConfig(btcCurrencyInfo)
   const ethConfig = makeFakeCurrencyConfig(ethCurrencyInfo)
   // A chain Houdini's served list leaves out:
+  // A chain with no max spend:
+  const adaConfig = makeFakeCurrencyConfig({
+    ...btcCurrencyInfo,
+    currencyCode: 'ADA',
+    displayName: 'Cardano',
+    pluginId: 'cardano',
+    walletType: 'wallet:cardano'
+  })
   const ltcConfig = makeFakeCurrencyConfig({
     ...btcCurrencyInfo,
     currencyCode: 'LTC',
@@ -399,11 +408,12 @@ describe('SwapCreateScene Stealth Swap bans', () => {
   })
   const makeWallet = (
     id: string,
-    currencyConfig: typeof btcConfig
+    currencyConfig: typeof btcConfig,
+    balance: string = '100000000'
   ): EdgeCurrencyWallet =>
     ({
-      balanceMap: new Map([[null, '100000000']]),
-      balances: { [currencyConfig.currencyInfo.currencyCode]: '100000000' },
+      balanceMap: new Map([[null, balance]]),
+      balances: { [currencyConfig.currencyInfo.currencyCode]: balance },
       currencyConfig,
       currencyInfo: currencyConfig.currencyInfo,
       enabledTokenIds: [],
@@ -420,6 +430,9 @@ describe('SwapCreateScene Stealth Swap bans', () => {
     /** The assets a wallet picker offers, or `undefined` for every asset. */
     pickerAssets: (side: 'from' | 'to') => Promise<EdgeAsset[] | undefined>
     pressMax: () => void
+    pressNext: () => void
+    pressPercent: (percent: string) => void
+    queryPercent: (percent: string) => unknown
     reasonShown: (currencyCode: string) => boolean
     stealthArmed: () => boolean
     stealthDimmed: () => boolean
@@ -428,6 +441,7 @@ describe('SwapCreateScene Stealth Swap bans', () => {
   }
 
   const renderScene = (opts: {
+    btcBalance?: string
     houdiniBans?: {
       source: Array<{ pluginId: string }>
       destination: Array<{ pluginId: string }>
@@ -436,6 +450,7 @@ describe('SwapCreateScene Stealth Swap bans', () => {
     toWalletId?: string
   }): RenderedSwap => {
     const {
+      btcBalance,
       houdiniBans = { source: [], destination: [] },
       stealthSwapEnabled = false,
       toWalletId = 'eth'
@@ -446,11 +461,13 @@ describe('SwapCreateScene Stealth Swap bans', () => {
         account: {
           currencyConfig: {
             bitcoin: btcConfig,
+            cardano: adaConfig,
             ethereum: ethConfig,
             litecoin: ltcConfig
           },
           currencyWallets: {
-            btc: makeWallet('btc', btcConfig),
+            ada: makeWallet('ada', adaConfig),
+            btc: makeWallet('btc', btcConfig, btcBalance),
             eth: makeWallet('eth', ethConfig),
             ltc: makeWallet('ltc', ltcConfig)
           },
@@ -518,8 +535,22 @@ describe('SwapCreateScene Stealth Swap bans', () => {
         return allowedAssets
       },
       pressMax: () => {
-        fireEvent.press(rendered.getByText(lstrings.string_max_cap))
+        fireEvent.press(rendered.getByTestId('amountPercent100'))
       },
+      pressNext: () => {
+        const input = rendered
+          .UNSAFE_getAllByType(SwapInput)
+          .find(node => node.props.walletPillTestID === 'swapFromWalletPill')
+        if (input == null) throw new Error('No from input')
+        act(() => {
+          input.props.onNext()
+        })
+      },
+      pressPercent: percent => {
+        fireEvent.press(rendered.getByTestId(`amountPercent${percent}`))
+      },
+      queryPercent: percent =>
+        rendered.queryByTestId(`amountPercent${percent}`),
       reasonShown: currencyCode =>
         rendered.queryByText(
           sprintf(lstrings.stealth_asset_unsupported_1s, currencyCode)
@@ -540,6 +571,72 @@ describe('SwapCreateScene Stealth Swap bans', () => {
   beforeEach(() => {
     jest.mocked(showToast).mockClear()
     mockSetStealthSwapEnabled.mockReset()
+  })
+
+  /** The native amount the scene last asked to quote. */
+  const quotedNativeAmount = (scene: RenderedSwap): string => {
+    const calls = scene.navigate.mock.calls as unknown as Array<
+      [string, SwapProcessingParams]
+    >
+    const processing = calls.filter(call => call[0] === 'swapProcessing')
+    return processing[processing.length - 1][1].swapRequest.nativeAmount
+  }
+
+  it('fills a partial amount and waits for Next to quote it', () => {
+    const scene = renderScene({})
+    scene.pressPercent('25')
+    expect(scene.navigate).not.toHaveBeenCalledWith(
+      'swapProcessing',
+      expect.anything()
+    )
+
+    scene.pressNext()
+    expect(quotedNativeAmount(scene)).toBe('25000000')
+    scene.unmount()
+  })
+
+  it('replaces an earlier partial amount with the newest pill', () => {
+    const scene = renderScene({})
+    scene.pressPercent('25')
+    scene.pressPercent('75')
+    scene.pressNext()
+    expect(quotedNativeAmount(scene)).toBe('75000000')
+    scene.unmount()
+  })
+
+  it('quotes the max right away from the 100 pill', () => {
+    const scene = renderScene({})
+    scene.pressMax()
+    const calls = scene.navigate.mock.calls as unknown as Array<
+      [string, SwapProcessingParams]
+    >
+    const processing = calls.filter(call => call[0] === 'swapProcessing')
+    expect(processing[0][1].swapRequest.quoteFor).toBe('max')
+    scene.unmount()
+  })
+
+  it('shows a toast when a partial amount rounds to nothing', () => {
+    const scene = renderScene({ btcBalance: '1' })
+    scene.pressPercent('50')
+    expect(showToast).toHaveBeenCalledWith(
+      lstrings.exchange_insufficient_funds_title
+    )
+    scene.pressNext()
+    expect(scene.navigate).not.toHaveBeenCalledWith(
+      'swapProcessing',
+      expect.anything()
+    )
+    scene.unmount()
+  })
+
+  it('leaves out the 100 pill for a chain with no max spend', () => {
+    const scene = renderScene({})
+    expect(scene.queryPercent('100')).not.toBeNull()
+
+    scene.pickPair('ada', 'eth')
+    expect(scene.queryPercent('100')).toBeNull()
+    expect(scene.queryPercent('50')).not.toBeNull()
+    scene.unmount()
   })
 
   it('quotes a Houdini-banned source when Stealth Swap is off', () => {
