@@ -6,7 +6,7 @@ import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { Provider } from 'react-redux'
-import { applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, legacy_createStore as createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import { fetchCountryCode } from '../../actions/CountryCodeActions'
@@ -20,6 +20,7 @@ import { perfLogger } from '../../util/middleware/perfLogger'
 import { BlurTarget, BlurTargetProvider } from '../common/BlurBackground'
 import { Main } from '../Main'
 import { Airship } from './AirshipInstance'
+import { PushLoginIdsService } from './PushLoginIdsService'
 import { useTheme } from './ThemeContext'
 
 interface Props {
@@ -30,7 +31,7 @@ interface Props {
  * Provides various global providers to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export function Providers(props: Props): React.ReactElement {
+export const Providers: React.FC<Props> = props => {
   const { context } = props
   const theme = useTheme()
   const isDesktop =
@@ -84,6 +85,7 @@ export function Providers(props: Props): React.ReactElement {
                 <BlurTarget>
                   <Main />
                 </BlurTarget>
+                <PushLoginIdsService context={context} />
               </Airship>
             </BlurTargetProvider>
           )}
