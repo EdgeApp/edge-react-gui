@@ -100,10 +100,10 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const currentAccountBalanceVisibility =
-      state.ui.settings.isAccountBalanceVisible
-    const isAccountBalanceVisible = !currentAccountBalanceVisibility
-    await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
+    const isAccountBalanceVisible = !state.ui.settings.isAccountBalanceVisible
+
+    // Flip the UI first: the settings write goes through the core, which
+    // can take seconds to answer while a large account is syncing.
     dispatch({
       type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
       data: { isAccountBalanceVisible }
@@ -114,6 +114,10 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
     if (!isAccountBalanceVisible) {
       showToast(lstrings.fragment_wallets_balance_hidden_toast, TOAST_HIDE_MS)
     }
+
+    // A failed save leaves the UI as it is: writeLocalAccountSettings has
+    // already cached the new value, so the next settings save persists it.
+    await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
   }
 }
 
@@ -345,6 +349,10 @@ export const readLocalAccountSettings = async (
   }
 }
 
+// Settings disk writes run one at a time, in call order. Each one holds the
+// whole file as of its call, so the last write always matches the cache.
+let settingsDiskWrite: Promise<void> = Promise.resolve()
+
 export const writeLocalAccountSettings = async (
   account: EdgeAccount,
   settings: LocalAccountSettings
@@ -353,7 +361,11 @@ export const writeLocalAccountSettings = async (
   emitAccountSettings(settings)
 
   const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  const write = settingsDiskWrite.then(async () => {
+    await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
+  })
+  settingsDiskWrite = write.catch(() => {})
+  await write
 
   return settings
 }
