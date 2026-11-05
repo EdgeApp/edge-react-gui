@@ -10,8 +10,6 @@ import {
 import * as React from 'react'
 import { Appearance, InteractionManager, Platform } from 'react-native'
 import { check } from 'react-native-permissions'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
@@ -19,6 +17,7 @@ import {
   getDeviceSettings,
   writeDisableAnimations,
   writeForceLightAccountCreate,
+  writeSlidersAsButtons,
   writeThemeMode
 } from '../../actions/DeviceSettingsActions'
 import {
@@ -64,6 +63,7 @@ import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
+import { VectorIcon } from '../themed/VectorIcon'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
@@ -151,6 +151,9 @@ export const SettingsScene: React.FC<Props> = props => {
   )
   const [forceLightAccountCreate, setForceLightAccountCreate] =
     useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [slidersAsButtons, setSlidersAsButtons] = useState<boolean>(
+    getDeviceSettings().slidersAsButtons
+  )
   const [touchIdText, setTouchIdText] = React.useState<string>(
     lstrings.settings_button_use_touchID
   )
@@ -484,6 +487,10 @@ export const SettingsScene: React.FC<Props> = props => {
     setForceLightAccountCreate(!forceLightAccountCreate)
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
+  const handleToggleSlidersAsButtons = useHandler(async () => {
+    setSlidersAsButtons(!slidersAsButtons)
+    await writeSlidersAsButtons(!slidersAsButtons)
+  })
 
   useAsyncEffect(
     async () => {
@@ -553,8 +560,9 @@ export const SettingsScene: React.FC<Props> = props => {
         <>
           <SettingsHeaderRow
             icon={
-              <FontAwesomeIcon
+              <VectorIcon
                 color={theme.icon}
+                font="FontAwesome"
                 name="user-o"
                 size={iconSize}
               />
@@ -625,7 +633,14 @@ export const SettingsScene: React.FC<Props> = props => {
         </>
         <>
           <SettingsHeaderRow
-            icon={<IonIcon color={theme.icon} name="options" size={iconSize} />}
+            icon={
+              <VectorIcon
+                color={theme.icon}
+                font="Ionicons"
+                name="options"
+                size={iconSize}
+              />
+            }
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
@@ -748,6 +763,14 @@ export const SettingsScene: React.FC<Props> = props => {
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
+              />
+            )}
+            {developerModeOn && (
+              <SettingsSwitchRow
+                key="slidersAsButtons"
+                label={lstrings.settings_developer_options_sliders_as_buttons}
+                value={slidersAsButtons}
+                onPress={handleToggleSlidersAsButtons}
               />
             )}
             {developerModeOn && (

@@ -542,6 +542,7 @@ const strings = {
   select_wallet_to_send_from: 'Select Wallet to Send From',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_button_confirm: 'Confirm',
   send_confirmation_balance: 'Balance',
   send_confirmation_zero_amount_title: 'Send Zero Amount?',
   send_confirmation_zero_amount_message:
@@ -624,6 +625,7 @@ const strings = {
   settings_default_screen_home: 'Home',
   settings_default_screen_assets: 'Assets',
   settings_developer_options_force_la: 'Force Light Account Creation',
+  settings_developer_options_sliders_as_buttons: 'Replace Sliders with Buttons',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
