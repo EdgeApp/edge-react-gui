@@ -12,6 +12,9 @@ module.exports = {
   // Custom resolver: worklets -> non-native build (reanimated 4 jest crash), and
   // msw -> node export conditions (the RN preset's react-native condition nulls them).
   resolver: './scripts/jestResolver.js',
+  // Tests and manual mocks all live under src. Without this, jest's file
+  // crawler indexes every file in node_modules on each run:
+  roots: ['<rootDir>/src'],
   setupFilesAfterEnv: ['./jestSetup.js'],
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!(@react-native|react-native|@react-navigation|zcashname-sdk|@noble/ed25519))'

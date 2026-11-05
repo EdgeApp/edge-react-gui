@@ -61,6 +61,13 @@ jest.mock('../../components/services/AirshipInstance', () => {
   return { ...actual, showToast: jest.fn() }
 })
 
+// A pick of the user's own wallet looks up the address's name, which for
+// Zcash asks the live ZcashNames indexer:
+jest.mock('../../util/nameServices', () => ({
+  ...jest.requireActual<object>('../../util/nameServices'),
+  reverseLookupName: async () => null
+}))
+
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
