@@ -60,6 +60,7 @@
     "updateVersion": "node -r sucrase/register scripts/updateVersion.ts",
     "updot": "EDGE_MODE=development updot",
     "verify": "npm run lint && npm run typechain && tsc && npm run test",
+    "verify:pirate-sdk": "node -r sucrase/register ./scripts/verifyPirateSdk.ts",
     "watch": "npm test -- --watch",
     "update-eslint-warnings": "node -r sucrase/register ./scripts/updateEslintWarnings.ts"
   },
