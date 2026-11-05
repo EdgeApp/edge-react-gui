@@ -353,6 +353,10 @@ async function prepare(
     'Secret files',
     async () => await writeSecrets(ctx, secrets)
   )
+  await ctx.log.section(
+    'Tester servers',
+    async () => await setTestServersFlag(ctx.workspace)
+  )
   if (options.maestro === true)
     await ctx.log.section(
       'Maestro',
@@ -600,6 +604,19 @@ export async function buildAndroid(ctx: Stage) {
       )
   )
   return { version }
+}
+
+/**
+ * Points this test build at the tester servers, where the test accounts
+ * live, by setting ENABLE_TEST_SERVERS in config.json.
+ */
+export async function setTestServersFlag(root: string): Promise<void> {
+  const file = join(root, 'config.json')
+  const config = JSON.parse(await readFile(file, 'utf8'))
+  await writeFile(
+    file,
+    JSON.stringify({ ...config, ENABLE_TEST_SERVERS: true }, null, 2)
+  )
 }
 
 /** Sets the Maestro flag in config.json, as scripts/deploy.ts does for a Maestro build. */
