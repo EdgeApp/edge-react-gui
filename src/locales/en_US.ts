@@ -624,6 +624,7 @@ const strings = {
   settings_default_screen_home: 'Home',
   settings_default_screen_assets: 'Assets',
   settings_developer_options_force_la: 'Force Light Account Creation',
+  settings_developer_options_sliders_as_buttons: 'Replace Sliders with Buttons',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
