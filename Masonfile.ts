@@ -353,10 +353,11 @@ async function prepare(
     'Secret files',
     async () => await writeSecrets(ctx, secrets)
   )
-  await ctx.log.section(
-    'Tester servers',
-    async () => await setTestServersFlag(ctx.workspace)
-  )
+  if (TEST_SERVER_BRANCHES.includes(ctx.run.branch))
+    await ctx.log.section(
+      'Tester servers',
+      async () => await setTestServersFlag(ctx.workspace)
+    )
   if (options.maestro === true)
     await ctx.log.section(
       'Maestro',
@@ -605,6 +606,9 @@ export async function buildAndroid(ctx: Stage) {
   )
   return { version }
 }
+
+/** The test-build branches that point the app at the tester servers. */
+const TEST_SERVER_BRANCHES = ['paul/cliMason']
 
 /**
  * Points this test build at the tester servers, where the test accounts
