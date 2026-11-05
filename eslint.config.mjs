@@ -304,7 +304,6 @@ export default [
 
       'src/components/scenes/WalletRestoreScene.tsx',
 
-      'src/components/scenes/WcDisconnectScene.tsx',
       'src/components/scenes/WebViewScene.tsx',
 
       'src/components/services/ActionQueueService.ts',

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 
 import { useWalletConnect } from '../../hooks/useWalletConnect'
 import { lstrings } from '../../locales/strings'
@@ -8,6 +7,7 @@ import type { EdgeAppSceneProps } from '../../types/routerTypes'
 import type { WcConnectionInfo } from '../../types/types'
 import { EdgeCard } from '../cards/EdgeCard'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { DAppIcon } from '../icons/DAppIcon'
 import { EdgeRow } from '../rows/EdgeRow'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -21,7 +21,7 @@ export interface WcDisconnectParams {
   wcConnectionInfo: WcConnectionInfo
 }
 
-export const WcDisconnectScene = (props: Props) => {
+export const WcDisconnectScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { wcConnectionInfo } = route.params
   const theme = useTheme()
@@ -29,7 +29,7 @@ export const WcDisconnectScene = (props: Props) => {
 
   const walletConnect = useWalletConnect()
 
-  const handleDisconnect = async () => {
+  const handleDisconnect = async (): Promise<void> => {
     try {
       await walletConnect.disconnectSession(wcConnectionInfo.uri)
     } catch (e: any) {
@@ -44,10 +44,7 @@ export const WcDisconnectScene = (props: Props) => {
       <View style={styles.container}>
         <EdgeCard paddingRem={0} marginRem={[0.5, 0.5, 0.5]}>
           <View key={wcConnectionInfo.dAppName} style={styles.listRow}>
-            <FastImage
-              style={styles.currencyLogo}
-              source={{ uri: wcConnectionInfo.icon }}
-            />
+            <DAppIcon uri={wcConnectionInfo.icon} />
             <View style={styles.info}>
               <EdgeText style={styles.infoTitle}>
                 {wcConnectionInfo.dAppName}
@@ -81,11 +78,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     padding: theme.rem(0.5),
     paddingTop: theme.rem(1)
-  },
-  currencyLogo: {
-    height: theme.rem(2),
-    width: theme.rem(2),
-    resizeMode: 'contain'
   },
   listRow: {
     marginTop: theme.rem(1),

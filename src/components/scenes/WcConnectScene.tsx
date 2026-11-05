@@ -2,7 +2,6 @@ import type { Web3WalletTypes } from '@walletconnect/web3wallet'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
 import { sprintf } from 'sprintf-js'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
@@ -23,6 +22,7 @@ import { SCENE_BUTTONS_MARGIN_REM, SceneButtons } from '../buttons/SceneButtons'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { CryptoIcon } from '../icons/CryptoIcon'
+import { DAppIcon, pickDAppIconUri } from '../icons/DAppIcon'
 import {
   WalletListModal,
   type WalletListResult
@@ -64,10 +64,7 @@ export const WcConnectScene = withWallet((props: Props) => {
       lstrings.wc_confirm_body_title,
       proposal.params.proposer.metadata.name
     )
-    const imageUri = proposal.params.proposer.metadata.icons[0] ?? '.svg'
-    const dAppImage = imageUri.endsWith('.svg')
-      ? 'https://content.edge.app/walletConnectLogo.png'
-      : imageUri
+    const dAppImage = pickDAppIconUri(proposal.params.proposer.metadata.icons)
     return { subTitleText, bodyTitleText, dAppImage }
   }, [proposal])
 
@@ -153,11 +150,9 @@ export const WcConnectScene = withWallet((props: Props) => {
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         <View style={styles.listRow}>
-          <FastImage
-            resizeMode="contain"
-            style={styles.currencyLogo}
-            source={{ uri: dAppImage }}
-          />
+          <View style={styles.currencyLogo}>
+            <DAppIcon uri={dAppImage} />
+          </View>
           <EdgeText style={styles.subTitle} numberOfLines={2}>
             {subTitleText}
           </EdgeText>
@@ -182,8 +177,6 @@ export const WcConnectScene = withWallet((props: Props) => {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
-    height: theme.rem(2),
-    width: theme.rem(2),
     marginLeft: theme.rem(0.5)
   },
   scroll: {

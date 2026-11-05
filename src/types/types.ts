@@ -375,7 +375,8 @@ export interface WcConnectionInfo {
   walletName: string
   walletId: string
   uri: string
-  icon: string
+  /** Drawable dApp artwork, if any. `DAppIcon` falls back without it. */
+  icon?: string
 }
 export interface WalletConnectChainId {
   namespace: 'algorand' | 'bip122' | 'cosmos' | 'eip155'
