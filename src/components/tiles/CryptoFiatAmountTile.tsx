@@ -10,6 +10,7 @@ import { MAX_CRYPTO_AMOUNT_CHARACTERS } from '../../constants/WalletAndCurrencyC
 import { useFiatText } from '../../hooks/useFiatText'
 import { useTokenDisplayData } from '../../hooks/useTokenDisplayData'
 import { formatNumber, trimEnd } from '../../locales/intl'
+import { getExchangeDenom } from '../../selectors/DenominationSelectors'
 import { DECIMAL_PRECISION } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { EdgeRow, type RowActionIcon } from '../rows/EdgeRow'
@@ -48,9 +49,8 @@ export const CryptoFiatAmountTile: React.FC<Props> = (props: Props) => {
     currencyConfig
   })
 
-  // Convert wallet native denomination to exchange denomination
-  // Does NOT take into account display denomination settings here,
-  // i.e. sats, bits, etc.
+  // Convert the native amount to the denomination the caller wants shown,
+  // which may be a display denomination such as sats or mETH:
   const cryptoAmountDenom = div(
     nativeCryptoAmount,
     cryptoDenomMult,
@@ -68,12 +68,14 @@ export const CryptoFiatAmountTile: React.FC<Props> = (props: Props) => {
   // Fiat amount is always positive for this specific tile
   const absCryptoAmount = abs(nativeCryptoAmount)
 
-  // Precompute fiat string for inline display
+  // Precompute fiat string for inline display. Rates are per exchange unit,
+  // so this ignores the denomination shown above.
   const fiatText = useFiatText({
     nativeCryptoAmount: absCryptoAmount,
     tokenId,
     pluginId: currencyConfig.currencyInfo.pluginId,
-    cryptoExchangeMultiplier: cryptoDenomMult,
+    cryptoExchangeMultiplier: getExchangeDenom(currencyConfig, tokenId)
+      .multiplier,
     isoFiatCurrencyCode
   })
 

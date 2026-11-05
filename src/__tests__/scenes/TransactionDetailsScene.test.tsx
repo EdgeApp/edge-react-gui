@@ -11,6 +11,7 @@ import Mailer from 'react-native-mail'
 import { TransactionDetailsScene } from '../../components/scenes/TransactionDetailsScene'
 import { Airship } from '../../components/services/AirshipInstance'
 import { lstrings } from '../../locales/strings'
+import { initialState } from '../../reducers/scenes/SettingsReducer'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
 import { btcCurrencyInfo } from '../../util/fake/fakeBtcInfo'
 import { makeFakeCurrencyConfig } from '../../util/fake/fakeCurrencyConfig'
@@ -284,6 +285,64 @@ describe('TransactionDetailsScene', () => {
         `${lstrings.transaction_details_exchange_payout_address}:<br />${RECIPIENT_ADDRESS}<br />`
       )
       rendered.unmount()
+    })
+
+    describe('with a non-exchange display denomination', () => {
+      const satsState: FakeState = {
+        ...fakeState,
+        ui: {
+          settings: {
+            ...initialState,
+            denominationSettings: {
+              bitcoin: {
+                BTC: { name: 'sats', multiplier: '1', symbol: 's' }
+              }
+            }
+          }
+        }
+      }
+
+      const renderInSats = (): RenderResult =>
+        render(
+          <FakeProviders initialState={satsState}>
+            <TransactionDetailsScene
+              {...fakeEdgeAppSceneProps('transactionDetails', {
+                edgeTransaction: makeSwapSendTx(),
+                walletId: fakeCoreWallet.id
+              })}
+            />
+          </FakeProviders>
+        )
+
+      it('shows exchange details amounts in the exchange denomination', () => {
+        const rendered = renderInSats()
+
+        rendered.getByText(`${lstrings.title_exchange} 0.00038693 ₿`)
+        rendered.getByText(`${lstrings.string_to_capitalize} 0.0003758 BTC`)
+        rendered.unmount()
+      })
+
+      it('prints the exchange denomination in the details modal', () => {
+        const showModal = jest
+          .spyOn(Airship, 'show')
+          .mockResolvedValue(undefined)
+        const rendered = renderInSats()
+
+        fireEvent.press(rendered.getByTestId('exchangeDetailsRow'))
+
+        const [renderModal] = showModal.mock.calls[0]
+        const modal = renderModal(fakeAirshipBridge)
+        if (!React.isValidElement<{ body: string }>(modal)) {
+          throw new Error('Expected the exchange details modal')
+        }
+        expect(modal.props.body).toContain(
+          `${lstrings.fragment_send_from_label}: 0.00038693 BTC\n`
+        )
+        expect(modal.props.body).toContain(
+          `${lstrings.string_to_capitalize}: 0.0003758 BTC\n`
+        )
+        rendered.unmount()
+      })
     })
   })
 })
