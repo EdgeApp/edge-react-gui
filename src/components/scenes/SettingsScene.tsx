@@ -55,7 +55,10 @@ import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
-import { requestContactsPermission } from '../services/PermissionsManager'
+import {
+  hasContactsAccess,
+  requestContactsPermission
+} from '../services/PermissionsManager'
 import { changeTheme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
@@ -494,7 +497,7 @@ export const SettingsScene: React.FC<Props> = props => {
   useAsyncEffect(
     async () => {
       const currentContactsPermission = await check(permissionNames.contacts)
-      setLocalContactsPermissionOn(currentContactsPermission === 'granted')
+      setLocalContactsPermissionOn(hasContactsAccess(currentContactsPermission))
     },
     [],
     'SettingsScene'
