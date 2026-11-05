@@ -4,6 +4,24 @@
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 
+## 4.52.3 (2026-11-04)
+
+- added: Scam warning before sending to a FIO handle the account has never interacted with
+- changed: Replace react-native-zcash with zcash-native
+- changed: Remove the duplicate payee name and FIO note save after a send
+- changed: (Base) Look back 600 blocks for new transactions and 1024 blocks of fee history, sized for Denim's 200ms blocks
+- changed: (Base) Replace the dead Ankr, BaseScan V1 and Blockchair fallback servers with publicnode and Infura
+- fixed: Missing wallet options menu icons on Android
+- fixed: Total Balance counting tokens the user has disabled
+- fixed: Market details Swap defaulting to a disabled token as the source
+- fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
+- fixed: Sends and swaps losing their metadata and swap details when the wallet reported the transaction first
+- fixed: (Ethereum) USDS (0xdC035D45) amounts off by 12 decimal places
+- fixed: (EVM) An unknown info-server adapter type no longer makes the plugin ignore its whole info-server payload
+- fixed: (Pirate Chain) Receive showing a Sapling address for the rest of the session after Ironwood activation
+- fixed: (Maya Protocol) Report amounts below the minimum instead of a generic error
+- fixed: (Rango) Stop reporting a below-limit error when no amount has a route
+
 ## 4.52.2 (2026-10-30)
 
 - added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
