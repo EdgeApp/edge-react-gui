@@ -127,11 +127,6 @@ export default [
     files: [
       'scripts/createAndroidKeys.ts',
 
-      'scripts/loggingServer.ts',
-      'scripts/makeNativeHeaders.ts',
-      'scripts/patchFiles.ts',
-      'scripts/secretFiles.ts',
-
       'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
 
@@ -139,17 +134,10 @@ export default [
 
       'src/actions/FioActions.tsx',
       'src/actions/FioAddressActions.ts',
-      'src/actions/FirstOpenActions.tsx',
       'src/actions/LoanWelcomeActions.tsx',
 
-      'src/actions/NotificationActions.ts',
       'src/actions/PaymentProtoActions.tsx',
       'src/actions/ReceiveDropdown.tsx',
-
-      'src/actions/ScamWarningActions.tsx',
-
-      'src/actions/SoundActions.ts',
-      'src/actions/TokenTermsActions.tsx',
 
       'src/components/buttons/ButtonsView.tsx',
       'src/components/buttons/EdgeSwitch.tsx',
@@ -174,12 +162,8 @@ export default [
       'src/components/cards/TappableAccountCard.tsx',
       'src/components/cards/TappableCard.tsx',
       'src/components/cards/UnderlinedNumInputCard.tsx',
-      'src/components/cards/VisaCardCard.tsx',
       'src/components/cards/WalletRestoreCard.tsx',
       'src/components/cards/WarningCard.tsx',
-      'src/components/charts/SwipeChart.tsx',
-
-      'src/components/common/AnimatedNumber.tsx',
 
       'src/components/common/CrossFade.tsx',
 
@@ -200,8 +184,6 @@ export default [
       'src/components/icons/IconBadge.tsx',
       'src/components/icons/PairIcons.tsx',
       'src/components/icons/SwipeableRowIcon.tsx',
-
-      'src/components/keyboard/KavButton.tsx',
 
       'src/components/layout/Peek.tsx',
 
@@ -251,10 +233,7 @@ export default [
 
       'src/components/progress-indicators/AccountSyncBar.tsx',
 
-      'src/components/progress-indicators/FullScreenLoader.tsx',
       'src/components/progress-indicators/LoadingSplashScreen.tsx',
-
-      'src/components/rows/CryptoFiatAmountRow.tsx',
 
       'src/components/rows/PaymentMethodRow.tsx',
       'src/components/rows/TxCryptoAmountRow.tsx',
@@ -310,16 +289,13 @@ export default [
       'src/components/services/ActionQueueService.ts',
       'src/components/services/AirshipInstance.tsx',
       'src/components/services/AutoLogout.ts',
-      'src/components/services/ContactsLoader.ts',
 
       'src/components/services/EdgeContextCallbackManager.tsx',
 
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
-      'src/components/services/PasswordReminderService.ts',
       'src/components/services/PermissionsManager.tsx',
 
-      'src/components/services/SortedWalletList.ts',
       'src/components/services/StatusBarManager.tsx',
 
       'src/components/services/WalletLifecycle.ts',
@@ -332,7 +308,6 @@ export default [
       'src/components/settings/SettingsSwitchRow.tsx',
       'src/components/settings/SettingsTappableRow.tsx',
       'src/components/text/AssetChangeText.tsx',
-      'src/components/text/FiatText.tsx',
 
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
@@ -340,7 +315,6 @@ export default [
       'src/components/themed/EdgeProviderComponent.tsx',
 
       'src/components/themed/ExplorerCard.tsx',
-      'src/components/themed/Fade.tsx',
 
       'src/components/themed/LineTextDivider.tsx',
       'src/components/themed/MainButton.tsx',
@@ -352,8 +326,6 @@ export default [
       'src/components/themed/SelectableRow.tsx',
 
       'src/components/themed/ShareButtons.tsx',
-
-      'src/components/themed/Slider.tsx',
 
       'src/components/themed/SwipeableRow.tsx',
       'src/components/themed/ThemedButtons.tsx',
@@ -371,28 +343,19 @@ export default [
       'src/components/themed/WalletListSwipeableLoadingRow.tsx',
 
       'src/components/tiles/AprCard.tsx',
-      'src/components/tiles/CountdownTile.tsx',
-      'src/components/tiles/CryptoFiatAmountTile.tsx',
 
       'src/components/tiles/ErrorTile.tsx',
-      'src/components/tiles/FiatAmountTile.tsx',
       'src/components/tiles/InterestRateChangeTile.tsx',
       'src/components/tiles/LtvRatioTile.tsx',
       'src/components/tiles/PercentageChangeArrowTile.tsx',
       'src/components/tiles/TotalDebtCollateralTile.tsx',
 
-      'src/controllers/action-queue/ActionQueueStore.ts',
       'src/controllers/action-queue/cleaners.ts',
-      'src/controllers/action-queue/push.ts',
-      'src/controllers/action-queue/runtime/evaluateAction.ts',
-      'src/controllers/action-queue/runtime/executeActionProgram.ts',
       'src/controllers/edgeProvider/client/edgeProviderBridge.ts',
-      'src/controllers/edgeProvider/client/pendingList.ts',
 
       'src/controllers/loan-manager/borrowPluginConfig.ts',
       'src/controllers/loan-manager/redux/actions.ts',
       'src/controllers/loan-manager/util/waitForLoanAccountSync.ts',
-      'src/hooks/animations/useFadeAnimation.ts',
 
       'src/hooks/useAbortable.ts',
       'src/hooks/useAccountSyncRatio.tsx',
@@ -417,7 +380,6 @@ export default [
 
       'src/hooks/useWalletsSubscriber.ts',
       'src/hooks/useWhyDidYouUpdate.ts',
-      'src/locales/intl.ts',
       'src/locales/strings.ts',
       'src/plugins/borrow-plugins/common/ApprovableCall.ts',
       'src/plugins/borrow-plugins/common/cleaners/asBigNumber.ts',
@@ -426,13 +388,8 @@ export default [
 
       'src/plugins/gui/providers/bityProvider.ts',
 
-      'src/plugins/gui/providers/mtpelerinProvider.ts',
-
       'src/plugins/gui/providers/revolutProvider.ts',
       'src/plugins/gui/RewardsCardPlugin.tsx',
-
-      'src/plugins/gui/util/fetchRevolut.ts',
-      'src/plugins/gui/util/initializeProviders.ts',
 
       'src/plugins/stake-plugins/generic/policyAdapters/CardanoKilnAdaptor.ts',
 
@@ -440,7 +397,6 @@ export default [
       'src/plugins/stake-plugins/generic/util/KilnApi.ts',
 
       'src/plugins/stake-plugins/metadataCache.ts',
-      'src/plugins/stake-plugins/stakePlugins.ts',
 
       'src/plugins/stake-plugins/util/accumulator.ts',
       'src/plugins/stake-plugins/util/biggystringplus.ts',
@@ -451,7 +407,6 @@ export default [
       'src/selectors/SettingsSelectors.ts',
       'src/state/createStateProvider.tsx',
       'src/state/SceneFooterState.tsx',
-      'src/state/SceneScrollState.tsx',
       'src/styles/common/textStyles.tsx',
       'src/styles/common/textStylesThemed.ts',
       'src/types/reactRedux.ts',
@@ -459,17 +414,14 @@ export default [
       'src/util/cleaners.ts',
 
       'src/util/crypto.ts',
-      'src/util/CryptoAmount.ts',
       'src/util/cryptoTextUtils.ts',
 
       'src/util/exchangeRates.ts',
 
       'src/util/getAccountUsername.ts',
-      'src/util/GuiPluginTools.ts',
       'src/util/haptic.ts',
 
       'src/util/memoUtils.ts',
-      'src/util/middleware/perfLogger.ts',
 
       'src/util/otpReminder.tsx',
       'src/util/scaling.ts',
@@ -477,7 +429,6 @@ export default [
       'src/util/stakeUtils.ts',
 
       'src/util/ukComplianceUtils.ts',
-
       'src/util/WebUtils.ts',
       'src/util/withWatchableProps.ts'
     ],

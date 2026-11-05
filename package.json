@@ -46,7 +46,7 @@
     "maestro": "node -r sucrase/register ./scripts/runMaestro.ts",
     "maestro:ios": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,ios maestro",
     "maestro:android": "node -r sucrase/register ./scripts/runMaestro.ts test --include-tags all,android maestro",
-    "precommit": "npm run localize && npm run update-eslint-warnings && lint-staged && tsc && npm test",
+    "precommit": "npm run localize && lint-staged && tsc && npm test",
     "prepare.ios": "(cd ios; pod repo update; pod install)",
     "prepare": "husky install && ./scripts/prepare.sh",
     "rates-cache-replay": "node -r sucrase/register scripts/ratesCacheReplay.ts",
