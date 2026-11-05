@@ -1,4 +1,4 @@
-import type { EdgeTokenId } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeTokenId } from 'edge-core-js'
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
@@ -56,9 +56,12 @@ const icons: Record<string, string> = {
   resync: 'sync',
   split: 'arrowsalt',
   togglePause: 'pause',
+  viewInExplorer: 'earth',
   viewPrivateViewKey: 'eye',
   viewXPub: 'eye'
 }
+
+const PRIVACY_PLUGIN_IDS = ['monero', 'piratechain', 'zcash', 'zano']
 
 /**
  * Customizes which coins get which options on the wallet list scene.
@@ -79,6 +82,10 @@ export const WALLET_LIST_MENU: Array<{
   {
     label: lstrings.fragment_wallets_export_transactions,
     value: 'exportWalletTransactions'
+  },
+  {
+    label: lstrings.fragment_wallets_view_in_explorer,
+    value: 'viewInExplorer'
   },
   {
     label: lstrings.string_master_private_key,
@@ -151,7 +158,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'signMessage'
   },
   {
-    pluginIds: ['monero', 'piratechain', 'zcash', 'zano'],
+    pluginIds: PRIVACY_PLUGIN_IDS,
     label: lstrings.fragment_wallets_view_private_view_key,
     value: 'viewPrivateViewKey'
   },
@@ -240,6 +247,14 @@ export const WalletListMenuModal: React.FC<Props> = props => {
             label: lstrings.fragment_wallets_export_transactions,
             value: 'exportWalletTransactions'
           },
+          ...(canViewInExplorer(wallet.currencyInfo)
+            ? [
+                {
+                  label: lstrings.fragment_wallets_view_in_explorer,
+                  value: 'viewInExplorer'
+                }
+              ]
+            : []),
           {
             label: lstrings.fragment_wallets_delete_token,
             value: 'delete'
@@ -293,6 +308,12 @@ export const WalletListMenuModal: React.FC<Props> = props => {
         if (value === 'walletSettings') continue
 
         if (value === 'split' && splitPluginIds.length <= 0) continue
+
+        if (
+          value === 'viewInExplorer' &&
+          !canViewInExplorer(wallet.currencyInfo)
+        )
+          continue
 
         if (Array.isArray(pluginIds) && !pluginIds.includes(pluginId)) continue
 
@@ -439,3 +460,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   }
 }))
+
+/**
+ * Only wallets with a public address the plugin's explorer can show get the
+ * explorer entry. Keys-only plugins have no addresses, and privacy wallets
+ * are excluded because their address pages reveal little or nothing.
+ */
+function canViewInExplorer(currencyInfo: EdgeCurrencyInfo): boolean {
+  const { addressExplorer, pluginId } = currencyInfo
+  return (
+    addressExplorer !== '' &&
+    !PRIVACY_PLUGIN_IDS.includes(pluginId) &&
+    !isKeysOnlyPlugin(pluginId)
+  )
+}
