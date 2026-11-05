@@ -67,6 +67,25 @@ describe('requestContactsPermission', () => {
     expect(mockOpenSettings).toHaveBeenCalledTimes(1)
   })
 
+  it('counts limited access as on without asking again', async () => {
+    givenStatuses('limited', 'limited')
+
+    const granted = await requestContactsPermission(true)
+
+    expect(granted).toBe(true)
+    expect(mockRequest).not.toHaveBeenCalled()
+    expect(mockOpenSettings).not.toHaveBeenCalled()
+  })
+
+  it('opens settings to turn limited access off', async () => {
+    givenStatuses('limited', 'limited')
+
+    await requestContactsPermission(false)
+
+    expect(mockRequest).not.toHaveBeenCalled()
+    expect(mockOpenSettings).toHaveBeenCalledTimes(1)
+  })
+
   it('opens settings to turn granted access off', async () => {
     givenStatuses('granted', 'granted')
 

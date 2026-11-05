@@ -45,6 +45,13 @@ export const PermissionsManager: React.FC = () => {
 }
 
 /**
+ * iOS 18 reports access to only the contacts the user picked as `limited`,
+ * which counts as access.
+ */
+export const hasContactsAccess = (status: PermissionStatus): boolean =>
+  status === 'granted' || status === 'limited'
+
+/**
  * If toggled on, will request permissions if system-level contacts permissions
  * are not granted. If toggled off, will open system settings.
  */
@@ -52,7 +59,7 @@ export async function requestContactsPermission(
   contactsPermissionOn: boolean
 ): Promise<boolean> {
   const priorStatus = await check(permissionNames.contacts)
-  const currentContactsPermissionOn = priorStatus === 'granted'
+  const currentContactsPermissionOn = hasContactsAccess(priorStatus)
 
   if (contactsPermissionOn && !currentContactsPermissionOn) {
     // Initial prompt to inform the reason of the permissions request.
@@ -88,7 +95,7 @@ export async function requestContactsPermission(
   }
 
   // Return the current permission state
-  return (await check(permissionNames.contacts)) === 'granted'
+  return hasContactsAccess(await check(permissionNames.contacts))
 }
 
 /**
