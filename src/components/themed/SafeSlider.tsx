@@ -9,9 +9,11 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { triggerHaptic } from '../../util/haptic'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { ChevronLeftIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -125,6 +127,36 @@ export const SafeSlider: React.FC<Props> = props => {
       width: translateX.value + confirmationSliderThumbWidth
     }
   })
+
+  const handleButtonPress = useHandler(() => {
+    if (sliderDisabled) return
+    handleComplete()
+  })
+
+  // Developer option for automation tools that cannot perform a swipe
+  // gesture (such as BrowserStack): render a plain button with the same
+  // completion, reset and lock semantics as the slider.
+  if (getDeviceSettings().slidersAsButtons) {
+    const buttonText = locked
+      ? lockedText
+      : disabled
+      ? disabledText ?? lstrings.select_exchange_amount_short
+      : lstrings.send_confirmation_button_confirm
+    return (
+      <View style={[parentStyle, styles.sliderContainer]}>
+        <View style={widthStyle}>
+          <EdgeButton
+            disabled={disabled || locked}
+            label={buttonText}
+            layout="column"
+            spinner={completed && !locked}
+            testID={testID}
+            onPress={handleButtonPress}
+          />
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
