@@ -13,6 +13,7 @@ describe('paymentTypeUtils', () => {
       expect(getPaymentTypeDisplayName('klarna')).toBe('Klarna')
       expect(getPaymentTypeDisplayName('paypal')).toBe('Paypal')
       expect(getPaymentTypeDisplayName('cashapp')).toBe('Cash App Pay')
+      expect(getPaymentTypeDisplayName('vietqr')).toBe('VietQR')
     })
 
     it('should return original value for unknown payment types', () => {

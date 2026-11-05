@@ -18,7 +18,8 @@ describe('paymentTypeIcons', () => {
     paymentTypeLogoPaypal: { uri: 'paypal-icon.png' },
     paymentTypeLogoPix: { uri: 'pix-icon.png' },
     paymentTypeLogoRevolut: { uri: 'revolut-icon.png' },
-    paymentTypeLogoVenmo: { uri: 'venmo-icon.png' }
+    paymentTypeLogoVenmo: { uri: 'venmo-icon.png' },
+    paymentTypeLogoVietQr: { uri: 'vietqr-icon.png' }
   } as any
 
   describe('getPaymentTypeThemeKey', () => {
@@ -28,6 +29,7 @@ describe('paymentTypeIcons', () => {
       expect(getPaymentTypeThemeKey('paypal')).toBe('paymentTypeLogoPaypal')
       expect(getPaymentTypeThemeKey('klarna')).toBe('paymentTypeLogoKlarna')
       expect(getPaymentTypeThemeKey('cashapp')).toBe('paymentTypeLogoCashApp')
+      expect(getPaymentTypeThemeKey('vietqr')).toBe('paymentTypeLogoVietQr')
     })
 
     it('should return bank transfer key for fallback payment types', () => {
@@ -50,6 +52,9 @@ describe('paymentTypeIcons', () => {
       })
       expect(getPaymentTypeIcon('cashapp', mockTheme)).toEqual({
         uri: 'cash-app-icon.png'
+      })
+      expect(getPaymentTypeIcon('vietqr', mockTheme)).toEqual({
+        uri: 'vietqr-icon.png'
       })
     })
 
