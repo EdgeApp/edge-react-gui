@@ -22,6 +22,7 @@ import {
 import process from 'process'
 import * as React from 'react'
 
+import { PoweredByCard } from '../../components/cards/PoweredByCard'
 import * as SwapVerifyTermsModal from '../../components/modals/SwapVerifyTermsModal'
 import {
   pickBestQuote,
@@ -465,6 +466,73 @@ describe('SwapConfirmationScene', () => {
       )
 
       unmount()
+    })
+  })
+
+  describe('the powered-by card', () => {
+    const makePickerQuote = (pluginId: string): EdgeSwapQuote => {
+      const fakeRequest: any = { fromWallet: btcWallet, toWallet: ethWallet }
+      return {
+        swapInfo: dummySwapInfo,
+        request: fakeRequest,
+        isEstimate: false,
+        fromNativeAmount: '10000',
+        toNativeAmount: '10000',
+        networkFee: { currencyCode: 'BTC', nativeAmount: '1', tokenId: null },
+        pluginId,
+        approve: async () => {
+          throw new Error('unreachable')
+        },
+        close: async () => {}
+      }
+    }
+
+    const renderWithQuotes = (
+      sceneQuotes: EdgeSwapQuote[]
+    ): ReturnType<typeof render> => {
+      const rootState: FakeState = { ...fakeRootState, core: { account } }
+      return render(
+        <FakeProviders initialState={rootState}>
+          <SwapConfirmationScene
+            {...fakeSwapTabSceneProps('swapConfirmation', {
+              quotes: sceneQuotes,
+              selectedQuote: sceneQuotes[0],
+              onApprove: () => undefined,
+              swapRequest: sceneQuotes[0].request,
+              swapRequestOptions: {}
+            })}
+          />
+        </FakeProviders>
+      )
+    }
+
+    it('cannot open the provider picker with a single quote', () => {
+      if (btcWallet == null || ethWallet == null) return
+      const rendered = renderWithQuotes([makePickerQuote('bitcoin')])
+
+      expect(rendered.UNSAFE_getByType(PoweredByCard).props.onPress).toBe(
+        undefined
+      )
+      expect(rendered.queryByText(lstrings.tap_to_change_provider)).toBe(null)
+
+      rendered.unmount()
+    })
+
+    it('opens the provider picker with several quotes', () => {
+      if (btcWallet == null || ethWallet == null) return
+      const rendered = renderWithQuotes([
+        makePickerQuote('bitcoin'),
+        makePickerQuote('ethereum')
+      ])
+
+      expect(
+        rendered.UNSAFE_getByType(PoweredByCard).props.onPress
+      ).toBeInstanceOf(Function)
+      expect(rendered.queryByText(lstrings.tap_to_change_provider)).not.toBe(
+        null
+      )
+
+      rendered.unmount()
     })
   })
 
