@@ -7,9 +7,6 @@
 ## 4.53.0 (staging)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
-- added: eCash (ECX) currency info, off unless the plugin config enables it, and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
-- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
-- added: Scam warning before sending to a FIO handle the account has never interacted with
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
@@ -20,8 +17,6 @@
 - changed: Upgrade edge-login-ui-rn to v4.0.0
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - changed: On Android 16 and above, the back button and back gesture reach the app through predictive back, which React Native 0.86 supports, so the app no longer opts out of it.
-- changed: Replace react-native-zcash with zcash-native
-- changed: Remove the duplicate payee name and FIO note save after a send
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
 - fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
@@ -40,10 +35,29 @@
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
-- fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
+
+## 4.52.3 (2026-11-04)
+
+- added: Scam warning before sending to a FIO handle the account has never interacted with
+- changed: Replace react-native-zcash with zcash-native
+- changed: Remove the duplicate payee name and FIO note save after a send
+- changed: (Base) Look back 600 blocks for new transactions and 1024 blocks of fee history, sized for Denim's 200ms blocks
+- changed: (Base) Replace the dead Ankr, BaseScan V1 and Blockchair fallback servers with publicnode and Infura
 - fixed: Missing wallet options menu icons on Android
 - fixed: Total Balance counting tokens the user has disabled
 - fixed: Market details Swap defaulting to a disabled token as the source
+- fixed: Opening a Bitcoin wallet split into eCash (ECX) showing an "Object is not async iterable" error and no replay protection warning
+- fixed: Sends and swaps losing their metadata and swap details when the wallet reported the transaction first
+- fixed: (Ethereum) USDS (0xdC035D45) amounts off by 12 decimal places
+- fixed: (EVM) An unknown info-server adapter type no longer makes the plugin ignore its whole info-server payload
+- fixed: (Pirate Chain) Receive showing a Sapling address for the rest of the session after Ironwood activation
+- fixed: (Maya Protocol) Report amounts below the minimum instead of a generic error
+- fixed: (Rango) Stop reporting a below-limit error when no amount has a route
+
+## 4.52.2 (2026-10-30)
+
+- added: eCash (ECX) currency info and a warning on a Bitcoin wallet until the eCash wallet split from it confirms its replay protection transaction
+- added: Confirmation before splitting a Bitcoin wallet into eCash (ECX), explaining the replay protection transaction and its network fee
 
 ## 4.52.1 (2026-10-23)
 
