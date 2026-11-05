@@ -27,7 +27,7 @@ import type { ThunkAction } from '../../types/reduxTypes'
 import { PermissionsSettingModal } from '../modals/PermissionsSettingModal'
 import { Airship, showError } from './AirshipInstance'
 
-export const PermissionsManager = () => {
+export const PermissionsManager: React.FC = () => {
   const dispatch = useDispatch()
   const statePermissions = useSelector(state => state.permissions)
   const isAppForeground = useIsAppForeground()
@@ -74,7 +74,7 @@ export async function requestContactsPermission(
       // Handle any other potential failure in enabling the permission
       // progmatically from within Edge by redirecting to the system settings
       // instead. Any manual change in system settings causes an app restart.
-      .catch(async _e => {
+      .catch(async (_e: unknown) => {
         await openSettings()
       })
   } else if (!contactsPermissionOn && currentContactsPermissionOn) {
@@ -106,7 +106,7 @@ export const checkAndRequestPermission =
     return status
   }
 
-export const checkIfDenied = (status: PermissionStatus) =>
+export const checkIfDenied = (status: PermissionStatus): boolean =>
   status === 'blocked' || status === 'denied' || status === 'unavailable'
 
 // Returns true if denied, false if accepted
@@ -158,7 +158,7 @@ export async function requestPermissionOnSettings(
           [data]: permissionLimit + 1
         })
       )
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error)
       })
 

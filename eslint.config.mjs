@@ -101,7 +101,7 @@ export default [
   {
     files: [
       'src/assets/vector/index.ts',
-
+      'src/components/icons/ThemedIcons.tsx',
       'src/components/themed/VectorIcon.tsx'
     ],
     rules: {
@@ -328,7 +328,7 @@ export default [
       'src/components/services/LoanManagerService.ts',
       'src/components/services/NetworkActivity.ts',
       'src/components/services/PasswordReminderService.ts',
-      'src/components/services/PermissionsManager.tsx',
+
       'src/components/services/Providers.tsx',
 
       'src/components/services/SortedWalletList.ts',
