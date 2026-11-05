@@ -21,6 +21,7 @@ import type {
   RampQuoteRequest,
   SettlementRange
 } from '../../plugins/ramps/rampPluginTypes'
+import { formatRampCryptoAmount } from '../../plugins/ramps/utils/formatRampCryptoAmount'
 import {
   compareRampQuotes,
   getBestRateRampQuote,
@@ -28,6 +29,7 @@ import {
   rampQuoteHasAmounts,
   type RampQuotePriority
 } from '../../plugins/ramps/utils/rampQuotePriority'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import type { BuySellTabSceneProps } from '../../types/routerTypes'
 import { getPaymentTypeIcon } from '../../util/paymentTypeIcons'
@@ -70,7 +72,14 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
   const theme = useTheme()
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.settings.countryCode)
+  const exchangeRates = useSelector(state => state.exchangeRates)
   const countryData = COUNTRY_CODES.find(c => c['alpha-2'] === countryCode)
+  const usdRate = getExchangeRate(
+    exchangeRates,
+    rampQuoteRequest.wallet.currencyInfo.pluginId,
+    rampQuoteRequest.tokenId,
+    'iso:USD'
+  )
   // Get ramp plugins
   const { data: rampPluginArray = [], isLoading: isPluginsLoading } =
     useRampPlugins({ account })
@@ -319,6 +328,7 @@ export const RampSelectOptionScene: React.FC<Props> = (props: Props) => {
                   onPress={handleQuotePress}
                   bestQuoteOverall={bestQuoteOverall}
                   isApprovingQuote={isApprovingQuote}
+                  usdRate={usdRate}
                 />
               )
             )}
@@ -348,7 +358,14 @@ const QuoteResult: React.FC<{
   onPress: (quote: RampQuote) => Promise<void>
   bestQuoteOverall?: RampQuote
   isApprovingQuote: boolean
-}> = ({ providerQuotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
+  usdRate: number
+}> = ({
+  providerQuotes,
+  onPress,
+  bestQuoteOverall,
+  isApprovingQuote,
+  usdRate
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -371,15 +388,14 @@ const QuoteResult: React.FC<{
     const items = providerQuotes.map(quote => {
       const fiatCurrencyCode = quote.fiatCurrencyCode.replace('iso:', '')
       const cryptoCurrencyCode = quote.displayCurrencyCode
+      const cryptoAmount = formatRampCryptoAmount(quote.cryptoAmount, usdRate)
 
       const body = rampQuoteHasAmounts(quote)
         ? quote.direction === 'buy'
           ? `${formatFiatString({
               fiatAmount: quote.fiatAmount
-            })} ${fiatCurrencyCode} → ${
-              quote.cryptoAmount
-            } ${cryptoCurrencyCode}`
-          : `${quote.cryptoAmount} ${cryptoCurrencyCode} → ${formatFiatString({
+            })} ${fiatCurrencyCode} → ${cryptoAmount} ${cryptoCurrencyCode}`
+          : `${cryptoAmount} ${cryptoCurrencyCode} → ${formatFiatString({
               fiatAmount: quote.fiatAmount
             })} ${fiatCurrencyCode}`
         : quote.specialQuoteRateMessage ??
@@ -437,6 +453,10 @@ const QuoteResult: React.FC<{
   const formattedSelectedFiatAmount = hasSelectedAmounts
     ? formatNumber(providerQuote.fiatAmount, { toFixed: 2 })
     : ''
+  const formattedSelectedCryptoAmount = formatRampCryptoAmount(
+    providerQuote.cryptoAmount,
+    usdRate
+  )
 
   // Get the icon for the payment type
   const paymentTypeIcon = getPaymentTypeIcon(providerQuote.paymentType, theme)
@@ -480,8 +500,8 @@ const QuoteResult: React.FC<{
           ? sprintf(
               lstrings.string_total_amount_s,
               providerQuote.direction === 'buy'
-                ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode}`
-                : `${providerQuote.cryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
+                ? `${formattedSelectedFiatAmount} ${fiatCurrencyCode} → ${formattedSelectedCryptoAmount} ${providerQuote.displayCurrencyCode}`
+                : `${formattedSelectedCryptoAmount} ${providerQuote.displayCurrencyCode} → ${formattedSelectedFiatAmount} ${fiatCurrencyCode}`
             )
           : providerQuote.specialQuoteRateMessage ??
             lstrings.tap_to_view_quote_amount_and_rate
