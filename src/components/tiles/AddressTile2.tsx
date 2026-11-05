@@ -1,6 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
+  EdgeAccount,
   EdgeAddress,
   EdgeCurrencyWallet,
   EdgeParsedUri,
@@ -22,14 +23,17 @@ import { lstrings } from '../../locales/strings'
 import { PaymentProtoError } from '../../types/PaymentProtoError'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
-import type { EdgeAsset } from '../../types/types'
+import type { EdgeAsset, FioAddress } from '../../types/types'
 import { describeAddressRejection } from '../../util/addressRejection'
 import {
   getCurrencyCode,
   isOwnEvmAddress
 } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import { checkPubAddress } from '../../util/FioAddressUtils'
+import {
+  checkPubAddress,
+  hasSentToFioAddress
+} from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
 import { type CrossChainPayment, withStatedAsset } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
@@ -47,13 +51,19 @@ import {
 import { EdgeRow } from '../rows/EdgeRow'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText, Paragraph } from '../themed/EdgeText'
 import { NameServicePrefix } from '../themed/NameServicePrefix'
 
 export type AddressEntryMethod = 'scan' | 'other'
 
 export interface ChangeAddressResult {
   fioAddress?: string
+  /**
+   * The public address `fioAddress` resolved to when the user entered it,
+   * after resolving any ENS name the handle points to. Only set for a handle
+   * resolved here, never for one a request prefilled.
+   */
+  fioPublicAddress?: string
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
@@ -225,6 +235,9 @@ export const AddressTile2 = React.forwardRef(
 
     // Selectors:
     const account = useSelector(state => state.core.account)
+    const ownFioAddresses = useSelector(
+      state => state.ui.fioAddress.fioAddresses
+    )
     const dispatch = useDispatch()
     const fioPlugin = account.currencyConfig.fio
 
@@ -316,6 +329,7 @@ export const AddressTile2 = React.forwardRef(
         let zanoAlias: string | undefined
         let resolvedName: { name: string; service: NameService } | undefined
         let fioAddress
+        let fioPublicAddress: string | undefined
         if (fioPlugin != null) {
           try {
             const publicAddress = await checkPubAddress(
@@ -325,6 +339,7 @@ export const AddressTile2 = React.forwardRef(
               currencyCode
             )
             fioAddress = address.toLowerCase()
+            fioPublicAddress = publicAddress
             address = publicAddress
           } catch (e: unknown) {
             const invalidCode =
@@ -338,6 +353,76 @@ export const AddressTile2 = React.forwardRef(
               return
             }
           }
+        }
+
+        // Try resolving address by ENS domain for ethereum wallets only
+        if (
+          coreWallet.currencyInfo.pluginId === 'ethereum' &&
+          /^.*\.eth$/.test(address)
+        ) {
+          const chainId = 1 // Hard-coded to Ethereum mainnet
+          const network = ethers.providers.getNetwork(chainId)
+          if (network.name !== 'unknown') {
+            try {
+              const ethersProvider = ethers.getDefaultProvider(network)
+              const resolvedAddress = await ethersProvider.resolveName(address)
+              if (resolvedAddress != null) {
+                resolvedName = { name: enteredInput, service: 'ens' }
+                address = resolvedAddress
+              }
+            } catch (_) {}
+          }
+        }
+
+        // A handle can resolve to an ENS name the owner can repoint at any
+        // time, so the address the send pays, not the name, is what the
+        // user accepts below and what gets recorded once it is sent:
+        if (fioAddress != null) fioPublicAddress = address
+
+        // Scammers tell users to append a handle they registered, such as
+        // "@thorchain", to the user's own exchange deposit address. Resolving
+        // it pays the scammer, so a handle new to this account needs consent.
+        if (
+          fioAddress != null &&
+          fioPublicAddress != null &&
+          !(await hasInteractedWithFioAddress(
+            account,
+            fioAddress,
+            fioPublicAddress,
+            ownFioAddresses
+          ))
+        ) {
+          setLoading(false)
+          const handleAddress = address
+          const namePart = enteredInput.split('@')[0]
+          const approved = await Airship.show<boolean>(bridge => (
+            <ConfirmContinueModal
+              bridge={bridge}
+              title={lstrings.warning_sending_to_fio_address_title}
+              body={lstrings.warning_sending_to_fio_address_owner}
+              warning
+              isSkippable
+            >
+              <Paragraph>
+                {sprintf(
+                  lstrings.warning_sending_to_fio_address_resolves_3s,
+                  enteredInput,
+                  currencyCode,
+                  handleAddress
+                )}
+              </Paragraph>
+              <Paragraph>
+                {looksLikeAddress(namePart)
+                  ? sprintf(
+                      lstrings.warning_sending_to_fio_address_not_name_1s,
+                      namePart
+                    )
+                  : lstrings.warning_sending_to_fio_address_no_routing}
+              </Paragraph>
+            </ConfirmContinueModal>
+          ))
+          if (!approved) return
+          setLoading(true)
         }
 
         // Check if this is an email for Tron USDT and show warning for potential
@@ -359,25 +444,6 @@ export const AddressTile2 = React.forwardRef(
           if (!approved) {
             setLoading(false)
             return
-          }
-        }
-
-        // Try resolving address by ENS domain for ethereum wallets only
-        if (
-          coreWallet.currencyInfo.pluginId === 'ethereum' &&
-          /^.*\.eth$/.test(address)
-        ) {
-          const chainId = 1 // Hard-coded to Ethereum mainnet
-          const network = ethers.providers.getNetwork(chainId)
-          if (network.name !== 'unknown') {
-            try {
-              const ethersProvider = ethers.getDefaultProvider(network)
-              const resolvedAddress = await ethersProvider.resolveName(address)
-              if (resolvedAddress != null) {
-                resolvedName = { name: enteredInput, service: 'ens' }
-                address = resolvedAddress
-              }
-            } catch (_) {}
           }
         }
 
@@ -488,6 +554,7 @@ export const AddressTile2 = React.forwardRef(
           // set address
           await onChangeAddress({
             fioAddress,
+            fioPublicAddress,
             parsedUri,
             addressEntryMethod,
             alias: zanoAlias,
@@ -827,3 +894,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     includeFontPadding: false
   }
 }))
+
+/**
+ * True when the handle belongs to this account, or this account has sent
+ * funds to it while it resolved to the same public address. Handles that only
+ * arrived through incoming requests or received transactions do not count,
+ * since anyone can put them there.
+ */
+const hasInteractedWithFioAddress = async (
+  account: EdgeAccount,
+  fioAddress: string,
+  publicAddress: string,
+  ownFioAddresses: FioAddress[]
+): Promise<boolean> =>
+  ownFioAddresses.some(own => own.name.toLowerCase() === fioAddress) ||
+  (await hasSentToFioAddress(account, fioAddress, publicAddress))
+
+/**
+ * True when the part of a FIO address before the @ reads like a wallet
+ * address rather than a person's name: letters and digits only, at least as
+ * long as the shortest common address formats.
+ */
+const looksLikeAddress = (namePart: string): boolean =>
+  /^[a-zA-Z0-9]{25,}$/.test(namePart)
