@@ -9,9 +9,12 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated'
 
+import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
+import { useSelector } from '../../types/reactRedux'
 import { triggerHaptic } from '../../util/haptic'
+import { EdgeButton } from '../buttons/EdgeButton'
 import { ChevronLeftIcon } from '../icons/ThemedIcons'
 import { showError } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
@@ -54,6 +57,9 @@ export const SafeSlider: React.FC<Props> = props => {
   const styles = getStyles(theme)
   const { confirmationSliderThumbWidth } = theme
   const [completed, setCompleted] = React.useState(false)
+  const developerModeOn = useSelector(
+    state => state.ui.settings.developerModeOn
+  )
 
   const { width = theme.confirmationSliderWidth } = props
   const upperBound = width - theme.confirmationSliderThumbWidth
@@ -125,6 +131,43 @@ export const SafeSlider: React.FC<Props> = props => {
       width: translateX.value + confirmationSliderThumbWidth
     }
   })
+
+  const handleButtonPress = useHandler(() => {
+    if (sliderDisabled) return
+    handleComplete()
+  })
+
+  // Developer option for automation tools that cannot perform a swipe
+  // gesture (such as BrowserStack): render a plain button with the same
+  // completion, reset and lock semantics as the slider. The device setting
+  // only applies while the current account has developer mode on.
+  if (developerModeOn && getDeviceSettings().slidersAsButtons) {
+    // Callers that keep the swipe instruction on a disabled slider get the
+    // button's own label instead:
+    const buttonDisabledText =
+      disabledText === lstrings.send_confirmation_slide_to_confirm
+        ? lstrings.send_confirmation_button_confirm
+        : disabledText ?? lstrings.select_exchange_amount_short
+    const buttonText = locked
+      ? lockedText
+      : disabled
+      ? buttonDisabledText
+      : lstrings.send_confirmation_button_confirm
+    return (
+      <View style={[parentStyle, styles.sliderContainer]}>
+        <View style={widthStyle}>
+          <EdgeButton
+            disabled={disabled || locked}
+            label={buttonText}
+            layout="column"
+            spinner={completed && !locked}
+            testID={testID}
+            onPress={handleButtonPress}
+          />
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
