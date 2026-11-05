@@ -421,7 +421,7 @@ export default [
       'src/hooks/useBackButtonToast.tsx',
       'src/hooks/useCryptoText.ts',
       'src/hooks/useExperimentConfig.ts',
-      'src/hooks/useFilter.ts',
+
       'src/hooks/useHistoricalRate.ts',
       'src/hooks/useIconColor.ts',
       'src/hooks/useIsAccountFunded.ts',
