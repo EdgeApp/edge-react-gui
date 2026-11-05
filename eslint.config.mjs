@@ -132,7 +132,6 @@ export default [
       'scripts/patchFiles.ts',
       'scripts/secretFiles.ts',
 
-      'scripts/updateVersion.ts',
       'src/actions/BackupModalActions.tsx',
 
       'src/actions/CreateWalletActions.tsx',
@@ -499,6 +498,9 @@ export default [
   {
     ignores: [
       '**/scratch.*',
+      // Typed by @mason/types, which is not on npm. A pattern rather than
+      // the file's name, which updateEslintWarnings.ts would remove:
+      'Masonfile.*',
       'android/*',
       'artifacts/*',
       'ios/*',
