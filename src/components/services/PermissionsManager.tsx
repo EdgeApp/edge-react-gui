@@ -45,14 +45,21 @@ export const PermissionsManager: React.FC = () => {
 }
 
 /**
+ * iOS 18 reports access to only the contacts the user picked as `limited`,
+ * which counts as access.
+ */
+export const hasContactsAccess = (status: PermissionStatus): boolean =>
+  status === 'granted' || status === 'limited'
+
+/**
  * If toggled on, will request permissions if system-level contacts permissions
  * are not granted. If toggled off, will open system settings.
  */
 export async function requestContactsPermission(
   contactsPermissionOn: boolean
 ): Promise<boolean> {
-  const currentContactsPermissionOn =
-    (await check(permissionNames.contacts)) === 'granted'
+  const priorStatus = await check(permissionNames.contacts)
+  const currentContactsPermissionOn = hasContactsAccess(priorStatus)
 
   if (contactsPermissionOn && !currentContactsPermissionOn) {
     // Initial prompt to inform the reason of the permissions request.
@@ -68,8 +75,13 @@ export async function requestContactsPermission(
       buttonNegative: lstrings.string_deny
     })
       .then(async (permissionStatus: PermissionStatus) => {
-        // Can't request permission from within the app if previously blocked
-        if (permissionStatus === 'blocked') await openSettings()
+        // Can't request permission from within the app if previously blocked,
+        // so send the user to the system settings. A 'blocked' result from a
+        // prompt the user just declined is their answer, not a reason to
+        // leave the app.
+        if (permissionStatus === 'blocked' && priorStatus === 'blocked') {
+          await openSettings()
+        }
       })
       // Handle any other potential failure in enabling the permission
       // progmatically from within Edge by redirecting to the system settings
@@ -83,7 +95,7 @@ export async function requestContactsPermission(
   }
 
   // Return the current permission state
-  return (await check(permissionNames.contacts)) === 'granted'
+  return hasContactsAccess(await check(permissionNames.contacts))
 }
 
 /**

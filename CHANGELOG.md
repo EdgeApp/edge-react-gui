@@ -28,6 +28,7 @@
 - fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
 - fixed: Contacts access hanging on iOS 18 after sharing only selected contacts
+- fixed: System settings opening right after declining the contacts prompt
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
