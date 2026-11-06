@@ -2006,6 +2006,15 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again:
     'Failed to send funds for sell transaction. Please try again.',
+  moneygram_send_title: 'Send to MoneyGram',
+  moneygram_send_message_2s:
+    'Your MoneyGram cash out is waiting for %1$s, paid to the MoneyGram account %2$s. Send it now to finish the transfer.',
+  moneygram_send_later:
+    'Your MoneyGram transfer is saved. Edge will ask you to send it the next time you log in.',
+  moneygram_deposit_complete: 'MoneyGram deposit complete',
+  moneygram_withdraw_complete: 'MoneyGram cash out complete',
+  moneygram_transfer_failed_2s:
+    'MoneyGram transfer ended with status %1$s. %2$s',
   fiat_plugin_cannot_continue_camera_permission:
     'Cannot continue. Camera permission needed for ID verifications',
   fiat_plugin_purchase_limit_error_2s:

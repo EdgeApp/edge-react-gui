@@ -1,13 +1,32 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
-import type { AnchorEndpoints } from '../../../plugins/ramps/moneygram/moneygramTypes'
+import { FiatProviderError } from '../../../plugins/gui/fiatProviderTypes'
+import {
+  checkLimits,
+  moneygramRampPlugin,
+  pickAmount
+} from '../../../plugins/ramps/moneygram/moneygramRampPlugin'
+import { loadOpenTransfers } from '../../../plugins/ramps/moneygram/moneygramStore'
+import { toEdgeMemo } from '../../../plugins/ramps/moneygram/moneygramTransfer'
+import type {
+  AnchorEndpoints,
+  MoneygramTransfer
+} from '../../../plugins/ramps/moneygram/moneygramTypes'
 import {
   asAnchorToml,
   parseStellarToml
 } from '../../../plugins/ramps/moneygram/sep1'
 import { fetchWithSep10 } from '../../../plugins/ramps/moneygram/sep10'
 import { isTerminalStatus } from '../../../plugins/ramps/moneygram/sep24Api'
+import type { RampPluginConfig } from '../../../plugins/ramps/rampPluginTypes'
+import type { RampPluginStore } from '../../../plugins/ramps/utils/createStore'
+
+jest.mock('../../../components/services/AirshipInstance', () => ({
+  ...jest.requireActual<object>('../../../components/services/AirshipInstance'),
+  showError: jest.fn(),
+  showToast: jest.fn()
+}))
 
 const TESTNET = 'Test SDF Network ; September 2015'
 const ANCHOR: AnchorEndpoints = {
@@ -71,6 +90,20 @@ const makeWallet = (
   } as unknown as EdgeCurrencyWallet
   return { wallet, signSep10Challenge }
 }
+
+const makeTransfer = (id: string, status: string): MoneygramTransfer => ({
+  id,
+  direction: 'sell',
+  walletId: 'wallet-id',
+  tokenId: null,
+  assetCode: 'native',
+  fiatCurrencyCode: 'USD',
+  status,
+  createdAt: '2026-11-06T00:00:00.000Z',
+  sendTxid: undefined,
+  taggedTxid: undefined,
+  anchor: ANCHOR
+})
 
 describe('SEP-1 stellar.toml', () => {
   it('reads top-level keys and stops at the first table', () => {
@@ -246,5 +279,182 @@ describe('SEP-24 statuses', () => {
     ]) {
       expect(isTerminalStatus(status)).toBe(false)
     }
+  })
+})
+
+describe('MoneyGram withdraw memos', () => {
+  it('converts withdraw memos for the Stellar engine', () => {
+    expect(toEdgeMemo('12345', 'id')).toEqual({
+      type: 'number',
+      memoName: 'memo_id',
+      value: '12345'
+    })
+    expect(toEdgeMemo('cash out', 'text')).toEqual({
+      type: 'text',
+      memoName: 'memo_text',
+      value: 'cash out'
+    })
+    expect(toEdgeMemo('cash out', undefined).type).toBe('text')
+    // SEP-24 sends hash memos as base64:
+    expect(toEdgeMemo('3q2+7w==', 'hash')).toEqual({
+      type: 'hex',
+      memoName: 'memo_hash',
+      value: 'deadbeef'
+    })
+  })
+})
+
+describe('MoneyGram amounts and limits', () => {
+  const limits = { enabled: true, min_amount: 1, max_amount: 10 }
+
+  it('picks the amount to send the anchor', () => {
+    expect(pickAmount({ exchangeAmount: '2.5' }, limits)).toBe('2.5')
+    expect(pickAmount({ maxExchangeAmount: '4' }, limits)).toBe('4')
+    expect(pickAmount({ maxExchangeAmount: '25' }, limits)).toBe('10')
+    expect(pickAmount({ max: true }, limits)).toBe('10')
+    expect(
+      pickAmount(
+        { max: true },
+        { enabled: true, min_amount: undefined, max_amount: 1e-7 }
+      )
+    ).toBe('0.0000001')
+    expect(() =>
+      pickAmount(
+        { max: true },
+        { enabled: true, min_amount: undefined, max_amount: undefined }
+      )
+    ).toThrow('MoneyGram has no maximum amount for this asset')
+  })
+
+  it('throws the quote limit errors from /info', () => {
+    const quoteError = (amount: string): unknown => {
+      try {
+        checkLimits(amount, limits, 'XLM')
+      } catch (error: unknown) {
+        return error instanceof FiatProviderError ? error.quoteError : error
+      }
+    }
+    expect(quoteError('0.5')).toEqual({
+      providerId: 'moneygram',
+      errorType: 'underLimit',
+      errorAmount: 1,
+      displayCurrencyCode: 'XLM'
+    })
+    expect(quoteError('10.0000001')).toEqual({
+      providerId: 'moneygram',
+      errorType: 'overLimit',
+      errorAmount: 10,
+      displayCurrencyCode: 'XLM'
+    })
+    expect(quoteError('1')).toBeUndefined()
+    expect(quoteError('10')).toBeUndefined()
+  })
+})
+
+describe('MoneyGram transfer store', () => {
+  it('loads unfinished transfers and untagged deposits', async () => {
+    const items: Record<string, string> = {
+      waiting: JSON.stringify(
+        makeTransfer('waiting', 'pending_user_transfer_start')
+      ),
+      done: JSON.stringify(makeTransfer('done', 'completed')),
+      refunded: JSON.stringify(makeTransfer('refunded', 'refunded')),
+      untagged: JSON.stringify({
+        ...makeTransfer('untagged', 'completed'),
+        direction: 'buy'
+      }),
+      tagged: JSON.stringify({
+        ...makeTransfer('tagged', 'completed'),
+        direction: 'buy',
+        taggedTxid: 'txid'
+      }),
+      garbled: '{not json',
+      wrongShape: JSON.stringify({ id: 'wrongShape' })
+    }
+    const store: RampPluginStore = {
+      deleteItem: async () => {},
+      listItemIds: async () => Object.keys(items),
+      getItem: async (id: string) => items[id],
+      setItem: async () => {}
+    }
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const transfers = await loadOpenTransfers(store)
+    expect(transfers.map(transfer => transfer.id)).toEqual([
+      'waiting',
+      'untagged'
+    ])
+    expect(warn).toHaveBeenCalledTimes(2)
+    warn.mockRestore()
+  })
+})
+
+describe('moneygramRampPlugin checkSupport', () => {
+  const makePlugin = (
+    withdrawEnabled: boolean
+  ): ReturnType<typeof moneygramRampPlugin> => {
+    global.fetch = jest.fn(async (url: string) => {
+      if (url === 'https://testanchor.stellar.org/.well-known/stellar.toml') {
+        return response({ text: STELLAR_TOML })
+      }
+      if (url === `${ANCHOR.transferServerSep24}/info`) {
+        return response({
+          json: {
+            deposit: {
+              native: { enabled: true, min_amount: 1, max_amount: 10 }
+            },
+            withdraw: { native: { enabled: withdrawEnabled } }
+          }
+        })
+      }
+      return response({ status: 404, json: {} })
+    }) as unknown as typeof fetch
+
+    return moneygramRampPlugin({
+      initOptions: {},
+      store: {} as unknown as RampPluginStore,
+      account: {},
+      navigation: {},
+      onLogEvent: () => {},
+      disklet: {}
+    } as unknown as RampPluginConfig)
+  }
+
+  const request = (
+    pluginId: string,
+    tokenId: string | null,
+    direction: 'buy' | 'sell'
+  ): Parameters<ReturnType<typeof moneygramRampPlugin>['checkSupport']>[0] => ({
+    direction,
+    regionCode: { countryCode: 'US' },
+    fiatAsset: { currencyCode: 'USD' },
+    cryptoAsset: { pluginId, tokenId }
+  })
+
+  it('supports native XLM on the network the anchor runs on', async () => {
+    const plugin = makePlugin(true)
+    expect(
+      await plugin.checkSupport(request('stellartestnet', null, 'buy'))
+    ).toEqual({ supported: true, supportedAmountTypes: ['crypto'] })
+    expect(
+      await plugin.checkSupport(request('stellartestnet', null, 'sell'))
+    ).toEqual({ supported: true, supportedAmountTypes: ['crypto'] })
+  })
+
+  it('rejects other networks, tokens, and disabled directions', async () => {
+    const plugin = makePlugin(false)
+    // The test anchor runs on testnet, so mainnet XLM is unsupported:
+    expect(await plugin.checkSupport(request('stellar', null, 'buy'))).toEqual({
+      supported: false
+    })
+    expect(
+      await plugin.checkSupport(request('stellartestnet', 'USDC-GA5Z', 'buy'))
+    ).toEqual({ supported: false })
+    expect(await plugin.checkSupport(request('ethereum', null, 'buy'))).toEqual(
+      { supported: false }
+    )
+    expect(
+      await plugin.checkSupport(request('stellartestnet', null, 'sell'))
+    ).toEqual({ supported: false })
   })
 })
