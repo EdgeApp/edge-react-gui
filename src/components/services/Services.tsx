@@ -49,6 +49,7 @@ import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
 
 interface Props {
+  // TODO: Remove NavigationBase dependency. Requires broader v7 navigation migration for service-level navigation.
   navigation: NavigationBase
 }
 
