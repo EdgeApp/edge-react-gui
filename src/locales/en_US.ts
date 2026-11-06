@@ -2006,6 +2006,9 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again:
     'Failed to send funds for sell transaction. Please try again.',
+  moneygram_activate_message_2s:
+    'MoneyGram pays out %1$s, which this wallet has not activated yet. Activating it costs %2$s in network fees.',
+  moneygram_activate_button: 'Activate',
   moneygram_send_title: 'Send to MoneyGram',
   moneygram_send_message_2s:
     'Your MoneyGram cash out is waiting for %1$s, paid to the MoneyGram account %2$s. Send it now to finish the transfer.',

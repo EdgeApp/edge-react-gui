@@ -15,8 +15,16 @@ export const asInitOptions = asObject({
   homeDomain: asOptional(asString, 'testanchor.stellar.org')
 })
 
+/** One asset from the anchor's stellar.toml [[CURRENCIES]] list. */
+export interface AnchorCurrency {
+  code: string
+  /** Missing for the chain's own asset. */
+  issuer?: string
+}
+
 /** The SEP-1 stellar.toml fields this client needs. */
 export interface AnchorToml {
+  currencies: AnchorCurrency[]
   networkPassphrase: string
   signingKey: string
   transferServerSep24: string

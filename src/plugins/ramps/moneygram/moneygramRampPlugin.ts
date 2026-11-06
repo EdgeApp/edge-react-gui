@@ -1,4 +1,6 @@
 import { gt, lt } from 'biggystring'
+import { asMaybe, asObject, asString } from 'cleaners'
+import type { EdgeTokenId, EdgeTokenMap } from 'edge-core-js'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import { EDGE_CONTENT_SERVER_URI } from '../../../constants/CdnConstants'
@@ -26,7 +28,9 @@ import {
   type TransferContext,
   watchTransfer
 } from './moneygramTransfer'
+import { activateTokenForDeposit } from './moneygramTrustline'
 import {
+  type AnchorCurrency,
   type AnchorEndpoints,
   type AnchorToml,
   asInitOptions,
@@ -53,6 +57,12 @@ export const NETWORK_PASSPHRASES: Record<string, string> = {
 
 // SEP-24 names the chain's own asset "native":
 const NATIVE_ASSET_CODE = 'native'
+
+// Where a Stellar token lives, as the wallet's token list describes it:
+const asStellarTokenLocation = asObject({
+  code: asString,
+  issuer: asString
+})
 
 const SETTLEMENT_RANGE: SettlementRange = {
   min: { value: 10, unit: 'minutes' },
@@ -102,27 +112,32 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
     return await infoPromise
   }
 
-  /** The anchor's limits for this asset, if the wallet and anchor match. */
-  const getAssetInfo = async (
+  /**
+   * The anchor's asset and limits for this wallet asset, if the wallet and
+   * anchor share the network and the anchor handles the asset.
+   */
+  const getAnchorAsset = async (
     pluginId: string,
-    tokenId: string | null,
+    tokenId: EdgeTokenId,
     direction: 'buy' | 'sell'
-  ): Promise<Sep24AssetInfo | undefined> => {
-    // Issued assets wait on Stellar token support in the wallet:
-    if (tokenId != null) return
+  ): Promise<
+    { asset: AnchorCurrency; assetInfo: Sep24AssetInfo } | undefined
+  > => {
     const passphrase = NETWORK_PASSPHRASES[pluginId]
     if (passphrase == null) return
 
     const toml = await getToml()
     if (toml.networkPassphrase !== passphrase) return
 
+    const allTokens = account.currencyConfig[pluginId]?.allTokens ?? {}
+    const asset = findAnchorAsset(toml.currencies, allTokens, tokenId)
+    if (asset == null) return
+
     const info = await getInfo()
     const assetInfo =
-      direction === 'buy'
-        ? info.deposit[NATIVE_ASSET_CODE]
-        : info.withdraw[NATIVE_ASSET_CODE]
+      direction === 'buy' ? info.deposit[asset.code] : info.withdraw[asset.code]
     if (!assetInfo?.enabled) return
-    return assetInfo
+    return { asset, assetInfo }
   }
 
   const checkSupport = async (
@@ -130,12 +145,12 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
   ): Promise<RampSupportResult> => {
     const { cryptoAsset, direction } = request
     try {
-      const assetInfo = await getAssetInfo(
+      const asset = await getAnchorAsset(
         cryptoAsset.pluginId,
         cryptoAsset.tokenId,
         direction
       )
-      if (assetInfo == null) return { supported: false }
+      if (asset == null) return { supported: false }
       // The anchor prices the transfer on its own page, so the amount is
       // always entered in crypto:
       return { supported: true, supportedAmountTypes: ['crypto'] }
@@ -159,12 +174,14 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
     } = request
     if (amountType !== 'crypto') return []
 
-    const assetInfo = await getAssetInfo(
+    const anchorAsset = await getAnchorAsset(
       wallet.currencyInfo.pluginId,
       tokenId,
       direction
     )
-    if (assetInfo == null) return []
+    if (anchorAsset == null) return []
+    const { asset, assetInfo } = anchorAsset
+    const { code: assetCode, issuer: assetIssuer } = asset
 
     const cryptoAmount = pickAmount(amountQuery, assetInfo)
     checkLimits(cryptoAmount, assetInfo, displayCurrencyCode)
@@ -174,11 +191,23 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
       params: RampApproveQuoteParams
     ): Promise<void> => {
       const { coreWallet } = params
+      // A deposit of a token needs the wallet's trustline before the
+      // anchor can pay it:
+      if (direction === 'buy' && tokenId != null) {
+        const activated = await activateTokenForDeposit(
+          account,
+          coreWallet,
+          tokenId
+        )
+        if (!activated) return
+      }
+
       const anchor = await getAnchor()
       const api = makeSep24Api(coreWallet, anchor)
       const { id, url } = await api.startInteractive({
         kind: direction === 'buy' ? 'deposit' : 'withdraw',
-        assetCode: NATIVE_ASSET_CODE,
+        assetCode,
+        assetIssuer,
         account: await getStellarAccount(coreWallet),
         amount: cryptoAmount
       })
@@ -188,7 +217,7 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
         direction,
         walletId: coreWallet.id,
         tokenId,
-        assetCode: NATIVE_ASSET_CODE,
+        assetCode,
         fiatCurrencyCode,
         status: 'incomplete',
         createdAt: new Date().toISOString(),
@@ -252,6 +281,29 @@ export const moneygramRampPlugin: RampPluginFactory = config => {
     fetchQuotes
   }
   return plugin
+}
+
+/**
+ * The anchor's SEP-24 asset for a wallet asset. A token only matches when
+ * the anchor's stellar.toml lists the same code from the same issuer, and
+ * the issuer goes to the anchor with the code, so a look-alike asset from
+ * another issuer never reaches the anchor.
+ */
+export function findAnchorAsset(
+  currencies: AnchorCurrency[],
+  allTokens: EdgeTokenMap,
+  tokenId: EdgeTokenId
+): AnchorCurrency | undefined {
+  if (tokenId == null) return { code: NATIVE_ASSET_CODE }
+  const location = asMaybe(asStellarTokenLocation)(
+    allTokens[tokenId]?.networkLocation
+  )
+  if (location == null) return
+  const listed = currencies.some(
+    currency =>
+      currency.code === location.code && currency.issuer === location.issuer
+  )
+  return listed ? location : undefined
 }
 
 /** Stellar amounts have 7 decimal places; avoids exponent notation. */
