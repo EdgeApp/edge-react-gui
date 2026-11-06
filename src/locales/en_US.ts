@@ -820,6 +820,7 @@ const strings = {
   string_first_ravencoin_wallet_name: 'My Ravencoin',
   string_first_zcoin_wallet_name: 'My Firo',
   string_first_stellar_wallet_name: 'My Stellar',
+  string_first_stellar_testnet_wallet_name: 'My Stellar Testnet',
   string_first_tezos_wallet_name: 'My Tezos',
   string_first_axelar_wallet_name: 'My Axelar',
   string_first_coreum_wallet_name: 'My TX',
