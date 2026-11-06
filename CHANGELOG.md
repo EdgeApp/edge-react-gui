@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Android release builds now run R8, which shrinks the Java and Kotlin bytecode from 35 MB to 9 MB of DEX and obfuscates it. Google Play requires at least 25% shrinking, optimization and obfuscation from February 2027 for apps with more than 10 MB of DEX.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)

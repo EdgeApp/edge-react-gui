@@ -62,9 +62,11 @@ react {
 }
 
 /**
- * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ * Run R8 on release builds to shrink, optimize and obfuscate the Java
+ * bytecode. Google Play requires at least 25% of each from February 2027
+ * for apps shipping more than 10 MB of DEX; Edge ships about 35 MB.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -193,7 +195,7 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
@@ -407,6 +409,13 @@ if (!sentrySlug.contains('SENTRY_ORGANIZATION')) {
       // This is auto disabled if running against a self hosted instance of Sentry.
       // Default is enabled.
       telemetry = true
+  }
+} else {
+  // Local builds keep the placeholder slug. Still stamp the R8 mapping UUID,
+  // but skip the upload: it needs the Sentry URL and auth token that only the
+  // deploy script patches in, and without them it fails the release build.
+  sentry {
+    autoUploadProguardMapping = false
   }
 }
 
