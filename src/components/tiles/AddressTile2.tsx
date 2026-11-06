@@ -39,7 +39,7 @@ import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { AddressModal } from '../modals/AddressModal'
+import { AddressModal, type AddressModalResult } from '../modals/AddressModal'
 import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import {
@@ -649,7 +649,7 @@ export const AddressTile2 = React.forwardRef(
             )
           : lstrings.scan_address_modal_title
 
-      Airship.show<string | undefined>(bridge => (
+      Airship.show<AddressModalResult | undefined>(bridge => (
         <AddressModal
           bridge={bridge}
           walletId={coreWallet.id}
@@ -658,8 +658,8 @@ export const AddressTile2 = React.forwardRef(
         />
       ))
         .then(async result => {
-          if (result != null && result !== '') {
-            await changeAddress(result, 'other')
+          if (result != null && result.address !== '') {
+            await changeAddress(result.address, 'other')
           }
         })
         .catch((error: unknown) => {

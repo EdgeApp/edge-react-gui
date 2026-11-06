@@ -33,7 +33,10 @@ import { EdgeCard } from '../../cards/EdgeCard'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { SceneContainer } from '../../layout/SceneContainer'
-import { AddressModal } from '../../modals/AddressModal'
+import {
+  AddressModal,
+  type AddressModalResult
+} from '../../modals/AddressModal'
 import { ButtonsModal } from '../../modals/ButtonsModal'
 import { TextInputModal } from '../../modals/TextInputModal'
 import { EdgeRow } from '../../rows/EdgeRow'
@@ -302,15 +305,17 @@ export class FioRequestConfirmationConnected extends React.Component<
   openFioAddressFromModal = async (): Promise<void> => {
     const { currencyCode, fioPlugin, wallet } = this.props
     const { walletAddresses } = this.state
-    const fioAddressFrom = await Airship.show<string | undefined>(bridge => (
-      <AddressModal
-        bridge={bridge}
-        walletId={wallet.id}
-        currencyCode={currencyCode}
-        title={lstrings.fio_confirm_request_fio_title}
-        useUserFioAddressesOnly
-      />
-    ))
+    const fioAddressFrom = (
+      await Airship.show<AddressModalResult | undefined>(bridge => (
+        <AddressModal
+          bridge={bridge}
+          walletId={wallet.id}
+          currencyCode={currencyCode}
+          title={lstrings.fio_confirm_request_fio_title}
+          useUserFioAddressesOnly
+        />
+      ))
+    )?.address
     if (fioAddressFrom == null) return
     if (fioPlugin != null) {
       const accountExists =
@@ -349,15 +354,17 @@ export class FioRequestConfirmationConnected extends React.Component<
     const { fioPlugin, wallet, currencyCode } = this.props
 
     this.setState({ settingFioAddressTo: true })
-    const fioAddressTo = await Airship.show<string | undefined>(bridge => (
-      <AddressModal
-        bridge={bridge}
-        walletId={wallet.id}
-        currencyCode={currencyCode}
-        title={lstrings.fio_confirm_request_fio_title}
-        isFioOnly
-      />
-    ))
+    const fioAddressTo = (
+      await Airship.show<AddressModalResult | undefined>(bridge => (
+        <AddressModal
+          bridge={bridge}
+          walletId={wallet.id}
+          currencyCode={currencyCode}
+          title={lstrings.fio_confirm_request_fio_title}
+          isFioOnly
+        />
+      ))
+    )?.address
     if (fioAddressTo == null) {
       this.showError()
       return
