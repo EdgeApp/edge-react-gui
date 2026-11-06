@@ -261,7 +261,11 @@ describe('AddressTile2 FIO address warning', () => {
     expect(onChangeAddress).toHaveBeenCalledTimes(1)
     expect(onChangeAddress.mock.calls[0][0]).toMatchObject({
       fioAddress: HANDLE,
-      fioPublicAddress: RESOLVED_ADDRESS,
+      acceptedName: {
+        service: 'fio',
+        name: HANDLE,
+        publicAddress: RESOLVED_ADDRESS
+      },
       parsedUri: { publicAddress: RESOLVED_ADDRESS }
     })
   })
@@ -335,7 +339,11 @@ describe('AddressTile2 FIO address warning', () => {
     )
     expect(onChangeAddress.mock.calls[0][0]).toMatchObject({
       fioAddress: HANDLE,
-      fioPublicAddress: ENS_ADDRESS,
+      acceptedName: {
+        service: 'fio',
+        name: HANDLE,
+        publicAddress: ENS_ADDRESS
+      },
       parsedUri: { publicAddress: ENS_ADDRESS }
     })
   })

@@ -30,13 +30,11 @@ import {
   isOwnEvmAddress
 } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import {
-  checkPubAddress,
-  hasSentToFioAddress
-} from '../../util/FioAddressUtils'
+import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
 import { type CrossChainPayment, withStatedAsset } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
+import { hasSentToName, type NameSend } from '../../util/sentNames'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeAnim } from '../common/EdgeAnim'
@@ -59,11 +57,11 @@ export type AddressEntryMethod = 'scan' | 'other'
 export interface ChangeAddressResult {
   fioAddress?: string
   /**
-   * The public address `fioAddress` resolved to when the user entered it,
-   * after resolving any ENS name the handle points to. Only set for a handle
-   * resolved here, never for one a request prefilled.
+   * The name the user entered and accepted, with the public address it
+   * resolved to, after resolving any ENS name a FIO handle points to. Only
+   * set for a name resolved here, never for one a request prefilled.
    */
-  fioPublicAddress?: string
+  acceptedName?: NameSend
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
@@ -554,7 +552,14 @@ export const AddressTile2 = React.forwardRef(
           // set address
           await onChangeAddress({
             fioAddress,
-            fioPublicAddress,
+            acceptedName:
+              fioAddress != null && fioPublicAddress != null
+                ? {
+                    service: 'fio',
+                    name: fioAddress,
+                    publicAddress: fioPublicAddress
+                  }
+                : undefined,
             parsedUri,
             addressEntryMethod,
             alias: zanoAlias,
@@ -908,7 +913,11 @@ const hasInteractedWithFioAddress = async (
   ownFioAddresses: FioAddress[]
 ): Promise<boolean> =>
   ownFioAddresses.some(own => own.name.toLowerCase() === fioAddress) ||
-  (await hasSentToFioAddress(account, fioAddress, publicAddress))
+  (await hasSentToName(
+    account,
+    { service: 'fio', name: fioAddress },
+    publicAddress
+  ))
 
 /**
  * True when the part of a FIO address before the @ reads like a wallet
