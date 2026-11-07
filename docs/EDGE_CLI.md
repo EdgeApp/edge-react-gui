@@ -91,7 +91,7 @@ Nodes cannot do, so there an install succeeds and Solana alone fails to load.
 
 `--omit=peer` because `edge-currency-accountbased` declares four React Native
 modules as non-optional peers — `react-native-monero`,
-`react-native-pirate-wallet`, `react-native-zano` and `react-native-zcash` —
+`react-native-pirate-wallet`, `react-native-zano` and `zcash-native` —
 which npm 7+ installs by default and the CLI never loads. Without it a global
 install pulls React Native itself. `npx` resolves the same peers, so it takes
 the flag too — before the package name, where npm reads its own options.
