@@ -1,4 +1,5 @@
 import { describe, expect, it } from '@jest/globals'
+import { createHmac } from 'crypto'
 
 import {
   flagValue,
@@ -7,7 +8,10 @@ import {
   packedFilesFor,
   parsePublishFlags,
   preBuildRefusal,
+  sharesKey,
+  SIGNER_PROBE,
   stagedManifestRefusal,
+  stagedSignerRefusal,
   type TreeState,
   treeStateOf
 } from '../../../scripts/util/publishArgs'
@@ -72,7 +76,6 @@ describe('parsePublishFlags', () => {
       '/tmp/stage',
       '--allow-unsigned',
       '--with-signer',
-      '--signer-secret-is-cli-only',
       '--allow-dirty',
       '--allow-broken-plugins',
       '--no-build',
@@ -84,7 +87,6 @@ describe('parsePublishFlags', () => {
       stageOnly: '/tmp/stage',
       allowUnsigned: true,
       withSigner: true,
-      signerSecretIsCliOnly: true,
       allowDirty: true,
       allowBrokenPlugins: true,
       allowUnpushed: false,
@@ -99,7 +101,6 @@ describe('parsePublishFlags', () => {
       stageOnly: undefined,
       allowUnsigned: false,
       withSigner: false,
-      signerSecretIsCliOnly: false,
       allowDirty: false,
       allowBrokenPlugins: false,
       allowUnpushed: false,
@@ -189,7 +190,8 @@ describe('preBuildRefusal', () => {
   const base = {
     treeState: treeClean,
     headState: pushed,
-    hasKey: true,
+    hasCliKey: true,
+    cliKeyIsAppKey: false,
     knownBrokenPlugins: []
   }
 
@@ -303,33 +305,46 @@ describe('preBuildRefusal', () => {
     ).toBeUndefined()
   })
 
-  it('refuses the addon without the flag that says the secret is the CLI’s own', () => {
-    // The addon's shards reconstruct the same `apiSecret` the mobile
-    // release builds sign with, and the runtime pad is a constant in this
-    // public repository.
+  it('refuses the addon without edgeCliKey.json', () => {
+    // The addon is built from the CLI's own key file alone: its shards
+    // reconstruct the secret it carries, and the runtime pad is a constant
+    // in this public repository.
     const flags = parsePublishFlags(['--with-signer'])
-    const refusal = preBuildRefusal({ ...base, flags })
+    const refusal = preBuildRefusal({ ...base, flags, hasCliKey: false })
     expect(refusal).toContain('Refusing to publish the HMAC addon')
-    expect(refusal).toContain('--signer-secret-is-cli-only')
+    expect(refusal).toContain('edgeCliKey.json')
+    // `--no-build` does not get around it: the staged addon is checked
+    // against that key.
+    expect(
+      preBuildRefusal({
+        ...base,
+        flags: parsePublishFlags(['--with-signer', '--no-build']),
+        hasCliKey: false
+      })
+    ).toContain('Refusing to publish the HMAC addon')
   })
 
-  it('allows the addon once that flag is given', () => {
-    const flags = parsePublishFlags([
-      '--with-signer',
-      '--signer-secret-is-cli-only'
-    ])
+  it('refuses a CLI key that is the app’s', () => {
+    const flags = parsePublishFlags(['--with-signer'])
+    const refusal = preBuildRefusal({ ...base, flags, cliKeyIsAppKey: true })
+    expect(refusal).toContain('edgeKey.json')
+    expect(refusal).toContain('key pair of its own')
+  })
+
+  it('allows the addon built from edgeCliKey.json', () => {
+    const flags = parsePublishFlags(['--with-signer'])
     expect(preBuildRefusal({ ...base, flags })).toBeUndefined()
   })
 
   it('refuses an unsigned build unless it is asked for out loud', () => {
     expect(
-      preBuildRefusal({ ...base, flags: noFlags, hasKey: false })
+      preBuildRefusal({ ...base, flags: noFlags, hasCliKey: false })
     ).toContain('--allow-unsigned')
     expect(
       preBuildRefusal({
         ...base,
         flags: parsePublishFlags(['--allow-unsigned']),
-        hasKey: false
+        hasCliKey: false
       })
     ).toBeUndefined()
     // `--no-build` publishes whatever is already in `lib/`, so the key is
@@ -338,7 +353,7 @@ describe('preBuildRefusal', () => {
       preBuildRefusal({
         ...base,
         flags: parsePublishFlags(['--no-build']),
-        hasKey: false
+        hasCliKey: false
       })
     ).toBeUndefined()
   })
@@ -356,10 +371,7 @@ describe('preBuildRefusal', () => {
  * other one.
  */
 describe('stagedManifestRefusal', () => {
-  const signed = parsePublishFlags([
-    '--with-signer',
-    '--signer-secret-is-cli-only'
-  ])
+  const signed = parsePublishFlags(['--with-signer'])
 
   it('refuses --with-signer when the allowlist would drop the addon', () => {
     // The last check before the stage is final, and the way this failed was
@@ -535,5 +547,73 @@ describe('headStateOf', () => {
         { status: null }
       ).kind
     ).toBe('unknown')
+  })
+})
+
+describe('sharesKey', () => {
+  const app = { apiKey: 'app-key', apiSecret: '0xA1B2C3' }
+
+  it('is true for the same apiKey or the same apiSecret', () => {
+    expect(sharesKey({ apiKey: 'app-key', apiSecret: 'ffff' }, app)).toBe(true)
+    // However the hex is spelled.
+    expect(sharesKey({ apiKey: 'cli-key', apiSecret: 'a1b2c3' }, app)).toBe(
+      true
+    )
+  })
+
+  it('is false for a pair of the CLI’s own', () => {
+    expect(sharesKey({ apiKey: 'cli-key', apiSecret: 'ffff' }, app)).toBe(false)
+  })
+})
+
+/**
+ * The last check of a signed publish: the staged addon has to sign with
+ * `edgeCliKey.json`'s key, whatever built it.
+ */
+describe('stagedSignerRefusal', () => {
+  const cliKey = { apiKey: 'cli-key', apiSecret: 'c0ffee' }
+  const sign = (secretHex: string): string =>
+    createHmac('sha256', Buffer.from(secretHex, 'hex'))
+      .update(SIGNER_PROBE, 'utf8')
+      .digest('base64')
+  const signerFile = 'edge_api_signer.node'
+
+  it('passes an addon that signs with the CLI key', () => {
+    expect(
+      stagedSignerRefusal({
+        cliKey,
+        staged: { apiKey: 'cli-key', signature: sign('c0ffee') },
+        signerFile
+      })
+    ).toBeUndefined()
+  })
+
+  it('refuses an addon that carries another secret', () => {
+    // `--no-build` stages whatever `lib/` holds: an addon built from the
+    // app's key presents the app's apiKey and signs with the app's secret.
+    expect(
+      stagedSignerRefusal({
+        cliKey,
+        staged: { apiKey: 'app-key', signature: sign('a1b2c3') },
+        signerFile
+      })
+    ).toContain('does not sign with edgeCliKey.json')
+    expect(
+      stagedSignerRefusal({
+        cliKey,
+        staged: { apiKey: 'cli-key', signature: sign('a1b2c3') },
+        signerFile
+      })
+    ).toContain('does not sign with edgeCliKey.json')
+  })
+
+  it('refuses an addon that could not sign', () => {
+    expect(
+      stagedSignerRefusal({
+        cliKey,
+        staged: { error: 'dlopen failed' },
+        signerFile
+      })
+    ).toContain('could not sign: dlopen failed')
   })
 })

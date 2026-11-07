@@ -16,11 +16,12 @@
  *   npm run publish:cli                      # publish
  *   npm run publish:cli -- --tag next        # publish under a dist-tag
  *
- * A build server needs `edgeKey.json` and nothing else: with it,
- * `build:cli:all` generates the XOR-split secret shards, compiles the Node
- * HMAC addon and rolls up both bundles. Without it the addon cannot be built
- * at all, so publishing then needs `--allow-unsigned` said out loud rather
- * than quietly shipping a CLI that cannot sign.
+ * A signed build needs `edgeCliKey.json`, the CLI's own key pair, and nothing
+ * else: with it, `build:cli:all` generates the XOR-split secret shards,
+ * compiles the Node HMAC addon and rolls up both bundles. The app's
+ * `edgeKey.json` is never read for the addon. Without the CLI key the addon
+ * cannot be built at all, so publishing then needs `--allow-unsigned` said out
+ * loud rather than quietly shipping a CLI that cannot sign.
  */
 import { spawnSync } from 'child_process'
 import fs from 'fs'
@@ -33,13 +34,17 @@ import {
   CLI_SIGNER_FILE
 } from '../src/cli/npmMeta'
 import {
+  type ApiKeyPair,
   type HeadState,
   headStateOf,
   isSignedPublish,
   packedFilesFor,
   parsePublishFlags,
   preBuildRefusal,
+  sharesKey,
+  SIGNER_PROBE,
   stagedManifestRefusal,
+  stagedSignerRefusal,
   type TreeState,
   treeStateOf
 } from './util/publishArgs'
@@ -65,10 +70,9 @@ const argv = process.argv.slice(2)
  * test: this script does its work at module scope, so the only thing a test
  * could reach before was its source text, and a regex over source passes
  * for a reformat that breaks the logic. `--with-signer` is off by default
- * and refused without `--signer-secret-is-cli-only`, because the addon's
- * shards reconstruct the same `apiSecret` the mobile release builds use and
- * the runtime pad is a constant in this public repository — see the note in
- * `src/cli/npmMeta.ts`.
+ * and needs `edgeCliKey.json`, the CLI's own key pair, because the addon's
+ * shards reconstruct the secret it carries and the runtime pad is a constant
+ * in this public repository — see the note in `src/cli/npmMeta.ts`.
  */
 const flags = parsePublishFlags(argv)
 // Only the ones this shell still reads for itself; the rest are the
@@ -129,8 +133,25 @@ function readHeadState(): HeadState {
 // one artifact nobody can re-derive later is the one in the registry. The
 // three refusals before anything is built live in `publishArgs.ts`, where a
 // test can run them: each one is irreversible once npm has the tarball.
+/** A key file's pair, or `undefined` when the file is absent. */
+function readKeyPair(name: string): ApiKeyPair | undefined {
+  const file = path.join(ROOT, name)
+  if (!fs.existsSync(file)) return undefined
+  const json = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<
+    string,
+    unknown
+  >
+  return {
+    apiKey: typeof json.apiKey === 'string' ? json.apiKey : '',
+    apiSecret: typeof json.apiSecret === 'string' ? json.apiSecret : ''
+  }
+}
+
 const treeState = readTreeState()
-const hasKey = fs.existsSync(path.join(ROOT, 'edgeKey.json'))
+// The addon is built from the CLI's own key pair. The app's key is read only
+// to refuse a CLI key that is a copy of it.
+const cliKey = readKeyPair('edgeCliKey.json')
+const appKey = readKeyPair('edgeKey.json')
 // Only what this phase actually judges: the tree, the key, and the flags.
 // The allowlist check belongs to the manifest and is made below.
 const headState = readHeadState()
@@ -138,17 +159,18 @@ const earlyRefusal = preBuildRefusal({
   flags,
   treeState,
   headState,
-  hasKey,
+  hasCliKey: cliKey != null,
+  cliKeyIsAppKey: cliKey != null && appKey != null && sharesKey(cliKey, appKey),
   knownBrokenPlugins: [...KNOWN_MISSING, ...KNOWN_UNLOADABLE]
 })
 if (earlyRefusal != null) throw new Error(earlyRefusal)
 
 if (!skipBuild) {
-  if (hasKey) {
+  if (cliKey != null) {
     run('npm', ['run', 'build:cli:all'])
   } else {
     console.warn(
-      '! edgeKey.json absent: building without the native signer. The ' +
+      '! edgeCliKey.json absent: building without the native signer. The ' +
         'published CLI makes unsigned info-server requests, cannot read ' +
         'gated plugin keys, and needs an `edgeApiKey` of its own before it ' +
         'will start at all.'
@@ -379,6 +401,29 @@ const stageRefusal = stagedManifestRefusal({
   signerFile: CLI_SIGNER_FILE
 })
 if (stageRefusal != null) throw new Error(stageRefusal)
+
+// And the addon in the stage has to sign with the CLI's key, whatever
+// produced it: `--no-build` stages what `lib/` already holds.
+if (withSigner && cliKey != null) {
+  let staged: { apiKey: string; signature: string } | { error: string }
+  try {
+    // A native addon, loaded from the stage so the check reads the very
+    // file npm will pack.
+
+    const addon = require(path.join(stage, CLI_SIGNER_FILE)) as {
+      signMessage: (message: string) => { apiKey: string; signature: string }
+    }
+    staged = addon.signMessage(SIGNER_PROBE)
+  } catch (error: unknown) {
+    staged = { error: error instanceof Error ? error.message : String(error) }
+  }
+  const signerRefusal = stagedSignerRefusal({
+    cliKey,
+    staged,
+    signerFile: CLI_SIGNER_FILE
+  })
+  if (signerRefusal != null) throw new Error(signerRefusal)
+}
 
 fs.writeFileSync(
   path.join(stage, 'package.json'),
