@@ -16,29 +16,33 @@ appKeys layer matching lives in
 
 `edgeKey.json` is `{ "apiKey": "<presented id>", "apiSecret": "<hex>" }`.
 `scripts/makeApiSigner.ts` runs from Gradle/Xcode generate tasks (and
-`prepare.sh`) when that file exists. It XOR-shards the secret:
+`prepare.sh`) when that file exists. The CLI's Node addon has a key file of
+its own, `edgeCliKey.json`, in the same shape: `makeApiSigner.ts --cli`, which
+`npm run build:cli:native` runs, reads that file and nothing else, and the
+mobile run never writes the Node sources. It XOR-shards the secret:
 
 1. Five random pads plus a stored remainder (`SHARD_COUNT = 6`).
 2. A runtime pad of `sha256(bundleId)`. The mobile pair share one id (Android
    `applicationId` and iOS `PRODUCT_BUNDLE_IDENTIFIER` must match); the Node
    build has its own, `NODE_API_SIGNER_BUNDLE_ID` from
-   `src/cli/engine/nodeApiSigner.ts`. One build's *shards* are therefore
-   useless to the other binary — but the **secret they reconstruct is the
-   same**, and `NODE_API_SIGNER_BUNDLE_ID` is a constant in this public
-   repository. So anyone holding the Node addon can recover the `apiSecret`
-   every mobile release build signs with. That is why
-   `scripts/publishCli.ts` does not put the addon in the published package,
-   and why `--with-signer` refuses without
-   `--signer-secret-is-cli-only`: publishing it is only safe once the CLI has
-   an `apiKey`/`apiSecret` pair of its own. Both ids are hashed into the
-   stamp that decides whether a regeneration is needed.
+   `src/cli/engine/nodeApiSigner.ts`. `NODE_API_SIGNER_BUNDLE_ID` is a
+   constant in this public repository, so anyone holding the Node addon can
+   recover the `apiSecret` it was built from. That is why the addon takes the
+   CLI's own `edgeCliKey.json` and never the app's `edgeKey.json`, why
+   `scripts/publishCli.ts` leaves it out of the published package by default,
+   and why `--with-signer` refuses without `edgeCliKey.json`, refuses a CLI key
+   that shares its apiKey or apiSecret with `edgeKey.json`, and checks that
+   the staged addon signs with the CLI key. Each run hashes its bundle id into
+   the stamp that decides whether a regeneration is needed: `.edgeApiSigner.stamp`
+   for the mobile pair, `.edgeCliApiSigner.stamp` for the Node one.
 3. The C sources reconstruct `secret = s0 ⊕ … ⊕ s5 ⊕ runtimePad`.
 
 Generated (gitignored) outputs — three pairs, one per target:
 
 - `ios/EdgeApiSecret.c` + `ios/EdgeApiSecret.h`
 - `android/app/src/main/cpp/edge_api_secret.c` + `edge_api_secret.h`
-- `native/edge-api-signer/node/edge_api_secret.c` + `edge_api_secret.h`
+- `native/edge-api-signer/node/edge_api_secret.c` + `edge_api_secret.h`, from
+  `edgeCliKey.json`
 
 Native modules (`ios/edge/EdgeApiSigner.m`,
 `android/.../EdgeApiSignerModule.kt`,
