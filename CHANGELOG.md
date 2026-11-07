@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Send scene says why a recipient can't receive a token instead of showing a network error
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
