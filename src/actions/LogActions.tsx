@@ -31,7 +31,7 @@ import type { ThunkAction } from '../types/reduxTypes'
 import { getCurrencyCode } from '../util/CurrencyInfoHelpers'
 import { base58 } from '../util/encoding'
 import { clearLogs, logWithType, readLogs } from '../util/logger'
-import { getOsVersion } from '../util/utils'
+import { getOsVersion } from '../util/rnUtils'
 import { getExchangeRateCacheDump } from './ExchangeRateActions'
 
 const logsUri = 'https://logs1.edge.app/v1/log/'

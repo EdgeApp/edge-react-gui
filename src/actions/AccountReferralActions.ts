@@ -1,11 +1,4 @@
-import {
-  asArray,
-  asBoolean,
-  asDate,
-  asObject,
-  asOptional,
-  asString
-} from 'cleaners'
+import { asArray, asObject, asOptional } from 'cleaners'
 import type { EdgeDataStore } from 'edge-core-js'
 import type { EdgeAccount } from 'edge-core-js/types'
 import { Platform } from 'react-native'
@@ -17,19 +10,18 @@ import type {
   Promotion,
   ReferralCache
 } from '../types/ReferralTypes'
+import { asMessageTweak, asPluginTweak } from '../types/TweakTypes'
 import {
-  asCurrencyCode,
-  asMessageTweak,
-  asPluginTweak
-} from '../types/TweakTypes'
+  ACCOUNT_REFERRAL_FILE,
+  asDiskReferralCache,
+  REFERRAL_CACHE_FILE,
+  unpackAccountReferral
+} from '../util/accountReferralFiles'
 import { getActivePromoIds } from '../util/infoUtils'
 import { fetchReferral } from '../util/network'
 import { lockStartDates, type TweakSource } from '../util/ReferralHelpers'
 import { logEvent } from '../util/tracking'
 import { getAppleAdsAttribution, getFirstOpenInfo } from './FirstOpenActions'
-
-const REFERRAL_CACHE_FILE = 'ReferralCache.json'
-const ACCOUNT_REFERRAL_FILE = 'CreationReason.json'
 
 /**
  * Call this at login time to load the account referral information.
@@ -327,60 +319,6 @@ async function saveReferralCache(state: RootState): Promise<void> {
     JSON.stringify(referralCache)
   )
 }
-
-/**
- * Turns on-disk data into a AccountReferral structure.
- */
-function unpackAccountReferral(raw: any): AccountReferral {
-  const clean = asDiskAccountReferral(raw)
-  const out: AccountReferral = {
-    creationDate: clean.creationDate,
-    installerId: clean.installerId,
-    currencyCodes: clean.currencyCodes,
-    promotions: clean.promotions,
-    ignoreAccountSwap: clean.ignoreAccountSwap,
-    hiddenAccountMessages: clean.hiddenAccountMessages,
-    activePromotions: clean.activePromotions,
-    accountAppleAdsAttribution: clean.accountAppleAdsAttribution
-  }
-
-  // Upgrade legacy fields:
-  if (out.currencyCodes == null && clean.currencyCode != null) {
-    out.currencyCodes = [clean.currencyCode]
-  }
-  return out
-}
-
-const asDiskPromotion = asObject({
-  installerId: asString,
-  hiddenMessages: asOptional(asObject(asBoolean), () => ({})),
-  messages: asOptional(asArray(asMessageTweak), () => []),
-  plugins: asOptional(asArray(asPluginTweak), () => [])
-})
-
-const asDiskAccountReferral = asObject({
-  creationDate: asOptional(asDate),
-  installerId: asOptional(asString),
-  currencyCodes: asOptional(asArray(asCurrencyCode)),
-  promotions: asOptional(asArray(asDiskPromotion), []),
-  activePromotions: asOptional(asArray(asString), []),
-  accountAppleAdsAttribution: asOptional(asAppleAdsAttribution),
-
-  // User overrides:
-  ignoreAccountSwap: asOptional(asBoolean, false),
-  hiddenAccountMessages: asOptional(asObject(asBoolean), {}),
-
-  // Legacy:
-  currencyCode: asOptional(asString)
-})
-
-/**
- * The referral cache, as stored on disk.
- */
-const asDiskReferralCache = asObject({
-  accountMessages: asOptional(asArray(asMessageTweak), []),
-  accountPlugins: asOptional(asArray(asPluginTweak), [])
-})
 
 /**
  * Account tweaks & promotions as sent down by the server on refresh.

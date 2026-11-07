@@ -42,12 +42,9 @@ import type {
 import type { GradientColors } from '../../types/Theme'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
-import {
-  calculateSpamThreshold,
-  convertNativeToDenomination,
-  darkenHexColor,
-  getOsVersion
-} from '../../util/utils'
+import { getOsVersion } from '../../util/rnUtils'
+import { calculateSpamThreshold } from '../../util/spamThreshold'
+import { convertNativeToDenomination, darkenHexColor } from '../../util/utils'
 import { EdgeCard } from '../cards/EdgeCard'
 import { InfoCardCarousel } from '../cards/InfoCardCarousel'
 import { SwipeChart } from '../charts/SwipeChart'
