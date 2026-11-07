@@ -67,10 +67,14 @@ build — the one a publish uses — run:
 npm run build:cli:all               # native signer, then both bundles
 ```
 
-That needs `edgeKey.json` in the repository root, because
-`scripts/makeApiSigner.ts` XOR-shards the secret out of it into
-`native/edge-api-signer/node/edge_api_secret.c`; without the file there is
-nothing to compile. It runs `build:cli:native` (node-gyp over
+That needs `edgeCliKey.json` in the repository root: a key pair issued for the
+CLI, in the shape of `edgeKey.example.json`. `scripts/makeApiSigner.ts --cli`
+XOR-shards its secret into `native/edge-api-signer/node/edge_api_secret.c`,
+and never reads the app's `edgeKey.json`, which feeds the iOS and Android
+signers only; without the file there is nothing to compile. For local testing
+any pair the tester servers accept will do, including a copy of the app's
+development key: `publish:cli --with-signer` refuses a CLI key that shares its
+apiKey or apiSecret with `edgeKey.json`. It runs `build:cli:native` (node-gyp over
 `native/edge-api-signer/node/`), then `build:cli`, then
 `build:cli:copy-native`, which puts `edge_api_signer.node` beside the bundles
 where `loadNodeApiSignerNative` looks for it. `npm run test:cli:node-hmac`
@@ -888,7 +892,7 @@ entry points, keeps the bare specifiers the app declares as dependencies,
 skips builtins and type-only imports, and treats the rest as bundled. The
 result is checked against the built bundles' own `require` calls.
 
-A build server needs `edgeKey.json` and nothing else:
+A signed publish needs `edgeCliKey.json` and nothing else:
 
 ```sh
 npm run publish:cli -- --dry-run      # build, stage, pack, publish nothing
@@ -896,9 +900,9 @@ npm run publish:cli -- --out /tmp/pkg # stage for inspection, then stop
 npm run publish:cli                   # publish
 ```
 
-With `edgeKey.json` present the script runs `build:cli:all`, which generates
-the XOR-split secret shards, compiles the Node HMAC addon and copies it beside
-the bundles. Without the key the addon cannot be built, so publishing requires
+With `edgeCliKey.json` present the script runs `build:cli:all`, which
+generates the XOR-split secret shards from it, compiles the Node HMAC addon
+and copies it beside the bundles. Without the key the addon cannot be built, so publishing requires
 `--allow-unsigned` and the staged README says the build cannot sign. A publish
 from a dirty tree is refused, because the registry copy could not then be
 re-derived from any commit, and the README's links into this repository are
@@ -919,28 +923,32 @@ passes `--allow-broken-plugins` to say that shipping without those chains is
 deliberate.
 
 **By default the published package carries no HMAC addon**, and the default
-exists because of what the addon would carry. Its shards reconstruct the same
-`apiSecret` the iOS and Android release builds sign with — only the runtime
-pad differs, and that pad is `NODE_API_SIGNER_BUNDLE_ID`, a constant in this
-public repository — so a tarball built from the *app's* `edgeKey.json` would
-hand that secret to anyone with `npm pack` and `strings`, which is cheaper
-than extracting it from a store binary.
+exists because of what the addon carries. Its shards reconstruct the secret it
+was built from, and the runtime pad is `NODE_API_SIGNER_BUNDLE_ID`, a constant
+in this public repository, so anyone with `npm pack` and `strings` can recover
+it. That is why the addon is built from `edgeCliKey.json` alone and never from
+the app's `edgeKey.json`: a tarball carrying the secret the iOS and Android
+release builds sign with would hand it out more cheaply than a store binary.
 
 ### Publishing with a signer
 
 The intended procedure, and the reason `--with-signer` exists:
 
-1. Put a key pair **issued for the CLI** — not the app's — in `edgeKey.json`.
+1. Put a key pair **issued for the CLI** in `edgeCliKey.json`. `edgeKey.json`
+   stays the app's, and the addon never reads it.
 2. `npm run build:cli:all`, which generates the shards, compiles the addon and
    copies it beside the bundles.
-3. `npm run publish:cli -- --with-signer --signer-secret-is-cli-only`.
+3. `npm run publish:cli -- --with-signer`.
 
-The second flag is not a formality: `--with-signer` alone is refused, because
-the only thing that makes shipping the addon safe is that the secret inside it
-is the CLI's own. With it, the addon is added to the manifest's `files` — npm's
-`files` is an allowlist, so staging the file is not enough — and the publish is
-refused if it did not make the list, since a tarball that silently lacks the
-addon would be published as signed.
+`--with-signer` is refused without `edgeCliKey.json`, and refused when that
+file shares its apiKey or apiSecret with `edgeKey.json`. With it, the addon is
+added to the manifest's `files` — npm's `files` is an allowlist, so staging the
+file is not enough — and the publish is refused if it did not make the list,
+since a tarball that silently lacks the addon would be published as signed.
+Before anything is packed, the staged addon signs a probe, and the publish is
+refused unless the answer matches an HMAC of `edgeCliKey.json`'s key:
+`--no-build` stages whatever `lib/` holds, which can be an addon built from
+some other secret.
 
 The addon rides in the main package, built for the publishing machine's
 platform, and `loadNodeApiSignerNative` answers `null` everywhere else: there
@@ -951,7 +959,7 @@ none. Git history holds the fan-out shape — `NativePackage`, `os`/`cpu`, the
 ### Publishing without one
 
 `--allow-unsigned` publishes with no addon at all, which is what a build with
-no `edgeKey.json` can do. Such a CLI makes unsigned info-server requests,
+no `edgeCliKey.json` can do. Such a CLI makes unsigned info-server requests,
 cannot read gated plugin keys, and **needs an `edgeApiKey` of its own**:
 `./keys.json`, `~/.edge-cli/keys.json`, or `-k`. With neither a signer nor a
 key the engine refuses to start and says so; `--fake` needs nothing. The
