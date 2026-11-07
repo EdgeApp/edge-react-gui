@@ -73,8 +73,10 @@ XOR-shards its secret into `native/edge-api-signer/node/edge_api_secret.c`,
 and never reads the app's `edgeKey.json`, which feeds the iOS and Android
 signers only; without the file there is nothing to compile. For local testing
 any pair the tester servers accept will do, including a copy of the app's
-development key: `publish:cli --with-signer` refuses a CLI key that shares its
-apiKey or apiSecret with `edgeKey.json`. It runs `build:cli:native` (node-gyp over
+development key. A signed publish refuses a CLI key that shares its apiKey or
+apiSecret with `edgeKey.json`, and without that file needs
+`--signer-secret-is-cli-only` to say the CLI key is a pair of its own.
+`build:cli:all` runs `build:cli:native` (node-gyp over
 `native/edge-api-signer/node/`), then `build:cli`, then
 `build:cli:copy-native`, which puts `edge_api_signer.node` beside the bundles
 where `loadNodeApiSignerNative` looks for it. `npm run test:cli:node-hmac`
@@ -892,7 +894,9 @@ entry points, keeps the bare specifiers the app declares as dependencies,
 skips builtins and type-only imports, and treats the rest as bundled. The
 result is checked against the built bundles' own `require` calls.
 
-A signed publish needs `edgeCliKey.json` and nothing else:
+A signed publish needs `edgeCliKey.json`. `--with-signer` still needs
+`edgeKey.json` to compare against, or `--signer-secret-is-cli-only` to say
+the CLI key is not a copy of the app pair:
 
 ```sh
 npm run publish:cli -- --dry-run      # build, stage, pack, publish nothing
@@ -938,10 +942,13 @@ The intended procedure, and the reason `--with-signer` exists:
    stays the app's, and the addon never reads it.
 2. `npm run build:cli:all`, which generates the shards, compiles the addon and
    copies it beside the bundles.
-3. `npm run publish:cli -- --with-signer`.
+3. `npm run publish:cli -- --with-signer`. Without `edgeKey.json` beside
+   `edgeCliKey.json`, add `--signer-secret-is-cli-only`.
 
-`--with-signer` is refused without `edgeCliKey.json`, and refused when that
-file shares its apiKey or apiSecret with `edgeKey.json`. With it, the addon is
+`--with-signer` is refused without `edgeCliKey.json`, refused when that
+file shares its apiKey or apiSecret with `edgeKey.json`, and refused without
+`edgeKey.json` unless `--signer-secret-is-cli-only` says the CLI key is a
+pair of its own. With it, the addon is
 added to the manifest's `files` — npm's `files` is an allowlist, so staging the
 file is not enough — and the publish is refused if it did not make the list,
 since a tarball that silently lacks the addon would be published as signed.

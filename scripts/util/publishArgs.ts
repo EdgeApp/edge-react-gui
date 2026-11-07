@@ -22,6 +22,7 @@ interface PublishFlags {
   stageOnly: string | undefined
   allowUnsigned: boolean
   withSigner: boolean
+  signerSecretIsCliOnly: boolean
   allowDirty: boolean
   allowBrokenPlugins: boolean
   allowUnpushed: boolean
@@ -60,6 +61,7 @@ export function parsePublishFlags(argv: string[]): PublishFlags {
     stageOnly: flagValue(argv, '--out'),
     allowUnsigned: has('--allow-unsigned'),
     withSigner: has('--with-signer'),
+    signerSecretIsCliOnly: has('--signer-secret-is-cli-only'),
     allowDirty: has('--allow-dirty'),
     allowBrokenPlugins: has('--allow-broken-plugins'),
     allowUnpushed: has('--allow-unpushed'),
@@ -291,6 +293,8 @@ export function preBuildRefusal(opts: {
   headState: HeadState
   /** `edgeCliKey.json`, the CLI's own key pair, is present. */
   hasCliKey: boolean
+  /** The app's `edgeKey.json` is present, so a copy can be detected. */
+  hasAppKey: boolean
   /** That pair shares its apiKey or apiSecret with the app's `edgeKey.json`. */
   cliKeyIsAppKey: boolean
   /** `knownPluginBreakage.js`'s two lists, joined. */
@@ -301,6 +305,7 @@ export function preBuildRefusal(opts: {
     treeState,
     headState,
     hasCliKey,
+    hasAppKey,
     cliKeyIsAppKey,
     knownBrokenPlugins
   } = opts
@@ -391,6 +396,23 @@ export function preBuildRefusal(opts: {
       'Refusing to publish the HMAC addon: edgeCliKey.json holds the apiKey ' +
       'or apiSecret in edgeKey.json, the key the iOS and Android release ' +
       'builds sign with. The CLI needs a key pair of its own.'
+    )
+  }
+
+  // A machine that holds only the CLI key cannot run the copy check, and
+  // that is the documented signed-publish path. A CLI key that is a copy of
+  // the app pair then passes every other gate and ships. The attestation
+  // is what `--signer-secret-is-cli-only` used to cover on every
+  // `--with-signer` run; with `edgeKey.json` present the comparison is
+  // stricter, so the flag is only required when the comparison cannot run.
+  if (flags.withSigner && !hasAppKey && !flags.signerSecretIsCliOnly) {
+    return (
+      'Refusing to publish the HMAC addon: edgeKey.json is absent, so the ' +
+      'CLI key cannot be checked for a copy of the app pair. A copied pair ' +
+      'would pack the mobile apiSecret into a public tarball. Put ' +
+      'edgeKey.json beside edgeCliKey.json so the copy can be detected, or ' +
+      'pass --signer-secret-is-cli-only to say the CLI key is a pair of its ' +
+      'own.'
     )
   }
 

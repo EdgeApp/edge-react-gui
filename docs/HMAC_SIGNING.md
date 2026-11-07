@@ -31,9 +31,11 @@ mobile run never writes the Node sources. It XOR-shards the secret:
    CLI's own `edgeCliKey.json` and never the app's `edgeKey.json`, why
    `scripts/publishCli.ts` leaves it out of the published package by default,
    and why `--with-signer` refuses without `edgeCliKey.json`, refuses a CLI key
-   that shares its apiKey or apiSecret with `edgeKey.json`, and checks that
-   the staged addon signs with the CLI key. Each run hashes its bundle id into
-   the stamp that decides whether a regeneration is needed: `.edgeApiSigner.stamp`
+   that shares its apiKey or apiSecret with `edgeKey.json`, refuses without
+   `edgeKey.json` unless `--signer-secret-is-cli-only` says the CLI key is a
+   pair of its own, and checks that the staged addon signs with the CLI key.
+   Each run hashes its bundle id into the stamp that decides whether a
+   regeneration is needed: `.edgeApiSigner.stamp`
    for the mobile pair, `.edgeCliApiSigner.stamp` for the Node one.
 3. The C sources reconstruct `secret = s0 ⊕ … ⊕ s5 ⊕ runtimePad`.
 

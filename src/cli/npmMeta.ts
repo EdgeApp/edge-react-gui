@@ -59,8 +59,9 @@ interface CliPackageMeta {
 // engine says exactly that when it has neither (`makeCoreContext.ts`), and
 // `--fake` needs nothing at all. `publishCli.ts --with-signer` can still ship
 // the addon, built from `edgeCliKey.json` — a key pair issued for the CLI —
-// and never from the app's `edgeKey.json`. It refuses without that file, or
-// when the file holds the app's key.
+// and never from the app's `edgeKey.json`. It refuses without that file, when
+// the file holds the app's key, or without `edgeKey.json` to compare against
+// unless `--signer-secret-is-cli-only` says the CLI key is a pair of its own.
 
 export const CLI_PACKAGE_META: CliPackageMeta = {
   name: '@edgeapp/cli',

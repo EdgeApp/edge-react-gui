@@ -76,6 +76,7 @@ describe('parsePublishFlags', () => {
       '/tmp/stage',
       '--allow-unsigned',
       '--with-signer',
+      '--signer-secret-is-cli-only',
       '--allow-dirty',
       '--allow-broken-plugins',
       '--no-build',
@@ -87,6 +88,7 @@ describe('parsePublishFlags', () => {
       stageOnly: '/tmp/stage',
       allowUnsigned: true,
       withSigner: true,
+      signerSecretIsCliOnly: true,
       allowDirty: true,
       allowBrokenPlugins: true,
       allowUnpushed: false,
@@ -101,6 +103,7 @@ describe('parsePublishFlags', () => {
       stageOnly: undefined,
       allowUnsigned: false,
       withSigner: false,
+      signerSecretIsCliOnly: false,
       allowDirty: false,
       allowBrokenPlugins: false,
       allowUnpushed: false,
@@ -191,6 +194,7 @@ describe('preBuildRefusal', () => {
     treeState: treeClean,
     headState: pushed,
     hasCliKey: true,
+    hasAppKey: true,
     cliKeyIsAppKey: false,
     knownBrokenPlugins: []
   }
@@ -329,6 +333,39 @@ describe('preBuildRefusal', () => {
     const refusal = preBuildRefusal({ ...base, flags, cliKeyIsAppKey: true })
     expect(refusal).toContain('edgeKey.json')
     expect(refusal).toContain('key pair of its own')
+    // The attestation is not an override: a detected copy still ships the
+    // app secret.
+    expect(
+      preBuildRefusal({
+        ...base,
+        flags: parsePublishFlags([
+          '--with-signer',
+          '--signer-secret-is-cli-only'
+        ]),
+        cliKeyIsAppKey: true
+      })
+    ).toContain('key pair of its own')
+  })
+
+  it('refuses --with-signer without edgeKey.json unless attested', () => {
+    // The copy check cannot run without the app pair, and a signed publish
+    // is documented to need only edgeCliKey.json. A CLI key that is a copy
+    // of the app pair then ships. The flag is the attestation that used to
+    // cover every --with-signer run.
+    const flags = parsePublishFlags(['--with-signer'])
+    const refusal = preBuildRefusal({ ...base, flags, hasAppKey: false })
+    expect(refusal).toContain('edgeKey.json is absent')
+    expect(refusal).toContain('--signer-secret-is-cli-only')
+    expect(
+      preBuildRefusal({
+        ...base,
+        flags: parsePublishFlags([
+          '--with-signer',
+          '--signer-secret-is-cli-only'
+        ]),
+        hasAppKey: false
+      })
+    ).toBeUndefined()
   })
 
   it('allows the addon built from edgeCliKey.json', () => {

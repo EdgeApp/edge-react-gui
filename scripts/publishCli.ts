@@ -16,12 +16,13 @@
  *   npm run publish:cli                      # publish
  *   npm run publish:cli -- --tag next        # publish under a dist-tag
  *
- * A signed build needs `edgeCliKey.json`, the CLI's own key pair, and nothing
- * else: with it, `build:cli:all` generates the XOR-split secret shards,
- * compiles the Node HMAC addon and rolls up both bundles. The app's
- * `edgeKey.json` is never read for the addon. Without the CLI key the addon
- * cannot be built at all, so publishing then needs `--allow-unsigned` said out
- * loud rather than quietly shipping a CLI that cannot sign.
+ * A signed build needs `edgeCliKey.json`, the CLI's own key pair: with it,
+ * `build:cli:all` generates the XOR-split secret shards, compiles the Node
+ * HMAC addon and rolls up both bundles. The app's `edgeKey.json` is never
+ * read for the addon. `--with-signer` still reads it to refuse a copy, and
+ * without it needs `--signer-secret-is-cli-only`. Without the CLI key the
+ * addon cannot be built at all, so publishing then needs `--allow-unsigned`
+ * said out loud rather than quietly shipping a CLI that cannot sign.
  */
 import { spawnSync } from 'child_process'
 import fs from 'fs'
@@ -72,7 +73,9 @@ const argv = process.argv.slice(2)
  * for a reformat that breaks the logic. `--with-signer` is off by default
  * and needs `edgeCliKey.json`, the CLI's own key pair, because the addon's
  * shards reconstruct the secret it carries and the runtime pad is a constant
- * in this public repository — see the note in `src/cli/npmMeta.ts`.
+ * in this public repository — see the note in `src/cli/npmMeta.ts`. A CLI
+ * key that is a copy of the app pair is refused when `edgeKey.json` is
+ * present, and attested with `--signer-secret-is-cli-only` when it is not.
  */
 const flags = parsePublishFlags(argv)
 // Only the ones this shell still reads for itself; the rest are the
@@ -149,7 +152,7 @@ function readKeyPair(name: string): ApiKeyPair | undefined {
 
 const treeState = readTreeState()
 // The addon is built from the CLI's own key pair. The app's key is read only
-// to refuse a CLI key that is a copy of it.
+// to refuse a CLI key that is a copy of it; without it, the flag attests.
 const cliKey = readKeyPair('edgeCliKey.json')
 const appKey = readKeyPair('edgeKey.json')
 // Only what this phase actually judges: the tree, the key, and the flags.
@@ -160,6 +163,7 @@ const earlyRefusal = preBuildRefusal({
   treeState,
   headState,
   hasCliKey: cliKey != null,
+  hasAppKey: appKey != null,
   cliKeyIsAppKey: cliKey != null && appKey != null && sharesKey(cliKey, appKey),
   knownBrokenPlugins: [...KNOWN_MISSING, ...KNOWN_UNLOADABLE]
 })
