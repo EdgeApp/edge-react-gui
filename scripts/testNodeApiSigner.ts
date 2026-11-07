@@ -1,6 +1,7 @@
 /**
  * Verify the Node N-API Edge API HMAC signer against a JS HMAC-SHA256
- * reference using edgeKey.json, and that makeCoreContext prefers apiSigner.
+ * reference using edgeCliKey.json, the key it is built from, and that
+ * makeCoreContext prefers apiSigner.
  */
 import { createHmac } from 'crypto'
 import fs from 'fs'
@@ -30,8 +31,11 @@ async function main(): Promise<void> {
     'Node API signer addon missing — run npm run build:cli:native first'
   )
 
-  const edgeKeyPath = path.join(__dirname, '..', 'edgeKey.json')
-  assert(fs.existsSync(edgeKeyPath), 'edgeKey.json required for HMAC reference')
+  const edgeKeyPath = path.join(__dirname, '..', 'edgeCliKey.json')
+  assert(
+    fs.existsSync(edgeKeyPath),
+    'edgeCliKey.json required for HMAC reference'
+  )
   const edgeKey = JSON.parse(fs.readFileSync(edgeKeyPath, 'utf8')) as {
     apiKey: string
     apiSecret: string
