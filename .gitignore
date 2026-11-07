@@ -9,6 +9,7 @@ temp/
 /android/google-java-format-*.jar
 /deploy-config.json
 /edgeKey.json
+/edgeCliKey.json
 /env.json
 /config.json
 /keys.json
@@ -22,6 +23,7 @@ android-release.bundle.map
 ios-release.bundle.map
 keystores/
 /.edgeApiSigner.stamp
+/.edgeCliApiSigner.stamp
 
 # Debugging
 overrideTheme.json
