@@ -30,6 +30,7 @@ import {
 } from '../../util/FioAddressUtils'
 import { reverseLookupName } from '../../util/nameServices'
 import { resolveName } from '../../util/resolveName'
+import type { RecipientName, RecipientNameService } from '../../util/sentNames'
 import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { EdgeTouchableWithoutFeedback } from '../common/EdgeTouchableWithoutFeedback'
@@ -44,8 +45,17 @@ import { UnscaledText } from '../text/UnscaledText'
 import { ModalFilledTextInput } from '../themed/FilledTextInput'
 import { EdgeModal } from './EdgeModal'
 
+/**
+ * The address the user picked. When the modal resolved a name to that
+ * address, `name` holds the name and its service.
+ */
+export interface AddressModalResult {
+  address: string
+  name?: RecipientName
+}
+
 interface OwnProps {
-  bridge: AirshipBridge<string | undefined>
+  bridge: AirshipBridge<AddressModalResult | undefined>
   // eslint-disable-next-line react/no-unused-prop-types
   walletId: string
   currencyCode: string
@@ -71,7 +81,8 @@ interface State {
   uri: string
   validLabel: string | undefined
   errorLabel: string | undefined
-  cryptoAddress?: string
+  /** The last name resolved, with the input that named it. */
+  resolved?: { input: string; address: string; name: RecipientName }
   fioAddresses: FioAddresses
   filteredFioAddresses: string[]
   showSpinner: boolean
@@ -93,7 +104,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
     this.state = {
       uri: '',
       validLabel: undefined,
-      cryptoAddress: undefined,
+      resolved: undefined,
       errorLabel: undefined,
       fioAddresses: { addresses: {} },
       filteredFioAddresses: [],
@@ -302,6 +313,7 @@ export class AddressModalComponent extends React.Component<Props, State> {
         this.props.coreWallet,
         name
       ).catch(() => undefined)
+      let service: RecipientNameService = 'plugin'
       if (
         this.checkIfUnstoppableDomain(name) &&
         globalKeys.UNSTOPPABLE_DOMAINS_API_KEY != null
@@ -313,20 +325,26 @@ export class AddressModalComponent extends React.Component<Props, State> {
             this.props.coreWallet.currencyInfo.pluginId
           ]
         )
+        service = 'unstoppable'
       } else if (this.checkIfEnsDomain(name)) {
         address = await this.fetchEnsAddress(name)
+        service = 'ens'
       } else if (
         this.checkIfZnsName(name) &&
         this.props.coreWallet.currencyInfo.pluginId === 'zcash'
       ) {
         address = await this.fetchZnsAddress(name)
+        service = 'zns'
       }
       if (address == null) {
         throw new ResolutionError('UnsupportedDomain', { domain: name })
       }
-      this.setState({ cryptoAddress: address, validLabel: address })
+      this.setState({
+        resolved: { input: name, address, name: { service, name } },
+        validLabel: address
+      })
     } catch (err: unknown) {
-      this.setState({ cryptoAddress: undefined, validLabel: undefined })
+      this.setState({ resolved: undefined, validLabel: undefined })
 
       if (err instanceof ResolutionError) {
         const message = sprintf(lstrings[err.code], name, currencyTicker)
@@ -464,31 +482,28 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   handleSubmit = (): void => {
-    const { uri, cryptoAddress, errorLabel } = this.state
-    const { coreWallet } = this.props
+    const { uri, resolved, errorLabel } = this.state
+    const { bridge, coreWallet } = this.props
+    if (errorLabel != null) return
 
-    let submitData = cryptoAddress ?? uri
     // Preserve Zano alias inputs (e.g., "@alias") so the caller can capture
     // and persist the alias in transaction metadata while still resolving it
     // before parsing the URI.
-    if (
-      coreWallet.currencyInfo.pluginId === 'zano' &&
-      typeof uri === 'string' &&
-      uri.startsWith('@')
-    ) {
-      submitData = uri
+    const isZanoAlias =
+      coreWallet.currencyInfo.pluginId === 'zano' && uri.startsWith('@')
+    // Same idea for ZNS (.zcash) names on Zcash: return the original name so
+    // the caller can capture it and persist it in transaction metadata.
+    const isZnsInput =
+      coreWallet.currencyInfo.pluginId === 'zcash' && isZnsName(uri)
+
+    // A resolution only counts for the input that started it, so text the
+    // user changed afterwards, or a slower lookup for earlier text, never
+    // swaps in an address the current input did not name:
+    if (!isZanoAlias && !isZnsInput && resolved?.input === uri) {
+      bridge.resolve({ address: resolved.address, name: resolved.name })
+      return
     }
-    // Same idea for ZNS (.zcash) names on Zcash — return the original name so
-    // the caller can capture znsName and persist it in transaction metadata.
-    if (
-      coreWallet.currencyInfo.pluginId === 'zcash' &&
-      typeof uri === 'string' &&
-      isZnsName(uri)
-    ) {
-      submitData = uri
-    }
-    if (errorLabel != null) return
-    this.props.bridge.resolve(submitData)
+    bridge.resolve({ address: uri })
   }
 
   handleClose = (): void => {

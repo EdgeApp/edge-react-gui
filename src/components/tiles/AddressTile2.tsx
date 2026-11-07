@@ -1,7 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard'
 import { asMaybe, asObject, asString } from 'cleaners'
 import type {
-  EdgeAccount,
   EdgeAddress,
   EdgeCurrencyWallet,
   EdgeParsedUri,
@@ -30,18 +29,21 @@ import {
   isOwnEvmAddress
 } from '../../util/CurrencyInfoHelpers'
 import { parseDeepLink } from '../../util/DeepLinkParser'
-import {
-  checkPubAddress,
-  hasSentToFioAddress
-} from '../../util/FioAddressUtils'
+import { checkPubAddress } from '../../util/FioAddressUtils'
 import { type NameService, reverseLookupName } from '../../util/nameServices'
 import { type CrossChainPayment, withStatedAsset } from '../../util/paymentUri'
 import { resolveName } from '../../util/resolveName'
+import {
+  hasSentToName,
+  type NameSend,
+  type RecipientName,
+  type RecipientNameService
+} from '../../util/sentNames'
 import { isEmail } from '../../util/utils'
 import { isZnsName, resolveZnsName } from '../../util/zns'
 import { EdgeAnim } from '../common/EdgeAnim'
 import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
-import { AddressModal } from '../modals/AddressModal'
+import { AddressModal, type AddressModalResult } from '../modals/AddressModal'
 import { showFullScreenSpinner } from '../modals/AirshipFullScreenSpinner'
 import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import {
@@ -59,11 +61,11 @@ export type AddressEntryMethod = 'scan' | 'other'
 export interface ChangeAddressResult {
   fioAddress?: string
   /**
-   * The public address `fioAddress` resolved to when the user entered it,
-   * after resolving any ENS name the handle points to. Only set for a handle
-   * resolved here, never for one a request prefilled.
+   * The name the user entered and accepted, with the public address it
+   * resolved to, after resolving any ENS name a FIO handle points to. Only
+   * set for a name resolved here, never for one a request prefilled.
    */
-  fioPublicAddress?: string
+  acceptedName?: NameSend
   parsedUri?: EdgeParsedUri
   addressEntryMethod: AddressEntryMethod
   alias?: string
@@ -294,11 +296,65 @@ export const AddressTile2 = React.forwardRef(
       }
     )
 
+    /**
+     * Anyone can register a name and point it at any address. Scammers tell
+     * users to send to one, such as a FIO handle like "@thorchain" appended to
+     * the user's own exchange deposit address, and resolving it pays the
+     * scammer. A name this account has not paid at this address before needs
+     * consent. The address the send pays, not the name, is what the user
+     * accepts and what gets recorded once sent, since the owner can repoint
+     * the name at any time.
+     *
+     * Resolves false when the user declined, and otherwise the accepted name
+     * (undefined when no name was entered). Leaves the spinner off.
+     */
+    const confirmNameSend = useHandler(
+      async (
+        enteredName: RecipientName | undefined,
+        address: string
+      ): Promise<NameSend | undefined | false> => {
+        const acceptedName: NameSend | undefined =
+          enteredName == null
+            ? undefined
+            : { ...enteredName, publicAddress: address }
+        setLoading(false)
+        if (
+          acceptedName == null ||
+          isOwnFioAddress(acceptedName, ownFioAddresses) ||
+          (await hasSentToName(account, acceptedName, address))
+        ) {
+          return acceptedName
+        }
+        const approved = await Airship.show<boolean>(bridge => (
+          <ConfirmContinueModal
+            bridge={bridge}
+            title={lstrings.warning_sending_to_name_title}
+            body={lstrings.warning_sending_to_name_owner}
+            warning
+            isSkippable
+          >
+            <Paragraph>
+              {sprintf(
+                lstrings.warning_sending_to_name_resolves_4s,
+                acceptedName.name,
+                getNameServiceName(acceptedName.service, coreWallet),
+                currencyCode,
+                acceptedName.publicAddress
+              )}
+            </Paragraph>
+            <Paragraph>{lstrings.warning_sending_to_name_no_routing}</Paragraph>
+          </ConfirmContinueModal>
+        ))
+        return approved ? acceptedName : false
+      }
+    )
+
     const changeAddress = useHandler(
       async (
         address: string,
         addressEntryMethod: AddressEntryMethod,
-        walletAddresses?: EdgeAddress[]
+        walletAddresses?: EdgeAddress[],
+        modalName?: RecipientName
       ) => {
         if (address == null || address.trim() === '') return
 
@@ -313,7 +369,15 @@ export const AddressTile2 = React.forwardRef(
             await rejectUnparsedAddress(address, addressEntryMethod)
             return
           }
+          // A name the address modal resolved still needs the same consent
+          // as one resolved for this wallet's own chain:
+          const acceptedName = await confirmNameSend(
+            modalName,
+            payment.publicAddress
+          )
+          if (acceptedName === false) return
           await onChangeAddress({
+            acceptedName,
             parsedUri: { publicAddress: payment.publicAddress },
             addressEntryMethod,
             crossChainNativeAmount: payment.nativeAmount,
@@ -329,7 +393,15 @@ export const AddressTile2 = React.forwardRef(
         let zanoAlias: string | undefined
         let resolvedName: { name: string; service: NameService } | undefined
         let fioAddress
-        let fioPublicAddress: string | undefined
+        // The name the user entered, once it resolved to `address`. The
+        // address modal resolves some names itself and passes them in:
+        let enteredName: RecipientName | undefined = modalName
+        if (
+          modalName?.service === 'ens' ||
+          modalName?.service === 'unstoppable'
+        ) {
+          resolvedName = { name: modalName.name, service: modalName.service }
+        }
         if (fioPlugin != null) {
           try {
             const publicAddress = await checkPubAddress(
@@ -339,7 +411,7 @@ export const AddressTile2 = React.forwardRef(
               currencyCode
             )
             fioAddress = address.toLowerCase()
-            fioPublicAddress = publicAddress
+            enteredName = { service: 'fio', name: fioAddress }
             address = publicAddress
           } catch (e: unknown) {
             const invalidCode =
@@ -368,61 +440,13 @@ export const AddressTile2 = React.forwardRef(
               const resolvedAddress = await ethersProvider.resolveName(address)
               if (resolvedAddress != null) {
                 resolvedName = { name: enteredInput, service: 'ens' }
+                // A FIO handle that points at an ENS name stays the name
+                // the user entered:
+                enteredName ??= { service: 'ens', name: enteredInput }
                 address = resolvedAddress
               }
             } catch (_) {}
           }
-        }
-
-        // A handle can resolve to an ENS name the owner can repoint at any
-        // time, so the address the send pays, not the name, is what the
-        // user accepts below and what gets recorded once it is sent:
-        if (fioAddress != null) fioPublicAddress = address
-
-        // Scammers tell users to append a handle they registered, such as
-        // "@thorchain", to the user's own exchange deposit address. Resolving
-        // it pays the scammer, so a handle new to this account needs consent.
-        if (
-          fioAddress != null &&
-          fioPublicAddress != null &&
-          !(await hasInteractedWithFioAddress(
-            account,
-            fioAddress,
-            fioPublicAddress,
-            ownFioAddresses
-          ))
-        ) {
-          setLoading(false)
-          const handleAddress = address
-          const namePart = enteredInput.split('@')[0]
-          const approved = await Airship.show<boolean>(bridge => (
-            <ConfirmContinueModal
-              bridge={bridge}
-              title={lstrings.warning_sending_to_fio_address_title}
-              body={lstrings.warning_sending_to_fio_address_owner}
-              warning
-              isSkippable
-            >
-              <Paragraph>
-                {sprintf(
-                  lstrings.warning_sending_to_fio_address_resolves_3s,
-                  enteredInput,
-                  currencyCode,
-                  handleAddress
-                )}
-              </Paragraph>
-              <Paragraph>
-                {looksLikeAddress(namePart)
-                  ? sprintf(
-                      lstrings.warning_sending_to_fio_address_not_name_1s,
-                      namePart
-                    )
-                  : lstrings.warning_sending_to_fio_address_no_routing}
-              </Paragraph>
-            </ConfirmContinueModal>
-          ))
-          if (!approved) return
-          setLoading(true)
         }
 
         // Check if this is an email for Tron USDT and show warning for potential
@@ -456,7 +480,10 @@ export const AddressTile2 = React.forwardRef(
           zanoAlias = enteredInput
           try {
             const resolved = await resolveName(coreWallet, enteredInput)
-            if (resolved != null) address = resolved
+            if (resolved != null) {
+              enteredName = { service: 'zano', name: enteredInput }
+              address = resolved
+            }
           } catch (_) {}
         }
 
@@ -472,10 +499,15 @@ export const AddressTile2 = React.forwardRef(
                 name: enteredInput.toLowerCase(),
                 service: 'zns'
               }
+              enteredName = { service: 'zns', name: resolvedName.name }
               address = resolved
             }
           } catch (_) {}
         }
+
+        const acceptedName = await confirmNameSend(enteredName, address)
+        if (acceptedName === false) return
+        setLoading(true)
 
         try {
           const parsedUri: EdgeParsedUri & { paymentProtocolUrl?: string } =
@@ -554,7 +586,7 @@ export const AddressTile2 = React.forwardRef(
           // set address
           await onChangeAddress({
             fioAddress,
-            fioPublicAddress,
+            acceptedName,
             parsedUri,
             addressEntryMethod,
             alias: zanoAlias,
@@ -644,7 +676,7 @@ export const AddressTile2 = React.forwardRef(
             )
           : lstrings.scan_address_modal_title
 
-      Airship.show<string | undefined>(bridge => (
+      Airship.show<AddressModalResult | undefined>(bridge => (
         <AddressModal
           bridge={bridge}
           walletId={coreWallet.id}
@@ -653,8 +685,8 @@ export const AddressTile2 = React.forwardRef(
         />
       ))
         .then(async result => {
-          if (result != null && result !== '') {
-            await changeAddress(result, 'other')
+          if (result != null && result.address !== '') {
+            await changeAddress(result.address, 'other', undefined, result.name)
           }
         })
         .catch((error: unknown) => {
@@ -895,25 +927,32 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-/**
- * True when the handle belongs to this account, or this account has sent
- * funds to it while it resolved to the same public address. Handles that only
- * arrived through incoming requests or received transactions do not count,
- * since anyone can put them there.
- */
-const hasInteractedWithFioAddress = async (
-  account: EdgeAccount,
-  fioAddress: string,
-  publicAddress: string,
+/** True for one of this account's own FIO handles. */
+const isOwnFioAddress = (
+  recipient: RecipientName,
   ownFioAddresses: FioAddress[]
-): Promise<boolean> =>
-  ownFioAddresses.some(own => own.name.toLowerCase() === fioAddress) ||
-  (await hasSentToFioAddress(account, fioAddress, publicAddress))
+): boolean =>
+  recipient.service === 'fio' &&
+  ownFioAddresses.some(
+    own => own.name.toLowerCase() === recipient.name.toLowerCase()
+  )
 
-/**
- * True when the part of a FIO address before the @ reads like a wallet
- * address rather than a person's name: letters and digits only, at least as
- * long as the shortest common address formats.
- */
-const looksLikeAddress = (namePart: string): boolean =>
-  /^[a-zA-Z0-9]{25,}$/.test(namePart)
+/** The service's own name, which no locale translates. */
+const NAME_SERVICE_NAMES: Record<
+  Exclude<RecipientNameService, 'plugin'>,
+  string
+> = {
+  ens: 'ENS',
+  fio: 'FIO',
+  unstoppable: 'Unstoppable Domains',
+  zano: 'Zano',
+  zns: 'ZcashNames'
+}
+
+const getNameServiceName = (
+  service: RecipientNameService,
+  coreWallet: EdgeCurrencyWallet
+): string =>
+  service === 'plugin'
+    ? coreWallet.currencyInfo.displayName
+    : NAME_SERVICE_NAMES[service]
