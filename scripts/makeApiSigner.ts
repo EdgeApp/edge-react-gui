@@ -1,19 +1,27 @@
 /**
- * Generates XOR-split native C sources embedding apiKey / apiSecret from edgeKey.json.
+ * Generates XOR-split native C sources embedding an apiKey / apiSecret pair.
  *
- * Bundle / application ID for the runtime XOR pad is read from the post-patch
- * project files (must match):
+ * Two key files, never mixed:
+ *   - `edgeKey.json`, the app's key, feeds the iOS and Android sources.
+ *   - `edgeCliKey.json`, a key pair issued for the CLI, feeds the Node addon's
+ *     sources, and only with `--cli` (what `build:cli:native` runs). The
+ *     addon is what `publish:cli --with-signer` ships, and its runtime pad is
+ *     a constant in this public repository, so the app's secret must never
+ *     reach it.
+ *
+ * Bundle / application ID for the mobile runtime XOR pad is read from the
+ * post-patch project files (must match):
  *   - android/app/build.gradle → applicationId (not namespace)
  *   - ios/edge.xcodeproj/project.pbxproj → PRODUCT_BUNDLE_IDENTIFIER
  *
  * Outputs (gitignored):
  *   ios/EdgeApiSecret.c + ios/EdgeApiSecret.h
  *   android/app/src/main/cpp/edge_api_secret.c (+ header)
- *   native/edge-api-signer/node/edge_api_secret.c (+ header)
+ *   native/edge-api-signer/node/edge_api_secret.c (+ header), with `--cli`
  *
  * Stub secret (`00`) only when EDGE_API_SIGNER_ALLOW_STUB=1 (used by prepare.sh
  * before Jenkins secretFiles). Native generate tasks omit the flag so missing
- * edgeKey.json fails closed.
+ * edgeKey.json fails closed. `--cli` has no stub: no edgeCliKey.json, no addon.
  */
 
 import { createHash, randomBytes } from 'crypto'
@@ -28,6 +36,9 @@ const ROOT = path.join(__dirname, '..')
 const SHARD_COUNT = 6 // 5 random pads + 1 stored remainder (after runtime pad)
 export const MAX_SECRET_LEN = 32
 const STAMP_PATH = path.join(ROOT, '.edgeApiSigner.stamp')
+const CLI_STAMP_PATH = path.join(ROOT, '.edgeCliApiSigner.stamp')
+/** The CLI's own key pair: the only input the Node addon is built from. */
+const CLI_KEY_FILE = 'edgeCliKey.json'
 const ANDROID_CPP = path.join(ROOT, 'android/app/src/main/cpp')
 const NODE_CPP = path.join(ROOT, 'native/edge-api-signer/node')
 /**
@@ -52,6 +63,10 @@ const MISSING_SECRET_MESSAGE =
   'edgeKey.json apiSecret missing. Copy edgeKey.example.json to edgeKey.json ' +
   'and fill in apiKey / apiSecret (Jenkins gets these from scripts/secretFiles.ts). ' +
   'Every native build needs the real secret; EDGE_API_SIGNER_ALLOW_STUB=1 is only for `npm run prepare`.'
+const MISSING_CLI_KEY_MESSAGE =
+  `${CLI_KEY_FILE} is missing or incomplete. The Node signer is built from ` +
+  'a key pair issued for the CLI, in the shape of edgeKey.example.json, and ' +
+  "never from the app's edgeKey.json."
 
 function parseHexSecret(hex: string): Buffer {
   const cleaned = hex.replace(/^0x/i, '').trim()
@@ -298,11 +313,11 @@ function writeFile(filePath: string, contents: string): void {
   console.log('wrote', path.relative(ROOT, filePath))
 }
 
-function anyOutputsExist(): boolean {
-  return Object.values(OUTPUT_PATHS).some(p => fs.existsSync(p))
+function anyMobileOutputsExist(): boolean {
+  return MOBILE_OUTPUTS.some(p => fs.existsSync(p))
 }
 
-/** The four mobile outputs, which every run writes. */
+/** The four mobile outputs, which every run without `--cli` writes. */
 const MOBILE_OUTPUTS = [
   OUTPUT_PATHS.iosSource,
   OUTPUT_PATHS.iosHeader,
@@ -311,12 +326,11 @@ const MOBILE_OUTPUTS = [
 ]
 
 /**
- * The two Node outputs, which only a run with a real secret writes.
+ * The two Node outputs, which only `--cli` writes, from `edgeCliKey.json`.
  *
  * Kept as a named group rather than loose consts, so `OUTPUT_PATHS` is the
- * one list of what this script produces — `anyOutputsExist` and the cleanup
- * loop both read the whole table — while the completeness tests can still
- * say which group they mean.
+ * one list of what this script produces while the completeness tests can
+ * still say which group they mean.
  */
 const NODE_OUTPUTS = [OUTPUT_PATHS.nodeSource, OUTPUT_PATHS.nodeHeader]
 
@@ -325,7 +339,7 @@ export function signerOutputsExist(): boolean {
   return MOBILE_OUTPUTS.every(p => fs.existsSync(p))
 }
 
-/** True when the Node pair exists too. */
+/** True when the Node pair exists. */
 function nodeOutputsExist(): boolean {
   return NODE_OUTPUTS.every(p => fs.existsSync(p))
 }
@@ -358,11 +372,10 @@ export function readEmbeddedSignerApiKey(): string | undefined {
   return undefined
 }
 
-function main(): void {
+/** The iOS and Android sources, from the app's `edgeKey.json`. */
+function generateMobile(): void {
   const mobileBundleId = readBundleId()
-  const nodeBundleId = NODE_API_SIGNER_BUNDLE_ID
   console.log('bundleId', mobileBundleId)
-  console.log('nodeBundleId', nodeBundleId)
 
   let apiKey = API_KEY_PLACEHOLDER
   let secretHex = ''
@@ -386,14 +399,9 @@ function main(): void {
     console.log('warn: could not read edgeKey.json:', errorMessage(error))
   }
 
-  let missingSecret = false
   if (secretHex === '') {
     if (process.env.EDGE_API_SIGNER_ALLOW_STUB !== '1') {
       throw new Error(MISSING_SECRET_MESSAGE)
-    }
-    missingSecret = true
-    for (const output of NODE_OUTPUTS) {
-      if (fs.existsSync(output)) fs.unlinkSync(output)
     }
     // Keep a complete existing tree only when its stamp still matches this
     // bundleId: deployPatches can rewrite applicationId after a prior stub.
@@ -407,7 +415,7 @@ function main(): void {
       console.log(
         'warn: apiSecret missing; bundleId changed since last generate, regenerating stub'
       )
-    } else if (anyOutputsExist()) {
+    } else if (anyMobileOutputsExist()) {
       console.log(
         'warn: apiSecret missing; regenerating incomplete EdgeApiSecret outputs as stub'
       )
@@ -415,9 +423,7 @@ function main(): void {
     // First-time compile stub only: do not pair a real apiKey with secret 00.
     apiKey = API_KEY_PLACEHOLDER
     secretHex = '00'
-    console.log(
-      'warn: apiSecret missing; emitting mobile stub and skipping Node signer'
-    )
+    console.log('warn: apiSecret missing; emitting mobile stub')
   } else if (apiKey === API_KEY_PLACEHOLDER) {
     // A real secret with no apiKey would sign correctly while advertising the
     // placeholder in Authorization / getApiKey, so refuse that pairing.
@@ -437,15 +443,10 @@ function main(): void {
     .update('\0')
     .update(mobileBundleId, 'utf8')
     .update('\0')
-    .update(nodeBundleId, 'utf8')
-    .update('\0')
     .update(fs.readFileSync(__filename))
     .digest('hex')
   if (
     signerOutputsExist() &&
-    // The Node pair is only written when there is a real secret, so a stub
-    // tree is complete without it.
-    (missingSecret || nodeOutputsExist()) &&
     fs.existsSync(STAMP_PATH) &&
     fs.readFileSync(STAMP_PATH, 'utf8').split('\n')[0].trim() === inputStamp
   ) {
@@ -462,13 +463,6 @@ function main(): void {
   writeFile(OUTPUT_PATHS.androidSource, mobileSource)
   writeFile(OUTPUT_PATHS.androidHeader, header)
 
-  if (!missingSecret) {
-    // Built here rather than above, where it was computed and then
-    // discarded on the `missingSecret` path.
-    writeFile(OUTPUT_PATHS.nodeSource, makeSource(apiKey, secret, nodeBundleId))
-    writeFile(OUTPUT_PATHS.nodeHeader, makeNodeHeader(nodeBundleId))
-  }
-
   fs.writeFileSync(STAMP_PATH, `${inputStamp}\n${mobileBundleId}\n`)
 
   // Stub embeds the placeholder apiKey; rewrite EdgeApiKey immediately so a
@@ -477,6 +471,61 @@ function main(): void {
     // Dynamic require avoids a load-time cycle (makeNativeHeaders imports us).
     require('./makeNativeHeaders').writeStubEdgeApiKeyHeaders()
   }
+}
+
+/**
+ * The Node addon's sources, from `edgeCliKey.json` and nothing else.
+ *
+ * No stub and no fallback to `edgeKey.json`: the addon is what
+ * `publish:cli --with-signer` ships, so an absent or incomplete CLI key fails
+ * here rather than producing an addon that carries some other secret.
+ */
+function generateCli(): void {
+  const nodeBundleId = NODE_API_SIGNER_BUNDLE_ID
+  console.log('nodeBundleId', nodeBundleId)
+  const keyPath = path.join(ROOT, CLI_KEY_FILE)
+  if (!fs.existsSync(keyPath)) throw new Error(MISSING_CLI_KEY_MESSAGE)
+  const cliKey: unknown = JSON.parse(fs.readFileSync(keyPath, 'utf8'))
+  const apiKey = isPlainObject(cliKey) ? cliKey.apiKey : undefined
+  const secretHex = isPlainObject(cliKey) ? cliKey.apiSecret : undefined
+  if (
+    typeof apiKey !== 'string' ||
+    apiKey === '' ||
+    typeof secretHex !== 'string' ||
+    secretHex === ''
+  ) {
+    throw new Error(MISSING_CLI_KEY_MESSAGE)
+  }
+
+  // Its own stamp, so a mobile regeneration and this one never invalidate
+  // or vouch for each other's outputs.
+  const inputStamp = createHash('sha256')
+    .update(apiKey, 'utf8')
+    .update('\0')
+    .update(secretHex, 'utf8')
+    .update('\0')
+    .update(nodeBundleId, 'utf8')
+    .update('\0')
+    .update(fs.readFileSync(__filename))
+    .digest('hex')
+  if (
+    nodeOutputsExist() &&
+    fs.existsSync(CLI_STAMP_PATH) &&
+    fs.readFileSync(CLI_STAMP_PATH, 'utf8').trim() === inputStamp
+  ) {
+    console.log('makeApiSigner --cli: inputs unchanged, skipping rewrite')
+    return
+  }
+
+  const secret = parseHexSecret(secretHex)
+  writeFile(OUTPUT_PATHS.nodeSource, makeSource(apiKey, secret, nodeBundleId))
+  writeFile(OUTPUT_PATHS.nodeHeader, makeNodeHeader(nodeBundleId))
+  fs.writeFileSync(CLI_STAMP_PATH, `${inputStamp}\n`)
+}
+
+function main(): void {
+  if (process.argv.includes('--cli')) generateCli()
+  else generateMobile()
 }
 
 // Importing this module (secretFiles.ts reuses MAX_SECRET_LEN) must not
