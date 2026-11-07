@@ -2,6 +2,7 @@ import { describe, expect, it, jest } from '@jest/globals'
 
 import {
   buildPluginsInit,
+  CLI_DISABLED_PLUGINS,
   pluginInitFor
 } from '../../cli/engine/makeCoreContext'
 import { mergePluginInit } from '../../configKeysMerge'
@@ -149,17 +150,40 @@ describe('buildPluginsInit', () => {
   const none = { appConfig: {}, pluginApiKeys: {}, warn: undefined }
 
   it('is the app’s table when there are no keys and no config.json', () => {
-    // With the engine's one narrowing: an init with no options, such as the
-    // table's `{ referralId: undefined }` for `bridgeless`, is `true`.
+    // With the engine's two narrowings: an init with no options, such as the
+    // table's `{ referralId: undefined }` for `bridgeless`, is `true`, and
+    // the privacy coins are off.
     const empty = { corePlugins: {}, swapPlugins: {} }
     const table = { ...buildCurrencyPlugins(empty), ...buildSwapPlugins(empty) }
     const expected = Object.fromEntries(
       Object.entries(table).map(([id, init]) => [
         id,
-        isEmptyInit(init) ? true : init
+        CLI_DISABLED_PLUGINS.includes(id)
+          ? false
+          : isEmptyInit(init)
+          ? true
+          : init
       ])
     )
     expect(buildPluginsInit(none)).toStrictEqual(expected)
+  })
+
+  it('leaves the privacy coins off whatever the keys and config.json say', () => {
+    const init = buildPluginsInit({
+      appConfig: {
+        corePlugins: {
+          monero: true,
+          piratechain: true,
+          zano: true,
+          zcash: true
+        }
+      },
+      pluginApiKeys: { monero: { edgeApiKey: 'key' } },
+      warn: undefined
+    })
+    for (const id of ['monero', 'piratechain', 'zano', 'zcash']) {
+      expect({ id, init: init[id] }).toStrictEqual({ id, init: false })
+    }
   })
 
   it('turns on and off what the app does, keys or not', () => {
