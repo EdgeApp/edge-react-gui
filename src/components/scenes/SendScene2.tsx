@@ -124,6 +124,7 @@ import {
   parseOwnNetworkPayment,
   peekPaymentUri
 } from '../../util/paymentUri'
+import { describeRecipientNotReady } from '../../util/recipientNotReady'
 import {
   disableAssetsCover,
   getStealthDisableAssets,
@@ -3986,6 +3987,14 @@ const SendComponent: React.FC<Props> = props => {
               : lstrings.send_funds_not_spendable_error_message
           )
         }
+
+        // The recipient can't receive this asset yet, so say what they need
+        // to do instead of blaming the network:
+        const recipientNotReady = describeRecipientNotReady(
+          error,
+          coreWallet.currencyInfo.displayName
+        )
+        if (recipientNotReady != null) error = recipientNotReady
 
         // Only set hasPendingTx to true when pending tx error occurs;
         // don't clear it for other errors as it may have been legitimately
