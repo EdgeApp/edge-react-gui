@@ -14,6 +14,7 @@
  * Pure: no filesystem, no `process.argv`, no spawning. The script stays the
  * shell that reads argv, touches the disk and runs npm.
  */
+import { createHmac } from 'crypto'
 
 /** What the flags asked for. */
 interface PublishFlags {
@@ -21,7 +22,6 @@ interface PublishFlags {
   stageOnly: string | undefined
   allowUnsigned: boolean
   withSigner: boolean
-  signerSecretIsCliOnly: boolean
   allowDirty: boolean
   allowBrokenPlugins: boolean
   allowUnpushed: boolean
@@ -60,7 +60,6 @@ export function parsePublishFlags(argv: string[]): PublishFlags {
     stageOnly: flagValue(argv, '--out'),
     allowUnsigned: has('--allow-unsigned'),
     withSigner: has('--with-signer'),
-    signerSecretIsCliOnly: has('--signer-secret-is-cli-only'),
     allowDirty: has('--allow-dirty'),
     allowBrokenPlugins: has('--allow-broken-plugins'),
     allowUnpushed: has('--allow-unpushed'),
@@ -290,11 +289,21 @@ export function preBuildRefusal(opts: {
   flags: PublishFlags
   treeState: TreeState
   headState: HeadState
-  hasKey: boolean
+  /** `edgeCliKey.json`, the CLI's own key pair, is present. */
+  hasCliKey: boolean
+  /** That pair shares its apiKey or apiSecret with the app's `edgeKey.json`. */
+  cliKeyIsAppKey: boolean
   /** `knownPluginBreakage.js`'s two lists, joined. */
   knownBrokenPlugins: readonly string[]
 }): string | undefined {
-  const { flags, treeState, headState, hasKey, knownBrokenPlugins } = opts
+  const {
+    flags,
+    treeState,
+    headState,
+    hasCliKey,
+    cliKeyIsAppKey,
+    knownBrokenPlugins
+  } = opts
 
   // A version is published once, and the CLI moves in lockstep with the
   // app, so publishing while every EVM chain cannot create or load a wallet
@@ -361,27 +370,36 @@ export function preBuildRefusal(opts: {
     )
   }
 
-  // Said out loud, because the addon's shards reconstruct the same
-  // `apiSecret` the iOS and Android release builds sign with and the runtime
-  // pad is a constant in this public repository: a public tarball would hand
-  // that secret to anyone with `npm pack` and `strings`.
-  if (flags.withSigner && !flags.signerSecretIsCliOnly) {
+  // The addon's shards reconstruct the secret it was built from, and the
+  // runtime pad is a constant in this public repository, so a public tarball
+  // hands that secret to anyone with `npm pack` and `strings`. It is built
+  // from `edgeCliKey.json` alone, and never from the app's `edgeKey.json`.
+  if (flags.withSigner && !hasCliKey) {
     return (
-      'Refusing to publish the HMAC addon. Its shards reconstruct the same ' +
-      'apiSecret the iOS and Android release builds sign with, and the ' +
-      'runtime pad (NODE_API_SIGNER_BUNDLE_ID) is a constant in this public ' +
-      'repository — so a public tarball exposes that secret to `npm pack` ' +
-      'plus `strings`. Issue the CLI its own apiKey/apiSecret pair, build ' +
-      'with that edgeKey.json, and pass --signer-secret-is-cli-only to say ' +
-      'so; or publish without the addon, which is the default.'
+      'Refusing to publish the HMAC addon without edgeCliKey.json. The addon ' +
+      'is built from that file alone, a key pair issued for the CLI: its ' +
+      'shards reconstruct the secret it carries, and the runtime pad ' +
+      '(NODE_API_SIGNER_BUNDLE_ID) is a constant in this public repository, ' +
+      'so a public tarball exposes that secret to `npm pack` plus `strings`. ' +
+      "Put the CLI's key pair in edgeCliKey.json, or publish without the " +
+      'addon, which is the default.'
     )
   }
 
-  if (!flags.skipBuild && !hasKey && !flags.allowUnsigned) {
+  if (flags.withSigner && cliKeyIsAppKey) {
     return (
-      'edgeKey.json is absent, so the Node HMAC addon cannot be built and ' +
-      'the published CLI could not sign info-server requests. Put the key ' +
-      'in place, or pass --allow-unsigned to publish without it.'
+      'Refusing to publish the HMAC addon: edgeCliKey.json holds the apiKey ' +
+      'or apiSecret in edgeKey.json, the key the iOS and Android release ' +
+      'builds sign with. The CLI needs a key pair of its own.'
+    )
+  }
+
+  if (!flags.skipBuild && !hasCliKey && !flags.allowUnsigned) {
+    return (
+      'edgeCliKey.json is absent, so the Node HMAC addon cannot be built and ' +
+      "the published CLI could not sign info-server requests. Put the CLI's " +
+      'key pair in edgeCliKey.json, or pass --allow-unsigned to publish ' +
+      'without it.'
     )
   }
 
@@ -411,5 +429,65 @@ export function stagedManifestRefusal(opts: {
     )
   }
 
+  return undefined
+}
+
+/** An `apiKey` / `apiSecret` pair, as the key files hold it. */
+export interface ApiKeyPair {
+  apiKey: string
+  apiSecret: string
+}
+
+/**
+ * Whether two key pairs share an apiKey or an apiSecret.
+ *
+ * Either one is enough: the same apiKey presents as the app, and the same
+ * apiSecret is the app's secret whatever id it travels under.
+ */
+export function sharesKey(a: ApiKeyPair, b: ApiKeyPair): boolean {
+  const secret = (hex: string): string => hex.replace(/^0x/i, '').toLowerCase()
+  return (
+    (a.apiKey !== '' && a.apiKey === b.apiKey) ||
+    (a.apiSecret !== '' && secret(a.apiSecret) === secret(b.apiSecret))
+  )
+}
+
+/** What a signed publish asks the staged addon to sign. */
+export const SIGNER_PROBE = 'GET\n/v1/infoRollup/edge-cli-publish-probe\n'
+
+/**
+ * Why a signed publish must stop once the addon is staged: it has to sign
+ * with `edgeCliKey.json`'s key.
+ *
+ * The build makes the addon from that file alone, but `--no-build` stages
+ * whatever `lib/` holds, which can be an addon built from some other secret.
+ * Signing a probe with the staged binary and comparing the answer to an HMAC
+ * of the CLI key reads what the addon carries rather than how it was made.
+ */
+export function stagedSignerRefusal(opts: {
+  cliKey: ApiKeyPair
+  /** The staged addon's answer to `SIGNER_PROBE`, or why it gave none. */
+  staged: { apiKey: string; signature: string } | { error: string }
+  signerFile: string
+}): string | undefined {
+  const { cliKey, staged, signerFile } = opts
+  if ('error' in staged) {
+    return (
+      `The staged ${signerFile} could not sign: ${staged.error}. Nothing ` +
+      'has been published.'
+    )
+  }
+  const secret = Buffer.from(cliKey.apiSecret.replace(/^0x/i, ''), 'hex')
+  const expected = createHmac('sha256', secret)
+    .update(SIGNER_PROBE, 'utf8')
+    .digest('base64')
+  if (staged.apiKey !== cliKey.apiKey || staged.signature !== expected) {
+    return (
+      `The staged ${signerFile} does not sign with edgeCliKey.json's key, ` +
+      'so it carries some other secret. Rebuild it with ' +
+      '`npm run build:cli:all`, without --no-build, and publish again. ' +
+      'Nothing has been published.'
+    )
+  }
   return undefined
 }
