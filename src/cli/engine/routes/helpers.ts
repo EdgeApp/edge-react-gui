@@ -235,18 +235,15 @@ export async function asBadRequest<T>(
  * `walletType` and `pluginId` come from `allKeys` and from `currencyConfig`,
  * which carry every wallet and every plugin whether or not either worked.
  *
- * What this *cannot* say is why core declined, and the first attempt claimed
- * it could: a `pluginLoaded` derived from `pluginId != null` was true for
- * every entry, because `currencyConfig` holds every plugin
- * `makeCoreContext` *registered* — and `edge-currency-accountbased`
- * registers monero, zano, zcash and piratechain whether or not the native
- * modules behind them exist, then fails when core builds the engine. On a
- * real account that published "should have worked and did not" for ten
- * wallets that cannot work in a Node CLI at all. So the fields say only
- * what is true: the plugin is *registered*, and whether any other wallet of
- * the same type did load — which is the distinction an operator can act on,
- * because a plugin with no loaded wallet anywhere is the common factor and
- * one with a loaded wallet beside the failures is not.
+ * What this *cannot* say is why core declined. `currencyConfig` holds every
+ * plugin `makeCoreContext` enabled, whether or not its engines start here, so
+ * the fields say only what is true: whether the plugin is *registered*, and
+ * whether any other wallet of the same type did load. That is the distinction
+ * an operator can act on, because a plugin with no loaded wallet anywhere is
+ * the common factor and one with a loaded wallet beside the failures is not.
+ *
+ * A wallet of a plugin the CLI leaves off, such as a privacy coin, is never
+ * here: core keeps it out of `activeWalletIds` altogether.
  */
 export function unloadedWallets(account: EdgeAccount): Array<{
   walletId: string
