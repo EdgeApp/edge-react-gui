@@ -61,13 +61,13 @@ function makeAccount(opts: {
       archived: false,
       deleted: false
     })),
-    // Every plugin a real engine registers, monero's included — which is
-    // the shape the first version of this fixture got wrong by leaving the
-    // unavailable ones out.
+    // The plugins the engine enables. The privacy coins are not among them:
+    // the CLI leaves them off, so core keeps their wallets out of
+    // `activeWalletIds` and none of them ever reaches this list.
     currencyConfig: {
       bitcoin: { currencyInfo: { walletType: 'wallet:bitcoin' } },
       ethereum: { currencyInfo: { walletType: 'wallet:ethereum' } },
-      monero: { currencyInfo: { walletType: 'wallet:monero' } }
+      solana: { currencyInfo: { walletType: 'wallet:solana' } }
     },
     async waitForAllWallets() {}
   } as unknown as EdgeAccount
@@ -100,14 +100,9 @@ describe('unloadedWallets', () => {
   })
 
   it('tells a plugin with a loaded wallet from one without', () => {
-    // The distinction that is actually derivable, and the one the first
-    // attempt got wrong: it published `pluginLoaded` from `pluginId != null`
-    // and `currencyConfig` holds every plugin `makeCoreContext`
-    // *registered* — `edge-currency-accountbased` registers monero, zano,
-    // zcash and piratechain whether or not their native modules are
-    // present — so the field was true for all twelve failures on a real
-    // account and the promised distinction never appeared. This fixture is
-    // that shape: every plugin registered, including monero's.
+    // `currencyConfig` holds every plugin the engine enabled, whether or not
+    // its wallets load, so registration alone cannot say a plugin works
+    // here. Whether another wallet of the same type loaded can.
     const account = makeAccount({
       loaded: ['a'],
       active: ['a', 'b', 'c', 'd'],
@@ -116,7 +111,7 @@ describe('unloadedWallets', () => {
         // here, so the fault is this wallet.
         b: 'wallet:bitcoin',
         c: 'wallet:ethereum',
-        d: 'wallet:monero'
+        d: 'wallet:solana'
       }
     })
     expect(unloadedWallets(account)).toStrictEqual([
@@ -136,10 +131,8 @@ describe('unloadedWallets', () => {
       },
       {
         walletId: 'd',
-        walletType: 'wallet:monero',
-        // Registered, like a real engine's: this is the case the old field
-        // reported as "should have worked and did not".
-        pluginId: 'monero',
+        walletType: 'wallet:solana',
+        pluginId: 'solana',
         pluginRegistered: true,
         pluginHasLoadedWallet: false
       }
@@ -201,7 +194,7 @@ describe('the routes that report it', () => {
     const account = makeAccount({
       loaded: ['a'],
       active: ['a', 'b', 'c'],
-      types: { b: 'wallet:ethereum', c: 'wallet:monero' }
+      types: { b: 'wallet:ethereum', c: 'wallet:solana' }
     })
     const result: any = await waitForAllWallets.handler(
       ctxFor(account, warnings)
@@ -216,7 +209,7 @@ describe('the routes that report it', () => {
     // with no loaded wallet anywhere. Both of these qualify, and the
     // bitcoin wallet in the other case does not.
     expect(warnings[0].extra?.typesWithNothingLoaded).toBe(
-      'wallet:ethereum,wallet:monero'
+      'wallet:ethereum,wallet:solana'
     )
     // And neither is unregistered, which is the rarer case.
     expect(warnings[0].extra?.notRegistered).toBe('')
