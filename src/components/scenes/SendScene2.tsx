@@ -216,6 +216,8 @@ export interface SendScene2Params {
     address?: boolean
     amount?: boolean
     fee?: boolean
+    /** Keeps the memos from `spendInfo` as sent, such as a ramp's payout memo. */
+    memo?: boolean
     wallet?: boolean
   }
   hiddenFeaturesMap?: {
@@ -3000,12 +3002,13 @@ const SendComponent: React.FC<Props> = props => {
           })
       }
 
+      const locked = lockTilesMap.memo === true
       return (
         <EdgeRow
           key={`${memoOption.type}:${memoOption.memoName}`}
-          rightButtonType="touchable"
+          rightButtonType={locked ? 'none' : 'touchable'}
           title={memoTitle}
-          onPress={handleMemo}
+          onPress={locked ? undefined : handleMemo}
         >
           <EdgeText>{value ?? addButtonText}</EdgeText>
         </EdgeRow>

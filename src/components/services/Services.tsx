@@ -12,12 +12,17 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import { updateGiftCardInfo } from '../../actions/GiftCardInfoActions'
 import { updateHoudiniChains } from '../../actions/HoudiniChainsActions'
 import { registerNotificationsV2 } from '../../actions/NotificationActions'
-import { trackAppUsageAfterUpgrade } from '../../actions/RequestReviewActions'
+import {
+  trackAppUsageAfterUpgrade,
+  updateFiatPurchaseCount
+} from '../../actions/RequestReviewActions'
 import { checkCompromisedKeys } from '../../actions/WalletActions'
 import { CONFIG } from '../../config'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useRefresher } from '../../hooks/useRefresher'
 import { lstrings } from '../../locales/strings'
+import { pluginMaps } from '../../pluginMaps'
+import { resumeMoneygramTransfers } from '../../plugins/ramps/moneygram/moneygramRampPlugin'
 import { defaultAccount } from '../../reducers/CoreReducer'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
@@ -28,6 +33,7 @@ import {
   ratioVertical,
   width
 } from '../../util/scaling'
+import { logEvent } from '../../util/tracking'
 import { snooze } from '../../util/utils'
 import { waitForWalletOtherMethods } from '../../util/waitForWalletOtherMethods'
 import { AlertDropdown } from '../navigation/AlertDropdown'
@@ -49,6 +55,7 @@ import { WalletLifecycle } from './WalletLifecycle'
 import { WipeLogsService } from './WipeLogsService'
 
 interface Props {
+  // TODO: Remove NavigationBase dependency. Requires broader v7 navigation migration for service-level navigation.
   navigation: NavigationBase
 }
 
@@ -93,6 +100,29 @@ export const Services: React.FC<Props> = props => {
       })
     }
   }, [account, dispatch])
+
+  // Pick up MoneyGram transfers left open by an earlier session:
+  useAsyncEffect(
+    async () => {
+      if (account == null) return
+      const initOptions: unknown = pluginMaps.rampPlugins.moneygram
+      if (initOptions == null || typeof initOptions !== 'object') return
+      await resumeMoneygramTransfers({
+        account,
+        navigation,
+        onLogEvent: (event, values) => {
+          dispatch(logEvent(event, values))
+          if (event === 'Buy_Success' || event === 'Sell_Success') {
+            dispatch(updateFiatPurchaseCount()).catch((error: unknown) => {
+              console.warn('MoneyGram: purchase count failed', error)
+            })
+          }
+        }
+      })
+    },
+    [account],
+    'Services MoneyGram'
+  )
 
   // Methods to call once all of the currency wallets have been loaded
   useAsyncEffect(
