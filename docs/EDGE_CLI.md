@@ -313,7 +313,7 @@ amount, a file path.
 
 When the native Edge API HMAC signer is available, the engine prefers it over
 `keys.json` secrets for **both** `edge-core-js` and
-`GET /v1/infoRollup/{appId}` on the info server. Plugin secrets (including Monero LWS `edgeApiKey`) come from that
+`GET /v1/infoRollup/{appId}` on the info server. Plugin secrets come from that
 fetch and overlay local `pluginApiKeys`. Set `EDGE_CLI_FORCE_KEYS_JSON=1`
 (or pass `-k`) to force the JSON key/secret pair instead — useful for tester
 embeds and debugging. `-t` signs infoRollup against `info-tester.edge.app`.
@@ -339,7 +339,7 @@ list:
 | UTXO (bitcoin, litecoin, dogecoin, …) and most non-EVM accountbased chains (stellar, solana, ripple, cardano, algorand, …) | Work. Created, loaded, synced and exported in QA |
 | **filecoin** and **binance** (the Beacon chain, not binancesmartchain) | **Broken**, and for a different reason from the EVM row. `lib/filecoin/FilecoinTools.js` and `lib/binance/BinanceTools.js` both call `bip32.default(ecc)`, the v4 factory API, while the `bip32` that resolves is **2.0.6** — accountbased declares no `bip32` dependency, so it gets the copy `edge-currency-plugins` pinned. The module throws `Cannot read properties of undefined (reading 'call')` at load, and creating either wallet is a `500`. A version range in accountbased's own dependencies is the fix |
 | **EVM** (ethereum, base, arbitrum, optimism, polygon, binancesmartchain, avalanche — 29 plugins) | **Broken.** `create-currency-wallet --wallet-type=wallet:ethereum` is a `500` with `Cannot find module '../abi/ETH_BAL_CHECKER_ABI.json'`, and an existing EVM wallet silently never loads. `edge-currency-accountbased` does not ship `lib/ethereum/abi/` (checked at 4.99.0, 4.101.0 and 4.102.0), which `lib/ethereum/networkAdapters/RpcAdapter.js` and `lib/ethereum/fees/ethMiningFees.js` both require; its `files` allowlist ships `/lib/`, so the published tarball is missing them and `npm install -g` behaves the same. The fix belongs in that package and already exists unreleased (accountbased `paul/cli` `c53b1510` copies `src/ethereum/abi` in its `node` build); this repo cannot work around a file that is not there. The app is unaffected: it loads accountbased's webpack chunks, which inline the JSON |
-| The native-module chains (monero, zcash, zano, piratechain) | Not available in Node, by construction. They fail with `Need <chain> native IO`, which the engine reports as a `500` |
+| The privacy coins (monero, zcash, zano, piratechain) | **Off.** Their engines need native libraries that do not load under Node, so the engine leaves these plugins disabled. `create-currency-wallet` for one is a `500` with `Cannot find a currency plugin for wallet type wallet:<chain>`, and core leaves an existing wallet of one out of the account's wallets, so `currency-wallets` and `wait-for-all-wallets` do not list it |
 
 `wait-for-all-wallets` and `currency-wallets` report the wallets that did not
 load as `unloadedWallets`, with `pluginHasLoadedWallet: false` for a type

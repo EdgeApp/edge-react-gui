@@ -276,12 +276,9 @@ export const waitForAllWallets = route({
         {
           walletTypes: [...new Set(unloaded.map(w => w.walletType))].join(','),
           // The types with no loaded wallet at all, which is the half an
-          // operator can do nothing about: the plugin is registered — every
-          // one is, because `edge-currency-accountbased` registers monero,
-          // zano, zcash and piratechain whether or not their native modules
-          // are here — and nothing of that type works in this build. A type
-          // that is *absent* from this list has a sibling that loaded, so
-          // the fault is those wallets rather than the plugin.
+          // operator can do nothing about: nothing of that type works in this
+          // build. A type that is *absent* from this list has a sibling that
+          // loaded, so the fault is those wallets rather than the plugin.
           typesWithNothingLoaded: [
             ...new Set(
               unloaded

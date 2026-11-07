@@ -162,13 +162,30 @@ function toPluginInit(
 }
 
 /**
- * Every plugin's init, as the app builds it.
+ * Currency plugins the CLI leaves off, whatever the app's table, the keys or
+ * `config.json` say: the privacy coins.
+ *
+ * Their engines need the native libraries `edge-currency-accountbased` uses —
+ * `react-native-monero`, `react-native-pirate-wallet`, `react-native-zano` and
+ * `zcash-native` — which the CLI does not load.
+ */
+export const CLI_DISABLED_PLUGINS: readonly string[] = [
+  'monero',
+  'piratechain',
+  'zano',
+  'zcash'
+]
+
+/**
+ * Every plugin's init, as the app builds it, with the privacy coins off.
  *
  * `corePluginsTable.ts` is the app's table: which plugins exist, which turn
  * on without keys, and the ones on or off whatever the keys say. It is fed
  * the app's merge, `config.json`'s enablement over the keys through
  * `resolvePluginMaps`, so the engine enables what the app enables. The keys
  * are one map here, core and swap ids together, which the table tells apart.
+ * The plugins in `CLI_DISABLED_PLUGINS` stay off whatever the table, the keys
+ * or `config.json` say.
  */
 export function buildPluginsInit(opts: {
   appConfig: {
@@ -197,6 +214,7 @@ export function buildPluginsInit(opts: {
   for (const [id, init] of Object.entries(buildSwapPlugins(inputs))) {
     out[id] = toPluginInit(`swap plugin ${id}`, init, opts.warn)
   }
+  for (const id of CLI_DISABLED_PLUGINS) out[id] = false
   return out
 }
 
@@ -502,20 +520,6 @@ export async function makeCoreContext(
           : undefined
     })
   )
-
-  const moneroInit = pluginsInit.monero
-  // Through the cleaner, like the reading seventy lines above this one:
-  // `asPluginKeysEntry` declares `edgeApiKey: asOptional(asString)`, so the
-  // cast and the `typeof` test were the cleaner's job done by hand — in the
-  // same function that already does it properly for the same field.
-  const moneroEdgeApiKey = asMaybe(asPluginKeysEntry)(moneroInit)?.edgeApiKey
-  if (moneroInit === true) {
-    opts.logger?.warn(
-      'Monero enabled without edgeApiKey; Edge LWS /login will omit api_key'
-    )
-  } else if (moneroEdgeApiKey != null && moneroEdgeApiKey !== '') {
-    opts.logger?.info('Monero LWS edgeApiKey configured')
-  }
 
   const enabledSwap = Object.keys(exchangePlugins).filter(
     id => pluginsInit[id] !== false && pluginsInit[id] != null
