@@ -66,6 +66,34 @@ afterEach(() => {
   fs.rmSync(home, { recursive: true, force: true })
 })
 
+describe('ensureRunDir', () => {
+  // A real Windows host controls access with ACLs; `setPlatform` above only
+  // changes what the code reads.
+  const posix = platform !== 'win32'
+
+  it('keeps ~/.edge-cli and run private, not just the profile directory', () => {
+    if (!posix) return
+    const umask = process.umask(0o022)
+    try {
+      load().ensureRunDir('p1')
+    } finally {
+      process.umask(umask)
+    }
+    for (const dir of ['.edge-cli', '.edge-cli/run', '.edge-cli/run/p1']) {
+      const mode = fs.statSync(path.join(home, dir)).mode & 0o777
+      expect({ dir, mode }).toStrictEqual({ dir, mode: 0o700 })
+    }
+  })
+
+  it('tightens a ~/.edge-cli an earlier run left open', () => {
+    if (!posix) return
+    fs.mkdirSync(path.join(home, '.edge-cli'))
+    fs.chmodSync(path.join(home, '.edge-cli'), 0o755)
+    load().ensureRunDir('p1')
+    expect(fs.statSync(path.join(home, '.edge-cli')).mode & 0o777).toBe(0o700)
+  })
+})
+
 describe('socketPathFor', () => {
   it('is a file in the run directory', () => {
     const { runDir, socketPathFor } = load()
