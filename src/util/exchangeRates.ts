@@ -33,22 +33,20 @@ const clog = SHOW_LOGS ? console.log : (...args: any) => undefined
  * One pass of the chain failed, and the chain carries on.
  *
  * The default is the shared warning sink, which the engine points at
- * `engine-<profile>.log` at boot and the GUI leaves on `console`. It used to
- * be `console.warn` directly, and in the daemon that is the startup log a
- * clean stop deletes — so a rates server that 500s, wedges mid-body or is
- * unreachable made `fillTxsFiat` answer `0` for every date, and nothing an
- * operator could read said why an export carried no fiat value.
+ * `engine-<profile>.log` at boot and the GUI leaves on `console`. In the
+ * daemon, `console` reaches only the startup log a clean stop deletes, so a
+ * rates server that 500s, wedges mid-body or is unreachable would leave
+ * nothing an operator could read about why an export carried no fiat value.
  *
  * Separate from `onChainError` because the two are different events and the
- * GUI shows them differently. Routing the per-pass arm through the same hook
- * changed what users see: at `origin/develop` that arm was a `console.warn`
- * and only the chain-level `.catch` reached `showError`, which shows an
- * Airship drop-down *and* sends a Sentry event. `TransactionListRow` calls
- * `useHistoricalRate` once per visible row, so during a rates-server outage
- * scrolling a wallet's transaction list produced an error drop-down and a
- * Sentry event per failed pass, and a 1,200-transaction unpriced export is
- * thirteen of them. The engine always treated it as `report.warn`, which is
- * the right level for one pass of a retried background queue.
+ * GUI shows them differently. Only the chain-level failure reaches
+ * `showError`, which shows an Airship drop-down *and* sends a Sentry event.
+ * `TransactionListRow` calls `useHistoricalRate` once per visible row, so
+ * routing every failed pass there would turn scrolling a wallet's
+ * transaction list during a rates-server outage into an error drop-down and
+ * a Sentry event per failed pass. The engine reports a pass as
+ * `report.warn`, which is the right level for one pass of a retried
+ * background queue.
  */
 let onQueryError: (error: unknown) => void = error => {
   reportWarning(`rate query failed: ${errorMessage(error)}`)
@@ -64,8 +62,7 @@ let onChainError: (error: unknown) => void = error => {
  *
  * `onError` is the chain-level failure — the one that ends the work and is
  * worth a drop-down. `onPassError` is one pass of a retried queue; leaving
- * it unset keeps the quiet default, which is what the GUI did before this
- * module was extracted.
+ * it unset keeps the quiet default, which is what the GUI does.
  */
 export function configureExchangeRates(opts: {
   onError?: (error: unknown) => void
@@ -100,11 +97,9 @@ export type RatesParams = ReturnType<typeof asRatesParams>
 /**
  * The asset a crypto rate names, as one index key.
  *
- * Settling a queued entry against a response used to be
- * `data.crypto.some(sameCrypto)` inside a walk of the entire queue, so a
- * caller that queues a whole transaction history at once paid
- * `O(queued x requested)` per pass. The response is indexed by these keys
- * instead, which makes each settle a lookup.
+ * The response is indexed by these keys, which makes settling a queued entry
+ * a lookup: scanning the response for each queued entry would cost a caller
+ * that queues a whole transaction history `O(queued x requested)` per pass.
  */
 const cryptoIndexKey = (entry: {
   isoDate?: Date
@@ -120,11 +115,10 @@ const fiatIndexKey = (entry: { isoDate?: Date; fiatCode: string }): string =>
 /**
  * How many rates the module-level cache keeps.
  *
- * In the GUI this was an app-session cache; behind a daemon it is a process
- * cache, and `fillTxsFiat` adds one entry per transaction date of every
- * wallet of every account the engine ever serves. An engine started with
- * `--idle-timeout=0` never exits, so the map needs a bound as well as a
- * clear function.
+ * Behind a daemon this is a process cache, and `fillTxsFiat` adds one entry
+ * per transaction date of every wallet of every account the engine ever
+ * serves. An engine started with `--idle-timeout=0` never exits, so the map
+ * needs a bound as well as a clear function.
  */
 const RATE_CACHE_MAX = 20_000
 
@@ -134,12 +128,10 @@ const rateMap = new Map<string, number>()
 /**
  * How long a key the server answered but could not price stays unpriceable.
  *
- * Not caching `0` is right — it would answer `0` for the life of the process,
- * long after the rates server recovered — but nothing absorbed the repeat
- * either, so an asset the server has no feed for re-paid the whole fill on
- * every listing. Measured against a stub answering 200 with `rate` absent: a
- * 1,200-transaction wallet cost 13 upstream requests and about a second on
- * listing one, two and three alike, with the cache staying empty.
+ * `0` is not cached: it would answer `0` for the life of the process, long
+ * after the rates server recovered. This window absorbs the repeat instead,
+ * so an asset the server has no feed for does not repeat the whole fill on
+ * every listing.
  *
  * Reachable on a hand-added custom token, a long-tail token with no feed, and
  * dates predating an asset's market — none of them rare on an old wallet.
@@ -154,21 +146,19 @@ export const UNPRICED_TTL_MS = 5 * 60_000
  *
  * `fetchRates(..., 5000, ...)` reads like one and is not: that number is
  * `asyncWaterfall`'s *per-server stagger*, and `utils.ts` arms that timer
- * only `if (pending > 1)`, so the last remaining server races against
- * nothing. Measured on the real function: `asyncWaterfall([never, never],
- * 300)` and `asyncWaterfall([fails, never], 300)` were both still pending
- * after two seconds.
+ * only while another server is left to start, so the last remaining server
+ * races against nothing.
  *
  * With no ceiling, one rates server that accepts a connection and never
- * answers wedged every rate caller in the process permanently: `doQuery`
- * stayed awaiting with `inQuery` latched, `addToQueue` deliberately arms no
- * second timer while that is true, and `getHistoricalRate` never calls its
- * own `reject` — so each later caller's promise simply never settled. For
- * the daemon that is `get-transactions` hanging to the client's deadline for
- * the life of the engine.
+ * answers would wedge every rate caller in the process permanently:
+ * `doQuery` would stay awaiting with `inQuery` latched, `addToQueue`
+ * deliberately arms no second timer while that is true, and
+ * `getHistoricalRate` never calls its own `reject`, so each later caller's
+ * promise would never settle. For the daemon that is `get-transactions`
+ * hanging to the client's deadline for the life of the engine.
  *
- * The recovery this hands to already existed for the *rejection* path; the
- * hang had nothing to reject, which is what this supplies.
+ * A hang has nothing to reject, so this supplies the rejection, and the
+ * request then takes the same recovery path as one that failed.
  *
  * `asyncWaterfall`'s own contract is deliberately left alone: two comments
  * in the repository — `keysServer.ts` and `keysStore.ts` — state that its
@@ -182,18 +172,17 @@ export const RATE_QUERY_TIMEOUT_MS = 30_000
  *
  * `RATE_QUERY_TIMEOUT_MS` bounds one upstream request, and `doQuery`
  * recurses once per batch: a pass carries at most 99 keys, so a wait is
- * (number of batches) × 30 s. `fillTxsFiat`'s own docblock cites 1,200
- * unpriced transactions as the real case — 13 passes, about 390 s — against
- * `apiClient`'s `DEFAULT_TIMEOUT_MS` of 120 s, so the client reported
- * `Request timed out` and the daemon kept working for another four and a
- * half minutes with `inQuery` latched, every other rate caller in the
+ * (number of batches) × 30 s. 1,200 unpriced transactions are 13 passes,
+ * about 390 s, against `apiClient`'s `DEFAULT_TIMEOUT_MS` of 120 s: without
+ * this budget the client would report `Request timed out` while the daemon
+ * kept working with `inQuery` latched, every other rate caller in the
  * process queued behind it.
  *
  * Under that 120 s, so the queue gives up before the client does, and well
  * above a healthy chain: 13 passes against a server answering in a few
  * hundred milliseconds is a couple of seconds. Keys still unsettled when it
- * is spent are settled at `0`, which is the same answer a failed request
- * already gives them.
+ * is spent are settled as `RATE_UNAVAILABLE`, which is the same answer a
+ * failed request gives them.
  */
 export const RATE_CHAIN_TIMEOUT_MS = 90_000
 
@@ -210,19 +199,18 @@ export const RATE_CHAIN_BUDGET_MAX_MS = 600_000
 /**
  * A chain budget that fits the number of keys the caller is asking about.
  *
- * `RATE_CHAIN_TIMEOUT_MS` is one number for every caller, which is why the
- * GUI's full-history export could not be obtained at all: `doQuery` recurses
- * once per batch of `RATES_SERVER_MAX_QUERY_SIZE`, so 10,000 transactions is
- * 102 passes, and against a server answering in ~700 ms the chain spends the
- * whole fixed 90 s before they finish. Every unsettled key is then
- * `RATE_UNAVAILABLE`, and a caller that refuses an export on that count —
- * which both exports now do, correctly — refuses *deterministically*, with
- * no control to raise the budget.
+ * `RATE_CHAIN_TIMEOUT_MS` is one number for every caller, and too small for a
+ * full-history export: `doQuery` recurses once per batch, and a batch stays
+ * below `RATES_SERVER_MAX_QUERY_SIZE`, so 10,000 transactions is 102 passes,
+ * which can spend the whole fixed 90 s before they finish. Every unsettled
+ * key is then `RATE_UNAVAILABLE`, and a caller that refuses an export on
+ * that count would refuse *deterministically*, with no control to raise the
+ * budget.
  *
  * So the budget is derived from the work instead: the batches the keys will
  * take, times the per-request bound each of them is allowed. Never below
- * `RATE_CHAIN_TIMEOUT_MS`, so a small fill keeps the headroom it has today,
- * and never above `RATE_CHAIN_BUDGET_MAX_MS`.
+ * `RATE_CHAIN_TIMEOUT_MS`, so a small fill keeps that headroom, and never
+ * above `RATE_CHAIN_BUDGET_MAX_MS`.
  *
  * A caller with a deadline of its own — the engine, which has the client's
  * `--timeout` — passes that instead; this is for the callers whose only
@@ -239,24 +227,21 @@ export function rateChainBudgetMs(keyCount: number): number {
 /**
  * The answer for a key the queue gave up on, as opposed to could not price.
  *
- * `0` already meant "the server answered without a price for this date",
- * which is a fact about the asset and is cached as one. The chain budget
- * expiring and a failed request were settled at `0` as well, so the one
- * caller that must not write a wrong number — an accounting export's fiat
- * column — could not tell them apart: `fillTxsFiat`'s `.catch` never saw it,
- * nothing was logged, and the CSV, QBO and Bitwave files carried a zero fiat
- * amount for an arbitrary tail of the oldest transactions while `total`
- * reported the real count.
+ * `0` means "the server answered without a price for this date", which is a
+ * fact about the asset and is cached as one. The chain budget expiring and a
+ * failed request get this answer instead, so the one caller that must not
+ * write a wrong number — an accounting export's fiat column — can tell them
+ * apart, rather than write a zero fiat amount for an arbitrary tail of the
+ * oldest transactions.
  *
  * `NaN`, so that no arithmetic on it can produce a plausible-looking figure.
  * That makes it unsafe to publish: `mul`, `div` and `add` take strings, and
- * `String(NaN)` is `'NaN'`, which biggystring rejects — so a sentinel
- * reaching a GUI consumer written against the old `0` throws out of a render
- * or a ramp quote rather than degrading. It therefore never leaves this module: only
- * `getHistoricalCryptoRateOrUnavailable` and
- * `getHistoricalFiatRateOrUnavailable` return it, and
- * `getHistoricalCryptoRate` / `getHistoricalFiatRate` fold it to `0` for
- * everyone else.
+ * `String(NaN)` is `'NaN'`, which biggystring rejects, so a sentinel
+ * reaching a GUI consumer written against `0` would throw out of a render or
+ * a ramp quote rather than degrade. It therefore leaves this module only
+ * through `getHistoricalCryptoRateOrUnavailable` and
+ * `getHistoricalFiatRateOrUnavailable`, and `getHistoricalCryptoRate` /
+ * `getHistoricalFiatRate` fold it to `0` for everyone else.
  */
 export const RATE_UNAVAILABLE = Number.NaN
 
@@ -275,16 +260,13 @@ const resolverMap = new Map<
     /**
      * When *this key's* callers stop waiting.
      *
-     * Per key rather than per chain, because the deadline used to be set by
-     * whichever caller happened to arm the chain and then applied to every
-     * key that joined it. The engine serves requests concurrently, so
-     * `get-transactions --export-format=csv --timeout=600` was refused with
+     * Per key rather than per chain, because the engine serves requests
+     * concurrently: a deadline set by whichever caller armed the chain would
+     * refuse `get-transactions --export-format=csv --timeout=600` with
      * `RATES_INCOMPLETE` whenever a `rates-query` (no budget, so 90 s) or a
-     * `--timeout=2` armed the chain first — and the error told the operator
-     * to raise `--timeout`, which could not help, because their own budget
-     * was never consulted. `--timeout` is the control the branch added for
-     * "slow is better than wrong", so under concurrency it did not meet the
-     * requirement it was written for.
+     * `--timeout=2` armed the chain first, and the error's advice to raise
+     * `--timeout` could not help, because that caller's own budget would
+     * never be consulted.
      *
      * A second caller waiting on a key already queued raises it to the more
      * generous of the two: they are sharing one request, and the longer
@@ -299,17 +281,16 @@ let inQuery = false
  *
  * A trailing-edge debounce spends a full `FETCH_FREQUENCY` before the *first*
  * request, which is the worst case for a daemon: every engine request starts
- * from an idle queue, so `get-transactions` paid it twice in series — once
- * for the spam threshold and once for the fiat fill — a fixed ~2s floor
- * independent of page size, and ~1s even when every rate was already cached.
+ * from an idle queue, so `get-transactions` would pay it twice in series,
+ * once for the spam threshold and once for the fiat fill.
  */
 let lastQueryEndedAt = 0
 /**
  * Bumped by `stopRateQueue`, so a pass in flight can tell it is unwanted.
  *
  * Stopping the queue clears `inQuery` but cannot cancel a `doQuery` already
- * awaiting a response. Without this, a key queued immediately after a stop
- * armed a second chain that ran concurrently with the first.
+ * awaiting a response, so the pass compares the epoch it started with and
+ * stops rather than run alongside a chain armed after the stop.
  */
 let queueEpoch = 0
 /**
@@ -319,26 +300,24 @@ let queueEpoch = 0
  * *next arrival* that there is no queue to join. Cleared only by
  * `startRateQueue`.
  *
- * It used to be cleared by `clearRateCache`, on the reasoning that a caller
- * wanting rates again always empties the cache first. The engine's own
- * `shutdown` disproved it: it calls `stopRateQueue()` and then
- * `clearRateCache()` on the next line, so the latch was lifted immediately
- * by the very sequence it was written to protect. Queue state and cache
- * state are separate things, and nothing infers one from the other now.
+ * Not cleared by `clearRateCache`: the engine's `shutdown` calls
+ * `stopRateQueue()` and then `clearRateCache()` on the next line, so a cache
+ * clear that lifted the latch would undo the stop at once. Queue state and
+ * cache state are separate things, and nothing infers one from the other.
  */
 let queueStopped = false
 let queryTimer: ReturnType<typeof setTimeout> | undefined
 /**
  * The one timer that settles a queued key at its own deadline.
  *
- * `settleExpiredQueued` used to run only when a pass began, and a pass waits
- * for its request — up to `RATE_QUERY_TIMEOUT_MS` — before the next one
- * starts. Every key queued today shares one group, whose request budget is
- * the *latest* deadline in it, so a `get-transactions --timeout=5` that
- * arrived during a `--timeout=600` export's pass waited the whole 30 s
- * request out and timed out at the client instead of answering at 5 s with
- * `unpricedCount`. Armed for the nearest `endsAt`, re-armed whenever that
- * changes, and cleared by `stopRateQueue`.
+ * A pass waits for its request — up to `RATE_QUERY_TIMEOUT_MS` — before the
+ * next one starts, and every queued key shares one group, whose request
+ * budget is the *latest* deadline in it. Settling only when a pass begins
+ * would make a `get-transactions --timeout=5` that arrives during a
+ * `--timeout=600` export's pass wait the whole 30 s request out and time
+ * out at the client instead of answering at 5 s with `unpricedCount`. Armed
+ * for the nearest `endsAt`, re-armed whenever that changes, and cleared by
+ * `stopRateQueue`.
  */
 let expiryTimer: ReturnType<typeof setTimeout> | undefined
 let expiryTimerAt = Infinity
@@ -356,8 +335,7 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
   clog(`${n} doQuery enter`)
 
   // Before anything is asked: a key whose own callers have stopped waiting
-  // is settled and taken out, and nobody else's key is touched. This is
-  // where one spent budget used to settle the whole queue.
+  // is settled and taken out, and nobody else's key is touched.
   settleExpiredQueued()
 
   const groups = new Map<string, RateQueryGroup>()
@@ -375,10 +353,8 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
     // The server rejects a request whose `crypto` or `fiat` array reaches
     // RATES_SERVER_MAX_QUERY_SIZE ("must be less than 100"), so this stops
-    // *before* adding an entry that would cross it. Testing the pre-insert
-    // length for equality instead let a batch reach 101 and let a batch that
-    // stepped over 100 never stop at all; whatever is left over is picked up
-    // by the retry at the end of this function.
+    // *before* adding an entry that would cross it; whatever is left over is
+    // picked up by the retry at the end of this function.
     if (
       group.params.crypto.length + value.rateQueueEntry.crypto.length >=
         RATES_SERVER_MAX_QUERY_SIZE ||
@@ -431,14 +407,12 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
     try {
       // The body read is *inside* the budget, not just the headers. Under
       // Node's `fetch` a response resolves as soon as headers arrive, so a
-      // server that answered 200 and then stalled mid-body left `doQuery`
-      // awaiting `response.json()` with `inQuery` latched — and `addToQueue`
-      // arms no second timer while that is true, so every key queued
-      // afterwards went into a `resolverMap` nothing would drain and no
-      // caller's promise ever settled. Measured on Node 24: `fetch()`
-      // resolved in 51ms against such a server and `response.json()` was
-      // still pending four seconds later, with undici's 300s `bodyTimeout`
-      // the only backstop — two and a half times the client's own deadline.
+      // server that answers 200 and then stalls mid-body would leave
+      // `doQuery` awaiting `response.json()` with `inQuery` latched — and
+      // `addToQueue` arms no second timer while that is true, so every key
+      // queued afterwards would go into a `resolverMap` nothing drains, with
+      // undici's 300s `bodyTimeout` the only backstop: two and a half times
+      // the client's own deadline.
       const cleanedRates = await withDeadline(
         (async () => {
           // `fetchRates`'s own default fetch carries the abort, because
@@ -475,8 +449,8 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
 
       // Only the keys this request carried. A key queued while the request
       // was in flight was never asked about, so it is none of this response's
-      // business and gets a pass of its own below. Settling those here
-      // answered `0` for a rate the server could have priced.
+      // business and gets a pass of its own below. Settling those here would
+      // answer `0` for a rate the server could have priced.
       for (const key of group.keys) {
         const pending = resolverMap.get(key)
         if (pending == null) continue
@@ -513,9 +487,9 @@ const doQuery = async (doFetch?: EdgeFetchFunction): Promise<void> => {
         resolvers.forEach(r => r(rate))
       }
     } catch (e: unknown) {
-      // Through the same hook, and with no `instanceof Error` gate: that
-      // discarded a non-`Error` throw entirely, so the one failure mode with
-      // no report at all was the one nobody had anticipated.
+      // Through the same hook, and with no `instanceof Error` gate: a gate
+      // would discard a non-`Error` throw entirely, leaving the one failure
+      // mode nobody anticipated with no report at all.
       onQueryError(e)
       // Give up on this request's own keys only. The queue may also hold keys
       // another group owns and keys that arrived mid-flight, and neither was
@@ -566,26 +540,23 @@ const addToQueue = (
   maxQuerySize: number,
   doFetch?: EdgeFetchFunction,
   /**
-   * The budget for the whole chain, from the caller that arms it.
+   * This caller's budget for its key, across the whole chain.
    *
-   * `RATE_CHAIN_TIMEOUT_MS` is the default and was the only value, so the
-   * one control the engine offers for "slow is better than wrong" —
-   * `--timeout`, which moves `apiClient`'s own deadline — had no effect on
-   * the work it is waiting for. A 10,000-transaction export is 102 passes,
-   * and a server answering in ~700 ms spends 90 s before they finish.
+   * `RATE_CHAIN_TIMEOUT_MS` is the default. A caller with a deadline of its
+   * own passes it, so `--timeout`, the one control the engine offers for
+   * "slow is better than wrong", moves the work it is waiting for and not
+   * only `apiClient`'s own deadline.
    */
   chainTimeoutMs?: number
 ): void => {
-  // A stopped queue stays stopped. `stopRateQueue` cleared `inQuery`, bumped
-  // the epoch and settled what was queued, but nothing recorded that it had
-  // been stopped — so the very next arrival took the `!inQuery` branch,
-  // armed a fresh timer and started a new chain whose epoch the guard in
-  // `doQuery` then accepted. The engine calls `stopRateQueue` from
-  // `shutdown` precisely so "a debounce armed just before shutdown" cannot
-  // fire against a closing context, and a debounce armed just *after* it
-  // still did: `drainRequests` is bounded and gives up, so a
-  // `get-transactions` that outlived the drain is still inside
-  // `fillTxsFiat`, still queueing dates, and those dates fired rates
+  // A stopped queue stays stopped. `stopRateQueue` clears `inQuery`, bumps
+  // the epoch and settles what was queued, so without this latch the very
+  // next arrival would take the `!inQuery` branch, arm a fresh timer and
+  // start a new chain whose epoch the guard in `doQuery` accepts. The engine
+  // calls `stopRateQueue` from `shutdown` so a debounce cannot fire against
+  // a closing context, and `drainRequests` is bounded and gives up, so a
+  // `get-transactions` that outlives the drain is still inside
+  // `fillTxsFiat`, still queueing dates, which would otherwise fire rates
   // requests during `context.close()`.
   if (queueStopped) {
     resolve(RATE_UNAVAILABLE)
@@ -630,7 +601,7 @@ const addToQueue = (
     // starts when the pass does.
     // Not when the caller named its own budget, though: that is a deadline
     // someone is holding a socket open for, and adding the debounce on top
-    // put this key's settle up to a second past it.
+    // would put this key's settle up to a second past it.
     const armed = resolverMap.get(rateKey)
     if (armed != null && chainTimeoutMs == null) {
       armed.endsAt = Date.now() + delay + budgetMs
@@ -638,16 +609,16 @@ const addToQueue = (
     queryTimer = setTimeout(() => {
       queryTimer = undefined
       doQuery(doFetch).catch((error: unknown) => {
-        // Unlatch before reporting. `inQuery` is set above and the only
-        // place that cleared it was `doQuery`'s own terminal branch, so a
-        // rejection from anywhere outside its per-group `try` — building the
-        // groups, or stringifying the params — left it latched for the life
-        // of the process: every later arrival took the `!inQuery` false
-        // path, armed no timer, and never settled, because
+        // Unlatch before reporting. `inQuery` is set above, and a rejection
+        // from anywhere outside `doQuery`'s per-group `try` — building the
+        // groups, or stringifying the params — never reaches its terminal
+        // branch, which is where a pass clears it. Left latched for the life
+        // of the process, every later arrival would take the `!inQuery`
+        // false path, arm no timer, and never settle, because
         // `getHistoricalRate` never calls its own `reject`. In the engine
         // that is a `get-transactions` that hangs to the client's deadline,
-        // for ever, on a daemon documented as long-lived. One bad pass now
-        // costs one pass.
+        // for ever, on a daemon documented as long-lived. One bad pass costs
+        // one pass.
         inQuery = false
         lastQueryEndedAt = Date.now()
         settleQueuedAsUnavailable()
@@ -663,11 +634,12 @@ const addToQueue = (
 /**
  * Bring the expiry timer forward for a new key's deadline, if it is sooner.
  *
- * O(1) per key. Rescanning the whole queue on every enqueue was quadratic in
- * a fill, which queues one key per transaction before it awaits anything: a
- * 10,000-transaction fill spent seconds on the JS thread before its first
- * request, freezing the GUI's export and stalling every other session in
- * the daemon. The full scan runs only when the timer fires.
+ * O(1) per key. Rescanning the whole queue on every enqueue would be
+ * quadratic in a fill, which queues one key per transaction before it awaits
+ * anything, so a 10,000-transaction fill would spend seconds on the JS
+ * thread before its first request, freezing the GUI's export and stalling
+ * every other session in the daemon. The full scan runs only when the timer
+ * fires.
  */
 function noteDeadline(endsAt: number): void {
   if (endsAt >= expiryTimerAt) return
@@ -821,10 +793,10 @@ function hasLiveQueuedKey(): boolean {
 /**
  * Settle the queued keys whose own deadline has passed, and only those.
  *
- * One caller's spent budget settled the *whole* queue before, process-wide,
- * whoever had asked — so a 600 s export was answered `RATE_UNAVAILABLE` by a
- * concurrent 90 s `rates-query` reaching its limit, and told to raise a
- * `--timeout` that had never been consulted.
+ * One caller's spent budget must not settle the *whole* queue, whoever had
+ * asked: a 600 s export would be answered `RATE_UNAVAILABLE` by a concurrent
+ * 90 s `rates-query` reaching its limit, and told to raise a `--timeout`
+ * that was never consulted.
  */
 function settleExpiredQueued(): void {
   const now = Date.now()
@@ -840,9 +812,9 @@ function settleExpiredQueued(): void {
  *
  * Reached when the chain outlived its caller, when a pass threw outside its
  * own `try`, and when the queue was stopped — three cases in which nothing
- * was learned about these keys. It settled them at `0` before, which is the
- * answer for an asset the server cannot price, so an export wrote zeros for
- * the tail it never asked about.
+ * was learned about these keys. Not `0`, which is the answer for an asset
+ * the server cannot price: an export would write zeros for the tail it
+ * never asked about.
  */
 function settleQueuedAsUnavailable(): void {
   for (const [key, { resolvers }] of [...resolverMap.entries()]) {
@@ -860,9 +832,8 @@ export function rateCacheSize(): number {
  * How many keys the server answered without a price.
  *
  * `engine-status` reports it as `rateUnpricedCount`. Worth publishing beside
- * the cached count: an asset with no feed used to cost a full re-query on
- * every listing with nothing to show for it, and the number is what makes
- * that visible rather than silent.
+ * the cached count: an asset with no feed has nothing to show in the rate
+ * cache, and this number is what makes it visible rather than silent.
  */
 export function rateUnpricedCount(): number {
   return unpricedMap.size
@@ -945,12 +916,10 @@ export const getHistoricalFiatRateOrUnavailable = async (
   maxQuerySize: number = RATES_SERVER_MAX_QUERY_SIZE,
   doFetch?: EdgeFetchFunction,
   /**
-   * The caller's own deadline, as the crypto accessor already takes.
+   * The caller's own deadline, as the crypto accessor takes.
    *
    * Here so the two spellings do not diverge: a caller that has a budget
-   * could pass it to one of them and silently not to the other, which is
-   * how `get-transactions` came to bound its second rate query and not its
-   * first.
+   * could otherwise pass it to one of them and silently not to the other.
    */
   chainTimeoutMs?: number
 ): Promise<number> => {
@@ -981,11 +950,11 @@ export const getHistoricalFiatRateOrUnavailable = async (
 /**
  * A historical crypto rate, with `0` for "no price".
  *
- * The long-standing contract, and the one every GUI consumer is written
- * against: a rate the server cannot supply, and now also one the queue never
- * got an answer about, both arrive as `0`. Callers that divide by it already
- * check for zero; what they cannot survive is `RATE_UNAVAILABLE`, which is
- * `NaN` and reaches biggystring as the string `'NaN'`.
+ * The contract every GUI consumer is written against: a rate the server
+ * cannot supply and one the queue never got an answer about both arrive as
+ * `0`. Callers that divide by it check for zero; what they cannot survive is
+ * `RATE_UNAVAILABLE`, which is `NaN` and reaches biggystring as the string
+ * `'NaN'`.
  */
 export const getHistoricalCryptoRate = async (
   pluginId: string,
