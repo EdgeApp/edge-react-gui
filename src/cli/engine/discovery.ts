@@ -3,7 +3,8 @@ import fs from 'fs'
 import net from 'net'
 import { basename, dirname, join, resolve } from 'path'
 
-import { cliLogsDir, cliRunRoot } from './cliHome'
+import { cliHome, cliLogsDir, cliRunRoot } from './cliHome'
+import { errorMessage } from './errors'
 import {
   type EngineRunFile,
   readRunFileAt,
@@ -165,6 +166,22 @@ export function sessionFilePath(profile: string): string {
 export function ensureRunDir(profile: string): string {
   const dir = runDir(profile)
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
+  // `mode` reaches only the last directory `mkdirSync` creates. The
+  // `~/.edge-cli` and `run` it creates on the way get the umask's mode, 0755
+  // under the usual 022, and `~/.edge-cli` is where the guide puts
+  // `keys.json`, the HMAC secret included. Windows controls access with
+  // ACLs, not modes.
+  if (process.platform !== 'win32') {
+    for (const owned of [cliHome(), cliRunRoot(), dir]) {
+      try {
+        fs.chmodSync(owned, 0o700)
+      } catch (error: unknown) {
+        console.error(
+          `[edge-cli] could not set ${owned} to 0700: ${errorMessage(error)}`
+        )
+      }
+    }
+  }
   return dir
 }
 
