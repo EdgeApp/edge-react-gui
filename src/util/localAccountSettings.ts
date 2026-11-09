@@ -14,25 +14,18 @@ import { reportWarning } from './reportWarning'
  * The *inner* cleaner, which can fail.
  *
  * `asLocalAccountSettings` is `asMaybe(inner, () => inner({}))`, and
- * `uncleaner()` only sets a global flag and calls the cleaner — so
- * un-cleaning through it ran `asMaybe`'s `try { inner(raw) } catch { return
- * fallback() }` in un-cleaning mode. A settings object the published shape
- * rejects was not reported: it was *replaced* by the twelve defaults, and
- * `writeLocalAccountSettingsToDisk` then stringified those over
+ * `uncleaner()` only sets a global flag and calls the cleaner, so
+ * un-cleaning through it would run `asMaybe`'s `try { inner(raw) } catch {
+ * return fallback() }` in un-cleaning mode. A settings object the published
+ * shape rejects would not be reported: it would be *replaced* by the twelve
+ * defaults, and `writeLocalAccountSettingsToDisk` would stringify those over
  * `spendingLimits`, `passwordReminder`, `notifState`, `reviewTrigger`,
  * `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown`.
- * Per field too, since each entry is its own `asMaybe` —
- * `reviewTrigger`'s `nextTriggerDate: asOptional(asDate)` un-cleans through
- * `Date.prototype.toISOString`, which throws on an invalid `Date` and
- * dropped the whole `reviewTrigger` record.
  *
- * That is the destruction this module's docblock, the `trusted` flag and
- * `localSettingsTrust.test.ts` exist to prevent, arriving by the write door.
- * The comment below ("so a shape change is a compile error") was true of the
- * types and read as though the call were a runtime check as well, which is
- * what made it easy to miss. Every sibling writer in the branch uncleans a
- * cleaner that can throw — `exportTxInfo.ts`, `CategoriesActions.ts`,
- * `runFile.ts`, `sessionFile.ts`. Type-identical, so this is one word.
+ * That is the destruction the `trusted` flag and `localSettingsTrust.test.ts`
+ * exist to prevent, arriving by the write door. The sibling writers,
+ * `exportTxInfo.ts`, `CategoriesActions.ts`, `runFile.ts` and
+ * `sessionFile.ts`, also unclean a cleaner that can throw.
  */
 const uncleanLocalAccountSettings = uncleaner(asLocalAccountSettingsInner)
 
@@ -41,14 +34,14 @@ export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 /**
  * Read account.localDisklet Settings.json.
  *
- * An **absent** file, or one whose contents this version cannot read, yields
- * the cleaner's defaults (`spamFilterOn: true`). A failure to *read* a file
- * that is there does not: it throws.
+ * An **absent** file yields the cleaner's defaults (`spamFilterOn: true`),
+ * and a field this version cannot read yields that field's default. A file
+ * that is there and cannot be read or parsed does not: it throws.
  *
  * The distinction is the whole point. `changeLocalSettings` is a
  * read-modify-write over this one file, so answering any failure with the
- * 12 defaults and then writing them back turned one unreadable file — an
- * interrupted write, a bad sync — into the loss of `spendingLimits`,
+ * 12 defaults and then writing them back would turn one unreadable file,
+ * such as an interrupted write, into the loss of `spendingLimits`,
  * `passwordReminder`, `notifState`, `reviewTrigger`, `developerModeOn`,
  * `isAccountBalanceVisible` and `tokenWarningsShown`. The user's spending
  * limits among them.
@@ -67,27 +60,27 @@ export async function readLocalAccountSettingsFromDisk(
     return asLocalAccountSettings({})
   }
   // `asJSON`, so one cleaner owns both the parse and the shape — and it
-  // *throws* for a file that is there and unreadable. "As good as absent"
-  // was true of the value and false of the consequence: this is the strict
-  // reader a read-modify-write uses, so answering the twelve defaults for
-  // a truncated `Settings.json` meant one `local-settings --spam-filter-on`
-  // wrote them back over the user's `spendingLimits` — the PIN-above-amount
-  // control — `passwordReminder`, `notifState`, `reviewTrigger`,
+  // *throws* for a file that is there and unreadable. This is the strict
+  // reader a read-modify-write uses, so answering the twelve defaults for a
+  // truncated `Settings.json` would let one `local-settings --spam-filter-on`
+  // write them back over the user's `spendingLimits` (the PIN-above-amount
+  // control), `passwordReminder`, `notifState`, `reviewTrigger`,
   // `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown`.
   // `readLocalAccountSettingsOrDefaults` is the lenient door, and it reports
   // the failure as `trusted: false`.
   //
   // The *inner* cleaner, because `asLocalAccountSettings` is
-  // `asMaybe(inner, () => inner({}))`: it cannot fail, so the strictness
-  // here reached only `asJSON`'s parse. A file that is valid JSON and not a
-  // settings object — `[]`, which `asObject` accepts, `"x"`, `42` — was
-  // answered with the twelve defaults, reported `trusted: true`, and
-  // written back. The per-field tolerance is inside the inner cleaner, so
-  // this still answers one unreadable field with that field's default.
+  // `asMaybe(inner, () => inner({}))`: it cannot fail, so with it the
+  // strictness here would reach only `asJSON`'s parse, and a file that is
+  // valid JSON and not a settings object (`[]`, which `asObject` accepts,
+  // `"x"`, `42`) would be answered with the twelve defaults, reported
+  // `trusted: true`, and written back. The per-field tolerance is inside the
+  // inner cleaner, so this still answers one unreadable field with that
+  // field's default.
   //
   // `isPlainObject` first, because `asObject` accepts an array — and an
-  // array is what a half-synced or hand-edited `Settings.json` is likeliest
-  // to be when it is valid JSON and not these settings.
+  // array is what a hand-edited `Settings.json` is likeliest to be when it
+  // is valid JSON and not these settings.
   return parseLocalAccountSettings(text)
 }
 
@@ -106,16 +99,14 @@ function parseLocalAccountSettings(text: string): LocalAccountSettings {
  *
  * The strict reader exists so a read-modify-write cannot answer an
  * unreadable file with the 12 defaults and then write them back over the
- * user's `spendingLimits`. That argument is about the *write*, and applying
- * it to read-only callers took something that could not fail before this
- * branch and made it fatal: `account.localDisklet` is core's
- * `encryptDisklet`, so a truncated `Settings.json` — the interrupted write
- * the strict reader's own docstring cites — throws a parse or cleaner error
- * that `isMissingFile` cannot match. That propagated out of
- * `initializeAccount`, so the `LOGIN` action was never dispatched and the
- * user sat on the login scene with a toast on every attempt; it also hard
- * failed `GET /local-settings` and every `get-transactions`, through
- * `resolveListSpamThreshold`.
+ * user's `spendingLimits`. That argument is about the *write*. For a reader
+ * the strict error would be fatal: a truncated `Settings.json`, the
+ * interrupted write the strict reader's own docstring cites, fails the parse
+ * with an error that `isMissingFile` cannot match. Out of
+ * `initializeAccount` that would keep the `LOGIN` action from being
+ * dispatched, leaving the user on the login scene with a toast on every
+ * attempt, and it would fail `GET /local-settings` and every
+ * `get-transactions`, through `resolveListSpamThreshold`.
  *
  * `trusted` is false when the file was there and could not be read. A caller
  * that caches must not then mark itself authoritative, or a later write would
@@ -151,9 +142,7 @@ export async function readLocalAccountSettingsOrDefaults(
  * Absent when nothing was done. `moved` keeps the bytes under `to`;
  * `deleted` means the file's content was unrecoverable — it would not parse
  * or decrypt — so there was nothing to keep, and every other setting is
- * now its default. One `undefined` used to stand for both "nothing
- * happened" and "deleted", so a caller logging the move-aside skipped the
- * more destructive outcome entirely.
+ * now its default.
  */
 export type LocalSettingsRecovery =
   | { kind: 'moved'; to: string }
@@ -166,9 +155,9 @@ export type LocalSettingsRecovery =
  * over a file it could not read. That is right, and on its own it is a
  * one-way door: the file does not repair itself, so every later write fails
  * the same way forever — `spamFilterOn`, `spendingLimits`, the password
- * reminder, the notification state. The GUI showed "try again" for a
- * condition trying again cannot clear, and `change-local-settings` answered
- * the same `500` indefinitely.
+ * reminder, the notification state. The GUI would show "try again" for a
+ * condition trying again cannot clear, and `change-local-settings` would
+ * answer the same `500` indefinitely.
  *
  * Moving the file aside is a door that loses nothing. What a caller could
  * not read, it could not have recovered either; under
@@ -180,9 +169,9 @@ export type LocalSettingsRecovery =
  * The bytes decide, read once more here: two failures before this call do
  * not prove the file is broken, so text that now parses cleanly is the
  * base and nothing moves. Text that does not parse is moved aside. A read
- * that fails on the content — the box will not decrypt or parse — leaves no
- * plaintext to keep, so the file is deleted and the answer says so. Any
- * other failure is rethrown with the file left in place (`isContentFailure`).
+ * that fails on the content leaves no plaintext to keep, so the file is
+ * deleted and the answer says so. Any other failure is rethrown with the
+ * file left in place (`isContentFailure`).
  */
 export async function quarantineUnreadableLocalSettings(
   account: EdgeAccount
@@ -225,11 +214,11 @@ export async function quarantineUnreadableLocalSettings(
  *
  * Two attempts before anything is moved, because one failure does not mean
  * the file is broken: an interrupted write may have completed in the
- * meantime, and a half-synced file may have caught up. Quarantining a
- * `Settings.json` that reads perfectly well on the second attempt would be
- * the same data loss arriving by a third door. Two failures in a row is the
- * bar, and it is this function's job rather than the caller's so that the
- * GUI's write path and `change-local-settings` clear the same one.
+ * meantime. Quarantining a `Settings.json` that reads perfectly well on the
+ * second attempt would be the same data loss arriving by a third door. Two
+ * failures in a row is the bar, and it is this function's job rather than
+ * the caller's so that the GUI's write path and `change-local-settings`
+ * clear the same one.
  *
  * The answer is the base the caller's change must be applied to — the file
  * when it read, the defaults only when `recovery` says the file is gone.
@@ -268,8 +257,8 @@ export async function writeLocalAccountSettingsToDisk(
   settings: LocalAccountSettings
 ): Promise<LocalAccountSettings> {
   // `isPlainObject` first, for the same reason the read has it: `asObject`
-  // accepts an array, so `[]` un-cleaned to the twelve defaults and this
-  // wrote them over the real file.
+  // accepts an array, so `[]` would un-clean to the twelve defaults and this
+  // would write them over the real file.
   if (!isPlainObject(settings)) {
     throw new TypeError(`${LOCAL_SETTINGS_FILENAME} must be a settings object`)
   }

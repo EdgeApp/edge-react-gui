@@ -172,8 +172,8 @@ export function updateMostRecentWalletsSelected(
       }
     })
     // Then the file, from the file's own list: Redux holds `[]` for a
-    // session whose login read failed, and writing its list whole replaced
-    // the user's real one with a single entry.
+    // session whose login read failed, and writing its list whole would
+    // replace the user's real one with a single entry.
     writeMostRecentWalletSelected(account, walletId, tokenId)
       .then(mostRecentWallets => {
         dispatch({
@@ -493,9 +493,9 @@ export function checkCompromisedKeys(
     }
 
     // Only the entries this pass changed, merged into what the file holds
-    // now. The map above came from a lenient read before an info-server
-    // round trip and a modal, so writing it whole replaced every other
-    // wallet's record with a stale — or, after a failed read, empty — copy.
+    // now. The map above comes from a lenient read before an info-server
+    // round trip and a modal, so writing it whole would replace every other
+    // wallet's record with a stale copy, or an empty one after a failed read.
     await updateSyncedSettings(account, latest => ({
       ...latest,
       securityCheckedWallets: markSecurityChecked(

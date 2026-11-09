@@ -17,10 +17,8 @@ const asUnknownMap = asObject(asUnknown)
 /**
  * Re-exported, not re-declared.
  *
- * This module exported a byte-equivalent second copy, and
- * `src/util/keysStore.ts` imports it from here — so the repo had two
- * exported `isPlainObject` functions and a hand-written third test inside
- * `requireBodyObject`, which is what `predicates.ts` was created to end.
+ * `src/util/keysStore.ts` imports it from here, and `predicates.ts` holds
+ * the one copy.
  */
 export { isPlainObject }
 
