@@ -29,14 +29,13 @@ const ROOT = path.resolve(__dirname, '../../..')
 /**
  * The published default page size must be the one the route actually uses.
  *
- * They disagreed: the description said 100 while `DEFAULT_TX_LIMIT` is 99,
- * deliberately, so the rates batcher stops before crossing its 100-asset
- * limit. The wrong number reaches `openapi.json`, the HTML reference and
- * `edge-cli help get-transactions`, so a caller paging on the documented
- * default walks `offset` 0, 100, 200 and skips one transaction per page —
- * and `total` does not reveal it, because `total` is the match count, not
- * the page size. An accounting export built that way is short and looks
- * complete.
+ * `DEFAULT_TX_LIMIT` is 99, deliberately, so the rates batcher stops before
+ * crossing its 100-asset limit. The description reaches `openapi.json`, the
+ * HTML reference and `edge-cli help get-transactions`, so if it said 100, a
+ * caller paging on the documented default would walk `offset` 0, 100, 200
+ * and skip one transaction per page, and `total` would not reveal it,
+ * because `total` is the match count, not the page size. An accounting
+ * export built that way is short and looks complete.
  *
  * The description cannot interpolate the constant: `extractRoutes` reads it
  * through the TypeScript checker as a string literal, and a template literal
@@ -52,13 +51,13 @@ describe('get-transactions limit', () => {
   })
 
   it('publishes the timer ceiling the parsers actually enforce', () => {
-    // Both ceilings are refusals a caller runs into, and neither was
-    // written down: the guide's `--idle-timeout` row stopped at "`0` means
-    // never" and `admin-make-lobby`'s `period` doc stated a floor, which
-    // reads as there being no ceiling. The number cannot be interpolated
-    // into either — `extractRoutes` reads a field doc through the checker as
-    // a string literal, and the guide is prose — so the two are kept in
-    // step here, against `MAX_TIMER_MS` itself.
+    // The ceiling is a refusal a caller runs into, so it is written down: in
+    // the guide's `--idle-timeout` row, and in `admin-make-lobby`'s `period`
+    // and `enable-otp`'s `timeout` docs, where a floor stated alone reads as
+    // there being no ceiling. The number cannot be interpolated into any of
+    // them, because `extractRoutes` reads a field doc through the checker as
+    // a string literal and the guide is prose, so they are kept in step here,
+    // against `MAX_TIMER_MS` itself.
     const seconds = String(Math.floor(MAX_TIMER_MS / 1000))
     const guide = fs.readFileSync(path.join(ROOT, 'docs/EDGE_CLI.md'), 'utf8')
     expect(guide).toContain(seconds)
@@ -89,10 +88,10 @@ describe('get-transactions limit', () => {
   })
 
   it('publishes the file suffixes the writer actually uses', () => {
-    // `out`'s prose is the fourth statement of the suffix table that
-    // `TX_EXPORT_FORMAT_INFO` is now the only source of, and it cannot
-    // interpolate for the same reason `limit`'s cannot — `extractRoutes`
-    // reads it through the checker as a string literal. A format added to
+    // `out`'s prose restates the suffix table `TX_EXPORT_FORMAT_INFO` is the
+    // source of, and it cannot interpolate for the same reason `limit`'s
+    // cannot: `extractRoutes` reads it through the checker as a string
+    // literal. A format added to
     // `TX_EXPORT_FORMATS` without a line here is accepted everywhere and
     // then written under a name the reference does not mention.
     const out = asHelpDocs(helpDocs).commands['get-transactions'].params?.out
@@ -111,20 +110,17 @@ describe('get-transactions limit', () => {
  * The client must not give up on a shutting-down engine before the engine has
  * finished shutting down.
  *
- * `apiClient` waited 15 s under a comment claiming it was "bounded by the
- * drain the engine itself allows, plus a margin", while the drain alone is
- * 110 s. A stop or Ctrl-C with any request slower than 15 s in flight left
- * the socket bound and answering 503; the next command gave up, spawned a
- * replacement, and that child failed to claim the profile and told the user
- * to run `engine-stop` — which is what they had just done.
+ * A stop or Ctrl-C with a slow request in flight leaves the socket bound and
+ * answering 503 for as long as the teardown takes. A client that gave up
+ * sooner would spawn a replacement that fails to claim the profile and tells
+ * the user to run `engine-stop`, which is what they had just done.
  */
 describe('shutdown budgets', () => {
   it('covers every bounded phase of the engine teardown', () => {
-    // Written out term by term, because the constant was three of them —
-    // 150 s against a real 220 s — under a docblock claiming it was all of
-    // them. The gap was a wasted spawn until the client learned to report
-    // past the ceiling; now it tells the operator to kill a daemon that is
-    // draining as designed. A new bounded phase has to move this line.
+    // Written out term by term, so a constant that leaves a phase out fails
+    // here. Past the ceiling the client tells the operator the engine is
+    // wedged and to inspect or kill it, which for a missing phase would be a
+    // daemon draining as designed. A new bounded phase has to move this line.
     expect(SHUTDOWN_WAIT_MS).toBe(
       SHUTDOWN_DRAIN_MS +
         // `objects.clearAll()`, then `releaseHandles` inside the logout —
@@ -146,10 +142,9 @@ describe('shutdown budgets', () => {
  *
  * `save-tx-action` writes into the wallet's synced transaction file, and its
  * `savedAction` description is the only place a caller learns which action
- * types the engine takes. It listed five of the six — `swapSend`, the arm
- * this branch picked up from develop, was missing — so a caller holding a
- * `swapSend` action read that the engine would reject it. The description
- * cannot interpolate the set, for the same reason the limit above cannot.
+ * types the engine takes, so a type missing from it reads as one the engine
+ * rejects. The description cannot interpolate the set, for the same reason
+ * the limit above cannot.
  */
 describe('save-tx-action actionType set', () => {
   it('publishes every arm the dispatcher has', () => {
@@ -167,15 +162,14 @@ describe('save-tx-action actionType set', () => {
  * The rate queue has to give up before the client stops waiting.
  *
  * `RATE_QUERY_TIMEOUT_MS` bounds one upstream request and `doQuery` recurses
- * once per batch of at most 99 keys, so a caller's wait was (batches) × 30 s
- * — 13 passes, about 390 s, for the 1,200 unpriced transactions
- * `fillTxsFiat`'s docblock names. The client reported `Request timed out` at
- * 120 s and the daemon kept working for another four and a half minutes with
- * `inQuery` latched and every other rate caller queued behind it. The chain
- * budget is what stops that, and it only does so while it is under the
- * client's own deadline — which lives in a different module, so the pair is
- * kept in step here rather than in `exchangeRatesCache.test.ts`, whose
- * subject is Node-safe and must not import the CLI client.
+ * once per batch of at most 99 keys, so without a chain budget a caller's
+ * wait would be (batches) × 30 s. A client that timed out first would leave
+ * the daemon working with `inQuery` latched and every other rate caller
+ * queued behind it. The chain budget is what stops that, and it only does
+ * so while it is under the client's own deadline, which lives in a different
+ * module, so the pair is kept in step here rather than in
+ * `exchangeRatesCache.test.ts`, whose subject is Node-safe and must not
+ * import the CLI client.
  */
 describe('rate budgets', () => {
   it('gives up before the client does', () => {

@@ -11,28 +11,28 @@ const ROOT = path.resolve(__dirname, '../../..')
  * as optional.
  *
  * `route.ts` opens by promising that "the documented shape is the enforced
- * shape, so the two cannot disagree", and for nested shapes it was not:
- * `asOptional(cleaner, fallback)` erases `undefined` from the cleaner's
- * output type, and the generator reads a *nested* field's optionality from
- * the printed type — `optionalNames` reads the source, deliberately, but it
- * is only ever applied to a route's own `query`/`body` literal, because
- * `jsonSchema`'s nested-object arm has only a type string to work from.
+ * shape, so the two cannot disagree", and for nested shapes that holds only
+ * declaration by declaration: `asOptional(cleaner, fallback)` erases
+ * `undefined` from the cleaner's output type, and the generator reads a
+ * *nested* field's optionality from the printed type. `optionalNames` reads
+ * the source, deliberately, but it is only ever applied to a route's own
+ * `query`/`body` literal, because `jsonSchema`'s nested-object arm has only
+ * a type string to work from.
  *
- * So `openapi.json` listed `spendInfo.required = ["spendTargets","tokenId"]`
- * for `spend`, `make-spend` and `get-max-spendable`,
- * `["privateKeys","tokenId","spendTargets"]` for `sweep-private-keys`, and
- * `crypto.items.required = ["pluginId","tokenId"]` for `rates-query` —
- * while a caller omitting any of them succeeded. The sweep was the pointed
- * one: `asSweepSpendInfo` exists because "a sweep legitimately has no
- * `spendTargets`", and the document said a sweep must send some.
+ * So a nested optional takes no fallback, and the handler defaults instead.
+ * With a fallback, `openapi.json` would list `tokenId` as required in
+ * `spendInfo` for `spend`, `make-spend`, `get-max-spendable` and
+ * `sweep-private-keys`, and in `crypto.items` for `rates-query`, while a
+ * caller omitting it succeeds. For a sweep it would also require
+ * `spendTargets`, which `asSweepSpendInfo` exists to make optional, because
+ * "a sweep legitimately has no `spendTargets`".
  *
- * The fix is per declaration — no fallback on a nested optional, and the
- * handler defaults instead — and this is the oracle for it, because it
- * compares the two sides rather than either one's own story. None of the
- * five gates could: `docs:api:check` regenerates and compares,
- * `docs:api:committed` compares that to git, and `verifyApiDocs` never looks
- * at a `required` list. A fallback added back here moves the field into
- * `required` while the cleaner still accepts omission, and this fails.
+ * This is the oracle for those declarations, because it compares the two
+ * sides rather than either one's own story. No other gate does:
+ * `docs:api:check` regenerates and compares, `docs:api:committed` compares
+ * that to git, and `verifyApiDocs` never looks at a `required` list. A
+ * fallback added back here moves the field into `required` while the
+ * cleaner still accepts omission, and this fails.
  */
 const openapi = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'docs/api/dist/openapi.json'), 'utf8')
@@ -89,7 +89,7 @@ describe('nested request shapes', () => {
 
   it('still publishes the one field asSpendInfo requires', () => {
     // The other direction: `spendTargets` is required because every handler
-    // reads it — an empty object passed `isPlainObject` and then threw on
+    // reads it, and an empty object would throw on
     // `spendInfo.spendTargets.length`.
     expect(acceptsWithout(asSpendInfo, SPEND_INFO, 'spendTargets')).toBe(false)
   })

@@ -30,7 +30,7 @@ export const walletTokens = route({
   returns: asObject({
     allTokens: doc(
       asObject(asCoreValue),
-      '`EdgeToken` by tokenId: everything the plugin ships with, plus this account\u2019s own. `builtinTokens` is not returned separately — it is this map minus `customTokens`, and sending both wrote the whole built-in list down the socket twice.'
+      '`EdgeToken` by tokenId: everything the plugin ships with, plus this account\u2019s own. `builtinTokens` is not returned separately: it is this map minus `customTokens`, and sending both would write the whole built-in list down the socket twice.'
     ),
     customTokens: doc(
       asObject(asCoreValue),
@@ -77,10 +77,8 @@ export const changeEnabledTokenIds = route({
     custom: true,
     flags: {
       // The hand-written command splits this on commas, so the reference
-      // must not publish `'<json>'` for it: the documented spelling came
-      // back `404 TOKEN_NOT_FOUND Unknown token: ["…"]`, taken as one
-      // literal id, while the command's own `UsageError` printed the real
-      // form.
+      // must not publish `'<json>'` for it: that spelling is taken as one
+      // literal id and answered `404 TOKEN_NOT_FOUND Unknown token: ["…"]`.
       tokenIds: { valueForm: '<a,b,c>' }
     },
     extra: {
@@ -94,16 +92,14 @@ export const changeEnabledTokenIds = route({
       },
       'disable-all': {
         kind: 'boolean',
-        doc: 'Send the empty set, disabling every token on the wallet. A spelling of its own, because an empty flag value is refused everywhere in this CLI — `-d ""` reaching the profile hash as an empty directory is the reason — so there was no way to ask for this.'
+        doc: 'Send the empty set, disabling every token on the wallet. A flag of its own, because this CLI refuses an empty flag value everywhere (an empty `-d ""` would reach the profile hash as an empty directory), so an empty list cannot be passed as a value.'
       }
     },
     // Four mutually exclusive ways to name the set, which one argument per
-    // field cannot say: the assembled line published `--token-ids` as
+    // field cannot say: an assembled line would publish `--token-ids` as
     // required and the other three as optional extras, which is the one
-    // combination the command refuses, and `--disable-all` on its own — the
-    // reason the flag exists — was not expressible in it at all. The
-    // command's own refusal footer had the real grammar; only the reference
-    // did not.
+    // combination the command refuses, and could not express `--disable-all`
+    // on its own, the reason the flag exists.
     usage:
       'change-enabled-token-ids --wallet-id=<walletId> (--token-ids=<a,b,c> | --add=<add> … | --remove=<remove> … | --disable-all)'
   },
@@ -126,11 +122,10 @@ export const changeEnabledTokenIds = route({
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     // Core ends `changeEnabledTokenIds` with
     // `.filter(tokenId => allTokens[tokenId] != null)`, so it drops what it
-    // does not know and answers 200. This was the last route taking a
-    // caller-supplied tokenId with no assertion, and the `--add`/`--remove`
-    // sugar makes a typo likelier rather than less: the client reads the
-    // current set and posts the whole list back, so a bad id is appended to
-    // a known-good set and the response is indistinguishable from success —
+    // does not know and answers 200. The `--add`/`--remove` sugar makes a
+    // typo likelier rather than less: the client reads the current set and
+    // posts the whole list back, so a bad id is appended to a known-good set
+    // and, unchecked, the response would be indistinguishable from success:
     // exit 0 for a script that asked for something it did not get.
     const tokenIds: string[] = []
     for (const tokenId of ctx.body.tokenIds) {

@@ -13,9 +13,9 @@ import { fetchSwapQuotes } from '../../cli/engine/routes/swap'
  * The routes that move funds refuse a body key they do not declare.
  *
  * The CLI refuses unknown flags, but REST is the published contract, and a
- * `.withRest` body accepted `{"tokenID": …}` — which left `tokenId` at its
- * `null` default and sent the native coin — and a top-level `"memos"` on an
- * XRP spend, which went out with no destination tag.
+ * `.withRest` body would accept `{"tokenID": …}`, which leaves `tokenId` at
+ * its `null` default and sends the native coin, and a top-level `"memos"` on
+ * an XRP spend, which goes out with no destination tag.
  */
 describe('strictBody', () => {
   async function post(
@@ -102,7 +102,7 @@ describe('strictBody', () => {
     ]
   ])('refuses a misspelled nested field: %s', async (_name, spendInfo) => {
     // The top-level check cannot see inside `spendInfo`, where `tokenID`
-    // left `tokenId` at its default and sent the native coin.
+    // would leave `tokenId` at its default and send the native coin.
     const error: any = await post(spend, { walletId: 'w', spendInfo })
     expect(error).toMatchObject({ code: 'BAD_REQUEST', status: 400 })
   })

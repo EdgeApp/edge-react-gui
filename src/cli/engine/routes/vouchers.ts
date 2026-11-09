@@ -19,20 +19,18 @@ const asVoucherBody = asObject({
 /**
  * Refuse an id that is not on the account's own pending list.
  *
- * Core forwards whatever it is given to the login server and both calls
- * answered `{"ok": true}` for an arbitrary string, on an account whose
- * `pendingVouchers` is empty — the same silent-wrong-answer shape this
- * branch removed from `change-enabled-token-ids` and from `balance-map
- * --token-id`, and the one place it matters most. A voucher is a pending
- * login the login server *approves on a timer* unless it is rejected, so a
- * caller who mistypes an id, or passes one from a stale `OTP_REQUIRED`, was
- * told an unrecognised device had been denied while that device's login went
- * on to succeed.
+ * Core forwards whatever it is given to the login server, and both calls
+ * succeed for an arbitrary string, even on an account whose
+ * `pendingVouchers` is empty. A voucher is a pending login the login server
+ * *approves on a timer* unless it is rejected, so without this check a
+ * caller who mistypes an id, or passes one from a stale `OTP_REQUIRED`,
+ * would be told an unrecognised device had been denied while that device's
+ * login went on to succeed.
  *
  * `account.pendingVouchers` is the list `pending-vouchers` already reads, so
  * a hit costs no round trip. Core leaves it undefined until the login server
  * has reported, which is the one case this cannot judge: an undefined list
- * is not an empty one, so the call goes through as before rather than
+ * is not an empty one, so the call goes through unchecked rather than
  * refusing a voucher that may well exist.
  *
  * Core refreshes the list only on the account's login sync, every 30
@@ -100,8 +98,8 @@ const REPLY_MARGIN_MS = 1000
  * The smallest whole-second `--timeout` whose budget still covers a full
  * wait: what the client sends (`requestBudgetFor`) less the reply margin,
  * and a second for what the request spends before it starts waiting.
- * Derived, because a hand-written figure said 37 s, which the client's own
- * headroom and this margin turn into a 34 s wait.
+ * Derived, because the client's own headroom and this margin both come off
+ * the `--timeout`: 37 s, for instance, is a 34 s wait.
  */
 export const TIMEOUT_FOR_FULL_WAIT_S = ((): number => {
   let seconds = Math.ceil(VOUCHER_SYNC_WAIT_MS / 1000)

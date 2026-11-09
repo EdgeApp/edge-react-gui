@@ -14,22 +14,17 @@ const NO_BUDGET = { budgetMs: undefined }
 /**
  * A voucher that is not pending must not be reported as approved or denied.
  *
- * Core forwards whatever id it is given to the login server, so both calls
- * answered `{"ok": true}` and exit 0 for an arbitrary string — on an account
- * whose `pendingVouchers` was empty. That is the silent-wrong-answer shape
- * this branch removed from `change-enabled-token-ids` and from `balance-map
- * --token-id`, and it is worse here: an Edge voucher is a pending login the
- * login server *approves on a timer* unless it is rejected, so a caller who
- * mistyped an id, or passed one from a stale `OTP_REQUIRED`, was told an
- * unrecognised device had been denied while that device's login went on to
- * succeed.
+ * Core forwards whatever id it is given to the login server, so without a
+ * check here both calls would answer `{"ok": true}` and exit 0 for an
+ * arbitrary string, on an account whose `pendingVouchers` is empty. An Edge
+ * voucher is a pending login the login server *approves on a timer* unless
+ * it is rejected, so a caller who mistyped an id, or passed one from a stale
+ * `OTP_REQUIRED`, would be told an unrecognised device had been denied while
+ * that device's login went on to succeed.
  *
  * The success path cannot run in either offline suite: a voucher exists only
- * while a login is waiting on 2FA, and it cannot be driven on the shared
- * test account either, because that account has 2FA off and turning it on is
- * a credential change QA is not allowed to make. A stub account with a
- * pending voucher is what is left, and it is enough: the handler's whole job
- * is the list check and the forward.
+ * while a login is waiting on 2FA. A stub account with a pending voucher is
+ * enough: the handler's whole job is the list check and the forward.
  */
 function makeCtx(
   body: Record<string, unknown>,
@@ -38,8 +33,8 @@ function makeCtx(
 ): { ctx: any; approved: string[]; rejected: string[]; account: any } {
   const approved: string[] = []
   const rejected: string[] = []
-  // `watch` reads `this`, as core's yaob object does: taking it off the
-  // account and calling it bare threw in the fake world.
+  // `watch` reads `this`, as core's yaob object does: taken off the account
+  // and called bare, it throws.
   const account = {
     pendingVouchers: pending,
     listeners: [] as Array<() => void>,
@@ -136,9 +131,9 @@ describe('approve-voucher and reject-voucher', () => {
   })
 
   it('say that nothing is pending when nothing is', async () => {
-    // The common case, and the one QA hit: an empty list is a different
-    // message from "that one is not on the list", because the answer is
-    // "there is no voucher to act on at all".
+    // The common case: an empty list is a different message from "that one
+    // is not on the list", because the answer is "there is no voucher to act
+    // on at all".
     const { ctx } = makeCtx({ voucherId: 'nosuchvoucher' }, [])
     await expect(rejectVoucher.handler(ctx)).rejects.toThrow(/none is/)
   })
@@ -146,7 +141,7 @@ describe('approve-voucher and reject-voucher', () => {
   it('forward anything while the list is still unknown', async () => {
     // `undefined` is not an empty list: core has not heard from the login
     // server yet, so refusing here would refuse a voucher that may well
-    // exist. The call goes through exactly as it did before.
+    // exist. The call goes through to core unchecked.
     const { ctx, rejected } = makeCtx({ voucherId: 'v1' }, undefined)
     expect(await rejectVoucher.handler(ctx)).toBeUndefined()
     expect(rejected).toStrictEqual(['v1'])

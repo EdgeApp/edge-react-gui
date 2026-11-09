@@ -94,7 +94,7 @@ function overlayDisplayMetadata(
  * 99, not 100: the rates batcher stops *before* crossing
  * RATES_SERVER_MAX_QUERY_SIZE, so 99 unpriced transactions cost one upstream
  * request and 100 cost two. The point of the default is that a page prices
- * in a single request, which 100 did not deliver.
+ * in a single request.
  */
 export const DEFAULT_TX_LIMIT = 99
 
@@ -109,9 +109,9 @@ export const DEFAULT_TX_LIMIT = 99
  * @note `limit` and `offset` apply before the fiat fill, so a large page asks
  *   the rates server about more dates. Unpriced dates are batched at up to 99
  *   per request — the batcher stops before the server's 100-asset limit,
- *   which is why `DEFAULT_TX_LIMIT` is 99 — and every rate is cached until
- *   the last session logs out, so a second listing of the same range within
- *   one login needs none.
+ *   which is why `DEFAULT_TX_LIMIT` is 99 — and rates are kept in a bounded
+ *   cache until the last session logs out, so a second listing of the same
+ *   range within one login needs none.
  * @note An export ignores `limit` and `offset` entirely. Paging an export is
  *   the obvious way to get a 50,000-transaction wallet out, and it would
  *   write a file holding one page while the response reported `total` as the
@@ -169,7 +169,7 @@ export const getTransactions = route({
         asQueryNonNegativeInteger,
         // The number has to match `DEFAULT_TX_LIMIT`, and a template literal
         // cannot say so: `extractRoutes` reads this through the checker as a
-        // string *literal*, and interpolating dropped the description from
+        // string *literal*, and interpolating would drop the description from
         // the reference altogether. `derivedNumbers.test.ts` asserts the two
         // agree instead.
         'How many to return. Defaults to 99; pass `0` for every transaction from `offset` on. `total` in the response says how many matched, so a caller can page with `offset`. Ignored by an `exportFormat` export, which always covers the whole match.'
@@ -186,7 +186,7 @@ export const getTransactions = route({
     saveExportPrefs: asOptional(
       doc(
         asQueryBoolean,
-        'Save `bitwaveAccountId` and the chosen formats into the wallet\u2019s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats \u2014 on a listing there would be nothing to write, and answering `ok` for that told a caller their preferences had been recorded when they had not.'
+        'Save `bitwaveAccountId` and the chosen formats into the wallet\u2019s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats \u2014 on a listing there would be nothing to write, and answering `ok` would tell a caller their preferences had been recorded when they had not.'
       ),
       false
     ),
@@ -244,33 +244,32 @@ export const getTransactions = route({
     const { tokenId, startDate, endDate, searchString, limit, offset } =
       ctx.query.valid
     // First, as `get-num-transactions` and the metadata routes do. After the
-    // spam floor, an unknown token id was priced before it was refused:
+    // spam floor, an unknown token id would be priced before it was refused:
     // `getExchangeDenom` answers multiplier `'1'` for it rather than
-    // throwing, so a mistyped `--token-id` queued a rates lookup for an
-    // asset that does not exist and waited out the queue before the 404.
+    // throwing, so a mistyped `--token-id` would queue a rates lookup for an
+    // asset that does not exist and wait out the queue before the 404.
     assertTokenId(wallet, tokenId)
     // The account's own fiat, read once and spent twice. It is the floor's
     // currency and the display default, and the two values are the same by
     // construction whenever `fiat` was not given — so reading it per use
-    // parsed the account's *synced* `Settings.json` twice for the identical
-    // answer, through `syncedSettingsFile.readSyncedSettings`, which
-    // deliberately has no process-wide cache to absorb the repeat. (The
-    // local disklet's file has the same basename, which is the confusion
-    // `spamThreshold.ts` warns about; `localAccountSettings` is the one that
-    // reads *that*.) The export path below wants `denominationSettings` out
-    // of the same file, so it takes them from this one read too.
-    // `fakeDisklet`'s `onSyncedRead` counts the reads, and
-    // `getTransactions.test.ts` pins the count.
+    // would parse the account's *synced* `Settings.json` twice for the
+    // identical answer, through `readAccountSyncedSettings`, which has no
+    // process-wide cache to absorb the repeat. (The local disklet's file has
+    // the same basename, which is the confusion `spamThreshold.ts` warns
+    // about; `localAccountSettings` is the one that reads *that*.) The export
+    // path below wants `denominationSettings` out of the same file, so it
+    // takes them from this one read too. `getTransactions.test.ts` counts the
+    // reads and pins the count.
     //
     // The spam floor is denominated in the account's fiat, never the one the
     // caller asked to see amounts in. `calculateSpamThreshold` divides a
-    // multiplier by a rate, so passing the display fiat moved the floor:
-    // `--fiat=JPY` on a BTC wallet truncated it to `'0'` — the account's
-    // spam filter silently off — and on a cheap ERC-20 it moved it by orders
-    // of magnitude, so two listings of one range returned different rows and
-    // different `total`s depending on the display currency. `fiat` is
-    // documented as display-only, and the GUI's list filters by the
-    // account's own setting.
+    // multiplier by a rate, so passing the display fiat would move the
+    // floor: `--fiat=JPY` on a BTC wallet would truncate it to `'0'`, the
+    // account's spam filter silently off, and on a cheap ERC-20 it would move
+    // it by orders of magnitude, so two listings of one range would return
+    // different rows and different `total`s depending on the display
+    // currency. `fiat` is documented as display-only, and the GUI's list
+    // filters by the account's own setting.
     const syncedSettings = await readAccountSyncedSettings(account)
     const thresholdIsoFiat = defaultIsoFiatOf(syncedSettings)
 
@@ -311,11 +310,10 @@ export const getTransactions = route({
     }
     // The symmetrical refusal. The write lives in the export arm, which this
     // handler returns before reaching when no format was asked for — so
-    // `--save-export-prefs` on a listing answered `ok` with a normal page
-    // and recorded nothing, and a caller had no way to know. It is the same
-    // argument as the line above, and the same one that made an unknown
-    // token id and an unknown voucher id refusals rather than successes.
-    // `--export-format=,` lands here too: an empty list is no formats.
+    // `--save-export-prefs` on a listing would answer with a normal page and
+    // record nothing, and a caller would have no way to know. It is the same
+    // argument as the line above. `--export-format=,` lands here too: an
+    // empty list is no formats.
     if (ctx.query.valid.saveExportPrefs && formats.length === 0) {
       throw engineError(
         'BAD_REQUEST',
@@ -327,10 +325,9 @@ export const getTransactions = route({
     }
 
     // Every refusal that depends only on the query and the saved
-    // preferences, made before any history or rates work: a missing Bitwave
-    // id used to be found after `wallet.getTransactions` and the whole
-    // `fillTxsFiat`, so the caller's `--timeout` was spent pricing the
-    // history before a 400 it could have had at once.
+    // preferences, made before any history or rates work, so the caller's
+    // `--timeout` is not spent pricing the history before a 400 it could
+    // have had at once.
     let bitwaveAccountId: string | undefined
     if (formats.includes('bitwave')) {
       if (bitwaveAccountIdQuery != null && bitwaveAccountIdQuery !== '') {
@@ -341,13 +338,12 @@ export const getTransactions = route({
           const map = await readExportTxInfoMap(wallet)
           saved = map[exportTxInfoKey(wallet, tokenId)]?.bitwaveAccountId
         } catch (error: unknown) {
-          // Only an absent file is "no saved id". This caught everything, so
-          // an `exportTxInfo.json` that would not decrypt answered
-          // `400 MISSING_BITWAVE_ACCOUNT_ID` — telling the caller their
-          // saved id is not there when it is, with nothing logged. The write
-          // half of this same request rethrows, and `mergeExportTxInfo`
-          // refuses to treat an unreadable file as absent for the same
-          // reason.
+          // Only an absent file is "no saved id". Catching everything would
+          // answer `400 MISSING_BITWAVE_ACCOUNT_ID` for an
+          // `exportTxInfo.json` that would not decrypt — telling the caller
+          // their saved id is not there when it is, with nothing logged.
+          // `mergeExportTxInfo`, the write half of this same request, refuses
+          // to treat an unreadable file as absent for the same reason.
           if (!isMissingFile(error)) throw error
           saved = undefined
         }
@@ -364,12 +360,12 @@ export const getTransactions = route({
 
     // An export is not a listing. Spam filtering is a display convenience —
     // the GUI's transaction list applies it and the GUI's Export button
-    // deliberately does not — and `spamFilterOn` defaults to `true`, so an
-    // account that has received dust exported a smaller row count here than
-    // from the scene over the same dates, with `total` reporting the
-    // filtered count as the whole range. Nobody asked for rows to be dropped
-    // from an accounting export; a caller who wants the floor can still pass
-    // `spamThreshold` and gets exactly what they asked for.
+    // deliberately does not — and `spamFilterOn` defaults to `true`, so
+    // filtering here would give an account that has received dust a smaller
+    // row count than the scene over the same dates, with `total` reporting
+    // the filtered count as the whole range. Nobody asked for rows to be
+    // dropped from an accounting export; a caller who wants the floor can
+    // still pass `spamThreshold` and gets exactly what they asked for.
     const exporting = formats.length > 0
     const queryThreshold = ctx.query.valid.spamThreshold
     // What is left of the caller's deadline, read at each rates consumer.
@@ -377,9 +373,10 @@ export const getTransactions = route({
     // the floor and the fill each get what remains *when they queue*. Not
     // read once and handed to both: the queue turns a duration into a
     // deadline at enqueue time, so the same duration given to the fill
-    // after the floor and `getTransactions` had run gave it a deadline later
-    // than the caller's by exactly that time. Not read only at the fill
-    // either, which let the floor arm its chain at the module default.
+    // after the floor and `getTransactions` had run would give it a deadline
+    // later than the caller's by exactly that time. Not read only at the
+    // fill either, which would let the floor arm its chain at the module
+    // default.
     const remainingBudgetMs = (): number | undefined =>
       readRequestBudgetMs(ctx.req, ctx.arrivedAt)
     const spamThreshold =
@@ -405,22 +402,16 @@ export const getTransactions = route({
       spamThreshold
     })
 
-    // `0` is the explicit opt-out. An unbounded default meant one call could
+    // `0` is the explicit opt-out. An unbounded default would let one call
     // price and serialise an entire wallet's history, which on an old BTC or
-    // ETH wallet ran past the client's own socket timeout.
+    // ETH wallet would run past the client's own socket timeout.
     //
-    // An export ignores the page entirely. The default was applied *before*
-    // the formatters, so `--export-format=csv` wrote a file holding only the
-    // first page while the response reported `total` as the real count — a
-    // silently truncated accounting export, which is worse than a slow one.
-    // The reason the default exists at all is to bound the rates work, and
-    // `fillTxsFiat` now queues a whole page in one batch either way.
-    // An export ignores the page *entirely*, `offset` included. Ignoring only
-    // `limit` left `--export-format=csv --offset=100` writing a file with the
-    // newest hundred transactions missing while the response reported `total`
-    // as the real count — the silently truncated accounting export this
-    // paragraph says is worse than a slow one, through the other half of the
-    // page.
+    // An export ignores the page *entirely*, `offset` included. Paging an
+    // export would write a file holding one page while the response
+    // reported `total` as the real count: a silently truncated accounting
+    // export, which is worse than a slow one. The reason the default exists
+    // at all is to bound the rates work, and `fillTxsFiat` queues a whole
+    // page in one batch either way.
     const sliced = exporting
       ? transactions
       : limit === 0
@@ -435,10 +426,10 @@ export const getTransactions = route({
     // which on this route is an arbitrary tail of the oldest transactions.
     // `doQuery` carries at most 99 keys a pass, so a 1,200-transaction
     // export is 13 passes and a 10,000-transaction one is 102, and a server
-    // answering in ~700 ms spends 90 s before they finish. `--timeout` moved
-    // `apiClient`'s deadline and nothing moved this, so the one control the
-    // route offers for "slow is better than wrong" had no effect on the work
-    // it was waiting for.
+    // answering in ~700 ms spends 90 s before they finish. Passing the
+    // caller's budget lets `--timeout`, the one control the route offers for
+    // "slow is better than wrong", move this deadline as well as
+    // `apiClient`'s.
     const fill = await fillTxsFiat({
       wallet,
       tokenId,
@@ -464,11 +455,11 @@ export const getTransactions = route({
 
     // An export is a file a person reconciles against their books, and a
     // zero fiat amount in it is indistinguishable from a real one. The
-    // queue's "gave up" answer is now distinct from "the server cannot
-    // price this date" — the first is this refusal, the second is a `0` the
-    // server itself supplied — so the export stops instead of writing a
-    // number nobody asked for. `details` says how much, and the message
-    // names the two ways out.
+    // queue's "gave up" answer is distinct from "the server cannot price
+    // this date" — the first is this refusal, the second is a `0` the server
+    // itself supplied — so the export stops instead of writing a number
+    // nobody asked for. `details` says how much, and the message names the
+    // two ways out.
     if (fill.unavailable > 0) {
       throw engineError(
         'RATES_INCOMPLETE',
@@ -487,16 +478,15 @@ export const getTransactions = route({
     // its CSV and QBO files: `selectDisplayDenom` reads the user's choice out
     // of Redux and this reads the same `denominationSettings` out of the
     // synced `Settings.json`, through one shared derivation. With only the
-    // exchange denomination, a BTC wallet set to "bits" exported
-    // `AMT_ASSET=50000` with `DENOMINATION=bits` from the scene and `0.0005`
-    // with `BTC` from here, for the same transaction — and QBO's `TRNAMT`
-    // carries no unit field at all to tell the two files apart.
+    // exchange denomination, a BTC wallet set to "bits" would export
+    // `0.0005` with `BTC` from here where the scene writes `AMT_ASSET=500`
+    // with `DENOMINATION=bits`, for the same transaction — and QBO's
+    // `TRNAMT` carries no unit field at all to tell the two files apart.
     // From the one read at the top, which is the strict one: an empty
     // `denominationSettings` sends `getDisplayDenom` to the exchange
-    // denomination, which is the divisor this export was just taught not to
-    // guess, so a file that is there and unreadable must not look like an
-    // account that has chosen nothing — and it does not, because that read
-    // throws.
+    // denomination, so a file that is there and unreadable must not look
+    // like an account that has chosen nothing — and it does not, because
+    // that read throws.
     const { denominationSettings } = syncedSettings
     // Two denominations, because the three formats want different ones and
     // the scene already spends them that way. CSV and QBO carry the amount
@@ -504,29 +494,26 @@ export const getTransactions = route({
     // from the user's chosen display units — while Bitwave has no unit field
     // at all: `amountTicker` is the asset's own currency code, so its
     // `amount` has to be in the *exchange* denomination or the row reads
-    // `50000 BTC` for 0.0005 BTC. Feeding one denomination to all three
-    // aligned CSV and QBO and broke the one format that already agreed.
+    // `50000 BTC` for 0.0005 BTC.
     const displayDenom = getDisplayDenom(
       denominationSettings,
       wallet.currencyConfig,
       tokenId
     )
     const exchangeDenom = getExchangeDenom(wallet.currencyConfig, tokenId)
-    // The shared body, not a third derivation: this one answered the raw
-    // `tokenId` for a token the plugin no longer carries, where the GUI
-    // answers `''`, so one export named a column after a contract address.
-    // (`assertTokenId` at the top means neither arm is reachable today,
+    // The shared body, not a third derivation: for a token the plugin no
+    // longer carries it answers `''`, as the GUI does, rather than the raw
+    // `tokenId`, which would name a column after a contract address.
+    // (`assertTokenId` at the top means that case is not reachable today,
     // which is exactly when a copy drifts unnoticed.)
     const currencyCode = currencyCodeForToken(wallet, tokenId)
 
     // Outside the bitwave branches, because the flag is documented as saving
-    // "`bitwaveAccountId` **and** the chosen formats" and it used to be
-    // honoured only when the caller asked for bitwave *and* passed an
-    // explicit account id. So `--export-format=csv,qbo --save-export-prefs`
-    // answered `ok` and wrote nothing, leaving the GUI export scene's
-    // switches untouched. Persisting is still opt-in: writing unasked turned
-    // a one-off `--bitwave-account-id` into the user's saved account id and
-    // flipped "Export to Bitwave" on for them.
+    // "`bitwaveAccountId` **and** the chosen formats", so
+    // `--export-format=csv,qbo --save-export-prefs` writes the GUI export
+    // scene's switches too. Persisting is opt-in: writing unasked would turn
+    // a one-off `--bitwave-account` into the user's saved account id and
+    // flip "Export to Bitwave" on for them.
     // A side errand, as the export scene treats it: `mergeExportTxInfo`
     // refuses to write over a file it could not read, and that refusal
     // must not cost the caller the files the whole fill was for. The
@@ -540,9 +527,9 @@ export const getTransactions = route({
           // rather than clearing it for a caller who never mentioned bitwave.
           bitwaveAccountId,
           // The same field set the GUI writes, so one record keeps one
-          // meaning: a partial patch left isExportCsv/isExportQbo at `false`
-          // on a first write and the record no longer described the last
-          // export either tool ran.
+          // meaning: a partial patch would leave isExportCsv/isExportQbo at
+          // `false` on a first write, and the record would no longer describe
+          // the last export either tool ran.
           isExportBitwave: formats.includes('bitwave'),
           isExportCsv: formats.includes('csv'),
           isExportQbo: formats.includes('qbo')
@@ -556,13 +543,8 @@ export const getTransactions = route({
       }
     }
 
-    // One dispatch, shared with the GUI's export scene. This was an
-    // `if/else if/else` over `formats` and the scene had three `if` blocks,
-    // and four rounds of review found the two disagreeing about which
-    // resolved value went to which formatter. The `else` arm compounded it:
-    // a fourth entry in `TX_EXPORT_FORMATS` is accepted by
-    // `asTxExportFormat` everywhere, fell in here, and dereferenced
-    // `bitwaveAccountId!` as `undefined`.
+    // One dispatch, shared with the GUI's export scene, so the two cannot
+    // disagree about which resolved value goes to which formatter.
     const files = await buildExportFiles({
       formats,
       txs: overlayed,
@@ -624,11 +606,9 @@ export const getNumTransactions = route({
  * id and which of the three formats were last chosen. It is keyed per asset,
  * so a token and its chain's own coin keep separate records.
  *
- * @note This exists because the write did not have a reader. The CLI could
- *   put a record into a *synced* file the GUI reads and offer no way to see
- *   what it had written, so the one write a `GET` makes could be observed
- *   only from the app — which also made it the one write QA could not
- *   verify or restore on a shared account.
+ * @note This is how a caller reads back what `--save-export-prefs` wrote.
+ *   The record is in a *synced* file the GUI reads, so without this route
+ *   the one write a `GET` makes could be observed only from the app.
  * @note A saved `bitwaveAccountId` can be overwritten, by exporting again
  *   with `--bitwave-account` and `--save-export-prefs`, but not cleared:
  *   `mergeExportTxInfo` keeps a previous value for a field the caller does
@@ -712,8 +692,8 @@ export const saveTxMetadata = route({
   async handler(ctx) {
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     // Core reads `allTokens[tokenId]` and destructures it, so an unknown
-    // token was a `TypeError` — `500 INTERNAL_ERROR` with no field name —
-    // where the reference now publishes `TOKEN_NOT_FOUND`.
+    // token would be a `TypeError` — `500 INTERNAL_ERROR` with no field
+    // name — where the reference publishes `TOKEN_NOT_FOUND`.
     assertTokenId(wallet, ctx.body.tokenId)
     await wallet.saveTxMetadata({
       txid: ctx.body.txid,

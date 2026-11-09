@@ -11,9 +11,9 @@ import { isAbsentItem } from '../../cli/engine/routes/dataStore'
  * say. Everything else comes from the `getDisklet()` call `getItem` makes
  * first: an account repo that will not open.
  *
- * The route used to report all of them as `404 NOT_FOUND`. A scripted caller
- * that treats 404 as "absent" then writes its defaults over live plugin
- * state — which is what this store holds.
+ * Only the absent item is `404 NOT_FOUND`: a scripted caller that treats 404
+ * as "absent" writes its defaults over live plugin state, which is what this
+ * store holds.
  */
 describe('isAbsentItem', () => {
   it('reads core’s own sentinel as absent', () => {
@@ -28,8 +28,8 @@ describe('isAbsentItem', () => {
   })
 
   it('does not read a repo that will not open as absent', () => {
-    // `getDisklet()` is the first thing `getItem` does, and this is the
-    // failure that used to arrive as `404 NOT_FOUND`.
+    // `getDisklet()` is the first thing `getItem` does, and this failure
+    // must not arrive as `404 NOT_FOUND`.
     expect(isAbsentItem(new Error('Cannot decrypt sync key'))).toBe(false)
     expect(isAbsentItem(new Error('Network request failed'))).toBe(false)
   })

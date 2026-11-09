@@ -136,19 +136,16 @@ export const fetchSwapQuotes = route({
       fromWalletId: doc(asString, 'Source wallet. Accepts a unique prefix.'),
       toWalletId: doc(asString, 'Destination wallet.'),
       nativeAmount: doc(asIntegerString, SPEND_AMOUNT_DOC),
-      // `asRequestTokenId`, like the ten other request-position tokenIds: the
-      // CLI sends every tokenId as text, so `--from-token-id=null` — the
-      // spelling the guide documents — arrived as the four characters "null"
-      // and `asTokenId` accepted it verbatim, asking every swap plugin to
-      // price a token literally named `null`.
+      // `asRequestTokenId`, like the other request-position tokenIds: the
+      // CLI sends every tokenId as text, so `--from-token-id=null` arrives as
+      // the four characters "null", which `asTokenId` would accept verbatim,
+      // asking every swap plugin to price a token literally named `null`.
       fromTokenId: asOptional(doc(asRequestTokenId, TOKEN_ID_DOC), null),
       toTokenId: asOptional(doc(asRequestTokenId, TOKEN_ID_DOC), null),
       quoteFor: asOptional(
         doc(
-          // The same enum `schemas.ts`'s response cleaner already spells. It
-          // was `asString` plus a three-way `!==` chain in the handler, so the
-          // branch disagreed with itself about one field and the generated
-          // reference documented a free-form string.
+          // The same enum `schemas.ts`'s response cleaner spells, so the
+          // request and the response agree about this field.
           asValue<Array<'from' | 'to' | 'max'>>('from', 'to', 'max'),
           '`from` spends this much of the source, `to` receives this much at the destination, `max` sends everything. Defaults to `from`.'
         ),
@@ -183,7 +180,7 @@ export const fetchSwapQuotes = route({
     'TOKEN_NOT_FOUND',
     'NETWORK_ERROR',
     // Both wallets come from `findWallet`, so a prefix two wallets share is
-    // a 409 this list used to omit.
+    // a 409.
     ...WALLET_ERRORS
   ],
 
@@ -191,17 +188,16 @@ export const fetchSwapQuotes = route({
     const account = getAccount(ctx)
     const fromWallet = findWallet(account, ctx.body.fromWalletId)
     const toWallet = findWallet(account, ctx.body.toWalletId)
-    // `asOptional(asTokenId, null)` already yields null for both an absent
-    // and an explicitly null tokenId, so the post-hoc `parseTokenId` the
-    // handlers used to call could never change the value.
+    // `asOptional(asRequestTokenId, null)` already yields null for both an
+    // absent and an explicitly null tokenId, so these are used as they are.
     const { fromTokenId, toTokenId } = ctx.body
-    // The only one of the eleven tokenId-taking routes that did not check.
-    // Core does not either — `fetchSwapQuotes` hands the request to every
-    // enabled plugin — and the plugins destructure the token record:
+    // Core does not check: `fetchSwapQuotes` hands the request to every
+    // enabled plugin, and the plugins destructure the token record:
     // `const { currencyCode } = wallet.currencyConfig.allTokens[tokenId]`.
-    // So a bogus tokenId was a `TypeError` inside each plugin, `pickBestError`
-    // rethrew it, and the caller got `500 INTERNAL_ERROR` naming no field,
-    // where every sibling route answers `404 TOKEN_NOT_FOUND`.
+    // So a bogus tokenId would be a `TypeError` inside each plugin, which
+    // `pickBestError` rethrows, and the caller would get
+    // `500 INTERNAL_ERROR` naming no field, where every sibling route
+    // answers `404 TOKEN_NOT_FOUND`.
     assertTokenId(fromWallet, fromTokenId)
     assertTokenId(toWallet, toTokenId)
     const { nativeAmount } = ctx.body
@@ -261,8 +257,7 @@ export const fetchSwapQuotes = route({
         // real order at the exchange, and it runs on a logout, on a
         // shutdown and on every 5-minute expiry — so an exchange that
         // refuses it leaves that order live. `ObjectHandleStore.delete`
-        // reports the failure with the handle's id and kind and rethrows,
-        // which is what the four sites built to catch it were written for.
+        // reports the failure with the handle's id and kind and rethrows it.
         onExpire: async value => {
           await value.close()
         }
@@ -297,9 +292,8 @@ export const getSwapQuote = route({
     'OBJECT_KIND_MISMATCH',
     'OBJECT_SESSION_MISMATCH',
     // `requireOwnedHandle` throws this for a handle that is mid-call, which
-    // a second shell closing a quote while `approve-swap-quote` runs will
-    // hit. `approveSwapQuote` declares it; these did not, so the generated
-    // reference omitted a status a caller meets.
+    // a second shell reading a quote while `approve-swap-quote` runs will
+    // hit.
     'OBJECT_IN_USE'
   ],
 
@@ -413,9 +407,9 @@ export const approveSwapQuote = route({
       } catch (error: unknown) {
         const code = mapCoreError(error)?.body.error.code
         if (code != null && SWAP_NOT_SENT_CODES.has(code)) throw error
-        // Possibly after the send. Reported as a network error, this was the
-        // code a script retries, and the retry is a fresh quote approved on
-        // top of a send that went through: the funds swapped twice.
+        // Possibly after the send. Reported as a network error, this would
+        // be the code a script retries, and the retry would approve a fresh
+        // quote on top of a send that went through: the funds swapped twice.
         const fromWalletId = quote.request.fromWallet.id
         throw engineError(
           'SWAP_OUTCOME_UNKNOWN',
@@ -456,8 +450,7 @@ export const closeSwapQuote = route({
     'OBJECT_SESSION_MISMATCH',
     // `requireOwnedHandle` throws this for a handle that is mid-call, which
     // a second shell closing a quote while `approve-swap-quote` runs will
-    // hit. `approveSwapQuote` declares it; these did not, so the generated
-    // reference omitted a status a caller meets.
+    // hit.
     'OBJECT_IN_USE'
   ],
 

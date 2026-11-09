@@ -37,8 +37,8 @@ async function createWithCaptcha(sock: string): Promise<string> {
 
 async function main(): Promise<void> {
   console.log(`Approver user=${USER} dir=${TMP}`)
-  // A longer idle window than the others: this suite waits for a human to
-  // approve the login on a second device.
+  // A longer idle window than the others: the lobby URI printed below can
+  // also be approved by hand on a second device.
   const { engine, socketPath: sock } = await startEngine({
     directory: TMP,
     idleTimeoutSeconds: 180

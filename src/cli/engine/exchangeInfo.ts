@@ -61,7 +61,7 @@ export function makeRollupExchangeInfo(
     // A rollup that arrived is a new object, so the same one means none did.
     if (raw === before) return current?.info ?? asExchangeInfo({})
     // As the app does: its cleaner refuses a missing object, so it keeps the
-    // last one. Read as `{}`, a rollup without one turned every remote
+    // last one. Read as `{}`, a rollup without one would turn every remote
     // disable off until the next rollup.
     if (raw?.exchangeInfo == null) {
       report.warn(
