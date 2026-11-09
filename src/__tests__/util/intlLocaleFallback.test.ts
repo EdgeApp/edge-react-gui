@@ -11,9 +11,9 @@ const localized = { de: 'Deutsch', en: 'English' }
 describe('setIntlLocale', () => {
   it('keeps the language when only the number format is unusable', () => {
     // An OS that reports an empty separator says nothing about the language.
-    // Discarding the whole locale made `getLocaleOrDefaultString` resolve
-    // info-server strings in English on such a device, where only number
-    // formatting used to fall back.
+    // Discarding the whole locale would make `getLocaleOrDefaultString`
+    // resolve info-server strings in English on such a device, where only
+    // number formatting should fall back.
     setIntlLocale({
       localeIdentifier: 'de_DE',
       decimalSeparator: '',
@@ -25,10 +25,9 @@ describe('setIntlLocale', () => {
   })
 
   it('keeps the number format when only the language is unusable', () => {
-    // The other half of the same rule, which this arm used to break: an
-    // unusable language says nothing about the separators the OS reported
-    // perfectly well, and assigning the whole English locale threw a working
-    // comma-decimal pair away.
+    // The other half of the same rule: an unusable language says nothing
+    // about the separators the OS reported perfectly well, and assigning the
+    // whole English locale would throw a working comma-decimal pair away.
     setIntlLocale({
       localeIdentifier: '',
       decimalSeparator: ',',
@@ -40,10 +39,9 @@ describe('setIntlLocale', () => {
 
   it('repairs a locale that is empty in all three fields', () => {
     // The likeliest shape, since one failed read of the OS locale usually
-    // fails all of them — and the one the two arms above used to miss: the
-    // identifier arm returned early, so the empty separators were
-    // installed. `formatNumber(1234.56)` then answered `123456` and
-    // `isValidInput` threw `SyntaxError: Invalid regular expression`.
+    // fails all of them. Installing the empty separators would make
+    // `formatNumber(1234.56)` answer `123456` and `isValidInput` throw
+    // `SyntaxError: Invalid regular expression`.
     const installed = setIntlLocale({
       localeIdentifier: '',
       decimalSeparator: '',
