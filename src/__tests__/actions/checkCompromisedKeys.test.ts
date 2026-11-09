@@ -25,13 +25,13 @@ jest.mock('../../util/network', () => ({
 }))
 
 /**
- * The call site the security-check merge was written for.
+ * The call site the security-check merge is for.
  *
  * `syncedSettingsTrust.test.ts` covers `markSecurityChecked` as a helper;
  * this runs `checkCompromisedKeys` itself. Writing its read-time copy of
- * `securityCheckedWallets` back whole — the regression the merge fixed —
- * replaced every other wallet's record, including a `modalShown` that keeps
- * the exposed-key modal from coming back.
+ * `securityCheckedWallets` back whole would replace every other wallet's
+ * record, including a `modalShown` that keeps the exposed-key modal from
+ * coming back.
  */
 describe('checkCompromisedKeys', () => {
   it('records only the wallet it checked, merged into the file as it is now', async () => {

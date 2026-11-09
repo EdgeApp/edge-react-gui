@@ -454,17 +454,17 @@ export const SYNCED_ACCOUNT_DEFAULTS = asSyncedAccountSettings({})
  * them afterwards — so a `Settings.json` that was present and unreadable at
  * login puts `'iso:USD'` and `{}` there for the whole session, and the export
  * derivation cannot tell that from an account that has chosen nothing. A
- * BTC wallet the user set to `bits` then exports `0.0005` and
- * `DENOMINATION=BTC` instead of `50000` and `bits`, with every row priced
+ * BTC wallet the user set to `bits` would then export `0.0005` and
+ * `DENOMINATION=BTC` instead of `500` and `bits`, with every row priced
  * and labelled `iso:USD`, while `edge-cli get-transactions --export-format`
  * on the same wallet refuses, because the engine reads the file strictly.
  *
- * So this records the outcome of *that* read and nothing else. It used to
- * follow whichever lenient read ran last anywhere in the app, which
- * described the file rather than Redux: a gift-card list opening after the
- * sync caught up flipped it to trusted while Redux still held the defaults,
- * and one failed read after a good login blocked every export while Redux
- * was correct. Reset on logout, because the next account's login sets it.
+ * So this records the outcome of *that* read and nothing else. A later
+ * lenient read anywhere in the app describes the file rather than Redux:
+ * one that succeeds after the sync catches up would mark Redux's defaults
+ * as trusted, and one that fails after a good login would block every
+ * export while Redux is correct. Reset on logout, because the next
+ * account's login sets it.
  */
 let loginSyncedSettingsTrusted = true
 
@@ -562,8 +562,8 @@ const writePreferredSwapPluginType = async (
 /**
  * A most-recent list with one wallet moved to the front, capped at 100.
  *
- * Pure, so the write can apply it to the file's own list: building the
- * list from Redux and writing it whole replaced the user's real list with a
+ * Pure, so the write can apply it to the file's own list: a list built from
+ * Redux and written whole would replace the user's real list with a
  * one-entry one whenever the login read had failed and Redux held `[]`.
  */
 export function pushMostRecentWallet(
@@ -598,11 +598,11 @@ export const writeMostRecentWalletSelected = async (
  * Mark wallets checked or shown, onto a security-check map.
  *
  * Only the ids given change, so a caller passes what it did and the write
- * applies it to the file's own map: the callers read that map leniently,
- * minutes before they write, and writing their copy whole replaced every
- * other wallet's `checked`/`modalShown` record — with an empty map, after a
- * failed read, so the exposed-key modal came back for wallets the user had
- * already dismissed it for.
+ * applies it to the file's own map. A caller's own copy can be minutes old
+ * by the time it writes, or empty after a failed read, and writing it whole
+ * would replace every other wallet's `checked`/`modalShown` record, so the
+ * exposed-key modal would come back for wallets the user has already
+ * dismissed it for.
  */
 export function markSecurityChecked(
   current: SecurityCheckedWallets,
@@ -690,15 +690,11 @@ export async function readSyncedSettings(
  * Change the synced settings, starting from what the file really holds.
  *
  * The one write door, and it takes the change rather than a finished
- * object. Every writer used to read leniently, spread its one field over
- * the result and hand the whole object back — so a read that failed
- * produced `SYNCED_ACCOUNT_DEFAULTS`, and the write put `defaultIsoFiat`,
- * `denominationSettings`, `walletsSort`, `mostRecentWallets` and the rest
- * back to their defaults on the synced repo, for every device.
- * `migrateDenominationSettings` did it at every login with no user action,
- * and set the flag that stops a later login retrying. Guarding the write
- * with a trust flag did not close it: a re-read that succeeded proved the
- * file readable and then wrote the stale, defaults-based object anyway.
+ * object. A finished object built on a lenient read is
+ * `SYNCED_ACCOUNT_DEFAULTS` plus one field whenever that read fails, and
+ * writing it would put `defaultIsoFiat`, `denominationSettings`,
+ * `walletsSort`, `mostRecentWallets` and the rest back to their defaults on
+ * the synced repo, for every device.
  *
  * Here the base is a strict read made for this write and nothing else, so
  * the change always lands on the real file. Serialized per account, so two
@@ -739,8 +735,8 @@ export async function updateSyncedSettings(
  *
  * A file that is not a JSON object even after a sync is kept aside and the
  * settings start again from the defaults: it is the same bad bytes on every
- * device, and refusing blocked every synced setting on the account for good
- * — the country, the exposed-key modal's `modalShown`, the password
+ * device, and refusing would block every synced setting on the account for
+ * good: the country, the exposed-key modal's `modalShown`, the password
  * reminder. A file that will not decrypt, or cannot be read, is refused.
  */
 async function readSyncedSettingsForWrite(
@@ -754,10 +750,10 @@ async function readSyncedSettingsForWrite(
     if (base.kind !== 'text') return asSyncedAccountSettings({})
     return asSyncedAccountSettings(asJsonObject(base.text))
   } catch (error: unknown) {
-    // Logged with the cause, then translated: every GUI writer hands this
+    // Logged with the cause, then translated: most GUI writers hand this
     // rejection to `showError`, and `translateError` has no arm for core's
-    // decryption error or a bridge's I/O message, so the English reached
-    // the drop-down verbatim in every language.
+    // decryption error or a bridge's I/O message, so the English would
+    // reach the drop-down verbatim in every language.
     reportWarning(
       `Could not read synced ${SYNCED_SETTINGS_FILENAME} for writing: ${errorMessage(
         error
@@ -793,11 +789,11 @@ export async function migrateDenominationSettings(
   account: EdgeAccount
 ): Promise<void> {
   // Through the strict write door, rather than on the object the login's
-  // lenient read produced. Taking that object meant a `Settings.json` that
-  // was merely unreadable arrived here as `SYNCED_ACCOUNT_DEFAULTS`, which
-  // takes the "nothing to clean, just set the flag" branch below and writes
-  // the whole file out as defaults — and sets the flag, so no later login
-  // retries. The throw reaches the `.catch` the caller already has.
+  // lenient read produced. For a `Settings.json` that is merely unreadable,
+  // that object is `SYNCED_ACCOUNT_DEFAULTS`, which would take the "nothing
+  // to clean, just set the flag" branch below, write the whole file out as
+  // defaults and set the flag, so no later login would retry. The throw
+  // reaches the `.catch` the caller already has.
   let needsCleanup = false
   await updateSyncedSettings(account, syncedSettings => {
     const result = optimizeDenominationSettings(account, syncedSettings)

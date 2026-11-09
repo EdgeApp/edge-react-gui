@@ -41,7 +41,7 @@ watchAccountSettings(s => {
  *
  * Three states, not a boolean, because the write path has to tell "nothing
  * has read the file yet" from "the read ran and could not read the file".
- * The second is the dangerous one: the lenient reader answers it with the 13
+ * The second is the dangerous one: the lenient reader answers it with the
  * defaults, and a read-modify-write built on those persists them over a
  * `Settings.json` that is present and merely unreadable — losing
  * `spendingLimits`, `passwordReminder`, `notifState`, `reviewTrigger`,
@@ -334,12 +334,12 @@ export const readLocalAccountSettings = async (
   }
 
   // Lenient: this is the GUI's read-only cached reader, reached from
-  // `initializeAccount`, and before this branch it could not fail. A
-  // `Settings.json` that is present but unreadable must not stop the login.
-  // The trust state records that it could not be read, which does two
-  // things: this reader tries again on the next call, and
-  // `updateLocalAccountSettings` reads the file for itself rather than
-  // building on these defaults — the loss the strict reader exists to prevent.
+  // `initializeAccount`, and a `Settings.json` that is present but
+  // unreadable must not stop the login. The trust state records that it
+  // could not be read, which does two things: this reader tries again on the
+  // next call, and `updateLocalAccountSettings` reads the file for itself
+  // rather than building on these defaults — the loss the strict reader
+  // exists to prevent.
   const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
     account
   )
@@ -352,11 +352,9 @@ export const readLocalAccountSettings = async (
  * Change the local settings, starting from what the file really holds.
  *
  * The one write door, and it takes the change rather than a finished
- * object. Every writer used to read through the cache, spread its field
- * over the result and hand the whole object back — so while the cache was
- * `untrusted` that object was the defaults plus one field, and a strict
- * read that then *succeeded* proved the file readable and wrote the
- * defaults over it anyway, losing `spendingLimits`, `passwordReminder`,
+ * object. A finished object built from the cache while it is `untrusted`
+ * would be the defaults plus one field, and writing it over a file that
+ * then read cleanly would lose `spendingLimits`, `passwordReminder`,
  * `notifState` and the rest. Here the change is applied to the base this
  * call established, so it always lands on the real file.
  */
@@ -365,9 +363,9 @@ export const updateLocalAccountSettings = async (
   update: (settings: LocalAccountSettings) => LocalAccountSettings
 ): Promise<LocalAccountSettings> =>
   // One write at a time per account, as `change-local-settings` does. Two
-  // writers racing on an unreadable file both failed their reads, the first
-  // recovered and wrote, and the second's recovery then read the first's
-  // fresh file and moved *that* aside, losing the first change.
+  // writers racing on an unreadable file would both fail their reads and
+  // both recover it, and the second could remove or overwrite the file the
+  // first had just written, losing the first change.
   await serializeByKey(
     `localSettings:${account.rootLoginId}`,
     async () => await updateLocalAccountSettingsNow(account, update)
@@ -380,23 +378,23 @@ const updateLocalAccountSettingsNow = async (
   let base = localAccountSettings
   if (settingsTrust !== 'trusted') {
     // Strictly, because this is a write path: an unreadable file must not be
-    // answered with the 12 defaults and written back, and an absent one is
+    // answered with the defaults and written back, and an absent one is
     // answered with those defaults exactly as the lenient reader would.
     //
-    // `untrusted` is the same call rather than a refusal. Refusing was
-    // right about the write and wrong about the way out: the message told
-    // the user to try again, and a `Settings.json` that is present and
-    // broken does not repair itself, so every later write failed the same
-    // way forever — spending limits included. There was nothing they could
-    // do, either: the file is on `account.localDisklet` inside the app's
-    // private container, and `ios/edge/Info.plist` sets neither
-    // `UIFileSharingEnabled` nor `LSSupportsOpeningDocumentsInPlace`, so it
-    // is not in the Files app and on Android it is app-private.
+    // `untrusted` is the same call rather than a refusal. A refusal would
+    // never clear: a `Settings.json` that is present and broken does not
+    // repair itself, so every later write would fail the same way, spending
+    // limits included. The user cannot fix the file either: it is on
+    // `account.localDisklet` inside the app's private container, and
+    // `ios/edge/Info.plist` sets neither `UIFileSharingEnabled` nor
+    // `LSSupportsOpeningDocumentsInPlace`, so it is not in the Files app and
+    // on Android it is app-private.
     //
     // So the reader tries twice and then moves the file aside, which loses
     // nothing a caller could have read anyway and leaves the bytes on the
-    // disklet for support. The toast stays for the case where even that
-    // fails — a disklet that cannot be read or written at all.
+    // disklet for support; a file that will not decrypt has no bytes to keep
+    // and is deleted. The error below is for the case where even that fails:
+    // a disklet that cannot be read or written at all.
     try {
       const { settings, recovery } = await readLocalAccountSettingsForWrite(
         account

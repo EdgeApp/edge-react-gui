@@ -29,8 +29,7 @@ const rateMock = getHistoricalCryptoRate as unknown as jest.Mock<
     maxQuerySize?: number,
     doFetch?: unknown,
     // The caller's own deadline, which this resolver forwards: it is the
-    // *first* of `get-transactions`' two rate queries and the one that had
-    // no budget.
+    // *first* of `get-transactions`' two rate queries.
     chainTimeoutMs?: number
   ) => Promise<number>
 >
@@ -46,10 +45,9 @@ describe('readDefaultIsoFiat', () => {
     // This function's own docblock: "a `Settings.json` that is *there* and
     // cannot be read is not answered the way an absent one is", because the
     // value labels and prices a whole `get-transactions` response and every
-    // CSV, QBO and Bitwave file written from it. The strict reader swallowed
-    // a parse failure into the defaults, so the promise did not hold and a
-    // truncated file priced the lot in `iso:USD` while reporting USD back as
-    // the account's own default.
+    // CSV, QBO and Bitwave file written from it. A reader that swallowed a
+    // parse failure into the defaults would let a truncated file price the
+    // lot in `iso:USD` while reporting USD back as the account's own default.
     const account = makeFakeDiskletAccount({ synced: '{not json' })
     await expect(readDefaultIsoFiat(account)).rejects.toThrow()
   })
@@ -108,12 +106,12 @@ describe('resolveListSpamThreshold', () => {
   it('does not filter when Settings.json cannot be read, and says so', async () => {
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
     try {
-      // Present and unreadable, which `isMissingFile` cannot match. This used
-      // to propagate out of every `get-transactions` on the default path;
-      // then it answered the lenient reader's defaults, where
-      // `spamFilterOn` is `true` — so the floor was applied to an account
-      // that had turned the filter off, dropping rows from a listing and
-      // from an export the route documents as unfiltered.
+      // Present and unreadable, which `isMissingFile` cannot match. Throwing
+      // would fail every `get-transactions` on the default path, and the
+      // lenient reader's defaults have `spamFilterOn` set to `true`, which
+      // would apply the floor to an account that turned the filter off,
+      // dropping rows from a listing and from an export the route documents
+      // as unfiltered.
       const account = makeFakeDiskletAccount({
         localError: new SyntaxError('Unexpected end of JSON input')
       })
@@ -221,13 +219,13 @@ describe('resolveListSpamThreshold', () => {
   })
 
   it('forwards the caller\u2019s budget to the rate queue', async () => {
-    // `get-transactions` makes *two* rate queries and only the second had
-    // the caller's deadline. This one runs ~87 lines earlier, so a listing
-    // with `--timeout=15` against a stalled rates server spent ~31 s here
-    // — `RATE_QUERY_TIMEOUT_MS` plus a debounce, whatever was asked for —
-    // and `readRequestBudgetMs` then found the deadline gone and gave
-    // `fillTxsFiat` the route's own 90 s fallback: ~120 s of work for a
-    // request abandoned at 15 s.
+    // `get-transactions` makes *two* rate queries, and this is the first.
+    // Without the caller's deadline, a listing with `--timeout=15` against a
+    // stalled rates server would spend `RATE_QUERY_TIMEOUT_MS` plus a
+    // debounce here, whatever was asked for, and `readRequestBudgetMs` would
+    // then find the deadline gone and give `fillTxsFiat` the route's own
+    // 90 s fallback: about two minutes of work for a request abandoned at
+    // 15 s.
     const account = {
       disklet: { getText: async () => '{"defaultIsoFiat":"iso:USD"}' },
       localDisklet: { getText: async () => '{"spamFilterOn":true}' }

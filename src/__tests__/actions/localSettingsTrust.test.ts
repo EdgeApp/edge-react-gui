@@ -26,12 +26,11 @@ const corrupt = (): Error => new SyntaxError('Unexpected end of JSON input')
 /**
  * Every settings write is a read-modify-write, so the base has to be real.
  *
- * The lenient reader answers an unreadable `Settings.json` with the 13
- * defaults. The first settings change the user then made read-modify-wrote
- * those defaults over the file, losing `spendingLimits`,
- * `passwordReminder`, `notifState`, `reviewTrigger`, `developerModeOn`,
- * `isAccountBalanceVisible` and `tokenWarningsShown` — and the comment that
- * justified the lenient read claimed a flag prevented exactly that.
+ * The lenient reader answers an unreadable `Settings.json` with the
+ * defaults. A settings change made on that base would write those defaults
+ * over the file, losing `spendingLimits`, `passwordReminder`, `notifState`,
+ * `reviewTrigger`, `developerModeOn`, `isAccountBalanceVisible` and
+ * `tokenWarningsShown`.
  */
 describe('settings trust', () => {
   beforeEach(() => {
@@ -41,9 +40,9 @@ describe('settings trust', () => {
   it('recovers an unreadable file once when two writers race', async () => {
     // The race `serializeByKey` is there for: both writers fail their reads
     // on the unreadable file, the first recovers and writes, and without
-    // the key the second's recovery moved that fresh file aside, losing the
-    // first change. A disklet with real state, so each read sees the
-    // previous write.
+    // the key the second's recovery would move that fresh file aside,
+    // losing the first change. A disklet with real state, so each read sees
+    // the previous write.
     const files = new Map<string, string>([['Settings.json', 'not json']])
     // Counted by write, not by key: two copies made in the same millisecond
     // share a name, so a Map would show one.
@@ -110,11 +109,10 @@ describe('settings trust', () => {
     const settings = await getLocalAccountSettings(account)
     expect(settings.spamFilterOn).toBe(true)
 
-    // The write a settings toggle does. It used to reject, which was right
-    // about not overwriting the file and wrong about the way out: the
-    // rejection said "try again", and a `Settings.json` that is present and
-    // broken does not repair itself — so every later write failed the same
-    // way forever, the user's spending limits among them, and the file is on
+    // The write a settings toggle does. Rejecting it would protect the file
+    // but leave no way out: a `Settings.json` that is present and broken
+    // does not repair itself, so every later write would fail the same way,
+    // the user's spending limits among them, and the file is on
     // `account.localDisklet` where no user of the shipped app can move it.
     await updateLocalAccountSettings(account, latest => ({
       ...latest,
@@ -240,12 +238,13 @@ describe('settings trust', () => {
 /**
  * A read-modify-write must not answer an unreadable file with the defaults.
  *
- * `readLocalAccountSettingsFromDisk` is the strict reader — the one the CLI's
- * `local-settings` route and the GUI's write path use — and it answered
- * `asLocalAccountSettings({})` for a file that was present and unparseable,
- * so one write reset `spendingLimits` (the PIN-above-amount control),
- * `passwordReminder`, `notifState`, `reviewTrigger`, `developerModeOn`,
- * `isAccountBalanceVisible` and `tokenWarningsShown` for that account.
+ * `readLocalAccountSettingsFromDisk` is the strict reader, the one the CLI's
+ * `local-settings` route and the GUI's write path use. Answering
+ * `asLocalAccountSettings({})` for a file that is present and unparseable
+ * would let one write reset `spendingLimits` (the PIN-above-amount
+ * control), `passwordReminder`, `notifState`, `reviewTrigger`,
+ * `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown` for
+ * that account.
  */
 describe('readLocalAccountSettingsFromDisk', () => {
   it('throws for a file it cannot parse', async () => {
@@ -254,12 +253,11 @@ describe('readLocalAccountSettingsFromDisk', () => {
   })
 
   it('throws for valid JSON that is not a settings object', async () => {
-    // The gap the strict reader had. `asLocalAccountSettings` is
-    // `asMaybe(inner, () => inner({}))`, so only `asJSON`'s *parse* could
-    // fail: each of these cleaned to all twelve defaults, reported
-    // `trusted: true`, and was then written back over the user's
-    // `spendingLimits`. `asObject` accepts an array, so `[]` is the one a
-    // half-synced file is likeliest to produce.
+    // `asLocalAccountSettings` is `asMaybe(inner, () => inner({}))`, so
+    // through it only `asJSON`'s *parse* could fail: each of these would
+    // clean to the defaults, report `trusted: true`, and be written back
+    // over the user's `spendingLimits`. `asObject` accepts an array, so `[]`
+    // is the one a half-synced file is likeliest to produce.
     for (const local of ['[]', '"x"', '42', 'null', '[1,2,3]']) {
       const account = makeFakeDiskletAccount({ local })
       await expect(readLocalAccountSettingsFromDisk(account)).rejects.toThrow()

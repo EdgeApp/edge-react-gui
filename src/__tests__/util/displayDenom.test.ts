@@ -11,12 +11,12 @@ import { BTC_DENOM, USDC_DENOM, USDC_TOKENS } from '../../util/fake/fakeDisklet'
  *
  * The GUI's Export writes the *display* denomination into its CSV and QBO
  * files — `AMT_ASSET` with a `DENOMINATION` column, and `TRNAMT` with no unit
- * field at all — and the CLI's `get-transactions --export-format=csv` used
- * the exchange denomination, so a BTC wallet set to "bits" exported
- * `50000`/`bits` from the scene and `0.0005`/`BTC` from the command line for
- * the same transaction. `selectDisplayDenom` is now this function with the
- * settings read out of Redux, and the engine passes the same records from the
- * synced `Settings.json`.
+ * field at all — so the CLI's `get-transactions --export-format=csv` has to
+ * write the same, or a BTC wallet set to "bits" would export `500`/`bits`
+ * from the scene and `0.0005`/`BTC` from the command line for the same
+ * transaction. `selectDisplayDenom` is this function with the settings read
+ * out of Redux, and the engine passes the same records from the synced
+ * `Settings.json`.
  */
 // `BTC_DENOM`, `USDC_DENOM` and the token map come from the shared fakes,
 // which `exchangeDenom.test.ts` already imports under a comment saying "not
@@ -78,11 +78,10 @@ describe('getDisplayDenom', () => {
 /**
  * The app's wallet row and the CLI's `displayAmount` are one derivation.
  *
- * Stated in this file's own docblock and asserted nowhere, which is the gap
- * QA named: the only way to *observe* the agreement is to read the number
- * off a running app beside the number the CLI prints, and that needs a
- * device build on a funded tester account. What can be checked here is the
- * claim the agreement rests on — that `selectDisplayDenom`, which the wallet
+ * The only way to *observe* the agreement is to read the number off a
+ * running app beside the number the CLI prints, which needs a device build
+ * on a funded tester account. What can be checked here is the claim the
+ * agreement rests on — that `selectDisplayDenom`, which the wallet
  * row and the export scene both read, is this function with Redux's
  * `denominationSettings` passed in, and not a second implementation that
  * happens to agree today.

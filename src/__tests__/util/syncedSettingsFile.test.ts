@@ -105,20 +105,19 @@ describe('readSyncedSettingsOrThrow', () => {
   })
 
   it('throws for a file that is there and cannot be read', async () => {
-    // "As good as absent" was true of the value and false of the
-    // consequence. This reader exists so that "present but unreadable"
-    // means one thing, and a truncated or half-synced `Settings.json` is
-    // the case it was written for: swallowed into the cleaner's defaults,
-    // `autoLogoutTimeInSeconds` silently became 3600 for an account that
-    // had set `0` to disable it and `engine-sessions` reported the
-    // substituted value as the user's own choice, while `defaultIsoFiat`
-    // silently became `iso:USD` in an accounting export. Every caller of
-    // this door is one that must not substitute — the spam floor, the
-    // export's fiat, the denomination settings, the auto-logout window —
-    // and `readSyncedSettings` is the lenient one, with a stated fallback.
+    // This reader exists so that "present but unreadable" means one thing,
+    // and a truncated or half-synced `Settings.json` is the case it is for:
+    // swallowed into the cleaner's defaults, `autoLogoutTimeInSeconds` would
+    // silently become 3600 for an account that had set `0` to disable it,
+    // with `engine-sessions` reporting the substituted value as the user's
+    // own choice, while `defaultIsoFiat` would silently become `iso:USD` in
+    // an accounting export. Every caller of this door is one that must not
+    // substitute — the spam floor, the export's fiat, the denomination
+    // settings, the auto-logout window — and `readSyncedSettings` is the
+    // lenient one, with a stated fallback.
     //
     // `[]` among them, because `asObject` accepts an array, so that case
-    // reached the defaults without `asMaybe` being involved at all.
+    // would reach the defaults without `asMaybe` being involved at all.
     for (const synced of ['{"defaultIsoFiat":', '[]', '"x"', '42']) {
       const account = makeFakeDiskletAccount({ synced })
       await expect(readSyncedSettingsOrThrow(account)).rejects.toThrow()

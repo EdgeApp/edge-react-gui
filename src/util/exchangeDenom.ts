@@ -35,9 +35,10 @@ export function getExchangeDenom(
   if (tokenId == null) return currencyConfig.currencyInfo.denominations[0]
 
   // `hasOwn`, because `allTokens` is a plain object: `allTokens['__proto__']`
-  // is `Object.prototype`, which is not null, so this took the token branch
-  // and evaluated `Object.prototype.denominations[0]` — a `TypeError`, and
-  // `spamThreshold.ts` reaches here before any route-level token check runs.
+  // is `Object.prototype`, which is not null, so a plain lookup would take
+  // the token branch and evaluate `Object.prototype.denominations[0]`, a
+  // `TypeError`, and `spamThreshold.ts` reaches here before any route-level
+  // token check runs.
   if (hasOwn(currencyConfig.allTokens, tokenId)) {
     const token = currencyConfig.allTokens[tokenId]
     if (token != null) return token.denominations[0]
