@@ -26,10 +26,9 @@ export const allLocales = { en, de, ru, es, esMX, it, pt, ja, fr, ko, vi, zh }
  * The tag-to-table resolution, re-exported from the module that holds it.
  *
  * It lives in `localeKeys.ts` — which imports no table — because the CLI
- * client needs the answer and not the tables: importing it from here
- * dragged all eleven JSON files into `lib/edgeCli.js`, where they were over
- * half the bundle and nothing read them. Re-exported so every existing call
- * site is unchanged.
+ * client needs the answer and not the tables: importing it from here would
+ * drag all eleven JSON files into `lib/edgeCli.js`, where nothing reads
+ * them. Re-exported so every existing call site is unchanged.
  */
 export {
   type LocaleKey,
@@ -59,16 +58,15 @@ function mergeStrings(
  *
  * Not idempotent across *different* tags on its own: `mergeStrings` only
  * ever writes over the keys its table has a value for, so a second tag
- * leaves the first one's strings wherever the second has a gap. `lstrings`
- * is re-seeded from English first, which makes a sequence of calls answer
- * for the last tag alone — `applyLocale` relies on it, and the tests relied
- * on calling `selectLocale('en')` by hand.
+ * would leave the first one's strings wherever the second has a gap.
+ * `lstrings` is re-seeded from English first, which makes a sequence of
+ * calls answer for the last tag alone, and `applyLocale` relies on it.
  *
- * Including the call that finds no table. The re-seed used to sit after the
- * `return false`, so a tag the build does not ship left the previous
- * language installed while `getAppliedLocale`, `GET /engine/status` and the
- * client's warning all reported English: `de-DE` then `nl-NL` answered
- * `localeMatched: false` over a German `lstrings`.
+ * Including the call that finds no table: the re-seed comes before the
+ * `return false`, so a tag the build does not ship leaves English
+ * installed rather than the previous language, which is what
+ * `localeMatched: false` in `GET /engine/status` and the engine's warning
+ * say.
  */
 export function selectLocale(locale: string): boolean {
   const key = resolveLocaleTable(locale)

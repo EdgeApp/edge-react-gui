@@ -9,11 +9,7 @@ export const TIMED_OUT: unique symbol = Symbol('timedOut')
  * holds a listening socket and the GUI a running app — and in a jest worker
  * an armed timer is a leaked handle that outlives the test.
  *
- * This race did not have it, and `withDeadline` did: a pending `raceTimeout`
- * kept Node's event loop awake for the rest of its window, which is the leak
- * `asyncWaterfall`'s stagger timers were fixed for. Both helpers share one
- * timer policy now, since the older, more discoverable name was the one
- * without it.
+ * `raceTimeout`, and `withDeadline` through it, share this one timer policy.
  */
 export function unrefTimer(timer: unknown): void {
   if (

@@ -4,9 +4,9 @@
  *
  * The rules are `.mjs` modules, which jest's react-native transform does not
  * load, so `src/__tests__/eslintRules.test.ts` spawns this file and asserts
- * it exits cleanly. Nothing else ran these rules against known-bad input:
- * `no-module-scope-lstrings` exists for the next edit, `npm run lint` never
- * fires it on today's tree, and a selector that stopped matching was
+ * it exits cleanly. Nothing else runs these rules against known-bad input:
+ * `no-module-scope-lstrings` exists for the next edit, and `npm run lint`
+ * never fires it on today's tree, so a rule that stopped matching would be
  * invisible to every gate.
  */
 import tsParser from '@typescript-eslint/parser'
@@ -43,7 +43,7 @@ tester.run('no-module-scope-lstrings', noModuleScopeLstrings, {
     { code: IMPORT + 'export const label = lstrings.ok', errors: [error] },
     { code: IMPORT + 'const { ok } = lstrings', errors: [error] },
     { code: IMPORT + 'const s = lstrings', errors: [error] },
-    // The three shapes the selector-based version let through.
+    // The three shapes a selector-based rule lets through.
     { code: IMPORT + 'const all = Object.entries(lstrings)', errors: [error] },
     { code: IMPORT + 'const copy = { ...lstrings }', errors: [error] },
     {

@@ -132,11 +132,11 @@ export const getTokenId = (
  * Get the currencyCode associated with a tokenId
  *
  * Re-exported from `util/txDisplay/currencyCodes`, exactly as
- * `getCurrencyCodeWithAccount` is. The body has to live there because
- * `src/util/utils.ts` needs it and loads under plain Node, where this
- * module's Airship imports cannot follow — and two bodies for "the currency
- * code for a tokenId on this wallet" is two different answers for a token
- * the plugin no longer carries.
+ * `getCurrencyCodeWithAccount` is. The body has to live there because the
+ * CLI engine's `spend` and `swap` routes need it and load under plain Node,
+ * where this module's Airship imports cannot follow — and two bodies for
+ * "the currency code for a tokenId on this wallet" is two different answers
+ * for a token the plugin no longer carries.
  */
 export { currencyCodeForToken as getCurrencyCode } from './txDisplay/currencyCodes'
 

@@ -21,7 +21,7 @@ let hasApplied = false
 /**
  * The last source `applyLocale` was given, for the idempotence test.
  *
- * Separate from `applied`, which now records what was *installed*: a source
+ * Separate from `applied`, which records what was *installed*: a source
  * whose separators are empty installs the English marks, so comparing the
  * next source against `applied` would never match and every call would
  * re-merge the language tables.
@@ -41,10 +41,10 @@ let applied: AppliedLocale = {
  * is free — both `index.ts` and `src/app.ts` import the GUI's boot module,
  * and the module cache makes that one evaluation — and a call with a
  * *different* tag answers for that tag alone, because `selectLocale`
- * re-seeds `lstrings` from English before merging. It did not: `mergeStrings`
- * only writes the keys its own table has a value for, so `fr-FR` then
- * `de-DE` left every key `de.json` has a gap in reading French, and
- * `en-US` could never restore English at all.
+ * re-seeds `lstrings` from English before merging. `mergeStrings` only
+ * writes the keys its own table has a value for, so without the re-seed
+ * `fr-FR` then `de-DE` would leave every key `de.json` has a gap in reading
+ * French, and `en-US` could never restore English at all.
  */
 export function applyLocale(source: LocaleSource): AppliedLocale {
   const languageTag =
@@ -60,17 +60,16 @@ export function applyLocale(source: LocaleSource): AppliedLocale {
   }
   hasApplied = true
   lastSource = { ...source, languageTag }
-  // `selectLocale` for English too, now that it re-seeds: skipping it was
-  // what made English the one language a second call could not switch back
-  // to, since nothing undid the previous tag's merge.
+  // `selectLocale` for English too: its re-seed is what undoes the previous
+  // tag's merge, so skipping it would make English the one language a
+  // second call could not switch back to.
   const matched = selectLocale(languageTag)
   // What `setIntlLocale` installed, not what was asked for. It substitutes
   // the English marks when either separator is empty — which is the case an
   // OS reporting no separator is handled by — so storing `source`'s values
-  // made `getAppliedLocale()` answer `decimalSeparator: ''` while
-  // `intl.locale` said `'.'`. Two answers to "what is the decimal mark", and
-  // the one named `applied` was the wrong one. `matched` has always been
-  // what `selectLocale` really did; now all four fields are.
+  // would make `getAppliedLocale()` answer `decimalSeparator: ''` while
+  // `intl.locale` says `'.'`. All four fields record what was really done,
+  // as `matched` records what `selectLocale` did.
   const installed = setIntlLocale({
     localeIdentifier: languageTag,
     decimalSeparator: source.decimalSeparator,

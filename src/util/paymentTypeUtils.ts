@@ -3,12 +3,12 @@ import { lstrings } from '../locales/strings'
 /**
  * Payment type display names, read at call time.
  *
- * A module-scope `Record` froze all twenty-eight strings to whatever
+ * A module-scope `Record` would freeze all twenty-eight strings to whatever
  * `lstrings` held when this module first evaluated, and `applyLocale`
- * mutates `lstrings` in place — so they were correct only if the locale boot
- * had already run, which is an ordering dependency on a module nothing here
- * imports. Read lazily there is no order in which it can be wrong, which is
- * what `txActionLabels.ts` says about the same hazard.
+ * mutates `lstrings` in place, so they would be correct only if the locale
+ * boot had already run, which is an ordering dependency on a module nothing
+ * here imports. Read lazily there is no order in which it can be wrong,
+ * which is what `txActionLabels.ts` says about the same hazard.
  */
 const paymentTypeDisplayNames = (): Record<string, string> => ({
   ach: lstrings.ach_bank_transfer,

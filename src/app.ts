@@ -7,8 +7,8 @@
 // import './wdyr'
 // First, and before anything that can read `lstrings`. ES module imports
 // evaluate in source order, so this makes the ordering `index.ts` describes
-// self-enforcing from *this* entry too: the extraction left it resting on a
-// comment plus one import line in one file, which nothing checks.
+// self-enforcing from *this* entry too, rather than resting on a comment
+// and one import line in one file, which nothing checks.
 import './locales/initLocale'
 // Then the app-boot wiring, beside its two siblings below. This one rode on
 // a binding-free side-effect import in `src/components/App.tsx`, where
@@ -72,8 +72,8 @@ configureNetwork({
  * The device and app fields the info server is told about.
  *
  * One object, because `configureInfoServer` and `initInfoServer` take the
- * same five and they were written out twice with an identical `onRollup`
- * closure — the kind of pair that drifts in one place and not the other.
+ * same five, and two copies with an identical `onRollup` closure would be
+ * the kind of pair that drifts in one place and not the other.
  */
 const infoServerParams = {
   osType: Platform.OS.toLowerCase(),
@@ -409,15 +409,15 @@ NetInfo.addEventListener(state => {
   const currentConnectionState = state.isConnected ?? false
   if (!previousConnectionState && currentConnectionState) {
     console.log('Network connected, refreshing info and coinrank...')
-    // Start attestation at reconnect (idempotent); previously lived in
-    // initInfoServer before network.ts was made Node-safe.
+    // Start attestation at reconnect (idempotent). Here rather than in
+    // `initInfoServer`, because `network.ts` has to stay Node-safe.
     initAttestation()
     // `willSignInfoRollup` reads the native signer, so it is awaited here
     // rather than inside `network.ts`, which has to stay Node-safe. Its
-    // failure must not skip the refresh: a rejection used to be swallowed by
-    // the outer catch, so the reconnect rollup fetch never ran at all, where
-    // before this branch it always did. `false` means "do not skip the
-    // unsigned fetch", which is the safe reading of "we could not tell".
+    // failure must not skip the refresh, so a rejection becomes `false`
+    // rather than reaching the outer catch, which would skip the reconnect
+    // rollup fetch entirely. `false` means "do not skip the unsigned fetch",
+    // which is the safe reading of "we could not tell".
     willSignInfoRollup()
       .catch((error: unknown) => {
         console.log(error)
@@ -431,8 +431,9 @@ NetInfo.addEventListener(state => {
       })
     // Through the in-flight guard, like the rollup fetch above: this arm
     // fires once per connectivity transition and writes shared module
-    // state, so a flapping link used to start an independent fetch several
-    // times a second and let whichever answered last decide the list.
+    // state, so without the guard a flapping link would start an independent
+    // fetch several times a second and let whichever answered last decide
+    // the list.
     refreshCoinrankList().catch((err: unknown) => {
       console.log(err)
     })

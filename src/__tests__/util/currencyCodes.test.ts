@@ -10,12 +10,10 @@ import {
 /**
  * The shared currency-code lookup, both halves of it.
  *
- * The token arms ran in no test on either side of the extraction:
- * `currencyCodes.ts` measured 47.05% of statements and 40% of branches, with
- * both `tokenId != null` blocks uncovered — including each one's warning and
- * `return ''` for a token the config does not know. That is not a rare
- * corner. `getCurrencyCodeWithAccount` is how `displayInfo` names the assets
- * of a swap or a stake, and `currencyCodeForToken` is what the
+ * The token arms too: both `tokenId != null` blocks, with each one's warning
+ * and `return ''` for a token the config does not know. That is not a rare
+ * corner. `getCurrencyCodeWithAccount` is how `displayInfo` names the
+ * assets of a swap or a stake, and `currencyCodeForToken` is what the
  * `get-transactions` handler puts in every export's currency column, so a
  * token swap and a token export are the ordinary case and a regression
  * spells one `''`.
@@ -90,9 +88,8 @@ describe('currencyCodeForToken', () => {
   })
 
   it('answers empty and reports for a token the config does not know', () => {
-    // This is the export's currency column: before the shared body, the
-    // engine answered the raw `tokenId` here, so one export named a column
-    // after a contract address.
+    // This is the export's currency column: answering the raw `tokenId` here
+    // would name a column after a contract address.
     const seen = warningsOf(() => {
       expect(currencyCodeForToken(wallet, 'nope')).toBe('')
     })

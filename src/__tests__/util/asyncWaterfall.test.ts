@@ -23,10 +23,9 @@ const after =
 /**
  * The waterfall behind the rates, info-server and coinrank fetches.
  *
- * It tracked servers by their position in an array, and positions moved: a
- * primary that was slow and then failed — the common outage shape — was
- * spliced out by a stale index, the `pop()` after it took a still-running
- * fallback with it, and the call threw while healthy servers were in flight.
+ * A primary that is slow and then fails is the common outage shape, and the
+ * call has to answer from a fallback still in flight rather than throw while
+ * healthy servers are running.
  */
 describe('asyncWaterfall', () => {
   beforeEach(() => {
@@ -81,7 +80,7 @@ describe('asyncWaterfall', () => {
       (error: unknown) => ({ error })
     )
     await jest.advanceTimersByTimeAsync(50)
-    // A string, which the old code could not tag with an index at all.
+    // A string, rethrown as given rather than wrapped or tagged.
     expect(await settled).toStrictEqual({ error: 'second' })
   })
 

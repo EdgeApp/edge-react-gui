@@ -278,33 +278,29 @@ export function formatTimeDate(date: Date, dateFormat?: string): string {
  * the English one and empty marks with the English marks, *independently* —
  * the number format and the language are separate failures, and an OS that
  * reports no separators says nothing about the language or the other way
- * round. `bootLocale.ts` stored the *requested* separators in
- * `AppliedLocale`, so on a device whose OS reports an empty separator —
- * which is the case this substitution exists for — `getAppliedLocale()`
- * answered `decimalSeparator: ''` while `intl.locale.decimalSeparator` was
- * `'.'`, and `GET /engine/status` published the wrong one of the two as "the
- * decimal mark for that locale".
+ * round. `bootLocale.ts` stores this answer in `AppliedLocale`, so on a
+ * device whose OS reports an empty separator, which is the case this
+ * substitution exists for, `getAppliedLocale()` and `GET /engine/status`
+ * publish the decimal mark `intl.locale` really uses rather than `''`.
  */
 export function setIntlLocale(l: IntlLocaleType): IntlLocaleType {
   if (l == null) {
     throw new Error('Please select locale for internationalization')
   }
 
-  // One pass, each field replaced only when it is empty. Separate arms with
-  // an early `return` in each meant a locale that was empty in *all three*
-  // fields — the likeliest shape, since one failed read of the OS locale
-  // usually fails all of them — took the identifier arm and installed the
-  // empty separators: `formatNumber(1234.56)` then answered `123456`,
-  // because the decimal mark is interpolated, and `isValidInput` threw
+  // One pass, each field replaced only when it is empty, so a locale that is
+  // empty in *all three* fields, the likeliest shape since one failed read
+  // of the OS locale usually fails all of them, gets the English separators
+  // as well as the English identifier. Empty separators would make
+  // `formatNumber(1234.56)` answer `123456`, because the decimal mark is
+  // interpolated, and make `isValidInput` throw
   // `SyntaxError: Invalid regular expression` on `new RegExp('\\' + '')`.
-  // Only `applyLocale` substituting a default language tag before this runs
-  // kept it out of the app.
   //
   // Each failure keeps its own warning, because they are different failures:
   // an unusable language says nothing about the separators the OS reported
-  // perfectly well. Discarding the whole locale for either one is what made
+  // perfectly well. Discarding the whole locale for either one would make
   // `getLocaleOrDefaultString` resolve info-server strings in English on a
-  // device whose only problem was its separators.
+  // device whose only problem is its separators.
   const next = { ...l }
   if (next.localeIdentifier === '') {
     console.warn(
