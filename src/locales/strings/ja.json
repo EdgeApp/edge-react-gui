@@ -1795,6 +1795,7 @@
   "spei_bank_transfer": "SPEI Bank Transfer",
   "turkish_bank_transfer": "Turkish Bank Transfer",
   "venmo": "Venmo",
+  "vietqr": "VietQR",
   "bank_wire_transfer": "Bank Wire Transfer",
   "uk_deposit_parent_crypto_modal_message_no_exchange_2s": "%1$s%2$s is required to send this transaction. Please deposit %2$s and try again.",
   "uk_deposit_parent_crypto_modal_message_no_exchange_3s": "%1$s%2$s (on %3$s) is required to send this transaction. Please deposit %2$s and try again.",
