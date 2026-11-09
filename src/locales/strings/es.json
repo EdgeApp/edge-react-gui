@@ -451,6 +451,7 @@
   "settings_default_screen_home": "Inicio",
   "settings_default_screen_assets": "Activos",
   "settings_developer_options_force_la": "Forzar creación de cuenta ligera",
+  "swap_fixed_to_unavailable_toast": "No provider can quote an exact receive amount for this pair. Your send amount is fixed instead, at about the same value.",
   "swap_preferred_header": "Casa de cambio preferida",
   "swap_preferred_cheapest": "Elegir mejor precio",
   "swap_preferred_dex": "Preferir modo descentralizado",
