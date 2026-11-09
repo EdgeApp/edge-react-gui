@@ -8,7 +8,12 @@ import {
   it,
   jest
 } from '@jest/globals'
-import { act, fireEvent, render } from '@testing-library/react-native'
+import {
+  act,
+  fireEvent,
+  render,
+  type RenderResult
+} from '@testing-library/react-native'
 import { asDate, asObject, asOptional, asString, asUnknown } from 'cleaners'
 import {
   addEdgeCorePlugins,
@@ -269,6 +274,169 @@ describe('SwapCreateScene', () => {
     rendered.unmount()
     // The fake navigation is shared by every test in the file:
     setParams.mockRestore()
+  })
+
+  describe('"to" quote fallback', () => {
+    /** Renders the scene, enters a "to" amount, and presses Next. */
+    const requestToQuote = async (
+      nativeAmount: string,
+      rootState: FakeState = { ...servedState, core: { account } },
+      fiatAmount: string = '100'
+    ): Promise<{
+      lastParams: () => SwapProcessingParams
+      params: SwapProcessingParams
+      replace: jest.SpiedFunction<typeof fakeNavigation.replace>
+      rendered: RenderResult
+    }> => {
+      if (btcWallet == null || ethWallet == null) throw new Error('No wallets')
+      const navigate = jest
+        .spyOn(fakeNavigation, 'navigate')
+        .mockImplementation(() => undefined)
+      const replace = jest
+        .spyOn(fakeNavigation, 'replace')
+        .mockImplementation(() => undefined)
+      const rendered = render(
+        <FakeProviders initialState={rootState}>
+          <SwapCreateScene
+            {...fakeSwapTabSceneProps('swapCreate', {
+              fromWalletId: btcWallet.id,
+              fromTokenId: null,
+              toWalletId: ethWallet.id,
+              toTokenId: null
+            })}
+          />
+        </FakeProviders>
+      )
+      const toInput = rendered
+        .UNSAFE_getAllByType(SwapInput)
+        .find(node => node.props.walletPillTestID === 'swapToWalletPill')
+      if (toInput == null) throw new Error('No to input')
+
+      act(() => {
+        toInput.props.onAmountChanged({
+          exchangeAmount: '1',
+          fiatAmount,
+          nativeAmount,
+          fieldChanged: 'crypto'
+        })
+      })
+      fireEvent.press(
+        rendered.getAllByText(lstrings.string_next_capitalized)[0]
+      )
+
+      const lastParams = (): SwapProcessingParams => {
+        const calls = navigate.mock.calls as unknown as Array<[string, unknown]>
+        const processingCalls = calls.filter(
+          call => call[0] === 'swapProcessing'
+        )
+        return processingCalls[
+          processingCalls.length - 1
+        ][1] as SwapProcessingParams
+      }
+      return { lastParams, params: lastParams(), rendered, replace }
+    }
+
+    /** A root state pricing BTC at $100,000 unless told, and ETH at $4,000. */
+    const pricedState = (btcRate: number = 100000): FakeState => {
+      const rate = (current: number): object => ({
+        'iso:EUR': {
+          current,
+          yesterday: 0,
+          expiration: 0,
+          yesterdayTimestamp: 0
+        }
+      })
+      return {
+        ...servedState,
+        core: { account },
+        exchangeRates: {
+          ...fakeRootState.exchangeRates,
+          crypto: {
+            bitcoin: { '': rate(btcRate) },
+            ethereum: { '': rate(4000) }
+          }
+        } as unknown as FakeState['exchangeRates']
+      }
+    }
+
+    it('offers a "from" request of the same value', async () => {
+      const { params, rendered } = await requestToQuote(
+        '1000000000000000000',
+        pricedState()
+      )
+
+      expect(params.swapRequest.quoteFor).toBe('to')
+      expect(params.toQuoteFallback?.swapRequest).toEqual({
+        ...params.swapRequest,
+        quoteFor: 'from',
+        nativeAmount: '4000000'
+      })
+      rendered.unmount()
+    })
+
+    it('rounds the switched send amount like a typed fiat amount', async () => {
+      const { params, rendered } = await requestToQuote(
+        '333333333333333333',
+        pricedState(3000),
+        '1333.33'
+      )
+      // The exact amount would be 44444444, a digit past what matters at $3,000:
+      expect(params.toQuoteFallback?.swapRequest.nativeAmount).toBe('44444440')
+
+      act(() => {
+        params.toQuoteFallback?.onSwitch()
+      })
+
+      // The card shows exactly the amount the request carries:
+      expect(rendered.getByText('0.4444444 BTC')).toBeTruthy()
+      rendered.unmount()
+    })
+
+    it('offers no fallback without a rate on both sides', async () => {
+      const state = pricedState()
+      const { params, rendered } = await requestToQuote('1000000000000000000', {
+        ...state,
+        exchangeRates: {
+          ...state.exchangeRates,
+          crypto: { ethereum: state.exchangeRates?.crypto?.ethereum }
+        } as unknown as FakeState['exchangeRates']
+      })
+
+      expect(params.toQuoteFallback).toBeUndefined()
+      rendered.unmount()
+    })
+
+    it('moves the amount to the send side and confirms the new request', async () => {
+      const { lastParams, params, rendered, replace } = await requestToQuote(
+        '1000000000000000000',
+        pricedState()
+      )
+
+      await act(async () => {
+        params.toQuoteFallback?.onSwitch()
+      })
+      await act(async () => {
+        params.onDone([])
+      })
+
+      const confirmationCall = replace.mock.calls.find(
+        call => call[0] === 'swapConfirmation'
+      )
+      const confirmationParams = confirmationCall?.[1] as SwapConfirmationParams
+      expect(confirmationParams.swapRequest.quoteFor).toBe('from')
+      expect(confirmationParams.swapRequest.nativeAmount).toBe('4000000')
+
+      // The scene now holds the send amount the toast promised, so pressing Next
+      // again asks for that amount directly:
+      fireEvent.press(
+        rendered.getAllByText(lstrings.string_next_capitalized)[0]
+      )
+      const nextParams = lastParams()
+      expect(nextParams.swapRequest.quoteFor).toBe('from')
+      expect(nextParams.swapRequest.nativeAmount).toBe('4000000')
+      expect(nextParams.toQuoteFallback).toBeUndefined()
+      rendered.unmount()
+    })
   })
 
   describe('saved Stealth Swap choice', () => {
