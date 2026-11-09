@@ -9,12 +9,11 @@ import { fillTxsFiat } from '../util/fillTxsFiat'
 /**
  * Records how many lookups are outstanding at once.
  *
- * The point of the change this suite covers is that every rate is queued
- * *before* anything is awaited, so one `doQuery` cycle drains a whole page
- * instead of one cycle per ten transactions — roughly 1.1s against 120s for
- * 1,200 transactions, which is past the client's own socket timeout. Without
- * measuring concurrency, the old chunked loop and the new one produce
- * byte-identical results under a mock, so the shape could regress silently.
+ * `fillTxsFiat` queues every rate *before* anything is awaited, so one
+ * `doQuery` cycle drains a whole page. Awaiting in groups of ten would buy a
+ * fresh debounce per group, which for 1,200 transactions would run past the
+ * client's own socket timeout. Both shapes produce byte-identical results
+ * under a mock, so only the concurrency measured here tells them apart.
  */
 const concurrency = { current: 0, peak: 0 }
 
@@ -94,11 +93,11 @@ describe('fillTxsFiat', () => {
   })
 
   it('leaves a transaction alone when the queue gave up on it', async () => {
-    // `RATE_UNAVAILABLE` is not a rate. Multiplying it in wrote `NaN`, and
-    // settling the queue's give-up at `0` — which is what it used to do —
-    // wrote a zero fiat amount indistinguishable from a real one into every
-    // CSV, QBO and Bitwave file built from the page. The count is what
-    // `get-transactions` refuses an export on.
+    // `RATE_UNAVAILABLE` is not a rate. Multiplying it in would write `NaN`,
+    // and settling the queue's give-up at `0` would write a zero fiat amount
+    // indistinguishable from a real one into every CSV, QBO and Bitwave file
+    // built from the page. The count is what `get-transactions` refuses an
+    // export on.
     const mocked: any = getHistoricalCryptoRateOrUnavailable
     mocked.mockImplementationOnce(async () => Number.NaN)
     const tx = makeTx({ nativeAmount: '100000000', metadata: undefined })
@@ -179,8 +178,8 @@ describe('fillTxsFiat concurrency', () => {
       isoFiat: 'iso:USD',
       txs
     })
-    // 25, not 10: the chunked loop awaited ten at a time, and each chunk
-    // paid its own debounce.
+    // 25, not 10: a loop that awaited ten at a time would pay a debounce per
+    // chunk.
     expect(concurrency.peak).toBe(25)
   })
 })

@@ -34,8 +34,8 @@ describe('parseExportFormats', () => {
   })
 
   it('names the legal values when a token is not one', () => {
-    // The reason this goes through the cleaner rather than `includes`: the
-    // hand-rolled check said only `Unknown exportFormat "x"`.
+    // The reason this goes through the cleaner rather than `includes`: a
+    // hand-rolled check would say only `Unknown exportFormat "x"`.
     let message = ''
     try {
       parseExportFormats('csv,xlsx')

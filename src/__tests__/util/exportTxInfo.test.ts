@@ -19,8 +19,7 @@ import {
  * rather than the Export button; `mergeExportTxInfo` is strict about the
  * read, because answering an unreadable file with an empty map rewrites
  * every asset's saved preferences from nothing. `localAccountSettings.ts` and
- * `CategoriesActions.ts` draw the same line and both have the three-case
- * suite; this was the reader that did not.
+ * `CategoriesActions.ts` draw the same line.
  */
 const GOOD = {
   bitwaveAccountId: 'acct-1',
@@ -49,8 +48,8 @@ describe('readExportTxInfoMap', () => {
   })
 
   it('answers an unparseable file with an empty map', async () => {
-    // Nothing can be recovered from it, and the GUI scene recovered by
-    // writing a fresh map.
+    // Nothing can be recovered from it, and the next merge writes a fresh
+    // map over it.
     const wallet = makeFakeDiskletWallet({
       files: { [EXPORT_TX_INFO_FILE]: '{not json' }
     })
@@ -96,11 +95,10 @@ describe('mergeExportTxInfo', () => {
   })
 
   it('tells an omitted id apart from a deliberate clear', async () => {
-    // `patch.x ?? prev?.x`, so `undefined` keeps and `''` clears — and the
-    // scene used to send `''` for both, because `accountId` starts empty
-    // and is only filled inside the Bitwave arm. A CSV-only export, or a
-    // cancelled id modal, therefore erased an id the user would have to
-    // find and retype.
+    // `patch.x ?? prev?.x`, so `undefined` keeps and `''` clears. A caller
+    // sending `''` for an id it never asked for would let a CSV-only export,
+    // or a cancelled id modal, erase an id the user would have to find and
+    // retype.
     const wallet = makeFakeDiskletWallet({ files: file({ BTC: GOOD }) })
     const kept = await mergeExportTxInfo(wallet, null, {
       bitwaveAccountId: undefined,
