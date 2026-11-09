@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
 
-// Imported at the top of the file, which is the hazard itself: these three
-// modules evaluate before any locale is applied, exactly as they do in the
-// app when a side-effect import happens to come first.
+// Imported at the top of the file, which is the hazard itself: these modules
+// evaluate before any locale is applied, exactly as they do in the app when
+// a side-effect import happens to come first.
 import {
   categoryName,
   displayCategories,
@@ -27,18 +27,15 @@ const english = {
 /**
  * A translated string must not depend on which module loaded first.
  *
- * It used to be correct by construction: `strings.ts` ran `selectLocale` as
- * part of its own module evaluation, so importing `lstrings` forced the
- * language to be applied first. The language is now applied by a separate
- * module — `initLocale` in the app, `bootNodeLocale` in the CLI — that these
- * modules do not import, so a module-scope capture freezes whatever
- * `lstrings` held at import time, and the failure is silent and partial:
- * the memo labels, the payment types and the transaction categories render
- * in English while the rest of the app is translated.
+ * The language is applied by a separate module — `initLocale` in the app,
+ * `bootEngineLocale` in the CLI — that these modules do not import, so a
+ * module-scope capture freezes whatever `lstrings` held at import time, and
+ * the failure is silent and partial: the memo labels, the payment types and
+ * the transaction categories render in English while the rest of the app is
+ * translated.
  *
- * These three sit on the CLI's import graph or were rewritten by the change
- * that moved the boot, and an ESLint rule now refuses a new module-scope
- * `lstrings.` read under `src/cli`, `src/util` and `src/locales`.
+ * An ESLint rule refuses a new module-scope `lstrings.` read under
+ * `src/cli`, `src/util` and `src/locales`.
  */
 describe('a module that reads lstrings', () => {
   afterEach(() => {
@@ -83,10 +80,10 @@ describe('a module that reads lstrings', () => {
 /**
  * The label table is static keys read late, which is both properties at once.
  *
- * A module-scope table of *strings* froze them at import time; rebuilding the
- * whole table per call fixed that and cost 151ns against 7ns on a path that
- * runs once per transaction. A table of key names is one indexed read and
- * still resolves after the boot.
+ * A module-scope table of *strings* would freeze them at import time, and
+ * rebuilding the whole table per call would cost an allocation on a path
+ * that runs once per transaction. A table of key names is one indexed read
+ * and still resolves after the boot.
  */
 describe('txActionLabel', () => {
   afterEach(() => {
@@ -100,14 +97,12 @@ describe('txActionLabel', () => {
   })
 
   it('reads one key per call, not a whole table', () => {
-    // Counted, not compared. The assertion here used to be
-    // `txActionLabel('claim') === txActionLabel('claim')`, under a comment
-    // claiming it caught a rebuilt literal — `toBe` is `Object.is`, which
-    // compares string *contents*, so a twenty-key literal rebuilt per call
-    // passes it exactly as a static table does. Reverting to the 151ns
-    // shape this branch replaced left the suite green, on a path that runs
-    // once per visible row while a list scrolls and once per transaction
-    // inside the export scene's synchronous map over a whole history.
+    // Counted, not compared: `toBe` is `Object.is`, which compares string
+    // *contents*, so a twenty-key literal rebuilt per call would pass
+    // `txActionLabel('claim') === txActionLabel('claim')` exactly as a static
+    // table does. The path runs once per visible row while a list scrolls
+    // and once per transaction inside the export scene's synchronous map
+    // over a whole history.
     expect(countLstringReads(() => txActionLabel('claim'))).toBe(1)
   })
 })
@@ -155,8 +150,7 @@ function countLstringReads(fn: () => unknown): number {
  *
  * `categoryName` is reached by `formatCategory`, so by `TransactionListRow`
  * once per visible row and by `CategoryModal`'s 116-entry memo on every
- * keystroke — and it had no allocation test at all, only a comment in
- * `CategoriesActions.ts` pointing at the one above that held nothing.
+ * keystroke.
  */
 describe('categoryName', () => {
   afterEach(() => {

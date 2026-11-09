@@ -1,16 +1,14 @@
 /**
  * Fiat code shapes, Node-safe.
  *
- * `CurrencyWalletHelpers.ts` holds the GUI's copy of this and imports
- * Airship, so the CLI cannot reach it — which is why the extraction made a
- * second copy. One module both can import instead: the value feeds a
- * user-facing string (the fiat code inside an `Exchange:From %1$s`
- * subcategory), so two implementations is two places for it to drift.
+ * Not in `CurrencyWalletHelpers.ts`, which imports Airship, so the CLI could
+ * not reach it. One module the GUI and the CLI can both import: the value
+ * feeds a user-facing string (the fiat code inside an `Exchange:From %1$s`
+ * subcategory), so two implementations would be two places for it to drift.
  */
 // From `fiatConstants`, where it is declared, not through `utils`, which
 // only re-exports it: this module exists to be small and Node-safe, and
-// reaching a 780-line module for one function is the dependency it was
-// extracted to avoid.
+// `utils` reaches the locales and the Redux selectors.
 import { removeIsoPrefix } from './fiatConstants'
 
 /**
