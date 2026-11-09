@@ -7,10 +7,9 @@ import path from 'path'
  *
  * The rules are `.mjs` modules, which jest's react-native transform does not
  * load, so the cases live in `scripts/eslint-plugin-edge/ruleTests.mjs` and
- * this asserts the process exits cleanly. Before them nothing ran
- * `no-module-scope-lstrings` against known-bad input — `npm run lint` never
- * fires it on today's tree — so a selector that stopped matching was
- * invisible to every gate.
+ * this asserts the process exits cleanly. `npm run lint` never fires
+ * `no-module-scope-lstrings` on a clean tree, so without known-bad input a
+ * selector that stopped matching would be invisible to every gate.
  */
 describe('eslint-plugin-edge rules', () => {
   it('pass their RuleTester cases', () => {

@@ -10,16 +10,14 @@ const ROOT = path.resolve(__dirname, '../../..')
 const CLIENT_BUNDLE = path.join(ROOT, 'lib/edgeCli.js')
 
 /**
- * The client ships no translation tables, which nothing checked.
+ * The client ships no translation tables.
  *
- * `bootNodeLocale.ts` and `docs/EDGE_CLI.md` both state it as fact — the
+ * `bootNodeLocale.ts` and `docs/EDGE_CLI.md` both state it as fact: the
  * client renders no localized string, so applying the language is the
- * engine's job — and it was not true: `spawnEngine.ts` imported
- * `resolveLocaleTableOrEnglish` from `locales/strings`, which statically
- * imports `en_US.ts` and eleven JSON tables and keeps them live through
- * `allLocales`. Rollup cannot shake a value `Object.keys` reads, so the
- * committed `lib/edgeCli.js` carried all eleven: 1.9 MB of 3.63 MB, over
- * half the client, in tables it never looks at.
+ * engine's job. `locales/strings` statically imports `en_US.ts` and every
+ * JSON table and keeps them live through `allLocales`, and Rollup cannot
+ * shake a value `Object.keys` reads, so one client import of it would put
+ * every table into `lib/edgeCli.js`.
  *
  * Skipped when the bundle is absent, like the other built-bundle checks:
  * `npm test` runs with no `lib/`, and `test:cli:offline:built` builds first.

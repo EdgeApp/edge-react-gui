@@ -27,38 +27,33 @@ let infoServerPollStarted = false
 /**
  * The info-server poll, kept so it can be stopped and cannot overlap.
  *
- * `makePeriodicTask` rather than `setInterval`, which is the one rule the
- * async brief states flatly. Two things followed from the raw interval.
- * `fetchPublicRollup` has no ceiling of its own — `fetchWaterfall`'s
- * `timeoutMs` is `asyncWaterfall`'s per-server *stagger*, armed only when
- * more than one server is pending — so against a stalled info server the
- * polls overlapped and accumulated one pending request every five minutes
- * for the life of the app, where this measures its gap after the task
- * finishes. And the interval handle was discarded, so nothing could stop
- * the poll; `src/cli/engine/fetchPluginKeys.ts` notes that as one reason
- * the engine never calls `initInfoServer`.
+ * `makePeriodicTask` rather than `setInterval`. `fetchPublicRollup` has no
+ * ceiling of its own: `fetchWaterfall`'s `timeoutMs` is `asyncWaterfall`'s
+ * per-server *stagger*, armed only when more than one server is pending. So
+ * against a stalled info server an interval's polls would overlap and
+ * accumulate one pending request every five minutes for the life of the
+ * app, where this measures its gap after the task finishes.
  */
 let infoServerPoll: PeriodicTask | undefined
 
 /**
  * One in-flight request per resource, so a flapping link cannot stack them.
  *
- * `makePeriodicTask` ended the overlap on the *poll*, and left it intact on
- * the arm that can fire several times a second: every
- * disconnected-to-connected transition started an independent
- * `fetchPublicRollup()` and `initCoinrankList()`, both writing the same
- * module state (`infoServerData.rollup` / `rollupRaw`,
- * `coinrankListData.coins`) with nothing serialising them.
- * `infoServerPollStarted` does not cover it — that latch only stops a
- * second poll being installed, which is the branch below the reconnect one.
+ * `makePeriodicTask` ends the overlap on the *poll*, not on the arm that
+ * can fire several times a second: every disconnected-to-connected
+ * transition asks for a `fetchPublicRollup()` and an `initCoinrankList()`,
+ * both writing the same module state (`infoServerData.rollup` /
+ * `rollupRaw`, `coinrankListData.coins`). `infoServerPollStarted` does not
+ * cover it — that latch only stops a second poll being installed, which is
+ * the branch below the reconnect one.
  *
  * `fetchPublicRollup` has no ceiling of its own, because `fetchWaterfall`'s
  * `timeoutMs` is `asyncWaterfall`'s per-server *stagger* and is armed only
  * when more than one server is pending. So against an info server that
  * accepts the connection and stalls, a lift, a train or a tethered laptop
- * accumulated one pending unsigned rollup request per transition for the
- * life of the app — and the last one to answer decided the rollup, whatever
- * order they were started in.
+ * would, without the join, accumulate one pending unsigned rollup request
+ * per transition for the life of the app, and the last one to answer would
+ * decide the rollup, whatever order they were started in.
  *
  * A join rather than a skip: the caller wanted fresh data, and the request
  * already running will produce it.
@@ -160,9 +155,8 @@ export async function cleanMultiFetch<T>(
   timeout: number = 5000,
   doFetch?: EdgeFetchFunction
 ): Promise<T> {
-  // `multiFetch`, whose body this used to repeat verbatim: the shuffle and
-  // the waterfall are its job, and only the `ok` check and the cleaner below
-  // are this function's own.
+  // `multiFetch` does the shuffle and the waterfall; only the `ok` check and
+  // the cleaner below are this function's own.
   const response = await multiFetch(servers, path, options, timeout, doFetch)
   if (!response.ok) {
     const text = await response.text()
@@ -252,9 +246,8 @@ export function abortingFetch(ms: number): EdgeFetchFunction {
     const timer = setTimeout(() => {
       controller.abort()
     }, ms)
-    // `unrefTimer`, not its body a second time: that helper was added by
-    // this change so "both helpers share one timer policy", and it imports
-    // nothing.
+    // `unrefTimer`, not its body a second time, so this follows the same
+    // timer policy as `raceTimeout`; its module imports nothing.
     unrefTimer(timer)
     // Deliberately not cleared when `fetch` resolves: under Node a response
     // resolves at the *headers*, so clearing here would disarm the timer
@@ -328,8 +321,8 @@ export const notifyInfoRollup = (): void => {
  * Fetch the unsigned public info rollup. Exported so `keysStore` can fall back
  * to it when the signed infoRollup fetch fails to populate `infoServerData`:
  * that failure is only observable once the signed fetch settles, which is long
- * after `initInfoServer` has already run. Uses the parameters captured by
- * `initInfoServer`, so this module stays Node-safe.
+ * after `initInfoServer` has already run. Uses the parameters recorded by
+ * `configureInfoServer`, so this module stays Node-safe.
  *
  * `doFetch` for the tests, the way `fetchWaterfall` and `cleanMultiFetch`
  * take one; production callers pass none.
@@ -345,27 +338,24 @@ export const fetchPublicRollup = async (
     return
   }
   const { osType, osVersion, appVersion, appId, onRollup } = params
-  // Three stages, each reported as what it is. One `catch` around all of
-  // them said "Failed to reach the info server" for the two that are not
-  // that: a rollup the cleaner rejects, and `onRollup` — the version check,
-  // `runOnce('checkAppVersion', …)` — failing after the fetch plainly
-  // succeeded and the rollup was stored. This is the module's one report for
-  // a rollup that did not arrive, so the label has to say what happened.
+  // Three stages, each reported as what it is: the fetch, a rollup the
+  // cleaner rejects, and `onRollup` (the version check,
+  // `runOnce('checkAppVersion', …)`) failing after the fetch succeeded and
+  // the rollup was stored. This is the module's one report for a rollup that
+  // did not arrive, so the label has to say what happened.
   let response: Awaited<ReturnType<typeof fetchInfo>>
   try {
     response = await fetchInfo(
       `v1/infoRollup/${appId}?os=${osType}&osVersion=${osVersion}&appVersion=${appVersion}`,
       undefined,
       undefined,
-      // Injectable, like `fetchWaterfall` and `cleanMultiFetch` beside it.
-      // This was the one function in the file without it, which is what
-      // made the three decisions it carries — the "configureInfoServer has
-      // not run yet" guard, the error arm and `onRollup` — reachable from
-      // no test at all, while the contract they hold is `keysStore`'s
-      // cold-start fallback: when the signed fetch does not fill the
-      // rollup, this call is what fills it, and a call that does nothing
-      // leaves every plugin with no `appKeys` and a `console.warn` as the
-      // only trace.
+      // Injectable, like `fetchWaterfall` and `cleanMultiFetch` beside it,
+      // so a test can reach the three decisions this function carries: the
+      // "configureInfoServer has not run yet" guard, the error arm and
+      // `onRollup`. The contract they hold is `keysStore`'s cold-start
+      // fallback: when the signed fetch does not fill the rollup, this call
+      // is what fills it, and a call that does nothing leaves every plugin
+      // with no `appKeys` and a `console.warn` as the only trace.
       doFetch
     )
   } catch (error: unknown) {
@@ -432,7 +422,7 @@ export const initInfoServer = async (
   if (infoServerPollStarted) {
     // NetInfo reconnect: live-update public rollup fields only (never KEYS).
     // Through the in-flight guard, because this arm fires once per
-    // connectivity transition and a flapping link made that several times a
+    // connectivity transition and a flapping link makes that several times a
     // second.
     await refreshPublicRollup()
     return
@@ -451,9 +441,9 @@ export const initInfoServer = async (
     await fetchPublicRollup()
   }
 
-  // Wrapped, not passed by reference: `fetchPublicRollup` now takes an
-  // optional `doFetch`, and handing the function straight to a scheduler
-  // would let whatever that scheduler calls its task with land in that slot.
+  // Wrapped, not passed by reference: `fetchPublicRollup` takes an optional
+  // `doFetch`, and handing the function straight to a scheduler would let
+  // whatever that scheduler calls its task with land in that slot.
   infoServerPoll = makePeriodicTask(
     async () => {
       await fetchPublicRollup()
@@ -474,8 +464,7 @@ export const initInfoServer = async (
  * Stop the info-server poll.
  *
  * Nothing in the app calls this today; it exists because a ticker whose
- * handle is thrown away cannot be stopped at all, and the engine's
- * `fetchPluginKeys` names that as a reason it keeps away from this module.
+ * handle is thrown away cannot be stopped at all.
  */
 export const stopInfoServerPoll = (): void => {
   infoServerPoll?.stop()
