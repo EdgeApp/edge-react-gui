@@ -1,11 +1,9 @@
 /**
  * What an engine refusal carried, for a test that expects one.
  *
- * Five CLI suites declared their own `ThrownEngineError` interface and four
- * their own `thrown()` beside it, in two spellings — sync and async — of one
- * idea. Here, beside the shared fakes, so a change to what a refusal carries
- * is one edit. Outside `src/__tests__`, because jest treats every file there
- * as a suite.
+ * The sync and async spellings of one idea, here beside the shared fakes so
+ * a change to what a refusal carries is one edit. Outside `src/__tests__`,
+ * because jest treats every file there as a suite.
  */
 export interface ThrownEngineError {
   code: string

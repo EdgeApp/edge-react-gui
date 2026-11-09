@@ -16,11 +16,11 @@ import { UsageError } from '../../cli/command'
 import { MAX_TIMER_MS } from '../../cli/timerCeiling'
 
 /**
- * The client's global flags, which nothing could load.
+ * The client's global flags.
  *
- * They lived in `src/cli/index.ts`, which calls `main()` at import, so the
- * `--timeout` ceiling and the `-c` mapping both landed with nothing seeing
- * the error class that decides the exit code.
+ * In `clientArgs.ts` rather than `src/cli/index.ts`, which calls `main()` at
+ * import, so a test can see the error class that decides the exit code for
+ * the `--timeout` ceiling and the `-c` mapping.
  */
 describe('clientTimeoutMs', () => {
   it('reads seconds as milliseconds', () => {
@@ -31,8 +31,8 @@ describe('clientTimeoutMs', () => {
 
   it('refuses a value above Node’s timer ceiling as a usage error', () => {
     // Node holds a timer's delay in a signed 32-bit int and clamps anything
-    // above it to 1 ms, so `--timeout=1e9` — how a caller asks for
-    // "effectively never" on `broadcast-tx` — failed *instantly* with
+    // above it to 1 ms, so `--timeout=1e9`, how a caller asks for
+    // "effectively never" on `broadcast-tx`, would fail *instantly* with
     // `REQUEST_TIMEOUT` and exit 6, the exact opposite.
     expect(() => clientTimeoutMs('1e9')).toThrow(UsageError)
     expect(() => clientTimeoutMs('1e9')).toThrow(/Node's timer ceiling/)
@@ -54,16 +54,16 @@ describe('clientTcpPort', () => {
   })
 
   it('refuses a non-port as a usage error, not as the engine’s stack', () => {
-    // `Number('abc')` is `NaN`, which reached the engine as `--tcp=NaN` and
-    // cost a 30-second spawn timeout followed by the engine's stack.
+    // `Number('abc')` is `NaN`, which would reach the engine as `--tcp=NaN`
+    // and cost a 30-second spawn timeout followed by the engine's stack.
     expect(() => clientTcpPort('abc')).toThrow(UsageError)
   })
 })
 
 describe('clientConfig', () => {
   it('reports a missing explicit -c as a usage error', () => {
-    // A plain `Error` here printed `INTERNAL_ERROR` and exited 1 for a typo
-    // in a path, with no usage line.
+    // A plain `Error` here would print `INTERNAL_ERROR` and exit 1 for a
+    // typo in a path, with no usage line.
     const missing = path.join(
       os.tmpdir(),
       `no-such-edge-cli-${process.pid}.json`
@@ -106,9 +106,9 @@ describe('the exit code those refusals produce', () => {
 /**
  * The legacy `-u`/`-p` helper chooses the account.
  *
- * It used to run only when no session existed, and the session file is per
- * profile, so `-u alice -p … delete-remote-account --yes` deleted whichever
- * account had logged in there last.
+ * It runs even when a session exists: the session file is per profile, so
+ * using the saved session for `-u alice -p … delete-remote-account --yes`
+ * would delete whichever account had logged in there last.
  */
 describe('legacyLoginAction', () => {
   it('compares names as core spells them', () => {
@@ -236,9 +236,9 @@ describe('legacyLoginAction', () => {
 /**
  * Which session a `-u` login logs out when it replaces the saved one.
  *
- * Every condition is one a reviewer found missing at least once: a plain
- * login's id, a session another shell's `-u` wrote mid-login, a pinned id,
- * one the engine had already dropped.
+ * Only one an earlier `-u` logged in. A plain login's id, a session another
+ * shell's `-u` wrote mid-login, a pinned id and one the engine has already
+ * dropped are all left alone.
  */
 describe('sessionToLogOut', () => {
   const base = {

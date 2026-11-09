@@ -34,9 +34,9 @@ export interface SectionInfo {
 }
 
 /**
- * The session errors every account-scoped route can return, from the list the
- * routes themselves import. Written out here, two copies of the sentence had
- * to be kept in step with the list by hand.
+ * The session errors every account-scoped route can return, from the list
+ * `scripts/extractRoutes.ts` adds to each of them, so the sentence cannot
+ * fall out of step with it.
  */
 function sessionErrorList(): string {
   return SESSION_ERRORS.map(code => `\`401 ${code}\``).join(' or ')
@@ -46,11 +46,10 @@ function sessionErrorList(): string {
  * The account sentence, published at both levels.
  *
  * The `account` section and the `account` group say the same thing, and
- * nothing compares them: two copies of a sentence is what
- * `sessionErrorList` was extracted to stop, and the neighbouring pairs show
- * the drift it predicts — the engine section reads "they describe the
- * process" against the group's "they describe the daemon itself". One
- * constant, the way `fieldDocs.ts` holds a field's prose.
+ * nothing compares them. Two copies of a sentence drift, as the neighbouring
+ * pairs show: the engine section reads "they describe the process" against
+ * the group's "they describe the daemon itself". One constant, the way
+ * `fieldDocs.ts` holds a field's prose.
  */
 const ACCOUNT_DOC = `Calls on a logged-in \`EdgeAccount\`, addressed by \`sessionId\`. All of these can also return ${sessionErrorList()}.`
 

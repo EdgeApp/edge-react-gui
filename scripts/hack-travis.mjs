@@ -6,13 +6,9 @@ function editFile(name, cb) {
   fs.writeFileSync(name, text, 'utf8')
 }
 
-// `edge-currency-accountbased` used to be stripped from `package.json` here,
-// with ambient declarations written for its `/rn*` subpaths in its place.
-// That was for git dependencies, which Travis installed in parallel into one
-// cache and raced on; the package is a registry dependency now, and the CLI
-// engine imports it directly (`src/cli/engine/makeCoreContext.ts`) — so
-// stripping it failed `tsc`, `npm test`, `cli:plugins:check` and both offline
-// suites on CI.
+// `edge-currency-accountbased` stays in `package.json`: the CLI engine imports
+// it directly (`src/cli/engine/makeCoreContext.ts`), so `tsc`, `npm test`,
+// `cli:plugins:check` and both offline suites need it installed on CI.
 editFile('package.json', text =>
   text //
     .replace(/"eosjs-api".*/, '')

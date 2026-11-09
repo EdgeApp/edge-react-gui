@@ -52,9 +52,8 @@ let pluginsLocked = false
  */
 function unwrapPlugins(mod: Record<string, unknown>): Record<string, unknown> {
   const inner = mod.default
-  // `isPlainObject` rather than its body a fourth time: that helper exists
-  // to end this triplication, and `keysConfig.ts` and `router.ts` already
-  // use it. Only the `<= 2` clause is this function's own.
+  // `isPlainObject`, the shared helper `keysConfig.ts` and `router.ts` use
+  // too. Only the `<= 2` clause is this function's own.
   if (isPlainObject(inner) && Object.keys(mod).length <= 2) {
     return inner
   }
@@ -64,13 +63,11 @@ function unwrapPlugins(mod: Record<string, unknown>): Record<string, unknown> {
 /**
  * A plugin keys entry, as core's `pluginsInit` takes it.
  *
- * The one place either path interprets a value that is neither `false`, nor
- * absent, nor `true`. The currency path had these arms and the swap path had
- * none: it handed the merged value to core unexamined, so an entry whose
- * `enabled` or `edgeApiKey` was the wrong type reached a plugin's init
- * untouched, and a value the cleaner rejects outright — the *string*
- * `"false"` is the one a server really sent — had no warn-and-disable arm on
- * that side at all.
+ * The one place either path, currency or swap, interprets a value that is
+ * neither `false`, nor absent, nor `true`, so an entry whose `enabled` or
+ * `edgeApiKey` is the wrong type does not reach a plugin's init untouched,
+ * and a value the cleaner rejects outright, such as the *string* `"false"`,
+ * is warned about and disabled.
  *
  * Disabled rather than enabled, because the alternative is a plugin running
  * with keys nobody has looked at. `enabled: false` is honoured here on both
@@ -78,14 +75,12 @@ function unwrapPlugins(mod: Record<string, unknown>): Record<string, unknown> {
  * the field and passes it to core as an init option. `src/configKeysMerge.ts`
  * says keys are never an off switch, and that is about a keys-side bare
  * `false` wiping a baked credential; a field that says `enabled: false` is a
- * server asking for the plugin to be off, and the CLI has honoured it on the
- * currency path since it had one.
+ * server asking for the plugin to be off.
  *
  * `{}` and `{"enabled":true}` both become `true`: `asObject` materialises
  * every declared key, so each cleans to an object carrying
- * `edgeApiKey: undefined`, and counting those made the init an object with
- * one undefined key where it should be `true` — which also stopped the
- * `moneroInit === true` check below warning about Monero enabled with no key.
+ * `edgeApiKey: undefined`, and counting those would make the init an object
+ * with one undefined key where it should be `true`.
  */
 function initFromKeysEntry(
   what: string,
@@ -94,8 +89,8 @@ function initFromKeysEntry(
 ): boolean | JsonObject {
   const entry = asMaybe(asPluginKeysEntry)(value)
   if (entry == null) {
-    // `Array.isArray` first, because `typeof []` is "object" and an array is
-    // the one unusable shape that used to be *accepted*.
+    // `Array.isArray` first, because `typeof []` is "object" and the warning
+    // should say "array".
     const kind = Array.isArray(value) ? 'array' : typeof value
     warn?.(`${what} has an unusable init (${kind}); the plugin is disabled`)
     return false
@@ -110,21 +105,10 @@ function initFromKeysEntry(
  * One plugin's init, as core takes it.
  *
  * The merge itself is `src/configKeysMerge.ts`'s `mergePluginInit`, which the
- * app uses and `configKeysMerge.test.ts` already pins. This engine had a
- * second function of the same name and the same signature, and the two
- * disagreed on six of ten cases I compared — so the existing suite was
- * giving assurance about code the engine did not call. Two of those
- * disagreements mattered:
- *
- *  - `config: true, keys: false` — the app answers `true` and documents why
- *    ("Keys are never an off switch: only config.json can disable a
- *    plugin"), and this answered `false`. The same remote `infoRollup` feeds
- *    both, so a keys-side `false` silently disabled a plugin in the CLI and
- *    not in the app. `config: {…}, keys: false` was the same defect.
- *  - a non-object, non-boolean keys value such as the *string* `"false"` —
- *    the app keeps the config value, and this answered `true`, switching a
- *    swap plugin on with no keys where the currency path a few functions
- *    below deliberately disables it.
+ * app uses and `configKeysMerge.test.ts` pins, so the engine merges as the
+ * app does. The same remote `infoRollup` feeds both, so a keys-side `false`
+ * leaves `config: true` on in both ("Keys are never an off switch: only
+ * config.json can disable a plugin").
  *
  * This wrapper only narrows the shared function's `unknown` to what
  * `EdgeCorePluginsInit` accepts, `boolean | JsonObject`, and names the
@@ -256,8 +240,8 @@ interface MakeCoreContextOpts {
    * An API key from the config file.
    *
    * Used as the key when there is no explicit one, and nothing more: it does
-   * not disable signing. Reading a config value as an override turned HMAC
-   * signing off for anyone who put `apiKey` in `edge-cli.conf`.
+   * not disable signing. Reading a config value as an override would turn
+   * HMAC signing off for anyone who put `apiKey` in `edge-cli.conf`.
    */
   configApiKey?: string
   /**
@@ -387,9 +371,9 @@ export async function makeCoreContext(
   const appId = opts.appId ?? ''
   const directory = opts.directory ?? defaultDirectory()
   const testMode = opts.testMode === true
-  // The four decisions, lifted out so they can be tabled: `resolveApiCredentials`
+  // The four decisions, in `resolveApiCredentials` so they can be tabled: it
   // is pure, and this call is the only thing between it and the request
-  // signature. They ran in no automated test at all while they were inline,
+  // signature. Inline here they would run in no automated test at all,
   // because jest never passes the `--fake` return above.
   const { effectiveApiKey, apiSecret, useNativeSigner, forceKeysJson } =
     resolveApiCredentials(
@@ -403,11 +387,11 @@ export async function makeCoreContext(
   const apiSigner = useNativeSigner ? makeNodeApiSigner() : undefined
 
   if (apiSigner == null && effectiveApiKey === '') {
-    // Names the install case, because that is the common one and the
-    // message used to read as a build problem: a package from `npm install
-    // -g` carries no addon and no `keys.json`, so this is the first thing
-    // every command does, before the socket exists — the client reports a
-    // spawn timeout and the reason is only in the startup log.
+    // Names the install case, because that is the common one: a package
+    // from `npm install -g` carries no addon and no `keys.json`, so this is
+    // the first thing every command does, before the socket exists — the
+    // client reports a spawn timeout and the reason is only in the startup
+    // log.
     throw new Error(
       'No Edge API key available, so the engine cannot start. A CLI ' +
         'installed from npm carries no native HMAC signer and no keys, so ' +
@@ -433,12 +417,12 @@ export async function makeCoreContext(
   if (useNativeSigner) {
     opts.logger?.info('Using Node native Edge API HMAC signer')
   } else {
-    // The other half, which used to be no line at all. Which signer is in
-    // use decides which `appKeys` layer the info server serves, so an
-    // operator who has built the addon and is still being served the floor
-    // layer has to be able to tell "I asked for keys.json" from "the addon
-    // could not be loaded" — and the failure the second one leads to names
-    // HMAC credentials, not the signer.
+    // The other half, logged as well. Which signer is in use decides which
+    // `appKeys` layer the info server serves, so an operator who has built
+    // the addon and is still being served the floor layer has to be able to
+    // tell "I asked for keys.json" from "the addon could not be loaded" —
+    // and the failure the second one leads to names HMAC credentials, not
+    // the signer.
     opts.logger?.info(
       forceKeysJson
         ? 'Signing with the keys.json pair: asked for by -k or EDGE_CLI_FORCE_KEYS_JSON'
@@ -451,12 +435,12 @@ export async function makeCoreContext(
     // the caller's job: its `FETCH_TIMEOUT_MS` is "a per-server stagger …
     // Not a hard ceiling on the whole signed infoRollup call: with multiple
     // info servers the waterfall can outlast this value", and it names the
-    // GUI's cold-start gate as what bounds the app. The engine had no
-    // equivalent, so one info server that accepted a connection and never
-    // answered held `makeCoreContext` open — and with it the whole boot,
-    // *after* the run file was claimed and before the socket exists. Every
-    // client then waits out its 30-second spawn timeout against a profile
-    // that looks claimed, for as long as the server stays silent.
+    // GUI's cold-start gate as what bounds the app. Unbounded, one info
+    // server that accepted a connection and never answered would hold
+    // `makeCoreContext` open — and with it the whole boot, *after* the run
+    // file is claimed and before the socket exists. Every client would then
+    // wait out its 30-second spawn timeout against a profile that looks
+    // claimed, for as long as the server stays silent.
     //
     // The keys are an overlay with a local fallback, which is why a
     // deadline here is safe: the `catch` below already logs and carries on
@@ -544,11 +528,10 @@ export async function makeCoreContext(
     ...servers,
     onLog(event) {
       const type = String(event.type ?? 'info')
-      // `info` is a plugin's own poll-loop chatter and there is a lot of it:
-      // 7,319 of 7,691 lines in one 9.6 MB log were a single plugin's
-      // `init:` messages. It still reaches a `subscribe` stream, which is
-      // where someone watching a live engine wants it; it is only kept out
-      // of the file unless EDGE_CLI_LOG_LEVEL asks for it.
+      // `info` is a plugin's own poll-loop chatter and there is a lot of it.
+      // It still reaches a `subscribe` stream, which is where someone
+      // watching a live engine wants it; it is only kept out of the file
+      // unless EDGE_CLI_LOG_LEVEL asks for it.
       if (type !== 'info' || process.env.EDGE_CLI_LOG_LEVEL === 'info') {
         opts.logger?.write(type, event.message, { source: event.source })
       }

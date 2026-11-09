@@ -41,14 +41,7 @@ const CLI_STAMP_PATH = path.join(ROOT, '.edgeCliApiSigner.stamp')
 const CLI_KEY_FILE = 'edgeCliKey.json'
 const ANDROID_CPP = path.join(ROOT, 'android/app/src/main/cpp')
 const NODE_CPP = path.join(ROOT, 'native/edge-api-signer/node')
-/**
- * Every file this script writes.
- *
- * The two Node outputs were module-level consts outside this table, so
- * `signerOutputsExist` could not see them and the stamp check needed a
- * bolted-on clause to notice they were missing — a third place to update
- * when a target is added.
- */
+/** Every file this script writes. */
 const OUTPUT_PATHS = {
   iosSource: path.join(ROOT, 'ios/EdgeApiSecret.c'),
   iosHeader: path.join(ROOT, 'ios/EdgeApiSecret.h'),

@@ -1,40 +1,35 @@
 import net from 'net'
 
 /**
- * The example and default loopback TCP port.
+ * The example loopback TCP port.
  *
- * `--tcp` has no default — the listener is off unless a port is given — so
- * nothing resolves this number at runtime; it only ever appears in text
- * telling a reader what a port looks like. This is the one declaration the
- * three usage errors (`parseArgs.ts`, `engine/index.ts` and `parseTcpPort`
- * below) and the two OpenAPI strings `scripts/buildApiDocs.ts` emits all
- * read, where it used to be written out at each site and a change left some
- * of them stale.
+ * `--tcp` has no default: the listener is off unless a port is given, so
+ * nothing resolves this number at runtime, and it only ever appears in text
+ * telling a reader what a port looks like. The usage errors in
+ * `parseArgs.ts`, `engine/engineArgs.ts` and `parseTcpPort` below, and the
+ * OpenAPI text `scripts/buildApiDocs.ts` emits, all read this one
+ * declaration, so a change reaches every one of them.
  *
- * Two places still spell it by hand and cannot read this: `docs/EDGE_CLI.md`,
- * which is prose and not generated, and `src/cli/flagTable.ts`, whose
- * descriptions carry no numbers — so `edge-cli --help` renders
- * `--tcp=<port>` and cites no example at all.
+ * `docs/EDGE_CLI.md` is prose and not generated, so it spells the port by
+ * hand, and `src/cli/flagTable.ts` cites no example, so `edge-cli --help`
+ * renders `--tcp=<port>`.
  */
 export const EXAMPLE_TCP_PORT = 9008
 
 /**
  * A `--tcp` port, validated the same way on both entries.
  *
- * The client demanded `1 <= port <= 65535` while the engine accepted any
- * finite `port >= 0`, so `--tcp=0` — which the docs document as "ephemeral" —
- * worked on the engine and was refused by the client, and `--tcp=1.5` or
- * `--tcp=70000` were accepted by the engine and then crashed at `listen`
- * with `ERR_SOCKET_BAD_PORT`. `0` is allowed, because an ephemeral port is
- * the documented behaviour; everything Node's `listen` rejects is rejected
- * here, with the flag named.
+ * One check for the client and the engine, so a port one accepts the other
+ * cannot refuse. `0` is allowed, because an ephemeral port is the documented
+ * behaviour; everything Node's `listen` rejects, such as `1.5` or `70000`,
+ * is rejected here with the flag named, rather than crashing at `listen`
+ * with `ERR_SOCKET_BAD_PORT`.
  */
 export function parseTcpPort(raw: string | undefined): number | null {
   // `undefined` means the flag is absent, which is the listener's off state.
-  // An *empty* value is a typo — `--tcp=` — and used to mean the same thing,
-  // so `--tcp` was a usage error while `--tcp=` silently started no
-  // listener. One spelling cannot mean "off" at one call site and "bad argv"
-  // at another, so the empty string is refused here, once, for both entries.
+  // An *empty* value is a typo, `--tcp=`, and is refused here, once, for both
+  // entries: read as absent, it would silently start no listener while a
+  // bare `--tcp` is a usage error.
   if (raw == null) return null
   if (raw === '') {
     throw new RangeError(
@@ -55,27 +50,22 @@ export function parseTcpPort(raw: string | undefined): number | null {
  *
  * Normalised here and nowhere else, so the bind address, the allowed-name set
  * in `transportAuth` and the `Host` header comparison all speak one
- * spelling. `--tcp-host=[::1]` used to be accepted and then answer nothing:
- * `allowedHostnamesFor` seeded its set from the raw string, so the set held
- * `[::1]`, while `hostnameOf` strips the brackets `URL` keeps — so a
- * caller's `Host: [::1]:9008` arrived as `::1`, missed the set, and every
- * request was refused 403 with a message about DNS rebinding.
- * `server.listen(port, '[::1]')` would not have bound it as an address
- * either, sending a bracketed literal through DNS resolution instead. The
- * unbracketed form worked, which is what made the bracketed one a trap
- * rather than an obvious failure.
+ * spelling. The brackets come off `[::1]`: `allowedHostnamesFor` seeds its
+ * set from this string while `hostnameOf` strips the brackets `URL` keeps,
+ * so a set holding `[::1]` would refuse every request 403, and
+ * `server.listen(port, '[::1]')` sends a bracketed literal through DNS
+ * resolution rather than binding it as an address.
  *
  * Loopback only: the TCP transport is for local scripts, and an engine
  * reachable from the LAN exposes `get-raw-private-key` and `spend` to it.
  */
 export function parseTcpHost(host: string): string {
   const canonical = host.replace(/^\[|\]$/g, '')
-  // `net.isIPv4` before the prefix test: the pattern alone accepted
+  // `net.isIPv4` before the prefix test: the prefix alone would accept
   // `127.000.000.001` and `127.999.999.999`, which are not addresses at all,
-  // so `server.listen` sent them through DNS resolution — a startup failure
-  // with a DNS error for an argv mistake, or a listener whose `Host` set
-  // matched nothing and refused every request. The same trap as the
-  // bracketed `[::1]` above, by another spelling.
+  // and `server.listen` would send them through DNS resolution, giving a
+  // startup failure with a DNS error for an argv mistake, or a listener whose
+  // `Host` set matches nothing and refuses every request.
   const loopback =
     canonical === 'localhost' ||
     canonical === '::1' ||

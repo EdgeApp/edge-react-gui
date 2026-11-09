@@ -7,12 +7,11 @@ import {
 import { redactSessionId } from '../../cli/engine/sessions'
 import { thrownSync } from '../../util/fake/thrownEngineError'
 
-/** The error shape `engineError` produces. */
 /**
  * An `EngineReporter` whose `warn` a case can assert on.
  *
- * Both levels, because the store takes the engine's shared reporter now —
- * the same interface `EventHub`, `SessionStore`, `IdleShutdown`, the sweep
+ * Both levels, because the store takes the engine's shared reporter, the
+ * same interface `EventHub`, `SessionStore`, `IdleShutdown`, the sweep
  * ticker and the listeners take, so one object reaches all of them.
  */
 const reporter = (
@@ -195,10 +194,9 @@ describe('ObjectHandleStore', () => {
  *
  * `quote.close()` is the engine's only cancellation of a real order at a
  * swap partner, and it runs on a logout, a shutdown and every 5-minute
- * expiry. The failure used to be swallowed twice — in the `onExpire`
- * callback and again in `delete`, which still answered `true` — so an
- * exchange that refused the close left the order live with no log line, no
- * event, and four call sites catching something that could not happen.
+ * expiry. An exchange that refuses the close leaves the order live, so the
+ * failure is reported with the handle's id and kind, and `delete` rejects
+ * rather than answering `true`.
  */
 describe('a release whose teardown fails', () => {
   const refuses = async (): Promise<never> => {
@@ -224,10 +222,9 @@ describe('a release whose teardown fails', () => {
     expect(warn.mock.calls[0][1]).toMatchObject({
       objectId: handle.objectId,
       kind: 'swap',
-      // Redacted, and this line used to assert the opposite — so the
-      // suite was pinning the leak. A `sessionId` is a bearer token, and
-      // this warning goes into the log file an operator pastes into a bug
-      // report; the owner is only here to correlate.
+      // Redacted: a `sessionId` is a bearer token, and this warning goes
+      // into the log file an operator pastes into a bug report; the owner is
+      // only here to correlate.
       sessionId: redactSessionId('session-1')
     })
   })
@@ -248,12 +245,13 @@ describe('a release whose teardown fails', () => {
 
   it('does not let a never-settling teardown stop the shutdown', async () => {
     // `clearAll()` is the shutdown's second phase, budgeted at
-    // `HANDLE_BUSY_WAIT_MS`. `deleteMany` bounded only its wait for a call
-    // already in flight; `onExpire` itself had no ceiling, and it is
+    // `HANDLE_BUSY_WAIT_MS` for the calls in flight and
+    // `HANDLE_TEARDOWN_WAIT_MS` for the teardowns. `onExpire` is
     // caller-supplied — a `swap` handle's is `quote.close()`, a plugin's
-    // HTTP call to an exchange. So one unresponsive partner meant the
-    // engine never closed its listeners, never removed its run file and
-    // never exited, holding the profile against every later invocation.
+    // HTTP call to an exchange — so without that second ceiling one
+    // unresponsive partner would keep the engine from closing its listeners,
+    // removing its run file and exiting, holding the profile against every
+    // later invocation.
     const warn = jest.fn()
     const store = new ObjectHandleStore(reporter(warn))
     store.create({
@@ -326,7 +324,7 @@ describe('a release whose teardown fails', () => {
  *
  * `delete` rethrows so the housekeeping paths can each decide; as an answer
  * to "release this handle" that would be a 500 for an operation that
- * succeeded. `cancel-request` found it: core's `cancelRequest()` throws when
+ * succeeded. `cancel-request` meets it: core's `cancelRequest()` throws when
  * the lobby has already gone, which is the ordinary case for a login that
  * completed before the caller cancelled it.
  */
@@ -360,10 +358,10 @@ describe('release', () => {
  *
  * `deleteMany`'s wait is bounded, because a wedged call must not stop the
  * engine exiting — so a logout or a shutdown can walk away from a handle
- * whose operation is still running. `hold`'s `finally` then cleared
- * `consuming` and re-armed a full TTL on a record whose session was already
- * gone: no later `deleteBySession` could match it, and the only thing that
- * would ever reach it was the sweeper, running `onExpire` against a dead
+ * whose operation is still running. If `hold`'s `finally` then cleared
+ * `consuming` and re-armed a full TTL on a record whose session is already
+ * gone, no later `deleteBySession` could match it, and the only thing that
+ * would ever reach it is the sweeper, running `onExpire` against a dead
  * account.
  */
 describe('hold against a bulk release', () => {
@@ -409,11 +407,11 @@ describe('hold against a bulk release', () => {
 
   it('tears the whole set down at once, not handle after handle', async () => {
     // `delete` gives every `onExpire` its own `HANDLE_TEARDOWN_WAIT_MS`, so
-    // running them in sequence made `clearAll()` cost N × that ceiling while
-    // `shutdownTiming` counted it once. Six swap quotes against an exchange
-    // that is black-holing requests put the shutdown past the 230s the
-    // client waits on, and a daemon draining exactly as designed was then
-    // reported to the operator as wedged.
+    // running them in sequence would make `clearAll()` cost N × that ceiling
+    // while `shutdownTiming` counts it once. Six swap quotes against an
+    // exchange that is black-holing requests would put the shutdown past the
+    // 230s the client waits on, and a daemon draining exactly as designed
+    // would be reported to the operator as wedged.
     jest.useRealTimers()
     const store = new ObjectHandleStore(reporter(() => {}))
     const slowClose = async (): Promise<void> => {

@@ -7,10 +7,10 @@
  * has an entry, because a published version cannot be replaced and every
  * EVM chain missing from it is not something a user can work around.
  *
- * The fix for the first two is a release of `edge-currency-accountbased`:
- * its `paul/cli` `c53b1510` makes the `node` build script copy
- * `src/ethereum/abi`, and 4.99.0 through 4.102.0 predate it. The app is
- * unaffected — it loads that package's webpack chunks, which inline the
+ * The fix for the first two is a release of `edge-currency-accountbased`
+ * with its `paul/cli` `c53b1510`, which makes the `node` build script copy
+ * `src/ethereum/abi`; the installed release does not have it. The app is
+ * unaffected: it loads that package's webpack chunks, which inline the
  * JSON.
  */
 'use strict'

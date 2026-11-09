@@ -58,8 +58,8 @@ function written(): any {
 
 describe('printError redaction', () => {
   it('saves the reset token for request-otp-reset and names the file', () => {
-    // Redacted and nowhere else, a CLI user could not run
-    // `request-otp-reset` at all: the token only reached a REST caller.
+    // Redacted and saved nowhere else, the token would reach only a REST
+    // caller, and a CLI user could not run `request-otp-reset` at all.
     printError(otpRequired('SECRET-RESET-TOKEN'))
     const file = path.join(home, '.edge-cli', 'otp-reset-token')
     expect(fs.readFileSync(file, 'utf8')).toBe('SECRET-RESET-TOKEN')
@@ -185,9 +185,9 @@ describe('printError redaction', () => {
   })
 
   // The envelope and exit code the guide's exit-code table publishes for the
-  // most common failure a first-time caller meets — and the one `printError`
-  // arm that is not an `ApiClientError`, so the 503 rule above it does not
-  // reach it. No test constructed this error.
+  // most common failure a first-time caller meets, and a `printError` arm of
+  // its own rather than an `ApiClientError`, so the 503 rule above it does not
+  // reach it.
   it('reports an unreachable engine as ENGINE_UNAVAILABLE, exit 7', () => {
     const code = printError(
       new EngineUnavailableError('Engine is not running for profile abc123')

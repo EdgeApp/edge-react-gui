@@ -49,8 +49,9 @@ export class IdleShutdown {
   /**
    * How many requests are being served right now.
    *
-   * Shutdown reads this: the idle path already refuses to fire while a
-   * request is open, and `engine-stop` and SIGINT have to refuse too.
+   * Shutdown reads this: the idle path refuses to fire while a request is
+   * open, and `engine-stop` and SIGINT wait, up to a bound, for open
+   * requests to finish.
    */
   get requestsInFlight(): number {
     return this.inFlight
@@ -69,7 +70,7 @@ export class IdleShutdown {
       this.getSubscriberCount() > 0 ||
       // A pending edge login and a parked admin lobby hold no session, and
       // their TTL equals the default idle timeout, so without this the engine
-      // shut down under a lobby the user was still showing a QR code for.
+      // would shut down under a lobby the user is still showing a QR code for.
       this.getSessionlessHandleCount() > 0
     )
   }
@@ -82,11 +83,12 @@ export class IdleShutdown {
   /**
    * Hold the engine open for the duration of one request.
    *
-   * `touch` only records when a request *started*, so a call that outlives the
-   * idle timeout — a cold login, `wait-for-all-wallets`, `resync-blockchain` —
-   * could be shut down underneath itself, and the client saw a destroyed
-   * socket rather than a result or an error. Pre-login calls hold nothing
-   * else: there is no session or subscriber to keep the timer disarmed.
+   * `touch` only records when a request *started*, so without this a call
+   * that outlives the idle timeout — a cold login, `wait-for-all-wallets`,
+   * `resync-blockchain` — could be shut down underneath itself, and the
+   * client would see a destroyed socket rather than a result or an error.
+   * Pre-login calls hold nothing else: there is no session or subscriber to
+   * keep the timer disarmed.
    */
   beginRequest(): void {
     this.inFlight++
@@ -143,14 +145,12 @@ export class IdleShutdown {
   /**
    * Disarm the timer for good.
    *
-   * `shuttingDown` as well as clearing it, because clearing alone was undone
-   * by the next notify: `objects.clearAll()`, `sessions.logoutAll()` and
-   * `events.closeAll()` all call back into this timer *during* `shutdown()`,
-   * each one `touch()`ing and re-arming it. The timer then fired while
-   * `core.context.close()` was still running and the log recorded
-   * "Idle timeout — shutting down" for an operator's `engine-stop`. The
-   * teardown itself survived only because `index.ts` keeps a second flag
-   * that makes `shutdown('idle')` a no-op.
+   * `shuttingDown` as well as clearing it, because clearing alone would be
+   * undone by the next notify: `objects.clearAll()`, `sessions.logoutAll()`
+   * and `events.closeAll()` all call back into this timer *during*
+   * `shutdown()`, each one `touch()`ing and re-arming it, and the timer would
+   * then fire while `core.context.close()` is still running and log
+   * "Idle timeout — shutting down" for an operator's `engine-stop`.
    */
   stop(): void {
     this.shuttingDown = true

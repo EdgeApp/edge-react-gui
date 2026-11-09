@@ -2799,7 +2799,7 @@
                     "unloadedWallets": {
                       "type": "array",
                       "items": {},
-                      "description": "The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer. This call used to return nothing, so an account with a wallet the CLI cannot load got `ok` and a short `currency-wallets` list with no explanation. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well."
+                      "description": "The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer; a wallet listed here is one the CLI cannot load, which `currency-wallets` leaves out. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well."
                     }
                   },
                   "required": [
@@ -2826,7 +2826,7 @@
       "get": {
         "operationId": "currencyWallets",
         "summary": "List the account's loaded wallets.",
-        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets\n```\n\nEvery wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nThis took a `filter` of `active`, `archived`, `hidden` or `all`, and three of those four could not work. The handler resolved each id through `account.currencyWallets`, which core builds from `activeWalletIds` **alone**, so the archived and hidden lists were disjoint from the resolvable set by construction: every id mapped to `undefined`, the `filter(wallet != null)` dropped it, and `?filter=archived` answered `{\"currencyWallets\":[]}` on every account, always. `all` concatenated the three lists, so it was `active` with each hidden wallet — which is active and hidden at once, core deriving the two flags independently — listed twice. Nor could the missing wallets be served in this shape: an archived wallet has no loaded API, so `name`, `currencyCode`, `blockHeight`, `syncStatus` and `paused` do not exist for it, and seven required response fields would have had to become nullable for every caller to carry three values that never worked.\n\n`all-keys` is the route for that, and already was: it returns `EdgeWalletInfoFull[]` — id, type, `archived`, `deleted`, `hidden`, `sortIndex` — which is everything knowable about a wallet core has not loaded.",
+        "description": "**Core call:** `account.currencyWallets`\n\n**Command line**\n\n```\ncurrency-wallets\n```\n\nEvery wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nA wallet core has not loaded has no `name`, `currencyCode`, `blockHeight`, `syncStatus` or `paused` to report. `all-keys` returns everything knowable about one: `EdgeWalletInfoFull[]`, with id, type, `archived`, `deleted`, `hidden` and `sortIndex`.",
         "tags": [
           "Session"
         ],
@@ -2951,12 +2951,12 @@
                           "unactivatedTokenIds"
                         ]
                       },
-                      "description": "Every wallet core has loaded for this account, including paused ones. Archived, deleted and hidden wallets are not loaded; `all-keys` lists those."
+                      "description": "Every wallet core has loaded for this account, including paused and hidden ones. Archived and deleted wallets are not loaded; `all-keys` lists those."
                     },
                     "unloadedWallets": {
                       "type": "array",
                       "items": {},
-                      "description": "The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. They used to be filtered out silently, so this list was the difference between `all-keys` and this one and a caller had to compute it — and nothing said why a wallet was missing. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
+                      "description": "The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. Listed here, with what the engine knows of why, so a caller need not work out the difference from `all-keys`. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
                     }
                   },
                   "required": [

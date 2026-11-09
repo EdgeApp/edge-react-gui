@@ -47,8 +47,8 @@ describe('Router.match', () => {
     const router = new Router()
     router.add('GET', '/object/{objectId}', noop)
     // `new URL()` accepts this and `decodeURIComponent` then throws
-    // `URIError`, which reached the catch-all as a 500 — a caller's bad URL
-    // reported as an engine fault on a route declaring 400 and 404.
+    // `URIError`. Uncaught, it would reach the catch-all as a 500, reporting a
+    // caller's bad URL as an engine fault on a route declaring 400 and 404.
     expect(codeOf(() => router.match('GET', '/object/%ZZ'))).toBe('BAD_REQUEST')
   })
 

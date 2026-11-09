@@ -12,8 +12,8 @@ import {
   runFileText
 } from './runFile'
 
-// The run file's own declaration lives in `runFile.ts`, so the log sweep can
-// read it with the same cleaner without pulling `net` into the startup path.
+// The run file's declaration and reader live in `runFile.ts`, which the log
+// sweep in `logger.ts` reads too.
 export type { EngineRunFile }
 
 export interface ProfileKey {
@@ -27,20 +27,18 @@ export interface ProfileKey {
  * One directory, one string.
  *
  * The profile hash is the only thing keeping two engines off one core data
- * directory, and it was taken over the raw argv string — so `/x/edge-data`,
- * `/x/edge-data/`, `/x/./edge-data` and a relative `edge-data` were four
- * profiles for one directory, each holding what it believed was an exclusive
- * claim, with no race needed to get there.
+ * directory, so it is taken over this function's answer rather than the raw
+ * argv string: `/x/edge-data`, `/x/edge-data/`, `/x/./edge-data` and a
+ * relative `edge-data` are one profile, not four each holding what it
+ * believes is an exclusive claim.
  *
- * `realpathSync` as well as `resolve`, so a symlink and its target agree —
- * including when the directory does not exist yet, which is the case that
- * mattered. The client hashes before it creates the data directory and the
- * engine hashes after, so resolving without realpath gave the two sides
- * different answers under a symlinked path: on macOS that is every first run
- * with `-d /tmp/…`, where the engine bound its socket under one profile, the
- * client polled another, and the command failed with a 30-second spawn
- * timeout while a healthy detached engine stayed behind. The second
- * invocation worked, because by then the directory existed.
+ * `realpathSync` as well as `resolve`, so a symlink and its target agree,
+ * including when the directory does not exist yet. The client hashes before
+ * it creates the data directory and the engine hashes after, and without
+ * realpath the two sides would get different answers under a symlinked path:
+ * on macOS that is every first run with `-d /tmp/…`, where the engine would
+ * bind its socket under one profile and the client poll another until its
+ * 30-second spawn timeout, leaving a healthy detached engine behind.
  */
 export function canonicalDirectory(directory: string): string {
   const resolved = resolve(directory)
@@ -91,12 +89,12 @@ const LISTEN_PROBE_MS = 1000
  * What a socket probe learned, which is three things rather than two.
  *
  * `absent` is the kernel saying nothing listens on that path. `unknown` is
- * the probe failing to find out — and the two were one `false`, so a single
- * EMFILE in the *starting* process read a healthy engine as dead and
- * unlinked its live socket and run file. That engine kept serving on an
- * unlinked inode: unreachable by `engine-stop` or `engine-status`, still
+ * the probe failing to find out, and is kept apart so that a single EMFILE
+ * in the *starting* process does not read a healthy engine as dead and
+ * unlink its live socket and run file. That engine would keep serving on an
+ * unlinked inode, unreachable by `engine-stop` or `engine-status` and still
  * holding a logged-in account, while the new engine bound a fresh socket at
- * the same path — two `EdgeContext`s on one data directory, which is the
+ * the same path: two `EdgeContext`s on one data directory, which is the
  * state the claim ordering exists to prevent.
  */
 export type ProbeResult = 'listening' | 'absent' | 'unknown'
@@ -105,11 +103,10 @@ export type ProbeResult = 'listening' | 'absent' | 'unknown'
  * The one seam these two functions need to be testable.
  *
  * Both decisions they turn on — "an unproven death is not a death" and "the
- * claim may have changed during the probe" — are races against a socket, and
- * neither was reachable from a test while the probe was closed over
- * directly. Injected the way this branch already injects `doFetch` into
- * `fetchWaterfall` and a request function into `httpsRequest`, so the two
- * verdicts become a table.
+ * claim may have changed during the probe" — are races against a socket,
+ * which a test can only reach through an injected probe. Injected the way
+ * `fetchWaterfall` takes a `doFetch` and `httpsRequest` a request function,
+ * so the two verdicts become a table.
  */
 export interface DiscoveryProbes {
   probeSocket?: (socketPath: string) => Promise<ProbeResult>
@@ -189,10 +186,10 @@ export function ensureRunDir(profile: string): string {
  * Replace the run file, atomically.
  *
  * Write-then-rename, because this runs *after* the socket is bound: a
- * truncating `writeFileSync` left a window in which a live engine's run file
- * was empty or half-written, which is exactly the state `cleanupStaleLock`
- * reads as "no claim" before unlinking the socket. A rename is atomic within
- * one directory, so a reader sees either the old record or the new one.
+ * truncating `writeFileSync` would leave a window in which a live engine's
+ * run file is empty or half-written, which is the state `cleanupStaleLock`
+ * reads as "no claim". A rename is atomic within one directory, so a reader
+ * sees either the old record or the new one.
  */
 export function writeRunFile(profile: string, data: EngineRunFile): void {
   ensureRunDir(profile)
@@ -215,8 +212,8 @@ export function writeRunFile(profile: string, data: EngineRunFile): void {
  * mean opposite things to the client that spawned it. On two racing cold
  * invocations the loser of `claimRunFile` exits within about a second while
  * the winner is still loading plugins, so a client that read any exit as
- * fatal gave up on a profile a healthy engine was about to bind — and said
- * "Stop it first", about an engine it had started itself.
+ * fatal would give up on a profile a healthy engine is about to bind, and
+ * say "Stop it first" about an engine it started itself.
  *
  * Shared by both halves so the number cannot drift, like
  * `REQUEST_BUDGET_HEADER`.
@@ -227,8 +224,8 @@ export const ENGINE_EXIT_ALREADY_RUNNING = 3
  * Claim the profile by creating the run file exclusively.
  *
  * `wx` fails when the file already exists, so two engines racing from cold
- * cannot both believe they own the profile. The socket path is deterministic
- * from the profile, so it can be recorded before anything is bound; the real
+ * cannot both believe they own the profile. The socket path is chosen before
+ * anything is bound, so it can be recorded in the claim; the real
  * `tcpPort` follows in the full `writeRunFile` once the listeners are up.
  *
  * Returns false when another engine won the race.
@@ -266,10 +263,10 @@ export function removeRunArtifacts(
      * Both set by a startup that claimed the profile and then died without
      * ever serving on it — above all one that died *because* it lost the
      * `listen` race. The socket then belongs to the engine that won, and
-     * `session.json` belongs to the user: unlinking them left the winner
-     * resident and unreachable with the user's session gone, and every later
-     * command spawning another engine on the same directory. Only the run
-     * file is this process's to clear.
+     * `session.json` belongs to the user: unlinking them would leave the
+     * winner resident and unreachable with the user's session gone, and every
+     * later command spawning another engine on the same directory. Only the
+     * run file is this process's to clear.
      */
     keepSocket?: boolean
     keepSession?: boolean
@@ -280,15 +277,16 @@ export function removeRunArtifacts(
      * Shutdown can outlast the claim. `server.close()` removes the socket
      * at once and then waits for open connections, so a client finding no
      * socket starts a replacement, whose `cleanupStaleLock` takes the
-     * profile over; this process's cleanup then deleted the *replacement's*
-     * run file and socket, leaving it running and unreachable, and the next
-     * command started a third engine on the same data directory.
+     * profile over. Without the check, this process's cleanup would then
+     * delete the *replacement's* run file and socket, leaving it running and
+     * unreachable, and the next command would start a third engine on the
+     * same data directory.
      *
      * A run file that is already gone is not another engine's: a
      * replacement claims the run file before it binds the socket, so with no
      * run file the socket and `session.json` are still this engine's, and
-     * leaving them made the next command read a dead session and answer
-     * `INVALID_SESSION`.
+     * leaving them would make the next command read a dead session and
+     * answer `INVALID_SESSION`.
      */
     claim?: { pid: number; startedAt: string }
   } = {}
@@ -316,7 +314,7 @@ export function removeRunArtifacts(
   }
   // Not while an engine is booting: the client opens this before the engine
   // claims the profile, and it is the only record of a startup that dies
-  // before the socket exists — the case it was added for.
+  // before the socket exists.
   if (opts.keepStartupLog !== true) retireStartupLog(profile)
   try {
     // Leave no empty profile directory behind: one per engine per data
@@ -329,15 +327,11 @@ export function removeRunArtifacts(
 /**
  * Move a non-empty startup log into the log directory, or delete it.
  *
- * It was unlinked outright, and in normal operation it is not only the
- * pre-socket record its name suggests: the engine is started detached with
+ * In normal operation it is not only the pre-socket record its name
+ * suggests: the engine is started detached with
  * `stdio: ['ignore', logFd, logFd]`, so anything a *plugin* writes to stderr
- * lands here. Measured on a healthy engine with seven wallets: 73 KB and 89
- * copies of `edge-currency-plugins`' `Socket closed without error` stack in
- * the first half-minute, against 19 KB in `engine-<profile>.log` for the
- * whole session — and every byte of it deleted by the stop that followed.
- * Core's own warn for those events does reach the engine log, so the
- * information is not lost; the plugin's own output was.
+ * lands here. Core's own warnings reach the engine log, but a plugin's own
+ * output is only here, so a stop keeps it.
  *
  * Into `~/.edge-cli/logs/`, where `sweepOldLogs` ages it out with everything
  * else rather than leaving one file per profile for ever. An empty one is
@@ -381,16 +375,14 @@ function isProcessAlive(pid: number): boolean {
 /**
  * Whether a run file's claim belongs to an engine that is still around.
  *
- * One definition, because there were two and they disagreed.
- * `cleanupStaleLock` required a listening socket as well as a live pid, and
- * its comment asserted that `sweepStaleProfiles` "skips the directory for
- * the same reason" — but the sweep tested the pid alone, so it permanently
- * skipped exactly the profiles it exists to clear: a SIGKILLed engine whose
- * pid the OS later recycled looks alive for ever, so its run directory — the
- * socket, the stale `session.json`, and `tcpToken` inside `engine.json`,
- * which is the one live credential in there — survived in a directory
- * nothing would revisit, because `testCliFake` derives its data directory
- * from the pid so every run hashes fresh.
+ * One definition, shared by `cleanupStaleLock` and `sweepStaleProfiles` so
+ * the two cannot disagree. A live pid is not enough on its own: a SIGKILLed
+ * engine whose pid the OS later recycled looks alive for ever, so a sweep
+ * testing the pid alone would skip exactly the profiles it exists to clear,
+ * keeping the socket, the stale `session.json` and `tcpToken` inside
+ * `engine.json`, the one live credential in there, in a directory nothing
+ * revisits: `testCliFake` derives its data directory from the pid, so every
+ * run hashes fresh.
  */
 async function isClaimLive(
   profile: string,
@@ -422,10 +414,9 @@ async function isClaimLive(
  * Whether the claim on disk is still the one a verdict was formed about.
  *
  * `isClaimLive` awaits a socket probe, and a second engine can claim the
- * profile inside that await — so a decision taken from the *old* run file
- * unlinked the socket and run file of an engine that had not existed when
- * the read happened. That engine's own `main().catch` then ran
- * `removeRunArtifacts` for a profile a third process now owned.
+ * profile inside that await, so a decision taken from the *old* run file
+ * would unlink the socket and run file of an engine that did not exist when
+ * the read happened.
  *
  * `pid` and `startedAt` together, because a recycled pid with a new
  * `startedAt` is a different claim and a claim rewritten by the same engine
@@ -442,8 +433,8 @@ function claimUnchanged(profile: string, run: EngineRunFile): boolean {
  * Whether a claim is young enough that its engine may still be booting.
  *
  * `startedAt` when the claim carries one, and the run file's own mtime
- * otherwise, so a file written by an engine from before that field existed is
- * still given the grace rather than swept out from under itself.
+ * otherwise, so a run file without the field is still given the grace rather
+ * than swept out from under its engine.
  */
 function claimedWithin(
   profile: string,
@@ -493,12 +484,12 @@ function mtimeMsOf(path: string): number {
  * replaces the record by rename, so a running engine's file is never
  * half-written, but `claimRunFile` cannot rename — it needs `wx` for the
  * exclusion — so the claim itself is a create followed by a write. A second
- * engine starting inside that sub-millisecond window read a zero-length
- * file, took this arm, and unlinked the socket and run file of the engine
- * that had just claimed them: both then believed they owned the profile.
- * A file whose mtime is inside `BOOT_GRACE_MS` is a claim in progress, which
- * is the same grace `isClaimLive` already gives an engine that has claimed
- * and not yet bound.
+ * engine starting inside that sub-millisecond window reads a zero-length
+ * file, and unlinking the socket and run file of the engine that has just
+ * claimed them would leave both believing they own the profile. A file
+ * whose mtime is inside `BOOT_GRACE_MS` is a claim in progress, which is the
+ * same grace `isClaimLive` gives an engine that has claimed and not yet
+ * bound.
  */
 export async function cleanupStaleLock(
   profile: string,
@@ -510,11 +501,12 @@ export async function cleanupStaleLock(
     // atomic: `wx` is the exclusion, so the create and the write are two
     // steps. Refusing to start is right here — the other engine is seconds
     // from listening, and `spawnEngine` waits — where unlinking its socket
-    // and run file left two engines each believing they owned the profile.
+    // and run file would leave two engines each believing they own the
+    // profile.
     if (writtenWithin(runFilePath(profile), BOOT_GRACE_MS)) return null
     // No readable claim, so nothing here is in use. The run file goes with
-    // the socket: leaving an unreadable one behind made `claimRunFile` fail
-    // EEXIST forever and wedged the profile until someone deleted the
+    // the socket: an unreadable one left behind would make `claimRunFile`
+    // fail EEXIST forever and wedge the profile until someone deleted the
     // directory by hand.
     for (const file of [socketPathFor(profile), runFilePath(profile)]) {
       try {
@@ -609,7 +601,7 @@ export async function probeEngineSocket(
  * Everything else is a failure of the *probe*: EMFILE or ENFILE under fork
  * pressure in the probing process says nothing whatever about the target,
  * `EACCES` is about this process's own permissions, and treating any of them
- * as death is what let one transient failure unlink a healthy engine's live
+ * as death would let one transient failure unlink a healthy engine's live
  * socket.
  */
 const DEAD_SOCKET_CODES = new Set([
@@ -643,9 +635,9 @@ export function classifyProbeError(error: unknown): ProbeResult {
  * directory is `tcpToken` inside `engine.json`, which is why that file is
  * `0600` inside a `0700` directory.
  *
- * Swept at engine startup. A directory whose run file names a live process is
- * left alone, as is one belonging to the profile starting up, and as is one
- * young enough to be mid-boot.
+ * Swept at engine startup. A directory whose run file holds a live claim, by
+ * `isClaimLive`, is left alone, as is one belonging to the profile starting
+ * up, and as is one young enough to be mid-boot.
  */
 export async function sweepStaleProfiles(
   except: string,
@@ -673,10 +665,10 @@ export async function sweepStaleProfiles(
     // client creates the run directory and `engine-startup.log` before it
     // spawns, and the engine does not write `engine.json` until
     // `claimRunFile`, a whole Node startup later. Another engine booting in
-    // that window read "no run file" as "abandoned" and deleted the socket,
-    // the session file and the very startup log the spawning client was
-    // about to read — so a failed spawn reported "No engine output" and
-    // pointed at a file that had just been removed.
+    // that window that read "no run file" as "abandoned" would delete the
+    // socket, the session file and the very startup log the spawning client
+    // is about to read, so a failed spawn would report "No engine output"
+    // and point at a file that had just been removed.
     const run = readRunFile(profile)
     if (run == null && now - newestMtime < BOOT_GRACE_MS) continue
     if (run != null && (await isClaimLive(profile, run, probes))) continue
@@ -690,12 +682,10 @@ export async function sweepStaleProfiles(
     if (run == null && readRunFile(profile) != null) continue
     // No live owner, and past the boot grace, so the startup log goes too.
     //
-    // Keeping it — as this did — meant the directory was never empty, so
-    // `removeRunArtifacts`' `rmdirSync` always threw ENOTEMPTY and the
-    // accumulation this function exists to bound carried on regardless,
-    // while `removed++` reported work that had not happened. The comment
-    // called the cost "a few hundred bytes"; it was a directory per engine
-    // per data directory, for ever.
+    // Keeping it would leave the directory never empty, so
+    // `removeRunArtifacts`' `rmdirSync` would always throw ENOTEMPTY and a
+    // directory per engine per data directory would accumulate for ever,
+    // while `removed++` would report work that had not happened.
     //
     // The log is a hand-off to the client that spawned the engine, which
     // reads it as soon as the spawn fails: the `BOOT_GRACE_MS` check above

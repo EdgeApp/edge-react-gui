@@ -11,17 +11,17 @@ import {
 /**
  * The one header the client sends that no route declares.
  *
- * `--timeout` moved `apiClient`'s own deadline and nothing else, so on the
- * one route whose work has an internal budget — `get-transactions`'s
- * historical fiat fill, whose chain *settles* the remainder when its budget
- * expires — the control the CLI offers for "slow is better than wrong" had
- * no effect on the work it was waiting for.
+ * It carries `--timeout` to the one route whose work has an internal budget,
+ * `get-transactions`'s historical fiat fill, whose chain *settles* the
+ * remainder when its budget expires. Without it, the control the CLI offers
+ * for "slow is better than wrong" would move only `apiClient`'s own deadline
+ * and have no effect on the work it is waiting for.
  *
  * Every rejected spelling falls back to the module constant rather than to
  * the value in the header, because a budget of `0` or an overflowed timer
  * would make the fill give up *instantly* — the opposite of what a caller
  * raising a timeout is asking for, and the same 32-bit trap
- * `asMinSeconds` refuses above.
+ * `asMinSeconds` refuses.
  */
 const req = (value?: string | string[]): IncomingMessage =>
   ({
@@ -58,10 +58,10 @@ describe('readRequestBudgetMs', () => {
     // The header is a duration from the caller's *send*, and a route reads
     // it where its slow work starts — after the settings read, the
     // spam-floor rate query and `wallet.getTransactions`. Taken as a fresh
-    // budget there, the engine's inner deadline was always later than the
-    // caller's outer one, so in the one case the budget exists for the
-    // client had already timed out and destroyed the socket before the
-    // engine settled the remainder.
+    // budget there, the engine's inner deadline would always be later than
+    // the caller's outer one, so in the one case the budget exists for, the
+    // client would already have timed out and destroyed the socket before
+    // the engine settled the remainder.
     const budget = readRequestBudgetMs(req('10000'), Date.now() - 4000)
     expect(budget).toBeLessThanOrEqual(6000)
     expect(budget).toBeGreaterThan(5500)

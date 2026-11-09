@@ -10,13 +10,11 @@ import type { RouteContext } from '../../cli/engine/router'
  *
  * `queryToObject` runs on every routed request; what is unreachable from the
  * CLI is its empty-value branch, because `commandArgs.ts` refuses `--flag=`
- * before a request exists — so only a raw REST call can exercise that arm,
- * and the raw calls in the offline suites touch three routes.
- * `checkResponse`'s default mode is `warn`, which is what production uses
- * and what no suite asserted: both offline suites run in `strict` now, so
- * they would fail on drift rather than log it, and the behaviour the engine
- * actually falls back to — log it and send the body through untouched — is
- * covered here.
+ * before a request exists, so only a raw REST call can exercise that arm.
+ * `checkResponse`'s default mode is `warn`, which is what production uses,
+ * while both offline suites run in `strict` and fail on drift rather than
+ * log it. The behaviour the engine falls back to, logging the drift and
+ * sending the body through untouched, is covered here.
  */
 
 describe('queryToObject', () => {
@@ -24,7 +22,7 @@ describe('queryToObject', () => {
     // `?b=` is the one layer that decides an empty parameter is an absent
     // one, so a required field reports as missing rather than arriving as
     // `''` and `asOptional`'s fallback applies. `?c=0` must survive: it is a
-    // value, and three downstream branches once assumed otherwise.
+    // value.
     expect(queryToObject(new URLSearchParams('a=1&b=&c=0'))).toStrictEqual({
       a: '1',
       c: '0'

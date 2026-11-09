@@ -145,12 +145,10 @@ function typeLabel(type: string): string {
 /**
  * Split a type on one separator, at the top level only.
  *
- * `t.split('|')` cut inside braces, so an index signature or an object
- * literal containing a union came apart: `{ [keys: string]: string |
- * string[]; }` became the two fragments `{ [keys: string]: string` and
- * `string[]; }`, and each fragment fell through to `{ description }` — so
- * the field published an `anyOf` of two always-true schemas built from
- * halves of a broken type.
+ * A plain `t.split('|')` cuts inside braces, so an index signature or an
+ * object literal containing a union would come apart:
+ * `{ [keys: string]: string | string[]; }` into `{ [keys: string]: string`
+ * and `string[]; }`, two halves of a broken type.
  */
 function splitTopLevel(t: string, separator: string): string[] {
   const parts: string[] = []
@@ -182,11 +180,9 @@ function splitTopLevel(t: string, separator: string): string[] {
 /**
  * A string literal type, with its value.
  *
- * Both quote styles. The enum and single-literal branches tested for `'`
- * while the TypeScript checker prints `"`, so neither ever fired: the
- * six-member `loginMethod` union and 62 other string-literal schemas landed
- * as `anyOf` members with no `type` at all, and `"enum"` appeared nowhere in
- * the published document.
+ * Both quote styles: the TypeScript checker prints `"`, so a test for `'`
+ * alone would never match, and a string-literal union would publish as
+ * `anyOf` members with no `type` rather than as an `enum`.
  */
 const STRING_LITERAL = /^(['"])([\s\S]*)\1$/
 
@@ -197,14 +193,12 @@ function exampleFor(type: string, name = ''): unknown {
     return [exampleFor(resolvedType.slice(0, -2), name)]
   if (resolvedType.startsWith('Array<'))
     return [exampleFor(resolvedType.slice(6, -1), name)]
-  // `splitTopLevel` and `STRING_LITERAL`, like `jsonSchema` below — the two
-  // readers of one resolved type string had two ideas of what a union is.
-  // `resolvedType.split('|')` cuts inside braces, so `{ walletType: string; name:
-  // string | undefined }` — the shape of most route returns — came apart
-  // into `{ walletType: string; name: string` and `undefined }`, and the
-  // first fragment then matched the `startsWith('{')` arm and answered `{}`:
-  // the right answer, by accident, until a shape whose first fragment is not
-  // an object literal comes along.
+  // `splitTopLevel` and `STRING_LITERAL`, like `jsonSchema` below, so the two
+  // readers of one resolved type string agree on what a union is. A plain
+  // `split('|')` cuts inside braces, and would break
+  // `{ walletType: string; name: string | undefined }`, the shape of most
+  // route returns, into `{ walletType: string; name: string` and
+  // `undefined }`.
   const unionParts = splitTopLevel(resolvedType, '|')
   if (unionParts.length > 1) {
     const first = unionParts.find(p => p !== 'null' && p !== 'undefined')
@@ -215,7 +209,7 @@ function exampleFor(type: string, name = ''): unknown {
     return /Height|Count|Seconds|Ratio|rate/i.test(name) ? 1 : 0
   if (resolvedType === 'null') return null
   // Both quote styles: the checker prints `"`, and testing only for `'`
-  // meant a string-literal union's example was the raw type text.
+  // would make a string-literal union's example the raw type text.
   const literal = STRING_LITERAL.exec(resolvedType)
   if (literal != null) return literal[2].split(' ')[0]
   if (resolvedType === 'string') {
@@ -227,8 +221,7 @@ function exampleFor(type: string, name = ''): unknown {
   if (resolvedType === 'unknown' || resolvedType === 'any') return {}
   // A `Date` never crosses JSON as one. `asQueryDate` accepts ISO-8601 or
   // epoch milliseconds and the handlers answer with `toISOString()`, so what
-  // a caller sends and reads is a string — and `{ description: 'Date' }`,
-  // which is what the fallthrough produced, validates anything.
+  // a caller sends and reads is a string.
   if (resolvedType === 'Date') return { type: 'string', format: 'date-time' }
   if (resolvedType.startsWith('{')) return {}
   return `<${resolvedType}>`
@@ -356,15 +349,15 @@ function cliBlock(e: ExtractedRoute): string {
               }</td><td class="doc">${md(x.doc)}</td></tr>`
           )
           .join('')}</tbody></table>`
-  // A route can bind more than one command — `spend` and `spend-max` share
-  // one, differing only by a preset — and rendering only the first left the
-  // others out of the reference entirely.
+  // A route can bind more than one command: `spend` and `spend-max` share
+  // one, differing only by a preset. Each alternate is rendered too, or it
+  // would be missing from the reference entirely.
   const alternates = e.cliExtra
     .map(
       extra =>
-        // The alternate's own `summary` as a heading. Rendering only its
-        // usage line left `spend-max` under a section headed "Send funds."
-        // — the summary it declares appeared nowhere in the document.
+        // The alternate's own `summary` as a heading. With only its usage
+        // line, `spend-max` would sit under a section headed "Send funds.",
+        // and the summary it declares would appear nowhere in the document.
         `<h5 class="alt"><code>${esc(extra.command)}</code>${
           extra.summary != null ? ` — ${esc(extra.summary)}` : ''
         }</h5><pre class="usage"><code>${esc(usageFor(e, extra))}</code></pre>${
@@ -539,8 +532,8 @@ function jsonSchema(type: string): Record<string, unknown> {
   if (resolvedType === 'unknown' || resolvedType === 'any') return {}
   // A `Date` never crosses JSON as one. `asQueryDate` accepts ISO-8601 or
   // epoch milliseconds and the handlers answer with `toISOString()`, so what
-  // a caller sends and reads is a string — and `{ description: 'Date' }`,
-  // which is what the fallthrough produced, validates anything.
+  // a caller sends and reads is a string, and the fallthrough's
+  // `{ description: 'Date' }` would validate anything.
   if (resolvedType === 'Date') return { type: 'string', format: 'date-time' }
 
   const indexed = INDEX_SIGNATURE.exec(resolvedType)
@@ -647,8 +640,8 @@ function buildOpenApi(): Record<string, unknown> {
         description: coreMd + cliMd + (e.description ?? ''),
         tags: [g.title],
         'x-cli': e.cli,
-        // Routes with a second binding (`spend-max` presets `spend`) were
-        // otherwise absent from the document entirely.
+        // Routes with a second binding (`spend-max` presets `spend`) list it
+        // here, or it would be absent from the document entirely.
         ...(e.cliExtra.length > 0 ? { 'x-cli-alternates': e.cliExtra } : {}),
         'x-core-call': e.core,
         'x-core-note': e.coreNote,
@@ -801,9 +794,8 @@ function buildHtml(): string {
                       ? `<code>${esc(e.cli.command)}</code>`
                       : `<span class="restonly">${esc(e.summary)}</span>`
                   // Every binding's command and summary go into the search
-                  // text, not just the first: a reader looking for
-                  // `spend-max` found nothing, because the sidebar and the
-                  // index were built from `e.cli` alone.
+                  // text, not just the first, so a reader looking for
+                  // `spend-max` finds the route it shares with `spend`.
                   const alternateText = e.cliExtra
                     .map(x => `${x.command} ${x.summary ?? ''}`)
                     .join(' ')

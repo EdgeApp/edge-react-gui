@@ -9,9 +9,9 @@ import { eventsPath, exitCodeForClose } from '../../cli/commands/subscribe'
  * The engine writes `forceLogout`'s reason through to the
  * `subscription.closed` frame verbatim, and it passes `'expired'` for the
  * idle auto-logout — the way a long-running scoped subscriber actually ends.
- * Honouring only `'logout'` made that exit 7, published as "could not connect
- * to or spawn the engine", so a supervisor branching on 7 restarted an engine
- * that was perfectly healthy.
+ * Honouring only `'logout'` would make that exit 7, published as "could not
+ * connect to or spawn the engine", so a supervisor branching on 7 would
+ * restart an engine that was perfectly healthy.
  */
 describe('exitCodeForClose', () => {
   it('reads a session ending as an orderly end for a scoped stream', () => {
@@ -46,9 +46,9 @@ describe('exitCodeForClose', () => {
  * Which flags narrow the stream, and which combination cannot.
  *
  * `--wallet-id` only means anything inside a session: the route's
- * `walletId` filter applies to a session-scoped subscription. Passing it
- * alone used to build the unscoped path, so `subscribe --wallet-id=…`
- * printed every event the engine emits and nothing said the filter had been
+ * `walletId` filter applies to a session-scoped subscription. Alone, it
+ * would build the unscoped path, so `subscribe --wallet-id=…` would print
+ * every event the engine emits with nothing saying the filter had been
  * discarded.
  */
 describe('eventsPath', () => {

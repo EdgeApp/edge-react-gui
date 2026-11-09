@@ -3,17 +3,15 @@ import { hasOwn } from '../util/predicates'
 /**
  * The flags whose values are secrets, and the variable each reads instead.
  *
- * `spawnEngine.ts` already states the rule for the API key — "Not on argv:
- * `ps` shows a command line to every user on the host, and this is a
- * credential" — and `docs/EDGE_CLI.md` publishes it. The branch applied it
- * to the *lowest*-value credential it handles and left the higher ones with
- * no other path: an account password, a PIN, a login key and a repo data key
- * were ordinary argv flags, visible to any local user's `ps -ef` or
- * `/proc/<pid>/cmdline` for the life of the call and written into shell
- * history.
+ * `spawnEngine.ts` states the rule for the API key, "Not on argv: `ps` shows
+ * a command line to every user on the host, and this is a credential", and
+ * `docs/EDGE_CLI.md` publishes it. The credentials here are worth more than
+ * the API key: an account password, a PIN, a login key or a repo data key on
+ * argv is visible to any local user's `ps -ef` or `/proc/<pid>/cmdline` for
+ * the life of the call, and is written into shell history.
  *
- * The engine already treats them as secrets on its own side, which is why
- * `redactUrl` replaces every query *value* in its log.
+ * The engine treats them as secrets on its own side, which is why `redactUrl`
+ * replaces every query *value* in its log.
  *
  * Reading a variable rather than prompting, so this works in a script, which
  * is where the exposure is. The flag still wins when both are given: an
@@ -44,19 +42,16 @@ export const SECRET_FLAG_ENV: Record<string, string> = {
  * account to the login password and exit 0, where it has to fail. `--pin`
  * and `change-pin` have the identical shape.
  *
- * The write-side variables live only here. `SECRET_FLAG_ENV` used to declare
- * them too, keyed by `new-password` and `new-pin` — flags no command, route
- * or generated table declares, so `secretEnvFor` could never reach them.
+ * The write-side variables live only here.
  */
 export const WRITE_CREDENTIAL_ENV: Record<string, Record<string, string>> = {
   'change-password': { password: 'EDGE_CLI_NEW_PASSWORD' },
   'change-pin': { pin: 'EDGE_CLI_NEW_PIN' },
-  // `create-account` writes both, which the first version of this table
-  // missed: with `EDGE_CLI_PASSWORD` and `EDGE_CLI_PIN` exported to log in
-  // — the pattern this module and the guide prescribe — a
-  // `create-account --username=newguy` that forgot its flags created a
-  // brand-new account whose password and PIN were *another live account's*
-  // credentials, and exited 0.
+  // `create-account` writes both. With `EDGE_CLI_PASSWORD` and
+  // `EDGE_CLI_PIN` exported to log in, the pattern this module and the guide
+  // prescribe, a `create-account --username=newguy` that forgot its flags
+  // would otherwise create a brand-new account whose password and PIN are
+  // *another live account's* credentials, and exit 0.
   'create-account': {
     password: 'EDGE_CLI_NEW_PASSWORD',
     pin: 'EDGE_CLI_NEW_PIN'
@@ -73,9 +68,9 @@ export const WRITE_CREDENTIAL_ENV: Record<string, Record<string, string>> = {
  *
  * Opt-in, unlike the credential flags: `--import-text` and `--keys` are
  * optional, and leaving them out means "generate fresh keys", so a variable
- * read whenever the flag was absent turned a forgotten `export` into a
- * wallet built from that seed, exiting 0 — and `--create-wallets` or
- * `--spend-info` re-ran an exported batch or sweep instead of failing
+ * read whenever the flag is absent would turn a forgotten `export` into a
+ * wallet built from that seed, exiting 0, and `--create-wallets` or
+ * `--spend-info` would re-run an exported batch or sweep instead of failing
  * `Missing --flag`. Asked for explicitly, a stale variable does nothing.
  */
 export const FROM_ENV = '@env'
@@ -84,8 +79,8 @@ export const FROM_ENV = '@env'
  * Inputs that carry key material under a name no other command shares, and
  * the variable each reads instead.
  *
- * Per command rather than per flag, like `WRITE_CREDENTIAL_ENV`: `--keys`
- * and `--spend-info` are ordinary on other commands, and `--answer` is
+ * Per command rather than per flag, like `WRITE_CREDENTIAL_ENV`:
+ * `--spend-info` is ordinary on other commands, and `--answer` is
  * "authenticate with these" on `login-with-recovery` but "set these" on
  * `change-recovery`, which gets a `_NEW_` variable for the reason that table
  * gives. A seed phrase, a private key or recovery answers are worth more than
@@ -123,8 +118,7 @@ export function keyMaterialEnvFor(
  *
  * Written down because the test walks every command that resolves a
  * credential through `requireSecret` and asserts it reads a write-side
- * variable *or* appears here — enumerating the write side two commands deep
- * is what let `create-account` through.
+ * variable *or* appears here.
  */
 export const AUTHENTICATE_ONLY_COMMANDS: Record<string, string[]> = {
   'login-with-password': ['password'],

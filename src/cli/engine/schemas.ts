@@ -61,10 +61,10 @@ import {
  * core's `changeWalletStates` works — those copy over the real fields and
  * blank them.
  *
- * Found twice: `change-wallet-states` wiping a wallet's `hidden` flag and
- * `sortIndex` out of the account's synced repo, and `--metadata` blanking a
- * transaction's payee, category and bizId. `JSON.stringify` hides it both
- * times, because it omits `undefined` values, so the cleaned object prints
+ * Without this, `change-wallet-states` would wipe a wallet's `hidden` flag
+ * and `sortIndex` out of the account's synced repo, and `--metadata` would
+ * blank a transaction's payee, category and bizId. `JSON.stringify` hides
+ * it, because it omits `undefined` values, so the cleaned object prints
  * exactly as the caller sent it.
  *
  * A caller cannot send `undefined` over JSON — the key is absent, or it is
@@ -99,7 +99,7 @@ const asNonEmptyString: Cleaner<string> = raw => {
  */
 export const asWalletId = doc(
   // Non-empty, because `findWallet` resolves a prefix: `''` is a prefix of
-  // every wallet, so on a single-wallet account a dropped field used to
+  // every wallet, so on a single-wallet account a dropped field would
   // resolve silently to that one wallet — and that reaches `spend`.
   asNonEmptyString,
   WALLET_ID_DOC
@@ -109,11 +109,12 @@ export const asWalletId = doc(
 // A query string carries only text, so `?saveExportPrefs=true` arrives as
 // the four characters "true". (`paused` is a *body* field on `change-paused`,
 // where it is a plain `asBoolean` and no coercion happens, so it is the
-// opposite of the lesson here.) These cleaners convert on the way in, which lets a route
-// declare the type it actually means: the documented type, the type the
-// handler reads, and the CLI flag kind all follow from one declaration. A
-// route that declared `asString` and converted inside the handler documented a
-// string and produced a `--flag=<value>` where a bare switch belonged.
+// opposite of the lesson here.) These cleaners convert on the way in, which
+// lets a route declare the type it actually means: the documented type, the
+// type the handler reads, and the CLI flag kind all follow from one
+// declaration. A route that declares `asString` and converts inside the
+// handler documents a string and produces a `--flag=<value>` where a bare
+// switch belongs.
 
 /** A boolean written out in a query string. */
 export const asQueryBoolean: Cleaner<boolean> = raw => {
@@ -140,12 +141,12 @@ export const asQueryInteger: Cleaner<number> = raw => {
  * A whole number that cannot be negative, for a field that indexes.
  *
  * `limit`, `offset` and `forceIndex` all reach an array index or a
- * derivation index, and `asQueryInteger` accepted a negative one:
- * `?limit=-5` reached `slice(0, -5)`, so the engine returned every
+ * derivation index, and `asQueryInteger` accepts a negative one:
+ * `?limit=-5` would reach `slice(0, -5)`, so the engine would return every
  * transaction but the last five while `total` still reported the full count —
- * a pager got wrong data with no error — and `?offset=-5` returned the last
- * five. Neither is a documented meaning; `0` is already the "everything"
- * opt-out.
+ * a pager would get wrong data with no error — and `?offset=-5` would return
+ * the last five. Neither is a documented meaning; `0` is already the
+ * "everything" opt-out.
  */
 export const asQueryNonNegativeInteger: Cleaner<number> = raw => {
   const parsed = asQueryInteger(raw)
@@ -158,12 +159,12 @@ export const asQueryNonNegativeInteger: Cleaner<number> = raw => {
 /**
  * A positive decimal string, as biggystring parses one.
  *
- * `asString` let `"abc"`, `""` and `"-1"` through to biggystring: the first
- * came back as a plain `Error` and therefore `500 INTERNAL_ERROR` on a route
- * that declares `BAD_REQUEST`, and the other two produced a silently wrong
- * `nativeAmount` under a field documented as what a spend actually takes.
- * `asBiggystring` already rejects blank, hex, exponential, `Infinity` and
- * `NaN`; this adds the sign and zero test those fields need.
+ * `asString` would let `"abc"`, `""` and `"-1"` through to biggystring: the
+ * first comes back as a plain `Error` and therefore `500 INTERNAL_ERROR` on
+ * a route that declares `BAD_REQUEST`, and the other two produce a silently
+ * wrong `nativeAmount` under a field documented as what a spend actually
+ * takes. `asBiggystring` already rejects blank, hex, exponential, `Infinity`
+ * and `NaN`; this adds the sign and zero test those fields need.
  */
 export const asPositiveBiggystring: Cleaner<string> = raw => {
   const value = asBiggystring(raw)
@@ -178,10 +179,10 @@ export const asPositiveBiggystring: Cleaner<string> = raw => {
  *
  * `kindOf` resolves a body field to `kind: 'string'` unless its cleaner is a
  * structured one, and the CLI then puts the raw flag text into the body: so
- * `enable-otp --timeout=604800` sent `{"timeout":"604800"}` into
- * `asOptional(asNumber)` and the command could never succeed —
+ * `enable-otp --timeout=604800` sends `{"timeout":"604800"}`, which
+ * `asOptional(asNumber)` would refuse every time —
  * `BAD_REQUEST: Expected a number, got "604800" at .timeout`. The query side
- * already solved this with `asQueryInteger`; this is the body-side twin, and
+ * handles this with `asQueryInteger`; this is the body-side twin, and
  * `routeBodyKinds.test.ts` asserts no `kind: 'string'` body field is left
  * with a cleaner that refuses a string.
  */
@@ -224,20 +225,19 @@ const EXPECTED_DATE =
 /**
  * A date written out in a query string, as ISO-8601 or epoch milliseconds.
  *
- * `Number(raw)` first was the whole problem: it made *any* all-digit string
- * epoch milliseconds, and ISO-8601 admits all-digit forms. `--date=2024`
- * became `1970-01-01T00:00:02.024Z` where `new Date('2024')` is
- * `2024-01-01`, and `--start-date=20240101` became
- * `1970-01-01T05:37:20.101Z`. No `BAD_REQUEST` — which is what this field's
- * documentation promises for a date it cannot read — just a silently empty
- * or wrong export window, or a 1970 price in a file someone files taxes
- * from.
+ * Reading *any* all-digit string as epoch milliseconds would be wrong,
+ * because ISO-8601 admits all-digit forms: `--date=2024` would become
+ * `1970-01-01T00:00:02.024Z` where `new Date('2024')` is `2024-01-01`, and
+ * `--start-date=20240101` would become `1970-01-01T05:37:20.101Z`. No
+ * `BAD_REQUEST` — which is what this field's documentation promises for a
+ * date it cannot read — just a silently empty or wrong export window, or a
+ * 1970 price in a file someone files taxes from.
  *
  * So an all-digit string is epoch milliseconds only when it is long enough
  * to be one. Twelve digits is March 1973 onwards and thirteen is September
  * 2001 onwards, which covers every timestamp an account can have. Ten and
- * eleven digits are refused: as milliseconds they are January to April
- * 1970, and a ten-digit value is almost always epoch *seconds* —
+ * eleven digits are refused: as milliseconds they fall between January 1970
+ * and March 1973, and a ten-digit value is almost always epoch *seconds* —
  * `1706659200` is 2024-01-31 — which read as milliseconds is
  * `1970-01-20`, the silently wrong window this cleaner exists to stop.
  *
@@ -296,8 +296,9 @@ export const asQueryDate: Cleaner<Date> = raw => {
  * tokenId core hands back is already the right shape, and reading `"null"`
  * there would be guessing.
  *
- * `''` cannot reach a cleaner: `queryToObject` reads an empty query value as
- * an absent parameter, and `asOptional` intercepts nullish before this runs.
+ * In a query string `''` cannot reach a cleaner: `queryToObject` reads an
+ * empty query value as an absent parameter, and `asOptional` intercepts
+ * nullish before this runs.
  */
 export const asRequestTokenId: Cleaner<string | null> = raw => {
   if (raw === null || raw === 'null') return null
@@ -382,9 +383,9 @@ export const asSession = asObject({
 /**
  * Returned by `engine-sessions`, whose `sessionId` is truncated.
  *
- * The listing needs no session of its own, so publishing usable ids made one
- * unauthenticated call a credential dispenser. Same shape otherwise, built
- * from `asSession` so the two cannot drift.
+ * The listing needs no session of its own, so publishing usable ids would
+ * make it a credential dispenser. Same shape otherwise, built from
+ * `asSession` so the two cannot drift.
  */
 export const asSessionListing = asObject({
   ...asSession.shape,
@@ -465,12 +466,7 @@ export const asBalance = asObject({
  * The fields every handle answer carries, shared by the shapes below.
  *
  * A plain object rather than a second cleaner, so each consumer can spread
- * it and add or narrow a field without restating the others' prose. It had
- * one consumer while `asTransactionHandle` below restated five of its six
- * fields — the same cleaners, down to the identical sentences — and
- * `ObjectHandleInfo` in `objectHandles.ts` was a third hand-written copy of
- * the same six. All three come from here now, which is what the comment
- * claimed before it was true.
+ * it and add or narrow a field without restating the others' prose.
  */
 const OBJECT_HANDLE_SHAPE = {
   objectId: doc(asString, OBJECT_ID_DOC),
@@ -493,13 +489,11 @@ const OBJECT_HANDLE_SHAPE = {
 /**
  * What `object-get` answers: the handle fields plus the projected value.
  *
- * `getObject`'s handler has always returned `value`, and its `returns` prose
- * spends a sentence on the three per-kind shapes — but it declared a handle
- * cleaner with no such field, so the published 200 schema
- * omitted the one thing the route exists to return and a generated client
- * dropped the payload. Nothing caught it: `asObject` ignores extra keys, so
- * the response check is silent even in `strict`, and the router discards the
- * cleaned value, so the field is still sent at runtime.
+ * `value` is declared here so the published 200 schema, and a client
+ * generated from it, carry the one thing the route exists to return. Nothing
+ * else would notice it missing: `asObject` ignores extra keys, so the
+ * response check is silent even in `strict`, and the router discards the
+ * cleaned value, so the field is sent at runtime either way.
  *
  * `asUnknown` because the shape depends on `kind`: a whole `EdgeTransaction`,
  * a five-field summary of a swap quote, or null.
@@ -524,8 +518,7 @@ export const asObjectHandleInfo = asObject(OBJECT_HANDLE_SHAPE)
  * An object handle carrying the transaction it refers to.
  *
  * The shared shape with `kind` narrowed to this one. `createdAt` arrives
- * with it: `txHandleResponse` spreads the whole `ObjectHandleInfo`, so the
- * field was always sent and only the declaration left it out.
+ * with it, because `txHandleResponse` spreads the whole `ObjectHandleInfo`.
  */
 export const asTransactionHandle = asObject({
   ...OBJECT_HANDLE_SHAPE,
@@ -642,17 +635,15 @@ export const asEnabledTokens = asObject({
 /*
  * The error envelope has no cleaner here, deliberately.
  *
- * Every other published shape is a cleaner in this file, because the
- * generator reads the route declarations. The envelope is not attached to a
- * route — it is the response of *every* route's failure — so
- * `scripts/buildApiDocs.ts` writes `components.schemas.ErrorEnvelope` from
- * the code catalogue instead.
+ * Every other published shape is a cleaner, in this file or beside its
+ * route, because the generator reads the route declarations. The envelope is
+ * not attached to a route — it is the response of *every* route's failure —
+ * so `scripts/buildApiDocs.ts` writes `components.schemas.ErrorEnvelope`
+ * by hand instead.
  *
  * The runtime shape lives in `errors.ts`, beside `toErrorBody` which writes
  * it: `asErrorBody` is the cleaner, `ErrorResponse` derives its fields from
- * it, and the client imports the same cleaner to read the envelope back. A
- * declaration lived here too, exported and referenced by nothing, which read
- * as the source of truth for a document it had no part in generating.
+ * it, and the client imports the same cleaner to read the envelope back.
  */
 
 // `asDate` is re-exported so route files can describe date fields without
@@ -678,8 +669,8 @@ export { asDate }
  *
  * `asObject` accepts one, because an array *is* an object in JS — and for a
  * value that core merges field by field that is the silent case:
- * `mergeMetadata` reads no properties off `[]`, so the route answered 204
- * having written nothing.
+ * `mergeMetadata` reads no properties off `[]`, so the route would answer
+ * 204 having written nothing.
  */
 function asNotArray<T>(cleaner: Cleaner<T>): Cleaner<T> {
   return raw => {
@@ -695,8 +686,8 @@ function asNotArray<T>(cleaner: Cleaner<T>): Cleaner<T> {
  * alone and `null` deletes it.
  *
  * `asOptional` cannot express this: it maps *both* to its fallback, so a
- * `{"notes": null}` would have reached core as `{}` and silently stopped
- * deleting the note.
+ * `{"notes": null}` would reach core as `{}` and silently leave the note in
+ * place.
  */
 function asChange<T>(cleaner: Cleaner<T>): Cleaner<T | null | undefined> {
   return raw => {
@@ -736,13 +727,13 @@ export const asEdgeMetadata: Cleaner<EdgeMetadata> = asNotArray(
  * `nativeAmount` is negative for a send, and core's own values are already
  * valid, so tightening those would reject legitimate output.
  *
- * `asString` here was the one field across the `asEdgeTxAction*` cleaners
- * looser than core's own, and it re-opened the hole those cleaners exist to
- * close. `save-tx-action` with `"nativeAmount":"1.5"` passed this route,
- * then core dispatched `CURRENCY_WALLET_FILE_CHANGED` *before* awaiting the
- * file save, whose `uncleaner(asTransactionFile)` rejected it — so the
- * engine served a `savedAction` the disk did not have for the life of the
- * daemon, and the caller got a 500 on a route declaring only 400 and 404.
+ * In the `asEdgeTxAction*` cleaners it keeps the amount as strict as core's
+ * own. With `asString`, `save-tx-action` with `"nativeAmount":"1.5"` would
+ * pass this route, and core dispatches `CURRENCY_WALLET_FILE_CHANGED`
+ * *before* awaiting the file save, whose `uncleaner(asTransactionFile)`
+ * rejects it — so the engine would serve a `savedAction` the disk does not
+ * have for the life of the daemon, and the caller would get a 500 the route
+ * does not declare.
  */
 export const asIntegerString: Cleaner<string> = raw => {
   const value = asString(raw)
@@ -946,9 +937,8 @@ const txActionCleaners: Record<
  * Exported for `derivedNumbers.test.ts`, which pins the published
  * `savedAction` description against it: that description cannot interpolate
  * the set — `extractRoutes` reads `doc()` strings as literals through the
- * checker — and it had already gone stale, listing five of the six after
- * `swapSend` arrived from develop. A caller holding a `swapSend` action read
- * that the engine would not take it.
+ * checker — and an action type missing from it tells a caller holding that
+ * action that the engine will not take it.
  */
 export const TX_ACTION_TYPES = Object.keys(txActionCleaners) as Array<
   EdgeTxAction['actionType']
@@ -958,19 +948,19 @@ export const TX_ACTION_TYPES = Object.keys(txActionCleaners) as Array<
  * The `actionType` union, dispatched on the discriminant core uses.
  *
  * Dispatched rather than `asEither`, which reports only the last alternative
- * it tried — `{ actionType: 'stake' }` with a missing field complained
+ * it tried — `{ actionType: 'stake' }` with a missing field would get
  * `Expected "giftCard"`, naming neither the field nor the actual shape.
  */
 export const asEdgeTxAction: Cleaner<EdgeTxAction> = asNotArray(raw => {
   const { actionType } = asObject({ actionType: asString }).withRest(raw)
   // `hasOwn`, not a truthiness test on the lookup: `txActionCleaners` is a
-  // plain object literal, so `actionType: "toString"` resolved
-  // `Object.prototype.toString` — not null, so the guard below was skipped
-  // and this returned a string as an `EdgeTxAction`. `"constructor"` was
-  // worse: `Object(raw)` handed back the unvalidated body. Either reached
-  // `wallet.saveTxAction`, where core dispatches
+  // plain object literal, so `actionType: "toString"` would resolve
+  // `Object.prototype.toString` — not null, so the guard below would be
+  // skipped and this would return a string as an `EdgeTxAction`.
+  // `"constructor"` is worse: `Object(raw)` would hand back the unvalidated
+  // body. Either would reach `wallet.saveTxAction`, where core dispatches
   // `CURRENCY_WALLET_FILE_CHANGED` before its own uncleaner rejects, so the
-  // caller got a 500 from a route promising only 400 and 404. Same guard
+  // caller would get a 500 the route does not declare. Same guard
   // `util/exchangeDenom.ts` uses for the same reason.
   const cleaner = hasOwn(txActionCleaners, actionType)
     ? // The cast is what `hasOwn` has just established: the map is keyed by
@@ -994,14 +984,14 @@ export const asEdgeTxAction: Cleaner<EdgeTxAction> = asNotArray(raw => {
  * whatever a plugin needs; the two fields this code reads are not open-ended
  * and are checked. `false` in place of the object disables the plugin.
  *
- * `asNotArray`, because `asObject` accepts one: `["a","b"]` cleaned to
+ * `asNotArray`, because `asObject` accepts one: `["a","b"]` would clean to
  * `{"0":"a","1":"b"}` — `.withRest` keeps the indices — so
- * `initFromKeysEntry` saw a non-empty object and enabled the plugin with
- * *that* as its init, and `[]` cleaned to `{}` and enabled it as `true`.
- * Neither warned, which is the one thing the `asMaybe`/`warn` arm exists to
- * guarantee for a value that is "neither `false`, nor absent, nor `true`" —
- * and these entries come from `keys.json` and from the info server's signed
- * `appKeys`, the same untrusted source the string `"false"` was fixed for.
+ * `initFromKeysEntry` would see a non-empty object and enable the plugin
+ * with *that* as its init, and `[]` would clean to `{}` and enable it as
+ * `true`. Neither would warn, which is the one thing the `asMaybe`/`warn`
+ * arm exists to guarantee for a value that is "neither `false`, nor absent,
+ * nor `true`" — and these entries come from `keys.json` and from the info
+ * server's signed `appKeys`, an untrusted source.
  */
 export const asPluginKeysEntry = asNotArray(
   asObject({
@@ -1013,13 +1003,10 @@ export const asPluginKeysEntry = asNotArray(
 // ---------------------------------------------------------------------------
 // Structured request shapes
 //
-// These were declared `asCoreValue` (i.e. `asUnknown`) and cast in the
-// handler, so a malformed value became a 500 from a property access rather
-// than the 400 the route declares — `create-currency-wallets
-// --create-wallets='[null]'` answered
-// `INTERNAL_ERROR: Cannot read properties of null (reading 'walletType')`.
-// `.withRest` keeps whatever core and the plugins add; only the fields a
-// handler or core itself requires are named.
+// Shaped rather than `asCoreValue` (i.e. `asUnknown`) and a cast in the
+// handler, so a malformed value is the 400 the route declares rather than a
+// 500 from a property access. `.withRest` keeps whatever core and the
+// plugins add; only the fields a handler or core itself requires are named.
 // ---------------------------------------------------------------------------
 
 /** One entry of a batch wallet create or split. */
@@ -1032,14 +1019,11 @@ export const asCreateCurrencyWallet = asObject({
 /**
  * A spend target: where the money goes and how much.
  *
- * `publicAddress` is required *here*, not in a handler helper. The rule used
- * to live in one with a single call site — the caller-supplied `spendInfo`
- * branch of `buildSpendInfo` — so `sweep-private-keys`, which takes
- * `asSweepSpendInfo` and goes straight to `wallet.sweepPrivateKeys`, had no
- * check at all. Core does `if (publicAddress == null) continue`, so such a
- * target is dropped and the rest of the transaction is still signed and
- * broadcast, and `.withRest` keeps a typo such as `publicAdress` as an
- * unread rest field.
+ * `publicAddress` is required *here*, not in a handler helper, so
+ * `sweep-private-keys`, which takes `asSweepSpendInfo` and goes straight to
+ * `wallet.sweepPrivateKeys`, is checked as well. Core does
+ * `if (publicAddress == null) continue`, so such a target is dropped and the
+ * rest of the transaction is still signed and broadcast.
  *
  * Non-empty, because `''` is an address core drops just as silently;
  * `asWalletId` is `asNonEmptyString` for the same reason. Only the
@@ -1062,7 +1046,7 @@ const asSpendTargetShape = asObjectExact(
  * the memo cleaner nor `assertMemosUsable` sees. Core's `upgradeMemos`
  * turns them into memos only when the chain sets `memoType`, and clears
  * them either way; no account-based chain sets it, so an XRP spend with a
- * target-level `memo` was signed and broadcast with no `DestinationTag`.
+ * target-level `memo` would be signed and broadcast with no `DestinationTag`.
  * They are refused, naming `memos` as the field that is checked.
  */
 export const asSpendTarget: Cleaner<ReturnType<typeof asSpendTargetShape>> = (
@@ -1090,12 +1074,12 @@ export const asSpendTarget: Cleaner<ReturnType<typeof asSpendTargetShape>> = (
  * One memo, in the shape core's `EdgeMemo` publishes.
  *
  * Shaped, because the memo is what carries an exchange deposit's
- * destination tag. `asObject(asUnknown)` let `{"type":"Number",…}` or
+ * destination tag. `asObject(asUnknown)` would let `{"type":"Number",…}` or
  * `{"type":"tag",…}` through, core's `upgradeMemos` does not check it, and
- * the XRP engine handles only `number` and `text` — so the payment was
+ * the XRP engine handles only `number` and `text` — so the payment would be
  * signed and broadcast with no `DestinationTag`, which on a deposit is money
  * credited to nobody. `buildSpendInfo` then checks each one against the
- * wallet's own `memoOptions`, as the URI path already did.
+ * wallet's own `memoOptions`, as the URI path does.
  */
 const asMemoType: Cleaner<EdgeMemo['type']> = asValue('text', 'number', 'hex')
 
@@ -1116,11 +1100,11 @@ export const asEdgeMemoInput = asObject({
  * The body `sweep-private-keys` really takes.
  *
  * `asSpendInfo` is the wrong cleaner for it — a sweep legitimately has no
- * `spendTargets` — and `asCoreValue` plus a cast meant
- * `--spend-info='{}'` passed the declaration and reached
- * `UtxoEngine.sweepPrivateKeys`, which throws a plain `Error`: a 500 on a
- * route declaring 400 and 422. It also meant `privateKeys`, the field the
- * route actually requires, appeared nowhere in the published type.
+ * `spendTargets` — and with `asCoreValue` plus a cast, `--spend-info='{}'`
+ * would pass the declaration and reach `UtxoEngine.sweepPrivateKeys`, which
+ * throws a plain `Error`: a 500 on a route that declares `BAD_REQUEST`.
+ * Declaring it also puts `privateKeys`, the field the route actually
+ * requires, in the published type.
  */
 export const asSweepSpendInfo = asObject({
   privateKeys: doc(
@@ -1128,10 +1112,7 @@ export const asSweepSpendInfo = asObject({
     'The keys to sweep from, in the plugin\u2019s import format.'
   ),
   // No fallbacks, for the reason `asSpendInfo.tokenId` gives: a nested
-  // optional with one is published as required. This shape made that
-  // pointed — its own docblock exists because "a sweep legitimately has no
-  // `spendTargets`", and the document the branch shipped said a sweep must
-  // send some.
+  // optional with one is published as required.
   tokenId: asOptional(asRequestTokenId),
   spendTargets: asOptional(asArray(asSpendTarget)),
   metadata: asOptional(asEdgeMetadata),
@@ -1141,8 +1122,8 @@ export const asSweepSpendInfo = asObject({
 /**
  * Enough of an `EdgeTransaction` to be recognisable.
  *
- * `accelerate --transaction='{}'` reached `wallet.accelerate` with a
- * non-transaction through `asCoreValue` and a cast. `.withRest`, because a
+ * Shaped, so `accelerate --transaction='{}'` is refused rather than reaching
+ * `wallet.accelerate` with a non-transaction. `.withRest`, because a
  * transaction carries plugin-specific fields this engine has no business
  * enumerating.
  */
@@ -1159,10 +1140,10 @@ export const asTransactionInput = asObject({
  *
  * For the nested objects of a body that moves funds — `spendInfo` and its
  * `spendTargets` — which the route-level `strictBody` check cannot see: a
- * misspelled `spendInfo.tokenID` left `tokenId` at its default and sent the
- * native coin. A `TypeError` naming the fields, which the route reports as
- * `BAD_REQUEST`. Named `asObject…` so `extractRoutes` reads the literal
- * through it.
+ * misspelled `spendInfo.tokenID` would leave `tokenId` at its default and
+ * send the native coin. A `TypeError` naming the fields, which the route
+ * reports as `BAD_REQUEST`. Named `asObject…` so `extractRoutes` reads the
+ * literal through it.
  */
 export function asObjectExact<T>(
   cleaner: Cleaner<T> & { shape: object }
@@ -1188,7 +1169,7 @@ export function asObjectExact<T>(
  * An `EdgeSpendInfo` as a caller may send it.
  *
  * `spendTargets` is required because every handler reads it: an empty object
- * passed `isPlainObject` and then threw on `spendInfo.spendTargets.length`.
+ * would otherwise throw on `spendInfo.spendTargets.length`.
  * Exact, so every `EdgeSpendInfo` field core takes is declared here — the
  * ones the engine only forwards as well — and anything else is refused.
  */
@@ -1197,24 +1178,19 @@ export const asSpendInfo = asObjectExact(
     spendTargets: asArray(asSpendTarget),
     // `asRequestTokenId`, like every other request-position tokenId —
     // including its sibling in `asSweepSpendInfo` and the one in
-    // `asSpendShorthandBody`, the field this body sits beside. As plain
-    // `asString` this was the one that took the CLI's text `"null"` as a
-    // contract id, so `--spend-info='{…,"tokenId":"null"}'` asked for a token
-    // called `null` — a 404 from `assertTokenId` — where the same spelling one
-    // level up means the native asset.
+    // `asSpendShorthandBody`, the field this body sits beside. Plain
+    // `asString` would take the CLI's text `"null"` as a contract id, so
+    // `--spend-info='{…,"tokenId":"null"}'` would ask for a token called
+    // `null` — a 404 from `assertTokenId` — where the same spelling one level
+    // up means the native asset.
     //
-    // `asOptional(…, null)`, not `asOptional(asEither(…, asNull))`:
-    // `asOptional` intercepts a nullish value before the inner cleaner runs,
-    // so the `asNull` arm was unreachable.
-    //
-    // And no fallback, because this shape is *nested*. `asOptional(c, x)`
-    // erases `undefined` from the output type, and the generator reads a
-    // nested field's optionality from the printed type — `optionalNames`
-    // reads the source, but only for a route's own `query`/`body` literal. So
-    // every nested optional with a fallback was published as **required**:
-    // `openapi.json` listed `spendInfo.required = ["spendTargets","tokenId"]`
-    // while a caller omitting `tokenId` succeeded. The handler defaults it
-    // instead, which `buildSpendInfo` already did (`spendInfo.tokenId ?? null`).
+    // No fallback, because this shape is *nested*. `asOptional(c, x)` erases
+    // `undefined` from the output type, and the generator reads a nested
+    // field's optionality from the printed type — `optionalNames` reads the
+    // source, but only for a route's own `query`/`body` literal. So a nested
+    // optional with a fallback is published as **required**, though a caller
+    // may omit it. The handler defaults it instead: `buildSpendInfo` reads
+    // `spendInfo.tokenId ?? null`.
     tokenId: asOptional(asRequestTokenId),
     metadata: asOptional(asEdgeMetadata),
     networkFeeOption: asOptional(asString),
@@ -1249,13 +1225,11 @@ export const asSpendInfo = asObjectExact(
 /**
  * The `coreExtra` prose for the three shorthand fields, declared once.
  *
- * `get-max-spendable` and `make-spend` each carried a verbatim copy, under a
- * comment saying `coreExtra` could not be shared because `extractRoutes`
- * reads it as an object literal. That was true of `recordLiteral` and is not
- * any more: it resolves through `resolveObjectLiteral` like every other
- * field, which already followed a name — including an import alias — to its
- * declaration. `spend` declares `core: null` and so has no `coreExtra` to
- * share.
+ * `get-max-spendable` and `make-spend` share it: `extractRoutes` reads
+ * `coreExtra` through `recordLiteral`, which resolves through
+ * `resolveObjectLiteral` like every other field, and so follows a name —
+ * including an import alias — to its declaration. `spend` declares
+ * `core: null` and so has no `coreExtra` to share.
  */
 export const SPEND_SHORTHAND_CORE_EXTRA = {
   to:
@@ -1270,11 +1244,11 @@ export const SPEND_SHORTHAND_CORE_EXTRA = {
  * The convenience spend body, shared by the three routes that take it.
  *
  * `get-max-spendable`, `spend` and `make-spend` all accept the same seven
- * fields, and all three wrote them out verbatim — including the long
- * `spendInfo` prose and the `amount` alias line. These declarations *are*
- * the published reference, so three copies meant one wording change
- * published the same request three different ways, and no gate compares
- * them: `checkCoreAlignment` cannot, because `spend` declares `core: null`.
+ * fields, with the same prose, the long `spendInfo` prose and the `amount`
+ * alias line included. These declarations *are* the published reference,
+ * so three copies would let one wording change publish the same request
+ * three different ways, and no gate compares them: `checkCoreAlignment`
+ * cannot, because `spend` declares `core: null`.
  */
 export const asSpendShorthandBody = asObject({
   walletId: asWalletId,
@@ -1297,13 +1271,11 @@ export const asWalletKeys = asObject(asUnknown)
 /**
  * The published shapes, derived from their cleaners.
  *
- * The engine's response builders were typed `Record<string, unknown>` —
- * `pendingSummary`, `summarizeQuote`, `summarizeWallet` — so nothing
- * compiled the object against the shape the API publishes. The only check
- * was `checkResponse`, and `EDGE_CLI_CHECK_RESPONSES` defaults to `warn`, so
- * a renamed or dropped field logged one line and still shipped. Every other
- * declaration in the CLI states the opposite rule in as many words:
- * "Derived from the cleaner, so the two cannot drift."
+ * The engine's response builders (`pendingSummary`, `summarizeQuote`,
+ * `summarizeWallet`) return these types, so the compiler checks each object
+ * against the shape the API publishes. `checkResponse` alone would not
+ * catch a renamed or dropped field: `EDGE_CLI_CHECK_RESPONSES` defaults to
+ * `warn`, so it would log one line and still ship.
  */
 export type Session = ReturnType<typeof asSession>
 export type WalletSummary = ReturnType<typeof asWalletSummary>
@@ -1315,9 +1287,9 @@ export type PendingEdgeLogin = ReturnType<typeof asPendingEdgeLogin>
  *
  * Declared beside the other published shapes because the *client* acts on
  * it: `reason` decides `edge-cli subscribe`'s exit code through
- * `exitCodeForClose`. It used to be a hand-written interface and a cast on
- * the client side, over a payload that arrives from `emitFrame`'s bare
- * `JSON.parse`, so nothing held the two halves to one spelling.
+ * `exitCodeForClose`. The payload arrives from `emitFrame`'s bare
+ * `JSON.parse`, so this cleaner is what holds the two halves to one
+ * spelling.
  *
  * `sessionId` is the redacted form `closeScope` writes — a `sessionId` is a
  * bearer token, and this frame goes to every scoped subscriber.

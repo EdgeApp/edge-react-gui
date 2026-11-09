@@ -2,10 +2,9 @@
  * The engine's argv, and nothing else.
  *
  * Its own module so it can be tested: `index.ts` runs `main()` as a side
- * effect of being imported, so nothing could reach the parser - and what it
- * decides is the engine's whole command-line contract, including which
- * profile a client will find. Every corner it was hardened against was
- * recorded as a comment and nothing else.
+ * effect of being imported, so a test could not reach a parser there, and
+ * what it decides is the engine's whole command-line contract, including
+ * which profile a client will find.
  *
  * The flags themselves are declared once, in `src/cli/flagTable.ts`, which
  * also renders both help texts and is checked against `docs/EDGE_CLI.md` in
@@ -39,10 +38,9 @@ function requireNonEmpty(value: string, flag: string): string {
 /**
  * The `--idle-timeout` value, validated once for both spellings.
  *
- * It was written out twice in the same function with error text that
- * disagreed, and neither copy refused an empty value: `Number('')` is `0`,
- * which is documented as "never", so `--idle-timeout=` produced an immortal
- * daemon holding an `EdgeContext` and a logged-in account open, silently.
+ * An empty value is refused: `Number('')` is `0`, which is documented as
+ * "never", so `--idle-timeout=` would otherwise give an immortal daemon
+ * holding an `EdgeContext` and a logged-in account open, silently.
  */
 function parseIdleTimeout(raw: string | undefined): number {
   if (raw == null || raw === '') {
@@ -57,9 +55,9 @@ function parseIdleTimeout(raw: string | undefined): number {
   // Refused rather than clamped. `setTimeout` holds its delay in a 32-bit
   // signed integer, so `seconds * 1000` above the ceiling becomes **1 ms**
   // after a `TimeoutOverflowWarning` — `--idle-timeout=2592000` ("keep it
-  // up for a month", when the documented way to say never is `0`) shut the
-  // engine down the instant it went idle, and the only notice was that
-  // warning, on a stderr that goes to a startup log a clean stop deletes.
+  // up for a month", when the documented way to say never is `0`) would
+  // shut the engine down the instant it went idle, and the only notice
+  // would be that warning, in the startup log.
   // Silently clamping to the ceiling would be a different number from the
   // one asked for; `0` is the way to say never.
   if (seconds * 1000 > MAX_TIMER_MS) {
@@ -86,9 +84,7 @@ export class EngineUsageError extends Error {
  * Three are `custom` and keep their own arms below, because each validates
  * its value as it reads it and says something specific when it is wrong: a
  * TCP port, a loopback bind host, a timeout in seconds where 0 means never.
- * All three still take their value through `takeFlagValue` or
- * `requireNonEmpty`,
- * so a forgotten value gets the same message it gets anywhere else.
+ * All three refuse a missing value.
  *
  * `--tcp` and `--tcp-host` accept only the `=` spelling, which is how the
  * help line and the guide's table spell them; `--idle-timeout` accepts both.
@@ -114,15 +110,11 @@ export function parseEngineArgs(argv: string[]): EngineArgs {
 
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]
-    // One match against the table, not five side-effecting probes. Each
-    // probe consumed its argument by mutating `i`, and they all ran at the
-    // top of every iteration — so every probe after the one that matched
-    // re-read `argv[i]`, which by then pointed at the *value* the previous
-    // probe had taken. Nothing went wrong only because `takeFlagValue`
-    // refuses a value beginning with `-`, an invariant that lived in another
-    // function: one valued flag whose value may legitimately start with `-`
-    // and the parser would read values as flags, in an order decided by
-    // which probe came first.
+    // One match against the table, not a side-effecting probe per flag. A
+    // probe consumes its value by moving `i`, so every probe after the one
+    // that matched would re-read `argv[i]`, which by then is that *value*,
+    // and a value that may legitimately start with `-` would be read as a
+    // flag.
     const flag = matchFlag(ENGINE_FLAGS, a)
     if (flag != null) {
       if (!flag.takesValue) {
@@ -158,13 +150,13 @@ export function parseEngineArgs(argv: string[]): EngineArgs {
     }
     if (a.startsWith('--tcp-host=')) {
       // Node's `server.listen(port, '')` takes the falsy-host branch and
-      // binds the unspecified address, so `--tcp-host=` used to publish the
-      // engine on every interface. An explicit non-loopback address did the
-      // same thing and was the bigger hole: the help text, the guide and this
-      // code's own intent all say loopback, and an engine reachable from the
-      // LAN exposes `get-raw-private-key` and `spend` to it.
-      // The one place the spelling is canonicalised, shared with the port
-      // validator so neither entry can disagree about what is accepted.
+      // binds the unspecified address, so an empty `--tcp-host=` would
+      // publish the engine on every interface, and so would a non-loopback
+      // address: the help text and the guide say loopback, and an engine
+      // reachable from the LAN exposes `get-raw-private-key` and `spend` to
+      // it. `requireNonEmpty` refuses the first and `parseTcpHost` the
+      // second, the one place the spelling is canonicalised, shared with the
+      // port validator so neither entry can disagree about what is accepted.
       try {
         args.tcpHost = parseTcpHost(
           requireNonEmpty(a.slice('--tcp-host='.length), '--tcp-host')
@@ -178,11 +170,9 @@ export function parseEngineArgs(argv: string[]): EngineArgs {
       continue
     }
     if (a === '--idle-timeout' || a.startsWith('--idle-timeout=')) {
-      // One arm, and the value taken the same way every other valued flag
-      // takes it: the space form used to read `argv[++i]` directly, so
-      // `--idle-timeout --tcp=9312` answered "Invalid --idle-timeout:
-      // --tcp=9312" where `takeFlagValue` answers "requires a value" for
-      // exactly that mistake.
+      // One arm, and the space form takes its value the way every other
+      // valued flag does, so `--idle-timeout --tcp=9312` gets the "requires
+      // a value" that `takeFlagValue` answers for exactly that mistake.
       const eq = a.indexOf('=')
       // The `=` form goes straight to `parseIdleTimeout`, whose own empty
       // check says what the value means — "in seconds, where 0 means never"

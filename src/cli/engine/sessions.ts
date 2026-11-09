@@ -2,9 +2,9 @@
  * The session table: one `EdgeAccount` per logged-in session.
  *
  * A `sessionId` is a bearer token — `getSession` does a map lookup and an
- * expiry test and nothing else — so everything here treats it as one: it is
- * redacted in events and logs, truncated in the public listing, and the
- * auto-logout window is the user's own synced setting, re-read on each sweep
+ * expiry test and checks nothing else — so everything here treats it as one:
+ * it is redacted in events and logs, truncated in the public listing, and the
+ * auto-logout window is the user's own synced setting, re-read by the sweep
  * and never silently replaced by a default.
  *
  * It also owns the teardown order, which is load-bearing: close the
@@ -17,9 +17,7 @@
  * its own bounded window and abandons it, which `hold` has to clean up. And
  * `account.logout()` comes after the release, not before: it is what
  * invalidates a live swap quote or a signed transaction, so a handle that
- * outlives it has nothing able to release it. Both orderings were inverted
- * at some point and both inversions survived because this list did not say
- * which way round they go.
+ * outlives it has nothing able to release it.
  */
 import crypto from 'crypto'
 import type { EdgeAccount } from 'edge-core-js'
@@ -51,7 +49,7 @@ import { makeSweepTicker } from './sweepTicker'
  * a user who re-enables auto-logout on their phone sees it on a live session
  * within a minute rather than never. Slower because `isExpired` answers
  * false for `0` before it looks at a window and the read is a decrypt plus a
- * parse with no cache — but not skipped, which made `0` a one-way latch.
+ * parse with no cache — but not skipped, which would make `0` a one-way latch.
  *
  * Exported for `derivedNumbers.test.ts`, which holds `docs/EDGE_CLI.md`'s
  * two published numbers to this and to `SWEEP_INTERVAL_MS`. Nothing else
@@ -63,27 +61,27 @@ export const DISABLED_RECHECK_MS = 60_000
 /**
  * Derived from the response cleaner, not restated beside it.
  *
- * The same six values were declared twice, independently, in a different
- * order: this type is what `create` accepts, and `asLoginMethod` is what the
- * published `asSession` enforces. A seventh added to the type alone made the
- * engine answer with a value its own `returns` cleaner rejects — a 500 under
- * `EDGE_CLI_CHECK_RESPONSES=strict`, which the fake suite runs in — and one
- * added to the cleaner alone published a value nothing can return.
+ * This type is what `create` accepts, and `asLoginMethod` is what the
+ * published `asSession` enforces. Declared separately, a value added to the
+ * type alone would make the engine answer with a value its own `returns`
+ * cleaner rejects, a 500 under `EDGE_CLI_CHECK_RESPONSES=strict`, which the
+ * fake suite runs in, and one added to the cleaner alone would publish a
+ * value nothing can return.
  */
 type LoginMethod = ReturnType<typeof asLoginMethod>
 
 /**
  * A session as `engine-sessions` publishes it: the id is truncated.
  *
- * `sessionId` is branded, so this is a genuinely distinct type and not — as
- * it was — `Omit<SessionInfo, 'sessionId'> & { sessionId: string }`, which
- * restates the field at the type it already had and is therefore
- * structurally identical to `SessionInfo`. What the compiler now refuses is
- * the direction that leaks: a `SessionInfo`, or any plain string, cannot be
- * used as a listing, so the only way to build one is through
- * `redactSessionId`. The other direction still widens to `string`, because a
- * brand is `string & …`, so the remaining rule is a convention: `list()` is
- * the only redaction point and nothing reads an id back out of a listing.
+ * `sessionId` is branded, so this is a genuinely distinct type:
+ * `Omit<SessionInfo, 'sessionId'> & { sessionId: string }` would restate the
+ * field at the type it already has and be structurally identical to
+ * `SessionInfo`. What the compiler refuses is the direction that leaks: a
+ * `SessionInfo`, or any plain string, cannot be used as a listing, so the
+ * only way to build one is through `redactSessionId`. The other direction
+ * still widens to `string`, because a brand is `string & …`, so the
+ * remaining rule is a convention: `list()` is the only redaction point and
+ * nothing reads an id back out of a listing.
  */
 interface SessionListing extends Omit<SessionInfo, 'sessionId'> {
   sessionId: RedactedSessionId
@@ -94,10 +92,7 @@ interface SessionListing extends Omit<SessionInfo, 'sessionId'> {
  *
  * `asSession` is the declaration: six routes name it as their `returns`,
  * `checkResponse` runs it on every reply, and the client cleans its own copy
- * with it. This restated all eight fields with the same cleaners' types, in
- * the same order, guarded by nothing — the mistake `LoginMethod` ten lines
- * above was fixed for, where "a seventh added to the type alone made the
- * engine answer with a value its own `returns` cleaner rejects".
+ * with it.
  */
 export type SessionInfo = ReturnType<typeof asSession>
 
@@ -115,7 +110,8 @@ export interface SessionRecord {
    * a slower cadence than the ticker runs at, because the read is a decrypt
    * plus a parse on core's synced disklet with no cache, and `isExpired`
    * answers false for `0` before it looks at a clock — so re-reading 240
-   * times an hour buys nothing. Not re-reading at all was worse: see `tick`.
+   * times an hour buys nothing. Not re-reading at all would be worse: see
+   * `tick`.
    */
   lastSettingReadAt: number
   lastActivityAt: number
@@ -123,7 +119,7 @@ export interface SessionRecord {
   /**
    * Requests being served against this session right now.
    *
-   * `lastActivityAt` records only when a request *started*, so a call that
+   * `lastActivityAt` is not refreshed while a request runs, so a call that
    * outlives the auto-logout window — a cold `wait-for-all-wallets`, a
    * `resync-blockchain`, a `spend` on a congested chain — would otherwise be
    * logged out from underneath itself, exactly the failure `IdleShutdown`
@@ -145,7 +141,7 @@ const DEFAULT_AUTO_LOGOUT_SECONDS = asSyncedSettingsSubset(
 /**
  * The account's auto-logout setting, letting a failure out.
  *
- * Read through `asSyncedSettingsSubset`, a two-field view of the same
+ * Read through `asSyncedSettingsSubset`, a narrow view of the same
  * `Settings.json` the GUI writes. Not the GUI's own `asSyncedAccountSettings`
  * — that lives in `actions/SettingsActions`, which imports Airship, so the
  * engine cannot load it. `syncedSettingsFile.test.ts` asserts the subset's
@@ -166,11 +162,10 @@ async function reReadAutoLogoutSeconds(account: EdgeAccount): Promise<number> {
  * A session id as it is safe to print or publish.
  *
  * A `sessionId` is a bearer token: `getSession` does a map lookup and an
- * expiry test and nothing else, so holding one is full account authority —
- * `get-raw-private-key`, `get-pin`, `get-login-key` and `spend` take nothing
- * more. Event payloads and log lines therefore carry only enough of it to
- * correlate, and it was spelled out at four call sites, which is three too
- * many for a redaction.
+ * expiry test and checks nothing else, so holding one is full account
+ * authority — `get-raw-private-key`, `get-pin`, `get-login-key` and `spend`
+ * take nothing more. Event payloads and log lines therefore carry only
+ * enough of it to correlate.
  */
 export function redactSessionId(sessionId: string): RedactedSessionId {
   return (sessionId.slice(0, 10) + '\u2026') as RedactedSessionId
@@ -181,10 +176,10 @@ export function redactSessionId(sessionId: string): RedactedSessionId {
  *
  * The brand exists at compile time only — the runtime value is the truncated
  * string — but it is what makes `SessionListing` a distinct type. Without it
- * `Omit<SessionInfo, 'sessionId'> & { sessionId: string }` was structurally
- * identical to `SessionInfo`, so TypeScript assigned either to the other
- * silently and the claim below was false: the whole guard against re-leaking
- * a full id rested on `list()` remembering to call this.
+ * `Omit<SessionInfo, 'sessionId'> & { sessionId: string }` would be
+ * structurally identical to `SessionInfo`, so TypeScript would assign either
+ * to the other silently, and the whole guard against re-leaking a full id
+ * would rest on `list()` remembering to call this.
  */
 export type RedactedSessionId = string & {
   readonly __redacted: unique symbol
@@ -229,12 +224,11 @@ export class SessionStore {
    * Every live session, with the ids redacted.
    *
    * `engine-sessions` needs no session of its own, because it is a
-   * diagnostic. Returning the full `sessionId` made it a credential
-   * dispenser: one unauthenticated call turned a reachable TCP port into
-   * account authority over every account the engine had open, and
-   * `get-login-key` turns that into a permanent one. A caller entitled to a
-   * session id already has it, from its own login response or from the
-   * `0600` session file.
+   * diagnostic. Returning the full `sessionId` would make it a credential
+   * dispenser: one call that needs no session would yield account authority
+   * over every account the engine has open, and `get-login-key` turns that
+   * into a permanent one. A caller entitled to a session id already has it,
+   * from its own login response or from the `0600` session file.
    */
   list(): SessionListing[] {
     return [...this.sessions.values()].map(r => ({
@@ -249,8 +243,8 @@ export class SessionStore {
     opts: {
       /**
        * Whether the caller has gone. A login on a large account can outlast
-       * the client's timeout; registering the session then left a logged-in,
-       * syncing account under an id nobody received.
+       * the client's timeout, and registering the session then would leave
+       * a logged-in, syncing account under an id nobody received.
        */
       abandoned?: () => boolean
     } = {}
@@ -259,8 +253,9 @@ export class SessionStore {
     // update(), then returns stopUpdates. createCurrencyWallet's internal
     // waitForCurrencyWallet throws if the new wallet id is missing from
     // Redux, so a same-turn create after login never lands the keys.
-    // Drain the pixie stack before exposing the session so POST /wallets
-    // is safe immediately. waitForAllWallets is a no-op on empty accounts.
+    // Drain the pixie stack before exposing the session so
+    // `create-currency-wallet` is safe immediately. waitForAllWallets is a
+    // no-op on empty accounts.
     // The account is logged in but not yet in `sessions`, so a failed wait
     // must log it out here: nothing else can reach it to tear it down.
     try {
@@ -284,14 +279,14 @@ export class SessionStore {
     }
 
     const sessionId = makeSessionId()
-    // Strict, like the ticker's re-read. The lenient read answered the
-    // cleaner's 3600 for an unreadable file, and the ticker then "kept the
-    // last known value" — that substituted 3600 — for as long as the file
-    // stayed unreadable: an account that set `0` was logged out of a long
-    // script after an hour, and one that set 60 s was kept sixty times
-    // longer, with `engine-sessions` reporting 3600 as their choice. The
-    // default is still the working window, but `autoLogoutRead` says so, and
-    // every sweep tries the file again.
+    // Strict, like the ticker's re-read. The lenient read would answer the
+    // cleaner's 3600 for an unreadable file, and the ticker would then keep
+    // that as the last known value for as long as the file stayed
+    // unreadable: an account that set `0` would be logged out of a long
+    // script after an hour, and one that set 60 s kept sixty times longer,
+    // with `engine-sessions` reporting 3600 as their choice. The default is
+    // still the working window, but `autoLogoutRead` says so, and every sweep
+    // tries the file again.
     let autoLogoutSeconds = DEFAULT_AUTO_LOGOUT_SECONDS
     let autoLogoutRead = false
     try {
@@ -318,10 +313,10 @@ export class SessionStore {
     }
     this.sessions.set(sessionId, record)
     this.sessionsChanged()
-    // Scoped, so `scopeMatches` actually runs. Without a scope this went
-    // to every subscriber, so a stream opened against account A received
-    // account B's username and session prefix through an API whose own prose
-    // calls it account-scoped.
+    // Scoped, so `scopeMatches` runs: without a scope this would go to every
+    // subscriber, and a stream opened against account A would receive
+    // account B's username and session prefix through an API whose own
+    // prose calls it account-scoped.
     this.events.emit(
       'session.created',
       {
@@ -381,13 +376,9 @@ export class SessionStore {
   /**
    * Log out at the caller's request.
    *
-   * The only difference from `forceLogout` is that an unknown session is an
-   * error here, because the caller named one. The teardown itself is shared:
-   * it was written out twice in the same order, and had already begun to
-   * drift — one copy carried the comment explaining why `closeScope` runs
-   * and the other did not — so a change to the order, which this branch made
-   * twice, had to be made in both or a logout and an auto-logout released
-   * different things.
+   * Unlike `forceLogout`, an unknown session is an error here, because the
+   * caller named one. The teardown itself is shared, so a logout and an
+   * auto-logout release the same things in the same order.
    */
   async logout(sessionId: string): Promise<void> {
     if (!this.sessions.has(sessionId)) {
@@ -395,7 +386,7 @@ export class SessionStore {
     }
     // The request serving this logout is itself in flight against this
     // session, so the wait below has to discount it or it deadlocks on
-    // itself. The ticker, `shutdown` and the two `cancelled` callers hold
+    // itself. The ticker, `shutdown` and the `cancelled` callers hold
     // nothing: those tear down a session freshly created for a pending edge
     // login, which no request is running against.
     await this.forceLogout(sessionId, 'logout', { ownRequests: 1 })
@@ -413,21 +404,16 @@ export class SessionStore {
     // Before the account goes, which is the order this class says it owns.
     // Both of these reach things the account owns — a live swap quote, a
     // signed transaction — and `account.logout()` invalidates every one of
-    // them, so tearing the account down first produced exactly the state the
-    // class comment warns about and left the bounded wait in `deleteMany`
-    // protecting the ordering of `quote.close()` against an account that was
-    // already gone.
+    // them, so tearing the account down first would leave exactly the state
+    // the class comment warns about.
     this.events.closeScope(sessionId, reason)
     // Drained *before* the handles are released, not after. `deleteMany`
     // gives the `consuming` handles `HANDLE_BUSY_WAIT_MS` (10 s) between
     // them — one absolute deadline for the whole release, not 10 s each —
     // and then abandons whatever is still in a call, "left in place", while
-    // this wait allows the request holding one `LOGOUT_WAIT_MS` (30 s). Releasing first therefore gave up
-    // on the handle twenty seconds before the request that owned it
-    // finished, and `hold`'s `finally` pushed its TTL out again, so a
-    // `broadcast-tx` on a congested chain left a signed-transaction or
-    // swap-quote handle in the store with a fresh lease and its account
-    // about to disappear. Once nothing is in flight, nothing is
+    // this wait allows the request holding one `LOGOUT_WAIT_MS` (30 s).
+    // Releasing first would give up on the handle twenty seconds before the
+    // request that owned it finished. Once nothing is in flight, nothing is
     // `consuming`, so the release is not abandoned — and when this wait does
     // time out, `deleteMany` marks what it walked away from and `hold`
     // releases it when the call finally returns, rather than re-arming a
@@ -472,14 +458,11 @@ export class SessionStore {
   /**
    * Wait for the session's other requests to finish, up to LOGOUT_WAIT_MS.
    *
-   * `SessionRecord.inFlight` exists for exactly this, and its own comment
-   * names "a `spend` on a congested chain" — but only `isExpired` read it,
-   * so the auto-logout ticker was protected and an explicit logout was not.
-   * A `POST /logout` from a second shell could therefore land between
-   * `broadcastTx` and `saveTx`: the money leaves the wallet, the client gets
-   * no response it can trust, and local history does not have the
-   * transaction until a sync finds it. That is the outcome `shutdown` drains
-   * for; the logout path has the same blast radius.
+   * Without this wait on `SessionRecord.inFlight`, a `logout` from a second
+   * shell could land between `broadcastTx` and `saveTx`: the money leaves
+   * the wallet, the client gets no response it can trust, and local history
+   * does not have the transaction until a sync finds it. That is the outcome
+   * `shutdown` drains for; the logout path has the same blast radius.
    *
    * Bounded, because a wedged request must not make a logout impossible —
    * logout is a security control. What was abandoned is logged rather than
@@ -520,11 +503,10 @@ export class SessionStore {
   /**
    * Drop process-wide caches once no account is logged in.
    *
-   * The rate cache was an app-session cache in the GUI; behind a daemon it
-   * grows one entry per transaction date of every wallet of every account the
-   * engine serves, and an engine started with `--idle-timeout=0` never exits.
-   * Nothing is lost by dropping it: every entry is a historical rate that can
-   * be fetched again.
+   * Behind a daemon the rate cache is a process cache: it grows one entry per
+   * transaction date of every wallet of every account the engine serves, and
+   * an engine started with `--idle-timeout=0` never exits. Nothing is lost by
+   * dropping it: every entry is a historical rate that can be fetched again.
    */
   private clearProcessCaches(): void {
     if (this.sessions.size > 0) return
@@ -568,15 +550,16 @@ export class SessionStore {
   beginRequest(sessionId: string): () => void {
     const record = this.sessions.get(sessionId)
     if (record == null) return () => {}
-    // Evaluated *before* the hold is taken. `isExpired` returns false while
-    // `inFlight > 0`, so taking the hold first stopped the session expiring
-    // at the moment a request arrived: the handler's own `getSession` never
-    // saw the expiry, and it then set `lastActivityAt` and re-armed the full
-    // window. Any request landing in the up-to-15-second gap after the
-    // window closed was served on a session that should have been gone, and
-    // revived it — and auto-logout is a security control, not a
-    // convenience. The counter's job is to protect a call that *outlives*
-    // the window, which is a different thing from admitting a new one.
+    // Evaluated *before* the hold is taken. `getSession` asks `isExpired`
+    // the sweeper's way, which answers false while `inFlight > 0`, so taking
+    // the hold first would stop the session expiring at the moment a request
+    // arrived: the handler's own `getSession` would never see the expiry,
+    // and would then set `lastActivityAt` and re-arm the full window. A
+    // request landing in the up-to-15-second gap after the window closed
+    // would be served on a session that should be gone, and revive it, and
+    // auto-logout is a security control, not a convenience. The counter's
+    // job is to protect a call that *outlives* the window, which is a
+    // different thing from admitting a new one.
     if (this.isExpired(record)) {
       throw engineError('SESSION_EXPIRED', 'Session expired; log in again', 401)
     }
@@ -588,9 +571,10 @@ export class SessionStore {
       record.inFlight--
       // Not past a window that already closed: new requests on this session
       // have been answered `SESSION_EXPIRED` since it did, so restarting the
-      // window here brought back a session the engine had told callers was
-      // gone — a script that logged in again on that answer ended up with
-      // two. The sweep takes it once this was the last call holding it.
+      // window here would bring back a session the engine had told callers
+      // was gone, and a script that logged in again on that answer would end
+      // up with two. The sweep takes it once this was the last call holding
+      // it.
       if (!this.isExpired(record)) record.lastActivityAt = Date.now()
     }
   }
@@ -601,12 +585,11 @@ export class SessionStore {
    * `inFlight > 0` means the *sweeper* must leave the session alone: a call
    * that outlives the window has to finish, and tearing the account down
    * under it is the failure this counter exists to prevent. It does not mean
-   * the session is fresh, which is what `beginRequest` is asking — so
-   * sharing one answer let a long call hold the window open for *new*
-   * requests: a ten-minute `wait-for-all-wallets` admitted a `get-pin` on
-   * the same session five minutes past a sixty-second window, and releasing
-   * it restarted the window again. `forSweep` keeps the sweeper's reading
-   * and `beginRequest` gets the question it actually asks.
+   * the session is fresh, which is what `beginRequest` is asking: one shared
+   * answer would let a long call hold the window open for *new* requests, so
+   * a ten-minute `wait-for-all-wallets` would admit a `get-pin` on the same
+   * session five minutes past a sixty-second window. `forSweep` keeps the
+   * sweeper's reading and `beginRequest` gets the question it actually asks.
    */
   private isExpired(
     record: SessionRecord,
@@ -628,14 +611,14 @@ export class SessionStore {
       // Auto-logout off is re-read on a slower cadence, not skipped. The
       // cost argument is real — `isExpired` answers false for `0` before it
       // looks at a window, and the read is a decrypt plus a parse on core's
-      // synced disklet with no cache — but skipping it outright made `0` a
-      // one-way latch: a session created while the setting said `0` captured
-      // it at `create` and the ticker never looked again, so a user turning
-      // auto-logout back on from their phone had no effect on a session the
-      // engine was already holding. It stayed logged in for the life of the
-      // process while `engine-sessions` reported `autoLogoutSeconds: 0` as
-      // though that were still their choice. Auto-logout is a security
-      // control and `0` is the one value whose staleness has no upper bound.
+      // synced disklet with no cache — but skipping it outright would make
+      // `0` a one-way latch: a session created while the setting said `0`
+      // would keep it for the life of the process, so a user turning
+      // auto-logout back on from their phone would have no effect on a
+      // session the engine is already holding, while `engine-sessions`
+      // reports `autoLogoutSeconds: 0` as their choice. Auto-logout is a
+      // security control and `0` is the one value whose staleness has no
+      // upper bound.
       if (
         record.autoLogoutSeconds === 0 &&
         Date.now() - record.lastSettingReadAt < DISABLED_RECHECK_MS

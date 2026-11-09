@@ -13,9 +13,8 @@ import { parseCliArgs } from '../../cli/parseArgs'
 /**
  * The CLI's argv front door.
  *
- * Every corner these two files were hardened against was recorded as a
- * comment rather than a test, and the 130 offline invocations cover only the
- * shapes they happen to use.
+ * The offline suites cover only the shapes their invocations happen to use,
+ * so the corners these two files guard against are pinned here.
  */
 function usage(fn: () => unknown): string {
   try {
@@ -60,10 +59,10 @@ describe('parseCliArgs', () => {
   })
 
   it('refuses an empty value in the space form too', () => {
-    // `-d ""` is the same forgotten value as `--directory=`, and it reached
-    // the profile hash as an empty directory while the engine used its
-    // default: two different engines, and a 30-second spawn timeout with a
-    // healthy engine running.
+    // `-d ""` is the same forgotten value as `--directory=`, and if accepted
+    // it would reach the profile hash as an empty directory while the engine
+    // used its default: two different engines, and a 30-second spawn timeout
+    // with a healthy engine running.
     expect(usage(() => parseCliArgs(['-d', '']))).toContain('Missing value')
     expect(usage(() => parseCliArgs(['--directory', '']))).toContain(
       'Missing value'
@@ -72,8 +71,8 @@ describe('parseCliArgs', () => {
 
   it('refuses a bare --tcp and an empty one, and takes a port', () => {
     // The docs document `--tcp=<port>`; a bare flag has no port, and
-    // `--tcp=` used to mean "no listener" on one side and bad argv on the
-    // other.
+    // `--tcp=` is refused on both sides rather than meaning "no listener" on
+    // one and bad argv on the other.
     expect(usage(() => parseCliArgs(['--tcp']))).toContain('requires a port')
     expect(usage(() => parseCliArgs(['--tcp=']))).toContain('Missing value')
     expect(parseCliArgs(['--tcp=9008']).options.tcp).toBe('9008')
@@ -84,8 +83,7 @@ describe('parseCliArgs', () => {
   it('passes a command and its args through after the command name', () => {
     // Not the `--` arm: `spend` is the first non-option, so the loop leaves
     // at the command-name branch and everything after it — the literal `--`
-    // included — is the command's. This case used to be titled for the `--`
-    // arm, and its own expectation showed it never reached it.
+    // included — is the command's.
     const { options, argv } = parseCliArgs([
       '--fake',
       'spend',
@@ -110,9 +108,9 @@ describe('parseCliArgs', () => {
   })
 
   it('reads the config, directory and timeout flags in both spellings', () => {
-    // Three arms that ran in no test at any level. `-c`/`-d` are the short
-    // forms the guide publishes, and the `=` and space forms both have to
-    // work — `takeValue` is shared, but which flag each arm records is not.
+    // `-c`/`-d` are the short forms the guide publishes, and the `=` and
+    // space forms both have to work — `takeValue` is shared, but which flag
+    // each arm records is not.
     expect(parseCliArgs(['--config=/tmp/a.conf']).options.config).toBe(
       '/tmp/a.conf'
     )
@@ -150,13 +148,8 @@ describe('parseCliArgs', () => {
 
   it('refuses a command name where a value belongs', () => {
     // `edge-cli --directory engine-status` is a forgotten value, not a
-    // directory called `engine-status`: taking it silently swallowed the
-    // command and dropped the caller into the prompt with exit 0.
-    //
-    // `engine-status` rather than a wallet command, so this case is true of
-    // every commit that has the registry: the guard is about any registered
-    // name, and a command that arrives later made the example fail on the
-    // engine commit's own tree.
+    // directory called `engine-status`: taking it would silently swallow the
+    // command and drop the caller into the prompt with exit 0.
     const message = usage(() => parseCliArgs(['--directory', 'engine-status']))
     expect(message).toContain('is a command')
     expect(message).toContain('--directory=<value>')
@@ -215,9 +208,8 @@ describe('parseCommandArgs', () => {
     ).toBe('addr')
   })
 
-  // Both spellings of the same mistake, answered the same way. `--to=` always
-  // was a usage error; `--to ""` used to be accepted, spawn an engine and
-  // come back as a 400 from the route.
+  // Both spellings of the same mistake, answered the same way: accepted,
+  // `--to ""` would spawn an engine and come back as a 400 from the route.
   it('refuses an empty value in either spelling', () => {
     for (const argv of [['--to='], ['--to', '']]) {
       expect(() =>
@@ -311,11 +303,10 @@ describe('parseCommandArgs', () => {
  * One declaration of the global flags, and two parsers that obey it.
  *
  * `flagTable.ts` renders both help texts and is checked against
- * `docs/EDGE_CLI.md` in both directions — and the two parsers used to
- * restate it by hand, which no gate could see. These cases are that gate:
- * the atoms each parser reads must agree with the spelling the help line
- * prints, and every field a parser is told to fill must exist on the object
- * it fills.
+ * `docs/EDGE_CLI.md` in both directions, and these cases hold the two
+ * parsers to it: the atoms each parser reads must agree with the spelling
+ * the help line prints, and every field a parser is told to fill must exist
+ * on the object it fills.
  */
 describe('the global flag table', () => {
   it('spells each flag the same way in its help line and on argv', () => {
@@ -349,8 +340,8 @@ describe('the global flag table', () => {
   })
 
   it('accepts both spellings of a short alias', () => {
-    // The drift the table-driven parser removes: `--api-key=x` worked and
-    // `-k=x` was an unknown option, which no help line or guide row said.
+    // The table-driven parser takes both spellings of every alias, so `-k=x`
+    // is not an unknown option where `--api-key=x` works.
     expect(parseCliArgs(['-k=abc']).options['api-key']).toBe('abc')
     expect(parseCliArgs(['--api-key=abc']).options['api-key']).toBe('abc')
     expect(parseCliArgs(['-k', 'abc']).options['api-key']).toBe('abc')
@@ -368,11 +359,11 @@ describe('the global flag table', () => {
 /**
  * A flag name is argv, so a lookup on it needs an own-property guard.
  *
- * `spec.flags` is a plain object literal, so for the eight
- * `Object.prototype` members the kind lookup found an inherited function —
- * not null, so the "unknown option" test never fired, and the flag was
- * accepted and stored under a key nothing reads. `--constructor=x` was taken
- * where `--anything-else=x` is a usage error at exit 2.
+ * `spec.flags` is a plain object literal, so without one the kind lookup
+ * finds an inherited function for an `Object.prototype` member. That is not
+ * null, so the "unknown option" test never fires, and the flag is accepted
+ * and stored under a key nothing reads: `--constructor=x` taken where
+ * `--anything-else=x` is a usage error at exit 2.
  */
 describe('a prototype member as a flag name', () => {
   const cmd = { name: 'probe', usage: 'probe' } as unknown as Parameters<

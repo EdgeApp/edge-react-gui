@@ -7,11 +7,9 @@ import type { Subscriber } from 'yaob'
  *
  * Core generates the lobby's keypair itself and writes `publicKey` over
  * whatever it was handed (`lib/core/login/lobby.js:100`), so a caller
- * creating a lobby has only `timeout` and `loginRequest` to say. The hand-
- * written `LobbyRequest` this replaces was one shape for all three, and its
- * `publicKey?: string` disagreed with core's published `EdgeLobbyRequest`,
- * where the field is a required `Uint8Array` — which is how
- * `admin-send-lobby-reply` came to be unable to succeed for any input.
+ * creating a lobby has only `timeout` and `loginRequest` to say. The other
+ * two use core's published `EdgeLobbyRequest`, where `publicKey` is a
+ * required `Uint8Array`.
  */
 export interface LobbyRequestDraft {
   timeout?: number

@@ -20,16 +20,14 @@ import {
 /**
  * What `edge-cli.conf` accepts, and which file answered.
  *
- * Two things had no test. The cleaner is the only declaration of what the
- * file takes, and it accepted three keys nothing read — `authServer`,
- * `username` and `password` — which is how a user who followed the guide's
- * advice to keep credentials off a command line got no login *and* a
- * password in a plaintext file for nothing. And `loadConfig` answered only
- * the values, so `engine-config`'s `configFiles` could not name this file:
- * it listed the `keys.json` search path and the app's `config.json`, and the
- * one file that decided `directory`, `appId`, `locale` and `apiKey` was
- * invisible in the call whose stated job is to say which configuration the
- * engine is running on.
+ * The cleaner is the only declaration of what the file takes, so it accepts
+ * no key that nothing reads: a cleaner that accepted `username` and
+ * `password` would leave a user keeping credentials off a command line with
+ * no login *and* a password in a plaintext file for nothing. And
+ * `loadConfigFrom` says which file answered, so `engine-config`'s
+ * `configFiles` can name the one file that decides `directory`, `appId`,
+ * `locale` and `apiKey`, in the call whose stated job is to say which
+ * configuration the engine is running on.
  *
  * `asObject` without `.withRest` drops an unknown key silently, so a
  * misspelled one is a setting that does nothing and the file cannot report
@@ -78,10 +76,10 @@ describe('edge-cli.conf', () => {
   })
 
   it('does not accept a credential or a server', () => {
-    // Deleted rather than wired: a cleaner that accepts a setting is what
-    // tells a user it works. `-t` is the supported way to reach the tester
-    // servers, and `EDGE_CLI_PASSWORD` the supported way to keep a password
-    // off a command line.
+    // Left out of the cleaner rather than wired up: a cleaner that accepts a
+    // setting is what tells a user it works. `-t` is the supported way to
+    // reach the tester servers, and `EDGE_CLI_PASSWORD` the supported way to
+    // keep a password off a command line.
     const config: Record<string, unknown> = loadConfig(
       write({ username: 'u', password: 'p', authServer: 'https://example' })
     )
@@ -129,9 +127,9 @@ describe('edge-cli.conf', () => {
   })
 
   it('types that refusal, so the client can report argv', () => {
-    // A plain `Error` fell through `printError`'s generic arm, so a typo in
-    // a `-c` path printed `{"code":"INTERNAL_ERROR","status":500}` and
-    // exited 1 — an engine fault, for a mistake in the command line — while
+    // A plain `Error` would fall through `printError`'s generic arm, so a
+    // typo in a `-c` path would print `{"code":"INTERNAL_ERROR","status":500}`
+    // and exit 1, an engine fault for a mistake in the command line, while
     // `clientTimeoutMs` and `clientTcpPort` both report a usage error and
     // exit 2 for theirs.
     let caught: unknown

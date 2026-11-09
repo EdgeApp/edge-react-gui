@@ -24,16 +24,13 @@ describe('the engine config subsets', () => {
       guiApiKeys: {},
       rampPlugins: {}
     })
-    // The engine reads only `swapPlugins`, and it has to survive the app's
-    // own cleaner having materialised every other key.
+    // `swapPlugins` is one of the three fields the engine reads, and it has
+    // to survive the app's own cleaner having materialised every other key.
     const narrow = narrowAppConfig()(full)
     expect(narrow.swapPlugins).toStrictEqual({ changelly: { apiKey: 'k' } })
-    // And the loader the engine really calls answers the shape
-    // `makeCoreContext` indexes into — `swapConfig[pluginId]` — whether or
-    // not this machine has a config file: an object, never undefined, and
-    // undefined for a plugin it does not mention rather than a throw.
-    // `expect(typeof loadAppConfig)` was here instead, which says only that
-    // the module has an export.
+    // And the loader the engine really calls answers a `swapPlugins` that
+    // `makeCoreContext` can index by plugin id: undefined for a plugin it
+    // does not mention, rather than a throw.
     const loaded = (loadAppConfig as () => { swapPlugins: any })()
     expect(typeof loaded.swapPlugins).toBe('object')
     expect(loaded.swapPlugins.notaplugin).toBeUndefined()

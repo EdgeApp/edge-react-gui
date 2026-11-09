@@ -3,10 +3,9 @@
  *
  * Its own module so every reader can use the cleaner. `discovery.ts` owns the
  * paths and probes a socket with `net`, which `logger.ts` must not drag into
- * the pre-profile startup path — so the log sweep parsed `engine.json` by
- * hand, with `JSON.parse(raw)?.pid` and a `typeof` test, and became a third
- * reader of a file whose one declaration is here. Nothing beyond `cleaners`
- * and `fs` is imported, so any module can take it.
+ * the pre-profile startup path, so the log sweep reads `engine.json` through
+ * this module rather than parsing it by hand. Nothing beyond `cleaners` and
+ * `fs` is imported, so any module can take it.
  */
 import {
   asBoolean,
@@ -63,8 +62,8 @@ const asEngineRunFile = asJSON(
 const uncleanRunFile = uncleaner(asEngineRunFile)
 
 /**
- * Derived from the cleaner, not declared beside it: a hand-written copy went
- * stale the moment the cleaner's optionality changed, and the compiler can
+ * Derived from the cleaner, not declared beside it: a hand-written copy goes
+ * stale the moment the cleaner's optionality changes, and the compiler can
  * only notice that when one of them is the source of truth.
  */
 export type EngineRunFile = ReturnType<typeof asEngineRunFile>
@@ -72,11 +71,11 @@ export type EngineRunFile = ReturnType<typeof asEngineRunFile>
 /**
  * The run file's name.
  *
- * Here because this is the module that owns the file's *shape*, and it had
- * three homes: `discovery.ts`, `logger.ts`'s sweep and
- * `scripts/util/cliHarness.ts`. `logger.ts` has a stated reason not to
- * import `discovery.ts` — its `net` probe — which does not apply to a
- * filename, and it already imports this module for `readRunFileAt`.
+ * Here because this is the module that owns the file's *shape*, and
+ * `discovery.ts`, `logger.ts`'s sweep and `scripts/util/cliHarness.ts` all
+ * need it. `logger.ts` has a stated reason not to import `discovery.ts` —
+ * its `net` probe — which does not apply to a filename, and it already
+ * imports this module for `readRunFileAt`.
  */
 export const RUN_FILE_NAME = 'engine.json'
 

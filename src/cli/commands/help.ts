@@ -22,7 +22,8 @@ const helpCmd = command(
     const [name] = argv
     const target = findCommand(name)
     // Prose comes from the route's JSDoc via src/cli/generated/helpDocs.json.
-    // Commands not yet declared with route() fall back to their own string.
+    // The one command with no route, `help` itself, falls back to its own
+    // string.
     const docs = generated[target.name]
     printJson({
       name: target.name,

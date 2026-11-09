@@ -53,8 +53,8 @@ describe('SessionStore auto-logout', () => {
   })
 
   it('says when the setting could not be read at login, and reads it later', async () => {
-    // The lenient read answered 3600 for an unreadable file and the ticker
-    // then kept that as "the last known value", reporting it as the user's
+    // A lenient read would answer 3600 for an unreadable file, and the ticker
+    // would keep that as "the last known value", reporting it as the user's
     // choice. The window stays the default, but the session says so, and
     // the next sweep reads the real setting.
     const state = { text: '{"autoLogoutTimeInSeconds":' }
@@ -147,8 +147,8 @@ describe('SessionStore auto-logout', () => {
     store.startAutoLogoutTicker()
 
     // A call that outlives the window — a cold `wait-for-all-wallets`, a
-    // `spend` on a congested chain — used to be logged out from underneath
-    // itself, because `lastActivityAt` records only when a request started.
+    // `spend` on a congested chain — must not be logged out from underneath
+    // itself, and `lastActivityAt` records only when a request started.
     const release = store.beginRequest(sessionId)
     await jest.advanceTimersByTimeAsync(5 * 60 * 1000)
     expect(logout).not.toHaveBeenCalled()
@@ -203,7 +203,8 @@ describe('SessionStore auto-logout', () => {
     await store.logout(sessionId)
 
     // A `swap_` handle holds a live quote whose `onExpire` closes the order,
-    // so leaving it behind held the exchange's order for the rest of the TTL.
+    // so leaving it behind would hold the exchange's order for the rest of
+    // the TTL.
     expect(onExpire).toHaveBeenCalledTimes(1)
     expect(objects.size).toBe(1)
   })
@@ -224,8 +225,8 @@ describe('SessionStore auto-logout', () => {
     store.startAutoLogoutTicker()
 
     // The documentation says the engine mirrors the GUI, where
-    // `AutoLogoutModal` takes effect immediately. Freezing the value at login
-    // meant a user who shortened it on their phone saw no change at all.
+    // `AutoLogoutModal` takes effect immediately. A value frozen at login
+    // would show a user who shortens it on their phone no change at all.
     settings = '{"autoLogoutTimeInSeconds":60}'
     await jest.advanceTimersByTimeAsync(16_000)
     expect(logout).not.toHaveBeenCalled()
@@ -258,10 +259,10 @@ describe('SessionStore auto-logout', () => {
     store.startAutoLogoutTicker()
 
     readable = false
-    // The ticker's `catch` used to be dead code, because the reader swallowed
-    // the failure and answered with the cleaner's 3600 — so a transient read
-    // error silently re-enabled auto-logout and logged this session out an
-    // hour later.
+    // The ticker keeps the last known window. A reader that swallowed the
+    // failure and answered with the cleaner's 3600 would let a transient read
+    // error silently re-enable auto-logout and log this session out an hour
+    // later.
     await jest.advanceTimersByTimeAsync(3_600_000 + 60_000)
     expect(store.peek(sessionId)?.autoLogoutSeconds).toBe(0)
     expect(logout).not.toHaveBeenCalled()
@@ -273,9 +274,9 @@ describe('SessionStore auto-logout', () => {
     const { sessionId } = await store.create(account, 'password')
 
     // The sweeper runs every 15 seconds, so a request can arrive up to that
-    // long after the window closes. `inFlight` makes `isExpired` false, so
-    // taking the hold before testing expiry served that request on a dead
-    // session *and* re-armed the window for another full minute.
+    // long after the window closes. `beginRequest` tests expiry before it
+    // takes the hold; the other way round would serve that request on a dead
+    // session *and* re-arm the window for another full minute.
     await jest.advanceTimersByTimeAsync(61_000)
     expect(codeOf(() => store.beginRequest(sessionId))).toBe('SESSION_EXPIRED')
   })
@@ -328,10 +329,10 @@ describe('SessionStore auto-logout', () => {
     expect(store.peek(sessionId)?.expiresAt).toBeNull()
     store.startAutoLogoutTicker()
 
-    // Skipping the re-read entirely made `0` a one-way latch: the session
-    // stayed logged in for the life of the process, and `engine-sessions`
-    // kept reporting `autoLogoutSeconds: 0` as though it were still the
-    // user's choice.
+    // Skipping the re-read entirely would make `0` a one-way latch: the
+    // session would stay logged in for the life of the process, and
+    // `engine-sessions` would keep reporting `autoLogoutSeconds: 0` as
+    // though it were still the user's choice.
     setting = '{"autoLogoutTimeInSeconds":60}'
     // The re-read lands on the 60s tick, and `isExpired` wants the window
     // genuinely exceeded, so the logout falls on the tick after it.
@@ -347,11 +348,10 @@ describe('SessionStore teardown order', () => {
   })
 
   it('releases what the account owns before logging it out', async () => {
-    // The order this class documents, and the one it did not follow:
-    // `account.logout()` invalidates every wallet the handlers hold, so
-    // running it first left a live swap quote or a signed transaction with
-    // nothing able to release it — exactly what the class comment warns
-    // about — and made the bounded wait in `deleteMany` protect nothing.
+    // The order this class documents: `account.logout()` invalidates every
+    // wallet the handlers hold, so running it first would leave a live swap
+    // quote or a signed transaction with nothing able to release it, and
+    // make the bounded wait in `deleteMany` protect nothing.
     const order: string[] = []
     const { account, logout } = makeAccount()
     logout.mockImplementation(async () => {
@@ -374,13 +374,13 @@ describe('SessionStore teardown order', () => {
   })
 
   it('drains the session requests before releasing its handles', async () => {
-    // The ordering defect inside the fix above. `deleteMany` abandons a
-    // `consuming` handle after HANDLE_BUSY_WAIT_MS (10 s) while this wait
-    // allows the request holding it LOGOUT_WAIT_MS (30 s), so releasing
-    // first gave up on the handle twenty seconds before the request that
-    // owned it finished — and `hold`'s `finally` then pushed its TTL out
-    // again, leaving a signed transaction or a swap quote in the store with
-    // a fresh lease and its account about to vanish.
+    // `deleteMany` abandons a `consuming` handle after HANDLE_BUSY_WAIT_MS
+    // (10 s) while this wait allows the request holding it LOGOUT_WAIT_MS
+    // (30 s), so releasing first would give up on the handle twenty seconds
+    // before the request that owned it finished, and `hold`'s `finally`
+    // would then push its TTL out again, leaving a signed transaction or a
+    // swap quote in the store with a fresh lease and its account about to
+    // vanish.
     const order: string[] = []
     const { account, logout } = makeAccount()
     logout.mockImplementation(async () => {
@@ -445,11 +445,10 @@ describe('SessionStore teardown order', () => {
     const { sessionId } = await store.create(account, 'password')
 
     // Two holds, as the real arrangement has: the request serving the logout
-    // itself, and a second shell's `spend` that is still running. `inFlight`
-    // exists for this — its comment names a `spend` on a congested chain —
-    // and only `isExpired` read it, so a `POST /logout` could land between
-    // `broadcastTx` and `saveTx`. The logout's own hold is discounted or the
-    // wait would deadlock on itself.
+    // itself, and a second shell's `spend` that is still running. The logout
+    // waits on `inFlight` too, so while the wait lasts a `POST /logout` does
+    // not land between `broadcastTx` and `saveTx`. The logout's own hold is
+    // discounted or the wait would deadlock on itself.
     const ownHold = store.beginRequest(sessionId)
     const release = store.beginRequest(sessionId)
     const pending = store.logout(sessionId)
@@ -492,12 +491,12 @@ describe('SessionStore teardown order', () => {
 /**
  * A long call holds the window open for itself, not for new requests.
  *
- * `isExpired` answered false whenever anything was in flight, and
- * `beginRequest` shared that answer — so a ten-minute `wait-for-all-wallets`
- * admitted a fresh request on the same session five minutes past a
- * sixty-second window, and releasing it restarted the window again. The
- * counter exists to stop a call being logged out from underneath itself,
- * which is a different question from whether a *new* request may start.
+ * The in-flight counter exists to stop a call being logged out from
+ * underneath itself, which is a different question from whether a *new*
+ * request may start. If `beginRequest` read expiry the way the sweeper does,
+ * as never while a call is in flight, a ten-minute `wait-for-all-wallets`
+ * would admit a fresh request on the same session five minutes past a
+ * sixty-second window, and releasing it would restart the window again.
  */
 describe('the expiry window against an in-flight call', () => {
   let store: SessionStore
@@ -531,7 +530,7 @@ describe('the expiry window against an in-flight call', () => {
  * A login whose caller has gone.
  *
  * A large account's login can outlast the client's timeout. The client has
- * then exited `REQUEST_TIMEOUT`, and a session registered anyway was a
+ * then exited `REQUEST_TIMEOUT`, and a session registered anyway would be a
  * logged-in, syncing account under an id nobody received.
  */
 describe('SessionStore.create for a caller that has gone', () => {

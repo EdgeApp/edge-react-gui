@@ -1,9 +1,8 @@
 /**
  * The periodic sweep both engine stores run.
  *
- * `SessionStore` and `ObjectHandleStore` each had their own `ticker` field,
- * `start`/`stop` pair, the same `15_000` literal and the same error handler.
- * One factory, so the interval and the failure reporting are decided once.
+ * `SessionStore` and `ObjectHandleStore` share this one factory, so the
+ * interval and the failure reporting are decided once.
  */
 import type { PeriodicTask } from '../../util/PeriodicTask'
 import { makePeriodicTask } from '../../util/PeriodicTask'
@@ -18,11 +17,11 @@ export const SWEEP_INTERVAL_MS = 15_000
  *
  * `makePeriodicTask` rather than `setInterval`: it measures the gap after the
  * task finishes rather than from a fixed tick, and `onError` puts a failure
- * in the log where a hand-rolled `.catch(() => {})` discarded it.
+ * in the log rather than discarding it.
  *
- * In *the* log, now that the caller passes a reporter: `console` reaches only
- * `engine-startup.log`, which every ordinary stop deletes, so a sweep that
- * failed all afternoon left nothing behind.
+ * The caller passes the engine's reporter, so a failure reaches the engine
+ * log: `console` reaches only `engine-startup.log`, which every ordinary stop
+ * deletes.
  */
 export function makeSweepTicker(
   label: string,

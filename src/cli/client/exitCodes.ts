@@ -5,12 +5,10 @@ import type { ErrorResponse } from '../engine/errors'
  * The exit code each error code maps to.
  *
  * One table, read by `output.ts` to choose the code and by
- * `docs/api/shared.ts` to publish it. Both used to state the same membership
- * separately — a 35-line `if`-chain here and English prose inside a `doc`
- * field there — with nothing tying them together, so a code added to one
- * would silently not appear in the other.
+ * `docs/api/shared.ts` to publish it, so a code cannot be in one and
+ * silently missing from the other.
  *
- * No imports, so the docs build does not pull in the client.
+ * No client imports, so the docs build does not pull in the client.
  */
 export const EXIT = {
   OK: 0,
@@ -44,14 +42,11 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
   PIN_DISABLED: EXIT.AUTH,
 
   // Every published code whose status is 404, which `exitCodes.test.ts`
-  // checks against the catalogue. Three of the seven were here and four
-  // were not, so a stale object handle — the most likely failure in the
-  // staged spend and swap flows, since a handle lives five minutes — exited
-  // `1`, "failed, with no more specific mapping", across the ten commands
-  // that publish `OBJECT_NOT_FOUND`. A script driving `make-spend` →
-  // `sign-tx` → `broadcast-tx` could not tell "the quote expired, start
-  // again" from a generic failure, which is the distinction this table is
-  // for.
+  // checks against the catalogue. A stale object handle is the most likely
+  // failure in the staged spend and swap flows, since a handle lives five
+  // minutes, and a script driving `make-spend` → `sign-tx` → `broadcast-tx`
+  // has to tell "the quote expired, start again" from a generic failure,
+  // which is the distinction this table is for.
   NOT_FOUND: EXIT.NOT_FOUND,
   NO_LOGIN_REQUEST: EXIT.NOT_FOUND,
   OBJECT_NOT_FOUND: EXIT.NOT_FOUND,
@@ -69,16 +64,15 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
   AMBIGUOUS_WALLET_ID: EXIT.VALIDATION,
   USERNAME_ERROR: EXIT.VALIDATION,
   // A 403 that is not about credentials: a geo restriction, missing
-  // verification or an asset that needs activating. By its status it was
-  // AUTH, and a script that logs in again on AUTH would loop on it.
+  // verification or an asset that needs activating. By its status it would
+  // be AUTH, and a script that logs in again on AUTH would loop on it.
   SWAP_PERMISSION: EXIT.VALIDATION,
 
   NETWORK_ERROR: EXIT.NETWORK,
   // The client's own two: a deadline it set, and a connection that went
   // away. Both are "no answer arrived", which is what NETWORK means here,
-  // and both used to fall through the generic arm as `INTERNAL_ERROR` and
-  // exit 1 — on the one failure `--timeout` is documented as the routine
-  // way to avoid.
+  // and a timeout is the one failure `--timeout` is documented as the
+  // routine way to avoid.
   REQUEST_TIMEOUT: EXIT.NETWORK,
   CONNECTION_CLOSED: EXIT.NETWORK,
   // `spend` signed a transaction and the broadcast did not answer. Network,
@@ -117,18 +111,13 @@ export const EXIT_CODE_BY_ERROR: Record<string, number> = {
 /**
  * The fallback for a published code with no row of its own.
  *
- * Nine codes fell through to `1` — "failed, with no more specific mapping" —
- * while their status-mates were mapped: `OBJECT_KIND_MISMATCH` and
- * `MISSING_BITWAVE_ACCOUNT_ID` beside `BAD_REQUEST`, the four `SWAP_*` limit
- * codes beside `INSUFFICIENT_FUNDS`, `SWAP_PERMISSION` beside `FORBIDDEN`,
- * `OBJECT_IN_USE` beside `AMBIGUOUS_WALLET_ID`. So a script branching on the
- * published table read its own correctable mistake — "the swap amount is
- * below the exchange's minimum", "you passed the wrong kind of handle" — as
- * an unclassified failure.
+ * A code without a row takes the exit code of its status, so a script
+ * branching on the published table reads its own correctable mistake, such
+ * as "the swap amount is below the exchange's minimum" or "you passed the
+ * wrong kind of handle", as a validation failure rather than an
+ * unclassified one.
  *
- * The 404 half was already derived from the catalogue, which is why its
- * seven are complete; this is the same idea for every other status, and
- * `exitCodes.test.ts` now requires that *every* published code resolves to
+ * `exitCodes.test.ts` requires that *every* published code resolves to
  * something other than `GENERIC` unless it is one of the two listed above as
  * meant to be.
  *
@@ -160,8 +149,7 @@ export const EXIT_BY_STATUS: Record<number, number> = {
   // An upstream that answered badly or not at all, which is the same
   // "no usable answer arrived" as the two below it.
   502: EXIT.NETWORK,
-  // The documented rule, now part of the table rather than a line of code
-  // after it.
+  // The documented rule.
   503: EXIT.NETWORK,
   504: EXIT.NETWORK
 }
@@ -176,7 +164,7 @@ export function errorCodesFor(exitCode: number): string[] {
 /** The exit code for one API error. */
 export function exitCodeForApiError(code: string, status: number): number {
   // `hasOwn`, because `code` arrives in a response body and this is a plain
-  // object literal: `"code": "constructor"` resolved to an inherited
+  // object literal: `"code": "constructor"` would resolve to an inherited
   // `Object.prototype` member, which is not a number but is not null either.
   const mapped = hasOwn(EXIT_CODE_BY_ERROR, code)
     ? EXIT_CODE_BY_ERROR[code]
@@ -192,13 +180,12 @@ export function exitCodeForApiError(code: string, status: number): number {
 /**
  * Write one error envelope to stderr.
  *
- * Here, in the leaf module, because three places write a `USAGE` envelope
+ * Here, in the leaf module, because two places write a `USAGE` envelope
  * and one of them cannot import `output.ts`: `bootNodeLocale.ts` runs before
- * the client exists and importing it would cycle through `spawnEngine`. Two
- * of the three therefore spelled `{ error: { code, message, status } }` as
- * an untyped literal with a hardcoded `400`, which is two more descriptions
- * of the CLI's documented failure format than there should be — a renamed
- * field would compile in both and ship two shapes.
+ * the client exists and importing it would cycle through `spawnEngine`. One
+ * writer keeps the CLI's documented failure format to one description; an
+ * untyped literal at each site would let a renamed field compile and ship
+ * two shapes.
  *
  * `ErrorResponse` is the engine's declaration, so the client and the engine
  * cannot describe a failure differently. This module imports nothing but
@@ -215,7 +202,7 @@ export function printErrorEnvelope(error: {
   console.error(JSON.stringify(body, null, 2))
 }
 
-/** The `USAGE` envelope, which three entry points write for bad argv. */
+/** The `USAGE` envelope, which two entry points write for bad argv. */
 export function printUsageEnvelope(message: string): void {
   printErrorEnvelope({ code: 'USAGE', message, status: 400 })
 }

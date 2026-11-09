@@ -13,18 +13,16 @@
  *   * the edge-login poll drives a five-minute loop off `state`;
  *   * `change-enabled-token-ids --add/--remove` reads the current set and
  *     posts back the *complete desired* set, so a missing `enabledTokenIds`
- *     made `new Set(undefined)` — an empty set, not a throw — and `--add X`
- *     replaced every enabled asset on the wallet with `X` in the account's
- *     synced wallet file, on every device, while `--remove X` disabled them
- *     all;
+ *     would make `new Set(undefined)` — an empty set, not a throw — and
+ *     `--add X` would replace every enabled asset on the wallet with `X` in
+ *     the account's synced wallet file, on every device, while `--remove X`
+ *     would disable them all;
  *   * `balance-map --token-id` filters `balances`;
  *   * `get-transactions --export-format` writes each `file.contents` to a
  *     path built from `file.format` on the user's disk.
  *
  * The cleaners come from the engine's own `schemas.ts`, so the client and
- * the engine cannot describe a session differently — the shape was
- * hand-declared three times on this side, beside the engine's `asSession`
- * and `SessionInfo`.
+ * the engine cannot describe a session differently.
  */
 import { asArray, asMaybe, asObject } from 'cleaners'
 
@@ -46,9 +44,9 @@ const asBalanceList = asObject({ balances: asArray(asBalance) })
 /**
  * The published shapes, from the one place that derives them.
  *
- * Re-exported rather than derived a second time: `schemas.ts` now carries
- * the `ReturnType` for each of these beside the cleaner, so the client and
- * the engine cannot end up with two spellings of a session.
+ * Re-exported rather than derived a second time: `schemas.ts` carries the
+ * `ReturnType` for each of these beside the cleaner, so the client and the
+ * engine cannot end up with two spellings of a session.
  */
 export type { PendingEdgeLogin, Session }
 
@@ -102,12 +100,10 @@ export function readPendingEdgeLogin(
  *
  * Out of the command handler so it can be tested: the route's body is the
  * *complete desired set*, so this arithmetic is what decides whether a
- * wallet keeps its tokens. The bug `readEnabledTokens` exists for lived
- * here — a cast made a missing `enabledTokenIds` an empty set rather than
- * a throw, and `--add X` then posted `['X']` and wiped the rest from the
- * account's synced wallet file on every device — and the one offline case
- * that reached this code ran on a wallet whose set was already empty, so
- * it passed identically either way.
+ * wallet keeps its tokens. Its `current` comes through `readEnabledTokens`:
+ * a missing `enabledTokenIds` taken as an empty set would have `--add X`
+ * post `['X']` and wipe the rest from the account's synced wallet file on
+ * every device.
  */
 export function nextEnabledTokenIds(
   current: readonly string[],
@@ -158,13 +154,12 @@ export function readExportedFiles(
  * The `subscription.closed` frame, cleaned rather than cast.
  *
  * It is acted on, which is this module's whole criterion: `reason` decides
- * the process exit code through `exitCodeForClose`. It was read through a
- * hand-written interface and a cast — `(data as ClosedData)?.reason` — on a
- * payload that arrives from `emitFrame`'s bare `JSON.parse` with no cleaner
- * anywhere on the path, so the client and the engine could describe a close
- * reason differently with nothing to notice.
+ * the process exit code through `exitCodeForClose`. The payload arrives from
+ * `emitFrame`'s bare `JSON.parse` with no other cleaner on the path, so
+ * without this one the client and the engine could describe a close reason
+ * differently with nothing to notice.
  *
- * `asMaybe` with no throw, unlike the five above: an unrecognised or absent
+ * `asMaybe` with no throw, unlike the readers above: an unrecognised or absent
  * reason already means "the engine ended this for a reason this client does
  * not know", which `exitCodeForClose` answers with `EXIT.ENGINE`. Failing
  * the command instead would turn a frame it cannot read into a worse

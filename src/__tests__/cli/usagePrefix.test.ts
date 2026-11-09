@@ -10,11 +10,11 @@ import { findCommand, listCommands } from '../../cli/command'
  * Every usage string starts with its own command name.
  *
  * `formatUsage` prints `Usage: edge-cli ${usage}` and omits the name,
- * crediting a gate for the prefix — and `docs:api:verify` never looked at a
- * usage line. The generated lines hold by construction (`cliUsage.ts` builds
- * them from `cli.command`); the hand-written ones in `src/cli/commands/`
- * complied by hand, so one typo printed `Usage: edge-cli --wallet-id <id>`
- * with no command in it. This is the gate the comment names.
+ * crediting a gate for the prefix. The generated lines hold by construction
+ * (`cliUsage.ts` builds them from `cli.command`); the hand-written ones in
+ * `src/cli/commands/` comply by hand, so one typo would print
+ * `Usage: edge-cli --wallet-id <id>` with no command in it. This is the gate
+ * that comment names.
  */
 describe('usage lines', () => {
   it('each begin with the command they belong to', () => {

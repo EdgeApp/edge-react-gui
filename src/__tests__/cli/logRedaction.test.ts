@@ -10,13 +10,10 @@ const ROOT = path.resolve(__dirname, '../../..')
 /**
  * A request line in the engine log must not carry a usable session id.
  *
- * Most of the surface — 82 of the 118 routes — is
- * `/account/{sessionId}/…`, and a `sessionId` is a
- * bearer token: holding one is full account authority. Every other site in
- * the engine routes through `redactSessionId`; the 4xx/5xx log line did not,
- * so one mistyped `--wallet-id` wrote a live credential into
- * `~/.edge-cli/logs/engine-<profile>.log` — kept for seven days by the sweep,
- * and the file an operator pastes into a bug report.
+ * Most routes are `/account/{sessionId}/…`, and a `sessionId` is a bearer
+ * token: holding one is full account authority. The 4xx/5xx log line goes to
+ * `~/.edge-cli/logs/engine-<profile>.log`, which the sweep keeps for seven
+ * days and an operator pastes into a bug report.
  */
 const ID = 'sess_0123456789abcdef0123456789abcdef'
 
@@ -67,15 +64,10 @@ describe('redactUrl', () => {
 })
 
 /**
- * A query string carries credentials too, which this used to deny.
+ * A query string carries credentials too.
  *
- * `redactUrl`'s own docblock said no route declares `sessionId` as a query
- * field. `/engine/events` does, and `subscribe --session-id=<stale id>`
- * answers 401, which is a logged line — so the id went into the file whole.
- * Three other routes carry a secret there that is not a session id at all:
- * `dataKey` on the two admin repo reads, which with the `syncKey` in the
- * path is full offline read of an account repo; `password` on
- * `check-password-rules`; `recoveryKey` on `fetch-recovery-questions`.
+ * `/engine/events` declares `sessionId` as a query field, and
+ * `subscribe --session-id=<stale id>` answers 401, which is a logged line.
  */
 describe('redactUrl on a query string', () => {
   it('keeps the session id prefix and nothing more', () => {
@@ -115,16 +107,12 @@ describe('redactUrl on a query string', () => {
  * The admin routes carry their secret in the *path*.
  *
  * Five take a `syncKey` as the positional, two a `lobbyId` and one an
- * `objectId`, and a `syncKey` with the `dataKey` from the query is full
- * offline read of an account repo — the pair `redactUrl`'s own docblock names
- * as the exposure. Only the query half was redacted, so the key itself went
- * into `~/.edge-cli/logs/engine-<profile>.log` whole, kept for seven days.
+ * `objectId`, and a `syncKey` with its `dataKey` is full offline read of an
+ * account repo, while `~/.edge-cli/logs/engine-<profile>.log` is kept for
+ * seven days.
  *
  * The rule is the segment after the command, which is the last one, because
- * `routePath` appends the positional. This said "segment 3" and the count
- * said "one lobbyId", and the route neither description fits —
- * `/admin/lobby-handle/delete/{objectId}`, the only two-segment admin
- * command — was also the one case this suite did not drive.
+ * `routePath` appends the positional.
  */
 describe('redactUrl on an admin path', () => {
   const SYNC_KEY = 'f1e2d3c4b5a60718293a4b5c6d7e8f90a1b2c3d4'
@@ -156,8 +144,8 @@ describe('redactUrl on an admin path', () => {
 
   it('redacts the positional of a two-segment admin command', () => {
     // `/admin/lobby-handle/delete/{objectId}` puts the positional at segment
-    // 4, so the old `parts[3]` rule truncated the literal word `delete` and
-    // logged the id whole. An `objectId` is an engine handle rather than a
+    // 4, so a `parts[3]` rule would truncate the literal word `delete` and
+    // log the id whole. An `objectId` is an engine handle rather than a
     // credential, but the rule this breaks is the one that keeps the next
     // admin route's positional out of the log.
     const out = redactUrl(`/admin/lobby-handle/delete/${SYNC_KEY}`)
@@ -178,12 +166,11 @@ describe('redactUrl on an admin path', () => {
  *
  * `redactUrl` covers the request line; the other door is a log call's
  * `extra` object, which `EngineLogger.write` spreads into the JSON line
- * with no redaction of its own. `objectHandles.ts` wrote
- * `sessionId: record.sessionId` on a failed handle release — reachable
- * whenever a swap partner refuses a `quote.close()` at the handle's TTL —
- * so `engine-<profile>.log` held a live bearer token good for
- * `get-login-key`, `get-pin` and `spend`, in the file an operator pastes
- * into a bug report.
+ * with no redaction of its own. A failed handle release, reachable whenever
+ * a swap partner refuses a `quote.close()` at the handle's TTL, logs one, and
+ * a whole `sessionId` there would put a live bearer token good for
+ * `get-login-key`, `get-pin` and `spend` into `engine-<profile>.log`, the
+ * file an operator pastes into a bug report.
  */
 describe('log extras', () => {
   it('never pass a whole sessionId', () => {
