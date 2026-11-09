@@ -10,11 +10,11 @@
 // self-enforcing from *this* entry too, rather than resting on a comment
 // and one import line in one file, which nothing checks.
 import './locales/initLocale'
-// Then the app-boot wiring, beside its two siblings below. This one rode on
-// a binding-free side-effect import in `src/components/App.tsx`, where
-// Metro's default `inlineRequires` can defer the whole module — so the one
-// wiring that decides how rate-query failures are reported was the one whose
-// evaluation point depended on a bundler transform.
+// Then the app-boot wiring, beside its two siblings below. A binding-free
+// side-effect import in a component module can be deferred with that whole
+// module by Metro's default `inlineRequires`, and this wiring decides how
+// rate-query failures are reported, so it is imported here, at a fixed
+// evaluation point.
 import './util/exchangeRatesGui'
 
 import NetInfo from '@react-native-community/netinfo'
