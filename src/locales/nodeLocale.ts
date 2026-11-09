@@ -13,8 +13,8 @@ export type NumberSeparators = Pick<
  * The environment variables this reads, and nothing else.
  *
  * `process.env` satisfies it, but so does `{ LANG: 'es_MX.UTF-8' }`. Typing
- * this as `NodeJS.ProcessEnv` demanded `NODE_ENV` from every caller, which no
- * locale test has any reason to set.
+ * this as `NodeJS.ProcessEnv` would demand `NODE_ENV` from every caller,
+ * which no locale test has any reason to set.
  */
 type LocaleEnv = Readonly<Record<string, string | undefined>>
 
@@ -31,11 +31,11 @@ interface DetectNodeLocaleOpts {
  * The C-locale test comes *after* the suffixes are stripped, because
  * `LANG=C.UTF-8` is the ordinary spelling in Debian-family containers and on
  * CI — the environment a scripted `edge-cli` most often runs in. Testing
- * first let `C.UTF-8` through as the tag `C`, which has no translation table,
- * so every engine start printed "No translation table for locale C" about a
- * locale that is English by definition, `GET /engine/status` published
- * `locale: "C"` under a field documented as a language tag, and `C` was the
- * one value that reached `Intl.NumberFormat` and threw.
+ * first would let `C.UTF-8` through as the tag `C`, which has no translation
+ * table, so every engine start would print "No translation table for locale
+ * C" about a locale that is English by definition, `GET /engine/status`
+ * would publish `locale: "C"` under a field documented as a language tag,
+ * and `Intl.NumberFormat` would throw on it.
  */
 export function normalizePosixLocale(raw: string): string {
   const trimmed = raw.trim()
@@ -51,13 +51,13 @@ export function normalizePosixLocale(raw: string): string {
  * The value of one flag in argv, in either spelling, or undefined.
  *
  * Deliberately lenient and deliberately separate from the real parsers in
- * `src/cli/parseArgs.ts` and `src/cli/engine/index.ts`: this runs *before*
- * either of them, from the locale boot, where a usage error has nowhere to
- * go and the only sensible answer to an unreadable flag is the default. The
- * real parser reports it a moment later.
+ * `src/cli/parseArgs.ts` and `src/cli/engine/engineArgs.ts`: this runs
+ * *before* either of them, from the locale boot, where a usage error has
+ * nowhere to go and the only sensible answer to an unreadable flag is the
+ * default. The real parser reports it a moment later.
  *
- * `parseLocaleFlag` and `parseConfigPathFlag` were byte-identical apart from
- * the names they matched.
+ * Shared by `parseLocaleFlag` and `parseConfigPathFlag`, which differ only
+ * in the names they match.
  */
 function parseEarlyFlag(
   argv: string[],
@@ -134,14 +134,11 @@ export function detectNodeLocale(
 
   // Lazy, because `bootNodeLocale` runs this at module scope on *every*
   // `edge` invocation and the client never reads the separators: its only
-  // uses of this value are `spawnEngine`'s two `.languageTag` reads, while
+  // uses of this value are `spawnEngine`'s `.languageTag` reads, while
   // `bootEngineLocale` and `routes/status.ts` — both engine-side — are what
   // read the marks. `numberSeparators` constructs the process's first
-  // `Intl.NumberFormat`, which is what pays V8's ICU initialisation:
-  // measured at about 30ms of the client's ~180ms of user CPU, on a value
-  // nobody on that path looks at, and `scripts/testCliFake.ts` pays it
-  // another ~128 times a run. This module's own docstring already makes the
-  // argument for the translation tables; the number format is the same case.
+  // `Intl.NumberFormat`, which is what pays V8's ICU initialisation, on a
+  // value nobody on the client's path looks at.
   let separators: NumberSeparators | undefined
   const read = (): NumberSeparators => {
     separators ??= numberSeparators(languageTag)

@@ -25,7 +25,7 @@ describe('normalizePosixLocale', () => {
     expect(normalizePosixLocale('')).toBe('en-US')
   })
   // The spellings an environment actually sets. `C.UTF-8` is the Debian-family
-  // container and CI default, and it used to normalise to the tag `C`.
+  // container and CI default, and must not normalise to the tag `C`.
   test('a suffixed C locale becomes en-US too', () => {
     expect(normalizePosixLocale('C.UTF-8')).toBe('en-US')
     expect(normalizePosixLocale('C.utf8')).toBe('en-US')
@@ -82,9 +82,8 @@ describe('numberSeparators', () => {
 describe('selectLocale', () => {
   afterEach(() => {
     // One call, because `selectLocale` re-seeds `lstrings` from English
-    // before it merges. This used to need a hand-written `selectLocale('en')`
-    // first: `applyLocale` could not undo the merges these cases perform,
-    // which is the workaround that said the function was not idempotent.
+    // before it merges, so `applyLocale` undoes the merges these cases
+    // perform.
     applyLocale({
       languageTag: 'en-US',
       decimalSeparator: '.',
@@ -110,9 +109,9 @@ describe('selectLocale', () => {
 
 describe('resolveLocaleTable', () => {
   test('two tags that select one table are the same choice', () => {
-    // What the engine-locale warning compares now: `en` and `en-US` both
-    // answer in English, so warning about the difference told a user about
-    // nothing — once per command, for the life of that engine.
+    // What the engine-locale warning compares: `en` and `en-US` both answer
+    // in English, so warning about the difference would tell a user about
+    // nothing, once per command, for the life of that engine.
     expect(resolveLocaleTable('en')).toBe(resolveLocaleTable('en-US'))
     expect(resolveLocaleTable('de')).toBe(resolveLocaleTable('de_DE'))
     expect(resolveLocaleTable('es-MX')).toBe('esMX')
@@ -121,11 +120,11 @@ describe('resolveLocaleTable', () => {
 
   test('reads a tag whatever its case, as BCP 47 requires', () => {
     // RFC 5646 §2.1.1: "the tag is to be treated as case-insensitive", and
-    // `Intl` treats it that way — so a case-sensitive lookup made
+    // `Intl` treats it that way — so a case-sensitive lookup would make
     // `--locale=DE` give German number formatting with English strings, and
     // `LANG=EN_US.UTF-8` make the mismatch warning fire on every command for
-    // the life of the engine. These four spellings are what a human types
-    // into `--locale`, `EDGE_CLI_LOCALE`, `edge-cli.conf` or `LANG`.
+    // the life of the engine. These spellings are what a human types into
+    // `--locale`, `EDGE_CLI_LOCALE`, `edge-cli.conf` or `LANG`.
     expect(resolveLocaleTable('DE')).toBe('de')
     expect(resolveLocaleTable('EN-US')).toBe('en')
     expect(resolveLocaleTable('ES-MX')).toBe('esMX')
@@ -140,9 +139,10 @@ describe('resolveLocaleTable', () => {
 
   test('no table is the English choice, for the warning that compares them', () => {
     // Edge ships twelve tables, so most of a developer's `LANG` values
-    // resolve to nothing — and `undefined !== 'en'` made the client warn
-    // that `nl-NL` and a cron shell's `en-US` were different languages, on
-    // every command for the life of that engine. Both answer in English.
+    // resolve to nothing, and comparing that `undefined` with `'en'` would
+    // make the client warn that `nl-NL` and a cron shell's `en-US` were
+    // different languages, on every command for the life of that engine.
+    // Both answer in English.
     expect(resolveLocaleTableOrEnglish('nl-NL')).toBe(
       resolveLocaleTableOrEnglish('en-US')
     )
@@ -154,15 +154,15 @@ describe('resolveLocaleTable', () => {
 /**
  * `AppliedLocale` has to mean the locale that took effect.
  *
- * `matched` always did — it comes from what `selectLocale` really resolved —
- * and the two separators did not: they were copied from the caller's
- * request, while `setIntlLocale` substitutes the English marks when either
- * is empty. That is not a corner: it is the case `intl.ts` added the
- * substitution for, an OS reporting no separator, and on the GUI path
- * `initLocale` feeds `getNumberFormatSettings()` straight through. So
- * `getAppliedLocale()` answered `decimalSeparator: ''` while
- * `intl.locale.decimalSeparator` was `'.'`, and `GET /engine/status`
- * published the wrong one of the two.
+ * `matched` comes from what `selectLocale` really resolved, and the two
+ * separators from what `setIntlLocale` installed, which substitutes the
+ * English marks when either is empty. That is not a corner: it is the case
+ * `intl.ts` has the substitution for, an OS reporting no separator, and on
+ * the GUI path `initLocale` feeds `getNumberFormatSettings()` straight
+ * through. Separators copied from the caller's request would make
+ * `getAppliedLocale()` answer `decimalSeparator: ''` while
+ * `intl.locale.decimalSeparator` is `'.'`, and `GET /engine/status` would
+ * publish the wrong one of the two.
  */
 describe('getAppliedLocale', () => {
   afterEach(() => {
@@ -221,13 +221,11 @@ describe('getAppliedLocale', () => {
 /**
  * A second `applyLocale` answers for its own tag, not a mixture.
  *
- * `mergeStrings` only writes the keys its own table has a value for, so a
- * sequence of tags used to leave each one's strings wherever the next had a
- * gap — `fr-FR` then `de-DE` read French in every key `de.json` is missing —
- * and `en-US` skipped `selectLocale` entirely, so English was the one
- * language a second call could not restore. The tests had to call
- * `selectLocale('en')` by hand in an `afterEach` to undo their own merges,
- * which is the workaround that said so.
+ * `mergeStrings` only writes the keys its own table has a value for, so
+ * without the re-seed from English a sequence of tags would leave each one's
+ * strings wherever the next had a gap: `fr-FR` then `de-DE` would read
+ * French in every key `de.json` is missing. `en-US` goes through
+ * `selectLocale` like any other tag, so a second call can restore English.
  */
 describe('applyLocale across tags', () => {
   const english = {
@@ -267,11 +265,12 @@ describe('applyLocale across tags', () => {
   })
 
   test('an unshipped tag really answers in English', () => {
-    // The re-seed used to sit after `selectLocale`'s `return false`, so a
-    // language the build does not ship left the previous one installed while
-    // `getAppliedLocale`, `GET /engine/status` and the client's warning all
-    // reported English. `matched: false` has one documented meaning — "the
-    // engine is answering in English" — and this is the path that broke it.
+    // The re-seed comes before `selectLocale`'s `return false`. Placed after
+    // it, a language the build does not ship would leave the previous one
+    // installed while `getAppliedLocale`, `GET /engine/status` and the
+    // client's warning all reported English. `matched: false` has one
+    // documented meaning, "the engine is answering in English", and this is
+    // the path that would break it.
     const inEnglish = lstrings.fragment_transaction_expense
     applyLocale({ ...english, languageTag: 'de-DE' })
     expect(lstrings.fragment_transaction_expense).not.toBe(inEnglish)
@@ -284,12 +283,12 @@ describe('applyLocale across tags', () => {
 
 describe('detectNodeLocale cost', () => {
   it('builds no Intl.NumberFormat until the separators are read', () => {
-    // `bootNodeLocale` runs detection at module scope on every `edge`
+    // `bootNodeLocale` runs detection at module scope on every `edge-cli`
     // invocation, and the client reads only `.languageTag` — the separators
     // belong to `bootEngineLocale` and `routes/status.ts`, both engine-side.
     // Constructing the first `Intl.NumberFormat` is what pays V8's ICU
-    // initialisation, about 30ms of the client's ~180ms of user CPU for a
-    // value nobody on that path looks at.
+    // initialisation, on every client start, for a value nobody on that path
+    // looks at.
     const RealNumberFormat = Intl.NumberFormat
     let built = 0
     // @ts-expect-error replacing a global for the duration of this case
