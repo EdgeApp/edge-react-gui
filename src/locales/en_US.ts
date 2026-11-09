@@ -1791,6 +1791,8 @@ const strings = {
   exchange_insufficient_funds_title: 'Insufficient Funds',
   exchange_insufficient_funds_message:
     'Entered amount plus fees exceeds wallet balance.',
+  exchange_insufficient_funds_quote_body:
+    'This wallet cannot cover this amount plus fees. Add funds to complete this exchange.',
   exchange_insufficient_funds_below_balance:
     'Wallet balance is below the amount entered.',
   exchange_pending_funds_error:
@@ -2305,6 +2307,8 @@ const strings = {
   trade_option_no_quotes_title: 'No quotes available',
   trade_option_no_quotes_body:
     'Please try again later. No providers are currently available.',
+  trade_option_insufficient_funds_body:
+    'This wallet cannot cover this amount. Add funds to complete this sale.',
   trade_option_total_label: 'Total',
   trade_option_settlement_label: 'Settlement',
   trade_option_powered_by_label: 'Powered By:',
