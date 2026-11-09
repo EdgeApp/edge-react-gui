@@ -111,6 +111,8 @@ const palette = {
   warningInner: 'rgba(130, 91, 33, 0.44)',
   errorOuter: 'rgba(148, 71, 46, 0.44)',
   errorInner: 'rgba(150, 44, 49, 0.44)',
+  dangerOuter: 'rgba(240, 81, 35, 0.44)',
+  dangerInner: 'rgba(237, 28, 36, 0.44)',
 
   darkestGreen: '#5c9067ec',
   darkGreen: '#77bb81ef',
@@ -302,6 +304,17 @@ export const edgeLight: Theme = {
   },
   secondaryButtonFontSizeRem: 1,
   secondaryButtonFont: palette.QuicksandRegular,
+
+  dangerButtonOutline: palette.transparent,
+  dangerButtonOutlineWidth: 0,
+  dangerButton: [palette.dangerOuter, palette.dangerInner, palette.dangerOuter],
+  dangerButtonColorStart: { x: 0, y: 0.25 },
+  dangerButtonColorEnd: { x: 1, y: 0.75 },
+  dangerButtonText: palette.white,
+  dangerButtonTextShadow: textNoShadow,
+  dangerButtonShadow: themeNoShadow,
+  dangerButtonFontSizeRem: 1,
+  dangerButtonFont: palette.QuicksandMedium,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
