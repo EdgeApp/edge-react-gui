@@ -19,16 +19,16 @@ const tempDirs: string[] = []
  *
  * `close()` stops a server listening but does nothing about a connection it
  * has already accepted, and one case below deliberately accepts and then says
- * nothing — so the listener stayed open, jest reported two `PIPEWRAP` handles
- * and force-exited a worker, and a live socket in a shared worker is how an
- * unrelated suite starts failing intermittently.
+ * nothing. Left open, that connection keeps the listener open, jest reports
+ * the open handles and force-exits the worker, and a live socket in a shared
+ * worker is how an unrelated suite starts failing intermittently.
  */
 const accepted: net.Socket[] = []
 
 afterEach(async () => {
   for (const socket of accepted.splice(0)) socket.destroy()
-  // Awaited: `close` is asynchronous, so returning before its callback left
-  // the handle open for whatever ran next.
+  // Awaited: `close` is asynchronous, so returning before its callback would
+  // leave the handle open for whatever runs next.
   await Promise.all(
     servers.splice(0).map(async server => {
       await new Promise<void>(resolve => {
@@ -40,8 +40,8 @@ afterEach(async () => {
   )
   for (const dir of tempDirs.splice(0)) {
     // The whole `mkdtemp` directory, not just the socket file inside it:
-    // unlinking one file left the directory behind, and 132 of them had
-    // accumulated in $TMPDIR on this machine.
+    // unlinking the file alone leaves one directory per case behind in
+    // $TMPDIR.
     fs.rmSync(dir, { recursive: true, force: true })
   }
 })
@@ -77,9 +77,9 @@ describe('ApiClient.sendRequest', () => {
     const socketPath = tempSocket()
     // Headers, then a truncated body, then the connection drops. Node routes
     // this to the *response*, not the request, so without `res.on('error')`
-    // and `res.on('aborted')` the promise never settled: the CLI printed
-    // nothing and exited 0, and `edge-cli spend … && echo sent` printed
-    // `sent`.
+    // and `res.on('aborted')` the promise would never settle: the CLI would
+    // print nothing and exit 0, and `edge-cli spend … && echo sent` would
+    // print `sent`.
     await rawServer(socketPath, socket => {
       socket.write(
         'HTTP/1.1 200 OK\r\n' +
@@ -101,7 +101,7 @@ describe('ApiClient.sendRequest', () => {
     // The commonest way an engine dies — `SIGKILL`, the OOM killer, a
     // container stop — reaches the *request* as a bare `ECONNRESET`, before
     // any headers exist for `res.on('aborted')` to fire on. Unclassified it
-    // fell through `printError`'s generic arm as
+    // would fall through `printError`'s generic arm as
     // `{"code":"INTERNAL_ERROR","status":500}` and exit 1, telling the
     // caller the engine answered 500 when it had answered nothing, and
     // under a code the catalogue declares `origin: 'engine'`.
@@ -176,10 +176,10 @@ describe('ApiClient.sendRequest', () => {
  *
  * `openStream` resolves when the stream ends, and the ordinary reason it ends
  * is that the engine went away: `engine-stop`, or the idle shutdown. Running
- * the hook there sent `/engine/status` at a socket with nothing listening,
- * and the client's own `onConnectFail` then spawned a replacement daemon
- * purely to read a locale back. The warning is also useless to `subscribe`,
- * which could only hear it after its stream was over.
+ * the hook there would send `/engine/status` at a socket with nothing
+ * listening, and the client's own `onConnectFail` would then spawn a
+ * replacement daemon purely to read a locale back. The warning is also
+ * useless to `subscribe`, which could only hear it after its stream is over.
  */
 describe('ApiClient first-response hook', () => {
   /** One SSE frame, then the engine ends the stream. */
@@ -239,13 +239,13 @@ describe('ApiClient first-response hook', () => {
 })
 
 /**
- * The 503 arm, which no suite reached.
+ * The 503 arm.
  *
- * `shutdown()` sets `shuttingDown` as its second statement and keeps the
+ * `shutdown()` sets `shuttingDown` before anything else and keeps the
  * socket bound through the drain, the logouts and `context.close()`, so for
  * that whole window the engine answers `503 ENGINE_SHUTTING_DOWN`. The
  * client has to wait it out rather than spawn a replacement that cannot
- * claim the profile — and has to stop waiting the moment the socket goes or
+ * claim the profile, and has to stop waiting the moment the socket goes or
  * a new engine answers. The offline suites drive the cold-start arm on every
  * invocation and never this one, because nothing there races a stop against
  * a command.
@@ -287,9 +287,9 @@ describe('ApiClient against an engine that is shutting down', () => {
     })
     const started = Date.now()
     expect(await client.get('/engine/status')).toStrictEqual({ ok: true })
-    // Inside a second: the plain answer is the loop's exit. Without it the
-    // client polled the whole `SHUTDOWN_WAIT_MS` — 150 s, about 1,500
-    // requests — against an engine that was ready immediately.
+    // Well inside the wait: the plain answer is the loop's exit. Without it
+    // the client would poll for the whole `SHUTDOWN_WAIT_MS` against an
+    // engine that is ready immediately.
     expect(Date.now() - started).toBeLessThan(5000)
     expect(spawns).toBe(1)
   })
@@ -330,13 +330,11 @@ describe('ApiClient against an engine that is shutting down', () => {
 
   it('reports a wedged engine rather than spawning a doomed replacement', async () => {
     const socketPath = tempSocket()
-    // 503 for ever: the drain never finishes. `SHUTDOWN_WAIT_MS`'s own
-    // docblock says the client "reports what it finds instead of spawning a
-    // replacement that could not claim the profile" — and `withEngine`
-    // ignored the wait's outcome, so it spawned exactly that: `claimRunFile`
-    // fails `wx` against the live run file, the user is told to run the
-    // `engine-stop` they just ran, and the child truncates the live
-    // engine's `engine-startup.log`.
+    // 503 for ever: the drain never finishes. The client reports what it
+    // finds instead of spawning a replacement that could not claim the
+    // profile: `claimRunFile` would fail `wx` against the live run file, the
+    // user would be told to run the `engine-stop` they just ran, and the
+    // child would truncate the live engine's `engine-startup.log`.
     const server = http.createServer((req, res) => {
       accepted.push(req.socket)
       res.setHeader('Content-Type', 'application/json')
@@ -366,9 +364,10 @@ describe('ApiClient against an engine that is shutting down', () => {
  * The budget the client gives the engine, as the engine receives it.
  *
  * `requestBudget.test.ts` tables `requestBudgetFor`; this is the call site.
- * Sending the client's whole timeout instead let a listing that ran out of
- * rates time answer `REQUEST_TIMEOUT` rather than its `unpricedCount`, and
- * nothing would have noticed the header going back to it.
+ * Sending the client's whole timeout instead would let a listing that runs
+ * out of rates time answer `REQUEST_TIMEOUT` rather than its
+ * `unpricedCount`, and nothing else would notice the header carrying the
+ * whole timeout.
  */
 describe('the request budget header', () => {
   it('sends the engine less than the client will wait', async () => {

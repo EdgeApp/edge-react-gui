@@ -1,23 +1,13 @@
 /**
  * The budgets a shutdown spends, in one place.
  *
- * They were spread across three modules, and the client's own wait was a
- * fourth number that contradicted them: `apiClient` waited 15 s for a
- * shutting-down engine to release its socket, under a comment claiming it was
- * "bounded by the drain the engine itself allows, plus a margin" — while the
- * drain alone is 110 s. The margin was negative by a factor of seven.
+ * The client's wait for a shutting-down engine to release its socket is
+ * built from these same figures, so it cannot fall short of the engine's own
+ * teardown. A shorter wait would report an engine that is still draining
+ * normally as wedged.
  *
- * What that produced: a stop or a Ctrl-C landing while any request slower
- * than 15 s was in flight — which `docs/EDGE_CLI.md` says `get-transactions`
- * on a whole wallet is — left the socket bound and answering 503. The next
- * command gave up at 15 s, spawned a replacement, and that child failed
- * `claimRunFile`'s `wx` against the dying engine's run file and printed "An
- * engine is already running … Stop it first (edge-cli engine-stop)" — advice
- * to do the thing the user had just done. Which is the sequence
- * `isShuttingDown` exists to prevent.
- *
- * This module holds no logic and imports nothing, so the client can read the
- * engine's figures without pulling the engine into its bundle.
+ * This module imports nothing, so the client can read the engine's figures
+ * without pulling the engine into its bundle.
  */
 
 /** How long `shutdown` waits for in-flight requests to finish. */
@@ -32,13 +22,12 @@ export const LOGOUT_WAIT_MS = 30_000
 /**
  * How long one core call gets during teardown.
  *
- * `account.logout()` and `context.close()` had no ceiling at all, so a core
- * call that never settled meant an engine that never exited — holding the
- * socket, the run file and the profile, which is the state the client's own
- * wait exists to survive rather than to be caused by. Past this the failure
- * is reported and the shutdown carries on: the process is going away either
- * way, and a wallet engine still running inside a dying process costs less
- * than a daemon that will not die.
+ * Bounds `account.logout()` and `context.close()`: a core call that never
+ * settles would otherwise be an engine that never exits, holding the socket,
+ * the run file and the profile. Past this the failure is reported and the
+ * shutdown carries on: the process is going away either way, and a wallet
+ * engine still running inside a dying process costs less than a daemon that
+ * will not die.
  */
 export const CORE_TEARDOWN_WAIT_MS = 20_000
 
@@ -63,14 +52,12 @@ export const LISTENER_CLOSE_WAIT_MS = 5_000
  * the engine's only cancellation of a real order. For a `pendingLogin` it
  * is a `forceLogout`, which has bounded phases of its own.
  *
- * `deleteMany`'s docblock says it is "bounded, because a wedged call must
- * not stop the engine exiting", and its deadline covered only the wait for
- * a call already in flight; the teardown itself had no ceiling, so
- * `objects.clearAll()` — the shutdown's second phase, budgeted at
- * `HANDLE_BUSY_WAIT_MS` — inherited whatever `onExpire` took. Shorter than
- * `CORE_TEARDOWN_WAIT_MS` because by this point the answer is already
- * decided: the engine is going away, and a cancellation that has not
- * landed in five seconds is one the operator will have to make at the
+ * `deleteMany`'s own deadline covers only the wait for a call already in
+ * flight. This bounds the teardown after it, so `objects.clearAll()`, the
+ * shutdown's second phase, does not inherit whatever `onExpire` takes.
+ * Shorter than `CORE_TEARDOWN_WAIT_MS` because by this point the answer is
+ * already decided: the engine is going away, and a cancellation that has
+ * not landed in five seconds is one the operator will have to make at the
  * exchange anyway.
  */
 export const HANDLE_TEARDOWN_WAIT_MS = 5_000
@@ -79,8 +66,7 @@ export const HANDLE_TEARDOWN_WAIT_MS = 5_000
  * How long a client waits for a shutting-down engine to let go of its socket.
  *
  * Every bounded phase between `shuttingDown = true` and the listeners being
- * gone, for *one* session — walked against `shutdown()` rather than
- * remembered:
+ * gone, for *one* session, in the order `shutdown()` runs them:
  *
  *   1. `drainRequests`                              SHUTDOWN_DRAIN_MS
  *   2. `objects.clearAll()` → `deleteMany`, which
@@ -98,16 +84,10 @@ export const HANDLE_TEARDOWN_WAIT_MS = 5_000
  *   7. two `closeListener` calls, each of which
  *      waits then closes the connections itself     4 × LISTENER_CLOSE_WAIT_MS
  *
- * It used to be terms 1, 2 and 3 alone — 150 s against a real 220 s — under
- * a docblock that said it was "built from the three phases that stand
- * between `shuttingDown = true` and the listeners closing". Five phases
- * stand there, `context.close()` is not per-session at all, and
- * `LISTENER_CLOSE_WAIT_MS` lands entirely past the last term. That gap was
- * only a wasted spawn until the client learned to *report* past the
- * ceiling: now a `get-transactions` that outlives the 110-second drain —
- * which the guide presents as an ordinary whole-wallet listing — makes the
- * next command fail and tells the operator to kill a daemon that is
- * draining exactly as designed.
+ * Every term counts because the client reports past this ceiling: a ceiling
+ * short of the real teardown would tell the operator to kill a daemon that
+ * is draining as designed, such as one finishing a `get-transactions` that
+ * outlives the 110-second drain.
  *
  * Still a ceiling rather than the true worst case: `logoutAll` walks
  * sessions sequentially, so terms 3 to 5 are per session. One session is
@@ -129,14 +109,12 @@ export const SHUTDOWN_WAIT_MS =
 /**
  * Wait for a counter to reach a floor, bounded, and say what was abandoned.
  *
- * `drainRequests` in `index.ts` and `waitForQuiet` in `sessions.ts` were the
- * same block in two files — a deadline, a `while` polling a counter every
- * 25 ms, then a warn reading "… request(s) still in flight after <budget>ms"
- * — so the polling interval and the wording could drift between two phases
- * of one shutdown. Bounded in both cases for the same reason: a wedged
- * request must not stop the engine exiting, and must not make a logout
- * impossible, because logout is a security control. What was abandoned is
- * logged rather than passed over in silence.
+ * Shared by `drainRequests` in `index.ts` and `waitForQuiet` in
+ * `sessions.ts`, so the deadline and the polling interval cannot drift
+ * between two phases of one shutdown. Bounded in both cases for the same
+ * reason: a wedged request must not stop the engine exiting, and must not
+ * make a logout impossible, because logout is a security control. What was
+ * abandoned is logged rather than passed over in silence.
  */
 export async function drainToFloor(opts: {
   inFlight: () => number

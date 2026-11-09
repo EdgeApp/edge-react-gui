@@ -6,12 +6,11 @@ import { allowedHostnamesFor, hostnameOf } from '../../cli/engine/transportAuth'
 /**
  * One spelling, everywhere.
  *
- * `--tcp-host=[::1]` was accepted and then answered nothing.
- * `allowedHostnamesFor` seeded its set from the raw string, so the set held
- * `[::1]`, while the `Host` header comparison strips the brackets `URL`
- * keeps — so a caller's `Host: [::1]:9008` arrived as `::1`, missed the set,
- * and every request was refused 403 with a message about DNS rebinding. The
- * unbracketed form worked, which is what made the bracketed one a trap.
+ * `allowedHostnamesFor` seeds its set from the host `parseTcpHost` returns,
+ * while the `Host` header comparison strips the brackets `URL` keeps, so a
+ * caller's `Host: [::1]:9008` arrives as `::1`. A set holding `[::1]` would
+ * miss it and refuse every request 403 with a message about DNS rebinding,
+ * so `parseTcpHost` takes the brackets off.
  */
 describe('parseTcpHost', () => {
   it('canonicalises a bracketed IPv6 literal', () => {
@@ -34,8 +33,8 @@ describe('parseTcpHost', () => {
   })
 
   it('agrees with what the Host header will look like', () => {
-    // The pair that disagreed. Whatever `parseTcpHost` returns has to be in
-    // the allowed set under the name a caller's `Host` header reduces to —
+    // Whatever `parseTcpHost` returns has to be in the allowed set under the
+    // name a caller's `Host` header reduces to —
     // and an IPv6 `Host` is always bracketed, whichever spelling was typed
     // on the command line.
     for (const typed of ['[::1]', '::1', 'localhost', '127.0.0.1']) {
@@ -48,11 +47,11 @@ describe('parseTcpHost', () => {
   })
 
   it('refuses a Host header that is not just a host', () => {
-    // The guard's whole job, and the direction nothing asserted: the suite
-    // ended on `not.toBeNull()` for four good spellings, which a function
-    // that never returns null also satisfies. Each of these is a DNS
-    // rebinding header that a colon-split parser would have matched on its
-    // prefix, against the one listener the CLI exposes over TCP.
+    // The guard's whole job: the case above asserts `not.toBeNull()` for
+    // four good spellings, which a function that never returns null also
+    // satisfies. Each of these is a DNS rebinding header that a colon-split
+    // parser would match on its prefix, against the one listener the CLI
+    // exposes over TCP.
     for (const header of [
       '127.0.0.1/evil',
       'evil@127.0.0.1:9008',
@@ -77,9 +76,9 @@ describe('parseTcpHost', () => {
 
 describe('parseTcpHost refuses spellings that are not addresses', () => {
   it('refuses an IPv4-looking string net.isIP rejects', () => {
-    // The pattern alone accepted these, and `server.listen` then sent them
-    // through DNS resolution: a startup failure with a DNS error for an argv
-    // mistake, or a listener whose `Host` set matched nothing.
+    // The `127.` prefix alone would accept these, and `server.listen` would
+    // send them through DNS resolution: a startup failure with a DNS error
+    // for an argv mistake, or a listener whose `Host` set matches nothing.
     for (const host of ['127.000.000.001', '127.999.999.999', '127.1.1']) {
       expect(() => parseTcpHost(host)).toThrow(RangeError)
     }

@@ -6,14 +6,14 @@
  * the client's business. `get-transactions` is the exception: its historical
  * fiat fill is a chain of up to 99-key requests, and when the chain's budget
  * expires the remainder is *settled* rather than retried — on an export that
- * is an arbitrary tail of the oldest transactions. The budget was a module
- * constant, so `--timeout`, the one control the CLI offers for "slow is
- * better than wrong", moved only `apiClient`'s own deadline and had no effect
- * on the work it was waiting for.
+ * is an arbitrary tail of the oldest transactions. Carrying the budget lets
+ * `--timeout`, the one control the CLI offers for "slow is better than
+ * wrong", move the work it waits for and not only `apiClient`'s own
+ * deadline.
  *
  * A header rather than a query field, because it is a property of the call
  * and not of the request: no route declares it, nothing in the reference
- * takes it, and a route that ignores it behaves exactly as before.
+ * takes it, and a route that ignores it is unaffected by it.
  *
  * Node-safe, and shared by both halves so the spelling cannot drift.
  */
@@ -48,21 +48,18 @@ export function readRequestBudgetMs(
   // Minus what the request has already spent. The header is a duration from
   // the caller's send, and a route reads it where its slow work starts —
   // after the settings read, the spam-floor rate query and
-  // `wallet.getTransactions` — so taking it as a fresh budget there set a
-  // deadline strictly later than the caller's. `addToQueue` then adds its
-  // own `FETCH_FREQUENCY` debounce on top. The result was that in the one
-  // case the budget was written for, a long export whose rate chain really
-  // does run out of time, the client had already timed out and destroyed
-  // the socket before the engine settled the remainder and serialised an
-  // answer nobody would read.
+  // `wallet.getTransactions` — so taking it as a fresh budget there would
+  // set a deadline strictly later than the caller's, and `addToQueue` adds
+  // its own `FETCH_FREQUENCY` debounce on top. In the one case the budget is
+  // for, a long export whose rate chain really does run out of time, the
+  // client would then time out and destroy the socket before the engine
+  // settled the remainder.
   if (arrivedAt == null) return Math.floor(ms)
   const left = ms - Math.max(0, Date.now() - arrivedAt)
   // Spent is not the same as unsaid. A caller whose deadline has passed is
-  // not waiting, so the work should settle at once — and answering
-  // `undefined` here, which means "no header", gave the route's own 90 s
-  // default to a request the client had already abandoned: the spam floor
-  // ran to its deadline, the fill then read the budget, and queried rates
-  // for nobody for another 90 s.
+  // not waiting, so the work should settle at once. `undefined`, which means
+  // "no header", would give the route's own 90 s default to a request the
+  // client has already abandoned, querying rates for nobody.
   if (left <= 0) return SPENT_BUDGET_MS
   return Math.floor(left)
 }
@@ -74,12 +71,12 @@ export const SPENT_BUDGET_MS = 1
  * The budget a client sends for its own timeout: a little less, so the
  * engine's answer can arrive.
  *
- * Sending the whole timeout put the engine's settle at or after the moment
- * the client destroyed the socket — the budget is measured from the
- * engine's `arrivedAt`, after the send, and the reply still has to be
- * serialised and carried back — so a listing that ran out of rates time
- * answered `REQUEST_TIMEOUT` instead of its `unpricedCount`. A tenth of the
- * timeout, at most two seconds, is the headroom.
+ * Sending the whole timeout would put the engine's settle at or after the
+ * moment the client destroys the socket, because the budget is measured from
+ * the engine's `arrivedAt`, after the send, and the reply still has to be
+ * serialised and carried back. A listing that ran out of rates time would
+ * then answer `REQUEST_TIMEOUT` instead of its `unpricedCount`. A tenth of
+ * the timeout, at most two seconds, is the headroom.
  */
 export function requestBudgetFor(timeoutMs: number): number {
   return Math.max(1, timeoutMs - Math.min(2000, Math.floor(timeoutMs / 10)))

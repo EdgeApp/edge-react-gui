@@ -16,13 +16,12 @@ import {
  *
  * Each of these cleaners stands on a route's `query` or `body`, and each was
  * written for a shape a real caller sends — a query string has only text, a
- * JSON body may have either. What exercised them until now was whatever flag
- * the offline suite happened to pass, which reached four of the eight
- * success arms: `asQueryDate` had never parsed a date of either accepted
- * form, although `startDate`/`endDate` on `get-transactions` and `date` on
- * three `rates-*` routes publish both. A fault there is silent at the HTTP
- * layer — a date range that parses to the wrong instant answers 200 with the
- * wrong rows.
+ * JSON body may have either. The offline suite reaches only the arms its
+ * flags happen to hit, so these cases cover the success arms too, among
+ * them both date forms `asQueryDate` accepts, which `startDate`/`endDate` on
+ * `get-transactions` and `date` on the two `rates-*` routes publish. A fault
+ * there is silent at the HTTP layer — a date range that parses to the wrong
+ * instant answers 200 with the wrong rows.
  */
 describe('asQueryBoolean', () => {
   it('reads both spellings, and a real boolean', () => {
@@ -61,8 +60,8 @@ describe('asQueryNonNegativeInteger', () => {
   })
 
   it('refuses a negative index', () => {
-    // `?limit=-5` reached `slice(0, -5)`, so the engine answered every
-    // transaction but the last five while `total` reported the full count.
+    // `?limit=-5` would reach `slice(0, -5)`, so the engine would answer every
+    // transaction but the last five while `total` reports the full count.
     expect(() => asQueryNonNegativeInteger('-5')).toThrow(
       'Expected zero or a whole positive number'
     )
@@ -84,10 +83,9 @@ describe('asQueryDate', () => {
   })
 
   it('reads the ISO forms that are all digits', () => {
-    // `Number(raw)` ran first, so any all-digit string was epoch
-    // milliseconds — and ISO-8601 admits all-digit forms. `--date=2024`
-    // became `1970-01-01T00:00:02.024Z` where `new Date('2024')` is
-    // `2024-01-01`, and `--start-date=20240101` became
+    // ISO-8601 admits all-digit forms, so reading every all-digit string as
+    // epoch milliseconds would make `--date=2024` `1970-01-01T00:00:02.024Z`,
+    // where `new Date('2024')` is `2024-01-01`, and `--start-date=20240101`
     // `1970-01-01T05:37:20.101Z`: a silently empty or wrong export window,
     // or a 1970 price in a file someone files taxes from, with no
     // `BAD_REQUEST` anywhere.
@@ -111,9 +109,9 @@ describe('asQueryDate', () => {
   })
 
   it('refuses ten and eleven digits, which are epoch seconds', () => {
-    // `1706659200` is 2024-01-31 in seconds. Read as milliseconds it was
-    // `1970-01-20`, accepted with no `BAD_REQUEST` — the wrong-window case
-    // the twelve-digit floor exists for.
+    // `1706659200` is 2024-01-31 in seconds. Read as milliseconds it is
+    // `1970-01-20`, and accepting it with no `BAD_REQUEST` is the
+    // wrong-window case the twelve-digit floor exists for.
     for (const raw of ['1706659200', '17066592000']) {
       expect(() => asQueryDate(raw)).toThrow('looks like epoch seconds')
     }

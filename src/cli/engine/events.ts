@@ -30,11 +30,11 @@ interface SseClient {
   /**
    * Event types this client asked for, or undefined for all of them.
    *
-   * Filtering client-side only meant a caller who wanted one event type
-   * still received the whole `core.log` firehose over the socket and threw
-   * it away — and `write` destroys any client more than
-   * MAX_SSE_BUFFER_BYTES behind, so a slow consumer was dropped for volume
-   * it had explicitly asked not to receive.
+   * Applied here rather than by the client: a caller who wants one event
+   * type would otherwise still receive the whole `core.log` firehose over
+   * the socket and throw it away, and `write` destroys any client more than
+   * MAX_SSE_BUFFER_BYTES behind, so a slow consumer would be dropped for
+   * volume it had explicitly asked not to receive.
    */
   types?: Set<string>
 }
@@ -70,10 +70,9 @@ export class EventHub {
   /**
    * Write one already-serialised frame to one client.
    *
-   * The frame arrives built, because `emit` builds it once: serialising
-   * inside here meant N subscribers serialised the identical payload N
-   * times. The per-client `types` test stays here, before the write, which
-   * is the whole point of filtering at the transport.
+   * The frame arrives built, because `emit` builds it once rather than once
+   * per subscriber. The per-client `types` test is here, before the write,
+   * which is the whole point of filtering at the transport.
    */
   private write(client: SseClient, event: string, frame: string): boolean {
     const { res } = client
@@ -106,16 +105,16 @@ export class EventHub {
    *
    * `stringifyJson`, not bare `JSON.stringify`: it is the encoding every
    * REST response uses, so a `Uint8Array` is base64 and a `Map` is an object
-   * on both transports. No frame carries either today, which is why this was
-   * invisible — the next one would have serialised a Uint8Array as
-   * {"0":1,…} on the stream and base64 over REST.
+   * on both transports. No frame carries either today; with bare
+   * `JSON.stringify` the first one would serialise a Uint8Array as {"0":1,…}
+   * on the stream and base64 over REST.
    */
   private buildFrame(event: string, data: unknown): string | null {
     try {
       return `event: ${event}\ndata: ${stringifyJson(data)}\n\n`
     } catch (error: unknown) {
       // Cannot serialise *this event*. Every client is fine, and dropping
-      // them here disconnected every subscriber over one bad payload.
+      // them here would disconnect every subscriber over one bad payload.
       const message = errorMessage(error)
       this.report.warn(`cannot serialise event ${event}: ${message}`)
       return null
@@ -124,16 +123,8 @@ export class EventHub {
 
   emit(event: string, data: unknown, scope?: SubscriptionScope): void {
     // No subscriber, so nothing below can have an effect. `core.log` is a
-    // firehose — around 8 MB an hour — and every one of those used to pay an
-    // array allocation for the client spread and an object literal for the
-    // payload with nobody connected.
-    //
-    // There was an in-process `subscribe(listener)` path here as well, with
-    // its own fan-out loop, try/catch and warn. Nothing in `src/` or
-    // `scripts/` ever called it — the `subscribe` *command* is an SSE client
-    // and never touches the hub — so it was unreachable scaffolding whose
-    // comments described behaviour that could not happen. Git history has it
-    // for the day the engine wants an internal hook.
+    // firehose, and returning here spares every one of its events the frame
+    // and the client spread when nobody is connected.
     if (this.clients.size === 0) return
 
     const frame = this.buildFrame(event, data)
@@ -171,14 +162,13 @@ export class EventHub {
   /**
    * Keep each stream warm, and notice a subscriber that vanished.
    *
-   * A stream is written to only when an event fires, and liveness was
-   * detected solely through `res.on('close')` — which a clean FIN produces
-   * and a sleeping laptop, a killed container or a dropped link do not. Such
-   * a client was never reaped: `clientCount` stayed non-zero, so
-   * `heldByClients` stayed true and the daemon held its `EdgeContext` and
-   * every plugin's polling open indefinitely. A comment frame costs nothing
-   * and surfaces the write failure, which the drop path below already
-   * handles.
+   * A stream is written to only when an event fires, and `res.on('close')`
+   * fires on a clean FIN, which a sleeping laptop, a killed container or a
+   * dropped link never sends. Without a write such a client is never reaped:
+   * `clientCount` stays non-zero, so `heldByClients` stays true and the
+   * daemon holds its `EdgeContext` and every plugin's polling open
+   * indefinitely. A comment frame costs nothing and surfaces the write
+   * failure, which the drop path below handles.
    */
   pingClients(): void {
     for (const client of [...this.clients]) {
@@ -245,12 +235,10 @@ export class EventHub {
  * `core.log` and `engine.shutdown` are not filtered at all.
  *
  * A `wallet` client is a `session` client that also accepts wallet-scoped
- * events for its wallet. It used to be narrower than that — `event.kind`
- * had to be `wallet` — which meant `?walletId=` silently dropped
- * `session.created` and `session.expired`, the two account events a
- * session-scoped stream exists to carry, in exchange for narrowing a set of
- * wallet-scoped events that is still empty. Narrowing a filter must not lose
- * what a broader scope would have delivered.
+ * events for its wallet, so `?walletId=` still delivers `session.created`
+ * and `session.expired`, the two account events a session-scoped stream
+ * exists to carry. Narrowing a filter must not lose what a broader scope
+ * would have delivered.
  */
 function scopeMatches(
   client: SubscriptionScope,

@@ -3,8 +3,8 @@ import { EXIT, exitCodeForApiError } from '../../src/cli/client/exitCodes'
 /**
  * The error catalogue and the CLI exit-code table.
  *
- * Response shapes used to live here too; they are now cleaners in
- * `src/cli/engine/schemas.ts`, where they both validate and describe.
+ * Response shapes are cleaners in `src/cli/engine/schemas.ts`, where they
+ * both validate and describe.
  */
 
 export interface ErrorCode {
@@ -20,7 +20,7 @@ export interface ErrorCode {
  * core codes are mapped from `edge-core-js` error types by `mapCoreError`;
  * client codes are written by `src/cli/client/output.ts` and never cross the
  * wire, but a script matching on `error.code` sees them all the same, so
- * leaving them out published a program whose failures the catalogue could
+ * leaving them out would publish a program whose failures the catalogue could
  * not describe.
  */
 export const errorCodes: ErrorCode[] = [
@@ -326,7 +326,7 @@ export const errorCodes: ErrorCode[] = [
     code: 'REQUEST_TIMEOUT',
     status: 504,
     origin: 'client',
-    doc: 'The client\u2019s own `--timeout` expired. No response arrived, and the engine is still running the request to completion \u2014 so the command may yet take effect. Written by the client, so it never arrives over the wire; exit code 6. It used to be reported as `INTERNAL_ERROR` with a fabricated `status: 500`, which said the engine had answered when nothing had.'
+    doc: 'The client\u2019s own `--timeout` expired. No response arrived, and the engine is still running the request to completion \u2014 so the command may yet take effect. Written by the client, so it never arrives over the wire; exit code 6.'
   },
   {
     code: 'CLIENT_GONE',
@@ -373,9 +373,9 @@ export {
  * The error codes that map to one exit code, as the reference renders them.
  *
  * Over the catalogue rather than over `EXIT_CODE_BY_ERROR`, because a code's
- * exit is now the explicit row *or* its status — so the list the reference
+ * exit is the explicit row *or* its status, so the list the reference
  * publishes is complete by construction. Built from `EXIT_CODE_BY_ERROR`
- * alone it was short by the nine codes that take the status fallback.
+ * alone it would miss the codes that take the status fallback.
  */
 function codeList(exitCode: number): string {
   return errorCodes
@@ -387,9 +387,9 @@ function codeList(exitCode: number): string {
 /**
  * The published exit-code table.
  *
- * The membership of codes 3 to 6 comes from `EXIT_CODE_BY_ERROR`, the same
- * table `output.ts` chooses the code from, so the reference cannot drift from
- * the implementation. Only the prose that is *not* a membership list is
+ * The membership of each code comes from `exitCodeForApiError`, the same
+ * function `output.ts` chooses the code with, so the reference cannot drift
+ * from the implementation. Only the prose that is *not* a membership list is
  * written here.
  */
 export const CLI_EXIT_CODES = [

@@ -1,10 +1,11 @@
 /**
  * Compare each route's request against the core call it fronts.
  *
- * `verifyApiDocs` only checks that the core member exists by name, which is
- * how `currency-wallets` came to carry a `waitForAll` parameter that
- * `account.currencyWallets` does not have — it is a property, and waiting is a
- * separate method. This resolves the real signature and compares names.
+ * `verifyApiDocs` only checks that the core member exists by name, so a route
+ * could declare a parameter its core call does not have: a `waitForAll` on
+ * `currency-wallets`, say, when `account.currencyWallets` is a property and
+ * waiting is a separate method. This resolves the real signature and compares
+ * names.
  */
 import path from 'path'
 import ts from 'typescript'
@@ -31,11 +32,10 @@ const INTERFACES: Record<string, string> = {
 // This program's only root is core's `types.ts` inside `node_modules`, and
 // the repo's config — `moduleResolution: "bundler"` with
 // `customConditions: ["react-native"]`, and `types: ["react-native", "jest"]`
-// — is for a React Native program rooted in `src`. Measured: switching this
-// to those options stopped `propertyNames` resolving the `opts` object of
-// every login method, which turned 87 checked routes into 20 false
-// divergences. `Node10` is the current spelling of what used to be `NodeJs`,
-// which TypeScript deprecated.
+// — is for a React Native program rooted in `src`. Under those options
+// `paramNames` cannot resolve the `opts` object of any login method, and the
+// gate reports false divergences. `Node10` is TypeScript's name for what it
+// deprecated as `NodeJs`.
 const program = ts.createProgram([CORE], {
   target: ts.ScriptTarget.ES2020,
   moduleResolution: ts.ModuleResolutionKind.Node10
@@ -159,13 +159,13 @@ for (const r of extractRoutes()) {
   }
 }
 
-// A gate that checked nothing used to print the same ✓ as one that checked
-// 87 routes: `signatureOf` returning null was a silent `continue`, and the
-// summary line reported `checked` without asserting a floor. A broken
-// resolution — a renamed core member, a moved `types.ts`, a compiler option
-// that stops seeing the package — would have taken every alignment check with
-// it and still exited 0. `extractRoutes` makes the same choice explicitly for
-// the same reason, and fails on a diagnostic inside a route file.
+// A core member that does not resolve is a failure, not a silent skip, so a
+// gate that checked nothing cannot print the same ✓ as one that checked every
+// route. A broken resolution (a renamed core member, a moved `types.ts`, a
+// compiler option that stops seeing the package) would otherwise take every
+// alignment check with it and still exit 0. `extractRoutes` makes the same
+// choice explicitly for the same reason, and fails on a diagnostic inside a
+// route file.
 if (unresolved.length > 0) {
   problems.push(
     `${unresolved.length} route(s) declare a core member this gate could ` +

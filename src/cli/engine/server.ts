@@ -47,24 +47,18 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
 /**
  * One request line, with every credential in it reduced to its name.
  *
- * The path's second segment is the session id on the 74 account routes, and
- * truncating it was all this did — on the claim that "a query string cannot
- * carry one", which the branch's own routes deny. `/engine/events` declares
- * `sessionId` as a query field and `subscribe --session-id=…` sends it, so a
- * stale id went into the log whole; and three other routes carry secrets
- * there that are not session ids at all — `admin-repo-get` and
- * `admin-repo-list` take `dataKey`, which with the `syncKey` in the path is
- * full offline read of an account repo, `check-password-rules` takes
- * `password`, and `fetch-recovery-questions` takes `recoveryKey`.
+ * The path's second segment is the session id on the account routes, and a
+ * query string can carry a credential too: `/engine/events` declares
+ * `sessionId` as a query field and `subscribe --session-id=…` sends it.
  *
- * So the rule is the other way round: every query *value* is replaced and
- * only the names are kept. The names are what identify the request, which is
- * why the line is logged at all, and a route that adds a secret field cannot
- * leak it by default. A `sessionId` keeps its truncated prefix, so a line can
- * still be correlated with a session.
+ * So every query *value* is replaced and only the names are kept. The names
+ * are what identify the request, which is why the line is logged at all, and
+ * a route that adds a secret field cannot leak it by default. A `sessionId`
+ * keeps its truncated prefix, so a line can still be correlated with a
+ * session.
  *
  * Exported for its test: the exposure is a file, not a response, so nothing
- * a caller sees would have shown it.
+ * a caller sees would show it.
  */
 export function redactUrl(url: string): string {
   const [rawPath, query] = splitOnce(url, '?')
@@ -79,21 +73,19 @@ export function redactUrl(url: string): string {
   }
   // The admin routes carry their secret in the path, not the query: five of
   // them take a `syncKey` as the positional, two a `lobbyId` and one an
-  // `objectId`. A `syncKey` with the `dataKey` from the query is full offline
-  // read of an account repo — the pair this function's own threat model
-  // names — and it was going into `engine-<profile>.log` whole, for seven
-  // days, in the file an operator pastes into a bug report. Truncated like a
-  // session id, so a line still correlates with a request.
+  // `objectId`. A `syncKey` with its `dataKey` is full offline read of an
+  // account repo, and `engine-<profile>.log` is kept for seven days and ends
+  // up in bug reports. Truncated like a session id, so a line still
+  // correlates with a request.
   //
   // The *last* segment, not segment 3: `routePath` appends the positional
   // after the whole command path, and `admin-lobby-handle-delete` is
-  // `/admin/lobby-handle/delete/{objectId}` — two segments of command. Fixing
-  // on segment 3 truncated the literal word `delete` and logged that id
-  // whole. An admin route with no positional is `/admin/<command>`, which is
-  // why the length test is for a fourth segment; a future two-segment command
-  // with no positional loses the tail of its own name to this and keeps
-  // enough to correlate, which is the safe direction for a rule about
-  // credentials.
+  // `/admin/lobby-handle/delete/{objectId}`, two segments of command, so
+  // segment 3 is the literal word `delete`. An admin route with no
+  // positional is `/admin/<command>`, which is why the length test is for a
+  // fourth segment; a future two-segment command with no positional loses
+  // the tail of its own name to this and keeps enough to correlate, which is
+  // the safe direction for a rule about credentials.
   if (parts[1] === 'admin' && parts.length > 3) {
     const last = parts.length - 1
     if (parts[last] !== '') parts[last] = redactSessionId(parts[last])
@@ -122,22 +114,15 @@ function splitOnce(text: string, sep: string): [string, string | undefined] {
 /**
  * The SSE query, cleaned by the route's own declaration.
  *
- * `/engine/events` is served directly rather than through the router, so
- * nothing applied its `query` cleaner. Running it here keeps a stream route's
- * declaration enforced like every other route's, and turns a bad value into
- * `400 BAD_REQUEST` instead of silently ignoring it.
+ * `/engine/events` is served directly rather than through the router, so the
+ * router does not apply its `query` cleaner. Running it here keeps a stream
+ * route's declaration enforced like every other route's, and turns a bad
+ * value into `400 BAD_REQUEST` instead of silently ignoring it.
  *
- * The cleaned value is *returned*, and the scope below is built from it. An
- * earlier version validated a `raw` object it assembled from a hard-coded
- * `['sessionId', 'walletId']` and then threw the result away, while the
- * handler went on reading `searchParams` by hand — so the declaration only
- * looked enforced: a field added to `engineEvents.query` was validated
- * nowhere, and a *required* one would have made the cleaner throw 400 on
- * every request, because the hand-written list never carried it.
+ * The cleaned value is *returned*, and the scope below is built from it.
  *
  * `queryToObject` is the same function every routed request goes through,
- * including its one rule about `?x=` meaning absent — which the handler used
- * to repeat with its own `!== ''` tests.
+ * including its one rule about `?x=` meaning absent.
  *
  * Exported for its test: serving the stream needs a whole `EngineState`, so
  * the scoping rule is pinned here instead.
@@ -170,11 +155,11 @@ export function createRequestHandler(
 ): (req: IncomingMessage, res: ServerResponse) => void {
   return (req, res) => {
     handleRequest(state, router, req, res, guard).catch((error: unknown) => {
-      // The last sink. The reachable escapes are in the error path itself —
+      // The last sink. The reachable escapes are in the error path itself:
       // `sendJson` stringifying an error's `details`, or `endRequest` in the
-      // `finally` — and swallowing them left the response unended, so the
-      // client waited out its own 120s socket timeout and reported
-      // `Request timed out` while the engine log said nothing.
+      // `finally`. Swallowing them would leave the response unended, so the
+      // client would wait out its own 120s socket timeout and report
+      // `Request timed out` with nothing in the engine log.
       const message = errorMessage(error)
       state.logger.error('Unhandled request failure', { message })
       if (!res.writableEnded) {
@@ -195,19 +180,18 @@ async function handleRequest(
   // Before the auth check and the body read, so the budget a route computes
   // is measured from when the caller's request actually landed.
   const arrivedAt = Date.now()
-  // Authenticate before touching any engine state, which is what the
-  // comment below has always claimed and the ordering did not deliver.
-  // `idle.touch()` and `idle.beginRequest()` used to run first, so every
-  // rejected request pushed `idleShutdownAt` out by a full `--idle-timeout`:
-  // any other local process — the threat `transportAuth.ts` names — could
-  // poll the port once a minute with no token and keep the daemon resident
-  // for good, holding its EdgeContext and every plugin's polling open. That
-  // is the leak `idleShutdown.ts` exists to bound.
+  // Authenticate before touching any engine state. `idle.touch()` and
+  // `idle.beginRequest()` come after it, so a rejected request does not push
+  // `idleShutdownAt` out by a full `--idle-timeout`: otherwise any other
+  // local process, the threat `transportAuth.ts` names, could poll the port
+  // once a minute with no token and keep the daemon resident for good,
+  // holding its EdgeContext and every plugin's polling open. That is the
+  // leak `idleShutdown.ts` exists to bound.
   try {
     if (guard != null) checkTcpRequest(req, guard)
   } catch (error: unknown) {
     // Logged, because a rejected request on the TCP transport is the only
-    // sign of a probe or a brute-force attempt and nothing recorded it.
+    // sign of a probe or a brute-force attempt.
     const message = errorMessage(error)
     state.logger.warn(`Rejected a TCP request: ${message}`)
     if (!res.writableEnded) {
@@ -222,20 +206,20 @@ async function handleRequest(
 
   try {
     // `== null || === ''`, not `??`: Node reports a present-but-empty
-    // `Host:` as the empty string, so `??` let `new URL('/', 'http://')`
-    // through — which throws, and the catch-all answered the caller's
-    // malformed header as `500 INTERNAL_ERROR` with a stack in the log.
+    // `Host:` as the empty string, and `??` would pass it on to
+    // `new URL('/', 'http://')`, which throws, so the catch-all would answer
+    // the caller's malformed header as `500 INTERNAL_ERROR` with a stack in
+    // the log.
     const rawHost = req.headers.host
     const host = rawHost == null || rawHost === '' ? 'localhost' : rawHost
     const url = new URL(req.url ?? '/', `http://${host}`)
     const pathname = url.pathname
 
     // Stopping an engine that is already stopping has succeeded, so the stop
-    // route is exempt from the 503. Answering it with
-    // `ENGINE_SHUTTING_DOWN` meant a client that retries that condition —
-    // which it must, so a command landing in the teardown window reaches a
-    // fresh engine — started a *replacement* daemon in answer to a request
-    // to stop one.
+    // route is exempt from the 503. Answering it with `ENGINE_SHUTTING_DOWN`
+    // would make a client that retries that condition (which it must, so a
+    // command landing in the teardown window reaches a fresh engine) start a
+    // *replacement* daemon in answer to a request to stop one.
     const isStopRequest = req.method === 'POST' && pathname === '/engine/stop'
     if (state.shuttingDown && !isStopRequest) {
       throw engineError('ENGINE_SHUTTING_DOWN', 'Engine is shutting down', 503)
@@ -244,19 +228,17 @@ async function handleRequest(
     // SSE special-case
     if (req.method === 'GET' && pathname === '/engine/events') {
       // An optional `sessionId` scopes the stream to one account, which is
-      // what makes `closeScope` reachable: without it every client was
-      // context-scoped and an auto-logout closed nothing, though the
-      // published reference said otherwise.
+      // what makes `closeScope` reachable: a logout closes only a scoped
+      // stream, never a context-scoped one.
       // `?type=` repeated narrows the stream at the transport, so a caller
       // asking for one event type does not pay for the whole firehose.
       const wanted = url.searchParams.getAll('type').filter(t => t !== '')
       const types = wanted.length > 0 ? new Set(wanted) : undefined
       // Through the route's own cleaner, even though this path is served
       // outside the router: `registerRoute` returns early for a `stream`
-      // route, so the declaration was validated nowhere and hand parsing was
-      // the only contract. A declared field with a real type would have been
-      // accepted in any shape at all. The scope comes off the cleaned value,
-      // so there is one declaration of this route's query, not two.
+      // route, so the router never validates its declaration. The scope
+      // comes off the cleaned value, so there is one declaration of this
+      // route's query, not two.
       const scope = cleanSseQuery(url)
       const scopeSession = scope.sessionId
       if (scopeSession != null) {
@@ -299,7 +281,7 @@ async function handleRequest(
       // whole beside the redacted URL, and a typo under an account path
       // carries the session id — the bearer credential — and an admin path
       // its `syncKey`. Not `pathname`: `new URL` reads a leading `//` as a
-      // host, so `//account/<id>/x` became `/<id>/x`, which no rule redacts.
+      // host, so `//account/<id>/x` becomes `/<id>/x`, which no rule redacts.
       throw engineError(
         'NOT_FOUND',
         `No route for ${redactUrl(req.url ?? '/')}`,
@@ -347,8 +329,8 @@ async function handleRequest(
     }
 
     // Hold the session open for the duration of the handler, the same way
-    // `idle.beginRequest` holds the engine. The auto-logout ticker records
-    // only when a request *started*, so a call that outlives the window —
+    // `idle.beginRequest` holds the engine. The auto-logout window runs from
+    // when a request *started*, so a call that outlives the window —
     // a cold `wait-for-all-wallets`, a `resync-blockchain`, a `spend` on a
     // congested chain — could otherwise be logged out from underneath itself.
     const releaseSession =
@@ -380,23 +362,18 @@ async function handleRequest(
   } catch (error: unknown) {
     if (res.writableEnded) return
     const { status, body } = toErrorBody(error)
-    // Logged before it is sent, because this path never touched the logger.
-    // Anything `mapCoreError` does not recognise becomes `500
-    // INTERNAL_ERROR` carrying only `error.message`, and for a detached
-    // daemon whose one diagnostic surface is
-    // `~/.edge-cli/logs/engine-<profile>.log` that made a plugin or core
-    // fault unreproducible after the fact: the operator had the single line
-    // the client printed, and the client is often a script that discarded
-    // it. The response body is unchanged.
-    // The path with its session id truncated. 74 of the 117 routes are
-    // `/account/{sessionId}/…`, and a `sessionId` is a bearer token — the
-    // module that mints them says so, and every other site in the engine
-    // routes through `redactSessionId`. This one did not, so a mistyped
-    // `--wallet-id` put a live credential into
-    // `~/.edge-cli/logs/engine-<profile>.log`, which `sweepOldLogs` keeps
-    // for seven days and an operator pastes into a bug report. Enough of it
-    // survives to correlate the line with a session, which is the whole
-    // reason the path is logged.
+    // Logged before it is sent. Anything `mapCoreError` does not recognise,
+    // short of a network failure, becomes `500 INTERNAL_ERROR` carrying only
+    // `error.message`, and a detached daemon's one diagnostic surface is
+    // `~/.edge-cli/logs/engine-<profile>.log`: without this line a plugin or
+    // core fault cannot be reproduced after the fact, since the operator has
+    // only the single line the client printed, and the client is often a
+    // script that discards it.
+    // The path with its session id truncated. Most routes are
+    // `/account/{sessionId}/…`, and a `sessionId` is a bearer token, while
+    // `~/.edge-cli/logs/engine-<profile>.log` is kept for seven days and ends
+    // up in bug reports. Enough of the id survives to correlate the line with
+    // a session, which is why the path is logged.
     const where = `${req.method ?? 'GET'} ${redactUrl(req.url ?? '/')}`
     if (status >= 500) {
       state.logger.error(`Request failed: ${where}`, {
@@ -419,9 +396,9 @@ async function handleRequest(
 /**
  * Report a listener error after `listen` has resolved.
  *
- * The `once('error', reject)` that guards startup stays bound afterwards and
- * would silently swallow any later error, leaving a dead socket behind an
- * engine that still looks healthy.
+ * `listenOn` removes its startup `'error'` handler once the server is bound,
+ * and an `'error'` event with no listener is an uncaught exception, which
+ * this engine treats as fatal.
  */
 function reportLateErrors(
   server: http.Server,
@@ -436,11 +413,10 @@ function reportLateErrors(
 /**
  * Start one listener and wait for it to be bound.
  *
- * The two entries below were 24-line near-duplicates: same
- * `createServer`, same two timeouts, same `once('error')` / `listen` /
- * `off('error')` dance, same late-error reporting. Only the `listen`
- * arguments and what happens after binding differ, so that is all either one
- * passes.
+ * The two entries below share the same `createServer`, the same two
+ * timeouts, the same `once('error')` / `listen` / `off('error')` dance and
+ * the same late-error reporting. Only the `listen` arguments and what
+ * happens after binding differ, so that is all either one passes.
  *
  * The `once('error')` matters: without it a bind failure — a socket another
  * engine already owns, a port in use — is an unhandled `'error'` event and
@@ -511,8 +487,8 @@ export async function listenTcp(
   handler: (req: IncomingMessage, res: ServerResponse) => void,
   port: number,
   // Required, not defaulted: the sole caller always passes
-  // `args.tcpHost`, and a second literal here meant the bind address had
-  // two defaults — `engineArgs.ts` owns the one that is read.
+  // `args.tcpHost`, so the bind address has one default, the one
+  // `engineArgs.ts` owns.
   host: string,
   report: EngineReporter = consoleReporter
 ): Promise<{ server: http.Server; port: number }> {

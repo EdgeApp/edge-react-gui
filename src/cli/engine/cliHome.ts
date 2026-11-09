@@ -1,12 +1,8 @@
 /**
  * The CLI's own home directory, and the paths under it.
  *
- * `join(os.homedir(), '.edge-cli', …)` was written out across four modules
- * — `discovery.ts` for the run directory and the logs, `logger.ts` for the
- * logs again, and `makeCoreContext.ts` and `readJsonConfig.ts` for the
- * files under the root — so the one place `docs/EDGE_CLI.md` documents as a
- * single root had no single declaration, and moving it would have silently
- * orphaned whichever sites were missed.
+ * The CLI builds every path under `~/.edge-cli` from here, so the root that
+ * `docs/EDGE_CLI.md` documents is declared once and moves in one place.
  *
  * Resolved at call time, not at module load: under jest `os.homedir()` is
  * what the tests stub, and a value captured at import would be the

@@ -2,15 +2,12 @@
 /**
  * The CLI's value-import graph, walked from a set of entry points.
  *
- * Shared, because three things need the same answer and had no way to agree:
+ * Shared, because three things need the same answer:
  * `scripts/buildCliManifest.ts` derives the published dependency list from
  * it, `scripts/cliNodeSafeSmoke.js` loads what it names under a poisoned
  * `react-native`, and `cliGatePaths.js` promises that the modules the smoke
- * test loads are the modules the CLI reaches. The third promise was the one
- * nobody could check: `SHARED_MODULES` is hand-written, and
- * `src/util/PeriodicTask.ts` — a value import of `src/cli/engine/
- * sweepTicker.ts`, which both `SessionStore` and `ObjectHandleStore` run —
- * sat outside it.
+ * test loads are the modules the CLI reaches. `SHARED_MODULES` is
+ * hand-written, so the graph is what checks that promise.
  *
  * CommonJS JavaScript, because the smoke test runs under plain Node with no
  * sucrase. `typescript` is a dev dependency and loads fine there.

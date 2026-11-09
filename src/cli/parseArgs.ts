@@ -1,6 +1,6 @@
 /**
- * Minimal argv parser replacing node-getopt (which emits DEP0128 because its
- * package.json has `"main": "./lib"` instead of a file path).
+ * Minimal argv parser, used instead of node-getopt (which emits DEP0128
+ * because its package.json has `"main": "./lib"` instead of a file path).
  */
 import { hasCommand, UsageError } from './command'
 import { errorMessage } from './engine/errors'
@@ -41,18 +41,14 @@ ${renderFlagHelp('client')}
 `
 
 /**
- * The flag an argument names, by any spelling the table gives it.
+ * The value a flag takes, by the rule in `flagTable.ts`.
  *
- * This parser used to restate `flagTable.ts` by hand: five copy-pasted
- * boolean arms and eight copy-pasted valued ones, each three lines differing
- * only in the flag's name and the field it writes. That made three
- * descriptions of one flag set — the table, the guide, and this — of which
- * `verifyApiDocs.ts` could check only the first two, and the drift it could
- * not see was real: `-k`/`-a`/`-c`/`-d`/`-u`/`-p` took `--long=value` but not
- * `-k=value`, which no table entry or help line mentioned.
+ * This parser drives its flags from that table rather than restating them,
+ * so `verifyApiDocs.ts`, which checks the guide against the table, covers
+ * this parser too.
  *
  * `matchFlag` and `takeFlagValue` live in the table itself, because the
- * engine's parser needs the same two rules and had its own copy of each.
+ * engine's parser needs the same two rules.
  */
 const takeValue = (
   argv: string[],
@@ -64,8 +60,8 @@ const takeValue = (
       throw new UsageError(undefined, message)
     },
     // `edge-cli --directory balance-map` means a forgotten value, not a
-    // directory called `balance-map`: taking it silently swallowed the
-    // command and dropped the caller into the interactive prompt with exit 0.
+    // directory called `balance-map`: taking it would silently swallow the
+    // command and drop the caller into the interactive prompt with exit 0.
     isCommand: hasCommand
   })
 
@@ -103,9 +99,7 @@ export function parseCliArgs(argv: string[]): ParsedArgs {
         )
       }
       // Validated here, where every other bad flag is reported, rather than
-      // only when `buildContext` converts it: `--tcp=` stored an empty
-      // string that silently meant "no listener" on one side of the parse
-      // and bad argv on the other.
+      // only when `buildContext` converts it.
       const raw = a.slice('--tcp='.length)
       try {
         parseTcpPort(raw)
@@ -134,10 +128,7 @@ export function parseCliArgs(argv: string[]): ParsedArgs {
 
     if (a.startsWith('-')) {
       // Always: every other path that fills `positional` breaks out of the
-      // loop, so nothing can reach here with one already collected. The
-      // branch this replaces claimed to handle a command-local flag after
-      // the command name, which the `argv.slice(i + 1)` below has already
-      // swallowed by then.
+      // loop, so nothing can reach here with one already collected.
       throw new UsageError(undefined, `Unknown option: ${a}`)
     }
 

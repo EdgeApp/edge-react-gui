@@ -3,9 +3,7 @@
  * Pre-commit decision: do the staged changes need the CLI gates?
  *
  * Exit 0 means no — and prints the one line that says so. Exit 1 means yes,
- * which is what makes `precommit:cli`'s `||` run them. The decision used to
- * be an inline `git diff --cached --quiet` in `package.json` with its own
- * pathspec; see `scripts/util/cliGatePaths.js` for what that missed.
+ * which is what makes `precommit:cli`'s `||` run them.
  *
  * Usage: node scripts/cliGateNeeded.js
  */

@@ -40,8 +40,8 @@ describe('parseAltchaChallenge', () => {
   })
 
   it('names the shape rather than throwing a SyntaxError', () => {
-    // With `JSON.parse` outside the cleaner this threw a bare SyntaxError,
-    // past the guard and the message written for exactly this case.
+    // One cleaner owns both the parse and the shape, so a capture that is not
+    // valid JSON gets the message written for this case, not a SyntaxError.
     expect(() => parseAltchaChallenge(page('{challenge: deadbeef}'))).toThrow(
       /not in the expected shape/
     )
@@ -92,16 +92,13 @@ describe('solveAltcha', () => {
 })
 
 /**
- * A structural guard, because this bug arrived twice.
+ * A structural guard over every response the client consumes.
  *
- * `apiClient.request` was fixed in iteration 2 and the same gap was left in
- * `solveCaptcha`'s two helpers and in `openStream`'s 4xx branch: once headers
- * have arrived Node routes a socket close to the *response* and clears the
- * request timer, so a request/response pair with no `error` and `aborted`
- * handler never settles and the command hangs for ever. These are not
- * exported, and testing them for real would need a TLS server, so the
- * invariant is checked at the source: every response consumer handles
- * `error`, and every one that resolves with a value also handles `aborted`.
+ * Once headers have arrived Node routes a socket close to the *response* and
+ * clears the request timer, so a request/response pair with no `error` and
+ * `aborted` handler never settles and the command hangs for ever. The
+ * invariant is checked at the source of `solveCaptcha.ts` and `apiClient.ts`:
+ * every response consumer handles both `error` and `aborted`.
  */
 describe('https response handlers', () => {
   const read = (name: string): string =>
@@ -123,8 +120,8 @@ describe('https response handlers', () => {
     // One rule for both files and every consumer: a response that is
     // destroyed mid-answer does emit `'error'` after `'aborted'`, so the
     // promise settles either way — but with the bare word `aborted` instead
-    // of a message naming the call. `openStream`'s success branch was the
-    // exception, for the case `subscribe` meets most: an engine killed, a
+    // of a message naming the call. That includes `openStream`'s success
+    // branch, for the case `subscribe` meets most: an engine killed, a
     // container stopped, a laptop slept.
     for (const name of ['solveCaptcha.ts', 'apiClient.ts']) {
       const text = read(name)
@@ -137,14 +134,11 @@ describe('https response handlers', () => {
  * The two response handlers, run rather than grepped.
  *
  * The case above counts occurrences of `res.on('error'`, `res.on('aborted'`
- * and `res.on('end'` in two files' source, and says in its own comment that
- * testing them for real would need a TLS server. The sibling this code is
- * modelled on is tested for real — `apiClient.test.ts` runs a server and
- * asserts "rejects when the engine dies mid-response" — and the same branch
- * injects `doFetch` into `fetchWaterfall` and `cleanMultiFetch` for exactly
- * this reason. `httpsRequest` now takes a request function, so a plain HTTP
- * server is enough and the string counts become a backstop rather than the
- * only check.
+ * and `res.on('end'` in two files' source. `httpsRequest` takes a request
+ * function, so a plain HTTP server is enough to run its handlers, the way
+ * `apiClient.test.ts` runs a server and asserts "rejects when the engine
+ * dies mid-response". The string counts are a backstop rather than the only
+ * check.
  */
 describe('httpsRequest against a server that misbehaves', () => {
   const servers: http.Server[] = []
@@ -209,8 +203,8 @@ describe('httpsRequest against a server that misbehaves', () => {
   it('names the server when the connection drops mid-body', async () => {
     // The hang this pair of handlers exists for: once headers have arrived
     // Node routes a socket close to the *response*, not the request, and
-    // clears the request timer — so without them `--solve-captcha` waited
-    // for ever with no output and no recovery but Ctrl-C.
+    // clears the request timer — so without them `--solve-captcha` would
+    // wait for ever with no output and no recovery but Ctrl-C.
     const { url, request } = await serve((_req, res) => {
       res.writeHead(200, { 'Content-Length': '120' })
       res.write('{"challenge":"abc"')
@@ -222,10 +216,10 @@ describe('httpsRequest against a server that misbehaves', () => {
   })
 
   it('gives up rather than waiting for a server that says nothing', async () => {
-    // `req.setTimeout` does cover this half — before any headers exist —
-    // and nothing asserted it either. A short deadline rather than the
-    // real 30 seconds, which is the other reason the deadline is a
-    // parameter: the whole suite is not going to wait half a minute.
+    // `req.setTimeout` does cover this half, before any headers exist. A
+    // short deadline rather than the real 30 seconds, which is the other
+    // reason the deadline is a parameter: the whole suite is not going to
+    // wait half a minute.
     const { url, request } = await serve(() => {})
     await expect(
       httpsRequest('GET', url, undefined, request, 120)
@@ -236,10 +230,9 @@ describe('httpsRequest against a server that misbehaves', () => {
 /**
  * The four decisions above the transport, run rather than read.
  *
- * `httpsRequest` was made injectable and tested; `solveCaptcha` and
- * `solveChallenge` called it by name, so the only thing that ran them was
- * `npm run test:cli:captcha`, which needs the network — and they sit on the
- * login retry path.
+ * `solveCaptcha` and `solveChallenge` take the transport as a parameter, so
+ * they run here without the network `npm run test:cli:captcha` needs. They
+ * sit on the login retry path.
  */
 describe('solveCaptcha and solveChallenge', () => {
   // sha256('abc7'): the answer is 7.

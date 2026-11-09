@@ -23,9 +23,9 @@ export function parseJsonFlag(
   try {
     return JSON.parse(raw)
   } catch {
-    // `cmd`, not `undefined`: every sibling throw passes it, so
-    // `--metadata '{bad'` printed no usage line where a *missing*
-    // `--metadata` did. `from` names the variable the text came from, so a
+    // `cmd`, not `undefined`: every sibling throw passes it, and without it
+    // `--metadata '{bad'` would print no usage line where a *missing*
+    // `--metadata` does. `from` names the variable the text came from, so a
     // malformed `EDGE_CLI_CREATE_WALLETS` is not blamed on a flag the caller
     // never typed.
     throw new UsageError(cmd, `${from ?? `--${what}`} must be valid JSON`)
@@ -50,8 +50,7 @@ interface ParseSpec {
    * Defaults to `'none'`; set `'required'` or `'optional'` for a command
    * that takes one.
    *
-   * Omitting it means any positional argument is bad argv, which is the
-   * opposite of what this comment used to promise.
+   * Omitting it means any positional argument is bad argv.
    */
   positional?: 'required' | 'optional' | 'none'
   flags?: Record<string, FlagKind>
@@ -141,13 +140,12 @@ export function parseCommandArgs(
   let sawPositional = false
 
   // One rule, from the table: `flagTable.ts` owns "the token after a flag,
-  // refused when it is missing, empty or itself a flag", because the client's
-  // global parser and the engine's each had their own copy of it and two of
-  // the three carried a comment saying they had to agree. `''` as well as
-  // absent, matching the `=` branch: without it `--wallet-id=` was a local
-  // usage error at exit 2 and `--wallet-id ""` spawned an engine and came
-  // back `BAD_REQUEST` at exit 5 — one spelling of one mistake answered two
-  // ways by one function.
+  // refused when it is missing, empty or itself a flag", which the client's
+  // global parser and the engine's share with this one. `''` as well as
+  // absent, matching the `=` branch: without it `--wallet-id=` would be a
+  // local usage error at exit 2 while `--wallet-id ""` spawned an engine and
+  // came back `BAD_REQUEST` at exit 5, one spelling of one mistake answered
+  // two ways by one function.
   const takeValue = (
     name: string,
     i: number
@@ -167,11 +165,10 @@ export function parseCommandArgs(
     if (arg.startsWith('--')) {
       const name = arg.slice(2).split('=')[0]
       // `hasOwn`, because `name` is argv and `spec.flags` is a plain literal:
-      // for `--constructor` or `--toString` the lookup found an inherited
-      // `Object.prototype` member, so the `kind == null` test below never
-      // fired and the flag was accepted and silently ignored — where every
-      // other unknown flag is a usage error. Two sites in this file already
-      // say this; this is the one whose key comes from the command line.
+      // for `--constructor` or `--toString` a plain lookup would find an
+      // inherited `Object.prototype` member, so the `kind == null` test below
+      // would never fire and the flag would be accepted and silently ignored,
+      // where every other unknown flag is a usage error.
       const kind = hasOwn(spec.flags ?? {}, name)
         ? spec.flags?.[name]
         : undefined
@@ -181,9 +178,9 @@ export function parseCommandArgs(
       if (kind === 'boolean') {
         // A bare `--flag` means true, and `--flag=false` is how a caller
         // turns off a field the server defaults to true. Refusing the value
-        // form left `--broadcast` and `--save` inert on `spend`, with no CLI
-        // path to a sign-only or a no-save spend although the usage line
-        // advertised both.
+        // form would leave `--broadcast` and `--save` inert on `spend`, with
+        // no CLI path to a sign-only or a no-save spend although the usage
+        // line advertises both.
         if (arg.includes('=')) {
           const raw = arg.slice(arg.indexOf('=') + 1)
           booleans[name] = parseBoolstr(cmd, name, raw)

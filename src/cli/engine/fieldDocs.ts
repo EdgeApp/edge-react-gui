@@ -8,9 +8,6 @@
  * they disagree, because `checkRouteContracts` only asserts that a
  * description *exists*.
  *
- * `'Defaults to the native asset.'` was written out twelve times across six
- * route files, with one of them already extracted locally as `TOKEN_ID_DOC`.
- *
  * No imports, so any route file can use it.
  */
 

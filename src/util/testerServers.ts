@@ -1,7 +1,5 @@
 /**
  * Edge tester fleet. Automated tests MUST use these — never production.
- *
- * Enumerated by DNS probe of *.edge.app (2026-08-05). Only these six resolve.
  */
 export const TESTER_SERVERS = {
   loginServer: 'https://login-tester.edge.app',
@@ -23,18 +21,17 @@ export const TESTER_SERVERS = {
  * harness will log into, spend from and delete wallets on.
  *
  * Over the *hostname*, not the URL. A substring test over the whole string
- * read `https://login.edge.app/?x=-tester` as the tester fleet — a path or
- * query is attacker- or typo-supplied in a way a hostname is not — and the
- * check has to be the strict one precisely because of what it guards. The
- * first label is where the fleet is named: `login-tester`, `info-tester`,
- * `change-tester`, `sync-tester-us1`.
+ * would read `https://login.edge.app/?x=-tester` as the tester fleet — a
+ * path or query is attacker- or typo-supplied in a way a hostname is not —
+ * and the check has to be the strict one precisely because of what it
+ * guards. The first label is where the fleet is named: `login-tester`,
+ * `info-tester`, `change-tester`, `sync-tester-us1`.
  */
 export function isTesterConfig(servers: {
   loginServer?: string
   infoServer?: string
   changeServer?: string
-  // `readonly`, so `TESTER_SERVERS` itself — an `as const` — can be passed
-  // in. Its own test is the first caller that tried.
+  // `readonly`, so `TESTER_SERVERS` itself — an `as const` — can be passed in.
   syncServer?: string | readonly string[]
 }): boolean {
   const urls: string[] = []

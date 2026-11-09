@@ -1,15 +1,12 @@
 /**
  * Cleaners for the files `scripts/build*` generate into `src/cli/generated/`.
  *
- * One declaration per file, imported by both the writer and the reader. Each
- * shape used to be hand-declared twice with a cast bridging the gap, and the
- * cast was load-bearing: `resolveJsonModule` already infers a literal type
- * for the import, so `table as { commands: CommandSpec[] }` is what
- * *suppressed* the check — a `kind` the JSON carries but `ArgSpec['kind']`
- * does not was accepted silently and `flagKind` fell through to `'string'`.
- * The copies had already drifted: `buildCliHelp`'s `ParamHelp` declared a
- * `restOnly` that nothing ever set and that appears zero times in the
- * generated JSON.
+ * One declaration per file, imported by both the writer and the reader, and
+ * the reader cleans rather than casts: `resolveJsonModule` already infers a
+ * literal type for the import, so a cast such as
+ * `table as { commands: CommandSpec[] }` would *suppress* the check, and a
+ * `kind` the JSON carries but `ArgSpec['kind']` does not would be accepted
+ * silently, with `flagKind` falling through to `'string'`.
  */
 import {
   asArray,
@@ -85,10 +82,9 @@ export const asCommandsTable = asObject({
 /**
  * The same table, read straight from the file.
  *
- * `asJSON`, so one cleaner owns both the parse and the shape: the two gates
- * that read `commands.json` each had their own hand-written interface and a
- * cast, which is the drift a gate exists to notice — and a cast suppresses
- * the check in the one place that is supposed to make it.
+ * `asJSON`, so one cleaner owns both the parse and the shape for the gates
+ * that read `commands.json`: a hand-written interface and a cast would
+ * suppress the check in the one place that is supposed to make it.
  */
 export const asCommandsTableJson = asJSON(asCommandsTable)
 

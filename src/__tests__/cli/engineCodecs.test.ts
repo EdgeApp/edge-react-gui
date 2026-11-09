@@ -7,7 +7,6 @@ import { base58, utf8 } from '../../util/encoding'
 import { makeFakeWalletAccount } from '../../util/fake/fakeDisklet'
 import { thrownSync } from '../../util/fake/thrownEngineError'
 
-/** The error shape `engineError` produces. */
 describe('jsonReplacer', () => {
   it('encodes a Uint8Array as base64', () => {
     expect(jsonReplacer('k', new Uint8Array([1, 2, 3]))).toBe('AQID')
@@ -36,8 +35,8 @@ describe('jsonReplacer', () => {
 
   it('serialises a Date to ISO without a replacer arm for it', () => {
     // `JSON.stringify` calls `Date.prototype.toJSON` before the replacer, so
-    // a `value instanceof Date` arm can never fire. The output is the same,
-    // which is why the dead arm went unnoticed.
+    // a `value instanceof Date` arm can never fire, and the ISO string comes
+    // from `toJSON` alone.
     expect(stringifyJson({ d: new Date(0) })).toBe(
       '{"d":"1970-01-01T00:00:00.000Z"}'
     )
@@ -108,8 +107,8 @@ describe('findWallet', () => {
   })
 
   it('refuses an empty prefix rather than resolving the only wallet', () => {
-    // `''` is a prefix of every id, so on a single-wallet account this used
-    // to resolve silently to that wallet — and this is what `spend` resolves
+    // `''` is a prefix of every id, so on a single-wallet account it would
+    // resolve silently to that wallet, and this is what `spend` resolves
     // through.
     const account = makeAccount(['aaa111'])
     expect(thrownSync(() => findWallet(account, ''))).toStrictEqual({
@@ -127,12 +126,9 @@ describe('findWallet', () => {
 /**
  * The resolver that reaches a wallet `currencyWallets` does not hold.
  *
- * `findWalletId` exists for one behaviour: `all-keys` listed an archived
- * wallet and `get-raw-private-key` answered `WALLET_NOT_FOUND` for the exact
- * id it had just printed — on the disaster-recovery path a CLI key export is
- * for. That behaviour was asserted at no level: reverting the routes to
- * `findWallet` left every check in both offline suites green, because they
- * only ever pass a loaded active wallet.
+ * `findWalletId` exists for one behaviour: `all-keys` lists an archived
+ * wallet, and `get-raw-private-key` has to answer for the exact id it has
+ * just printed, on the disaster-recovery path a CLI key export is for.
  */
 describe('findWalletId', () => {
   /** An account whose `allKeys` and `currencyWallets` differ, as core's do. */
@@ -144,7 +140,7 @@ describe('findWalletId', () => {
     const account = makeAccount(['aaa111', 'bbb222'], ['bbb222'])
     expect(findWalletId(account, 'aaa111')).toBe('aaa111')
     expect(findWalletId(account, 'aaa')).toBe('aaa111')
-    // And `findWallet`, which the key-export routes used to use, does not.
+    // And `findWallet`, which searches `currencyWallets`, does not.
     expect(thrownSync(() => findWallet(account, 'aaa111'))).toStrictEqual({
       code: 'WALLET_NOT_FOUND',
       status: 404

@@ -11,14 +11,12 @@ import { TCP_TOKEN_HEADER } from '../../cli/engine/transportAuth'
  * An unauthenticated request must not touch the engine's idle clock.
  *
  * The guard runs above `idle.touch()` and `idle.beginRequest()` for one
- * reason: before it did, every *rejected* request pushed `idleShutdownAt` out
- * by a full `--idle-timeout`, so any other local process — the threat
- * `transportAuth.ts` names — could poll the port once a minute with no token
- * and hold the daemon resident for good, with its `EdgeContext` and every
- * plugin's polling alive. The offline suite asserts a log line was written,
- * which its own comment admits is not this; swapping those two statements
- * back is invisible to it. `createRequestHandler` is exported as the seam for
- * exactly this, and nothing used it.
+ * reason: if every *rejected* request pushed `idleShutdownAt` out by a full
+ * `--idle-timeout`, any other local process (the threat `transportAuth.ts`
+ * names) could poll the port once a minute with no token and hold the daemon
+ * resident for good, with its `EdgeContext` and every plugin's polling alive.
+ * The offline suite asserts only that a rejection is logged, so the order of
+ * those statements is invisible to it.
  */
 const TOKEN = 'a'.repeat(43)
 
@@ -149,10 +147,10 @@ describe('createRequestHandler on the TCP transport', () => {
 /**
  * A malformed `Host:` is the caller's, not the engine's.
  *
- * Node reports a present-but-empty header as the empty string, so `??` let
- * `new URL('/', 'http://')` through — which throws — and the catch-all
- * answered `500 INTERNAL_ERROR` with a stack in the log. Driven with no
- * `guard`, which is the unix-socket path this reaches.
+ * Node reports a present-but-empty header as the empty string, which a `??`
+ * default would let through: `new URL('/', 'http://')` throws, and the
+ * catch-all would answer `500 INTERNAL_ERROR` with a stack in the log.
+ * Driven with no `guard`, which is the unix-socket path this reaches.
  */
 describe('the Host header', () => {
   const router = new Router()
@@ -166,7 +164,7 @@ describe('the Host header', () => {
   })
 
   it('substitutes localhost for an empty one', async () => {
-    // The arm that is the whole fix: `headers.host` is `''`, not nullish.
+    // The arm a `??` default misses: `headers.host` is `''`, not nullish.
     const { state } = makeState()
     const { res, status } = makeRes()
     createRequestHandler(state, router)(makeReq({ host: '' }), res)
@@ -186,10 +184,10 @@ describe('the Host header', () => {
 /**
  * A 404 under an account path must not log or answer with the session id.
  *
- * The message was built from `new URL(...).pathname`, and a URL parser
- * reads a leading `//` as a host: `//account/<id>/walets` became
- * `/<id>/walets`, which no redaction rule matches, and the bearer token
- * went into the engine log whole.
+ * A URL parser reads a leading `//` as a host, so a message built from
+ * `new URL(...).pathname` would turn `//account/<id>/walets` into
+ * `/<id>/walets`, which no redaction rule matches, and put the bearer token
+ * into the engine log whole.
  */
 describe('a 404 for a doubled slash', () => {
   it('names the path without the session id', async () => {

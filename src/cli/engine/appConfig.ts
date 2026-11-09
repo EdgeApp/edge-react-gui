@@ -34,17 +34,16 @@ function readAppConfigFile(path: string): AppConfigFile | null {
  *
  * A file that parses but declares neither `corePlugins` nor `swapPlugins`
  * does not shadow a later one that does — the same latch `loadKeys` applies
- * to `edgeApiKey`, and for the same reason. `asAppConfigFile` drops unknown keys, so *any*
- * `config.json` in the working directory parsed to `{}` and was returned:
- * a user who disabled a swap plugin in `~/.edge-cli/config.json` got it
- * enabled again by running from a directory that happened to hold an
- * unrelated `config.json`, with nothing said.
+ * to `edgeApiKey`, and for the same reason. `asAppConfigFile` drops unknown
+ * keys, so *any* `config.json` in the working directory parses to `{}`, and
+ * returning that would let an unrelated `config.json` in the directory a
+ * command runs from re-enable a swap plugin the user disabled in
+ * `~/.edge-cli/config.json`, with nothing said.
  *
- * The throw stays for a file whose `swapPlugins` is the wrong *type*: a typo
- * in the user's own file would otherwise silently re-enable every plugin
- * they turned off, which is what it is for. `readJsonConfig` names the path,
- * so a `config.json` belonging to something else is diagnosable from the
- * message.
+ * A file whose `swapPlugins` is the wrong *type* does throw: a typo in the
+ * user's own file would otherwise silently re-enable every plugin they
+ * turned off. `readJsonConfig` names the path, so a `config.json` belonging
+ * to something else is diagnosable from the message.
  */
 export function loadAppConfig(): AppConfigFile {
   return loadAppConfigFrom().config

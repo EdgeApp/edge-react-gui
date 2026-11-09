@@ -20,10 +20,9 @@ describe('extractionCacheKey', () => {
     // No inherited `GIT_*` variable reaches these children. This suite runs
     // inside the pre-commit hook, where git exports `GIT_DIR` and
     // `GIT_INDEX_FILE`; a child that inherits them ignores `cwd` and acts on
-    // the *real* repository — an earlier version of this helper committed
-    // into the branch being committed and wrote `core.bare` and a test
-    // identity into the shared repository config. Identity goes on the
-    // command line for the same reason: nothing here may run `git config`.
+    // the *real* repository, committing into the branch being committed and
+    // writing `core.bare` into the shared repository config. Identity goes on
+    // the command line for the same reason: nothing here may run `git config`.
     const git = (...args: string[]): string =>
       spawnSync('git', args, {
         cwd: dir,

@@ -26,7 +26,7 @@ export interface CliContext {
    *
    * `process.exitCode` is a global, so a command that reports through it is
    * reporting for the whole session: one `subscribe` whose engine restarted
-   * left the prompt exiting non-zero however many commands succeeded
+   * would leave the prompt exiting non-zero however many commands succeed
    * afterwards.
    */
   interactive?: boolean
@@ -44,10 +44,8 @@ export interface Command {
    *
    * `help.ts` reads `docs?.summary ?? target.help`, so a command whose route
    * publishes a summary never reaches this — and `docs:api:verify` fails on
-   * one that sets it anyway. Fifteen commands carried a string here that
-   * nothing rendered, each worded differently from the line that ships.
-   * `help` itself is the only command with no route, so it is the only one
-   * this is for.
+   * one that sets it anyway. `help` itself is the only command with no route,
+   * so it is the only one this is for.
    */
   help?: string
   needsSession?: boolean

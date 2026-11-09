@@ -149,13 +149,13 @@ describe('loadKeys', () => {
   })
 
   it('reports which files it actually read, in search order', () => {
-    // `engine-config` publishes this as `configFiles.keysFiles` and nothing
-    // asserted it. It exists because a daemon inherits the working directory
-    // of whichever command spawned it and `./keys.json` is searched first,
-    // so two invocations with identical flags from different directories are
-    // served by one engine running on one checkout's `edgeApiKey`,
-    // `edgeApiSecret` and plugin init options, with nothing saying which.
-    // A diagnostic nothing checks can lie silently.
+    // `engine-config` publishes this as `configFiles.keysFiles`. It exists
+    // because a daemon inherits the working directory of whichever command
+    // spawned it and `./keys.json` is searched first, so two invocations with
+    // identical flags from different directories are served by one engine
+    // running on one checkout's `edgeApiKey`, `edgeApiSecret` and plugin init
+    // options, with nothing saying which. A diagnostic nothing checks can lie
+    // silently.
     expect(loadKeysFrom().paths).toStrictEqual([])
     writeHome({ edgeApiKey: 'home' })
     expect(loadKeysFrom().paths).toStrictEqual([

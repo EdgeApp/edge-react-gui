@@ -63,8 +63,7 @@ export interface ExtractedCli {
    * This binding's own one-line summary.
    *
    * Two commands on one route otherwise share the route's JSDoc first line,
-   * so `spend` and `spend-max` were both published as "Send funds." — the
-   * only duplicated help text in the generated table.
+   * so `spend` and `spend-max` would both be published as "Send funds."
    */
   summary?: string
   custom: boolean
@@ -145,16 +144,11 @@ function arrayLiteral(obj: ts.ObjectLiteralExpression, key: string): string[] {
  * A declared string array, with the shared error groups expanded.
  *
  * `errors: WALLET_ERRORS` and `errors: ['BAD_REQUEST', ...WALLET_ERRORS]` are
- * exactly what `docs/api/README.md` tells every contributor to write, and the
- * old reading — bail on a non-literal, then filter the elements down to
- * string literals — turned the first into nothing and the second into
- * `['BAD_REQUEST']`. 46 codes across 16 routes were therefore missing from
- * the reference, the OpenAPI document and `edge-cli help`, including all five
- * `OBJECT_*` codes on `sign-tx`, `broadcast-tx` and `save-tx`, where
- * `OBJECT_EXPIRED` is the one a caller holding a five-minute handle has to
- * branch on. Following the documented convention was what made a route's
- * errors disappear, and no gate could see it because the codes were already
- * gone before `verifyApiDocs` looked.
+ * exactly what `docs/api/README.md` tells every contributor to write, so both
+ * are read in full. Keeping only the string literals would turn the first
+ * into nothing and the second into `['BAD_REQUEST']`, and the missing codes
+ * would be gone from the reference, the OpenAPI document and `edge-cli help`
+ * before `verifyApiDocs` looked.
  *
  * An unrecognised form throws rather than extracting nothing, so the next
  * shape nobody anticipated fails the build instead of silently shrinking the
@@ -192,11 +186,9 @@ function stringArray(node: ts.Expression): string[] {
  *
  * `SESSION_ERRORS` is added to every session-scoped route rather than
  * restated on each of them: the two codes apply uniformly to anything under
- * `/account/{sessionId}/`, and `errorGroups.ts` says itself that the group
- * "had no consumer at all" — so no session route documented the two failures
- * a caller is most likely to meet, which is what the `unpublished error
- * group` gate now refuses. Deriving it from the path cannot drift as routes
- * are added.
+ * `/account/{sessionId}/`, and they are the two failures a caller is most
+ * likely to meet. Deriving them from the path cannot drift as routes are
+ * added.
  */
 function routeErrors(
   arg: ts.ObjectLiteralExpression,
@@ -235,25 +227,22 @@ function propNode(
   return undefined
 }
 
-/** Expand a cleaner's resolved output type into documented fields. */
 /**
  * A type as text, with the members of a string-literal union sorted.
  *
- * The checker's own order for a union is an implementation detail — it
- * changed when this generator started using the repo's compiler options
- * instead of six hand-written ones — and these artifacts are committed, so
- * an arbitrary order means a diff on every toolchain change. Sorted, the
+ * The checker's own order for a union is an implementation detail that a
+ * change of compiler options can alter, and these artifacts are committed,
+ * so an arbitrary order means a diff on every toolchain change. Sorted, the
  * output depends only on the declaration.
  */
 function stableTypeText(text: string): string {
   // The checker spells an imported type as
   // `import("/Users/<whoever>/git/.../node_modules/edge-core-js/src/types/types").EdgeTxActionSwap`,
-  // so the published artifacts carried whichever absolute path the last
-  // person to regenerate them happened to have — 31 occurrences across
-  // `openapi.json` and `index.html`. That is a leak of a local path into a
-  // committed document, and it makes the artifacts machine-specific, so
-  // `docs:api:committed` could never pass for a second developer. The name
-  // is what a reader and a generated client need; the path is noise.
+  // so without this the published artifacts would carry the absolute path
+  // of whoever regenerated them last: a local path leaked into a committed
+  // document, and artifacts that differ by machine, so `docs:api:committed`
+  // could never pass for a second developer. The name is what a reader and
+  // a generated client need; the path is noise.
   text = text.replace(/import\("[^"]*"\)\./g, '')
   const parts = text.split(' | ').map(p => p.trim())
   if (parts.length < 2) return text
@@ -264,6 +253,7 @@ function stableTypeText(text: string): string {
   return sorted.join(' | ')
 }
 
+/** Expand a cleaner's resolved output type into documented fields. */
 function fieldsOf(
   checker: ts.TypeChecker,
   node: ts.Expression
@@ -300,15 +290,12 @@ function fieldsOf(
 /**
  * What a name points at: the initializer of the declaration it resolves to.
  *
- * One mechanism, written three times — in `resolveObjectLiteral`, in
- * `proseText` and in `findDoc` — each differing only in which function it
- * then recursed into. So the rule for "a name pointing at a declaration"
- * lived in three places, and teaching it an `ExportSpecifier`, a `satisfies`
- * expression or an `as const` would have had to happen three times. The
- * failure is silent and asymmetric: a shared cleaner reached through a form
- * only one copy resolves publishes its prose with `docs:api:verify` green
- * while `resolveDeclaredFields` answers "no declared fields" for the same
- * declaration.
+ * One mechanism for `resolveObjectLiteral`, `proseText` and `findDoc`, so
+ * teaching it an `ExportSpecifier`, a `satisfies` expression or an `as const`
+ * happens once. Separate copies would fail silently and asymmetrically: a
+ * shared cleaner reached through a form only one copy resolves would publish
+ * its prose with `docs:api:verify` green while `resolveDeclaredFields`
+ * answered "no declared fields" for the same declaration.
  */
 function initializerOf(
   checker: ts.TypeChecker,
@@ -328,15 +315,10 @@ function initializerOf(
 /**
  * The object literal behind an expression, following names and wrappers.
  *
- * One resolver, because there were two: `proseFor` had `objectOf` and
- * `optionalNames` had `walk`, twenty lines each, both unwrapping a property
- * access, both following an identifier through `getSymbolAtLocation` →
- * `getAliasedSymbol` → the variable declaration's initializer, both
- * unwrapping `doc(…)` and `asObject(…)`. They had already diverged on where
- * the object-literal test goes, and both feed the documentation gates on the
- * same node: `withProse` merges the prose one finds with the optionality the
- * other does, so teaching the pipeline a new cleaner shape was two edits
- * that could half-land.
+ * One resolver for both `proseFor` and `optionalNames`, which feed the
+ * documentation gates on the same node: `withProse` merges the prose one
+ * finds with the optionality the other does, so a new cleaner shape is
+ * taught here once rather than as two edits that could half-land.
  *
  * The shapes it resolves:
  *
@@ -465,13 +447,9 @@ function proseFor(
 /**
  * Read `{ key: 'text', … }` from a property, for `coreExtra`.
  *
- * Through `resolveObjectLiteral`, like every other field in this extractor.
- * It used to bail on anything that was not an object literal written in
- * place, so two routes that share a body also had to paste the same
- * published prose twice, each under five lines of comment telling the next
- * route author it could not be shared — a limitation that was entirely
- * self-imposed, since this was the one resolver never moved onto the shared
- * one.
+ * Through `resolveObjectLiteral`, like every other field in this extractor,
+ * so the object can be a named constant as well as a literal written in
+ * place, and two routes that share a body can share its prose.
  */
 function recordLiteral(
   checker: ts.TypeChecker,
@@ -701,13 +679,13 @@ function optionalNames(
  * The source-driven half of `withProse`, over a standalone source text.
  *
  * Exported for `routeFields.test.ts`. `optionalNames` decides every
- * `"required"` in the generated command table — `commands/generated.ts`
- * throws `Missing --<flag>` on a required arg — and nothing tested or gated
- * it: `docs:api:check` regenerates and compares against the committed
- * artifact, and `docs:api:committed` compares that artifact to git, so a
- * resolver that half-lands produces a `commands.json` that passes both. Two
- * of the three shapes it has to follow are reached only through an import
- * alias or a spread, which is exactly what a hand edit breaks.
+ * `"required"` in the generated command table (`commands/generated.ts`
+ * throws `Missing --<flag>` on a required arg), and neither gate can catch a
+ * regression in it: `docs:api:check` regenerates and compares against the
+ * committed artifact, and `docs:api:committed` compares that artifact to
+ * git, so a resolver that half-lands produces a `commands.json` that passes
+ * both. Two of the three shapes it has to follow are reached only through an
+ * import alias or a spread, which is exactly what a hand edit breaks.
  *
  * The other half, `fieldsOf`, reads the checker's *type* of the expression,
  * so it needs the real cleaners and the real route graph; this half reads
@@ -793,14 +771,11 @@ function withProse(
 /**
  * The repo's own compiler options, so the checker sees what `tsc` sees.
  *
- * Six hand-written options stood in for `tsconfig.json`, and the difference
- * was not cosmetic: without `resolveJsonModule` every `.json` import in the
- * route graph resolved to nothing, and without `esModuleInterop` a default
- * import did. Measured at the time, the hand-written program produced 63
- * errors over the same files that `npm run tsc` compiles clean — so the
- * document was generated from a partly broken view of the code, and a type
- * the checker silently resolved to an error type would have been documented
- * as such with no gate able to notice.
+ * A hand-written subset is not equivalent: without `resolveJsonModule` every
+ * `.json` import in the route graph resolves to nothing, and without
+ * `esModuleInterop` a default import does. The document would then be
+ * generated from a partly broken view of the code, and a type the checker
+ * silently resolved to an error type would be documented as such.
  */
 function compilerOptions(): ts.CompilerOptions {
   const configPath = path.join(ROOT, 'tsconfig.json')
@@ -854,21 +829,14 @@ function extractRoutesUncached(): ExtractedRoute[] {
   // type-check is `npm run tsc`.
   //
   // Asked for per file rather than through `getPreEmitDiagnostics`, which
-  // runs semantic diagnostics over *every* file in the program — the 24
-  // route files plus the whole app graph they reach plus the lib files,
-  // 2,893 source files here — and then had its answer thrown away by the
-  // filter on the next line. Measured in one process on this worktree:
-  // `getPreEmitDiagnostics` 32.9 s for 138 diagnostics, all of them in
-  // files the filter discards, against 0.78 s for the same surviving set
-  // (none) asked for directly. A repeat under load gave 109 s against
-  // 4.7 s, so the ratio is the robust part. It is paid once per gate
-  // process and `docs:api:gates` runs six of them, which made it the
-  // dominant cost of a chain that is in `verify`, in CI and — behind
-  // `cliGateNeeded.js` — in the pre-commit hook.
+  // runs semantic diagnostics over *every* file in the program (the route
+  // files, the whole app graph they reach, and the lib files) when only the
+  // route files' answers count. That is many times slower, and the gates
+  // run in `verify`, in CI and, behind `cliGateNeeded.js`, in the pre-commit
+  // hook.
   //
   // `getPreEmitDiagnostics`' option and global diagnostics carry no `file`,
-  // so the existing `d.file != null` test already discarded them: nothing
-  // that survived the filter is lost.
+  // so they could never name a route file: asking per file loses nothing.
   const fatal: ts.Diagnostic[] = []
   for (const file of files) {
     const source = program.getSourceFile(file)

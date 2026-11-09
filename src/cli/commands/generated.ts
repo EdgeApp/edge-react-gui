@@ -134,10 +134,10 @@ for (const spec of asCommandsTable(table).commands) {
           }
         } else {
           // The body is created if it does not exist yet. Guarding the whole
-          // branch on `body != null` dropped a `challengeId` whenever no
-          // other field happened to build a body, so the retry went out
-          // unchallenged and the server issued a fresh challenge. The query
-          // branch above has no such condition.
+          // branch on `body != null` would drop a `challengeId` whenever no
+          // other field happened to build a body, so the retry would go out
+          // unchallenged and the server would issue a fresh challenge. The
+          // query branch above has no such condition.
           body = { challengeId: ctx.challengeId, ...body }
         }
       }

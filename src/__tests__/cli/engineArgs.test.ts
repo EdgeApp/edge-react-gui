@@ -18,9 +18,9 @@ function usage(argv: string[]): string {
 }
 
 /**
- * The engine's command line, which nothing could test before.
+ * The engine's command line.
  *
- * It lived inside `index.ts`, which starts an engine as a side effect of
+ * It lives apart from `index.ts`, which starts an engine as a side effect of
  * being imported. What it decides is the whole contract: the data directory,
  * the app id and the test-server flag all feed the profile hash a client
  * looks an engine up by, so a flag read wrongly here is a client waiting out
@@ -61,10 +61,9 @@ describe('parseEngineArgs', () => {
   })
 
   it('does not read one flag’s value as another flag', () => {
-    // The shape this replaces ran five value-taking probes at the top of
-    // every iteration, each re-reading `argv[i]` after an earlier one had
-    // advanced it. It was safe only because `flagValue` refuses a value
-    // starting with `-`, an invariant stated in another function.
+    // One match against the flag table per argument, not a probe per flag:
+    // a probe consumes its value by moving `i`, so every later probe would
+    // re-read that value as an argument.
     const args = parseEngineArgs(['--config', '/tmp/a.conf', '--app-id=b'])
     expect(args.configPath).toBe('/tmp/a.conf')
     expect(args.appId).toBe('b')
@@ -91,8 +90,9 @@ describe('parseEngineArgs', () => {
     expect(usage(['--directory'])).toContain('requires a value')
     expect(usage(['--directory='])).toContain('requires a value')
     expect(usage(['-d', ''])).toContain('requires a value')
-    // A forgotten value that is itself a flag: `--directory --tcp=9312`
-    // used to create a directory named `--tcp=9312` and drop the port.
+    // A forgotten value that is itself a flag: taken as a value,
+    // `--directory --tcp=9312` would create a directory named `--tcp=9312`
+    // and drop the port.
     expect(usage(['--directory', '--tcp=9312'])).toContain('requires a value')
   })
 
@@ -115,8 +115,8 @@ describe('parseEngineArgs', () => {
     expect(usage(['--idle-timeout='])).toContain('seconds')
     expect(usage(['--idle-timeout=-1'])).toContain('Invalid')
     // Above the 32-bit timer ceiling, `seconds * 1000` becomes 1 ms after
-    // a `TimeoutOverflowWarning`, so "keep it up for a month" shut the
-    // engine down the instant it went idle — the opposite of the ask, with
+    // a `TimeoutOverflowWarning`, so "keep it up for a month" would shut the
+    // engine down the instant it went idle, the opposite of the ask, with
     // the warning the only notice, on a stderr that goes to a startup log
     // a clean stop deletes.
     expect(usage(['--idle-timeout=2592000'])).toContain('at most')
@@ -125,9 +125,9 @@ describe('parseEngineArgs', () => {
     expect(parseEngineArgs(['--idle-timeout=2147483']).idleTimeoutSeconds).toBe(
       2147483
     )
-    // A forgotten value gets the same message it gets for any other flag:
-    // the space form used to read `argv[++i]` itself, so this answered
-    // "Invalid --idle-timeout: --tcp=9312".
+    // A forgotten value gets the same message it gets for any other flag,
+    // not "Invalid --idle-timeout: --tcp=9312" from reading the next flag as
+    // the value.
     expect(usage(['--idle-timeout', '--tcp=9312'])).toContain(
       'requires a value'
     )

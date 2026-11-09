@@ -9,10 +9,9 @@ const query = (search: string): URL =>
  * The stream route's scope comes from its own declaration.
  *
  * `/engine/events` is served outside the router, so its `query` cleaner is
- * applied by hand. The first version of that applied the cleaner to an object
- * it assembled from a hard-coded field list and threw the cleaned value away,
- * while the handler went on reading `searchParams` itself — two declarations
- * of one route's query, of which only the hand-written one decided anything.
+ * applied by hand, and the scope is the cleaner's output. A handler that read
+ * `searchParams` itself would give one route two declarations of its query,
+ * of which only the hand-written one decided anything.
  */
 describe('cleanSseQuery', () => {
   it('returns the scope the caller asked for', () => {

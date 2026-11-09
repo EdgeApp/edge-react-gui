@@ -45,9 +45,7 @@ function failIfUnsuccessful(result, label) {
  * One source for it, because it guards two kinds of child: a single shared
  * module, and a whole entry point run with `--help`. Both interpolate this
  * constant, so a specifier added here covers the whole gate — a second copy
- * would let half of it go on passing. The entry points used to run with no
- * poison at all, so the 50-odd modules outside `src/cli` that only they
- * reach were checked by nothing.
+ * would let half of it go on passing.
  */
 const POISON = `
 const Module = require('module')
@@ -97,7 +95,7 @@ console.log('OK ' + ${JSON.stringify(relPath)})
  * argument that makes both of them print and exit 0 without touching the
  * network, a socket or the account directory. Loading it is the point: it
  * pulls the whole value-import graph — every module either entry point
- * reaches, most of them outside
+ * reaches, many of them outside
  * `src/cli` — so a `react-native` import anywhere in it fails here, whether
  * or not `SHARED_MODULES` happens to name the file.
  */

@@ -6,16 +6,15 @@ import { splitPromptLine, UnterminatedQuoteError } from '../../cli/promptLine'
  * The prompt must hand a command exactly what the user typed.
  *
  * `docs/EDGE_CLI.md` promises the prompt behaves like one-shot mode, where
- * values arrive verbatim in `process.argv`. The old tokenizer was a shell
- * parser run over text the shell had already unquoted, so it expanded a
- * second time and corrupted values silently. These cases are the ones that
- * were wrong, and they are about credentials and money.
+ * values arrive verbatim in `process.argv`. A shell parser run over the line
+ * would act on `$`, `#`, globs and redirects and corrupt values silently, and
+ * these cases are about credentials and money.
  */
 describe('splitPromptLine', () => {
   it('keeps a value containing $ verbatim', () => {
-    // The defect this replaces: `$55w0rd` expanded against an empty
-    // environment, so the account was created with the password `p` and the
-    // user could never log in with what they typed.
+    // Expanded against an empty environment, `$55w0rd` would create the
+    // account with the password `p`, and the user could never log in with
+    // what they typed.
     expect(
       splitPromptLine(
         'create-account --username=alice --password=p$55w0rd --pin=1234'
@@ -34,7 +33,7 @@ describe('splitPromptLine', () => {
   })
 
   it('keeps # and everything after it', () => {
-    // Read as a comment before, which silently truncated a memo or a note.
+    // Read as a comment, it would silently truncate a memo or a note.
     expect(splitPromptLine('x --memo=a#b --notes=#1').args).toStrictEqual([
       '--memo=a#b',
       '--notes=#1'
@@ -42,8 +41,8 @@ describe('splitPromptLine', () => {
   })
 
   it('returns strings for glob and redirect characters', () => {
-    // These came back as `{ op: 'glob' }` / `{ op: '>' }` objects, which
-    // reached `arg.startsWith('--')` and threw `INTERNAL_ERROR`.
+    // An `{ op: 'glob' }` or `{ op: '>' }` object in their place would reach
+    // `arg.startsWith('--')` and throw `INTERNAL_ERROR`.
     expect(splitPromptLine('x --search-string=a*b').args).toStrictEqual([
       '--search-string=a*b'
     ])
@@ -96,10 +95,10 @@ describe('splitPromptLine', () => {
 
   it('escapes only a quote and itself inside double quotes', () => {
     // POSIX, and the rule that makes the prompt and one-shot mode agree.
-    // Escaping *every* character deleted the backslash from any
-    // double-quoted value: `--password="a\b"` became `ab` here and stayed
-    // `a\b` in one-shot mode, so an account created at the prompt had a
-    // password the user could not reproduce — reported as success, and
+    // Escaping *every* character would delete the backslash from any
+    // double-quoted value: `--password="a\b"` would become `ab` here and stay
+    // `a\b` in one-shot mode, so an account created at the prompt would have
+    // a password the user could not reproduce, reported as success, and
     // unrecoverable once `session.json` goes.
     expect(splitPromptLine(`x --password="a\\b"`).args).toStrictEqual([
       '--password=a\\b'

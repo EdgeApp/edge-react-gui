@@ -19,12 +19,12 @@ export function findWallet(
   }
   const wallets = account.currencyWallets
   // `hasOwn`, not `wallets[prefix] != null`. `currencyWallets` is a plain
-  // object literal, so `wallets['__proto__']` is `Object.prototype` and that
-  // test passed: `--wallet-id=__proto__` returned the prototype cast as an
-  // `EdgeCurrencyWallet` and the first `wallet.currencyInfo.pluginId` was a
-  // `TypeError` — `500 INTERNAL_ERROR` where this function's whole job is to
-  // answer `WALLET_NOT_FOUND`. `constructor`, `toString`, `valueOf` and the
-  // rest behave the same way.
+  // object literal, so `wallets['__proto__']` is `Object.prototype`, and
+  // `constructor`, `toString`, `valueOf` and the rest are inherited too. A
+  // `!= null` test would return one cast as an `EdgeCurrencyWallet`, and the
+  // first `wallet.currencyInfo.pluginId` would throw a `TypeError`, a
+  // `500 INTERNAL_ERROR` where this function's whole job is to answer
+  // `WALLET_NOT_FOUND`.
   if (hasOwn(wallets, prefix)) return wallets[prefix]
 
   const matches = Object.keys(wallets).filter(id => id.startsWith(prefix))
@@ -56,8 +56,8 @@ export function findWallet(
  * `EdgeCurrencyWallet`, and wrong for the calls that only need an id:
  * `getRawPrivateKey`, `getDisplayPrivateKey`, `getRawPublicKey`,
  * `listSplittableWalletTypes` and `changeWalletStates` all work off
- * `allKeys`. Resolving those through the loaded set made key export answer
- * `WALLET_NOT_FOUND` for a wallet `all-keys` had just listed — on the
+ * `allKeys`. Resolving those through the loaded set would make key export
+ * answer `WALLET_NOT_FOUND` for a wallet `all-keys` lists, on the
  * disaster-recovery path a CLI key export exists for.
  *
  * Same prefix contract and same errors as `findWallet`, so a caller cannot
@@ -93,7 +93,7 @@ export function findWalletId(account: EdgeAccount, prefix: string): string {
  * Refuse a tokenId the wallet's plugin does not know.
  *
  * Over REST a tokenId is free-form caller input, where in the GUI it always
- * came from a real token. Core does not check it: `wallet.getTransactions`,
+ * comes from a real token. Core does not check it: `wallet.getTransactions`,
  * `getNumTransactions` and `getAddresses` all destructure the token's own
  * record and throw a `TypeError` that surfaces as `500 INTERNAL_ERROR` with
  * no field name, outside every error list those routes declare.
@@ -104,9 +104,9 @@ export function assertTokenId(
 ): void {
   if (tokenId == null) return
   // `hasOwn`: `allTokens` is a plain object literal built with a spread, so
-  // `allTokens['__proto__'] == null` is **false** and this guard returned
-  // without throwing — which defeats the entire function, as the comment
-  // above describes.
+  // `allTokens['__proto__'] == null` is **false**, and a `== null` guard
+  // would return without throwing, which defeats the entire function, as the
+  // comment above describes.
   if (!hasOwn(wallet.currencyConfig.allTokens, tokenId)) {
     throw engineError('TOKEN_NOT_FOUND', `Unknown token: ${tokenId}`, 404)
   }

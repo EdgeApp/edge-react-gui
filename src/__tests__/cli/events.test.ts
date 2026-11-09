@@ -79,7 +79,7 @@ describe('EventHub', () => {
     const changed = jest.fn<() => void>()
     hub.onClientsChanged = changed
     // Past MAX_SSE_BUFFER_BYTES: a consumer this slow is the reason the
-    // `--type` filter moved to the transport in the first place.
+    // `--type` filter runs in the transport.
     const client = makeClient({ writableLength: 2 * 1024 * 1024 })
     hub.addSseClient(client.res, { kind: 'context' })
     changed.mockClear()
@@ -102,7 +102,7 @@ describe('EventHub', () => {
     const circular: any = {}
     circular.self = circular
     hub.emit('core.log', circular)
-    // One bad payload used to disconnect every subscriber.
+    // One bad payload must not disconnect every subscriber.
     expect(hub.clientCount).toBe(2)
     expect(a.frames).toHaveLength(0)
 
@@ -126,7 +126,7 @@ describe('EventHub', () => {
       { sessionId: 'sess_a…' },
       { kind: 'session', sessionId: 'sess_a' }
     )
-    // A stream opened against one account used to receive another account's
+    // A stream opened against one account must not receive another account's
     // username and session prefix.
     expect(mine.frames).toHaveLength(1)
     expect(other.frames).toHaveLength(0)
@@ -134,11 +134,10 @@ describe('EventHub', () => {
     expect(context.frames).toHaveLength(1)
   })
 
-  // The whole scope matrix, because the wallet row was the one never run and
-  // it was wrong: a `?walletId=` stream used to drop `session.created` and
-  // `session.expired` — the two account events a session-scoped stream exists
-  // to carry — in exchange for narrowing a set of wallet-scoped events that
-  // is still empty.
+  // The whole scope matrix. A `?walletId=` stream has to carry
+  // `session.created` and `session.expired`, the two account events a
+  // session-scoped stream exists to carry, while its wallet scope narrows
+  // only wallet-scoped events, a set no emitter produces yet.
   it('delivers each scope of event to every scope of client', () => {
     const hub = new EventHub()
     const context = makeClient()
@@ -222,8 +221,8 @@ describe('EventHub', () => {
       throw new Error('EPIPE')
     }
 
-    // A subscriber that vanished without a clean FIN never emitted 'close',
-    // so it held the engine's EdgeContext open indefinitely.
+    // A subscriber that vanishes without a clean FIN never emits 'close', so
+    // unreaped it would hold the engine's EdgeContext open indefinitely.
     hub.pingClients()
     expect(hub.clientCount).toBe(0)
   })

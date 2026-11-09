@@ -11,15 +11,13 @@ import { BTC_DENOM } from '../../util/fake/fakeDisklet'
 /**
  * A wallet core never built an API for has to be reported.
  *
- * `account.activeWalletIds` is every non-archived, non-deleted wallet, and
- * `account.currencyWallets[id]` is absent for one whose engine failed to
- * start. `currency-wallets` filtered those out and `wait-for-all-wallets`
- * returned no body at all, so on an account holding an asset this build
- * cannot load every listing was short, every command naming one of those
- * wallets answered `404 WALLET_NOT_FOUND`, and nothing said why — not the
- * response, not `engine-<profile>.log`. Measured on a real account: 21
- * active wallets, 7 loaded, 14 absent, two of them on a plugin
- * `engine-config` reports as enabled.
+ * `account.activeWalletIds` is every non-archived, non-deleted wallet whose
+ * plugin is enabled, and `account.currencyWallets[id]` is absent for one
+ * whose engine failed to start. If those went unreported, then on an account
+ * holding an asset this build cannot load every listing would be short,
+ * every command naming one of those wallets would answer
+ * `404 WALLET_NOT_FOUND`, and nothing would say why, not the response and
+ * not `engine-<profile>.log`.
  *
  * Not reachable from either offline suite: the fake world builds the real
  * currency plugins for the wallets it creates, so every wallet there loads.
@@ -185,8 +183,7 @@ describe('the routes that report it', () => {
   it('wait-for-all-wallets reports them, and says so in the log', async () => {
     // After core's promise resolves, anything still missing has *failed*
     // rather than being slow — the one moment this can be said without a
-    // race. The call used to answer with no body, so `ok` was the whole
-    // report.
+    // race.
     const warnings: Array<{
       message: string
       extra?: Record<string, unknown>

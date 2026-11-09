@@ -9,13 +9,13 @@ import { loadAppConfig, loadAppConfigFrom } from '../../cli/engine/appConfig'
  * Which `config.json` the engine's swap settings come from.
  *
  * The working directory is searched first, so a checkout or a container can
- * override — and `asAppConfigFile` drops unknown keys, so *any* file called
- * `config.json` parsed to `{}` and was returned as the answer. A user who
- * disabled a swap plugin in `~/.edge-cli/config.json` got it enabled again
- * by running from a directory holding an unrelated `config.json`, with
- * nothing said: `swapConfig[pluginId]` is `undefined` and `pluginInitFor`
- * enables the plugin. `loadKeys` guards against exactly this for
- * `edgeApiKey` and says so.
+ * override, and `asAppConfigFile` drops unknown keys, so *any* file called
+ * `config.json` parses to `{}`. Only a file that declares the plugin
+ * switches is the answer. Otherwise a user who disabled a swap plugin in
+ * `~/.edge-cli/config.json` would get it enabled again by running from a
+ * directory holding an unrelated `config.json`, with nothing said: the
+ * plugin's `swapPlugins` entry is `undefined`, and `pluginInitFor` enables
+ * it from its keys. `loadKeys` applies the same latch to `edgeApiKey`.
  */
 const dirs: string[] = []
 const cwd = process.cwd()
@@ -109,11 +109,11 @@ describe('loadAppConfig', () => {
   })
 
   it('reports which file supplied swapPlugins', () => {
-    // `engine-config` publishes this as `configFiles.appConfigFile` and
-    // nothing asserted it. The daemon inherits the working directory of
-    // whichever command spawned it and hashes to the same profile from
-    // anywhere, so this field is the only statement of which configuration
-    // is answering — and a diagnostic nothing checks can lie silently.
+    // `engine-config` publishes this as `configFiles.appConfig`. The daemon
+    // inherits the working directory of whichever command spawned it and
+    // hashes to the same profile from anywhere, so this field is the only
+    // statement of which configuration is answering, and a diagnostic
+    // nothing checks can lie silently.
     fakeHome({ swapPlugins: { changenow: false } })
     const here = tempDir()
     process.chdir(here)
@@ -131,9 +131,10 @@ describe('loadAppConfig', () => {
 
   it('reports null when a config.json was read and ignored', () => {
     // The asymmetry worth stating: `path` is `null` whenever no file
-    // *declared* `swapPlugins`, including when one was read and dropped —
-    // the shadowing case this field was added for. An operator reading
-    // `engine-config` sees "no file decided this", not "no file was found".
+    // *declared* `corePlugins` or `swapPlugins`, including when one was read
+    // and dropped, the shadowing case this field exists for. An operator
+    // reading `engine-config` sees "no file decided this", not "no file was
+    // found".
     fakeHome({ name: 'something else' })
     const here = tempDir()
     fs.writeFileSync(

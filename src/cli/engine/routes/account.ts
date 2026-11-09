@@ -258,7 +258,7 @@ export const waitForAllWallets = route({
   returns: asObject({
     unloadedWallets: doc(
       asArray(asCoreValue),
-      'The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer. This call used to return nothing, so an account with a wallet the CLI cannot load got `ok` and a short `currency-wallets` list with no explanation. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well.'
+      'The active wallets core did *not* build an API for, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Empty is the healthy answer; a wallet listed here is one the CLI cannot load, which `currency-wallets` leaves out. The engine cannot say *why* core declined — a registered plugin can still fail to build an engine, and in a Node CLI that is usually a native module the package does not carry — so what it says is this: `pluginRegistered: false` means no plugin claims that wallet type at all, and `pluginHasLoadedWallet: false` means nothing of that type loaded, so the plugin is the common factor rather than these wallets. The reason itself, when a plugin reports one, is in `~/.edge-cli/logs/engine-<profile>.log`, or in `engine-<profile>-startup.log` where a plugin’s own stderr lands; `EDGE_CLI_LOG_LEVEL=info` keeps core’s own chatter as well.'
     )
   }),
 
@@ -305,32 +305,16 @@ export const waitForAllWallets = route({
  * `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or
  * deleted wallet is not here. Paused wallets are.
  *
- * This took a `filter` of `active`, `archived`, `hidden` or `all`, and three
- * of those four could not work. The handler resolved each id through
- * `account.currencyWallets`, which core builds from `activeWalletIds`
- * **alone**, so the archived and hidden lists were disjoint from the
- * resolvable set by construction: every id mapped to `undefined`, the
- * `filter(wallet != null)` dropped it, and `?filter=archived` answered
- * `{"currencyWallets":[]}` on every account, always. `all` concatenated the
- * three lists, so it was `active` with each hidden wallet — which is active
- * and hidden at once, core deriving the two flags independently — listed
- * twice. Nor could the missing wallets be served in this shape: an archived
- * wallet has no loaded API, so `name`, `currencyCode`, `blockHeight`,
- * `syncStatus` and `paused` do not exist for it, and seven required response
- * fields would have had to become nullable for every caller to carry three
- * values that never worked.
- *
- * `all-keys` is the route for that, and already was: it returns
- * `EdgeWalletInfoFull[]` — id, type, `archived`, `deleted`, `hidden`,
- * `sortIndex` — which is everything knowable about a wallet core has not
- * loaded.
+ * A wallet core has not loaded has no `name`, `currencyCode`, `blockHeight`,
+ * `syncStatus` or `paused` to report. `all-keys` returns everything knowable
+ * about one: `EdgeWalletInfoFull[]`, with id, type, `archived`, `deleted`,
+ * `hidden` and `sortIndex`.
  *
  * @note Wallets load in the background after login, so a list taken straight
  *   afterwards can be short. Call `wait-for-all-wallets` first to be sure the
  *   account has finished loading.
- * @note Archived, deleted and hidden wallets are not here, because core
- *   builds no API for them. Use `all-keys`, which carries their ids and
- *   their flags.
+ * @note Archived and deleted wallets are not here, because core builds no
+ *   API for them. Use `all-keys`, which carries their ids and their flags.
  * @coreNote account.currencyWallets is keyed by activeWalletIds.
  */
 export const currencyWallets = route({
@@ -341,11 +325,11 @@ export const currencyWallets = route({
   returns: asObject({
     currencyWallets: doc(
       asArray(asWalletSummary),
-      'Every wallet core has loaded for this account, including paused ones. Archived, deleted and hidden wallets are not loaded; `all-keys` lists those.'
+      'Every wallet core has loaded for this account, including paused and hidden ones. Archived and deleted wallets are not loaded; `all-keys` lists those.'
     ),
     unloadedWallets: doc(
       asArray(asCoreValue),
-      'The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. They used to be filtered out silently, so this list was the difference between `all-keys` and this one and a caller had to compute it — and nothing said why a wallet was missing. See `wait-for-all-wallets` for what the two plugin fields do and do not claim.'
+      'The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. Listed here, with what the engine knows of why, so a caller need not work out the difference from `all-keys`. See `wait-for-all-wallets` for what the two plugin fields do and do not claim.'
     )
   }),
 
@@ -354,10 +338,9 @@ export const currencyWallets = route({
     const currencyWallets = account.activeWalletIds
       .map(id => account.currencyWallets[id])
       // A wallet whose api has not finished building yet, which is the race
-      // the `wait-for-all-wallets` note is about — or one that failed, which
-      // is what `unloadedWallets` is for. Dropping them silently is what
-      // made an account with an unloadable asset look like a shorter
-      // account.
+      // the `wait-for-all-wallets` note is about, or one that failed. Both
+      // are reported in `unloadedWallets` instead, so an account with an
+      // unloadable asset does not look like a shorter account.
       .filter((wallet): wallet is EdgeCurrencyWallet => wallet != null)
       .map(summarizeWallet)
     return { currencyWallets, unloadedWallets: unloadedWallets(account) }
@@ -406,11 +389,12 @@ export const createCurrencyWallet = route({
  * Turn an entry's `importText` into keys before core stores anything.
  *
  * Core imports inside `createCurrencyWallet(s)`, and lets the plugin's plain
- * `Error` through, so a mistyped seed answered `500 INTERNAL_ERROR` — the
- * unmapped engine fault — on a route that declares `BAD_REQUEST`. Done here
- * with the plugin's own `importKey`, the refusal is the caller's 400, and
- * the entry goes on with `keys` in place of the text, so core neither
- * imports twice nor can fail at that step once the batch has started.
+ * `Error` through, so left to core a mistyped seed would answer
+ * `500 INTERNAL_ERROR`, the unmapped engine fault, on a route that declares
+ * `BAD_REQUEST`. Done here with the plugin's own `importKey`, the refusal is
+ * the caller's 400, and the entry goes on with `keys` in place of the text,
+ * so core neither imports twice nor can fail at that step once the batch
+ * has started.
  */
 async function prepareImport(
   account: EdgeAccount,
@@ -495,8 +479,8 @@ type WalletResult =
  *   plugin claims. `account.createCurrencyWallets` makes every entry's keys
  *   at once, stores them with one `applyKit` — one login-server round trip
  *   and one stash rewrite — and finishes the wallets concurrently, returning
- *   an `EdgeResult` per entry. One wallet per call paid that round trip per
- *   entry.
+ *   an `EdgeResult` per entry. One wallet per call would pay that round trip
+ *   per entry.
  * @note Core's batch *throws* rather than reporting per entry when it
  *   cannot make an entry's keys, so the ways that happens are answered per
  *   entry before the batch: a wallet type no plugin claims, and an

@@ -20,9 +20,9 @@ const CHECK_ONLY = process.argv.includes('--check')
  *
  * Under `--check` nothing is written; a file that would have changed throws
  * instead. `hint` names the command that regenerates this particular
- * artifact: the route generators are not the only callers any more, and
- * telling someone to run `npm run docs:api` when the stale file is the npm
- * manifest sends them somewhere that cannot fix it.
+ * artifact: the route generators are not the only callers, and telling
+ * someone to run `npm run docs:api` when the stale file is the npm manifest
+ * sends them somewhere that cannot fix it.
  */
 export function writeIfChanged(
   file: string,

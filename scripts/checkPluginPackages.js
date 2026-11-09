@@ -2,13 +2,13 @@
 /**
  * Pre-commit / CI gate: the plugin packages the CLI bundles must load.
  *
- * QA found that **no EVM wallet can be created or loaded**:
+ * **No EVM wallet can be created or loaded**:
  * `create-currency-wallet --wallet-type=wallet:ethereum` answers
  * `500 INTERNAL_ERROR "Cannot find module '../abi/ETH_BAL_CHECKER_ABI.json'"`,
- * and the same throw is why `wallet:ethereum` wallets on a real account
- * silently never loaded for three QA rounds — core swallows it while
- * building the engine, so it reaches neither the engine log nor the startup
- * log. `edge-currency-accountbased` ships
+ * and the same throw keeps `wallet:ethereum` wallets on a real account from
+ * loading, silently: core swallows it while building the engine, so it
+ * reaches neither the engine log nor the startup log.
+ * `edge-currency-accountbased` ships
  * `lib/ethereum/networkAdapters/RpcAdapter.js`, which requires that JSON,
  * and the package has no `lib/ethereum/abi/` directory at all. That is 29
  * plugin ids under `lib/ethereum/info/` — ethereum, base, arbitrum,

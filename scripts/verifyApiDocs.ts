@@ -67,11 +67,10 @@ function registeredCommands(): Set<string> {
  * Flags each command's parser really accepts, and the kind it reads each one
  * as.
  *
- * The kind, because the name alone was not enough: `login-with-key` and
- * `login-with-pin` accepted `use-login-id` — so both directions of the name
- * check passed — and read it as `'boolstr'`, which demands a value, against
- * a usage line publishing the bare `[--use-login-id[=false]]` the kind
- * refuses.
+ * The kind, because the name alone is not enough: a parser can accept a
+ * flag under the declared name, so both directions of the name check pass,
+ * and still read it as a different kind from the one the usage line
+ * publishes.
  */
 function registeredFlags(): Map<string, Map<string, string>> {
   const out = new Map<string, Map<string, string>>()
@@ -84,10 +83,9 @@ function registeredFlags(): Map<string, Map<string, string>> {
     let m: RegExpExecArray | null
     PAIR.lastIndex = 0
     while ((m = PAIR.exec(block[1])) != null) flags.set(m[1], m[2])
-    // A shared flag group, spread in: `...AUTH_FLAGS`. Five login handlers
-    // declared the same three auth flags, and reading only the literal pairs
-    // made this gate report every one of them as "published but refused" —
-    // a false positive that would have argued for keeping the duplication.
+    // A shared flag group, spread in: `...AUTH_FLAGS`. Reading only the
+    // literal pairs would report every flag in the group as "published but
+    // refused" for each handler that spreads it.
     for (const spread of block[1].matchAll(/\.\.\.([A-Z][A-Z0-9_]*)/g)) {
       const decl = new RegExp(
         `const ${spread[1]} = \\{([\\s\\S]*?)\\n\\}`
@@ -250,8 +248,8 @@ for (const r of routes) {
 // --------------------------------------------------------- section by core
 // A call is filed under the object it acts on. That is the rule the reference
 // is organised by, and it is easy to break by putting a route in a convenient
-// file: `account.createCurrencyWallet` sat in `wallets.ts`, and so appeared
-// under Wallet, for as long as nobody read that section closely.
+// file: an `account.` call declared in `wallets.ts` would appear under
+// Wallet.
 const SECTION_BY_CORE: Array<[RegExp, string]> = [
   [/^context\.\$internalStuff\./, 'admin'],
   [/^context\./, 'context'],
@@ -305,14 +303,13 @@ for (const name of commands) {
 // first, then the kebab-cased field name. Adding both — the override's name
 // and the field's — makes the set a superset, which is harmless when asking
 // "is an accepted flag declared?" and produces a false positive on every
-// renamed field when asking the reverse. Six of those, against three real
-// findings, the first time the reverse check ran.
+// renamed field when asking the reverse.
 const declaredFlags = new Map<string, Set<string>>()
 // And the kind each declaration implies, for the flags whose kind the
 // declaration actually fixes: a field's own type through `kindOf` — the
 // function `buildCliCommands` generates with — or the explicit `kind` on a
-// `cliExtra` entry. A renamed field is in `declaredFlags` under both names,
-// so this map is keyed by the name the generator would publish only.
+// `cliExtra` entry, keyed like `declaredFlags` by the name the generator
+// publishes.
 const declaredKinds = new Map<string, Map<string, string>>()
 for (const r of routes) {
   for (const cli of [r.cli, ...r.cliExtra]) {
@@ -368,9 +365,8 @@ for (const [command, real] of flagsByCommand) {
   // route declares is printed in the usage line and in `params` whether or
   // not the parser takes it — and for a `custom: true` command the parser is
   // hand-written, so the two drift apart silently. `docs/api/README.md`
-  // promises "no flag on one side missing from the other"; only one side was
-  // ever checked. `wallet.ts` records two instances of this being fixed by
-  // hand with no gate added, and three more were live when this was written.
+  // promises "no flag on one side missing from the other", so both sides are
+  // checked.
   for (const name of declared) {
     if (!real.has(name)) {
       fail(
@@ -410,18 +406,17 @@ for (const r of routes) {
   if (r.summary === '') fail('missing summary', `${r.id} has no JSDoc summary`)
 }
 
-// Every shared group reaches the published surface. `extractRoutes` used to
-// read `errors: WALLET_ERRORS` as no codes at all and drop every
-// `...WALLET_ERRORS` element, so 56 entries across 21 routes were missing
-// from the reference and from `edge-cli help` — and the check above could
-// not see it, because it only asks whether an extracted code is a real one
-// and the codes were gone before it looked. This asks the other question.
+// Every shared group reaches the published surface. The check above only
+// asks whether an extracted code is a real one, so a group the extractor
+// fails to expand (`errors: WALLET_ERRORS`, or a `...WALLET_ERRORS` element)
+// loses its codes before that check looks, and they are missing from the
+// reference and from `edge-cli help`. This asks the other question.
 //
 // For a group some route *declares*, read out of the route sources rather
-// than inferred from the published codes: a group whose codes all vanished
-// is exactly the regression, so "some of its codes are published" cannot be
-// the test. A group no route mentions is vacuous and skipped, which is what
-// lets the commit that adds the groups precede the routes that use them.
+// than inferred from the published codes: a group whose codes all vanish is
+// exactly the failure, so "some of its codes are published" cannot be the
+// test. A group no route mentions is vacuous and skipped, so a group can be
+// added before the routes that use it.
 const routeSource = fs
   .readdirSync(path.join(ROOT, 'src/cli/engine/routes'))
   .filter(f => f.endsWith('.ts'))
@@ -452,12 +447,8 @@ const realPaths = new Set(routes.map(r => `${r.method} ${r.routePath}`))
 const EXTERNAL_PATHS = new Set(['GET /v1/infoRollup/{appId}'])
 const proseSources: Array<[string, string]> = []
 // `buildApiDocs.ts` and `groups.ts` hold the reference's Overview and its
-// per-group prose, which ship in `index.html` and `openapi.json` — and they
-// were not scanned, so three separate claims in them went out wrong: a
-// threat model the engine denies, a warning above the key routes
-// that contradicted it, and `POST …/objects/{objectId}/delete`, an endpoint
-// that does not exist (the route is `object/delete/{objectId}`, singular,
-// with the id last). Published prose is published prose wherever it is
+// per-group prose, which ship in `index.html` and `openapi.json`, so they
+// are scanned too. Published prose is published prose wherever it is
 // written.
 for (const file of [
   'docs/EDGE_CLI.md',
@@ -497,16 +488,11 @@ for (const [where, text] of proseSources) {
 // ---------------------------------------------------------------------------
 // The global flags, against the table `docs/EDGE_CLI.md` publishes.
 //
-// Every route-derived surface in this branch is generated and gated; the
-// global flags were the last hand-maintained table, written out in the
-// client's help, again in the engine's `printHelp()` and again in the docs,
-// and all three had drifted — `-h, --help` was "Display options", "Show
-// help" and "Show options".
-//
-// The two help texts are now rendered from `src/cli/flagTable.ts`, so this
-// checks the one remaining copy: the guide's table has to carry every flag
-// with the right `Who`, and its description has to *start with* the
-// canonical one — the guide may add prose after it, not instead of it.
+// The client's help and the engine's `printHelp()` are rendered from
+// `src/cli/flagTable.ts`, so this checks the one hand-written copy: the
+// guide's table has to carry every flag with the right `Who`, and its
+// description has to *start with* the canonical one. The guide may add
+// prose after it, not instead of it.
 // ---------------------------------------------------------------------------
 {
   const { GLOBAL_FLAGS } = require('../src/cli/flagTable') as {
@@ -565,18 +551,15 @@ for (const [where, text] of proseSources) {
 // ---------------------------------------------------------------------------
 // User-facing text with no reader.
 //
-// Two single-source claims were false. Fifteen commands carried a
-// hand-written `help:` string that nothing rendered — `help.ts` reads
-// `docs?.summary ?? target.help`, and a command with a route always has a
-// summary — so each was a second description of a command, worded
-// differently from the one that ships, that a maintainer could fix without
-// changing anything a user sees. And two of `fieldDocs.ts`'s constants, the
-// module whose whole purpose is to be the one place a repeated field is
-// described, had no importer, one of them stating the field differently from
-// the description actually published.
+// A command with a route always has a generated summary, and `help.ts`
+// reads `docs?.summary ?? target.help`, so a hand-written `help:` string
+// beside it is never rendered: a second description of the command that a
+// maintainer could edit without changing anything a user sees. A
+// `fieldDocs.ts` constant no schema or route uses is the same, in the module
+// whose whole purpose is to be the one place a repeated field is described.
 //
-// Both are the same defect: a string a reader believes is the source and
-// isn't. So both are gated rather than tidied.
+// Both are a string a reader believes is the source and isn't, so both are
+// gated.
 // ---------------------------------------------------------------------------
 {
   const helpDocs = new Set(
@@ -624,13 +607,9 @@ for (const [where, text] of proseSources) {
 // ---------------------------------------------------------------------------
 // The module map in `docs/EDGE_CLI.md`, against `src/cli/engine/`.
 //
-// The guide claimed the map was complete and credited
-// `scripts/cliNodeSafeSmoke.js` with keeping it so. That script loads a
-// hand-written list of shared GUI modules and the client entry; it says
-// nothing about this map, and two modules added after the claim was written
-// were missing from it. So the claim is gated here instead of asserted
-// there — the map is the only hand-maintained inventory of the engine left,
-// and a reader uses it to find the module that owns a concern.
+// The map is the only hand-maintained inventory of the engine, and a reader
+// uses it to find the module that owns a concern, so its completeness is
+// gated here rather than asserted in the guide.
 // ---------------------------------------------------------------------------
 {
   const docsText = fs.readFileSync(path.join(ROOT, 'docs/EDGE_CLI.md'), 'utf8')

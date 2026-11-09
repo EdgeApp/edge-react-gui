@@ -1,11 +1,8 @@
 /**
  * Read one JSON config file through a cleaner.
  *
- * `appConfig.ts`, `keysConfig.ts` and `cliConfig.ts` each had the same
- * twenty-odd statements in the same order — `readFileSync` →
- * `isMissingFile` → null, `JSON.parse` → "Invalid JSON in <path>", cleaner →
- * "Invalid <label> at <path>" — differing only in the cleaner and one word
- * of each message.
+ * `appConfig.ts`, `keysConfig.ts` and `cliConfig.ts` all read through it,
+ * each passing its own cleaner and the label its messages name.
  *
  * An absent file is `null`, which is what the search-path loop above each
  * caller treats as "try the next one", and what `cliConfig.ts` turns into

@@ -158,9 +158,9 @@ describe('profileHash', () => {
     const { profileHash } = load()
     // The hash is the only thing keeping two engines off one core data
     // directory. Taken over the raw argv string, a trailing slash or a
-    // relative path gave one directory several profiles, each holding what it
-    // believed was an exclusive claim — the same two-EdgeContexts state the
-    // claim ordering exists to prevent, reached with no race at all.
+    // relative path would give one directory several profiles, each holding
+    // what it believes is an exclusive claim — the same two-EdgeContexts
+    // state the claim ordering exists to prevent, reached with no race at all.
     const real = fs.realpathSync.native(
       fs.mkdtempSync(path.join(os.tmpdir(), 'edge-dir-'))
     )
@@ -237,10 +237,10 @@ describe('removeRunArtifacts with a claim', () => {
   }
 
   it('leaves a replacement engine’s files alone', () => {
-    // The old engine's listeners were still draining when a client started
-    // a replacement, which took the profile over. The old engine's cleanup
-    // used to delete the replacement's run file *and socket*, leaving it
-    // running and unreachable — the socket alone is enough for that.
+    // The first engine's listeners are still draining when a client starts a
+    // replacement, which takes the profile over. The first engine's cleanup
+    // must not delete the replacement's run file or socket: that leaves it
+    // running and unreachable, and the socket alone is enough for that.
     const { claimRunFile, ensureRunDir, readRunFile, removeRunArtifacts } =
       load()
     ensureRunDir('p2')
@@ -273,7 +273,7 @@ describe('removeRunArtifacts with a claim', () => {
   it('removes its socket and session when its run file is already gone', () => {
     // No run file means no replacement has claimed the profile — one claims
     // before it binds — so these are still this engine's, and leaving them
-    // made the next command send a dead session.
+    // would make the next command send a dead session.
     const { ensureRunDir, removeRunArtifacts } = load()
     ensureRunDir('p4')
     const { socket, session } = seedFiles('p4')
@@ -362,10 +362,11 @@ describe('cleanupStaleLock', () => {
     const { cleanupStaleLock, runFilePath } = load()
     // The recycled-pid case: a SIGKILLed engine's run file names a pid the
     // OS later handed to something else, so `process.kill(pid, 0)` succeeds
-    // for ever. On the pid alone the engine printed "already running" and
-    // exited 1 on every invocation, and the sweep skipped the directory for
-    // the same reason, so the profile stayed wedged until someone deleted it
-    // by hand. `process.pid` is certainly alive, and nothing is listening.
+    // for ever. On the pid alone the engine would print "already running"
+    // and exit 1 on every invocation, and the sweep would skip the directory
+    // for the same reason, so the profile would stay wedged until someone
+    // deleted it by hand. `process.pid` is certainly alive, and nothing is
+    // listening.
     // Backdated past the boot grace, because that is what a recycled pid
     // always is: the engine that wrote this file died long enough ago for the
     // OS to hand its pid out again.
@@ -381,10 +382,11 @@ describe('cleanupStaleLock', () => {
       load()
     // The boot window. `claimRunFile` runs before `makeCoreContext`, which
     // opens the repos and starts every plugin, so for seconds a live engine
-    // holds the claim with nothing bound. Treating that as stale let a second
-    // cold invocation delete this engine's artifacts and claim the same
-    // profile, so two EdgeContexts opened one core directory — and when the
-    // two converged, the loser's cleanup unlinked the winner's live socket.
+    // holds the claim with nothing bound. Treating that as stale would let a
+    // second cold invocation delete this engine's artifacts and claim the
+    // same profile, so two EdgeContexts would open one core directory, and
+    // when the two converged, the loser's cleanup would unlink the winner's
+    // live socket.
     seed('booting', process.pid)
     fs.unlinkSync(socketPathFor('booting'))
     expect(await cleanupStaleLock('booting')).toBe(process.pid)
@@ -394,8 +396,8 @@ describe('cleanupStaleLock', () => {
 
   it('falls back to the run file mtime when the claim has no startedAt', async () => {
     const { cleanupStaleLock, runFilePath } = load()
-    // An engine from before `startedAt` existed is still booting-or-not, and
-    // guessing "stale" would sweep it mid-boot. A fresh file is young.
+    // A run file without `startedAt` is still booting-or-not, and guessing
+    // "stale" would sweep it mid-boot. A fresh file is young.
     seed('legacy', process.pid, { startedAt: null })
     expect(await cleanupStaleLock('legacy')).toBe(process.pid)
     expect(fs.existsSync(runFilePath('legacy'))).toBe(true)
@@ -410,14 +412,14 @@ describe('cleanupStaleLock', () => {
 
   it('leaves a live claim alone when the probe could not answer', async () => {
     const { cleanupStaleLock, runFilePath, sessionFilePath } = load()
-    // The probe failing is not the target being dead. A single transient
-    // failure in *this* process — EMFILE or ENFILE under fork pressure — or
-    // a full accept backlog on an engine that is merely busy read as death,
-    // and line 400 then unlinked a healthy engine's live `engine.sock` and
-    // `engine.json`. That engine keeps serving on an unlinked inode:
-    // `engine-stop`, `engine-status` and the TCP token are all unreachable,
-    // it still holds a logged-in account, and the next engine binds a fresh
-    // socket at the same path — two `EdgeContext`s on one data directory.
+    // The probe failing is not the target being dead. Read as death, a
+    // single transient failure in *this* process (EMFILE or ENFILE under
+    // fork pressure) or a full accept backlog on an engine that is merely
+    // busy would unlink a healthy engine's live `engine.sock` and
+    // `engine.json`. That engine would keep serving on an unlinked inode:
+    // `engine-stop`, `engine-status` and the TCP token all unreachable, a
+    // logged-in account still held, and the next engine binding a fresh
+    // socket at the same path, two `EdgeContext`s on one data directory.
     //
     // Backdated well past the boot grace, so nothing but the probe's verdict
     // can be keeping this claim alive.
@@ -481,7 +483,7 @@ describe('cleanupStaleLock', () => {
     })
     // Null, so the caller goes on to `claimRunFile`, which fails EEXIST
     // against the new owner's file and exits "already running" — a refusal,
-    // where unlinking was two owners.
+    // where unlinking would make two owners.
     expect(result).toBeNull()
     expect(fs.existsSync(runFilePath('taken'))).toBe(true)
     expect(fs.existsSync(sessionFilePath('taken'))).toBe(true)
@@ -506,9 +508,9 @@ describe('cleanupStaleLock', () => {
   it('retires a non-empty startup log instead of deleting it', () => {
     // `engine-startup.log` is the engine's whole stderr, and in normal
     // operation the larger part of it is a plugin's own output —
-    // `edge-currency-plugins` dumps a stack for every dropped socket. It was
-    // unlinked on every clean stop, so that was the one surface carrying it
-    // and the stop erased it. Moved into the log directory, where
+    // `edge-currency-plugins` dumps a stack for every dropped socket. It is
+    // the one surface carrying that output, and unlinking it on every clean
+    // stop would erase it, so it moves into the log directory, where
     // `sweepOldLogs` ages it out with everything else.
     const { ensureRunDir, removeRunArtifacts, runDir } = load()
     const { cliLogsDir } = require('../../cli/engine/cliHome')
@@ -521,8 +523,7 @@ describe('cleanupStaleLock', () => {
     const retired = path.join(cliLogsDir(), 'engine-noisy-startup.log')
     expect(fs.existsSync(retired)).toBe(true)
     expect(fs.readFileSync(retired, 'utf8')).toContain('Socket closed')
-    // And no empty profile directory left behind, which is what the unlink
-    // was buying.
+    // And no empty profile directory left behind.
     expect(fs.existsSync(runDir('noisy'))).toBe(false)
   })
 
@@ -546,8 +547,8 @@ describe('cleanupStaleLock', () => {
       load()
     // What a startup that claimed the profile and then lost the `listen` race
     // must do. The socket is the winner's and `session.json` is the user's;
-    // removing them left the winner resident and unreachable, with every
-    // later command spawning another engine on the same directory.
+    // removing them would leave the winner resident and unreachable, with
+    // every later command spawning another engine on the same directory.
     seed('loser', process.pid)
     removeRunArtifacts('loser', {
       keepStartupLog: true,
@@ -580,9 +581,9 @@ describe('cleanupStaleLock', () => {
     ensureRunDir('claiming')
     // `claimRunFile` needs `wx` for the exclusion, so it cannot rename: the
     // claim is a create followed by a write, and a second engine starting
-    // inside that window read a zero-length file. Treating it as no claim
-    // unlinked the socket and run file of the engine that had just claimed
-    // them, and both then believed they owned the profile.
+    // inside that window reads a zero-length file. Treating it as no claim
+    // would unlink the socket and run file of the engine that has just
+    // claimed them, and both would then believe they owned the profile.
     fs.writeFileSync(runFilePath('claiming'), '')
     fs.writeFileSync(socketPathFor('claiming'), '')
     expect(await cleanupStaleLock('claiming')).toBeNull()
@@ -632,13 +633,11 @@ describe('sweepStaleProfiles', () => {
 
   it('removes a profile directory that still holds a startup log', async () => {
     // The case the fixture above misses: it writes no `engine-startup.log`,
-    // so the directory was already empty and `rmdirSync` succeeded whatever
-    // the sweep kept. A real abandoned profile has one — the engine's stdio
-    // is redirected into it — and the sweep used to pass
-    // `keepStartupLog: true`, so `rmdirSync` always threw ENOTEMPTY, the
-    // directory survived, and `removed++` still counted it. The
-    // accumulation this function exists to bound carried on while its own
-    // return value said otherwise.
+    // so the directory is already empty and `rmdirSync` succeeds whatever
+    // the sweep keeps. A real abandoned profile has one, since the engine's
+    // stdio is redirected into it, so a sweep that kept the startup log
+    // would hit ENOTEMPTY in `rmdirSync`, leave the directory, and still
+    // count it as removed.
     const {
       ensureRunDir,
       runDir,
@@ -678,8 +677,8 @@ describe('sweepStaleProfiles', () => {
       sweepStaleProfiles
     } = load()
     // The recycled-pid case. `process.kill(pid, 0)` succeeds for ever once
-    // the OS hands the pid to something else, so testing the pid alone meant
-    // the sweep permanently skipped the directories it exists to clear —
+    // the OS hands the pid to something else, so testing the pid alone would
+    // make the sweep skip, permanently, the directories it exists to clear,
     // leaving `session.json`, a full-account bearer token, on disk in a
     // profile nothing would revisit. Backdated past the boot grace, because
     // that is what a recycled pid always is.
@@ -714,10 +713,10 @@ describe('sweepStaleProfiles', () => {
     } = load()
     // This removal is the wider of the two: the socket, the run file *and*
     // `session.json`, which belongs to the user rather than to the engine.
-    // One failed probe in the sweeping process therefore deleted a live
-    // engine's artifacts and the user's session, leaving that engine
-    // resident, unreachable and unstoppable while every later command on the
-    // profile spawned another.
+    // One failed probe in the sweeping process, read as death, would
+    // therefore delete a live engine's artifacts and the user's session,
+    // leaving that engine resident, unreachable and unstoppable while every
+    // later command on the profile spawned another.
     ensureRunDir('serving')
     fs.writeFileSync(
       runFilePath('serving'),
@@ -790,11 +789,11 @@ describe('sweepStaleProfiles', () => {
  * The profile hash must not change when the data directory is created.
  *
  * The client hashes before `mkdir` and the engine hashes after, so a
- * `realpath` that gave up on a missing leaf gave the two sides different
- * answers under a symlinked path — on macOS, every first run with
- * `-d /tmp/…`. The engine bound its socket under one profile, the client
- * polled another, and the command failed with a 30-second spawn timeout
- * while a healthy detached engine stayed behind.
+ * `realpath` that gave up on a missing leaf would give the two sides
+ * different answers under a symlinked path: on macOS, every first run with
+ * `-d /tmp/…`. The engine would bind its socket under one profile, the
+ * client would poll another, and the command would fail with a 30-second
+ * spawn timeout while a healthy detached engine stayed behind.
  */
 describe('canonicalDirectory', () => {
   it('answers the same before and after the directory exists', () => {
@@ -837,10 +836,10 @@ describe('canonicalDirectory', () => {
  * How a probe's verdict is reached, not only what callers do with it.
  *
  * Every case above that needs `'unknown'` injects it through
- * `DiscoveryProbes.probeSocket`, so replacing the classification with
- * `'absent'` — or letting the timeout resolve `'absent'` — kept the suite
- * green while one EMFILE in a starting process unlinked a healthy engine's
- * live socket again.
+ * `DiscoveryProbes.probeSocket`, so without these, replacing the
+ * classification with `'absent'`, or letting the timeout resolve
+ * `'absent'`, would keep the suite green while one EMFILE in a starting
+ * process unlinked a healthy engine's live socket.
  */
 describe('probe classification', () => {
   it('reads only the kernel’s answers about the path as absent', () => {

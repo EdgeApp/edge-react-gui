@@ -18,10 +18,9 @@ const babelOpts = {
       '@babel/preset-env',
       {
         // The CLI bundle runs on Node, so target Node rather than downlevelling
-        // for browsers. `loose: true` compiled `[...aSet]` to
-        // `[].concat(aSet)`, which wraps the Set instead of spreading it — the
-        // built engine then iterated the Set object itself and died on the
-        // first event. Targeting Node 18 leaves spread native.
+        // for browsers. Targeting Node 18 leaves spread native; loose mode
+        // would compile `[...aSet]` to `[].concat(aSet)`, which wraps the Set
+        // instead of spreading it.
         targets: { node: '18' },
         exclude: ['transform-regenerator']
       }
@@ -34,7 +33,7 @@ const babelOpts = {
   // engine and client both dispatch on `instanceof EngineError`,
   // `ApiClientError` and `UsageError`. This bundle targets Node 18, where
   // native subclasses work and give good stack traces. (The repo does not
-  // depend on that plugin at all; it was declared and never used.)
+  // depend on that plugin at all.)
   plugins: []
 }
 // `preferBuiltins` said out loud, which also silences the plugin's
@@ -48,9 +47,9 @@ const resolveOpts = { extensions, preferBuiltins: true }
 // alongside it, which also puts it in the React Native app's runtime graph for
 // nothing. `nanocolors` is therefore a dev dependency and is bundled.
 //
-// The CLI now has its own `dependencies` — `src/cli/generated/npmPackage.json`,
-// derived from this list by `scripts/buildCliManifest.ts` — so anything left
-// external here is a package `npm install -g @edgeapp/cli` has to fetch.
+// The CLI has its own `dependencies`, in `src/cli/generated/npmPackage.json`,
+// which `scripts/buildCliManifest.ts` derives by the same rule, so anything
+// left external here is a package `npm install -g @edgeapp/cli` has to fetch.
 const external = [
   'buffer',
   'child_process',
@@ -62,11 +61,10 @@ const external = [
   'os',
   'path',
   'readline',
-  // Both reached by the bundles — `util` for the engine's `inspect`, `tty`
-  // through the bundled `nanocolors` — and missing from this list, so they
-  // were external only because `@rollup/plugin-node-resolve` defaults
-  // `preferBuiltins` to true while `node_modules/util` is the browserify
-  // shim. `scripts/util/moduleGraph.js`'s `BUILTINS` already names them.
+  // Both reached by the bundles: `util` for the engine's `inspect`, `tty`
+  // through the bundled `nanocolors`. Listed so they stay external whatever
+  // `preferBuiltins` says, because `node_modules/util` is the browserify
+  // shim. `scripts/util/moduleGraph.js`'s `BUILTINS` names them too.
   'tty',
   'util',
   ...Object.keys(packageJson.dependencies)
@@ -76,14 +74,10 @@ const external = [
  * External modules are side-effect free; the bundle's own are not.
  *
  * Rollup keeps a module it cannot prove side-effect free, even after
- * tree-shaking every binding away — so the built client opened with six bare
- * `require`s it never used: `edge-core-js`, `biggystring`,
- * `csv-stringify/lib/browser/sync`, `sha.js`, `sprintf-js` and `date-fns`.
- * Measured on this machine, five runs each: `node lib/edgeCli.js help` was
- * 162 ms with them and 68 ms without, byte-identical output — so most of
- * every command's fixed overhead was spent loading modules the client cannot
- * reach, while `src/cli/index.ts` states the opposite as its contract
- * ("Nothing here imports `edge-core-js`").
+ * tree-shaking every binding away, so without this the built client would
+ * open with bare `require`s of packages it never uses, `edge-core-js` among
+ * them, and load them on every command, while `src/cli/index.ts` states as
+ * its contract that nothing there imports `edge-core-js`.
  *
  * Externals only. The bundle's own modules keep their side effects, because
  * the client's `import './bootNodeLocale'` and `import './commands/all'` are

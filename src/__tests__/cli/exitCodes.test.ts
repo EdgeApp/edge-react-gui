@@ -21,8 +21,8 @@ describe('exitCodeForApiError', () => {
 
   it('prefers the explicit code over the 503 rule', () => {
     // The engine only ever sends this code with a 503, so testing the status
-    // first made EXIT.ENGINE unreachable and reported a daemon that is going
-    // away as a network failure.
+    // first would make EXIT.ENGINE unreachable and report a daemon that is
+    // going away as a network failure.
     expect(exitCodeForApiError('ENGINE_SHUTTING_DOWN', 503)).toBe(EXIT.ENGINE)
     expect(exitCodeForApiError('NETWORK_ERROR', 503)).toBe(EXIT.NETWORK)
   })
@@ -58,9 +58,6 @@ describe('exitCodeForApiError', () => {
 
 describe('the published exit-code table', () => {
   it('lists every mapped error code', () => {
-    // Both sides used to state the membership separately — a 35-line
-    // `if`-chain and English prose in a `doc` field — and `ENGINE_SHUTTING_DOWN`
-    // was missing from the published one.
     for (const code of Object.keys(EXIT_CODE_BY_ERROR)) {
       const row = CLI_EXIT_CODES.find(r => r.code === EXIT_CODE_BY_ERROR[code])
       expect(row?.doc).toContain(`\`${code}\``)
@@ -68,14 +65,13 @@ describe('the published exit-code table', () => {
   })
 
   it('classifies every published code, or says it is deliberate', () => {
-    // The 404 half was derived from the catalogue and complete; nothing did
-    // that for the other statuses, so nine codes fell through to `1` —
-    // "failed, with no more specific mapping" — while their status-mates
-    // were mapped. `OBJECT_KIND_MISMATCH` and `MISSING_BITWAVE_ACCOUNT_ID`
+    // A code that falls through to `1`, "failed, with no more specific
+    // mapping", while its status-mates are mapped leaves a script branching
+    // on the published table reading its own correctable mistake as
+    // unclassified: `OBJECT_KIND_MISMATCH` and `MISSING_BITWAVE_ACCOUNT_ID`
     // beside `BAD_REQUEST`, the four `SWAP_*` limit codes beside
-    // `INSUFFICIENT_FUNDS`, `OBJECT_EXPIRED` — which is the literal "the
-    // quote expired, start again" signal. A script branching on the
-    // published table read its own correctable mistake as unclassified.
+    // `INSUFFICIENT_FUNDS`, and `OBJECT_EXPIRED`, which is the literal "the
+    // quote expired, start again" signal.
     //
     // `INTERNAL_ERROR` and `OBSOLETE_API` are generic on purpose: one is the
     // unmapped failure by definition, and the other means "this build is too
@@ -107,13 +103,11 @@ describe('the published exit-code table', () => {
   })
 
   it('maps every 404 in the catalogue to the not-found exit', () => {
-    // The guide publishes `4 | Not found` and the reference's own table
-    // listed three of the seven published 404s, so `OBJECT_NOT_FOUND` — the
-    // most likely failure in the staged spend and swap flows, since a handle
-    // lives five minutes — exited `1`, "failed, with no more specific
-    // mapping". The membership is derived from the catalogue now rather
-    // than from a hand-kept list, so a new 404 code cannot be added without
-    // a row here.
+    // The guide publishes `4 | Not found`, and `OBJECT_NOT_FOUND` is the most
+    // likely failure in the staged spend and swap flows, since a handle
+    // lives five minutes. The membership is derived from the catalogue
+    // rather than from a hand-kept list, so a new 404 code cannot be added
+    // without a row here.
     const missing = errorCodes
       .filter(entry => entry.status === 404)
       .map(entry => entry.code)
@@ -142,8 +136,7 @@ describe('the published exit-code table', () => {
 
   it('groups the codes the same way the table does', () => {
     // All seven published 404s, in the order the published doc renders
-    // them. Four were absent, so a stale object handle or a cancelled edge
-    // login exited `1`.
+    // them.
     expect(errorCodesFor(EXIT.NOT_FOUND)).toStrictEqual([
       'NOT_FOUND',
       'NO_LOGIN_REQUEST',
