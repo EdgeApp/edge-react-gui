@@ -15,19 +15,16 @@ import { BTC_DENOM } from '../../util/fake/fakeDisklet'
 /**
  * The two routes that write into a wallet's *synced* transaction file.
  *
- * Neither ever completed successfully anywhere. `checkCliCoverage`'s
- * `REFUSAL_ONLY` recorded them as "needs a confirmed txid in the wallet; no
- * funds offline", which is true of `testCliFake.ts` — both offline call
- * sites are `refusesInternal(…, 'missing tx', …)`, so core rejects the txid
- * and nothing observes what the route handed it. It is not true of jest:
- * `getTransactions.test.ts` drives a handler over a wallet stub whose core
- * calls resolve, and `spendHandlers.test.ts` does it for seven handlers.
+ * `testCliFake.ts` cannot complete either: its calls that reach core are
+ * `refusesInternal(…, 'missing tx', …)`, so core rejects the txid and nothing
+ * observes what the route handed it. `checkCliCoverage`'s `REFUSAL_ONLY`
+ * names this suite for them instead, which drives the handlers over a wallet
+ * stub whose core calls resolve, as `getTransactions.test.ts` and
+ * `spendHandlers.test.ts` do.
  *
- * One documented behaviour sat inside that gap: `saveTxAction`'s `@note`
- * publishes that an omitted `assetAction` defaults to
- * `{ assetActionType: 'transfer' }`, and nothing asserted core received that
- * rather than `undefined` — which would write an unclassified action into
- * the synced file.
+ * `saveTxAction`'s `@note` publishes that an omitted `assetAction` defaults
+ * to `{ assetActionType: 'transfer' }`, and core receiving `undefined`
+ * instead would write an unclassified action into the synced file.
  */
 interface Calls {
   saveTxMetadata: Array<Record<string, unknown>>
@@ -112,9 +109,9 @@ describe('save-tx-metadata', () => {
       tokenId: 'nope',
       metadata: { name: 'Coffee' }
     })
-    // Core reads `allTokens[tokenId]` and destructures it, so this was a
-    // `TypeError` — a 500 with no field name — where the reference
-    // publishes `TOKEN_NOT_FOUND`.
+    // Core reads `allTokens[tokenId]` and destructures it, so an unknown
+    // token reaching core is a `TypeError`, a 500 with no field name, where
+    // the reference publishes `TOKEN_NOT_FOUND`.
     await expect(saveTxMetadata.handler(ctx)).rejects.toMatchObject({
       code: 'TOKEN_NOT_FOUND'
     })

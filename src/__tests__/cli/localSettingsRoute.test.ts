@@ -10,12 +10,12 @@ import { makeFakeDiskletAccount } from '../../util/fake/fakeDisklet'
  * Whether `local-settings` can tell a choice from a default.
  *
  * The read is deliberately lenient — a read-only route must not answer `500`
- * for a file it can report defaults for — and that left the two cases
- * identical on the wire: a `Settings.json` that is present and unreadable
- * answered `{ spamFilterOn: true }`, exactly like a user who has the filter
- * on. `localAccountSettings`' own rule is that "a caller that caches must
- * not then mark itself authoritative", which a REST caller could not apply
- * because nothing in the response said which reading it had.
+ * for a file it can report defaults for — so a `Settings.json` that is
+ * present and unreadable answers `{ spamFilterOn: true }`, exactly like a
+ * user who has the filter on, and `trusted` is what tells the two apart.
+ * `localAccountSettings`' own rule is that "a caller that caches must not
+ * then mark itself authoritative", which a REST caller can apply only
+ * because the response says which reading it has.
  *
  * The offline suite reaches this route on the fake world, whose file is
  * readable, so the untrusted arm is only reachable here.
@@ -106,9 +106,9 @@ describe('local-settings', () => {
  *
  * The read-modify-write is strict on purpose — its base must not be the 13
  * defaults, or one `--spam-filter-on` puts them over the user's
- * `spendingLimits`. Answering the same `500` forever is the part that was
- * wrong: `Settings.json` does not repair itself, and it is on
- * `account.localDisklet`, so there was nothing the caller could do about it
+ * `spendingLimits`. It must not answer the same `500` forever, though:
+ * `Settings.json` does not repair itself, and it is on
+ * `account.localDisklet`, so there is nothing the caller can do about it
  * from outside.
  */
 describe('change-local-settings', () => {
@@ -158,8 +158,9 @@ describe('change-local-settings', () => {
   })
 
   it('says so when the file was deleted rather than moved', async () => {
-    // Content that will not decrypt leaves nothing to keep. That outcome
-    // used to answer exactly like an ordinary write, and was not logged.
+    // Content that will not decrypt leaves nothing to keep. That outcome is
+    // named on the wire and logged, rather than answering like an ordinary
+    // write.
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
     try {
       const warnings: string[] = []

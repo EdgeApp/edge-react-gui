@@ -48,15 +48,15 @@ export const enableOtp = route({
   path: '/account/{sessionId}/enable-otp',
   cli: 'enable-otp',
   body: asObject({
-    // `asBodyNumber`, not `asNumber`: the CLI puts a flag's raw text into
-    // the body, so `enable-otp --timeout=604800` sent `{"timeout":"604800"}`
-    // and this command could never succeed.
-    // Floored, because this is a 2FA control and `0` is not nullish — so
-    // `enable-otp --timeout=0` was passed through rather than defaulted,
+    // `asMinSeconds` reads through `asBodyNumber`, not `asNumber`: the CLI
+    // puts a flag's raw text into the body, so `enable-otp --timeout=604800`
+    // sends `{"timeout":"604800"}`.
+    // Floored, because this is a 2FA control and `0` is not nullish, so
+    // `enable-otp --timeout=0` would pass through rather than default,
     // configuring a reset delay of zero seconds on the account whose
     // sibling route in this file documents `cancel-otp-reset` as the
     // defence. A delay of zero is a window in which nothing can be
-    // cancelled, and a negative value reached the login server the same
+    // cancelled, and a negative value would reach the login server the same
     // way. One hour, which is short enough to be a deliberate choice and
     // long enough to act on; core's own default is seven days.
     // `admin-make-lobby`'s `period` carries the same cleaner for the same

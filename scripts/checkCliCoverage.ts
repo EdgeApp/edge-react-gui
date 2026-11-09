@@ -1,10 +1,8 @@
 /**
  * Which commands no automated test ever runs.
  *
- * Live coverage was about half the surface until the fake world existed, and
- * the only way anyone knew that was by counting by hand. This counts instead,
- * and fails on a command that nothing exercises unless it is listed below with
- * a reason.
+ * This counts them from the offline suites' call sites, and fails on a
+ * command that nothing exercises unless it is listed below with a reason.
  */
 import fs from 'fs'
 import path from 'path'
@@ -18,10 +16,6 @@ const ROOT = path.resolve(__dirname, '..')
  *
  * Empty, and the gate below fails on an entry an offline test does reach, so
  * it stays empty while the suites can refuse a bad request without a server.
- * `get-payment-protocol-info` was the last entry: it fetches a BIP70 request
- * from a merchant, which no suite can stand in for, but a URL that is not a
- * URL fails inside the plugin before any socket opens — so the offline suite
- * can pin how the route classifies it, which is the part that was wrong.
  *
  * A command that reaches a third party the suites cannot stand in for goes
  * here with its reason, so the gate's own output says it has no coverage
@@ -34,17 +28,13 @@ const NETWORK_ONLY: Record<string, string> = {}
  *
  * A refusal is not coverage of the handler: `refuses('…', 'INSUFFICIENT_FUNDS',
  * 'spend', …)` proves the route rejects a request, and the body past that
- * rejection never runs. This gate counted the two the same way and printed
- * "118/118 commands run offline" — a figure quoted elsewhere at the time,
- * over a surface a quarter of which no handler ever ran for.
+ * rejection never runs.
  *
  * In the fake world `makeFakeCoreContext` builds the real currency plugins,
  * so a wallet there has no funds and no network: the commands below cannot
  * reach a success inside `testCliFake.ts` at all. Each says what does reach
  * it instead. A value that starts with `src/` is a suite path and is checked
- * to exist, so deleting the suite an entry names fails this gate — the only
- * read used to be `REFUSAL_ONLY[name] == null`, so removing
- * `spendHandlers.test.ts` left it printing `✓ … 28 refusal-only`. A value
+ * to exist, so deleting the suite an entry names fails this gate. A value
  * that is not a path is an unverified prose reason, and says why the command
  * cannot run offline at all.
  */
@@ -61,9 +51,9 @@ const REFUSAL_ONLY: Record<string, string> = {
   'save-tx-metadata': 'src/__tests__/cli/saveTxHandlers.test.ts',
   'save-tx-action': 'src/__tests__/cli/saveTxHandlers.test.ts',
   // A voucher exists only while a login is waiting on 2FA, so there is none
-  // to approve or reject offline — and the refusals are now the whole of
-  // what the offline suite can reach, since an id that is not pending is
-  // refused rather than forwarded.
+  // to approve or reject offline, and the refusals are the whole of what
+  // the offline suite can reach, since an id that is not pending is refused
+  // rather than forwarded.
   'approve-voucher': 'src/__tests__/cli/vouchers.test.ts',
   'reject-voucher': 'src/__tests__/cli/vouchers.test.ts',
   'sweep-private-keys': 'needs a funded key to sweep from',
@@ -133,10 +123,10 @@ const tests = ['scripts/testCliFake.ts', 'scripts/testCliSubscribe.ts']
  *   refusesInternal('label', 'message', 'command', …)
  *   notInFakeWorld('label', 'marker', 'command', …)
  *   cli('command', …)
- * A bare scan counted labels, comments, URL fragments and unrelated literals,
- * so a command that was merely mentioned passed the gate. This can still
- * under-count — a command invoked through a variable is invisible — which is
- * the safe direction for a coverage gate to be wrong in.
+ * A bare scan would count labels, comments, URL fragments and unrelated
+ * literals, so a command that was merely mentioned would pass the gate. This
+ * can still under-count — a command invoked through a variable is invisible —
+ * which is the safe direction for a coverage gate to be wrong in.
  */
 const CALL_SITES: Array<[RegExp, number]> = [
   [/\bok\(\s*'[^']*'\s*,\s*'([a-z0-9-]+)'/g, 1],
@@ -174,9 +164,8 @@ const missing: string[] = []
 const stale: string[] = []
 const unexcusedRefusals: string[] = []
 const staleRefusals: string[] = []
-// A named suite that is not there any more. The reason half cannot be
-// checked; the path half can, and the four entries that named a suite
-// covering something else were found by writing this.
+// A named suite that is not there. The reason half cannot be checked; the
+// path half can.
 const missingSuites: string[] = []
 for (const [name, excuse] of Object.entries(REFUSAL_ONLY)) {
   // Only for a command this tree has. An entry for a command the next

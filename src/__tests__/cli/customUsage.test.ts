@@ -17,30 +17,27 @@ const ROOT = path.resolve(__dirname, '../../..')
  * `usageFor` assembles one argument per declared field, which is exactly
  * right for a generated command: `commands/generated.ts` is built from the
  * same declaration, so the two cannot disagree. A `custom: true` command is
- * written by hand against that declaration and nothing compared them, and
- * both halves had drifted:
+ * written by hand against that declaration, so the two can drift apart:
  *
- *  - `change-enabled-token-ids` published `--token-ids='<json>'`, because
- *    the field is `asArray(asRequestTokenId)` and `valueForm` renders a
- *    structured field that way, while the command splits the raw value on
- *    commas — so the documented spelling came back
- *    `404 TOKEN_NOT_FOUND Unknown token: ["…"]`, taken as one literal id.
- *    The command's own `UsageError` printed the real form all along, which
- *    is the asymmetry this case is for. `CliFlagSpec.valueForm` is the
- *    declaration that fixes it.
- *  - `change-wallet-states` published a single line carrying both
- *    `--wallet-states` and `--wallet-id`, which the command refuses in so
- *    many words ("`--wallet-states` is the whole map; drop `--wallet-id`").
- *    `CliSpec.usage` is the declaration that fixes it.
+ *  - `change-enabled-token-ids` splits the raw `--token-ids` value on
+ *    commas, while its field is `asArray(asRequestTokenId)`, a structured
+ *    field the reference would render as `'<json>'`. That documented
+ *    spelling would come back `404 TOKEN_NOT_FOUND Unknown token: ["…"]`,
+ *    taken as one literal id. `CliFlagSpec.valueForm` declares the real
+ *    form.
+ *  - `change-wallet-states` refuses `--wallet-states` beside `--wallet-id`
+ *    in so many words ("--wallet-states is the whole map; drop
+ *    --wallet-id"), so a single published line carrying both would
+ *    advertise the one combination it refuses. `CliSpec.usage` declares the
+ *    grammar.
  *
  * Two rules, chosen because they are the two that can be checked without
  * turning prose into a contract. The flag *names* must match exactly. And a
  * flag the reference publishes as `'<json>'` must be JSON in the command's
- * own usage too, and the reverse — which is the thing that was wrong, and
- * the thing a caller acts on. Placeholder *names* are deliberately not
- * compared: a hand-written line may say `--fiat=USD` or
- * `--export-format=csv,qbo,bitwave` where the reference says `<fiat>`, and
- * the example is the better line.
+ * own usage too, and the reverse, which is the thing a caller acts on.
+ * Placeholder *names* are deliberately not compared: a hand-written line may
+ * say `--fiat=USD` or `--export-format=csv,qbo,bitwave` where the reference
+ * says `<fiat>`, and the example is the better line.
  */
 const helpDocs = asHelpDocsJson(
   fs.readFileSync(path.join(ROOT, 'src/cli/generated/helpDocs.json'), 'utf8')
@@ -63,14 +60,14 @@ function jsonFlags(text: string): Set<string> {
 
 describe('custom commands', () => {
   it('publish an alternative grammar when they have one', () => {
-    // The gap the first case cannot see. A command whose own usage string
-    // offers alternatives — `(a | b)`, or two lines joined by `|` — has a
-    // grammar `usageFor` cannot assemble, because one argument per field
+    // The gap the flag-name case below cannot see. A command whose own usage
+    // string offers alternatives, `(a | b)` or two lines joined by `|`, has
+    // a grammar `usageFor` cannot assemble, because one argument per field
     // assumes every field is passed alongside every other. Without
-    // `CliSpec.usage` the reference publishes the one combination the
-    // command refuses: `change-wallet-states` advertised `--wallet-states`
-    // *and* `--wallet-id`, and `change-enabled-token-ids` advertised
-    // `--token-ids` as required with `--add`, `--remove` and
+    // `CliSpec.usage` the reference would publish the one combination the
+    // command refuses: `change-wallet-states` would advertise
+    // `--wallet-states` *and* `--wallet-id`, and `change-enabled-token-ids`
+    // would advertise `--token-ids` as required with `--add`, `--remove` and
     // `--disable-all` as optional extras beside it. Comparing flag names
     // passes for both, which is why this is its own case.
     const problems: string[] = []

@@ -24,28 +24,23 @@ import { BTC_DENOM } from '../../util/fake/fakeDisklet'
 /**
  * The flagship read route, with transactions in it.
  *
- * Nothing had ever run this handler over a non-empty wallet: the offline
- * suite's twelve call sites are five refusals and seven successes on the
- * fake world's empty wallet, which the suite says itself. So every number
- * and every file it produces was unasserted — which is how three defects in
- * one release landed here unnoticed: Bitwave dividing by the display
- * multiplier, `--fiat` moving the spam floor, and `offset` truncating an
- * export while `total` reported the full count.
+ * The offline suite only runs this handler on the fake world's empty wallet,
+ * so this suite asserts the numbers and files it produces for real
+ * transactions.
  */
 // No test in this file reaches the rates server. The handler prices
 // transactions through `fillTxsFiat` and computes the spam floor through
 // `resolveListSpamThreshold`, and both of those call into the rate queue,
 // which falls back to `globalThis.fetch` against the production
-// `rates3.edge.app` — so `npm test`, the first step of `verify` and of the
-// precommit chain, made live requests to a production service. Measured:
-// 9.8s for this file with network, and with `fetch` made to throw, 42.4s
-// and seven failures. Both entry points are stubbed instead, the way
-// `fillTxsFiat.test.ts` and `spamThreshold.test.ts` already do it. The
-// individual case that wants an unpriceable rate re-spies.
+// `rates3.edge.app`. Unstubbed, `npm test` would make live requests to a
+// production service from `verify` and the precommit chain, which both run
+// it. Both entry points are stubbed instead, the way `fillTxsFiat.test.ts`
+// and `spamThreshold.test.ts` do it. The individual case that wants an
+// unpriceable rate re-spies.
 //
 // That also removes the need for real timers: `jestSetup.js` fakes them
 // globally and the queue's `FETCH_FREQUENCY` debounce never fires under a
-// faked timer, which is why this file used to opt out.
+// faked timer.
 const STUB_RATE = 40000
 
 beforeEach(() => {
@@ -134,9 +129,7 @@ function makeCtx(opts: Options = {}): any {
       return txs.length
     },
     // `exportTxInfo.json` lives here, and `--save-export-prefs` is the one
-    // write a GET makes. Nothing observed it: there is no route that reads
-    // the file back, so QA could not verify the write on a real account
-    // either — and it is a *synced* file the GUI's export scene reads.
+    // write a GET makes, into a *synced* file the GUI's export scene reads.
     disklet: {
       getText: async () => {
         if (opts.walletReadError != null) throw opts.walletReadError
@@ -228,8 +221,7 @@ describe('get-transactions as a listing', () => {
     // The handler needs the account's fiat twice — the display default and
     // the spam floor's currency — and they are the same value whenever
     // `fiat` was not given. `readSyncedSettings` has no process-wide cache,
-    // so reading per use parsed the file twice per listing while two
-    // comments claimed the repeat had been removed.
+    // so reading per use would parse the file twice per listing.
     let reads = 0
     const onSyncedRead = (): void => {
       reads++
@@ -251,10 +243,10 @@ describe('get-transactions as a listing', () => {
 
 describe('get-transactions and the spam floor', () => {
   it('asks for the account’s floor, not the display fiat’s', async () => {
-    // `--fiat` is display-only. Feeding it to the threshold moved the floor:
-    // on BTC with JPY it truncated to '0' — the filter silently off — and on
-    // a cheap token it moved by orders of magnitude, so two listings of one
-    // range returned different rows and different totals.
+    // `--fiat` is display-only. Feeding it to the threshold would move the
+    // floor: on BTC with JPY it truncates to '0', the filter silently off,
+    // and on a cheap token it moves by orders of magnitude, so two listings
+    // of one range return different rows and different totals.
     const askedUsd: Array<Record<string, unknown>> = []
     await run({}, { asked: askedUsd })
     const askedJpy: Array<Record<string, unknown>> = []
@@ -276,19 +268,11 @@ describe('get-transactions and the spam floor', () => {
 })
 
 /**
- * What is refused before any history or rates work.
- *
- * Each of these depends only on the query, the saved preferences or the
- * account's settings file, and each used to be found after the spam floor's
- * rate query — or after `wallet.getTransactions` and the whole fill — so the
- * caller's `--timeout` was spent before an answer it could have had at once.
- */
-/**
  * The caller's deadline, shared by the two rate consumers.
  *
  * The queue turns a duration into a deadline when it enqueues, so handing
- * the fill the same duration the spam floor got — after the floor and
- * `getTransactions` had run — gave the fill a deadline later than the
+ * the fill the same duration the spam floor got, after the floor and
+ * `getTransactions` have run, would give the fill a deadline later than the
  * caller's by exactly that time: past the client's own `--timeout`.
  */
 describe('get-transactions and the caller’s deadline', () => {
@@ -362,6 +346,14 @@ describe('get-transactions and the caller’s deadline', () => {
   })
 })
 
+/**
+ * What is refused before any history or rates work.
+ *
+ * Each of these depends only on the query, the saved preferences or the
+ * account's settings file, so each is answered before the spam floor's rate
+ * query, `wallet.getTransactions` and the fill, rather than after the
+ * caller's `--timeout` has gone on work the answer did not need.
+ */
 describe('get-transactions refusals', () => {
   const failureOf = async (
     query: Record<string, unknown>,
@@ -373,8 +365,8 @@ describe('get-transactions refusals', () => {
     )
 
   it('names an unreadable Settings.json rather than answering 500', async () => {
-    // A truncated, half-synced file: `JSON.parse`'s `SyntaxError` used to
-    // reach the caller as an undeclared `INTERNAL_ERROR`, exit 1.
+    // A truncated, half-synced file: `JSON.parse`'s `SyntaxError`, uncaught,
+    // would reach the caller as an undeclared `INTERNAL_ERROR`, exit 1.
     const failure = await failureOf({}, { syncedRaw: '{"defaultIsoFiat":' })
     expect(failure.code).toBe('SETTINGS_UNREADABLE')
     expect(failure.status).toBe(503)
@@ -400,9 +392,9 @@ describe('get-transactions refusals', () => {
 
 describe('get-transactions as an export', () => {
   it('ignores the page entirely, offset included', async () => {
-    // Ignoring only `limit` left `--export-format=csv --offset=100` writing
-    // a file with the newest hundred rows missing while `total` reported the
-    // real count.
+    // Ignoring only `limit` would leave `--export-format=csv --offset=100`
+    // writing a file with the newest hundred rows missing while `total`
+    // reports the real count.
     const txs = [tx({ txid: 'a' }), tx({ txid: 'b' }), tx({ txid: 'c' })]
     const result = await run(
       { exportFormat: 'csv', offset: 2, limit: 1 },
@@ -452,9 +444,9 @@ describe('get-transactions as an export', () => {
   })
 
   it('writes no preferences unless asked', async () => {
-    // The flag is documented as the one write a GET makes, and as opt-in:
-    // "writing unasked turned a one-off `--bitwave-account-id` into the
-    // user's saved account id and flipped Export to Bitwave on for them".
+    // The flag is the one write a GET makes, and is documented as opt-in:
+    // writing unasked would turn a one-off `--bitwave-account-id` into the
+    // user's saved account id and flip Export to Bitwave on for them.
     const walletWrites: Array<{ path: string; text: string }> = []
     await run(
       { exportFormat: 'csv,qbo', bitwaveAccountId: undefined },
@@ -464,11 +456,10 @@ describe('get-transactions as an export', () => {
   })
 
   it('saves the account id and the chosen formats together', async () => {
-    // Both halves, because the flag's own doc says it persists
-    // "`bitwaveAccountId` **and** the chosen formats" and it used to be
-    // honoured only when the caller asked for bitwave *with* an explicit
-    // id — so `--export-format=csv,qbo --save-export-prefs` answered `ok`
-    // and wrote nothing, leaving the GUI export scene's switches untouched.
+    // Both halves, because the flag's own doc says it saves
+    // "`bitwaveAccountId` and the chosen formats": with no bitwave in the
+    // request, `--export-format=csv,qbo --save-export-prefs` still writes the
+    // formats the GUI export scene's switches read back.
     const walletWrites: Array<{ path: string; text: string }> = []
     await run(
       { exportFormat: 'csv,qbo', saveExportPrefs: true },
@@ -481,8 +472,8 @@ describe('get-transactions as an export', () => {
     expect(record.isExportCsv).toBe(true)
     expect(record.isExportQbo).toBe(true)
     // The format the caller did not ask for is recorded as off, not left
-    // out: a partial patch left the record no longer describing the last
-    // export either tool ran.
+    // out: a partial patch would leave the record no longer describing the
+    // last export either tool ran.
     expect(record.isExportBitwave).toBe(false)
     // The cleaner's own default for a caller who never mentioned bitwave —
     // an empty string, not an id carried over from somewhere else.
@@ -508,11 +499,11 @@ describe('get-transactions as an export', () => {
   it('refuses rather than writing zeros when the fiat fill gave up', async () => {
     // The chain budget bounds the whole fill and *settles* whatever is left
     // when it expires. A 10,000-transaction export is 102 passes, and a
-    // server answering in ~700 ms spends the budget before they finish — so
-    // the oldest tail used to be written as a zero fiat amount, in a file a
-    // person reconciles against their books, with `total` reporting the real
-    // count and nothing logged. A listing answers instead, with
-    // `unpricedCount` set.
+    // server answering in ~700 ms spends the budget before they finish, so
+    // without this refusal the oldest tail would be written as a zero fiat
+    // amount, in a file a person reconciles against their books, with
+    // `total` reporting the real count and nothing logged. A listing answers
+    // instead, with `unpricedCount` set.
     const spy = jest
       .spyOn(exchangeRates, 'getHistoricalCryptoRateOrUnavailable')
       .mockResolvedValue(exchangeRates.RATE_UNAVAILABLE)
@@ -535,9 +526,9 @@ describe('get-transactions as an export', () => {
 /**
  * "No saved id" and "I could not read your saved id" are different answers.
  *
- * Both reads of `exportTxInfo.json` caught everything, so a file that would
- * not decrypt answered `400 MISSING_BITWAVE_ACCOUNT_ID` from the export and
- * `null` from `export-prefs` — telling the caller their saved id is not
+ * A read of `exportTxInfo.json` that caught everything would answer a file
+ * that does not decrypt with `400 MISSING_BITWAVE_ACCOUNT_ID` from the export
+ * and `null` from `export-prefs`, telling the caller their saved id is not
  * there when it is, with nothing logged. `wallet.disklet` is core's
  * `encryptDisklet`, so an interrupted write surfaces as a parse error, which
  * is not a spelling `isMissingFile` knows.
@@ -560,8 +551,8 @@ describe('a saved export record that cannot be read', () => {
 
   it('still exports when the preferences cannot be saved over it', async () => {
     // `mergeExportTxInfo` refuses to write over a file it could not read, and
-    // that refusal took the files with it after the whole fill. The export
-    // scene saves the preferences as a side errand and exports anyway.
+    // that refusal must not take the files with it after the whole fill. The
+    // export scene saves the preferences as a side errand and exports anyway.
     const walletWrites: Array<{ path: string; text: string }> = []
     const result = await run(
       { exportFormat: 'csv', saveExportPrefs: true },

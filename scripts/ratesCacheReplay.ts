@@ -145,7 +145,7 @@ function cacheToQueries(blob: RateCacheBlob, isoNow: string): RatesQuery[] {
  * excerpt (with surrounding lines) works as well as bare JSON.
  *
  * `firstJsonObject` in the shared harness is the scanner; this caller wants
- * an input it cannot read to stop the script rather than answer undefined.
+ * an input it cannot read to stop the script rather than answer null.
  */
 function extractFirstJsonObject(text: string): string {
   const found = firstJsonObject(text)

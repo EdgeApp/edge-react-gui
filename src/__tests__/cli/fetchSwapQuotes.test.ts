@@ -17,16 +17,16 @@ import {
 } from '../../util/fake/thrownEngineError'
 
 /**
- * The success path of `fetch-swap-quotes`, which nothing reached.
+ * The success path of `fetch-swap-quotes`.
  *
- * Jest never loaded the route, and in the fake world every invocation is a
- * refusal that lands in the cleaner or at `assertTokenId` before the quote
- * loop runs — so the handler body was unasserted: the `EdgeSwapRequest` it
- * assembles, `preferPluginId` becoming `opts` or staying `undefined`, the
- * published summary of each quote, and the `objects.create({ kind: 'swap',
- * onExpire })` parking that the route's own comment calls "the engine's only
- * cancellation of a real order at the exchange". `swapApprove.test.ts`
- * builds its handle by hand, so it covers what happens *after* this.
+ * In the fake world every invocation is a refusal that lands in the cleaner
+ * or at `assertTokenId` before the quote loop runs, so the handler body is
+ * asserted here: the `EdgeSwapRequest` it assembles, `preferPluginId`
+ * reaching the request options, the published summary of each quote, and
+ * the `objects.create({ kind: 'swap', onExpire })` parking that the route's
+ * own comment calls "the engine's only cancellation of a real order at the
+ * exchange". `swapApprove.test.ts` builds its handle by hand, so it covers
+ * what happens *after* this.
  *
  * Only the real exchange is outside this.
  */
@@ -235,8 +235,8 @@ describe('fetch-swap-quotes', () => {
         pluginId: 'changenow',
         displayName: 'changenow exchange',
         supportEmail: 'help@changenow.example',
-        // The three fields an exchange may not give are published as `null`
-        // rather than dropped, so a caller reading them gets a value.
+        // The fields an exchange may not give are published as `null` rather
+        // than dropped, so a caller reading them gets a value.
         isDex: null
       },
       request: {

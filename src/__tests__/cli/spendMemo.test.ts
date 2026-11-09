@@ -11,11 +11,12 @@ import { asEdgeMetadata, asSweepSpendInfo } from '../../cli/engine/schemas'
 /**
  * A URI's `uniqueIdentifier` has to become the kind of memo its chain wants.
  *
- * Hard-coding `text` was irreversible rather than merely wrong: on XRP the
- * destination tag went into `payment.Memos` and `payment.DestinationTag`
- * stayed unset, so the payment broadcast successfully and an exchange
- * crediting on that field could not credit it. Nothing refused it, because
- * `text` *is* one of XRP's memo options — just not the first one.
+ * A hard-coded `text` would be irreversible rather than merely wrong: on XRP
+ * the destination tag would go into `payment.Memos` and leave
+ * `payment.DestinationTag` unset, so the payment would broadcast
+ * successfully and an exchange crediting on that field could not credit it.
+ * Nothing would refuse it, because `text` *is* one of XRP's memo options,
+ * just not the first one.
  *
  * The real spend path needs a funded wallet, which the fake world has not
  * got, so this is where the derivation is pinned.
@@ -50,7 +51,7 @@ describe('memoFromUri', () => {
   })
 
   it('makes a hex memo where hex is first', () => {
-    // Zano's shape: the same defect the other way round.
+    // Zano's shape: the same rule, with hex first.
     const options: EdgeMemoOption[] = [
       { type: 'hex', memoName: 'paymentId', maxBytes: 32 },
       { type: 'text', memoName: 'comment' }
@@ -100,8 +101,8 @@ describe('memoFromUri', () => {
   })
 
   it('falls back to text where the chain declares no memo support', () => {
-    // The historical behaviour, kept for a chain with nothing to go on: the
-    // plugin is what refuses it.
+    // The default for a chain with nothing to go on: the plugin is what
+    // refuses it.
     expect(memoFromUri(fakeWallet(undefined, undefined), 'x')).toStrictEqual({
       type: 'text',
       value: 'x'
@@ -115,9 +116,9 @@ describe('memoFromUri', () => {
  *
  * `parseUriCommon` defaults the currency code to the chain's own and scales
  * `?amount=` by *that* denomination, so keeping the amount while ignoring the
- * code mixed two assets. XRP's multiplier is 1e6 and RLUSD's is 1e18, so
- * `?amount=5` against the token became 0.000000000005 of it — signed and
- * broadcast, because core and the plugin both trust `nativeAmount` as
+ * code would mix two assets. XRP's multiplier is 1e6 and RLUSD's is 1e18, so
+ * `?amount=5` against the token would become 0.000000000005 of it, signed
+ * and broadcast, because core and the plugin both trust `nativeAmount` as
  * already-scaled base units.
  */
 describe('buildSpendInfo and the URI asset', () => {
@@ -215,10 +216,9 @@ describe('buildSpendInfo and the URI asset', () => {
 /**
  * A caller's `--metadata` must not blank the fields it does not name.
  *
- * Through `buildSpendInfo`, not through the helper: the first version of this
- * case asserted `withoutUndefined` directly and passed with the merge
- * reverted: a test of the mechanism rather than of the behaviour, which
- * passes whatever the caller actually gets.
+ * Through `buildSpendInfo`, not through the helper: asserting
+ * `withoutUndefined` directly would test the mechanism rather than the
+ * behaviour, and pass whatever the caller actually gets.
  */
 describe('buildSpendInfo and metadata', () => {
   function walletWithMetadata(
@@ -236,10 +236,10 @@ describe('buildSpendInfo and metadata', () => {
   }
 
   it('keeps the URI’s payee when the caller only sets notes', async () => {
-    // A BIP21 `?label=` becomes `metadata.name`, and `--metadata` carrying
-    // only `notes` used to blank it — along with the category and the bizId
-    // — because `asEdgeMetadata` materialises all five keys and the merge
-    // spread them.
+    // A BIP21 `?label=` becomes `metadata.name`. `asEdgeMetadata`
+    // materialises all five keys, so a merge that spread them would let
+    // `--metadata` carrying only `notes` blank it, along with the category
+    // and the bizId.
     const wallet = walletWithMetadata({
       publicAddress: 'bc1qexample',
       metadata: { name: 'Coffee Shop', category: 'Expense:Food', bizId: 7 }
@@ -251,9 +251,8 @@ describe('buildSpendInfo and metadata', () => {
         nativeAmount: '1000',
         // Cleaned, because that is what the route hands it: `ctx.body` is
         // the cleaned value, and `asEdgeMetadata` is what materialises the
-        // four keys the caller never sent. A raw object here cannot
-        // reproduce the defect at all — the first version of this case
-        // passed one and went green with the fix reverted.
+        // four keys the caller never sent. A raw object here would pass
+        // whether or not the merge blanks them.
         metadata: asEdgeMetadata({ notes: 'for the beans' })
       },
       { requireAmount: true }
@@ -288,11 +287,11 @@ describe('buildSpendInfo and metadata', () => {
  * Where the money goes is the cleaner's rule, so every route has it.
  *
  * `sweep-private-keys` takes `asSweepSpendInfo` and calls
- * `wallet.sweepPrivateKeys` directly, so it never reached the handler helper
- * that used to carry this check — and core drops an address-less target and
- * signs the rest of the transaction regardless. These cases go through the
- * sweep body for that reason: a test on `asSpendInfo` alone would stay green
- * if the rule moved back into the handler.
+ * `wallet.sweepPrivateKeys` directly, so it never reaches the spend
+ * handlers' helpers, and core drops an address-less target and signs the
+ * rest of the transaction regardless. These cases go through the sweep body
+ * for that reason: a test on `asSpendInfo` alone would stay green if the
+ * rule moved into a handler.
  */
 describe('asSweepSpendInfo targets', () => {
   it('refuses a target with no publicAddress', () => {
@@ -314,8 +313,8 @@ describe('asSweepSpendInfo targets', () => {
   })
 
   it('refuses a misspelled publicAddress, naming the typo', () => {
-    // The target is exact now, so the misspelling is refused as itself
-    // rather than as a missing `publicAddress`.
+    // The target is exact, so the misspelling is refused as itself rather
+    // than as a missing `publicAddress`.
     expect(() =>
       asSweepSpendInfo({
         privateKeys: ['xyz'],
@@ -337,10 +336,10 @@ describe('asSweepSpendInfo targets', () => {
  * Memos a caller writes by hand, on `spend`, `make-spend` and
  * `sweep-private-keys`.
  *
- * They reached core with no shape at all, and core's `upgradeMemos` does not
- * check them: `{"type":"Number",…}` or `{"type":"tag",…}` was ignored by the
- * XRP engine, so the payment broadcast with no `DestinationTag` — a deposit
- * credited to nobody, irreversibly.
+ * Core's `upgradeMemos` does not check their shape, and the XRP engine
+ * ignores `{"type":"Number",…}` or `{"type":"tag",…}`, so an unchecked memo
+ * would broadcast the payment with no `DestinationTag`: a deposit credited
+ * to nobody, irreversibly.
  */
 describe('caller-supplied memos', () => {
   it('refuses a memo kind core does not define', () => {

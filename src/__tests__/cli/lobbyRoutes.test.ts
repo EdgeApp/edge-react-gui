@@ -11,15 +11,12 @@ import { thrownSync } from '../../util/fake/thrownEngineError'
 /**
  * Whether `admin-send-lobby-reply` can succeed for any input at all.
  *
- * It could not. The field that decides the encryption was declared
- * `asObject(asUnknown)` and cast to a hand-written shape whose
- * `publicKey?: string` disagreed with core's published `EdgeLobbyRequest`,
- * where it is a required `Uint8Array`: core destructures it straight into
- * `encryptLobbyReply` → `deriveSharedKey` → `secp256k1.keyFromPublic`, so a
- * base64 string threw `Unknown point format` — a `500 INTERNAL_ERROR` from a
- * route declaring `BAD_REQUEST`. No JSON body can carry a `Uint8Array`, so
- * there was no request that worked, and the only exercise of the route
- * asserted that very `INTERNAL_ERROR` under the name "to an unknown lobby".
+ * Core's published `EdgeLobbyRequest` takes `publicKey` as a required
+ * `Uint8Array` and destructures it straight into `encryptLobbyReply` →
+ * `deriveSharedKey` → `secp256k1.keyFromPublic`, where a base64 string
+ * throws `Unknown point format`, a `500 INTERNAL_ERROR` from a route
+ * declaring `BAD_REQUEST`. No JSON body can carry a `Uint8Array`, so the
+ * route decodes the base64 a caller sends before core sees it.
  */
 
 /** A real compressed secp256k1 point: 33 bytes, leading 0x03. */
@@ -60,8 +57,8 @@ describe('admin-send-lobby-reply', () => {
   })
 
   it('rejects a request with no public key, from the declaration', () => {
-    // `{}` used to pass the declaration and die inside core. It is the
-    // caller's mistake, so it is a 400 the cleaner names.
+    // `{}` is the caller's mistake, so it is a 400 the cleaner names rather
+    // than a failure inside core.
     expect(() =>
       bodyOf(adminSendLobbyReply, { lobbyId: 'x', lobbyRequest: {} })
     ).toThrow(/publicKey/)
@@ -83,8 +80,8 @@ describe('admin-make-lobby', () => {
     // Core generates the lobby's keypair itself and writes `publicKey` over
     // whatever it was handed, so requiring it here — as core's
     // `EdgeLobbyRequest` does — would refuse every correct call.
-    // Absent rather than `{}` in the body — a fallback there published the
-    // field with no properties — and the handler passes `{}` on.
+    // Absent rather than `{}` in the body, since a fallback there would
+    // publish the field with no properties, and the handler passes `{}` on.
     const body = bodyOf<{
       lobbyRequest?: { timeout?: number; loginRequest?: { appId: string } }
     }>(adminMakeLobby, {})
@@ -100,11 +97,10 @@ describe('admin-make-lobby', () => {
   })
 
   it('refuses a wrong-typed field at the boundary', () => {
-    // `asObject(asUnknown)` plus a cast left these to core's own uncleaner:
-    // `wasEdgeLobbyRequest` walks the shape, so each of them threw from
-    // inside core as a `500 INTERNAL_ERROR` on a route whose declared
-    // errors are `NETWORK_ERROR` alone — where the declaration should have
-    // answered a 400 naming the field.
+    // Left to core's own uncleaner, `wasEdgeLobbyRequest`, which walks the
+    // shape, each of these would throw from inside core as a
+    // `500 INTERNAL_ERROR` on a route whose declared errors are
+    // `NETWORK_ERROR` alone. The declaration answers a 400 naming the field.
     for (const lobbyRequest of [
       { loginRequest: { appId: 42 } },
       { loginRequest: {} },

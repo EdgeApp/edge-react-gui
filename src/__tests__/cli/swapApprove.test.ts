@@ -6,24 +6,15 @@ import { ObjectHandleStore } from '../../cli/engine/objectHandles'
 import { approveSwapQuote, closeSwapQuote } from '../../cli/engine/routes/swap'
 
 /**
- * The last step of the swap flow, which nothing could drive.
+ * The last step of the swap flow, driven with a stub quote.
  *
- * `approve-swap-quote` signs and broadcasts, so QA cannot run it on the
- * shared funded account — the brief forbids broadcasting — and a disposable
- * account has no funds to swap with. Four QA rounds therefore verified
- * everything up to it (two quotes under `swap_` handles, `swap-quote-get`
- * reading one back, `close-swap-quote` releasing them, the second close as
- * `404 OBJECT_NOT_FOUND`, `OBJECT_KIND_MISMATCH` for a `tx_` handle,
- * `SWAP_BELOW_LIMIT` for a small amount) and left the success path
- * unverified, which is the step the guide presents as the point of the flow.
- *
- * A stub quote is what is left, and it reaches the parts that are the
+ * `approve-swap-quote` signs and broadcasts, so a live run needs funds to
+ * swap with and moves them. A stub quote reaches the parts that are the
  * engine's rather than the exchange's: the published response shape, the
  * `?? null` for the two fields an exchange may not give, and the two
- * promises the route's own `@note`s make about the handle — released on
- * success, *and* released on failure, so that a retry is
- * `OBJECT_NOT_FOUND` rather than a second broadcast. Only the real
- * broadcast is outside this.
+ * promises the route's own doc makes about the handle: released on success,
+ * *and* released on failure, so that a retry is `OBJECT_NOT_FOUND` rather
+ * than a second broadcast. Only the real broadcast is outside this.
  */
 interface Quote {
   approve: () => Promise<Record<string, unknown>>
@@ -123,9 +114,9 @@ describe('approve-swap-quote', () => {
   })
 
   it('answers SWAP_OUTCOME_UNKNOWN for a failure that may follow the send', async () => {
-    // A timeout after the plugin broadcast read as a network error, the code
-    // a script retries, and the retry was a fresh quote approved on top of a
-    // send that went through: the funds swapped twice.
+    // A timeout after the plugin broadcast must not read as a network error,
+    // the code a script retries: the retry would be a fresh quote approved on
+    // top of a send that went through, and the funds would swap twice.
     const { ctx, objectId } = makeCtx({
       approve: async () => {
         throw new Error('socket hang up')

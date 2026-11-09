@@ -3405,7 +3405,7 @@
                           ]
                         }
                       ],
-                      "description": "Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. Refusing the write instead was a one-way door: the file does not repair itself, so every later write failed the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written."
+                      "description": "Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. The write recovers rather than refuses because the file does not repair itself, so every later write would fail the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written."
                     }
                   },
                   "required": [
@@ -5529,7 +5529,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here — `wallet-tokens` exists to carry it, and returning it from both sent the same map twice in a session that calls both.",
+            "description": "Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here: `wallet-tokens` carries it, and returning it from both would send the same map twice in a session that calls both.",
             "content": {
               "application/json": {
                 "schema": {}
@@ -5674,7 +5674,7 @@
                   },
                   "fiatCurrencyCode": {
                     "type": "string",
-                    "description": "An ISO 4217 code, with or without core’s `iso:` prefix: `iso:EUR` and `EUR` both work, and the engine normalises. Core itself refuses a bare code, as an untyped throw this route reported as a `500` — and `get-transactions --fiat` already takes the bare form, so the two were inconsistent as well. Anything that is not three letters is a `400`."
+                    "description": "An ISO 4217 code, with or without core’s `iso:` prefix: `iso:EUR` and `EUR` both work, as they do for `get-transactions --fiat`, and the engine normalises, because core itself refuses a bare code. Anything that is not three letters is a `400`."
                   }
                 },
                 "required": [
@@ -6142,7 +6142,7 @@
                           "unknownToken"
                         ]
                       },
-                      "description": "One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it — one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, and a freshly enabled token was simply missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet."
+                      "description": "One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it — one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, so a freshly enabled token would otherwise be missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet."
                     }
                   },
                   "required": [
@@ -6310,7 +6310,7 @@
                     "allTokens": {
                       "type": "object",
                       "additionalProperties": {},
-                      "description": "`EdgeToken` by tokenId: everything the plugin ships with, plus this account’s own. `builtinTokens` is not returned separately — it is this map minus `customTokens`, and sending both wrote the whole built-in list down the socket twice."
+                      "description": "`EdgeToken` by tokenId: everything the plugin ships with, plus this account’s own. `builtinTokens` is not returned separately: it is this map minus `customTokens`, and sending both would write the whole built-in list down the socket twice."
                     },
                     "customTokens": {
                       "type": "object",
@@ -6390,7 +6390,7 @@
               "name": "disable-all",
               "kind": "boolean",
               "required": false,
-              "doc": "Send the empty set, disabling every token on the wallet. A spelling of its own, because an empty flag value is refused everywhere in this CLI — `-d \"\"` reaching the profile hash as an empty directory is the reason — so there was no way to ask for this."
+              "doc": "Send the empty set, disabling every token on the wallet. A flag of its own, because this CLI refuses an empty flag value everywhere (an empty `-d \"\"` would reach the profile hash as an empty directory), so an empty list cannot be passed as a value."
             }
           ],
           "custom": true,
@@ -6561,7 +6561,7 @@
             "name": "saveExportPrefs",
             "in": "query",
             "required": false,
-            "description": "Save `bitwaveAccountId` and the chosen formats into the wallet’s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats — on a listing there would be nothing to write, and answering `ok` for that told a caller their preferences had been recorded when they had not.",
+            "description": "Save `bitwaveAccountId` and the chosen formats into the wallet’s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats — on a listing there would be nothing to write, and answering `ok` would tell a caller their preferences had been recorded when they had not.",
             "schema": {
               "type": "boolean"
             }
@@ -10425,7 +10425,7 @@
                   },
                   "path": {
                     "type": "string",
-                    "description": "Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages` — which the server refuses as an unknown endpoint, through an untyped throw this route reported as a `500`."
+                    "description": "Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages`, which the server refuses as an unknown endpoint."
                   },
                   "body": {
                     "type": "object",
@@ -10481,7 +10481,7 @@
                   "properties": {
                     "userId": {
                       "type": "string",
-                      "description": "Base58. The login server’s hash of the username, which is what it keys an account’s stash by — not a `loginId`. This field was called `loginId`, which made it look interchangeable with every other login id in the API; it is not, and the only thing the route is for is reproducing the server’s hash."
+                      "description": "Base58. The login server’s hash of the username, which is what it keys an account’s stash by. It is not a `loginId` and not interchangeable with the login ids elsewhere in the API: the route exists to reproduce the server’s hash."
                     }
                   },
                   "required": [
@@ -10604,7 +10604,7 @@
                   },
                   "period": {
                     "type": "number",
-                    "description": "Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int — above that it clamps to 1ms, so the longest interval a caller could ask for became the fastest poll the loop could make."
+                    "description": "Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int and clamps a longer one to 1 ms, which would turn the longest interval into the fastest poll."
                   }
                 }
               }
@@ -10891,7 +10891,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
-            "description": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+            "description": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
             "schema": {
               "type": "string"
             }
@@ -10975,7 +10975,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
-            "description": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+            "description": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
             "schema": {
               "type": "string"
             }
@@ -11061,7 +11061,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
-            "description": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+            "description": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
             "schema": {
               "type": "string"
             }
@@ -11136,7 +11136,7 @@
             "name": "syncKey",
             "in": "path",
             "required": true,
-            "description": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+            "description": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
             "schema": {
               "type": "string"
             }

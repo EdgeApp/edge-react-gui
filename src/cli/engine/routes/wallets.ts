@@ -40,7 +40,7 @@ export const walletInfo = route({
   query: asObject({ walletId: asWalletId }).withRest,
   returns: doc(
     asCoreValue,
-    'Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here \u2014 `wallet-tokens` exists to carry it, and returning it from both sent the same map twice in a session that calls both.'
+    'Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here: `wallet-tokens` carries it, and returning it from both would send the same map twice in a session that calls both.'
   ),
   errors: WALLET_ERRORS,
 
@@ -89,7 +89,7 @@ export const setFiatCurrencyCode = route({
     walletId: asWalletId,
     fiatCurrencyCode: doc(
       asString,
-      'An ISO 4217 code, with or without core\u2019s `iso:` prefix: `iso:EUR` and `EUR` both work, and the engine normalises. Core itself refuses a bare code, as an untyped throw this route reported as a `500` \u2014 and `get-transactions --fiat` already takes the bare form, so the two were inconsistent as well. Anything that is not three letters is a `400`.'
+      'An ISO 4217 code, with or without core\u2019s `iso:` prefix: `iso:EUR` and `EUR` both work, as they do for `get-transactions --fiat`, and the engine normalises, because core itself refuses a bare code. Anything that is not three letters is a `400`.'
     )
   }).withRest,
   errors: ['BAD_REQUEST', ...WALLET_ERRORS],
@@ -97,13 +97,12 @@ export const setFiatCurrencyCode = route({
   async handler(ctx) {
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     // Normalised here, and refused here when it cannot be. Core's own
-    // refusal is a plain `Error('Fiat currency codes must start with
+    // refusal is a plain `TypeError('Fiat currency codes must start with
     // `iso:`')`, which the engine maps to `500 INTERNAL_ERROR` — a code
     // published as "unmapped engine or plugin failure", exiting 1, on a
-    // route whose declared errors include the `BAD_REQUEST` this is. The
-    // field doc said only "e.g. `iso:EUR`", so `--fiat-currency-code=EUR`
-    // is the ordinary mistake — and `get-transactions --fiat` takes the
-    // bare form, so refusing it here would be the CLI disagreeing with
+    // route whose declared errors include the `BAD_REQUEST` this is. And
+    // `get-transactions --fiat` takes the bare form, so refusing
+    // `--fiat-currency-code=EUR` here would be the CLI disagreeing with
     // itself. `toIsoFiatCode` is the same helper that one uses.
     const isoFiat = toIsoFiatCode(ctx.body.fiatCurrencyCode)
     if (isoFiat == null) {
@@ -195,9 +194,9 @@ export const resyncBlockchain = route({
  *
  * @note A `walletType` no plugin claims is a `400` from this route, before
  *   core is called. Core throws `Cannot find plugin for wallet type "…"` for
- *   it, which arrived as `500 INTERNAL_ERROR` — the caller mistake this
- *   route's own description sends them to `list-splittable-wallet-types` to
- *   avoid, reported as an engine fault.
+ *   it, which would surface as `500 INTERNAL_ERROR` — the caller mistake
+ *   this route's own description sends them to `list-splittable-wallet-types`
+ *   to avoid, reported as an engine fault.
  * @note A plugin that fails *during* the split still abandons the rest of
  *   the list: core's `split` is one call. `create-currency-wallets` is one
  *   call too, but answers an unclaimed type and a refused key text per
@@ -295,7 +294,7 @@ export const balanceMap = route({
   returns: asObject({
     balances: doc(
       asArray(asBalance),
-      'One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it \u2014 one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, and a freshly enabled token was simply missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet.'
+      'One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it \u2014 one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, so a freshly enabled token would otherwise be missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet.'
     )
   }),
   errors: [...WALLET_ERRORS, 'SETTINGS_UNREADABLE'],
@@ -304,39 +303,36 @@ export const balanceMap = route({
     const account = getAccount(ctx)
     const wallet = findWallet(account, ctx.query.valid.walletId)
     // The *display* denomination, which is what this field's own doc
-    // promises and what the GUI's wallet row and this branch's CSV export
-    // both show. It used to divide by the exchange multiplier, so a BTC
-    // wallet the user had set to "bits" answered `0.0005` where both of
-    // those said `50000`, and a token on a custom unit was out by its own
-    // factor — on the one field a script would compare against the app.
+    // promises and what the GUI's wallet row and the CSV export both show.
+    // Dividing by the exchange multiplier instead would answer `0.0005` for
+    // a BTC wallet the user had set to "bits" where both of those say
+    // `50000`, and put a token on a custom unit out by its own factor — on
+    // the one field a script would compare against the app.
     // `get-transactions`'s export arm reads the same settings through the
     // same derivation; an empty `denominationSettings` falls through to
     // the exchange denomination, which is the right default.
     const { denominationSettings } = await readAccountSyncedSettings(account)
-    // One rule per entry, and the listing stays alive. Two adjacent lines
-    // used to disagree: the multiplier lookup threw TOKEN_NOT_FOUND for an
-    // absent token while the line below it tolerated the same absence with
-    // `?? tokenId`. `wallet.balanceMap` is not filtered against `allTokens`,
-    // so a token deleted from the config while the engine ran made
-    // `balance-map` answer 404 for the *whole wallet*, naming a token the
-    // caller never asked about, until the engine restarted.
+    // One rule per entry, and the listing stays alive. `wallet.balanceMap`
+    // is not filtered against `allTokens`, so a token deleted from the
+    // config while the engine runs is reported as unknown below, rather
+    // than failing `balance-map` for the *whole wallet* with a 404 naming a
+    // token the caller never asked about.
     // Every asset the wallet tracks, which is not the same as every key in
     // `balanceMap`: a plugin populates that map for a token when it has a
     // balance to report, not when the token is enabled. So a freshly
-    // enabled token on a fully synced wallet was absent — and this route's
-    // own summary says "the native currency plus every enabled token",
-    // while the client's `--token-id` filter answered
+    // enabled token on a fully synced wallet would be absent, though this
+    // route's own summary says "the native currency plus every enabled
+    // token", and the client's `--token-id` filter would answer
     // `404 TOKEN_NOT_FOUND` for an id `wallet-tokens` listed and the wallet
-    // had enabled. Measured on solana and algorand, so it is not one
-    // plugin's quirk. An enabled token the map does not mention holds
-    // nothing, which is `'0'`.
+    // had enabled. An enabled token the map does not mention holds nothing,
+    // which is `'0'`.
     const amounts = new Map(wallet.balanceMap)
     // The native asset first, and for the same reason one key short of the
     // loop below it: core's reducer starts `balanceMap` as `new Map()` and
     // fills a key only when an engine reports an amount, so a freshly
-    // created or still-syncing wallet answered `{"balances": []}` — no row
-    // for the chain's own coin, contradicting this route's summary, and a
-    // `404 TOKEN_NOT_FOUND` from the client's `--token-id` filter for the
+    // created or still-syncing wallet would answer `{"balances": []}` — no
+    // row for the chain's own coin, contradicting this route's summary, and
+    // a `404 TOKEN_NOT_FOUND` from the client's `--token-id` filter for the
     // native asset. A wallet that has reported nothing holds nothing, which
     // is `'0'`.
     if (!amounts.has(null)) amounts.set(null, '0')
@@ -346,8 +342,8 @@ export const balanceMap = route({
     const balances = []
     for (const [tokenId, nativeAmount] of amounts.entries()) {
       // `hasOwn`, because a tokenId is caller-shaped data: `allTokens` is a
-      // plain object, so `__proto__` or `toString` as a key resolved to an
-      // inherited member and passed the `token == null` test below.
+      // plain object, so `__proto__` or `toString` as a key would resolve to
+      // an inherited member and pass the `token == null` test below.
       const token =
         tokenId != null && hasOwn(wallet.currencyConfig.allTokens, tokenId)
           ? wallet.currencyConfig.allTokens[tokenId]

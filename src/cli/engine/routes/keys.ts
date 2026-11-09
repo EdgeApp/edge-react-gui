@@ -35,10 +35,10 @@ function walletIdFor(
     query: { valid: { walletId: string } }
   }
 ): string {
-  // The account the handler already resolved, not a second `getAccount`:
-  // that repeated the Map lookup, the expiry test and the `lastActivityAt`
-  // write on every one of these requests, invisibly at the call site —
-  // which is the cost `routes/helpers.ts` says it removed.
+  // The account the handler already resolved, not a second `getAccount`,
+  // which would repeat the Map lookup, the expiry test and the
+  // `lastActivityAt` write on every one of these requests, invisibly at the
+  // call site.
   return findWalletId(account, ctx.query.valid.walletId)
 }
 
@@ -176,9 +176,9 @@ export const getRawPublicKey = route({
  * `waitForCurrencyEngine`, which needs a *running* engine. Core builds those
  * from `activeWalletIds`, so on an archived or otherwise unloaded wallet that
  * fallback throws a plain `Error` — `Wallet id … does not exist in this
- * account` — which this engine reported as `500 INTERNAL_ERROR` for a
- * knowable condition, on a route whose own resolver had just found the wallet
- * in `allKeys` and whose caller is usually recovering keys.
+ * account` — which would surface as `500 INTERNAL_ERROR` for a knowable
+ * condition, on a route whose own resolver has just found the wallet in
+ * `allKeys` and whose caller is usually recovering keys.
  *
  * The raw forms have no such limit, which is why only these two need it, and
  * a plugin that does implement the tools call still answers while archived —
@@ -202,7 +202,8 @@ export async function displayKey(
     // The original message, kept. The guard narrows which *arm* this is, not
     // what went wrong inside it — a plugin that threw while deriving, a key
     // blob it could not read — and the substitution happens before the
-    // request sink, so dropping the cause lost it from the engine log too.
+    // request sink, so dropping the cause would lose it from the engine log
+    // too.
     // These are the key-recovery routes: the caller is already in trouble.
     const cause = errorMessage(error)
     throw engineError(
@@ -293,27 +294,21 @@ export const listSplittableWalletTypes = route({
 /**
  * `EdgeWalletState`, declared rather than restated.
  *
- * All five fields core carries. `migratedFromWalletId` was the one left out,
- * and because the object is `.withRest` a caller could still send it: a
- * wrong-typed one went through `account.changeWalletStates` into
- * `asWalletStateFile`'s uncleaner, which threw inside core — a `500
- * INTERNAL_ERROR` on a route whose declared errors are `BAD_REQUEST` plus
- * the wallet ones, where the declaration should have answered a 400 naming
- * the field. `.withRest` stays, so an unrecognised key is visible to
- * `onlyNamedFlags` and refused rather than silently dropped.
+ * All five fields core carries, each cleaned, so a wrong-typed value is a
+ * 400 naming the field rather than a throw from `asWalletStateFile`'s
+ * uncleaner inside core: a `500 INTERNAL_ERROR` on a route whose declared
+ * errors are `BAD_REQUEST` plus the wallet ones. The object is `.withRest`,
+ * so an unrecognised key is visible to `onlyNamedFlags` and refused rather
+ * than silently dropped.
  *
- * Exported for the test, which kept its own copy of these four fields and
- * so could not notice the fifth going missing.
+ * `asWalletStateEntry` and `WALLET_STATE_FLAGS` are exported for the test.
  *
- * Hoisted to a plain object so the cleaner and the accepted-key list are one
- * declaration. `.withRest` means the cleaner cannot be asked for its own key
- * list, and `WALLET_STATE_FLAGS` restated it by hand under a comment
- * claiming the two could not drift — with nothing holding them together. The
- * drift is not cosmetic: `onlyNamedFlags` throws `BAD_REQUEST` for every key
- * the list does not name, so a sixth field added to the cleaner, declared in
- * `body` and published in the generated reference, would be refused by the
- * route that documents it. That is the "answered while nothing changed"
- * failure this block exists to fix, inverted.
+ * A plain object, so the cleaner and the accepted-key list are one
+ * declaration: `.withRest` means the cleaner cannot be asked for its own key
+ * list. The two must not drift: `onlyNamedFlags` throws `BAD_REQUEST` for
+ * every key the list does not name, so a field the cleaner declares and the
+ * generated reference publishes, but the list leaves out, would be refused
+ * by the route that documents it.
  */
 const walletStateShape = {
   archived: asOptional(asBoolean),
@@ -332,27 +327,27 @@ export const WALLET_STATE_FLAGS = Object.keys(walletStateShape)
  * The flags the caller actually named, with the absent ones removed.
  *
  * `asObject` materialises every declared key, so cleaning
- * `{"archived": true}` yields an object that *has* `deleted`, `hidden` and
- * `sortIndex` — each `undefined`. Core merges rather than replaces:
+ * `{"archived": true}` yields an object that *has* `deleted`, `hidden`,
+ * `migratedFromWalletId` and `sortIndex`, each `undefined`. Core merges
+ * rather than replaces:
  * `toWrite[id] = { ...walletStates[id], ...newStates[id] }`
  * (`account-files.js:257`), and an object spread copies a key whose value is
- * `undefined` over the real one. So archiving a wallet also cleared its
- * `hidden` flag and its `sortIndex`, in the account's *synced*
- * `Keys/<hash>.json`, and that reached every device the account has.
+ * `undefined` over the real one. Forwarded as cleaned, archiving a wallet
+ * would also clear its `hidden` flag and its `sortIndex` in the account's
+ * *synced* `Keys/<hash>.json`, and that would reach every device the
+ * account has.
  *
- * `JSON.stringify` hides it — the cleaned value prints as `{"archived":true}`
- * — and the `as unknown as` cast the fix replaces is what kept the compiler
- * from mentioning the extra keys. A caller cannot send `archived: undefined`
- * over JSON, so "the key is present and undefined" means exactly "the caller
- * did not name it".
+ * `JSON.stringify` hides it: the cleaned value prints as `{"archived":true}`.
+ * A caller cannot send `archived: undefined` over JSON, so "the key is
+ * present and undefined" means exactly "the caller did not name it".
  *
  * A flag the caller misspelled is refused rather than forwarded. The inner
- * cleaner is `.withRest`, so `{"archvied": true}` survives cleaning and core
- * writes it verbatim into the same synced file — the request answered `204`,
- * nothing was archived, and the account carried a junk key to every device.
- * Dropping `.withRest` would silently ignore it instead, which is the
- * "answered 204 while nothing changed" failure the handler below says it
- * fixed for wallet ids; this is the same answer for flags.
+ * cleaner is `.withRest`, so `{"archvied": true}` survives cleaning, and
+ * core would write it verbatim into the same synced file: the request would
+ * answer `204`, nothing would be archived, and the account would carry a
+ * junk key to every device. Dropping `.withRest` would silently ignore it
+ * instead, the same "answered 204 while nothing changed" failure the handler
+ * below prevents for wallet ids.
  *
  * Exported for its test: the destruction is in the account's synced repo and
  * `JSON.stringify` cannot see it.
@@ -402,7 +397,7 @@ export const changeWalletStates = route({
     notes:
       'The command builds a single-wallet `walletStates` map from these flags, and needs at least one. `--wallet-states` is the other form: the whole `EdgeWalletStates` map as JSON, which is the only way to change several wallets in one call, and it cannot be combined with `--wallet-id`.',
     // Two mutually exclusive forms, which one argument per field cannot
-    // say: the assembled line read as "pass `--wallet-states` *and*
+    // say: the assembled line would read as "pass `--wallet-states` *and*
     // `--wallet-id`", and the command refuses exactly that.
     usage:
       "change-wallet-states --wallet-id=<walletId> [--archived=true|false] [--deleted=true|false] [--hidden=true|false] [--sort-index=<sortIndex>] | change-wallet-states --wallet-states='<json>'"
@@ -420,14 +415,13 @@ export const changeWalletStates = route({
   async handler(ctx) {
     const account = getAccount(ctx)
     // Every key resolved first. Core treats an id it has never seen as new
-    // and writes a state file for it without complaint, so a typo or a
-    // prefix answered 204 while nothing changed — and left a bogus
-    // `Keys/<hash>.json` record in the account repo to sync to every device.
-    // This was also the one wallet route that did not honour the prefix
-    // contract `walletId` is documented with everywhere else, so an id that
-    // worked with `rename-wallet` silently did nothing here. Resolved over
-    // `allKeys`, because archiving and deleting are exactly the states an
-    // already-archived wallet has.
+    // and writes a state file for it without complaint, so an unresolved
+    // typo or prefix would answer 204 while nothing changed, and leave a
+    // bogus `Keys/<hash>.json` record in the account repo to sync to every
+    // device. Resolving also gives this route the prefix contract `walletId`
+    // is documented with everywhere else. Resolved over `allKeys`, because
+    // archiving and deleting are exactly the states an already-archived
+    // wallet has.
     const resolved: EdgeWalletStates = {}
     for (const [prefix, states] of Object.entries(ctx.body.walletStates)) {
       resolved[findWalletId(account, prefix)] = onlyNamedFlags(states)
