@@ -19,17 +19,15 @@ import {
 /**
  * The publish script's decisions, run rather than grepped.
  *
- * `publishFlags.test.ts` asserted regexes against the *text* of
- * `publishCli.ts` — `expect(source).toMatch(/value\.startsWith\('--'\)/)` —
- * because the script does its work at module scope and cannot be imported.
- * Those assertions pass for a reformat that breaks the logic and fail for a
- * prettier line break that does not, and the defect they stand in for is
- * `--out` with the value left off falling through to
- * `npm publish --access public`, which the script documents as
- * irreversible: npm will not replace a version, so a mis-fired publish burns
- * the app's current version number and the next CLI fix waits for an app
- * bump. The decisions now live in `scripts/util/publishArgs.ts`, which the
- * script imports, so this runs the same code the script runs.
+ * `publishCli.ts` does its work at module scope and cannot be imported, so
+ * its decisions live in `scripts/util/publishArgs.ts`, which the script
+ * imports, and this runs the same code the script runs. A regex over the
+ * script's text passes for a reformat that breaks the logic and fails for a
+ * prettier line break that does not. The failure at stake is `--out` with
+ * the value left off falling through to `npm publish --access public`,
+ * which the script documents as irreversible: npm will not replace a
+ * version, so a mis-fired publish burns the app's current version number
+ * and the next CLI fix waits for an app bump.
  */
 const PACKAGE_FILES = ['edgeCli.js', 'edgeEngine.js', 'README.md', 'LICENSE']
 const SIGNER = 'edge_api_signer.node'
@@ -38,16 +36,17 @@ const noFlags = parsePublishFlags([])
 
 describe('flagValue', () => {
   it('refuses a flag whose value is missing', () => {
-    // The whole case. `--out` with the path left off answered `undefined`,
-    // the `stageOnly != null` gate was false, and the script published.
+    // The whole case. If `--out` with the path left off answered
+    // `undefined`, the `stageOnly != null` gate would be false, and the
+    // script would publish.
     expect(() => flagValue(['--out'], '--out')).toThrow(
       /--out needs a value\. Nothing has been built or published\./
     )
   })
 
   it('refuses a flag whose value is another flag', () => {
-    // The other spelling of the same mistake, which behaved oppositely: it
-    // staged into a directory literally named `--dry-run`, and did stop.
+    // The other spelling of the same mistake, which, taken as a value, would
+    // stage into a directory literally named `--dry-run` and stop.
     expect(() => flagValue(['--out', '--dry-run'], '--out')).toThrow(
       /--out needs a value/
     )
@@ -116,11 +115,11 @@ describe('parsePublishFlags', () => {
 
 describe('packedFilesFor', () => {
   it('adds the addon to the allowlist, not merely to the stage', () => {
-    // npm's `files` is an allowlist, and the script used only to copy the
-    // addon into the staging directory: a package.json with the unsigned
-    // four and an `edge_api_signer.node` beside the bundles packs the four
-    // and drops the addon, so the flag published a tarball that could not
-    // sign while the report said it had shipped.
+    // npm's `files` is an allowlist: a package.json with the unsigned four
+    // and an `edge_api_signer.node` beside the bundles packs the four and
+    // drops the addon, so only copying the addon into the staging directory
+    // would publish a tarball that cannot sign while the report says it
+    // shipped.
     expect(
       packedFilesFor({
         withSigner: true,
@@ -164,10 +163,10 @@ describe('isSignedPublish', () => {
 
   it('is false for an addon a reused --out left behind', () => {
     // Read off the manifest and not off the directory, because a stale
-    // addon in a reused stage made this true with no `--with-signer` at
-    // all, which suppressed the README's unsigned warning — the one
-    // paragraph that explains why the installed CLI refuses to start
-    // without an `edgeApiKey`.
+    // addon in a reused stage would make this true with no `--with-signer`
+    // at all, suppressing the README's unsigned warning, the one paragraph
+    // that explains why the installed CLI refuses to start without an
+    // `edgeApiKey`.
     expect(
       isSignedPublish({
         packedFiles: PACKAGE_FILES,
@@ -180,12 +179,10 @@ describe('isSignedPublish', () => {
 
 describe('preBuildRefusal', () => {
   const treeClean: TreeState = { kind: 'clean' }
-  // Only what this phase judges. The two call sites used to share one
-  // function and each had to fabricate the other phase's inputs — the
-  // pre-build call invented a `packedFiles` so the allowlist check could not
-  // fire, the staged call invented a clean tree so the dirty check could not
-  // fire twice — so which refusals a call could reach was decided by
-  // arguments that were not facts.
+  // Only what this phase judges. With one function for both call sites,
+  // each would have to fabricate the other phase's inputs, and which
+  // refusals a call could reach would be decided by arguments that are not
+  // facts.
   const pushed = { kind: 'pushed' as const, sha: 'a'.repeat(40) }
   const base = {
     treeState: treeClean,
@@ -249,13 +246,12 @@ describe('preBuildRefusal', () => {
   })
 
   it('refuses when git could not be run at all', () => {
-    // The guard used to fail *open* here: `capture` answered `''` for a
-    // child that exited non-zero or never spawned, and `=== ''` is the
-    // clean-tree reading. So a CI container reporting "detected dubious
-    // ownership in repository" (exit 128), an extracted source tarball with
-    // no `.git`, or git missing from `PATH` all published an unreproducible
-    // tree under the app's current version — which npm will not let anyone
-    // replace.
+    // The guard must not fail *open* here: an empty answer is the
+    // clean-tree reading, so if a failed git run read as one, a CI container
+    // reporting "detected dubious ownership in repository" (exit 128), an
+    // extracted source tarball with no `.git`, or git missing from `PATH`
+    // would publish an unreproducible tree under the app's current version,
+    // which npm will not let anyone replace.
     const refusal = preBuildRefusal({
       ...base,
       flags: noFlags,
@@ -271,8 +267,8 @@ describe('preBuildRefusal', () => {
 
   it('refuses an unknown tree even with --allow-dirty', () => {
     // The README links are pinned to HEAD, and every case that leaves the
-    // tree unknown leaves HEAD unreadable too, so the override used to move
-    // the failure past a full build.
+    // tree unknown leaves HEAD unreadable too, so honouring the override
+    // would only move the failure past a full build.
     const refusal = preBuildRefusal({
       ...base,
       flags: parsePublishFlags(['--allow-dirty']),
@@ -374,8 +370,8 @@ describe('stagedManifestRefusal', () => {
   const signed = parsePublishFlags(['--with-signer'])
 
   it('refuses --with-signer when the allowlist would drop the addon', () => {
-    // The last check before the stage is final, and the way this failed was
-    // silent: the addon in the directory, absent from the tarball, and the
+    // The last check before the stage is final, and the failure it catches
+    // is silent: the addon in the directory, absent from the tarball, and the
     // report saying "included". `files` is npm's allowlist, so this is the
     // one assertion that distinguishes the two.
     const refusal = stagedManifestRefusal({
@@ -409,11 +405,11 @@ describe('stagedManifestRefusal', () => {
 })
 
 /**
- * The mapping that was the bug: every git failure read as a clean tree.
+ * A git run, read as a tree state, where a git failure is not a clean tree.
  *
- * `publishFlags.test.ts` only checked that the text `readTreeState()`
+ * `publishFlags.test.ts` only checks that the text `readTreeState()`
  * appears in the script, so `stdout.trim() === ''` without a `status` check
- * would have stayed green while an unreproducible tree published.
+ * would stay green there while an unreproducible tree published.
  */
 describe('treeStateOf', () => {
   it('reads a spawn that never started as unknown', () => {

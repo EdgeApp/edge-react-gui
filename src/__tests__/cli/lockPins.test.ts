@@ -9,9 +9,9 @@ import {
  * The published manifest's pins, against the four kinds of `resolved` a lock
  * holds.
  *
- * Nothing ran either arm before: today's lock has no off-registry pin on a
- * CLI dependency, so a wrong prefix or an unreachable fatal check would have
- * published a pack-dependencies build under a bare semver.
+ * The lock has no off-registry pin on a CLI dependency, so nothing else runs
+ * either arm, and a wrong prefix or an unreachable fatal check would publish
+ * a pack-dependencies build under a bare semver.
  */
 describe('lockedVersion', () => {
   const lock = {

@@ -2,11 +2,11 @@
  * What `package-lock.json` pins a published dependency to, and whether that
  * pin can be published.
  *
- * Lifted out of `buildCliManifest.ts`, which does its work at module scope,
- * so a test can run it: nothing exercised either arm, because today's lock
- * has no off-registry pin on a CLI dependency. A `startsWith` against the
- * wrong prefix would have published a `pack-dependencies` build under a
- * bare semver with nothing to notice.
+ * Separate from `buildCliManifest.ts`, which does its work at module scope,
+ * so a test can run it: a lock with no off-registry pin on a CLI dependency
+ * exercises neither arm. A `startsWith` against the wrong prefix would
+ * publish a `pack-dependencies` build under a bare semver with nothing to
+ * notice.
  */
 
 /** One `packages` entry of a v2/v3 lockfile, as far as this reads it. */
@@ -18,12 +18,11 @@ export interface LockEntry {
 /**
  * Where a published dependency has to come from.
  *
- * `version` alone ignored `resolved`, so a dependency the lock pins to an
- * HTTPS tarball — how `pack-dependencies` pins an unpublished `edge-core-js`
- * or `edge-currency-accountbased` build, and how a `test-<cheese>` tree is
- * committed — was published as the bare semver npm recorded beside it. The
- * registry then resolves that version to something the bundle was never
- * built against.
+ * `version` alone is not enough: a dependency the lock pins to an HTTPS
+ * tarball (how `pack-dependencies` pins an unpublished `edge-core-js` or
+ * `edge-currency-accountbased` build, and how a `test-<cheese>` tree is
+ * committed) records a bare semver beside `resolved`, and the registry
+ * resolves that version to something the bundle was never built against.
  */
 export const NPM_REGISTRY = 'https://registry.npmjs.org/'
 
