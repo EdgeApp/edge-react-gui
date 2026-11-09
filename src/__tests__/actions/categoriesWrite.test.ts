@@ -62,9 +62,9 @@ function run(
  * The redux list is only as good as the read that filled it, and a read that
  * *failed* leaves it at the reducer's initial `[]`: `getSubcategories`
  * rejects, `useAsyncEffect` turns that into a toast, and `CategoryModal`
- * stays open on an empty list. The first category the user then picks wrote
- * that empty list back plus one entry — replacing the whole synced list, on
- * every device, which is the loss the strict read was added to prevent
+ * stays open on an empty list. Merging into the redux list would write that
+ * empty list back plus one entry when the user picks a category, replacing
+ * the whole synced list on every device: the loss the strict read prevents,
  * arriving through the other door.
  */
 describe('setNewSubcategory', () => {
@@ -94,8 +94,8 @@ describe('setNewSubcategory', () => {
   })
 
   it('keeps an unparseable file aside and starts again from the defaults', async () => {
-    // Refusing was a one-way door: nothing rewrote the file, so every add
-    // failed and the modal stayed empty on every device.
+    // Refusing would be a one-way door: nothing would rewrite the file, so
+    // every add would fail and the modal stay empty on every device.
     const { account, written, paths } = makeAccount({
       synced: '{"categories":["Expense:Mi'
     })
@@ -142,9 +142,9 @@ describe('setNewSubcategory', () => {
   })
 
   it('writes nothing when the read after the sync fails', async () => {
-    // The kept copy used to come from a re-read whose failure was
-    // swallowed, so a transient error there wrote the defaults with nothing
-    // kept. Now a failing read is the add's failure, and nothing is written.
+    // The kept copy is the bytes of the read after the sync, so a failure
+    // there is the add's failure and nothing is written: a transient error
+    // cannot write the defaults with nothing kept.
     let reads = 0
     const written: Array<[string, string]> = []
     const account = {
@@ -165,8 +165,8 @@ describe('setNewSubcategory', () => {
   })
 
   it('writes the defaults plus one for a fresh account', async () => {
-    // An absent file is the one case the defaults are right for, and the
-    // reader writes them; the add then merges into them.
+    // An absent file is the one case the defaults are right for; the add
+    // merges into them and writes the file.
     const { account, written } = makeAccount({})
     const { done } = run(account, [])
     await done
@@ -176,10 +176,11 @@ describe('setNewSubcategory', () => {
   })
 
   it('keeps both entries when two writers race on a fresh account', async () => {
-    // The property `serializeByKey` was added for, driven the way
-    // `exportTxInfo.test.ts` drives its own: two writers at once, the
-    // file absent, so each read sees no file and merges only its own
-    // entry. Whichever `setText` lands last used to be the whole answer.
+    // The property `serializeByKey` exists for, driven the way
+    // `exportTxInfo.test.ts` drives its own: two writers at once, the file
+    // absent. Unserialized, each read would see no file and merge only its
+    // own entry, and whichever `setText` landed last would be the whole
+    // answer.
     let text: string | undefined
     const written: string[] = []
     const account = {
@@ -224,13 +225,13 @@ describe('setNewSubcategory', () => {
 /**
  * The mount read and the add are ordered against each other.
  *
- * `getSubcategories` read and dispatched outside the serialization key, so
- * the two dispatches were unordered. `CategoryModal` fires it on mount and
- * leaves the rows tappable for the whole disklet round trip, so a mount read
- * that resolved after the add had written overwrote Redux with the pre-add
- * list: the row the user just created vanished from `state.ui.subcategories`
- * while the synced file held it, and the next open wrote the same entry
- * again because `handleCategoryUpdate`'s `includes` gate failed.
+ * `getSubcategories` reads inside the serialization key. `CategoryModal`
+ * fires it on mount and leaves the rows tappable for the whole disklet
+ * round trip, so an unordered mount read that resolved after the add had
+ * written would overwrite Redux with the pre-add list: the row the user just
+ * created would vanish from `state.ui.subcategories` while the synced file
+ * held it, and the next open would write the same entry again because
+ * `handleCategoryUpdate`'s `includes` gate fails.
  */
 describe('getSubcategories against a concurrent add', () => {
   it('dispatches the post-add list, not the list it started reading', async () => {
@@ -283,8 +284,9 @@ describe('getSubcategories against a concurrent add', () => {
  * No dispatch for a list Redux already holds.
  *
  * Every `CategoryModal` mount reads the file, and the common answer is the
- * list already in `state.ui.subcategories` — a fresh array each time, which
- * re-rendered the modal and rebuilt its sorted rows for nothing.
+ * list already in `state.ui.subcategories`. Dispatching it as a fresh array
+ * each time would re-render the modal and rebuild its sorted rows for
+ * nothing.
  */
 describe('getSubcategories when nothing changed', () => {
   const account = (text: string): EdgeAccount =>

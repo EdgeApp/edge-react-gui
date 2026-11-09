@@ -16,16 +16,15 @@ import { lstrings } from '../../locales/strings'
  * The label for one `assetActionType`, read at call time.
  *
  * The *keys* are static and only the values must be read late. A module-scope
- * `Record` of the strings froze all twenty to whatever `lstrings` held when
- * this module first evaluated — `applyLocale` mutates `lstrings` in place, so
- * they were correct only if the locale boot had already run, an invisible
- * ordering dependency on a module nothing here imports. Rebuilding the whole
- * table per call fixed that and paid for it on every call: these callers are
- * per-transaction, not per-screen — `TransactionListRow` once per render of
- * every visible row, `TransactionsExportScene` inside a synchronous map over
- * a whole wallet's history, and `get-transactions` once per transaction per
- * page — and a fresh twenty-key literal measured 151ns against 7ns for one
- * indexed read.
+ * `Record` of the strings would freeze all twenty to whatever `lstrings` held
+ * when this module first evaluated: `applyLocale` mutates `lstrings` in
+ * place, so they would be correct only if the locale boot had already run,
+ * an invisible ordering dependency on a module nothing here imports.
+ * Rebuilding the whole table per call would pay for that on every call, and
+ * these callers are per-transaction, not per-screen: `TransactionListRow`
+ * once per render of every visible row, `TransactionsExportScene` inside a
+ * synchronous map over a whole wallet's history, and `get-transactions` once
+ * per transaction per page.
  *
  * A table of key *names* is both: one static object, one indexed read, and
  * the string fetched from `lstrings` after the boot by construction.

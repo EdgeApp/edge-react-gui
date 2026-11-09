@@ -11,7 +11,7 @@ import {
 /**
  * The predicate against the strings production really produces.
  *
- * Both callers answer an absent file by rewriting it from defaults —
+ * A write path answers an absent file by rewriting it from defaults —
  * `mergeExportTxInfo` from `{}`, `readLocalAccountSettingsFromDisk` from the
  * cleaner defaults that `changeLocalSettings` then writes back — so a false
  * positive is data loss, and a false negative is a 500 on a first-ever save.
@@ -47,7 +47,7 @@ describe('isMissingFile', () => {
   })
 
   it('does not read an unrelated "not found" as an absent file', () => {
-    // No library in the tree emits this, and both callers respond to a true
+    // No library in the tree emits this, and a write path responds to a true
     // answer by overwriting the file from defaults.
     expect(isMissingFile(new Error('wallet not found'))).toBe(false)
     expect(isMissingFile(new Error('Token not found for currency code'))).toBe(
@@ -66,10 +66,10 @@ describe('isMissingFile', () => {
  *
  * A false positive deletes a file that was merely hard to read; a false
  * negative leaves a file that will not decrypt refusing every write on that
- * device for good. Core's three messages were matched by hand against
- * `edge-core-js`'s repo disklet. This table pins this side's match — the
- * strings are written out here, so it cannot notice core rewording one;
- * that would need the disklet itself to produce them.
+ * device for good. Core's three messages are the ones `edge-core-js`'s
+ * decryption throws under its repo disklet. This table pins this side's
+ * match — the strings are written out here, so it cannot notice core
+ * rewording one; that would need the disklet itself to produce them.
  */
 describe('isContentFailure', () => {
   const cases: Array<[string, unknown, boolean, boolean]> = [

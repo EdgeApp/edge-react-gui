@@ -31,8 +31,9 @@ describe('serializeByKey', () => {
   it('a read-modify-write loses updates without it', async () => {
     const store = makeStore()
     await Promise.all([store.bump(), store.bump(), store.bump()])
-    // Each call read 0 before any of them wrote, so two increments vanished —
-    // the same way two `mergeExportTxInfo` calls discarded each other's keys.
+    // Each call read 0 before any of them wrote, so two increments vanished,
+    // the way two unserialized `mergeExportTxInfo` calls would discard each
+    // other's keys.
     expect(store.value()).toBe(1)
   })
 

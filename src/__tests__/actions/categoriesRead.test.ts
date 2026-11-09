@@ -16,19 +16,19 @@ jest.mock('../../components/services/AirshipInstance', () => ({
 /**
  * `Categories.json` is on the *synced* repo, so a bad read is expensive.
  *
- * The reader caught every failure and answered it by writing the 116-entry
- * default array back — so one decryption or I/O failure on a file that is
- * there replaced the user's own subcategories, on every device. The two
- * readers beside it (`localAccountSettings.ts`, `exportTxInfo.ts`) both test
- * `isMissingFile` first, and this is the file that reasoning came from.
+ * Answering every failure with the 116-entry default array would let one
+ * decryption or I/O failure on a file that is there replace the user's own
+ * subcategories, on every device. So only an absent file reads as the
+ * defaults: the reader tests `isMissingFile` first, as the two readers
+ * beside it (`localAccountSettings.ts`, `exportTxInfo.ts`) do.
  */
 describe('readSyncedSubcategories', () => {
   it('returns the defaults for an absent file, and writes nothing', async () => {
-    // A read, and only a read. The seed write it used to do was the one
-    // `setText` outside `setNewSubcategory`'s `serializeByKey` key — in the
-    // function both callers funnel through — so a tap in `CategoryModal`'s
-    // mount window raced the mount's own unlocked write and the synced
-    // file ended up without the user's entry while Redux had it.
+    // A read, and only a read. Both callers funnel through this function,
+    // and only `setNewSubcategory` holds the `serializeByKey` key, so a
+    // write here would race an add tapped in `CategoryModal`'s mount window
+    // and could leave the synced file without the user's entry while Redux
+    // has it.
     const written: string[] = []
     const account = makeFakeDiskletAccount({
       onSyncedWrite: (_path, text) => {
@@ -42,10 +42,9 @@ describe('readSyncedSubcategories', () => {
   })
 
   it('still answers the defaults when the repo cannot be written', async () => {
-    // The seed write was awaited and `writeSyncedSubcategories` no longer
-    // swallows a failure, so this threw out of a *read* — and
-    // `CategoryModal` rendered an empty list, offering none of the 116
-    // standard categories on the screen whose purpose is to offer them.
+    // The defaults need no write, so a repo that cannot be written does not
+    // fail a *read*, and `CategoryModal` still offers the 116 standard
+    // categories on the screen whose purpose is to offer them.
     const account = makeFakeDiskletAccount({
       writeError: new Error('EACCES: the synced repo is read-only')
     })
@@ -74,14 +73,14 @@ describe('readSyncedSubcategories', () => {
 
   it('refuses valid JSON that is not a categories object', async () => {
     // `asObject` accepts an array, and `categories` is `asOptional(…, () =>
-    // [...defaultCategories])` — so each of these cleaned to the 116
-    // defaults and reported a successful read. `setNewSubcategory` then
-    // merged its one entry into those defaults and `writeSyncedSubcategories`
-    // put them on `account.disklet`: the user's whole subcategory list
-    // replaced by the defaults plus one entry, on the *synced* repo, on
-    // every device. `[]` and `["Expense:Mine"]` are the shapes a
-    // half-synced file is likeliest to produce, and the two sibling readers
-    // of this pattern already guard against them.
+    // [...defaultCategories])`, so without the object check each of these
+    // would clean to the 116 defaults and report a successful read.
+    // `setNewSubcategory` would then merge its one entry into those defaults
+    // and `writeSyncedSubcategories` put them on `account.disklet`: the
+    // user's whole subcategory list replaced by the defaults plus one entry,
+    // on the *synced* repo, on every device. `[]` and `["Expense:Mine"]` are
+    // the shapes a half-synced file is likeliest to produce, and the two
+    // sibling readers of this pattern guard against them too.
     for (const synced of ['[]', '["Expense:Mine"]', '[1,2,3]']) {
       const account = makeFakeDiskletAccount({ synced })
       await expect(readSyncedSubcategories(account)).rejects.toThrow(
@@ -100,8 +99,8 @@ describe('readSyncedSubcategories', () => {
   })
 
   it('defaults a file that parses without the list', async () => {
-    // `{}` used to return `undefined` into `state.ui.subcategories`, which
-    // is typed `string[]`, and `CategoryModal` threw on `categories.map`.
+    // `{}` must not return `undefined` into `state.ui.subcategories`, which
+    // is typed `string[]`: `CategoryModal` would throw on `categories.map`.
     const account = makeFakeDiskletAccount({ synced: '{}' })
     expect(await readSyncedSubcategories(account)).toStrictEqual(
       defaultCategories

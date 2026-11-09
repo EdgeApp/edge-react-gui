@@ -62,14 +62,10 @@ export function splitCategory(
   // none of it is a category this code recognises and all of it is text a
   // user — or a dapp through `edgeProvider`, or `--metadata` — put there.
   //
-  // The old fallback changed it on the way through. It stripped
-  // `/^[^:]:/`, which removes only a one-character prefix — `X:Food` came
-  // back as `Food` — and it returned the probe with its appended colon, so
-  // a bare `Shopping` became `Shopping:`. `TransactionDetailsScene`
-  // round-trips the pair through `joinCategory`, so the first time a user
-  // opened and saved such a transaction the change was written back. The
-  // appended colon is only for the tests above; nothing here strips
-  // anything.
+  // Nothing here strips anything, and the appended colon is only for the
+  // tests above: `CategoryModal` round-trips the pair through `joinCategory`,
+  // so any change made on the way through would be written back the first
+  // time a user opened and saved such a transaction.
   return { category: defaultCategory, subcategory: fullCategory }
 }
 

@@ -3,8 +3,8 @@
  *
  * A pure function of the transaction, the wallet and the account: the
  * category, the payee, the direction, and the label for each action type.
- * Extracted from `CategoriesActions.ts` so the GUI and a Node caller derive
- * the same answer rather than approximately the same answer.
+ * One module, so the GUI and a Node caller derive the same answer rather
+ * than approximately the same answer.
  */
 import { eq } from 'biggystring'
 import type {
@@ -192,9 +192,7 @@ export const getTxActionDisplayInfo = (
 
             // A swap the provider routed privately is titled by its flow, the
             // way a private send is. The provider alone cannot say so, since
-            // it serves transparent routes too. The flag is read without
-            // naming it on the type, because the installed edge-core-js
-            // predates `EdgeTxActionSwap.privacy`.
+            // it serves transparent routes too.
             if (
               assetActionType === 'swap' &&
               'privacy' in action &&
