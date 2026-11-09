@@ -11,14 +11,10 @@ const source = fs.readFileSync(path.join(ROOT, 'scripts/publishCli.ts'), 'utf8')
  * That the script still routes its decisions through the tested module.
  *
  * `publishArgs.test.ts` is where the decisions themselves are asserted, by
- * running them. These five cases used to assert regexes against this
- * script's own text — `expect(source).toMatch(/value\.startsWith\('--'\)/)`
- * — because it does its work at module scope and cannot be imported, so
- * they passed for a reformat that broke the logic and failed for a prettier
- * line break that did not. The decisions moved to
- * `scripts/util/publishArgs.ts`; what is left to check here is that this
- * shell has not grown a second copy of them, which is the only way the two
- * could disagree again.
+ * running them from `scripts/util/publishArgs.ts`. This script does its work
+ * at module scope and cannot be imported, so what is checked here is that it
+ * has not grown a second copy of them, which is the only way the two could
+ * disagree.
  */
 describe('publishCli delegates its decisions', () => {
   it('parses its flags through publishArgs', () => {
@@ -35,13 +31,12 @@ describe('publishCli delegates its decisions', () => {
   })
 
   it('asks each phase\u2019s refusal at that phase', () => {
-    // Two functions, not one called twice. With one, each call had to
-    // fabricate the inputs for the checks that did not apply to it yet —
-    // the pre-build call invented a `packedFiles` so the allowlist check
-    // could not fire before a manifest existed, the staged call invented a
-    // clean tree so the dirty check could not fire twice — so which
-    // refusals a call could reach was decided by arguments that were not
-    // facts.
+    // Two functions, not one called twice. With one, each call would have to
+    // fabricate the inputs for the checks that do not apply to it yet: the
+    // pre-build call a `packedFiles`, so the allowlist check cannot fire
+    // before a manifest exists, and the staged call a clean tree, so the
+    // dirty check cannot fire twice. Which refusals a call could reach would
+    // then be decided by arguments that are not facts.
     expect(source).toContain('preBuildRefusal({')
     expect(source).toContain('stagedManifestRefusal({')
     expect(source.split('preBuildRefusal({').length - 1).toBe(1)
@@ -52,8 +47,8 @@ describe('publishCli delegates its decisions', () => {
   })
 
   it('keeps no second copy of the rules it delegates', () => {
-    // The shapes that used to live here. A reader adding one back locally
-    // is how the script and the module would drift apart.
+    // Shapes of the rules `publishArgs.ts` owns. A reader adding one back
+    // locally is how the script and the module would drift apart.
     expect(source).not.toMatch(/value\.startsWith\('--'\)/)
     expect(source).not.toMatch(
       /manifest\.files = \[\.\.\.CLI_PACKAGE_FILES, CLI_SIGNER_FILE\]/
@@ -61,7 +56,7 @@ describe('publishCli delegates its decisions', () => {
   })
 
   it('still stops before publishing when --out was given', () => {
-    // The gate the valueless `--out` used to slip past.
+    // The gate a valueless `--out` must not slip past.
     expect(source).toContain('stopping before publish')
     expect(source).toMatch(/npm publish|'publish'/)
   })

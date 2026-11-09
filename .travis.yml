@@ -5,10 +5,9 @@ branches:
 if: head_branch !~ ^dependabot/
 dist: jammy
 language: node_js
-# 22, not 18: `cli:plugins:check` loads every plugin family the CLI bundles,
+# Node 22: `cli:plugins:check` loads every plugin family the CLI bundles,
 # and Solana's tools reach an ESM-only `uuid` through `rpc-websockets`, which
-# Node can `require()` only from 20.19 / 22.12. Every step below was run on
-# 22.23.3 before the change.
+# Node can `require()` only from 20.19 / 22.12.
 node_js:
   - 22
 before_install:
@@ -55,9 +54,7 @@ script:
   - npm run test:cli:offline:built
   # Last, because it is the only check that reads the built bundles' own
   # `require` calls, and `--require-bundles` makes an absent `lib/` a failure
-  # rather than a skip. Run where `cli:manifest:check` is, nine lines above
-  # the build, `built` was false and the one direction that matters — a
-  # package the bundles require and the manifest does not declare, which a
-  # published CLI could not resolve — printed "bundles absent, so the require
-  # cross-check did not run" and passed.
+  # rather than a skip. `cli:manifest:check` above runs without the flag and
+  # skips the direction that matters: a package the bundles require and the
+  # manifest does not declare, which a published CLI could not resolve.
   - npm run cli:manifest -- --check --require-bundles

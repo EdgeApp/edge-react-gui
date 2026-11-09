@@ -36,21 +36,16 @@ interface CliPackageMeta {
   engines: { node: string }
 }
 
-// The per-platform native packages are not here. The scaffolding for them —
-// a `NativePackage` shape, a `nativePackages: []` that nothing ever filled,
-// and the `optionalDependencies` branch in the generator — was a code path
-// that could not run, with `os` and `cpu` fields nothing read. Git history
-// has the shape for the day those packages exist.
+// The per-platform native packages are not here.
 //
-// The HMAC addon is not published either, and that is a decision rather than
-// a gap. Two things were wrong with shipping it:
+// The HMAC addon is not published by default either, and that is a decision
+// rather than a gap. Two things are wrong with shipping it:
 //
-//   * Its shards reconstruct the *same* `apiSecret` the iOS and Android
-//     release builds sign with — only the runtime pad differs, and that pad
-//     is `NODE_API_SIGNER_BUNDLE_ID`, a constant in this public repository.
-//     `npm pack` plus `strings` plus a value from GitHub is a materially
-//     cheaper retrieval than pulling it out of a store binary, which is the
-//     only channel the obfuscation was built against.
+//   * Its shards reconstruct the `apiSecret` it signs with, and the runtime
+//     pad is `NODE_API_SIGNER_BUNDLE_ID`, a constant in this public
+//     repository. `npm pack` plus `strings` plus a value from GitHub is a
+//     materially cheaper retrieval than pulling it out of a store binary,
+//     which is the only channel the obfuscation was built against.
 //   * One prebuilt addon in a package with no `os`/`cpu` is a package that
 //     works on the build machine's platform and nowhere else.
 //
