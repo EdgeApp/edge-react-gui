@@ -530,7 +530,7 @@
       "returnsDoc": "The handle survives, so `save-tx` can still run.",
       "notes": [
         "Broadcasting does not record the transaction locally. Follow with `save-tx`, or it stays missing from history until a sync finds it.",
-        "Safe to repeat. On a handle already sent it answers the first call's result and sends nothing, so a client that lost the response can ask again. A failed broadcast keeps the handle and answers `BROADCAST_FAILED`: the transaction may still have reached the network, so check its txid before anything else, and run this again to re-send the same bytes rather than building a new transaction."
+        "Safe to repeat. On a handle already sent it answers the first call's result and sends nothing, so a client that lost the response can ask again. A failed broadcast keeps the handle and answers `BROADCAST_FAILED`: the transaction may still have reached the network, so check its txid before anything else. If it is on the chain, the send went through, and this answers a re-send as already known: record it with `save-tx` and `broadcastElsewhere`. If it is not, run this again to re-send the same bytes rather than building a new transaction."
       ],
       "errors": [
         "BAD_REQUEST",
@@ -2832,7 +2832,7 @@
         },
         "broadcastElsewhere": {
           "pass": "[--broadcast-elsewhere[=false]]",
-          "doc": "The transaction was sent some other way than `broadcast-tx`. Without it, a handle `broadcast-tx` has not sent is refused.",
+          "doc": "The transaction reached the network without `broadcast-tx` marking it sent: sent some other way, or a broadcast that answered `BROADCAST_FAILED` and is on the chain. Without it, a handle `broadcast-tx` has not sent is refused.",
           "optional": true
         }
       },

@@ -8215,7 +8215,7 @@
                 "properties": {
                   "broadcastElsewhere": {
                     "type": "boolean",
-                    "description": "The transaction was sent some other way than `broadcast-tx`. Without it, a handle `broadcast-tx` has not sent is refused."
+                    "description": "The transaction reached the network without `broadcast-tx` marking it sent: sent some other way, or a broadcast that answered `BROADCAST_FAILED` and is on the chain. Without it, a handle `broadcast-tx` has not sent is refused."
                   }
                 }
               }

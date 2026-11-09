@@ -842,10 +842,12 @@ export const spend = route({
           'BROADCAST_FAILED',
           `The transaction was signed but the broadcast failed: ${message}. ` +
             'It may still have reached the network. Check txid ' +
-            `${signedTx.txid} on the chain before retrying. To retry, run ` +
-            `broadcast-tx ${parked.objectId}, which re-sends this same ` +
-            `transaction${save ? ', then save-tx' : ''}; building a new ` +
-            'one pays the recipient twice on an account-based chain.',
+            `${signedTx.txid} on the chain first. If it is there, the send ` +
+            `went through: record it with save-tx ${parked.objectId} ` +
+            '--broadcast-elsewhere. If it is not, run broadcast-tx ' +
+            `${parked.objectId}, which re-sends this same transaction` +
+            `${save ? ', then save-tx' : ''}; building a new one pays the ` +
+            'recipient twice on an account-based chain.',
           502,
           {
             txid: signedTx.txid,
@@ -991,8 +993,10 @@ export const signTx = route({
  *   call's result and sends nothing, so a client that lost the response can
  *   ask again. A failed broadcast keeps the handle and answers
  *   `BROADCAST_FAILED`: the transaction may still have reached the network,
- *   so check its txid before anything else, and run this again to re-send
- *   the same bytes rather than building a new transaction.
+ *   so check its txid before anything else. If it is on the chain, the send
+ *   went through, and this answers a re-send as already known: record it
+ *   with `save-tx` and `broadcastElsewhere`. If it is not, run this again to
+ *   re-send the same bytes rather than building a new transaction.
  */
 export const broadcastTx = route({
   core: 'wallet.broadcastTx',
@@ -1043,10 +1047,12 @@ export const broadcastTx = route({
           'BROADCAST_FAILED',
           `The transaction was signed but the broadcast failed: ${message}. ` +
             'It may still have reached the network. Check txid ' +
-            `${signed.txid} on the chain before retrying. To retry, run ` +
-            `broadcast-tx ${record.objectId} again, which re-sends this same ` +
-            'transaction; building a new one pays the recipient twice on an ' +
-            'account-based chain.',
+            `${signed.txid} on the chain first. If it is there, the send ` +
+            `went through: record it with save-tx ${record.objectId} ` +
+            '--broadcast-elsewhere, because a re-send is refused as already ' +
+            `known. If it is not, run broadcast-tx ${record.objectId} again, ` +
+            'which re-sends this same transaction; building a new one pays ' +
+            'the recipient twice on an account-based chain.',
           502,
           {
             txid: signed.txid,
@@ -1071,7 +1077,7 @@ export const saveTx = route({
   core: 'wallet.saveTx',
   coreExtra: {
     broadcastElsewhere:
-      'The engine refuses to record a handle `broadcast-tx` has not sent; this says it was sent another way.'
+      'The engine refuses to record a handle `broadcast-tx` has not sent; this says it reached the network anyway: sent another way, or despite a `BROADCAST_FAILED`.'
   },
   method: 'POST',
   path: '/account/{sessionId}/save-tx',
@@ -1081,7 +1087,7 @@ export const saveTx = route({
     broadcastElsewhere: asOptional(
       doc(
         asBoolean,
-        'The transaction was sent some other way than `broadcast-tx`. Without it, a handle `broadcast-tx` has not sent is refused.'
+        'The transaction reached the network without `broadcast-tx` marking it sent: sent some other way, or a broadcast that answered `BROADCAST_FAILED` and is on the chain. Without it, a handle `broadcast-tx` has not sent is refused.'
       )
     )
   }).withRest,
@@ -1113,7 +1119,7 @@ export const saveTx = route({
     if (record.broadcast !== true && ctx.body.broadcastElsewhere !== true) {
       throw engineError(
         'BAD_REQUEST',
-        `save-tx records a transaction broadcast-tx has sent, and ${objectId} has not been: saving it would mark its inputs spent for a transaction the network has not seen. Run broadcast-tx first, or pass broadcastElsewhere if it was sent another way.`,
+        `save-tx records a transaction broadcast-tx has sent, and ${objectId} has not been: saving it would mark its inputs spent for a transaction the network has not seen. Run broadcast-tx first, or pass broadcastElsewhere if it reached the network another way or despite a BROADCAST_FAILED.`,
         400
       )
     }
