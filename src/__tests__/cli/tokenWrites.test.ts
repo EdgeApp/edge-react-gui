@@ -10,15 +10,13 @@ import { changeEnabledTokenIds } from '../../cli/engine/routes/tokens'
  * wrong list is not a partial failure: it is the user's enabled assets
  * replaced, in the account's synced wallet file, everywhere they are logged
  * in. The client's `--add`/`--remove` sugar reads the current set and posts
- * the whole list back, which is how `new Set(undefined)` once turned
- * `--add X` into "X and nothing else".
+ * the whole list back, so a current set misread as empty turns `--add X`
+ * into "X and nothing else".
  *
- * Nothing drove the successful write. In the offline suites the fake world's
- * wallet is UTXO and has no tokens, so the only reachable arms are the
- * refusals and a no-op; QA could not drive it on a real account either,
- * because no wallet that account loads has a token-capable plugin. A
- * recording stub is what is left, and what it pins is the set that reaches
- * core — which is the whole of the destructive behaviour.
+ * In the offline suites the fake world's wallet is UTXO and has no tokens,
+ * so the only reachable arms are the refusals and a no-op. A recording stub
+ * reaches the successful write, and what it pins is the set that reaches
+ * core, which is the whole of the destructive behaviour.
  */
 function makeCtx(
   body: Record<string, unknown>,
@@ -88,9 +86,9 @@ describe('change-enabled-token-ids', () => {
   it('writes nothing when one id is unknown', async () => {
     // Core ends `changeEnabledTokenIds` with
     // `.filter(tokenId => allTokens[tokenId] != null)`, so it drops what it
-    // does not know and answers 200 — a mistyped contract address arriving
-    // inside a known-good set was indistinguishable from success. The whole
-    // call is refused, before anything is written.
+    // does not know without an error, and a mistyped contract address
+    // arriving inside a known-good set would be indistinguishable from
+    // success. The whole call is refused, before anything is written.
     const { ctx, sent } = makeCtx({
       walletId: 'wallet-1',
       tokenIds: ['tok1', 'deadbeef']

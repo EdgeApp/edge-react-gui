@@ -25,7 +25,8 @@ const ROOT = path.resolve(__dirname, '../../..')
  * `ps -ef` and `/proc/<pid>/cmdline` show a command line to every other user
  * on the host, and a shell writes it to its history. `spawnEngine.ts` states
  * the rule for the API key and forwards it in the environment; the account
- * password, the PIN, the login key and the repo data key had no such path.
+ * password, the PIN, the login key and the repo data key each have a
+ * variable in `SECRET_FLAG_ENV`.
  */
 const saved = new Map<string, string | undefined>()
 
@@ -89,11 +90,11 @@ describe('secret flags', () => {
 
   it('never writes the login credential as the new one', () => {
     // The hazard the per-command table exists for. `--password` means
-    // "authenticate with this" on five commands and "the new password" on
+    // "authenticate with this" on three commands and "the new password" on
     // `change-password`, so one variable for both meanings turns a
     // forgotten flag into a silent credential reset: with
     // `EDGE_CLI_PASSWORD` exported for a login, `change-password` with no
-    // `--password` used to resolve it, send it as the new password and exit
+    // `--password` would resolve it, send it as the new password and exit
     // 0. It has to fail instead, and name its own variable when it does.
     setEnv('EDGE_CLI_PASSWORD', 'the-login-password')
     setEnv('EDGE_CLI_NEW_PASSWORD', '')
@@ -134,15 +135,14 @@ describe('secret flags', () => {
   })
 
   it('maps every credential-writing flag to its own variable', () => {
-    // The check that would have caught `create-account`. The first version
-    // of `WRITE_CREDENTIAL_ENV` enumerated two commands, so a third that
-    // *writes* a credential — `create-account`, which resolves both
-    // `password` and `pin` through `requireSecret` — fell through to the
-    // login variable and created an account whose password and PIN were
-    // another live account's. This walks every command instead: each one
-    // that resolves a credential must either read a write-side variable or
-    // be named in `AUTHENTICATE_ONLY_COMMANDS`, which makes adding a
-    // credential-taking command a decision rather than an omission.
+    // A command that *writes* a credential must not fall through to the
+    // login variable: `create-account` resolves both `password` and `pin`
+    // through `requireSecret`, and reading the login variables would create
+    // an account whose password and PIN are another live account's. So this
+    // walks every command: each one that resolves a credential must either
+    // read a write-side variable or be named in `AUTHENTICATE_ONLY_COMMANDS`,
+    // which makes adding a credential-taking command a decision rather than
+    // an omission.
     const CREDENTIALS = ['password', 'pin']
     const unaccounted: string[] = []
     for (const name of listCommands()) {
@@ -203,10 +203,10 @@ describe('secret flags', () => {
 
   it('covers every flag that carries key material', () => {
     // A seed phrase, a private key or recovery answers are worth more than
-    // any password, and the name list above cannot see them: `--keys` and
-    // `--spend-info` are ordinary on other commands. So the gate is the
-    // inputs themselves — any command whose usage takes one of these flags
-    // must give it a variable.
+    // any password, and the name list above cannot see them: `--spend-info`
+    // is ordinary on other commands. So the gate is the inputs themselves —
+    // any command whose usage takes one of these flags must give it a
+    // variable.
     const keyMaterial = ['import-text', 'create-wallets', 'keys', 'answer']
     const perCommand: Record<string, string[]> = {
       'sweep-private-keys': ['spend-info'],
@@ -236,7 +236,7 @@ describe('secret flags', () => {
 
   it('reads key material from its variable only when asked to', () => {
     // `--import-text` is optional and its absence means fresh keys, so a
-    // stale export read implicitly turned a create into an import.
+    // stale export read implicitly would turn a create into an import.
     setEnv('EDGE_CLI_IMPORT_TEXT', 'seed words')
     const flags = { flags: { 'import-text': 'string' as const } }
     const create = findCommand('create-currency-wallet')
@@ -293,14 +293,12 @@ describe('secret flags', () => {
   })
 
   it('reads every secret flag through the secret accessors', () => {
-    // The table is not the gate: `login.ts` had `args.string('otp-key')`
-    // and `args.requireString('recovery-key')` while the guide published
-    // `EDGE_CLI_OTP_KEY` and `EDGE_CLI_RECOVERY_KEY`, so two of the eight
-    // variables did nothing — the OTP one silently, since `--otp-key` is
-    // optional and the request simply went out without it. The call sites
-    // are what has to be checked.
+    // The table is not the gate: a call site reading `args.string('otp-key')`
+    // or `args.requireString('recovery-key')` leaves its variable doing
+    // nothing, the OTP one silently, since `--otp-key` is optional and the
+    // request goes out without it. The call sites are what has to be checked.
     // The key-material flags too, and `.strings(` for the repeated ones: a
-    // call site back on `args.strings('answer')` left both recovery-answer
+    // call site on `args.strings('answer')` leaves both recovery-answer
     // variables doing nothing.
     const dir = path.join(ROOT, 'src/cli/commands')
     const names = new Set(Object.keys(SECRET_FLAG_ENV))
@@ -310,8 +308,8 @@ describe('secret flags', () => {
     const flags = [...names]
       .map(f => f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
       .join('|')
-    // `.string(`, `.strings(` and `.requireString(`: written as
-    // `(?:require)?String`, case and all, this matched only the last.
+    // `.string(`, `.strings(` and `.requireString(`. The case differs, so
+    // `(?:require)?String` would match only the last.
     const wrong = new RegExp(
       `\\.(?:requireString|strings?)\\('(${flags})'\\)`,
       'g'
@@ -336,20 +334,15 @@ describe('secret flags', () => {
   })
 
   it('does not put a secret in a URL', () => {
-    // `check-password-rules`, `admin-repo-list` and `admin-repo-get` were
-    // `GET` with the secret in the query string, which the engine's own log
-    // redacts values out of precisely because a URL is written down by
-    // everything it passes through.
+    // A URL is written down by everything it passes through, which is why
+    // the engine's own log redacts every query value. A recovery key counts
+    // as a secret here: with the answers, it resets the account's password.
     //
     // Against the generated table, because the property is directly
     // checkable there: `commands.json` records `method` per command and
-    // `target` per argument. This case used to assert `not.toContain(
-    // '?password=')` on each command's *usage string* — a string of the form
-    // `check-password-rules --password=<password>`, which could not hold a
-    // query parameter under any defect, so all three of those commands
-    // would have passed it had they gone back to `GET`. And one route had:
-    // `fetch-recovery-questions` was `GET` with `recoveryKey` in the query,
-    // and a recovery key with the answers resets the account's password.
+    // `target` per argument. A command's usage string, of the form
+    // `check-password-rules --password=<password>`, cannot hold a query
+    // parameter under any defect, so it cannot show a secret sent by `GET`.
     const secretish = new RegExp(
       `^(new-)?(${Object.keys(SECRET_FLAG_ENV)
         .map(flag => flag.replace(/^new-/, ''))

@@ -21,17 +21,17 @@ import { thrown } from '../../util/fake/thrownEngineError'
 /**
  * The spend path's own behaviour, driven through the handlers.
  *
- * Nothing reached these bodies before. In the fake world
- * `makeFakeCoreContext` builds the *real* currency plugins, so a wallet there
- * has no funds and no network: every invocation of `spend`, `make-spend`,
- * `sign-tx`, `broadcast-tx` and `save-tx` in the offline suites is a refusal
- * — `INSUFFICIENT_FUNDS`, a shape error, or `OBJECT_NOT_FOUND` inside
- * `requireOwnedHandle` — so the whole sequence past `wallet.makeSpend` was
- * untested: `dryRun`, `broadcast: false`, the save-after-broadcast arm and
- * its documented `saveError` field, the staged `make-spend → sign-tx →
- * broadcast-tx → save-tx` flow that `docs/EDGE_CLI.md` presents as the way
- * to stage a send, and `requireTxHandle`'s `OBJECT_WALLET_MISMATCH`, a code
- * the reference publishes and nothing produced.
+ * In the fake world `makeFakeCoreContext` builds the *real* currency plugins,
+ * so a wallet there has no funds and no network: every invocation of
+ * `spend`, `make-spend`, `sign-tx`, `broadcast-tx` and `save-tx` in the
+ * offline suites is a refusal (`INSUFFICIENT_FUNDS`, a shape error, or
+ * `OBJECT_NOT_FOUND` inside `requireOwnedHandle`), so those suites never
+ * reach the sequence past `wallet.makeSpend`: `dryRun`, `broadcast: false`,
+ * the save-after-broadcast arm and its documented `saveError` field, the
+ * staged `make-spend → sign-tx → broadcast-tx → save-tx` flow that
+ * `docs/EDGE_CLI.md` presents as the way to stage a send, and
+ * `requireTxHandle`'s `OBJECT_WALLET_MISMATCH`, a code the reference
+ * publishes.
  *
  * A wallet whose four calls resolve is enough, which is the shape
  * `spendMemo.test.ts` and `routeHelpers.test.ts` already use.
@@ -180,7 +180,7 @@ function makeCtx(opts: {
   }
 }
 
-/** `{ to, nativeAmount, walletId }`, the shorthand every case here uses. */
+/** `{ to, nativeAmount, walletId }`, the shorthand most cases here use. */
 const body = (
   extra: Record<string, unknown> = {}
 ): Record<string, unknown> => ({
@@ -250,8 +250,8 @@ describe('spend', () => {
 
   it('tells a metadata failure apart from a failed save', async () => {
     // The transaction is recorded by the time its tags are written, so a
-    // tagging failure reported as `saveError` sent an operator to save it
-    // again.
+    // tagging failure reported as `saveError` would send an operator to save
+    // it again.
     const objects = new ObjectHandleStore()
     const warnings: Warning[] = []
     const { wallet, calls } = makeWallet({ saveMetadataFails: true })
@@ -285,14 +285,13 @@ describe('spend', () => {
   })
 
   it('carries the txid out of a failed broadcast', async () => {
-    // The throw used to escape the handler, so the signed transaction and
-    // its txid were discarded: the only `storeTransaction` on this route is
-    // the `dryRun` arm. A socket timeout *after* the node accepted the
-    // transaction therefore answered `NETWORK_ERROR` with nothing for the
-    // caller to reconcile against — and on an account-based chain a
-    // scripted retry builds a fresh transaction at the next nonce and pays
-    // the recipient twice. The `saveTx` arm above takes the same stance for
-    // the same reason, on the path where the uncertainty is smaller.
+    // A socket timeout *after* the node accepted the transaction looks the
+    // same as one before it, so the failure carries the signed transaction
+    // and its txid out of the handler. With nothing to reconcile against, a
+    // scripted retry on an account-based chain would build a fresh
+    // transaction at the next nonce and pay the recipient twice. The
+    // `saveTx` arm above takes the same stance for the same reason, on the
+    // path where the uncertainty is smaller.
     const objects = new ObjectHandleStore()
     const warnings: Warning[] = []
     const { wallet, calls } = makeWallet({ broadcastFails: true })
@@ -376,13 +375,11 @@ describe('spend', () => {
   })
 
   it('refuses useMax beside an amount instead of emptying the wallet', async () => {
-    // The pair `spend-max` actively invited: its usage line offered the two
-    // amount flags while `useMax` overwrote whatever they said with
-    // `getMaxSpendable`, so `spend-max --to=<addr> --native-amount=50000`
-    // signed and broadcast the whole spendable balance — 200, no warning,
-    // irreversible. Refused before `findWallet`, like every other
-    // contradictory pair on this body, because a usage error must not
-    // depend on the wallet having enough funds to reach signing.
+    // `useMax` replaces the amount with `getMaxSpendable`, so accepting an
+    // amount beside it would sign and broadcast the whole spendable balance
+    // instead, with no warning and no way back. Refused before `findWallet`,
+    // like every other contradictory pair on this body, because a usage error
+    // must not depend on the wallet having enough funds to reach signing.
     for (const amountField of [
       { nativeAmount: '50000' },
       { amount: '0.0005' }
@@ -432,7 +429,7 @@ describe('spend', () => {
 
   it('refuses useMax beside a payment request that names an amount', async () => {
     // The third place an amount comes from: a merchant invoice asking for
-    // 0.001 BTC would have been paid the whole spendable balance.
+    // 0.001 BTC would be paid the whole spendable balance.
     const objects = new ObjectHandleStore()
     const { wallet, calls } = makeWallet()
     const ctx = makeCtx({
@@ -472,7 +469,7 @@ describe('spend', () => {
   })
 
   it('refuses useMax with more than one destination', async () => {
-    // The maximum is one amount, and it went to `spendTargets[0]` alone:
+    // The maximum is one amount, and it would go to `spendTargets[0]` alone:
     // the whole balance to the first address and no amount for the second.
     const objects = new ObjectHandleStore()
     const { wallet, calls } = makeWallet()
@@ -513,8 +510,8 @@ describe('spend', () => {
 })
 
 describe('nativeAmount beside its alias', () => {
-  // `amount` is an alias of `nativeAmount`. Both were accepted and
-  // `nativeAmount` silently won, so two different values signed one of them.
+  // `amount` is an alias of `nativeAmount`. Letting one silently win would
+  // sign one of two different values.
   it('refuses the two when they disagree', async () => {
     const objects = new ObjectHandleStore()
     const { wallet, calls } = makeWallet()
@@ -550,8 +547,8 @@ describe('nativeAmount beside its alias', () => {
 })
 
 describe('an amount beside a payment request', () => {
-  // `--to='bitcoin:<address>?amount=0.001' --amount=0.5` paid 500 times the
-  // invoice: the body's amount won and nothing said so.
+  // `--to='bitcoin:<address>?amount=0.001' --amount=0.5` would pay 500 times
+  // the invoice if the body's amount won and nothing said so.
   it('refuses the two when they disagree', async () => {
     const objects = new ObjectHandleStore()
     const { wallet, calls } = makeWallet()
@@ -593,12 +590,12 @@ describe('an amount beside a payment request', () => {
 })
 
 describe('spendInfo beside the shorthand', () => {
-  // Refused rather than ranked. `spendInfo` was used as-is and the four
-  // shorthand fields were never read, so on three irreversible routes a
-  // caller could name an asset or a destination and have it dropped:
+  // Refused rather than ranked. A `spendInfo` used as-is leaves the four
+  // shorthand fields unread, so on three irreversible routes a caller could
+  // name an asset or a destination and have it dropped:
   // `asSpendInfo.tokenId` defaults to null and null is the chain's own
-  // coin, so a token id beside a spendInfo signed and broadcast the native
-  // asset instead.
+  // coin, so a token id beside a spendInfo would sign and broadcast the
+  // native asset instead.
   const spendInfo = {
     spendTargets: [{ publicAddress: 'bc1qelsewhere', nativeAmount: '1000' }]
   }
@@ -650,12 +647,11 @@ describe('spendInfo beside the shorthand', () => {
 
 describe('the staged flow', () => {
   it('reports a save-tx that failed after the money left', async () => {
-    // `onMetadataError` diverted the tagging failure and left
-    // `wallet.saveTx` itself to propagate — out of `consume`, whose
-    // `finally` has already deleted the record. By then the money has
-    // gone: the caller got `500 INTERNAL_ERROR`, outside this route's
-    // declared errors, and the retry answered `OBJECT_NOT_FOUND`, with no
-    // API path left to record the transaction.
+    // A `wallet.saveTx` failure that propagated out of `consume`, whose
+    // `finally` deletes the record, would reach the caller after the money
+    // has gone as `500 INTERNAL_ERROR`, outside this route's declared
+    // errors, and the retry would answer `OBJECT_NOT_FOUND`, with no API
+    // path left to record the transaction.
     const objects = new ObjectHandleStore()
     const warnings: Warning[] = []
     const { wallet } = makeWallet({ saveTxFails: true })
@@ -844,9 +840,9 @@ describe('the staged flow', () => {
 
   it('answers a repeat broadcast-tx without sending again', async () => {
     // A client that timed out or lost the socket after the engine sent asks
-    // again. Sending again reached the plugin, which answers "already known"
-    // or "missing inputs", so a payment that went through was reported as
-    // failed.
+    // again. Sending again would reach the plugin, which answers "already
+    // known" or "missing inputs", so a payment that went through would be
+    // reported as failed.
     const objects = new ObjectHandleStore()
     const { wallet, calls } = makeWallet()
     const staged: any = await makeSpend.handler(
@@ -932,7 +928,7 @@ describe('the staged flow', () => {
   it('will not save a bump nobody has broadcast', async () => {
     // `broadcast-tx` marks the handle sent, then `accelerate` puts an unsent
     // replacement into the same handle. The mark has to go with the
-    // transaction it described: kept, it let `save-tx` record the
+    // transaction it described: kept, it would let `save-tx` record the
     // replacement as sent, a phantom pending send with its inputs marked
     // spent until a resync.
     const objects = new ObjectHandleStore()

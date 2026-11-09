@@ -18,8 +18,7 @@ import { type CliContext, findCommand, UsageError } from '../../cli/command'
  * `secretFlags.test.ts` checks the table and the accessors; this runs the
  * handlers, because a call site reading `args.strings('answer')` or a
  * generated arm reading `args.string(a.flag)` would leave a documented
- * variable doing nothing while every table check passed — the way two of
- * the first eight credential variables once did.
+ * variable doing nothing while every table check passed.
  */
 const saved = new Map<string, string | undefined>()
 

@@ -31,11 +31,11 @@ const asLocalSettings = asObject({
  * The same settings, plus whether they are the user's.
  *
  * The read is lenient, so a `Settings.json` that is *there* and cannot be
- * read answered `{ spamFilterOn: true }` — the cleaner's default,
+ * read answers `{ spamFilterOn: true }`, the cleaner's default,
  * indistinguishable from a user who really has the filter on.
  * `localAccountSettings`' own rule is that "a caller that caches must not
- * then mark itself authoritative", and the GUI applies it; a REST caller
- * could not, because nothing in the response said which it had.
+ * then mark itself authoritative", and the GUI applies it; `trusted` is what
+ * lets a REST caller apply it too.
  */
 const asLocalSettingsRead = asObject({
   spamFilterOn: doc(asBoolean, SPAM_FILTER_DOC),
@@ -49,8 +49,8 @@ const asLocalSettingsRead = asObject({
  * What a write had to do to an unreadable file first, as published.
  *
  * A union rather than an optional path, because a path cannot say "deleted":
- * when the file will not even decrypt there is nothing to move, and the
- * answer used to be the same absent field as an ordinary write.
+ * when the file will not even decrypt there is nothing to move, and an
+ * absent path would read the same as an ordinary write.
  */
 const asRecovery = asEither(
   asObject({
@@ -76,7 +76,7 @@ const asLocalSettingsWrite = asObject({
   spamFilterOn: doc(asBoolean, SPAM_FILTER_DOC),
   recovery: doc(
     asOptional(asRecovery),
-    'Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. Refusing the write instead was a one-way door: the file does not repair itself, so every later write failed the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written.'
+    'Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. The write recovers rather than refuses because the file does not repair itself, so every later write would fail the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written.'
   )
 })
 
@@ -104,8 +104,7 @@ export const localSettings = route({
     const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
       getAccount(ctx)
     )
-    // And reported, not only published: the warning the reader writes goes to
-    // `console`, which in the daemon is the startup log a clean stop deletes.
+    // And reported in the engine log, not only published in the response.
     if (!trusted) {
       ctx.state.logger.warn(
         'local-settings answered defaults: Settings.json is present and unreadable'
@@ -147,13 +146,11 @@ export const changeLocalSettings = route({
     return await serializeByKey(
       `localSettings:${account.rootLoginId}`,
       async () => {
-        // Strict, so this write cannot put the twelve defaults over the
-        // user's `spendingLimits` — and, after two failed attempts, it
-        // moves the unreadable file aside rather than answering the same
-        // `500` forever. A refusal with no way out is what it used to do:
-        // `Settings.json` does not repair itself, so `--spam-filter-on`
-        // failed identically on every later call, and the file is on
-        // `account.localDisklet` where the caller cannot move it by hand.
+        // Strict, so this write cannot put the defaults over the user's
+        // `spendingLimits`, and, after two failed attempts, it moves the
+        // unreadable file aside rather than answering the same `500`
+        // forever: `Settings.json` does not repair itself, and the file is
+        // on `account.localDisklet` where the caller cannot move it by hand.
         const { settings, recovery } = await readLocalAccountSettingsForWrite(
           account
         ).catch((error: unknown) => {

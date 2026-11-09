@@ -16,10 +16,10 @@ import {
 } from '../../util/exchangeRates'
 
 /**
- * The two rate routes, which `REFUSAL_ONLY` excused with suites for other
- * modules — `exchangeRatesCache.test.ts` covers `src/util/exchangeRates.ts`
- * and `ratesScaling.test.ts` covers `displayToNative`, a helper in this
- * file, while `routes/rates.ts` itself ran at 0% of branches.
+ * The two rate routes, which `REFUSAL_ONLY` excuses with this suite.
+ * `exchangeRatesCache.test.ts` covers `src/util/exchangeRates.ts` and
+ * `ratesScaling.test.ts` covers `displayToNative`; this one runs the
+ * handlers in `routes/rates.ts`.
  *
  * The upstream server is replaced at `globalThis.fetch`, which is where
  * `fetchRates`'s own default fetch ends up: the routes pass no `doFetch`, so
@@ -93,12 +93,11 @@ const DATE = new Date('2024-01-01T00:00:00.000Z')
 
 describe('rates-query', () => {
   it('costs one upstream request for a mixed body', async () => {
-    // The property the handler's own comment publishes and no test held:
-    // both sets are *queued* before either is awaited. Awaiting the crypto
-    // lookups first made a mixed body pay two `FETCH_FREQUENCY` debounces
-    // and two upstream requests, measured at 2,006ms / 2 against 1,005ms /
-    // 1 — against a description promising that asking for many rates at
-    // once costs a single request.
+    // The property the handler's own comment publishes: both sets are
+    // *queued* before either is awaited. Awaiting the crypto lookups first
+    // would make a mixed body pay two `FETCH_FREQUENCY` debounces and two
+    // upstream requests, against a description promising that asking for
+    // many rates at once costs a single request.
     globalThis.fetch = pricingFetch
     const answer = (await ratesQuery.handler(
       ctxFor({

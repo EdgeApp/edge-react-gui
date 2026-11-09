@@ -109,11 +109,9 @@ async function main(): Promise<void> {
     // Status over unix and TCP must match
     start = Date.now()
     const statusUnix = await engineRequest(sock, 'GET', '/engine/status')
-    // With the bearer token from the engine's run file. The TCP guard
-    // requires it on every request, so this probe — which sent no headers at
-    // all — got 401 and made the parity check fail on every run: the whole
-    // networked suite exited 1 for ever, and a real regression in any of the
-    // twenty-odd cases after it was indistinguishable from the fixed red.
+    // With the bearer token from the engine's run file: the TCP guard
+    // requires it on every request, and a probe without it gets 401 and
+    // fails the parity check.
     const tcpToken = readTcpToken(9008)
     if (tcpToken == null) {
       throw new Error(
@@ -121,18 +119,16 @@ async function main(): Promise<void> {
           'minted one when started with --tcp'
       )
     }
-    // Through `engineRequest`, with a TCP target: this was a twenty-five line
-    // copy of it, and the module's own docstring says it exists to have
-    // ended those. It took a `socketPath` and nothing else, which is why
-    // every TCP probe in the suites was written again by hand.
+    // Through `engineRequest`, with a TCP target, so this probe gets the same
+    // error, abort and timeout handling as every other request.
     const statusTcp = await engineRequest(
       { host: '127.0.0.1', port: 9008 },
       'GET',
       '/engine/status',
       undefined,
-      // The probe had no deadline of its own either, so an engine that
-      // accepted the connection and never answered hung the suite instead of
-      // failing this check.
+      // A deadline shorter than `engineRequest`'s two-minute default, so an
+      // engine that accepts the connection and never answers fails this
+      // check rather than holding up the suite.
       { headers: { [TCP_TOKEN_HEADER]: tcpToken }, timeoutMs: 30_000 }
     )
     record(

@@ -14,18 +14,16 @@ import { asEdgeMetadata, withoutUndefined } from '../../cli/engine/schemas'
  * Core merges rather than replaces — `{ ...walletStates[id], ...newStates[id] }`
  * — and an object spread copies a key whose value is `undefined` over the real
  * one. `asObject` materialises every declared key, so the cleaned body of
- * `--archived=true` carried `hidden: undefined` and `sortIndex: undefined`
- * along with it and wiped both, in the account's *synced* repo.
+ * `--archived=true` carries `hidden: undefined` and `sortIndex: undefined`
+ * along with it, and core's merge would copy both over the real values, in
+ * the account's *synced* repo.
  */
 
 /**
  * The route's own inner cleaner, so the test starts where the route does.
  *
- * Imported rather than restated. The copy that used to live here named four
- * fields where core's `EdgeWalletState` has five, which is how
- * `migratedFromWalletId` went missing from the declaration without any test
- * noticing — and `.withRest` meant a caller could still send it, wrongly
- * typed, into core's own uncleaner as a 500.
+ * Imported rather than restated, so these cases check the declaration the
+ * route uses: a restated copy could drift from it without any test noticing.
  */
 const asStates = asWalletStateEntry
 
@@ -44,16 +42,16 @@ describe('onlyNamedFlags', () => {
   })
 
   it('refuses a misspelled flag rather than writing it', () => {
-    // The inner cleaner is `.withRest`, so a typo survives cleaning and
-    // core wrote it verbatim into the account's synced `Keys/<hash>.json`:
-    // `--wallet-states='{"<id>":{"archvied":true}}'` answered 204, archived
-    // nothing, and synced a junk key to every device. Dropping `.withRest`
-    // would have answered 204 and changed nothing, which is the failure the
-    // route's wallet-id resolution exists to prevent.
+    // The inner cleaner is `.withRest`, so a typo survives cleaning, and core
+    // would write it verbatim into the account's synced `Keys/<hash>.json`:
+    // `--wallet-states='{"<id>":{"archvied":true}}'` would answer 204,
+    // archive nothing, and sync a junk key to every device. Dropping
+    // `.withRest` would answer 204 and change nothing, which is the failure
+    // the route's wallet-id resolution exists to prevent.
     const cleaned = asStates({ archvied: true })
     // `.withRest`'s own output type does not name the rest keys, so this is
     // the cast the route itself does not need: the point is that the key is
-    // there, which is why core received it.
+    // there, which is how it would reach core.
     expect((cleaned as Record<string, unknown>).archvied).toBe(true)
     let caught: { code?: string; status?: number; message?: string } = {}
     try {
@@ -105,13 +103,14 @@ describe('onlyNamedFlags', () => {
 })
 
 /**
- * The same defect on the spend path's metadata.
+ * The same rule on the spend path's metadata.
  *
  * `asEdgeMetadata` materialises all five keys, and `mergeMetadata` spreads
- * the cleaned value over whatever the URI carried — so any `--metadata`
- * blanked every field it did not itself set: the payee, the category, the
- * bizId. `JSON.stringify` prints the cleaned object as the caller sent it
- * either way, which is why this and the wallet flags both hid.
+ * the cleaned value over whatever the URI carried, so with the `undefined`
+ * keys left in, any `--metadata` would blank every field it did not itself
+ * set: the payee, the category, the bizId. `JSON.stringify` prints the
+ * cleaned object as the caller sent it either way, so a printed body never
+ * shows this, for the metadata or for the wallet flags.
  */
 describe('withoutUndefined over cleaned metadata', () => {
   it('keeps the fields a caller did not send out of the merge', () => {
@@ -151,11 +150,11 @@ describe('withoutUndefined over cleaned metadata', () => {
 
 describe('the wallet-state cleaner against core', () => {
   it('declares every field EdgeWalletState carries', () => {
-    // `migratedFromWalletId` was missing, and `.withRest` meant a caller
-    // could still send it: a wrong-typed one went through
+    // A field missing from the declaration still passes `.withRest`: a
+    // wrong-typed `migratedFromWalletId` would go through
     // `account.changeWalletStates` into `asWalletStateFile`'s uncleaner and
-    // threw inside core, so the route answered `500 INTERNAL_ERROR` where
-    // its declaration should have given a 400 naming the field.
+    // throw inside core, so the route would answer `500 INTERNAL_ERROR`
+    // where its declaration should give a 400 naming the field.
     const typed: EdgeWalletState = {
       archived: true,
       deleted: false,
@@ -175,10 +174,9 @@ describe('the wallet-state cleaner against core', () => {
 /**
  * The cleaner and the accepted-key list are one declaration.
  *
- * They were two, under a comment saying they could not drift, with nothing
- * holding them together — and `onlyNamedFlags` refuses every key the list
- * does not name, so a sixth field added to the cleaner and published in the
- * generated reference would have been refused by the route documenting it.
+ * `onlyNamedFlags` refuses every key the list does not name, so if the two
+ * drifted, a sixth field added to the cleaner and published in the generated
+ * reference would be refused by the route documenting it.
  */
 describe('WALLET_STATE_FLAGS', () => {
   it('is exactly what the cleaner accepts', () => {

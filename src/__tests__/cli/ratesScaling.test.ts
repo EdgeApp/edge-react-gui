@@ -7,9 +7,8 @@ import { displayToNative } from '../../cli/engine/routes/rates'
  *
  * `rates-usd-to-native` answers `nativeAmount`, documented as "What a spend
  * actually takes", from `(usdAmount / rate).toFixed(8)` times the asset's
- * multiplier. The rest of that handler needs the live rates server, so this
- * was unreachable from any test; a wrong answer here is wrong by orders of
- * magnitude and looks plausible.
+ * multiplier. A wrong answer here is wrong by orders of magnitude and looks
+ * plausible.
  */
 describe('displayToNative', () => {
   it('scales whole coins by an 8-decimal multiplier', () => {
@@ -47,10 +46,10 @@ describe('displayToNative', () => {
   })
 
   it('reads exponential notation, which the route cannot produce anyway', () => {
-    // Measured, because the route's `(usdAmount / rate).toFixed(8)` means a
-    // caller never reaches this with an exponential — and if `toFixed` were
-    // ever dropped, `String(1e-7)` is `"1e-7"`, which biggystring scales
-    // correctly rather than reading as 1. Result in decimal either way.
+    // The route's `(usdAmount / rate).toFixed(8)` means a caller never
+    // reaches this with an exponential, but if `toFixed` were ever dropped,
+    // `String(1e-7)` is `"1e-7"`, which biggystring scales correctly rather
+    // than reading as 1. Result in decimal either way.
     expect(displayToNative(String(1e-7), '100000000')).toBe('10')
     expect(displayToNative((1e-7).toFixed(8), '100000000')).toBe('10')
     expect(displayToNative(String(1e-9), '100000000')).toBe('0')

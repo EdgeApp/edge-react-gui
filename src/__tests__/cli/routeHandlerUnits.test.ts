@@ -21,13 +21,11 @@ import { encodeUri, parseUri } from '../../cli/engine/routes/uri'
 import { thrown } from '../../util/fake/thrownEngineError'
 
 /**
- * Three handler bodies whose only logic nothing asserted.
+ * Handler bodies whose logic the offline harness cannot see.
  *
- * Each is a decision the engine makes and neither jest nor the offline
- * harness could see: the harness drives the command and reads the envelope,
- * so a number on its way *into* core and a classification that changes only
- * the status are both invisible to it, and jest never loaded these routes at
- * all.
+ * Each is a decision the engine makes, and the harness drives the command
+ * and reads the envelope, so a number on its way *into* core and a
+ * classification that changes only the status are both invisible to it.
  */
 describe('admin-make-lobby', () => {
   /** A context whose `makeLobby` records the period core was given. */
@@ -72,13 +70,12 @@ describe('admin-make-lobby', () => {
   }
 
   it('sends core milliseconds for the documented seconds', async () => {
-    // The handler's own comment records what a wrong value costs: passing
-    // `--period-seconds=30` straight through reached `makePeriodicTask`'s
-    // `msGap` as 30 *milliseconds*, so the engine polled
-    // `GET /v2/lobby/{id}` about 33 times a second for the handle's whole
-    // five-minute TTL — roughly 10,000 requests against production, with
-    // the single event loop saturated throughout. Nothing could see the
-    // number: the harness only knows the command exited 0.
+    // Passed straight through, `--period-seconds=30` would reach
+    // `makePeriodicTask`'s `msGap` as 30 *milliseconds*, so the engine would
+    // poll `GET /v2/lobby/{id}` about 33 times a second for the handle's
+    // whole five-minute TTL: roughly 10,000 requests against production,
+    // with the single event loop saturated throughout. The harness only
+    // knows the command exited 0.
     const { ctx, periods } = makeCtx({ lobbyRequest: {}, period: 30 })
     const result: any = await adminMakeLobby.handler(ctx)
     expect(periods).toStrictEqual([30000])
@@ -542,9 +539,9 @@ describe('get-payment-protocol-info', () => {
 
   it('answers NETWORK_ERROR only for a failure that got no answer', async () => {
     // The distinction these arms draw is retryable versus not —
-    // `EXIT_CODE_BY_ERROR` turns 503 into exit 6 — and the defect they fix
-    // was *every* failure answering retryable, which told a script to try
-    // again for ever about a 404 or an unparseable payload.
+    // `EXIT_CODE_BY_ERROR` turns 503 into exit 6 — and *every* failure
+    // answering retryable would tell a script to try again for ever about a
+    // 404 or an unparseable payload.
     const error = Object.assign(new Error('socket hang up'), {
       code: 'ECONNRESET'
     })
@@ -557,7 +554,8 @@ describe('get-payment-protocol-info', () => {
 
   it('names the chain for a wallet type that has no payment requests', async () => {
     // The likeliest thing to land here, and not the URL at all: blaming
-    // `paymentProtocolUrl` sent the caller to check a field they got right.
+    // `paymentProtocolUrl` would send the caller to check a field they got
+    // right.
     const answer = await thrown(
       async () =>
         await getPaymentProtocolInfo.handler(
@@ -603,11 +601,11 @@ describe('get-payment-protocol-info', () => {
  * Whether a plugin's refusal reaches the caller as the declared 400.
  *
  * A currency plugin throws a plain `Error` for an unparseable URI or an
- * address it cannot encode, `mapCoreError` has no arm for a plain `Error`,
- * and `toErrorBody` therefore answered `500 INTERNAL_ERROR` — an engine
- * fault — for a string the caller got wrong, on routes whose declared errors
- * say `BAD_REQUEST`. Neither handler was reachable from the offline harness:
- * its two cases are successes, and the fractional-amount case fails in
+ * address it cannot encode, and `mapCoreError` has no arm for a plain
+ * `Error`, so unwrapped, `toErrorBody` would answer `500 INTERNAL_ERROR`, an
+ * engine fault, for a string the caller got wrong, on routes whose declared
+ * errors say `BAD_REQUEST`. The offline harness cannot reach these arms: its
+ * two cases are successes, and the fractional-amount case fails in
  * `asIntegerString` before the plugin is called at all.
  */
 describe('parse-uri and encode-uri', () => {
@@ -642,9 +640,8 @@ describe('parse-uri and encode-uri', () => {
     const failure = await thrown(async () => await parseUri.handler(ctx))
     expect(failure.code).toBe('BAD_REQUEST')
     expect(failure.status).toBe(400)
-    // The plugin's own words, kept: `spend --to=notanaddress` and
-    // `parse-uri --uri=notanaddress` used to report differently for
-    // identical input.
+    // The plugin's own words, kept, as `spend --to=notanaddress` keeps them
+    // for identical input.
     expect(failure.message).toBe('Could not parse URI: Invalid address')
   })
 

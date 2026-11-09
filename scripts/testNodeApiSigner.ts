@@ -46,12 +46,12 @@ async function main(): Promise<void> {
     'apiSecret'
   )
 
-  // `base16.parse`, the way `makeCoreContext.ts` reads the same secret three
-  // files away — this script's whole job is to assert that the native signer
-  // agrees with a JS reference, so the reference has to read the key the way
-  // production does. `Buffer.from(hex, 'hex')` also truncates silently at
-  // the first non-hex character, so a mistyped `apiSecret` produced a
-  // signature mismatch report rather than "bad secret".
+  // `base16.parse`, the way `apiCredentials.ts` reads an API secret for
+  // `makeCoreContext`: this script's whole job is to assert that the native
+  // signer agrees with a JS reference, so the reference has to read the key
+  // the way production does. `Buffer.from(hex, 'hex')` also truncates
+  // silently at the first non-hex character, so a mistyped `apiSecret` would
+  // report a signature mismatch rather than a bad secret.
   const secret = base16.parse(
     edgeKey.apiSecret.replace(/^0x/i, '').toUpperCase()
   )

@@ -232,10 +232,8 @@ export const changeRecovery = route({
     // order as `questions`" — enforced rather than merely stated. Core does
     // not check it: `makeRecovery2Kit` derives `question2Box` from the
     // questions and `recovery2Auth` from the answers independently, so a
-    // mismatched call returned 200 with a `recoveryKey` for a recovery
-    // setup that can never be used. `fetch-recovery-questions` then showed
-    // two questions while the server's hash covered one answer, and
-    // `login-with-recovery` could never succeed — a credential that looks
+    // mismatched call would return 200 with a `recoveryKey` for a recovery
+    // setup `login-with-recovery` can never use: a credential that looks
     // configured and is permanently dead. Easy to reach, because the flags
     // are repeatable.
     if (questions.length !== answers.length) {

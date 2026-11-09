@@ -45,11 +45,9 @@ import { getAccount, requireOwnedHandle } from './helpers'
  * A caller's metadata over whatever the URI carried.
  *
  * `withoutUndefined` on both sides, because `asEdgeMetadata` materialises
- * all five keys: spreading the cleaned value directly meant any
- * `--metadata` blanked every field it did not itself set. Measured —
- * `{ notes: 'x' }` over a transaction with a payee, a category and a bizId
- * left `notes` and `undefined` for the other three, and `JSON.stringify`
- * printed the cleaned value as `{"notes":"x"}` either way.
+ * all five keys: spreading the cleaned value directly would let any
+ * `--metadata` blank every field it did not itself set, while
+ * `JSON.stringify` prints the cleaned value as though those keys were absent.
  */
 function mergeMetadata(
   base: EdgeMetadata | undefined,
@@ -66,10 +64,9 @@ function mergeMetadata(
 /**
  * The fields `buildSpendInfo` reads, as its three callers declare them.
  *
- * Named rather than `Record<string, unknown>`: the erased type threw away
- * what `route.ts` had already validated, so every field was checked twice
- * with two different messages and a renamed declaration would have left the
- * helper's string literals silently stale.
+ * Named rather than `Record<string, unknown>`, so the helper keeps the types
+ * `route.ts` has already validated instead of checking every field again by
+ * hand.
  */
 interface SpendInput {
   spendInfo?: ReturnType<typeof asSpendInfo>
@@ -77,8 +74,7 @@ interface SpendInput {
   nativeAmount?: string
   amount?: string
   tokenId?: string | null
-  // Typed, because the declaration validates it now: it was `unknown` while
-  // the field was `asCoreValue` and the handler re-checked it by hand.
+  // Typed, because the declaration validates it.
   metadata?: ReturnType<typeof asEdgeMetadata>
 }
 
@@ -87,11 +83,11 @@ interface SpendInput {
  *
  * Core's `makeSpend` hands an empty `spendTargets` to the plugin, which
  * throws a plain `Error` — `500 INTERNAL_ERROR`, outside the declared errors
- * of every route that calls it — so a one-flag mistake on a documented
- * command answered a fault rather than saying what was missing.
+ * of every route that calls it — so without this check a one-flag mistake
+ * on a documented command would answer a fault rather than saying what was
+ * missing.
  *
- * `get-max-spendable` and `spend` each had this guard written out; the third
- * caller, `make-spend`, did not, which is what a third copy is for.
+ * Shared by `get-max-spendable`, `spend` and `make-spend`.
  */
 function assertDestination(spendInfo: EdgeSpendInfo, extra: string = ''): void {
   if (spendInfo.spendTargets.length > 0) return
@@ -137,8 +133,8 @@ function assertSpendAmounts(
  * `createEdgeMemo` reads the type off the wallet's first non-hidden
  * `memoOptions` entry, which is how the GUI does it. The fallbacks cover a
  * plugin that still only declares the deprecated `memoType`, and one that
- * declares no memo support at all — where `text` is the historical
- * behaviour and the plugin is what refuses it.
+ * declares no memo support at all, where the memo goes as `text` and the
+ * plugin is what refuses it.
  *
  * Exported for its test: the URI spend path needs a funded wallet, so the
  * offline suites cannot reach it, and getting the memo *kind* wrong is
@@ -240,19 +236,18 @@ export async function buildSpendInfo(
   const bodyMetadata = body.metadata
 
   if (body.spendInfo != null) {
-    // Refused rather than ranked. `spendInfo` was used as-is and the
-    // shorthand siblings were never read, so on the three irreversible
-    // routes that share this body a caller could name an asset or a
-    // destination and have it silently dropped:
-    // `spend --token-id=<usdc> --spend-info='{"spendTargets":[…]}'` signed
-    // and broadcast native ETH, because `asSpendInfo.tokenId` defaults to
-    // null and null means the chain's own coin; `--to=<address>` beside a
-    // spendInfo sent to the spendInfo's address. The six fields are
-    // published as peer optionals and only the `spendInfo` prose hints at
-    // precedence. This file's stance for a contradictory pair is already a
-    // refusal up front — see `save` with `broadcast: false` — because a
-    // usage error must not depend on the wallet having enough funds to get
-    // as far as signing.
+    // Refused rather than ranked. `spendInfo` is used as-is, so on the three
+    // irreversible routes that share this body a shorthand sibling beside it
+    // would be silently dropped:
+    // `spend --token-id=<usdc> --spend-info='{"spendTargets":[…]}'` would
+    // sign and broadcast native ETH, because `asSpendInfo.tokenId` defaults
+    // to null and null means the chain's own coin, and `--to=<address>`
+    // beside a spendInfo would send to the spendInfo's address. The six
+    // fields are published as peer optionals and only the `spendInfo` prose
+    // hints at precedence. This file's stance for a contradictory pair is a
+    // refusal up front (see `save` with `broadcast: false`), because a usage
+    // error must not depend on the wallet having enough funds to get as far
+    // as signing.
     const shorthand = (
       [
         ['tokenId', body.tokenId],
@@ -276,8 +271,8 @@ export async function buildSpendInfo(
     // Above the return, not below it. Core does
     // `tokenId == null ? currencyInfo : allTokens[tokenId]` and destructures
     // the result, so an unknown tokenId inside a caller-supplied `spendInfo`
-    // was a `TypeError` — `500 INTERNAL_ERROR` with no field name, on routes
-    // that declare `TOKEN_NOT_FOUND`.
+    // would throw a `TypeError`, a `500 INTERNAL_ERROR` with no field name,
+    // on routes that declare `TOKEN_NOT_FOUND`.
     assertTokenId(wallet, spendInfo.tokenId ?? null)
     // Only the amount: `asSpendTarget` requires `publicAddress`, which is
     // where that rule belongs, because core drops an address-less target and
@@ -293,11 +288,11 @@ export async function buildSpendInfo(
   const tokenId = body.tokenId ?? null
   const to = body.to
   // Refused rather than ranked, like `spendInfo` beside the shorthand.
-  // `amount` is an alias of `nativeAmount`, and the `??` below kept
-  // `nativeAmount` and dropped `amount` without a word, so a caller who set
-  // the two to different values had one of them signed and never learned
-  // which. Compared as numbers, because `asIntegerString` accepts leading
-  // zeros and `01000` is the same amount as `1000`.
+  // `amount` is an alias of `nativeAmount`, and the `??` below keeps
+  // `nativeAmount` and drops `amount` without a word, so a caller who set
+  // the two to different values would have one of them signed and never
+  // learn which. Compared as numbers, because `asIntegerString` accepts
+  // leading zeros and `01000` is the same amount as `1000`.
   if (
     body.nativeAmount != null &&
     body.amount != null &&
@@ -320,9 +315,7 @@ export async function buildSpendInfo(
   // unknown tokenId is the `TypeError` `assertTokenId` exists to turn into a
   // 404.
   assertTokenId(wallet, tokenId)
-  // The shared derivation, not a third copy of it: `transactions.ts`
-  // already calls this one under the comment "The shared body, not a third
-  // derivation", which made the local copy here the third. It also answers
+  // The shared derivation, which `transactions.ts` uses as well. It answers
   // a token the plugin no longer carries with `''` and a warning, rather
   // than indexing `allTokens` unguarded.
   const currencyCode = currencyCodeForToken(wallet, tokenId)
@@ -332,8 +325,8 @@ export async function buildSpendInfo(
     try {
       // With the currency code, not without. `parseUriCommon` does
       // `if (currencyCode == null) currencyCode = currencyInfo.currencyCode`
-      // and then scales by *that* denomination, so omitting it made the
-      // amount and the asset come from different places.
+      // and then scales by *that* denomination, so omitting it would make
+      // the amount and the asset come from different places.
       parsed = await wallet.parseUri(to, currencyCode)
     } catch (error: unknown) {
       const message = errorMessage(error)
@@ -354,13 +347,13 @@ export async function buildSpendInfo(
     }
     // The URI's own asset has to agree with the one being spent. `parseUri`
     // scales `?amount=` by whatever denomination it resolved, so taking the
-    // amount while ignoring `parsed.currencyCode` mixed two assets: an XRP
-    // URI's `?amount=5` became `5000000`, and spent against a token with
-    // eighteen decimals that is 0.000000000005 of it — signed and broadcast,
-    // twelve orders of magnitude under what the caller asked for, because
-    // core and the plugin both trust `nativeAmount` as already-scaled base
-    // units. The other direction asks for too much and fails safe on
-    // `InsufficientFundsError`, which is why only one half was silent.
+    // amount while ignoring `parsed.currencyCode` would mix two assets: an
+    // XRP URI's `?amount=5` becomes `5000000`, and spent against a token
+    // with eighteen decimals that is 0.000000000005 of it, signed and
+    // broadcast, twelve orders of magnitude under what the caller asked for,
+    // because core and the plugin both trust `nativeAmount` as
+    // already-scaled base units. The other direction asks for too much and
+    // fails safe on `InsufficientFundsError`.
     if (parsed.nativeAmount != null && parsed.currencyCode != null) {
       if (parsed.currencyCode !== currencyCode) {
         throw engineError(
@@ -417,14 +410,14 @@ export async function buildSpendInfo(
       // The chain's own memo type, not `text`. XRP's first non-hidden option
       // is `{ type: 'number', memoName: 'destination tag' }` and `text` is
       // its *second* — a real, different memo kind on that chain — so
-      // hard-coding `text` passed `validateMemos`, took `RippleEngine`'s
-      // text branch and landed the destination tag in `payment.Memos` with
+      // hard-coding `text` would pass `validateMemos`, take `RippleEngine`'s
+      // text branch and land the destination tag in `payment.Memos` with
       // `payment.DestinationTag` unset. The payment broadcasts and succeeds,
       // and an exchange deposit credited on that field is unrecoverable.
       // Zano is the same shape the other way round, with `hex` first.
       //
-      // `createEdgeMemo` is the GUI's own derivation, which is the branch's
-      // premise: one answer for scene and script.
+      // `createEdgeMemo` is the GUI's own derivation, so scene and script
+      // give one answer.
       memos = [memoFromUri(wallet, parsed.uniqueIdentifier)]
     }
     metadata = mergeMetadata(parsed.metadata, bodyMetadata)
@@ -466,8 +459,8 @@ function storeTransaction(
  * The staged transaction named by `objectId`, checked against a wallet.
  *
  * `walletId` must be a resolved `wallet.id`, never the caller's raw input:
- * `asWalletId` accepts any unique prefix, so comparing raw strings rejected a
- * prefix and a full id that name the same wallet.
+ * `asWalletId` accepts any unique prefix, so comparing raw strings would
+ * reject a prefix and a full id that name the same wallet.
  */
 function requireTxHandle(
   ctx: RouteContext,
@@ -542,13 +535,12 @@ function stagedTx(
 /**
  * The handle's new value, and the response that reports it.
  *
- * Called *inside* `hold`, so `consuming` is still set while `update` runs. It
- * used to run after `hold` returned, and `hold`'s `finally` clears
- * `consuming` before that — so a bulk release already inside `deleteMany`'s
- * busy-wait could remove the record in the window between, and `update` then
- * threw `OBJECT_NOT_FOUND`. On `broadcast-tx` that is a 404 with no txid for
- * money that has already left the wallet, which is the failure `hold` exists
- * to prevent.
+ * Called *inside* `hold`, so `consuming` is still set while `update` runs.
+ * `hold`'s `finally` clears `consuming`, so once `hold` has returned a bulk
+ * release already inside `deleteMany`'s busy-wait could remove the record,
+ * and `update` would throw `OBJECT_NOT_FOUND`. On `broadcast-tx` that is a
+ * 404 with no txid for money that has already left the wallet, which is the
+ * failure `hold` exists to prevent.
  */
 function txHandleResponse(
   ctx: RouteContext,
@@ -638,10 +630,9 @@ export const spend = route({
       summary: 'Send a wallet\u2019s entire spendable balance.',
       notes:
         'The same route with `useMax` preset, so it sends everything. It therefore takes no amount: `--native-amount` and `--amount` are refused rather than ignored, because the one thing this command cannot do is send less than the balance.',
-      // The generated line offered `[--native-amount=<nativeAmount>]` and
-      // `[--amount=<amount>]`, which this command refuses — advertising a
-      // flag whose only effect is a 400 is how a caller came to write the
-      // pair that used to empty the wallet.
+      // The generated line would offer `[--native-amount=<nativeAmount>]`
+      // and `[--amount=<amount>]`, which this command refuses, and a flag
+      // whose only effect is a 400 should not be advertised.
       usage:
         "spend-max [--dry-run[=false]] [--broadcast[=false]] [--save[=false]] --wallet-id=<walletId> [--to=<to>] [--token-id=<tokenId>] [--metadata='<json>']"
     }
@@ -693,8 +684,8 @@ export const spend = route({
   async handler(ctx) {
     const broadcast = ctx.body.broadcast ?? true
     // `save` follows `broadcast` rather than defaulting to true on its own.
-    // The pair `broadcast: false, save: true` signed a transaction, never
-    // sent it, and then wrote it into the wallet as a real one:
+    // The pair `broadcast: false, save: true` would sign a transaction, never
+    // send it, and then write it into the wallet as a real one:
     // `wallet.saveTx` reaches the UTXO engine's `saveTx`, which stores the
     // transaction *and* processes its own UTXOs, so the inputs are marked
     // spent locally for something that will never confirm and will never be
@@ -713,23 +704,18 @@ export const spend = route({
       )
     }
 
-    // `ctx.body` is the cleaned value `route.ts` substituted. Re-reading the
-    // raw body through `optionalBoolean` validated every field a second time,
-    // with a different message, and left the string literals silently stale
-    // if a declaration were renamed.
+    // `ctx.body` is the cleaned value `route.ts` substituted, so its fields
+    // are read as they are rather than validated a second time.
     const useMax = ctx.body.useMax ?? false
 
     // Refused before `findWallet`, like every other contradictory pair on
-    // this body. `useMax` turns off the amount check and then *overwrote*
+    // this body. `useMax` turns off the amount check and then *overwrites*
     // whatever the caller asked for with `getMaxSpendable`, so
-    // `spend-max --to=<addr> --native-amount=50000` signed and broadcast the
-    // wallet's entire spendable balance instead of 50000 base units — 200,
-    // no warning, irreversible. `spend-max` is published as its own command
-    // with `useMax` preset, and its usage line still offers the two amount
-    // flags, so the contradiction is one a caller is actively invited to
-    // write. Same rule and the same reason as the `spendInfo` refusal
-    // above: a usage error must not depend on the wallet having enough
-    // funds to get as far as signing.
+    // `spend-max --to=<addr> --native-amount=50000` would sign and broadcast
+    // the wallet's entire spendable balance instead of 50000 base units:
+    // 200, no warning, irreversible. Same rule and the same reason as the
+    // `spendInfo` refusal above: a usage error must not depend on the wallet
+    // having enough funds to get as far as signing.
     if (useMax) {
       const named = (
         [
@@ -758,10 +744,10 @@ export const spend = route({
           400
         )
       }
-      // One destination, because the maximum is one amount. It was written
+      // One destination, because the maximum is one amount. It is written
       // into `spendTargets[0]` alone, so a `spendInfo` naming two
-      // destinations and no amounts sent the whole balance to the first
-      // and left the second with no amount at all.
+      // destinations and no amounts would send the whole balance to the
+      // first and leave the second with no amount at all.
       const targets = ctx.body.spendInfo?.spendTargets?.length ?? 0
       if (targets > 1) {
         throw engineError(
@@ -779,9 +765,8 @@ export const spend = route({
       useMax
     })
 
-    // Before the maximum is consulted: `spend` used to look at it only when
-    // a target already existed and otherwise fell through to
-    // `makeSpend({ spendTargets: [] })`.
+    // Before the maximum is consulted: `getMaxSpendable` and the
+    // `spendTargets[0]` write below both need a target.
     assertDestination(spendInfo)
     if (useMax) {
       const nativeAmount = await wallet.getMaxSpendable(spendInfo)
@@ -810,9 +795,9 @@ export const spend = route({
         // The uncertain case, and the one with the larger blast radius of
         // the two on this route. A socket timeout *after* the node accepted
         // the transaction is indistinguishable here from one before it, and
-        // letting the throw out discarded the signed transaction and its
-        // txid — so the caller had nothing to check the chain against, and
-        // on an account-based chain a scripted retry builds a fresh
+        // letting the throw out would discard the signed transaction and its
+        // txid, so the caller would have nothing to check the chain against,
+        // and on an account-based chain a scripted retry builds a fresh
         // transaction at the next nonce and pays the recipient twice.
         //
         // The same stance the `saveTx` arm below takes, for the same
@@ -827,9 +812,9 @@ export const spend = route({
         })
         // Parked under a handle, so the retry this error asks for exists.
         // `broadcast-tx` takes a `tx_` handle, never raw bytes, so returning
-        // only `details.signedTx` left a fresh `spend` as the one way to try
-        // again — the double payment this arm warns about. With the spend's
-        // metadata, so `save-tx` records what `spend` would have.
+        // only `details.signedTx` would leave a fresh `spend` as the one way
+        // to try again, the double payment this arm warns about. With the
+        // spend's metadata, so `save-tx` records what `spend` would have.
         const parked = storeTransaction(ctx, {
           sessionId: ctx.params.sessionId,
           walletId: wallet.id,
@@ -873,8 +858,8 @@ export const spend = route({
       try {
         // `onMetadataError`, as `save-tx` passes it: once `saveTx` itself
         // has succeeded the transaction is recorded, and a tagging failure
-        // landing in the catch below reported it as unsaved — the one thing
-        // an operator would then act on by saving it again.
+        // landing in the catch below would report it as unsaved, the one
+        // thing an operator would then act on by saving it again.
         await saveTxAndMetadata(wallet, txToSave, {
           onMetadataError: error => {
             metadataError = errorMessage(error)
@@ -1123,38 +1108,32 @@ export const saveTx = route({
         400
       )
     }
-    // Under `consume`, like every other handle-advancing route. This was the
-    // one that set neither `consuming` nor `hold`, so three guards were
-    // blind to an in-flight save: `get`'s `OBJECT_IN_USE`, the sweeper's
-    // skip, and the bounded wait a bulk release does. A slow `save-tx`
-    // overlapping a `broadcast-tx` for the same handle — what a client
-    // timeout and a retry of the other step produce — passed `stagedTx`
-    // because `consuming` was false, and the bare `delete` below removed the
-    // record under the in-flight broadcast, so that call answered
-    // `OBJECT_NOT_FOUND` *after the funds had left*, with no txid in the
-    // response. `consume` also does the delete in its own `finally`, which
-    // is what this handler was doing by hand.
+    // Under `consume`, like every other handle-advancing route, so the three
+    // guards that read `consuming` see an in-flight save: `get`'s
+    // `OBJECT_IN_USE`, the sweeper's skip, and the bounded wait a bulk
+    // release does. Without it, a slow `save-tx` overlapping a
+    // `broadcast-tx` for the same handle (what a client timeout and a retry
+    // of the other step produce) could delete the record under the
+    // in-flight broadcast, which would then answer `OBJECT_NOT_FOUND`
+    // *after the funds had left*, with no txid in the response. `consume`
+    // also releases the handle, in its own `finally`.
     let saveError: string | undefined
     let metadataError: string | undefined
     await ctx.state.objects.consume(record, async transaction => {
       // `onMetadataError`, which is what that option exists for: "so a
       // tagging failure cannot look like a failed send after broadcast". The
       // transaction is recorded by the time the metadata write runs, and
-      // `consume` has already released the handle — so letting the tagging
-      // failure out answered `500 INTERNAL_ERROR`, outside this route's
-      // declared errors, for a send that had succeeded, and the retry a
-      // script would make answered `OBJECT_NOT_FOUND`. Reported beside the
-      // result instead, exactly as `spend`'s own save arm does.
-      // The whole call, not just its metadata half. `onMetadataError`
-      // diverted the tagging failure and left `wallet.saveTx` itself to
-      // propagate — out of `consume`, whose `finally` has already deleted
-      // the record. `save-tx` is the last step of the staged flow, so by
-      // then the money has left: a disklet or encryption failure answered
-      // `500 INTERNAL_ERROR`, outside this route's declared errors, and
-      // the retry a script makes answered `OBJECT_NOT_FOUND` — no API
-      // path left to record the transaction. That is the state the
-      // comment above says was fixed, one call deeper. `spend`'s own save
-      // arm takes this stance: once broadcast, the spend is real.
+      // `consume` releases the handle on the way out, so letting the tagging
+      // failure out would answer `500 INTERNAL_ERROR`, outside this route's
+      // declared errors, for a send that succeeded, and the retry a script
+      // would make would answer `OBJECT_NOT_FOUND`.
+      // The `try` covers the whole call, not just its metadata half, for the
+      // same reason: `save-tx` is the last step of the staged flow, so by
+      // then the money has left, and a `wallet.saveTx` failure (a disklet or
+      // encryption failure) propagating out of `consume`, whose `finally`
+      // deletes the record, would leave no API path to record the
+      // transaction. Both are reported beside the result instead, as
+      // `spend`'s own save arm does: once broadcast, the spend is real.
       try {
         await saveTxAndMetadata(wallet, transaction, {
           onMetadataError: error => {
@@ -1224,10 +1203,10 @@ export const accelerate = route({
     if (objectId != null) {
       // `hold`, like `sign-tx` and `broadcast-tx`, with the response built
       // inside it. The expiry is checked on the way *out*, through `update`,
-      // so an unguarded plugin call that crossed the five-minute boundary had
-      // its handle collected by the 15-second sweeper and the accelerated
-      // transaction was then thrown away with a 404 the caller cannot tell
-      // from "wrong id".
+      // so an unguarded plugin call that crossed the five-minute boundary
+      // would have its handle collected by the 15-second sweeper, and the
+      // accelerated transaction would then be thrown away with a 404 the
+      // caller cannot tell from "wrong id".
       const staged = requireTxHandle(ctx, ctx.body, wallet.id)
       return await ctx.state.objects.hold(staged.record, async () => {
         const bumped = await wallet.accelerate(staged.transaction)
@@ -1352,11 +1331,9 @@ export const signBytes = route({
   body: asObject({
     walletId: asWalletId,
     bytes: asOptional(doc(asString, 'Base64. Defaults to empty when absent.')),
-    // `asObject(asUnknown)`, so a non-object is a 400 naming the field. As
-    // `asCoreValue` it passed the declaration and was then *dropped* by the
-    // handler, so `--other-params='"x"'` signed with no options at all and
-    // produced a confusing plugin failure instead of saying what was wrong —
-    // and on bitcoin that is where `publicAddress` lives.
+    // `asObject(asUnknown)`, so a non-object is a 400 naming the field
+    // rather than a confusing plugin failure, and on bitcoin this is where
+    // `publicAddress` lives.
     otherParams: asOptional(
       doc(
         asObject(asUnknown),
@@ -1371,8 +1348,8 @@ export const signBytes = route({
   async handler(ctx) {
     const wallet = findWallet(getAccount(ctx), ctx.body.walletId)
     // `Buffer.from(.., 'base64')` scrubs anything it cannot decode and hands
-    // back short or empty bytes, so a typo produced a valid signature over the
-    // wrong payload. `base64.parse` rejects instead.
+    // back short or empty bytes, so a typo would produce a valid signature
+    // over the wrong payload. `base64.parse` rejects instead.
     let bytes: Uint8Array
     try {
       bytes = base64.parse(ctx.body.bytes ?? '')
@@ -1423,14 +1400,12 @@ export const getPaymentProtocolInfo = route({
       if (error instanceof EngineError) throw error
       if (mapCoreError(error) != null) throw error
       const message = errorMessage(error)
-      // Only a failure that never got an answer is the retryable class. This
-      // arm used to rewrite *every* failure as `NETWORK_ERROR` with status
-      // 503, which `EXIT_CODE_BY_ERROR` maps to exit 6 and the published
-      // table presents as retryable — so a merchant answering 404, a payment
-      // request whose payload will not parse, and a plugin with no
-      // `getPaymentProtocolInfo` all told a script to try again for ever,
-      // and the `BAD_REQUEST` this route declares was unreachable from its
-      // own handler.
+      // Only a failure that never got an answer is the retryable class.
+      // `EXIT_CODE_BY_ERROR` maps `NETWORK_ERROR` to exit 6, and the
+      // published table presents it as retryable, so a merchant answering
+      // 404, a payment request whose payload will not parse, or a plugin with
+      // no `getPaymentProtocolInfo` must not answer it: a script would try
+      // again for ever.
       if (isNetworkFailure(error)) {
         throw engineError(
           'NETWORK_ERROR',
@@ -1441,8 +1416,8 @@ export const getPaymentProtocolInfo = route({
       // Named, because the likeliest thing to land here is not the URL at
       // all: core answers `'getPaymentProtocolInfo' is not implemented on
       // wallets of this type` for every chain whose engine does not have it,
-      // and blaming `paymentProtocolUrl` sent the caller to check a field
-      // they got right. Not retryable either way, so the class stays.
+      // and blaming `paymentProtocolUrl` would send the caller to check a
+      // field they got right. Not retryable either way, so the class stays.
       if (message.includes('not implemented on wallets of this type')) {
         throw engineError(
           'BAD_REQUEST',

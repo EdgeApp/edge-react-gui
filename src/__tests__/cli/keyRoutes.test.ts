@@ -13,11 +13,10 @@ const account = (loaded: string[]): EdgeAccount =>
  * Core asks the currency tools for the display form and, for a plugin whose
  * tools do not implement it, falls back to `waitForCurrencyEngine` — which
  * needs a running engine, and core builds those from `activeWalletIds`. On an
- * archived wallet that threw a plain `Error` reading `Wallet id … does not
- * exist in this account`, which this engine reported as `500
- * INTERNAL_ERROR`: a knowable condition, on a route whose own resolver had
- * just found the wallet in `allKeys`, answering a caller who is usually
- * recovering keys.
+ * archived wallet that throws a plain `Error` reading `Wallet id … does not
+ * exist in this account`, which would otherwise become `500 INTERNAL_ERROR`:
+ * a knowable condition, on a route whose own resolver has just found the
+ * wallet in `allKeys`, answering a caller who is usually recovering keys.
  */
 describe('displayKey', () => {
   it('returns the key the plugin produced', async () => {
@@ -41,8 +40,8 @@ describe('displayKey', () => {
   it('carries the plugin’s own message into the substitution', async () => {
     // The guard narrows which arm this is, not what went wrong inside it.
     // The substitution happens before the request sink, so a dropped cause
-    // was gone from `engine-<profile>.log` as well as from the response — on
-    // the routes a caller reaches when they are already in trouble.
+    // would be gone from `engine-<profile>.log` as well as from the response,
+    // on the routes a caller reaches when they are already in trouble.
     await expect(
       displayKey(account([]), 'w1', async () => {
         throw new Error('Wallet id w1 does not exist in this account')

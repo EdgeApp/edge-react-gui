@@ -98,7 +98,7 @@
         },
         "path": {
           "pass": "--path=<path>",
-          "doc": "Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages` — which the server refuses as an unknown endpoint, through an untyped throw this route reported as a `500`.",
+          "doc": "Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages`, which the server refuses as an unknown endpoint.",
           "optional": false
         },
         "body": {
@@ -150,10 +150,10 @@
         }
       },
       "returns": {
-        "userId": "string — Base58. The login server’s hash of the username, which is what it keys an account’s stash by — not a `loginId`. This field was called `loginId`, which made it look interchangeable with every other login id in the API; it is not, and the only thing the route is for is reproducing the server’s hash."
+        "userId": "string — Base58. The login server’s hash of the username, which is what it keys an account’s stash by. It is not a `loginId` and not interchangeable with the login ids elsewhere in the API: the route exists to reproduce the server’s hash."
       },
       "notes": [
-        "This is **not** a `loginId`. It was published as one, and it is not interchangeable with the `rootLoginId` from a login, the `loginId` from `local-users`, or the id `forget-account` and `login-with-key --use-login-id` take: core moved to a random `loginId` and kept the username hash as `userId`, so passing this value to either of those fails — `404 USER_NOT_FOUND` and a stash that cannot be found. Use `local-users` for a login id."
+        "This is **not** a `loginId`, and it is not interchangeable with the `rootLoginId` from a login, the `loginId` from `local-users`, or the id `forget-account` and `login-with-key --use-login-id` take: core's `loginId` is random and the username hash is only the `userId`, so passing this value to either of those fails, with `404 USER_NOT_FOUND` and a stash that cannot be found. Use `local-users` for a login id."
       ]
     },
     "admin-lobby-handle-delete": {
@@ -188,7 +188,7 @@
         },
         "period": {
           "pass": "[--period-seconds=<period>]",
-          "doc": "Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int — above that it clamps to 1ms, so the longest interval a caller could ask for became the fastest poll the loop could make.",
+          "doc": "Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int and clamps a longer one to 1 ms, which would turn the longest interval into the fastest poll.",
           "optional": true
         }
       },
@@ -220,7 +220,7 @@
         },
         "syncKey": {
           "pass": "<syncKey>",
-          "doc": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+          "doc": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
           "optional": false
         },
         "dataKey": {
@@ -247,7 +247,7 @@
         },
         "syncKey": {
           "pass": "<syncKey>",
-          "doc": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+          "doc": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
           "optional": false
         },
         "dataKey": {
@@ -278,7 +278,7 @@
         },
         "syncKey": {
           "pass": "<syncKey>",
-          "doc": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+          "doc": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
           "optional": false
         },
         "dataKey": {
@@ -314,7 +314,7 @@
         },
         "syncKey": {
           "pass": "<syncKey>",
-          "doc": "Repo sync key, base58 or base64 — either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core’s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.",
+          "doc": "Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core’s own repo APIs take base58. Base58 is tried first.",
           "optional": false
         },
         "dataKey": {
@@ -491,7 +491,7 @@
         }
       },
       "returns": {
-        "balances": "{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string | null; unknownToken: boolean; }[] — One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it — one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, and a freshly enabled token was simply missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet."
+        "balances": "{ tokenId: string | null; currencyCode: string; nativeAmount: string; displayAmount: string | null; unknownToken: boolean; }[] — One entry per asset the wallet tracks, native coin first: `tokenId`, `currencyCode`, `nativeAmount`, `displayAmount` and `unknownToken`. Every *enabled* token is here whether or not the plugin has a balance for it — one it has not reported holds `0`, because a plugin populates `balanceMap` when it has an amount rather than when the token is enabled, so a freshly enabled token would otherwise be missing. A token the plugin reports a balance for but whose config it no longer carries is listed with `unknownToken: true` and a null `displayAmount`, rather than failing the whole wallet."
       },
       "notes": [
         "On the CLI, omit `--token-id` for the native asset rather than passing the literal `null`."
@@ -601,7 +601,7 @@
         },
         "disable-all": {
           "pass": "[--disable-all]",
-          "doc": "Send the empty set, disabling every token on the wallet. A spelling of its own, because an empty flag value is refused everywhere in this CLI — `-d \"\"` reaching the profile hash as an empty directory is the reason — so there was no way to ask for this.",
+          "doc": "Send the empty set, disabling every token on the wallet. A flag of its own, because this CLI refuses an empty flag value everywhere (an empty `-d \"\"` would reach the profile hash as an empty directory), so an empty list cannot be passed as a value.",
           "optional": true
         }
       },
@@ -942,7 +942,7 @@
       },
       "returnsDoc": "A session with `loginMethod: \"create\"`.",
       "notes": [
-        "The command requires a password and a PIN; `--username` is optional, and omitting it claims no name. Creating a *light* account — no credentials at all — is REST-only, so the published command form marks the two the command insists on. The reference bracketed all three, the parameter table called them optional, and the command's own refusal printed two of them unbracketed: three descriptions of one program."
+        "The command requires a password and a PIN; `--username` is optional, and omitting it claims no name. Creating a *light* account — no credentials at all — is REST-only, so the published command form marks the two the command insists on."
       ],
       "errors": [
         "USERNAME_ERROR",
@@ -1019,7 +1019,7 @@
         "results": "unknown[] — Mirrors core’s EdgeResult[]: `{ ok: true, wallet }`, or `{ ok: false, error, code, status }` with the same code the engine would answer for that failure on its own — and `details` where it has them."
       },
       "notes": [
-        "One call to core's batch, for every entry whose wallet type a plugin claims. `account.createCurrencyWallets` makes every entry's keys at once, stores them with one `applyKit` — one login-server round trip and one stash rewrite — and finishes the wallets concurrently, returning an `EdgeResult` per entry. One wallet per call paid that round trip per entry.",
+        "One call to core's batch, for every entry whose wallet type a plugin claims. `account.createCurrencyWallets` makes every entry's keys at once, stores them with one `applyKit` — one login-server round trip and one stash rewrite — and finishes the wallets concurrently, returning an `EdgeResult` per entry. One wallet per call would pay that round trip per entry.",
         "Core's batch *throws* rather than reporting per entry when it cannot make an entry's keys, so the ways that happens are answered per entry before the batch: a wallet type no plugin claims, and an `importText` the plugin will not import (`BAD_REQUEST`; the entry then goes on with the imported keys). The one left is a plugin whose currency tools will not load (the EVM family, today). When the batch fails with exactly that plugin's load error, its entries fail with it and the batch runs again without them — nothing was stored.",
         "Any other failure is the route's error, with nothing retried. The login-server POST can fail after the server stored the keys — a network drop, a gateway's non-JSON reply — and so can the stash write after it, and creating the wallets again would give the account each one twice. Check `currency-wallets` before trying again."
       ],
@@ -1073,15 +1073,15 @@
       "method": "GET",
       "path": "/account/{sessionId}/currency-wallets",
       "usage": "currency-wallets",
-      "description": "Every wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nThis took a `filter` of `active`, `archived`, `hidden` or `all`, and three of those four could not work. The handler resolved each id through `account.currencyWallets`, which core builds from `activeWalletIds` **alone**, so the archived and hidden lists were disjoint from the resolvable set by construction: every id mapped to `undefined`, the `filter(wallet != null)` dropped it, and `?filter=archived` answered `{\"currencyWallets\":[]}` on every account, always. `all` concatenated the three lists, so it was `active` with each hidden wallet — which is active and hidden at once, core deriving the two flags independently — listed twice. Nor could the missing wallets be served in this shape: an archived wallet has no loaded API, so `name`, `currencyCode`, `blockHeight`, `syncStatus` and `paused` do not exist for it, and seven required response fields would have had to become nullable for every caller to carry three values that never worked.\n\n`all-keys` is the route for that, and already was: it returns `EdgeWalletInfoFull[]` — id, type, `archived`, `deleted`, `hidden`, `sortIndex` — which is everything knowable about a wallet core has not loaded.",
+      "description": "Every wallet core has built an API for, which is the account's active set: `activeWalletIds` is `ids.filter(id => !archived)`, so an archived or deleted wallet is not here. Paused wallets are.\n\nA wallet core has not loaded has no `name`, `currencyCode`, `blockHeight`, `syncStatus` or `paused` to report. `all-keys` returns everything knowable about one: `EdgeWalletInfoFull[]`, with id, type, `archived`, `deleted`, `hidden` and `sortIndex`.",
       "core": "account.currencyWallets",
       "returns": {
-        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet core has loaded for this account, including paused ones. Archived, deleted and hidden wallets are not loaded; `all-keys` lists those.",
-        "unloadedWallets": "unknown[] — The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. They used to be filtered out silently, so this list was the difference between `all-keys` and this one and a caller had to compute it — and nothing said why a wallet was missing. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
+        "currencyWallets": "{ walletId: string; id: string; type: string; name: string | null; pluginId: string; currencyCode: string; fiatCurrencyCode: string; blockHeight: number; syncStatus: unknown; syncRatio: string | undefined; paused: boolean; imported: boolean | undefined; created: string | null; enabledTokenIds: string[]; detectedTokenIds: string[]; unactivatedTokenIds: string[]; }[] — Every wallet core has loaded for this account, including paused and hidden ones. Archived and deleted wallets are not loaded; `all-keys` lists those.",
+        "unloadedWallets": "unknown[] — The active wallets that are *not* in the list above, each with its `walletId`, `walletType`, `pluginId`, `pluginRegistered` and `pluginHasLoadedWallet`. Before `wait-for-all-wallets` an entry here may simply still be building; after it, it has failed. Listed here, with what the engine knows of why, so a caller need not work out the difference from `all-keys`. See `wait-for-all-wallets` for what the two plugin fields do and do not claim."
       },
       "notes": [
         "Wallets load in the background after login, so a list taken straight afterwards can be short. Call `wait-for-all-wallets` first to be sure the account has finished loading.",
-        "Archived, deleted and hidden wallets are not here, because core builds no API for them. Use `all-keys`, which carries their ids and their flags."
+        "Archived and deleted wallets are not here, because core builds no API for them. Use `all-keys`, which carries their ids and their flags."
       ],
       "errors": [
         "INVALID_SESSION",
@@ -1317,7 +1317,7 @@
         "configFiles": "{ cwd: string; keys: string[]; appConfig: string | null; cliConfig: string | null; } — Where this engine’s configuration came from. The profile a client hashes covers `appId`, the data directory, test mode and the login server — not these, so two invocations with the same flags from different directories share one daemon, and this is what says which configuration it is running on."
       },
       "notes": [
-        "Outside `-t` / `--test`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
+        "Outside `-t` / `--test` and `--fake`, `servers` is an empty object — core is using its built-in production defaults, so there is nothing to echo back."
       ]
     },
     "engine-sessions": {
@@ -1393,7 +1393,7 @@
         "prefs": "unknown — The saved record — `bitwaveAccountId`, `isExportCsv`, `isExportQbo`, `isExportBitwave` — or null when this asset has none, which is the state of every wallet until something saves one."
       },
       "notes": [
-        "This exists because the write did not have a reader. The CLI could put a record into a *synced* file the GUI reads and offer no way to see what it had written, so the one write a `GET` makes could be observed only from the app — which also made it the one write QA could not verify or restore on a shared account.",
+        "This is how a caller reads back what `--save-export-prefs` wrote. The record is in a *synced* file the GUI reads, so without this route the one write a `GET` makes could be observed only from the app.",
         "A saved `bitwaveAccountId` can be overwritten, by exporting again with `--bitwave-account` and `--save-export-prefs`, but not cleared: `mergeExportTxInfo` keeps a previous value for a field the caller does not name, which is what stops a CSV export from wiping a saved id. Clearing one is the export scene's job."
       ],
       "errors": [
@@ -1453,7 +1453,7 @@
       "core": "context.fetchLoginMessages",
       "returnsDoc": "An `EdgeLoginMessage[]` from core: one entry per local login, each with its own `loginId`, `otpResetPending`, `pendingVouchers`, `recovery2Corrupt` and, where the stash has one, `username`. `loginId` is base58, like every other login id in this API — core answers it in base64 here, and an id in the wrong alphabet is one `forget-account` and `--use-login-id` reject.",
       "notes": [
-        "`loginId` is re-encoded to base58. Core answers this one in base64 while every other login id in the API — `local-users`, a login's `rootLoginId`, what `forget-account` and `login-with-key --use-login-id` take — is base58, and this route is the documented way to find which local account has a pending voucher or an OTP reset. So the natural next step was to act on the id it named, which failed with `404 USER_NOT_FOUND` while `local-users` listed the same account under the other spelling."
+        "`loginId` is re-encoded to base58. Core answers this one in base64 while every other login id in the API — `local-users`, a login's `rootLoginId`, what `forget-account` and `login-with-key --use-login-id` take — is base58, and this route is the documented way to find which local account has a pending voucher or an OTP reset, so the natural next step is to act on the id it names. In base64 that id would fail with `404 USER_NOT_FOUND` while `local-users` lists the same account under the other spelling."
       ],
       "errors": [
         "NETWORK_ERROR"
@@ -1930,7 +1930,7 @@
         },
         "saveExportPrefs": {
           "pass": "[--save-export-prefs[=false]]",
-          "doc": "Save `bitwaveAccountId` and the chosen formats into the wallet’s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats — on a listing there would be nothing to write, and answering `ok` for that told a caller their preferences had been recorded when they had not.",
+          "doc": "Save `bitwaveAccountId` and the chosen formats into the wallet’s synced `exportTxInfo.json`, which the GUI export scene reads back; `export-prefs` reads it. Off by default: a read does not change saved preferences. A `400` without `exportFormat`, because what is saved *is* the chosen formats — on a listing there would be nothing to write, and answering `ok` would tell a caller their preferences had been recorded when they had not.",
           "optional": true
         },
         "startDate": {
@@ -1977,7 +1977,7 @@
       "returnsDoc": "`{ transactions, total, isoFiat, unpricedCount }`, or `{ ok, isoFiat, total, files }` when exportFormat is set, with `exportPrefsError` when `saveExportPrefs` could not save the preferences. `unpricedCount` is how many of the returned transactions the rates queue gave up on rather than priced — their `metadata.exchangeAmount` is left as it was instead of being written as `0`; an export refuses with `RATES_INCOMPLETE` in that case rather than writing a file with a zero fiat amount in part of the range. Each transaction carries `metadata.name`, `metadata.category` and `metadata.notes` as **localized prose** in the engine’s boot locale — the engine has no per-request locale, so a second shell with a different `LANG` reuses the first engine and gets its language. `displayInfo` beside them carries the machine values the prose was derived from (`direction`, `assetActionType`, `actionType`, and the `category` split whose `category` member is one of `transfer`, `exchange`, `expense`, `income`), so a caller can render its own text.",
       "notes": [
         "The metadata overlay and the fiat fill are response-only. Neither writes to disk.",
-        "`limit` and `offset` apply before the fiat fill, so a large page asks the rates server about more dates. Unpriced dates are batched at up to 99 per request — the batcher stops before the server's 100-asset limit, which is why `DEFAULT_TX_LIMIT` is 99 — and every rate is cached until the last session logs out, so a second listing of the same range within one login needs none.",
+        "`limit` and `offset` apply before the fiat fill, so a large page asks the rates server about more dates. Unpriced dates are batched at up to 99 per request — the batcher stops before the server's 100-asset limit, which is why `DEFAULT_TX_LIMIT` is 99 — and rates are kept in a bounded cache until the last session logs out, so a second listing of the same range within one login needs none.",
         "An export ignores `limit` and `offset` entirely. Paging an export is the obvious way to get a 50,000-transaction wallet out, and it would write a file holding one page while the response reported `total` as the real count — a silently truncated accounting export.",
         "This is the one GET that can write, and only with `saveExportPrefs`: that flag persists `bitwaveAccountId` *and* the chosen formats into `exportTxInfo.json` on the wallet disklet. `bitwaveAccountId` on its own persists nothing, so a one-off export does not become the caller's saved account id.",
         "An export is unfiltered. The account spam-filter setting applies to a listing, the way the GUI's transaction list applies it, and not to an `exportFormat` export, the way the GUI's Export button does not — dropping rows from an accounting export is not a display convenience. An explicit `spamThreshold` applies to both.",
@@ -2088,7 +2088,7 @@
       "returns": {
         "spamFilterOn": "boolean — Hide spam transactions in `get-transactions` results. Defaults to `true`, matching the GUI. The filter hides rows; it never changes stored metadata.",
         "trusted": "boolean — False when `Settings.json` is present and could not be read, in which case every value here is a default rather than the user’s choice. Do not cache a `false` reading. A `change-local-settings` call against the same file reads it again, twice, and if its *content* still will not parse or decrypt moves it aside (or deletes it, when it will not decrypt) before writing — so every other local setting, `spendingLimits` among them, goes back to its default, and the response’s `recovery` says which happened. A file that cannot be read at all — a permission or I/O failure — or whose move aside or delete itself fails answers `SETTINGS_UNREADABLE`, with nothing written over it.",
-        "recovery?": "{ kind: \"moved\"; to: string; } | { kind: \"deleted\"; reason: string; } — Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. Refusing the write instead was a one-way door: the file does not repair itself, so every later write failed the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written."
+        "recovery?": "{ kind: \"moved\"; to: string; } | { kind: \"deleted\"; reason: string; } — Absent on an ordinary write. Present when `Settings.json` was present and its content would not parse or decrypt on two attempts, so this call recovered a writable file before writing — in which case every other setting in the account is now its default. The write recovers rather than refuses because the file does not repair itself, so every later write would fail the same way. A read failure that is not about the content, or a recovery whose own step fails, is `SETTINGS_UNREADABLE` instead, with nothing written."
       },
       "errors": [
         "INVALID_SESSION",
@@ -2958,7 +2958,7 @@
         },
         "fiatCurrencyCode": {
           "pass": "--fiat-currency-code=<fiatCurrencyCode>",
-          "doc": "An ISO 4217 code, with or without core’s `iso:` prefix: `iso:EUR` and `EUR` both work, and the engine normalises. Core itself refuses a bare code, as an untyped throw this route reported as a `500` — and `get-transactions --fiat` already takes the bare form, so the two were inconsistent as well. Anything that is not three letters is a `400`.",
+          "doc": "An ISO 4217 code, with or without core’s `iso:` prefix: `iso:EUR` and `EUR` both work, as they do for `get-transactions --fiat`, and the engine normalises, because core itself refuses a bare code. Anything that is not three letters is a `400`.",
           "optional": false
         }
       },
@@ -3267,7 +3267,7 @@
         "results": "unknown[] — Per-entry outcomes, like batch create."
       },
       "notes": [
-        "A `walletType` no plugin claims is a `400` from this route, before core is called. Core throws `Cannot find plugin for wallet type \"…\"` for it, which arrived as `500 INTERNAL_ERROR` — the caller mistake this route's own description sends them to `list-splittable-wallet-types` to avoid, reported as an engine fault.",
+        "A `walletType` no plugin claims is a `400` from this route, before core is called. Core throws `Cannot find plugin for wallet type \"…\"` for it, which would surface as `500 INTERNAL_ERROR` — the caller mistake this route's own description sends them to `list-splittable-wallet-types` to avoid, reported as an engine fault.",
         "A plugin that fails *during* the split still abandons the rest of the list: core's `split` is one call. `create-currency-wallets` is one call too, but answers an unclaimed type and a refused key text per entry before core is called, and runs the batch again without a plugin whose tools failed to load, so each of those entries gets its own outcome."
       ],
       "errors": [
@@ -3485,7 +3485,7 @@
           "optional": false
         }
       },
-      "returnsDoc": "Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here — `wallet-tokens` exists to carry it, and returning it from both sent the same map twice in a session that calls both.",
+      "returnsDoc": "Every WalletSummary field, plus denominations and walletSettings. `allTokens` is not here: `wallet-tokens` carries it, and returning it from both would send the same map twice in a session that calls both.",
       "errors": [
         "WALLET_NOT_FOUND",
         "AMBIGUOUS_WALLET_ID",
@@ -3530,7 +3530,7 @@
         }
       },
       "returns": {
-        "allTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: everything the plugin ships with, plus this account’s own. `builtinTokens` is not returned separately — it is this map minus `customTokens`, and sending both wrote the whole built-in list down the socket twice.",
+        "allTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: everything the plugin ships with, plus this account’s own. `builtinTokens` is not returned separately: it is this map minus `customTokens`, and sending both would write the whole built-in list down the socket twice.",
         "customTokens": "{ [keys: string]: unknown; } — `EdgeToken` by tokenId: tokens this account added by hand.",
         "enabledTokenIds": "string[] — Which of the above the wallet is actually tracking.",
         "detectedTokenIds": "string[] — Seen on-chain but not enabled, so their balances are not synced."

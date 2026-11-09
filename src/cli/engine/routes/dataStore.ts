@@ -89,8 +89,8 @@ export const getItem = route({
   async handler(ctx) {
     const { storeId, itemId } = ctx.query.valid
     // The account is resolved outside the `try`: a session error is a 401,
-    // and rewriting it as a 404 told a scripted caller that the item was
-    // missing rather than that it had to log in again.
+    // and rewriting it as a 404 would tell a scripted caller that the item
+    // is missing rather than that it has to log in again.
     const account = getAccount(ctx)
     try {
       const value = await account.dataStore.getItem(storeId, itemId)
@@ -98,10 +98,9 @@ export const getItem = route({
     } catch (error: unknown) {
       // Anything that already carries a code and a status says what it means.
       if (error instanceof EngineError) throw error
-      // Only an absent item is the 404 this route declares. Every other
-      // failure used to come out as one too, so an account repo that would
-      // not open told a scripted caller the item was missing — and a caller
-      // that treats 404 as absent then writes over live plugin state.
+      // Only an absent item is the 404 this route declares. An account repo
+      // that will not open is a fault, not a missing item, and a caller that
+      // treats 404 as absent would then write over live plugin state.
       if (!isAbsentItem(error)) throw error
       throw engineError(
         'NOT_FOUND',

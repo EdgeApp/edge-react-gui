@@ -9,12 +9,12 @@ import { BTC_DENOM } from '../../util/fake/fakeDisklet'
  *
  * Core's reducer starts `balanceMap` as `new Map()` and fills a key only
  * when an engine reports an amount, so the map is not "every asset the
- * wallet tracks". The enabled-token backfill was added for exactly that and
- * left out `tokenId: null`, so a freshly created or still-syncing wallet
- * answered `{"balances": []}` — no native row at all, contradicting this
- * route's own summary ("the native currency plus every enabled token") and
- * making the client's `--token-id` filter answer `404 TOKEN_NOT_FOUND` for
- * the native asset.
+ * wallet tracks". The route backfills `tokenId: null` as well as the enabled
+ * tokens: without it a freshly created or still-syncing wallet would answer
+ * `{"balances": []}`, no native row at all, contradicting this route's own
+ * summary ("the native currency plus every enabled token") and making the
+ * client's `--token-id` filter answer `404 TOKEN_NOT_FOUND` for the native
+ * asset.
  */
 function makeWallet(
   opts: {
@@ -85,8 +85,8 @@ describe('balance-map', () => {
 
   it('answers the native row for --token-id rather than 404', async () => {
     // The consequence a caller sees: the filter is applied to this list, so
-    // a missing native row was a `TOKEN_NOT_FOUND` for the chain's own coin
-    // on every new wallet.
+    // a missing native row would be a `TOKEN_NOT_FOUND` for the chain's own
+    // coin on every new wallet.
     const result = await run(makeWallet(), {
       walletId: 'wallet-1',
       tokenId: null

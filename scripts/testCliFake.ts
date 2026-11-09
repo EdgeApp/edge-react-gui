@@ -52,8 +52,8 @@ function cli(...args: string[]): Run {
   // Both streams, and the leading object when a stream carries more than
   // JSON: a result is printed to stdout and an error envelope to stderr, and
   // a client-side usage failure prints the envelope *followed by* a usage
-  // line. Parsing only `stdout` whole left `run.json` undefined for every
-  // failure — exactly when a check wants to read `error.code`.
+  // line. Parsing only `stdout` whole would leave `run.json` undefined for
+  // every failure, exactly when a check wants to read `error.code`.
   let json: any
   for (const text of [result.stdout, result.stderr]) {
     json = parseLeadingJson(text)
@@ -100,11 +100,9 @@ function check(label: string, condition: boolean, detail = ''): void {
  * Run a command that is expected to fail, and say why that is correct.
  *
  * The code is compared against the envelope's own `error.code`, not matched
- * as a substring of stdout+stderr: a substring match passed whenever the
- * code appeared anywhere, including inside a *message*, and eleven cases
- * asserted the literal `'error'`, which every envelope contains — so they
- * pinned "the command failed" and nothing else, and a regression from
- * `INSUFFICIENT_FUNDS`/422 to `INTERNAL_ERROR`/500 kept the suite green.
+ * as a substring of stdout+stderr: a substring match passes whenever the
+ * code appears anywhere, including inside a *message*, and pins little more
+ * than "the command failed".
  */
 function refuses(label: string, code: string, ...args: string[]): void {
   refusesInner(label, code, undefined, args)
@@ -189,14 +187,11 @@ function notInFakeWorld(
 /**
  * A double-quoted value holding a backslash survives the prompt.
  *
- * `splitPromptLine` applied backslash escaping to *every* following
- * character inside double quotes, where a shell escapes only `"` and `\`.
- * So `create-account --password="a\b"` created the account with `ab` at the
- * prompt and with `a\b` in one-shot mode, reported success either way, and
- * the user could not log in again — the exact failure the `$` case above
- * was written for, one escape rule over. One-shot mode is the oracle,
- * because a prompt that mangles the value mangles it the same way going in
- * and coming out.
+ * Inside double quotes a shell keeps a backslash before an ordinary
+ * character, so `create-account --password="a\b"` has to create the account
+ * with `a\b` at the prompt as in one-shot mode, or the user cannot log in
+ * again. One-shot mode is the oracle, because a prompt that mangles the
+ * value mangles it the same way going in and coming out.
  */
 function checkPromptBackslash(
   dir: string,
@@ -236,29 +231,24 @@ function checkPromptBackslash(
  * The interactive prompt, driven over stdin.
  *
  * Its own directory, so the shared engine and `session.json` above are not
- * disturbed. The prompt used to be handed a *spread copy* of the client
- * context while `setSessionId` assigned to the original, so a login inside
- * the prompt never took effect: the next account command answered "Please
- * log in first" on an account that was logged in, and after a dead session
- * the copy kept the stale id and repeated a 401 for the life of the prompt.
- * `docs/EDGE_CLI.md` promises "the engine, session and flags are the same as
- * one-shot mode".
+ * disturbed. A login inside the prompt has to take effect for the commands
+ * after it: `docs/EDGE_CLI.md` promises "the engine, session and flags are
+ * the same as one-shot mode".
  */
 function checkPromptSession(): void {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-prompt-'))
   const user = `prompt${process.pid}`
 
   // A `$` in the password, unquoted, because that is what a user types and
-  // what one-shot mode receives verbatim. The prompt used to tokenize with a
-  // shell parser, so `p$55w0rd` expanded against an empty environment: the
-  // account was created with `p`, `create-account` reported success, and the
-  // login below — with the password the script actually asked for — failed
-  // for ever. The `logout` then `login-with-password` round trip is the
+  // what one-shot mode receives verbatim. A prompt that tokenized with a
+  // shell parser would expand `p$55w0rd` against an empty environment and
+  // create the account with `p`, and `create-account` would still report
+  // success. The `logout` then `login-with-password` round trip is the
   // assertion, since `create-account` alone cannot tell the two apart.
   const dollarPass = 'p$55w0rdZq7'
-  // And a double-quoted value holding a backslash, which the prompt used to
-  // delete: `--notes="a\\b"` became `ab` here and stayed `a\\b` in one-shot
-  // mode. Checked the same way, with one-shot as the oracle.
+  // And a double-quoted value holding a backslash, which has to reach the
+  // engine as one-shot mode passes it. Checked the same way, with one-shot
+  // as the oracle.
   const backslashUser = `slash${process.pid}`
   const backslashPass = 'a\\b7Zq9kk'
   const script = [
@@ -310,13 +300,12 @@ function checkPromptSession(): void {
   )
   // The prompt's own profile directory, taken from the engine rather than
   // recomputed — the same trick `main()` uses, so this cannot drift from
-  // however the client resolves appId, test mode and login server. Waiting
-  // on a *set difference* over `runRoot()` was waiting on a machine-global
-  // directory: another checkout's suite, a second worktree or an engine
-  // respawning mid-run turned this gate red with "still present: <someone
-  // else's profile>", and because `testCliFake` is the first half of
-  // `test:cli:offline` that also stopped `testCliSubscribe` from running at
-  // all.
+  // however the client resolves appId, test mode and login server. A *set
+  // difference* over `runRoot()` would wait on a machine-global directory,
+  // which another checkout's suite, a second worktree or an engine
+  // respawning mid-run can change, and because `testCliFake` is the first
+  // half of `test:cli:offline`, a false failure here would also stop
+  // `testCliSubscribe` from running at all.
   const promptStatus = spawnSync(
     'node',
     [...CLI, '--fake', `--directory=${dir}`, 'engine-status'],
@@ -359,8 +348,8 @@ function checkPromptSession(): void {
     spawnSync('sleep', ['0.1'])
   }
   // Asserted rather than hoped for: the whole point of the wait is that the
-  // prompt's engine leaves nothing behind, and a silent timeout left the
-  // leak in place and the suite green.
+  // prompt's engine leaves nothing behind, and a silent timeout would leave
+  // the leak in place and the suite green.
   check(
     'the prompt engine leaves no run directory behind',
     !fs.existsSync(profileDir),
@@ -373,10 +362,10 @@ function checkPromptSession(): void {
  * `-u` chooses the account, in the prompt as in one-shot mode, and a name
  * in another case is the same account.
  *
- * The prompt never read `-u`, so `echo account-info | edge-cli -u alice -p …`
- * answered for whoever `session.json` held. And the name was compared raw
- * against the one core had lowercased, so `-u ALICE` logged in again on
- * every command and left the previous login running in the engine.
+ * So `echo account-info | edge-cli -u alice -p …` answers for alice whatever
+ * `session.json` holds, and `-u ALICE` matches the name core lowercased
+ * rather than logging in again on every command and leaving the previous
+ * login running in the engine.
  */
 function checkNamedSession(): void {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-named-'))
@@ -632,12 +621,9 @@ function checkNamedSession(): void {
 /**
  * The exit code a piped script gets for several failing lines.
  *
- * One rule, the highest code any line produced. It was three: the API arm
- * was last-non-zero-wins and the two usage arms were first-wins, so a script
- * that failed 5 then 4 reported 4, and one that failed 4 then took a usage
- * error reported 4 where the reverse order reported 2. Nothing observed it,
- * because the exit code of a piped run is the one thing the other prompt
- * checks do not read.
+ * One rule, the highest code any line produced, whatever kind of failure
+ * each line was and in whatever order. The exit code of a piped run is the
+ * one thing the other prompt checks do not read.
  */
 function checkPromptExitCode(): void {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-pipe-'))
@@ -645,8 +631,8 @@ function checkPromptExitCode(): void {
   const login = `create-account --username=${user} --password=pipePass7x --pin=${PIN}`
   // `--spam-threshold=abc` fails the query cleaner — BAD_REQUEST, exit 5 —
   // and an unknown wallet id is WALLET_NOT_FOUND, exit 4. Two *API*
-  // failures, which is what tells the rules apart: the arm that handles them
-  // was last-non-zero-wins, so 5 then 4 reported 4.
+  // failures, the worse one first, so last-non-zero-wins would report 4
+  // where the highest code is 5.
   const badRequest = 'get-transactions --wallet-id=nope --spam-threshold=abc'
   const notFound = 'get-transactions --wallet-id=nope'
   const pipe = (lines: string[]): number => {
@@ -692,7 +678,7 @@ function checkPromptExitCode(): void {
  * Its own directory, so the suite's shared engine is not in the way. This is
  * the envelope and the exit code — `EXIT.ENGINE`, 7 — that the guide's
  * exit-code table publishes for the most common failure a first-time caller
- * meets, and no suite produced it.
+ * meets.
  */
 function checkEngineUnavailable(): void {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-nospawn-'))
@@ -775,9 +761,7 @@ function main(): void {
     // The call's stated job is to say which configuration the engine is
     // running on, and the one file this suite's engine is *not* started with
     // is the CLI conf — so `cliConfig` is null here, and the field's
-    // existence is what this pins. It used to name the `keys.json` search
-    // path and the app's `config.json` and not `edge-cli.conf` at all, while
-    // the guide says that file "decides both halves".
+    // existence is what this pins.
     check(
       'engine-config names both config files',
       engineConfig.json?.configFiles != null &&
@@ -800,7 +784,7 @@ function main(): void {
     )
     ok('account-info', 'account-info')
     ok('local-users', 'local-users')
-    // Two more published codes nothing produced. They cost nothing offline.
+    // Two more published codes, which cost nothing to produce offline.
     refuses(
       'forget-account for an unknown local user',
       'USER_NOT_FOUND',
@@ -818,12 +802,12 @@ function main(): void {
     ok('sync', 'sync')
     ok('wait-for-all-wallets', 'wait-for-all-wallets')
     ok('pending-vouchers', 'pending-vouchers')
-    // Written to the value that is *not* the default, then read back. The
-    // previous pair wrote `true`, which `spamFilterOn` already defaults to,
-    // and read before writing — so a handler that answered `ok` and wrote
-    // nothing, or wrote the wrong file, passed both. This is the only CLI
-    // path that writes `Settings.json` on `account.localDisklet`, and the
-    // setting it writes changes what `get-transactions` returns.
+    // Written to the value that is *not* the default, then read back:
+    // `spamFilterOn` defaults to `true`, so writing `false` is what catches a
+    // handler that answered `ok` and wrote nothing, or wrote the wrong file.
+    // This is the only CLI path that writes `Settings.json` on
+    // `account.localDisklet`, and the setting it writes changes what
+    // `get-transactions` returns.
     ok('local-settings read', 'local-settings')
     ok('local-settings write', 'local-settings', '--spam-filter-on=false')
     const afterWrite = ok('local-settings read after write', 'local-settings')
@@ -852,13 +836,13 @@ function main(): void {
     // ------------------------------------------- the persisted session id
     //
     // `--session` and `EDGE_CLI_SESSION` are published as an override of the
-    // persisted id, and a 401 on an overridden id used to delete the
-    // `session.json` holding a different, still-live one — the only copy of
-    // an id for an account the engine still had open.
+    // persisted id, so a 401 on an overridden id must not delete the
+    // `session.json` holding a different, still-live one: the only copy of
+    // an id for an account the engine still has open.
     checkSessionFileSurvivesABadOverride()
     // `engine-status` rather than a wallet command: the subject is that
-    // `help <name>` answers for a registered name, and a command the next
-    // commit adds made this case fail on the engine commit's own tree.
+    // `help <name>` answers for a registered name, and a newer command
+    // would fail this case on any tree that predates it.
     ok('help', 'help', 'engine-status')
 
     // ------------------------------------------------------ credentials
@@ -913,13 +897,13 @@ function main(): void {
     // -------------------------------------------------------------- otp
     ok('otp-key before enabling', 'otp-key')
     ok('enable-otp', 'enable-otp')
-    // A number in a JSON body arrives as the flag's raw text, so this used
-    // to be `BAD_REQUEST: Expected a number, got "604800" at .timeout` and
-    // the flag the help advertises could never be used.
+    // A number in a JSON body arrives as the flag's raw text, so the flag the
+    // help advertises has to be read as a number, or this answers
+    // `BAD_REQUEST: Expected a number, got "604800" at .timeout`.
     ok('enable-otp with a timeout', 'enable-otp', '--timeout=604800')
-    // `0` is not nullish, so it used to be passed through rather than
-    // defaulted — a 2FA reset delay of zero seconds, which is a window in
-    // which `cancel-otp-reset` cannot be used.
+    // `0` is not nullish, so a `??` default would pass it through: a 2FA
+    // reset delay of zero seconds, a window in which `cancel-otp-reset`
+    // cannot be used. It is refused instead.
     refuses(
       'enable-otp with no reset window',
       'BAD_REQUEST',
@@ -974,12 +958,11 @@ function main(): void {
     // Inside the archived window, which is the whole reason `findWalletId`
     // exists. Core builds `account.currencyWallets` from `activeWalletIds`,
     // so an archived wallet is absent from it — and these five routes only
-    // need an id. Resolved through the loaded set, `all-keys` listed the
-    // wallet and `get-raw-private-key` answered `WALLET_NOT_FOUND` for the
-    // exact id it had just printed, on the disaster-recovery path a CLI key
-    // export is for. Every other key-export check passes a loaded active
-    // wallet, so reverting the routes to `findWallet` left both offline
-    // suites green.
+    // need an id. Resolved through the loaded set, `get-raw-private-key`
+    // would answer `WALLET_NOT_FOUND` for the exact id `all-keys` had just
+    // printed, on the disaster-recovery path a CLI key export is for. Every
+    // other key-export check passes a loaded active wallet, so only these
+    // cases catch a route that resolves through `findWallet`.
     ok('all-keys while archived', 'all-keys')
     ok('get-raw-private-key while archived', 'get-raw-private-key', w)
     // The display forms are deliberately not here. Core asks the plugin's
@@ -987,9 +970,7 @@ function main(): void {
     // a running engine — and whether an archived wallet still has one
     // depends on how far core has got with tearing it down, so the answer
     // races. `keyRoutes.test.ts` pins both outcomes instead: the key when
-    // the engine is there, and `WALLET_NOT_RUNNING` when it is not, where
-    // this used to be a `500 INTERNAL_ERROR` carrying core's `Wallet id …
-    // does not exist in this account`.
+    // the engine is there, and `WALLET_NOT_RUNNING` when it is not.
     ok('get-raw-public-key while archived', 'get-raw-public-key', w)
     ok(
       'list-splittable-wallet-types while archived',
@@ -1007,9 +988,9 @@ function main(): void {
     ok('wallet-sync', 'wallet-sync', w)
     ok('dump-data', 'dump-data', w)
     ok('balance-map', 'balance-map', w)
-    // The client-side `--token-id` filter used to answer `{"balances": []}`
-    // and exit 0 for an id the wallet tracks nothing for, so a script could
-    // not tell that from a zero balance.
+    // The client-side `--token-id` filter refuses an id the wallet tracks
+    // nothing for, rather than answering `{"balances": []}` and exit 0,
+    // which a script could not tell from a zero balance.
     refuses(
       'balance-map with a token the wallet does not track',
       'TOKEN_NOT_FOUND',
@@ -1027,12 +1008,12 @@ function main(): void {
       w,
       '--remove=notatoken'
     )
-    // `--add` of an id the plugin does not know used to answer 200 with the
-    // unchanged set and exit 0, because core ends with
-    // `.filter(tokenId => allTokens[tokenId] != null)` — so a script could
-    // not tell a mistyped contract address from a no-op. The sugar makes
-    // that likelier, not less: the client posts the whole list back, so a
-    // bad id arrives inside a known-good set.
+    // `--add` of an id the plugin does not know is refused. Core ends with
+    // `.filter(tokenId => allTokens[tokenId] != null)`, so unchecked it would
+    // answer 200 with the unchanged set and exit 0, and a script could not
+    // tell a mistyped contract address from a no-op. The sugar makes that
+    // likelier, not less: the client posts the whole list back, so a bad id
+    // arrives inside a known-good set.
     refuses(
       'change-enabled-token-ids with an id the plugin does not know',
       'TOKEN_NOT_FOUND',
@@ -1047,10 +1028,10 @@ function main(): void {
       w,
       '--token-ids=null'
     )
-    // "Disable every token on this wallet" is the empty set, and it had no
-    // spelling: `--token-ids=` is refused because an empty flag value is a
-    // forgotten value everywhere in this CLI, and `--token-ids=,` works but
-    // reads as a typo. A no-op here, because the fake world's UTXO wallet
+    // "Disable every token on this wallet" is the empty set, spelled
+    // `--disable-all`: `--token-ids=` is refused because an empty flag value
+    // is a forgotten value everywhere in this CLI, and `--token-ids=,` works
+    // but reads as a typo. A no-op here, because the fake world's UTXO wallet
     // has no tokens enabled — the point is that the command is accepted and
     // answers the empty set.
     const cleared = ok(
@@ -1081,9 +1062,8 @@ function main(): void {
       '--disable-all',
       '--add=a'
     )
-    // The reader for the one write a GET makes. Nothing read
-    // `exportTxInfo.json` back, so the CLI could put a record into a synced
-    // file the GUI reads and offer no way to see what it had written.
+    // The reader for the one write a GET makes, so a record the CLI puts
+    // into the synced `exportTxInfo.json` the GUI reads can be seen.
     const prefsBefore = ok('export-prefs', 'export-prefs', w)
     check(
       'export-prefs answers null for a wallet with nothing saved',
@@ -1095,9 +1075,9 @@ function main(): void {
 
     // A key that is a member of `Object.prototype` is caller input like any
     // other. `wallets['__proto__']` is truthy and
-    // `allTokens['__proto__'] == null` is false, so every guard that exists
-    // to answer 404 was skipped and the `TypeError` that followed surfaced
-    // as 500 with no field name.
+    // `allTokens['__proto__'] == null` is false, so a guard written as a
+    // plain lookup would skip its 404, and the `TypeError` that follows
+    // would surface as 500 with no field name.
     refuses(
       'a prototype key as a walletId',
       'WALLET_NOT_FOUND',
@@ -1117,7 +1097,7 @@ function main(): void {
       'get-transactions',
       '--wallet-id=constructor'
     )
-    // `limit` and `offset` index an array, so a negative one returned a
+    // `limit` and `offset` index an array, so a negative one would return a
     // silently wrong page beside an unchanged `total`.
     refuses(
       'a negative limit',
@@ -1134,9 +1114,8 @@ function main(): void {
       '--offset=-1'
     )
 
-    // The export mode had no coverage at all: not the format-list parse, not
-    // the `bitwaveAccountId` guards, and not the branch that *writes* the
-    // wallet's synced `exportTxInfo.json`.
+    // The export mode: the format-list parse, the `bitwaveAccountId` guards,
+    // and the branch that *writes* the wallet's synced `exportTxInfo.json`.
     const exportDir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-export-'))
     ok(
       'get-transactions --export-format=csv',
@@ -1152,11 +1131,11 @@ function main(): void {
       '--export-format=csv,qbo',
       `--out=${path.join(exportDir, 'tx')}`
     )
-    // Seven export checks and not one of them opened a file, so an engine
-    // that stopped assembling `files`, or a `writeExportFiles` whose
-    // `fs.writeFile` were deleted, would have kept all seven green: `ok()`
-    // asserts only `status === 0` and the absence of an error, and the
-    // client returns early when `result.files == null`.
+    // The files themselves, because `ok()` asserts only `status === 0` and
+    // the absence of an error, and the client returns early when
+    // `result.files == null`: an engine that stopped assembling `files`, or
+    // a `writeExportFiles` that wrote nothing, would pass every `ok()` export
+    // check.
     //
     // The wallet is empty in the fake world, which is what makes the two
     // formats differ here: QBO always writes its envelope, and the CSV
@@ -1249,10 +1228,9 @@ function main(): void {
       '--export-format=bitwave',
       `--out=${path.join(exportDir, 'bw2.csv')}`
     )
-    // `--save-export-prefs` used to be honoured only inside the bitwave
-    // branches, so this combination answered `ok` and wrote nothing. The
-    // write now runs for every format. The bitwave call after it checks that
-    // the saved id survived a write that did not mention one — it has no
+    // `--save-export-prefs` writes for every format, not only inside the
+    // bitwave branches. The bitwave call after it checks that the saved id
+    // survived a write that did not mention one — it has no
     // `--bitwave-account` of its own, so it can only succeed from the
     // record. `mergeExportTxInfo` is what preserves it, by reading each
     // field as `patch.x ?? prev?.x`.
@@ -1273,9 +1251,9 @@ function main(): void {
     )
     fs.rmSync(exportDir, { recursive: true, force: true })
     // A tokenId is free-form caller input over REST, where in the GUI it
-    // always came from a real token. Unvalidated, each of these destructured
-    // an absent token inside core and answered 500 INTERNAL_ERROR with no
-    // field name, outside every error list the routes declare.
+    // always comes from a real token. Unvalidated, each of these would
+    // destructure an absent token inside core and answer 500 INTERNAL_ERROR
+    // with no field name, outside every error list the routes declare.
     refuses(
       'get-transactions with an unknown tokenId',
       'TOKEN_NOT_FOUND',
@@ -1310,9 +1288,9 @@ function main(): void {
     // The success path needs the live rates server, but every refusal here
     // happens before any fetch — the empty-body arm in the handler, and the
     // rest at the declaration. They matter more than their size: this is the
-    // only route whose output is a spend amount, and an unparseable date used
-    // to come back inside a 200 as `rate: 0`, indistinguishable from a rate
-    // the server could not supply.
+    // only route whose output is a spend amount, and an unparseable date
+    // answered inside a 200 as `rate: 0` would be indistinguishable from a
+    // rate the server could not supply.
     refuses(
       'rates-query with neither crypto nor fiat',
       'BAD_REQUEST',
@@ -1407,12 +1385,12 @@ function main(): void {
     )
 
     // A caller-supplied `spendInfo` is free-form input over REST, and core
-    // silently drops a target with no `publicAddress` — so before this was
-    // checked, the first of these signed and broadcast a *one-output*
-    // transaction and answered 200. All three must be refused before the
-    // wallet's balance is ever consulted, which is why an empty wallet
-    // answering BAD_REQUEST rather than INSUFFICIENT_FUNDS is the assertion.
-    // The amount in a URI is now scaled by the asset the request spends, so
+    // silently drops a target with no `publicAddress`, so unchecked, the
+    // first of these would sign and broadcast a *one-output* transaction and
+    // answer 200. All three must be refused before the wallet's balance is
+    // ever consulted, which is why an empty wallet answering BAD_REQUEST
+    // rather than INSUFFICIENT_FUNDS is the assertion.
+    // The amount in a URI is scaled by the asset the request spends, so
     // `parseUri` is told which one that is. This asserts the guard around
     // that does not refuse the ordinary case: a native-asset URI carrying an
     // amount must reach the balance check, so INSUFFICIENT_FUNDS rather than
@@ -1441,11 +1419,11 @@ function main(): void {
       w,
       '--spend-info={"tokenId":null,"spendTargets":[{"publicAdress":"bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7","nativeAmount":"1"}]}'
     )
-    // Declared `asString`, these reached biggystring, which throws a plain
-    // `Error` that `toErrorBody` has no arm for — so a mistyped amount
-    // answered 500 on routes declaring 400. A fractional one was worse: the
-    // UTXO plugin sums fees with biggystring but builds the output with
-    // `parseInt`, so "1.5" funded the fee math at 1.5 and paid out 1.
+    // Declared `asString`, these would reach biggystring, which throws a
+    // plain `Error` that `toErrorBody` has no arm for, so a mistyped amount
+    // would answer 500 on routes declaring 400. A fractional one is worse:
+    // the UTXO plugin sums fees with biggystring but builds the output with
+    // `parseInt`, so "1.5" would fund the fee math at 1.5 and pay out 1.
     for (const [label, amount] of [
       ['non-numeric', 'abc'],
       ['fractional', '1.5'],
@@ -1484,10 +1462,10 @@ function main(): void {
       '--spend-info={"tokenId":null,"spendTargets":[{"publicAddress":"bc1q0qsagl9n0lrsutam6zncd6vf07rq3mekn3phl7"}]}'
     )
 
-    // All three spend entries, because the guard was written out twice and
-    // missing from the third: core hands an empty `spendTargets` to the
-    // plugin, which throws a plain `Error` — a 500 on routes that declare
-    // BAD_REQUEST, for a one-flag mistake on a documented command.
+    // All three spend entries, because each needs the guard: core hands an
+    // empty `spendTargets` to the plugin, which throws a plain `Error`, a
+    // 500 on routes that declare BAD_REQUEST, for a one-flag mistake on a
+    // documented command.
     for (const command of ['make-spend', 'spend', 'spend-max']) {
       refuses(`${command} with no destination`, 'BAD_REQUEST', command, w)
     }
@@ -1498,11 +1476,11 @@ function main(): void {
       w
     )
 
-    // The route used to rewrite *every* failure as `NETWORK_ERROR` with
-    // status 503 — exit 6, which the published table presents as the
-    // retryable class — so a URL that can never work told a script to retry
-    // for ever. A string that is not a URL fails inside the plugin before
-    // any socket is opened, which is why this one is safe offline.
+    // A URL that can never work is a BAD_REQUEST. A `NETWORK_ERROR` with
+    // status 503 exits 6, which the published table presents as the
+    // retryable class, so it would tell a script to retry for ever. A string
+    // that is not a URL fails inside the plugin before any socket is opened,
+    // which is why this one is safe offline.
     refuses(
       'get-payment-protocol-info with a URL that is not one',
       'BAD_REQUEST',
@@ -1520,12 +1498,11 @@ function main(): void {
       'create-currency-wallets',
       '--create-wallets=[{"walletType":"wallet:bitcoin","name":"Batch"}]'
     )
-    // Partial success, which is what the route publishes and what nothing
-    // reached: core's batch resolves every type up front and throws for one
-    // it cannot find, so a single bad entry abandoned the whole call and
-    // created nothing. The route answers a type no plugin claims itself,
-    // before core, so the good one is created and the bad one reports its
-    // own failure.
+    // Partial success, which is what the route publishes: core's batch
+    // resolves every type up front and throws for one it cannot find, so a
+    // single bad entry would abandon the whole call and create nothing. The
+    // route answers a type no plugin claims itself, before core, so the good
+    // one is created and the bad one reports its own failure.
     const batch = ok(
       'create-currency-wallets with one bad entry',
       'create-currency-wallets',
@@ -1542,7 +1519,7 @@ function main(): void {
     )
     ok('split', 'split', w, '--split-wallets=[]')
     // The caller mistake the route's own description sends them to
-    // `list-splittable-wallet-types` to avoid, which arrived as a 500.
+    // `list-splittable-wallet-types` to avoid.
     refuses(
       'split into a wallet type no plugin claims',
       'BAD_REQUEST',
@@ -1568,10 +1545,9 @@ function main(): void {
       w,
       '--txid=deadbeef',
       '--token-id=null',
-      // A complete `EdgeTxActionSwap`. `{"actionType":"swap"}` alone used to
-      // reach core, because the field was declared `asCoreValue` and cast;
-      // it is now refused for the missing `swapInfo` before it can be
-      // written into the synced transaction file.
+      // A complete `EdgeTxActionSwap`. `{"actionType":"swap"}` alone is
+      // refused for the missing `swapInfo` before it can be written into the
+      // synced transaction file.
       `--saved-action=${JSON.stringify({
         actionType: 'swap',
         swapInfo: {
@@ -1594,9 +1570,9 @@ function main(): void {
       '--saved-action={"actionType":"swap"}'
     )
     // `actionType` is dispatched through a plain object literal, so these two
-    // names resolved `Object.prototype.toString` and `Object` rather than
-    // missing: the "unknown actionType" guard was skipped and a string, or
-    // the unvalidated body, was returned as an `EdgeTxAction`.
+    // names would resolve `Object.prototype.toString` and `Object` rather
+    // than missing, skip the "unknown actionType" guard, and return a
+    // string, or the unvalidated body, as an `EdgeTxAction`.
     for (const actionType of ['toString', 'constructor']) {
       refuses(
         `save-tx-action with actionType "${actionType}"`,
@@ -1608,11 +1584,11 @@ function main(): void {
       )
     }
     // Core treats an unknown wallet id as new and writes a state file for it
-    // without error, so these answered 204 while changing nothing and left a
-    // bogus record to sync to every device.
-    // The three flags the published usage advertised and the parsers
-    // refused. Each is the route's own field, so the fix was to accept it,
-    // and `docs:api:verify` now fails on a published flag a parser rejects.
+    // without error, so unrefused these would answer 204 while changing
+    // nothing and leave a bogus record to sync to every device.
+    // Flags the published usage advertises, each the route's own field, so
+    // the parser accepts it; `docs:api:verify` fails on a published flag a
+    // parser rejects.
     ok(
       'change-wallet-states with the whole walletStates map',
       'change-wallet-states',
@@ -1626,8 +1602,8 @@ function main(): void {
       w,
       '--archived=true'
     )
-    // The per-wallet flags without `--wallet-id` used to be applied as the
-    // map and silently ignored, with no diagnostic.
+    // The per-wallet flags without `--wallet-id` are refused, rather than
+    // applied as the map and silently ignored with no diagnostic.
     refuses(
       'change-wallet-states with --wallet-states and a per-wallet flag',
       'USAGE',
@@ -1659,7 +1635,7 @@ function main(): void {
       '--metadata=[]'
     )
 
-    // Published contracts the routes stated and did not enforce.
+    // Published contracts the routes state, which they enforce.
     refuses(
       'change-recovery with more questions than answers',
       'BAD_REQUEST',
@@ -1696,8 +1672,8 @@ function main(): void {
     // the login completes — so it is reachable through the un-scoped
     // `poll-edge-login` and `cancel-request` above and below, and *not*
     // through the account-scoped object routes. Skipping the ownership
-    // comparison for an owner-less handle let any logged-in session read
-    // another's pending login out of `object-get` and cancel it through
+    // comparison for an owner-less handle would let any logged-in session
+    // read another's pending login out of `object-get` and cancel it through
     // `object-delete`.
     refuses(
       'object-get on a handle that belongs to no session',
@@ -1711,7 +1687,7 @@ function main(): void {
 
     // ------------------------------------------------------------ admin
     // Seconds, converted to the milliseconds core takes, with a floor: zero
-    // polled Edge's production login server as fast as it would answer.
+    // would poll Edge's production login server as fast as it would answer.
     ok(
       'admin-make-lobby with a period',
       'admin-make-lobby',
@@ -1724,8 +1700,8 @@ function main(): void {
       '--period-seconds=0'
     )
     // And a ceiling, because `setTimeout` keeps its delay in a 32-bit signed
-    // int: a period above that clamped to 1 ms after a warning, so "poll once
-    // a month" became the fastest poll the loop could make.
+    // int: a period above that clamps to 1 ms after a warning, so "poll once
+    // a month" would become the fastest poll the loop could make.
     refuses(
       'admin-make-lobby with a period past the 32-bit timer ceiling',
       'BAD_REQUEST',
@@ -1741,16 +1717,15 @@ function main(): void {
     )
     // An admin lobby is created empty, so it has no `loginRequest` — which
     // makes this the one offline way to reach `NO_LOGIN_REQUEST`, a published
-    // code no test produced.
+    // code.
     refuses(
       'approve-login-request on a lobby with no request',
       'NO_LOGIN_REQUEST',
       'approve-login-request',
       lobby.json?.lobbyId ?? ''
     )
-    // A caller's typo in a base58 key is bad argv, not an engine fault: nine
-    // unguarded `base58.parse` calls made the `BAD_REQUEST` each of these
-    // routes declares unreachable from its own handler.
+    // A caller's typo in a base58 key is bad argv, not an engine fault, so it
+    // answers the `BAD_REQUEST` each of these routes declares.
     refuses(
       'admin-sync-repo with a non-base58 sync key',
       'BAD_REQUEST',
@@ -1765,9 +1740,9 @@ function main(): void {
       '--data-key=not!base58',
       '--path=Keys/x.json'
     )
-    // Base64 as well, because `get-raw-private-key` — the only command that
-    // produces these two values — emits them base64, so the whole group was
-    // undrivable from the CLI's own output. An unwritten repo lists empty,
+    // Base64 as well, because `get-raw-private-key`, the only command that
+    // produces these two values, emits them base64, and the group has to be
+    // drivable from the CLI's own output. An unwritten repo lists empty,
     // which is the same answer the base58 case above it gets; the point is
     // that the key was *read* rather than refused as bad argv.
     ok(
@@ -1843,12 +1818,11 @@ function main(): void {
 
     // These need state the fake world cannot produce, so the refusal is what
     // proves the route runs at all.
-    // Core accepts any voucher id without complaint, so success here is the
-    // engine reporting core faithfully, not the voucher having existed.
-    // Both used to answer `ok` for an arbitrary string, on an account whose
-    // `pendingVouchers` is empty — and a voucher is a pending login the
-    // login server *approves on a timer* unless it is rejected, so the
-    // caller was told an unrecognised device had been denied while that
+    // Core accepts any voucher id without complaint, so the engine refuses
+    // an id `pendingVouchers` does not hold rather than forwarding it: a
+    // voucher is a pending login the login server *approves on a timer*
+    // unless it is rejected, so answering `ok` for an arbitrary string would
+    // tell the caller an unrecognised device had been denied while that
     // device's login went on to succeed.
     refuses(
       'approve-voucher with no such voucher',
@@ -1878,9 +1852,7 @@ function main(): void {
       '--path=x'
     )
     // Succeeds with an empty listing: a repo nobody has written to is not
-    // an error to list. The check used to pass a `--sync-key` flag that does
-    // not exist, so it never reached the route at all — and `refuses(...,
-    // 'error')` accepted the resulting usage envelope.
+    // an error to list.
     ok(
       'admin-repo-list on an unwritten repo is empty',
       'admin-repo-list',
@@ -1897,8 +1869,7 @@ function main(): void {
       '--text=y'
     )
     // Also succeeds: deleting a path that is not there is a no-op, which is
-    // what disklet's `delete` does. Same wrong-flag history as the listing
-    // above.
+    // what disklet's `delete` does.
     ok(
       'admin-repo-delete of an absent path is a no-op',
       'admin-repo-delete',
@@ -1918,12 +1889,9 @@ function main(): void {
     // tests the same bytes every run.
     const LOBBY_PUBLIC_KEY_BASE64 =
       'A5TtBTRQirwe15Yjdeq2xShERYJSy9fmo+iCXjy7swpi'
-    // `{}` is a `400` from the declaration now, not a `500` from inside
-    // core. The old case asserted `INTERNAL_ERROR` under the name "to an
-    // unknown lobby", which it never reached: core encrypts the reply
-    // *before* it fetches the lobby, so the throw was
-    // `secp256k1.keyFromPublic` on a missing key — the case was pinning
-    // that bug under another name.
+    // `{}` is a `400` from the declaration, not a `500` from inside core:
+    // core encrypts the reply *before* it fetches the lobby, so a missing key
+    // would throw from `secp256k1.keyFromPublic`.
     refuses(
       'admin-send-lobby-reply without a lobby public key',
       'BAD_REQUEST',
@@ -1931,14 +1899,13 @@ function main(): void {
       'nosuchlobby',
       '--lobby-request={}'
     )
-    // And a well-formed request now gets *past* the declaration and all the
-    // way to the login server, which the fake world answers for an unknown
-    // lobby with `USERNAME_ERROR`. That is the assertion worth having: core
+    // And a well-formed request gets *past* the declaration and all the way
+    // to the login server, which the fake world answers for an unknown lobby
+    // with `USERNAME_ERROR`. That is the assertion worth having: core
     // encrypts the reply *before* it fetches the lobby, so reaching the
     // server at all is proof that `encryptLobbyReply` →
-    // `secp256k1.keyFromPublic` accepted the key — the step that threw
-    // `Unknown point format` for every input this route could express. The
-    // key is 33 bytes of compressed secp256k1 point, base64, exactly as
+    // `secp256k1.keyFromPublic` accepted the key. The key is 33 bytes of
+    // compressed secp256k1 point, base64, exactly as
     // `admin-fetch-lobby-request` publishes it.
     refuses(
       'admin-send-lobby-reply reaches the server with a usable key',

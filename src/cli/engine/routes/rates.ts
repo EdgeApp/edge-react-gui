@@ -33,8 +33,8 @@ import {
  *
  * Exported for its test. This is the one route whose output is a spend
  * amount — `nativeAmount` is documented as "What a spend actually takes" —
- * and the rest of the handler needs the live rates server, so the arithmetic
- * was reachable from no test at all while it was module-private.
+ * and the rest of the handler needs the live rates server, so exporting the
+ * arithmetic is what lets a test reach it.
  */
 export function displayToNative(
   displayAmount: string,
@@ -51,9 +51,8 @@ const asCryptoQuery = asObject({
   pluginId: doc(asString, 'Which chain, e.g. `bitcoin`.'),
   // No fallback: this shape is nested inside `crypto`, and
   // `asOptional(c, x)` erases `undefined` from the output type, which is
-  // how the generator reads a nested field's optionality — so
-  // `crypto.items.required` published `["pluginId","tokenId"]` while a
-  // caller omitting `tokenId` succeeded. The handler defaults it.
+  // how the generator reads a nested field's optionality, so a fallback
+  // would publish `tokenId` as required. The handler defaults it.
   tokenId: asOptional(doc(asRequestTokenId, TOKEN_ID_DOC)),
   targetFiat: asOptional(doc(asString, TARGET_FIAT_DOC)),
   date: asOptional(doc(asQueryDate, DATE_DOC))
@@ -142,14 +141,12 @@ export const ratesQuery = route({
     }
     const now = new Date().toISOString()
 
-    // Both sets are *queued* before either is awaited. Awaiting the crypto
-    // lookups first and only then starting the fiat ones made a mixed body
-    // pay two `FETCH_FREQUENCY` debounces and two upstream requests:
-    // `exchangeRates` batches crypto and fiat into the same group, but
-    // `inQuery` clears the moment the first pass drains, so the second set
-    // armed a fresh 1,000ms timer. Measured at 2,006ms / 2 requests the old
-    // way against 1,005ms / 1 this way — and this route's own description
-    // promises that asking for many rates at once costs a single request.
+    // Both sets are *queued* before either is awaited. `exchangeRates`
+    // batches crypto and fiat into the same group, but `inQuery` clears the
+    // moment the first pass drains, so starting the fiat lookups only after
+    // the crypto ones would arm a fresh `FETCH_FREQUENCY` timer and pay a
+    // second upstream request. This route's own description promises that
+    // asking for many rates at once costs a single request.
     const cryptoPending = (cryptoRaw ?? []).map(async item => {
       // Already cleaned by `asRequestTokenId` at the declaration; the
       // default is here rather than in the cleaner, so the published shape
@@ -169,7 +166,7 @@ export const ratesQuery = route({
       // `JSON.stringify` writes as `null` — a cleaner built from the
       // published shape dies on it, and `asNumber` cannot catch it because
       // `typeof NaN` is `'number'`. So the sentinel becomes the `0` this
-      // route has always documented, and `unavailable` carries the fact.
+      // route documents, and `unavailable` carries the fact.
       const unavailable = isRateUnavailable(queried)
       return {
         pluginId: item.pluginId,
@@ -231,11 +228,11 @@ export const ratesUsdToNative = route({
     usdAmount: doc(asPositiveBiggystring, 'A positive decimal string.'),
     pluginId: doc(asString, 'Which chain to price.'),
     tokenId: asOptional(doc(asRequestTokenId, TOKEN_ID_DOC), null),
-    // `asPositiveBiggystring`, not `asString`. Unvalidated, `"abc"` reached
-    // biggystring and came back as a plain `Error` — `500 INTERNAL_ERROR` on
-    // a route that declares `BAD_REQUEST` — while `""` returned `"0"` and
-    // `"-1"` returned `"-1"`: a silently wrong `nativeAmount` under a field
-    // documented as what a spend actually takes.
+    // `asPositiveBiggystring`, not `asString`. Unvalidated, `"abc"` would
+    // reach biggystring and come back as a plain `Error`, a
+    // `500 INTERNAL_ERROR` on a route that declares `BAD_REQUEST`, while
+    // `""` and `"-1"` would give a silently wrong `nativeAmount` under a
+    // field documented as what a spend actually takes.
     multiplier: doc(
       asPositiveBiggystring,
       'Native units per whole coin, as a positive decimal string. This route is not session-scoped, so the engine cannot read the asset\u2019s denomination from core and will not guess one.'
@@ -266,8 +263,7 @@ export const ratesUsdToNative = route({
   async handler(ctx) {
     // Both numbers are validated by the declaration, so a bad one is the
     // 400 this route publishes rather than a 500 from biggystring or a
-    // silently wrong `nativeAmount`. The hand-written positivity test that
-    // used to live here only covered `usdAmount`.
+    // silently wrong `nativeAmount`.
     const usdAmount = Number(ctx.body.usdAmount)
     const { pluginId } = ctx.body
     // `asOptional(asRequestTokenId, null)` already guarantees non-undefined.
@@ -278,9 +274,9 @@ export const ratesUsdToNative = route({
     const { multiplier } = ctx.body
     const date = ctx.body.date?.toISOString() ?? new Date().toISOString()
     // The answer that keeps "the server could not price it" apart from "the
-    // server did not answer": the plain accessor folds both into `0`, so an
-    // outage was a `404 NOT_FOUND`, and a script that reads that as "this
-    // asset has no price" stops retrying a transient failure.
+    // server did not answer": the plain accessor folds both into `0`, which
+    // would make an outage a `404 NOT_FOUND`, and a script that reads that as
+    // "this asset has no price" stops retrying a transient failure.
     const rate = await getHistoricalCryptoRateOrUnavailable(
       pluginId,
       tokenId,

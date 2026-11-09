@@ -13,12 +13,9 @@ import { asCommandsTableJson } from '../../cli/generatedSchemas'
  * `kindOf` resolves a body field to `kind: 'string'` unless its cleaner is a
  * structured one, and `generated.ts` then puts the raw flag text into the
  * body. So a `kind: 'string'` field declared with a cleaner that refuses a
- * string is a command nobody can run: `enable-otp --timeout=604800` sent
- * `{"timeout":"604800"}` into `asOptional(asNumber)` and came back
- * `BAD_REQUEST: Expected a number, got "604800" at .timeout`.
- *
- * `asBodyNumber`'s docblock has claimed this test exists since that fix. It
- * did not, which is worse than no claim — the next reader stops checking.
+ * string is a command nobody can run: with `asOptional(asNumber)`,
+ * `enable-otp --timeout=604800` would send `{"timeout":"604800"}` and come
+ * back `BAD_REQUEST: Expected a number, got "604800" at .timeout`.
  *
  * The check runs each route's real body cleaner over a string, rather than
  * comparing published types: the OpenAPI type is the cleaner's *output*, so

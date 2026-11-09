@@ -42,14 +42,13 @@ const BASE = ['--fake', `--directory=${DIR}`]
 
 // Every response this suite provokes is checked against the route's own
 // `returns` cleaner, and a drift fails the suite rather than being logged
-// where nobody looks. `testCliFake.ts` has always run in this mode; this one
-// set nothing, so `/engine/status` over both transports and every SSE frame
-// were validated against no declared shape — while the other suite's header
-// advertises strict checking as a property of "the offline suites".
+// where nobody looks. Here that covers `/engine/status` over both
+// transports and every SSE frame; `testCliFake.ts` runs in the same mode,
+// so strict checking holds for both offline suites.
 //
-// Set on this process rather than per spawn: the six `spawn`/`spawnSync`
-// calls below pass no `env`, so they inherit it, and so does the engine the
-// client spawns.
+// Set on this process rather than per spawn: every `spawn`/`spawnSync` call
+// below inherits this environment, and so does the engine the client
+// spawns.
 process.env.EDGE_CLI_CHECK_RESPONSES = 'strict'
 
 let failures = 0
@@ -64,10 +63,8 @@ function check(label: string, ok: boolean, detail = ''): void {
 /**
  * A case this host cannot run.
  *
- * Its own word, because `check(label, true)` printed `OK` for a case that
- * did nothing and the suite's closing line is "all checks passed" — which is
- * the shape of every other "machinery that passes while not measuring" this
- * review has found.
+ * Its own word, because `check(label, true)` would print `OK` for a case
+ * that did nothing, and the suite's closing line is "all checks passed".
  */
 function skip(label: string, why: string): void {
   console.log(`SKIP ${label} — ${why}`)
@@ -76,15 +73,14 @@ function skip(label: string, why: string): void {
 /**
  * One CLI invocation, with a deadline.
  *
- * `testCli.ts` has always passed one; this helper did not, and two cases
- * below invoke `subscribe` — a command that streams until the engine closes
- * the connection. They terminate today only because the engine refuses an
- * unknown `--session-id` before it attaches an SSE client, which is the very
- * guard those cases exist to pin: if it moved below `addSseClient`, the
- * engine would attach a client and never close it, and `spawnSync` would
- * block for ever. A CI job would hang to its external timeout instead of
- * failing a check, which is the worst way for a suite to report a
- * regression.
+ * Two cases below invoke `subscribe`, a command that streams until the
+ * engine closes the connection. They terminate only because the engine
+ * refuses an unknown `--session-id` before it attaches an SSE client, which
+ * is the very guard those cases exist to pin: if it moved below
+ * `addSseClient`, the engine would attach a client and never close it, and
+ * `spawnSync` with no deadline would block for ever. A CI job would hang to
+ * its external timeout instead of failing a check, which is the worst way
+ * for a suite to report a regression.
  */
 function cli(...args: string[]): { status: number; out: string } {
   const result = spawnSync('node', [...CLI, ...BASE, ...args], {
@@ -94,7 +90,7 @@ function cli(...args: string[]): { status: number; out: string } {
   const out = (result.stdout ?? '') + (result.stderr ?? '')
   if (result.error != null) {
     // A timeout arrives as an `error` with `status: null`, so without this a
-    // hung command read as exit -1 and whatever text had arrived.
+    // hung command would read as exit -1 and whatever text had arrived.
     return {
       status: result.status ?? -1,
       out: `${out}\nspawn failed: ${result.error.message}`
@@ -106,14 +102,13 @@ function cli(...args: string[]): { status: number; out: string } {
 /**
  * Everything the suite creates, torn down whatever happens.
  *
- * `main` had no `try`/`finally` and the only error path was the top-level
- * `.catch`, which removed `DIR` and exited — so any throw mid-suite left
- * four engines running, two subscriber children orphaned, and three temp
- * directories behind. Those engines keep their
+ * A throw mid-suite would otherwise leave engines running, subscriber
+ * children orphaned and temp directories behind. A leftover engine keeps its
  * `~/.edge-cli/run/<profile>/engine.json`, so the *next* run's
  * `readTcpToken` can find a stale engine that happens to name the same port
- * — ports collide whenever two pids differ by 200 — and the Origin and Host
- * checks then fail against the wrong engine's token, spuriously.
+ * (ports collide whenever two pids differ by a multiple of 200), and the
+ * Origin and Host checks then fail against the wrong engine's token,
+ * spuriously.
  */
 const cleanup: Array<() => void> = []
 
@@ -164,10 +159,9 @@ async function main(): Promise<void> {
   check('engine starts', status.status === 0, status.out.slice(0, 200))
 
   // The two scope flags the route declares and the published usage line
-  // advertises. The hand-written command accepted only `--type`, so these
-  // died at the parser with `Unknown option` and exit 2 — the account-scoped
-  // stream the engine supports had no CLI path at all. An unknown session is
-  // the right refusal here; `Unknown option` is not.
+  // advertises, which are the account-scoped stream's only CLI path. An
+  // unknown session is the right refusal here; `Unknown option` and exit 2
+  // are not.
   const sessionFlag = cli('subscribe', '--session-id=sess_nosuchsession')
   check(
     'subscribe accepts --session-id',
@@ -225,9 +219,8 @@ async function main(): Promise<void> {
     subOut.slice(0, 300)
   )
 
-  // A session-scoped stream has to be closed by that session's logout. Every
-  // client used to be context-scoped, so `closeScope` matched nothing and the
-  // published reference promised a teardown that could not happen.
+  // A session-scoped stream has to be closed by that session's logout, which
+  // is the teardown the published reference promises.
   const scoped = await (async (): Promise<string> => {
     const created = cli(
       'create-account',
@@ -254,10 +247,10 @@ async function main(): Promise<void> {
     let frames = ''
     await new Promise<void>(resolve => {
       // Both timers are cleared on the way out, whichever path settles this.
-      // The ordinary one is the logout ending the stream at 1 s, and the 6 s
-      // deadline then stayed armed — holding the event loop open for five
-      // seconds after the case was over, and finally calling `destroy()` on
-      // a request that had already finished.
+      // The ordinary one is the logout ending the stream at 1 s; a 6 s
+      // deadline left armed would hold the event loop open for five seconds
+      // after the case is over, and then call `destroy()` on a request that
+      // has already finished.
       const timers: NodeJS.Timeout[] = []
       const settle = (): void => {
         for (const timer of timers) clearTimeout(timer)
@@ -303,10 +296,9 @@ async function main(): Promise<void> {
   // Ctrl-C on a subscription that is *already streaming*, which is the case
   // the exit code exists for: a supervisor or a `while edge-cli subscribe
   // …; do` loop has to tell an operator's interrupt from the engine ending
-  // the stream normally, and without the fix this exited **0** — the same
-  // value a normal end produces. The cold-start case below keeps its looser
-  // accept for the reason its own comment gives; here the engine is up and
-  // the stream is open, so 130 is the only right answer.
+  // the stream normally, which can exit **0**. The cold-start case below
+  // keeps its looser accept for the reason its own comment gives; here the
+  // engine is up and the stream is open, so 130 is the only right answer.
   const liveDir = `${DIR}-live`
   registerEngine(liveDir)
   fs.mkdirSync(liveDir, { recursive: true })
@@ -357,8 +349,8 @@ async function main(): Promise<void> {
 
   // Ctrl-C while the engine is still spawning. The abort lands before the
   // stream request exists, so it is only observable by re-checking the signal
-  // on the second attempt; without that, `subscribe` opened the stream after
-  // the spawn and swallowed every later signal.
+  // on the second attempt; without that, `subscribe` would open the stream
+  // after the spawn and swallow every later signal.
   const coldDir = `${DIR}-cold`
   registerEngine(coldDir)
   fs.mkdirSync(coldDir, { recursive: true })
@@ -393,9 +385,9 @@ async function main(): Promise<void> {
   spawnSync('node', [...CLI, '--fake', `--directory=${coldDir}`, 'engine-stop'])
   fs.rmSync(coldDir, { recursive: true, force: true })
 
-  // Claim 3, on the *same* engine. Asserting it against a fresh engine
-  // started after `engine-stop` never executed the path the contract is
-  // about: `EventHub.onClientsChanged` -> `IdleShutdown.notifySubscribersChanged`
+  // Claim 3, on the *same* engine. A fresh engine started after
+  // `engine-stop` never executes the path the contract is about:
+  // `EventHub.onClientsChanged` -> `IdleShutdown.notifySubscribersChanged`
   // when the last subscriber detaches.
   const detachDir = `${DIR}-detach`
   registerEngine(detachDir)
@@ -451,8 +443,8 @@ async function main(): Promise<void> {
   )
   cli('engine-stop')
 
-  // The TCP transport is documented and published in the reference, and its
-  // only test needed tester servers, so it had no offline coverage at all.
+  // The TCP transport is documented and published in the reference, so it
+  // is covered here offline, without tester servers.
   const tcpDir = `${DIR}-tcp`
   registerEngine(tcpDir)
   fs.mkdirSync(tcpDir, { recursive: true })
@@ -470,12 +462,10 @@ async function main(): Promise<void> {
   /**
    * One raw TCP request, with whatever headers the case is testing.
    *
-   * Through `engineRequest`'s `rawRequest`, which owns the sockets: this was
-   * one of five hand-rolled clients beside the module whose docstring says it
-   * ended exactly that, and the copies had diverged — two of them carried
-   * neither `res.on('error')`, nor `res.on('aborted')`, nor a deadline. Every
-   * case here is about a request the engine *refuses*, so the failure is
-   * recorded rather than thrown: a thrown transport error would stop the
+   * Through `engineRequest`'s `rawRequest`, which owns the sockets and with
+   * them the `res.on('error')`, `res.on('aborted')` and deadline handling.
+   * Every case here is about a request the engine *refuses*, so the failure
+   * is recorded rather than thrown: a thrown transport error would stop the
    * suite where a `status: 0` fails the one check it belongs to.
    */
   const tcpRequest = async (
@@ -515,11 +505,10 @@ async function main(): Promise<void> {
   )
 
   // A rejected TCP request is the only sign of a probe or a brute-force
-  // attempt, and nothing recorded it. It is also the one request that must
-  // not reach `idle.touch()`: before the guard was hoisted above the idle
-  // clock, each rejection pushed `idleShutdownAt` out by a full
-  // `--idle-timeout`, so an unauthenticated poller could hold the daemon
-  // open for good.
+  // attempt, so the engine logs it. It is also the one request that must
+  // not reach `idle.touch()`, so the guard runs before the idle clock: a
+  // rejection that pushed `idleShutdownAt` out by a full `--idle-timeout`
+  // would let an unauthenticated poller hold the daemon open for good.
   const logText = ((): string => {
     const dir = path.join(os.homedir(), '.edge-cli', 'logs')
     try {
@@ -599,9 +588,6 @@ async function main(): Promise<void> {
     `status=${wrongType.status}`
   )
 
-  // `tcpRequest` with a token header, which is all this ever was: it was
-  // declared in the same scope as `tcpRequest` and repeated its twenty-five
-  // lines, minus the error, aborted and timeout handling.
   const tcpStatus = (await tcpRequest({ [TCP_TOKEN_HEADER]: tcpToken ?? '' }))
     .raw
   // Field by field against what *this* engine answers over its own unix
@@ -698,15 +684,14 @@ async function main(): Promise<void> {
 
   // ------------------------------------------ a plugin's stray rejection
   //
-  // An unhandled rejection used to be a fatal shutdown, which is Node's own
-  // default and the wrong one for a daemon hosting third-party plugins in
-  // its own process: one plugin rejects on a timer, so an account holding a
-  // single `wallet:fio` wallet lost its engine — and with it every session,
-  // every live `subscribe` stream and every object handle — 10 to 20
-  // seconds after the wallet started, every time. Nothing could reach the
-  // handler: the fake world registers only the plugins it builds wallets
-  // for, and the handler is installed inside `main()`. So the engine makes
-  // one on request, and this is the case that proves it is survivable.
+  // Node's own default makes an unhandled rejection a fatal shutdown, the
+  // wrong answer for a daemon hosting third-party plugins in its own
+  // process: one plugin rejecting on a timer would take down the engine,
+  // and with it every session, every live `subscribe` stream and every
+  // object handle. Nothing else reaches the handler offline: the fake world
+  // registers only the plugins it builds wallets for, and the handler is
+  // installed inside `main()`. So the engine makes a stray rejection on
+  // request, and this is the case that proves it is survivable.
   const rejectDir = path.join(os.tmpdir(), `edge-cli-reject-${process.pid}`)
   fs.mkdirSync(rejectDir, { recursive: true })
   const rejectBase = ['--fake', `--directory=${rejectDir}`]
@@ -727,7 +712,8 @@ async function main(): Promise<void> {
   // Past the 50ms the rejection is armed for, and then some.
   const until = Date.now() + 3000
   while (Date.now() < until) {
-    // Busy-wait rather than a timer: this script is synchronous throughout.
+    // Busy-wait. The engine runs in its own process, so blocking this one
+    // does not hold it up.
   }
   const afterReject = spawnSync(
     'node',
@@ -740,8 +726,7 @@ async function main(): Promise<void> {
     (afterReject.stdout + afterReject.stderr).slice(0, 300)
   )
   // And it is reported in full. `String(error)` on a plain object is
-  // `[object Object]`, which was the only diagnostic for the one failure
-  // class that actually happens here — no plugin name, no chain, no stack.
+  // `[object Object]`, which carries no plugin name, no chain and no stack.
   const rejectProfile = /"socketPath":\s*"([^"]+)"/.exec(afterReject.stdout)
   let rejectLog = ''
   if (rejectProfile != null) {

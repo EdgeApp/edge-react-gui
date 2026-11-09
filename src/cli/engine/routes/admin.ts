@@ -43,9 +43,10 @@ const asLobbyRequestDraft = asObject({
  * back unchanged.
  *
  * Declared here rather than as core's `asEdgeLobbyRequest`, because that
- * cleaner's output has `publicKey: Uint8Array` and the reference could print
- * no schema for it — so nothing said the one required field was a base64
- * string. The handler decodes with core's cleaner (`decodeLobbyRequest`).
+ * cleaner's output has `publicKey: Uint8Array`, which the reference cannot
+ * print a schema for, so it could not say the one required field is a
+ * base64 string. The handler decodes with core's cleaner
+ * (`decodeLobbyRequest`).
  */
 const asLobbyRequestWire = asObject({
   publicKey: doc(
@@ -70,8 +71,8 @@ const asLobbyRequestWire = asObject({
  *
  * Core destructures `publicKey` straight into `encryptLobbyReply` →
  * `deriveSharedKey` → `secp256k1.keyFromPublic`, where it must be the
- * `Uint8Array` its type declares; a base64 string threw `Unknown point
- * format` as a `500`. Exported for its test.
+ * `Uint8Array` its type declares; a base64 string throws `Unknown point
+ * format`, a `500`. Exported for its test.
  */
 export function decodeLobbyRequest(raw: unknown): EdgeLobbyRequest {
   try {
@@ -91,10 +92,10 @@ export function decodeLobbyRequest(raw: unknown): EdgeLobbyRequest {
  * `dataKey` is a full offline read of an account's repository, so it does
  * not go in a URL: a query string is written down by everything that touches
  * it, which is why this engine's own log redacts query *values*
- * (`server.ts`'s `redactUrl`). `admin-repo-list` and `admin-repo-get` were
- * `GET` with both keys in the query; they are `POST` with both in the body,
- * like the two write routes that always were. `syncKey` stays the command's
- * positional, because it names the repo rather than opening it.
+ * (`server.ts`'s `redactUrl`). So `admin-repo-list` and `admin-repo-get` are
+ * `POST` with both keys in the body, like the two write routes. `syncKey` is
+ * the command's positional, because it names the repo rather than opening
+ * it.
  */
 // Written out rather than built from a shared const: `extractRoutes` reads a
 // `doc()` string through the TypeScript checker as a *literal*, so an
@@ -103,7 +104,7 @@ export function decodeLobbyRequest(raw: unknown): EdgeLobbyRequest {
 const REPO_KEYS = {
   syncKey: doc(
     asString,
-    'Repo sync key, base58 or base64 \u2014 either, because the only route that produces this value, `get-raw-private-key`, emits it base64 while core\u2019s own repo APIs take base58, and nothing in the CLI converted between them. Base58 is tried first.'
+    'Repo sync key, base58 or base64: `get-raw-private-key`, the only route that produces this value, emits it base64, while core\u2019s own repo APIs take base58. Base58 is tried first.'
   ),
   dataKey: doc(
     asString,
@@ -116,21 +117,16 @@ const REPO_KEYS = {
  * engine fault.
  *
  * `base58` here is the `base-x` wrapper in `src/util/encoding.ts`, whose
- * `parse` throws a plain `Error('Non-base58 character')`. Nine call sites
- * across these six routes passed a caller's typo straight into it, so
- * `admin-sync-repo --sync-key=abc0OIl` answered `500 INTERNAL_ERROR` and the
- * `BAD_REQUEST` every one of them declares was unreachable from its own
- * handler. `signBytes` already does exactly this for `base64.parse`; these
- * were missed.
+ * `parse` throws a plain `Error('Non-base58 character')`. Passed a caller's
+ * typo straight through, that would answer `500 INTERNAL_ERROR`, and the
+ * `BAD_REQUEST` these routes declare would be unreachable from their own
+ * handlers. `signBytes` does the same for `base64.parse`.
  *
- * Base64 as well as base58, because the whole group was undrivable from the
- * CLI's own output: `get-raw-private-key` is the only command that produces
- * a `syncKey` or a `dataKey` and it emits both base64 — 28 and 44 characters
- * with `+`, `/` and `=` in them — so feeding either straight to
- * `admin-repo-list` was `400 BAD_REQUEST "must be valid base58"`, and the
- * five commands the guide points at for repo debugging needed an external
- * encoder to use at all. Base58 is tried first, since that is what core's
- * own APIs take and what these routes have always documented.
+ * Base64 as well as base58, because `get-raw-private-key` is the only
+ * command that produces a `syncKey` or a `dataKey`, and it emits both base64,
+ * with `+`, `/` and `=` in them. Base58 alone would leave these routes
+ * unusable with the CLI's own output without an external encoder. Base58 is
+ * tried first, since that is what core's own APIs take.
  */
 function parseKey(value: string, field: string): Uint8Array {
   try {
@@ -173,12 +169,9 @@ export const adminAuthRequest = route({
     method: doc(asString, 'HTTP method, e.g. `GET`.'),
     path: doc(
       asString,
-      'Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages` \u2014 which the server refuses as an unknown endpoint, through an untyped throw this route reported as a `500`.'
+      'Login-server path below `/api`, not an engine path: core prefixes `/api` itself, so `/v2/messages` reaches `/api/v2/messages` and `/api/v2/messages` reaches `/api/api/v2/messages`, which the server refuses as an unknown endpoint.'
     ),
-    // `asObject(asUnknown)`, so a non-object is a 400 naming the field. As
-    // `asCoreValue` it was accepted by the declaration and then *dropped* by
-    // the handler's `isPlainObject` ternary, which sent the login-server
-    // request with no body at all.
+    // `asObject(asUnknown)`, so a non-object is a 400 naming the field.
     body: asOptional(
       doc(asObject(asUnknown), 'Request body, when the method takes one.')
     )
@@ -199,13 +192,12 @@ export const adminAuthRequest = route({
  * Reproduces the login server's username hash — `userId`, the key the server
  * files an account's stash under — offline.
  *
- * @note This is **not** a `loginId`. It was published as one, and it is not
- *   interchangeable with the `rootLoginId` from a login, the `loginId` from
- *   `local-users`, or the id `forget-account` and `login-with-key
- *   --use-login-id` take: core moved to a random `loginId` and kept the
- *   username hash as `userId`, so passing this value to either of those
- *   fails — `404 USER_NOT_FOUND` and a stash that cannot be found. Use
- *   `local-users` for a login id.
+ * @note This is **not** a `loginId`, and it is not interchangeable with the
+ *   `rootLoginId` from a login, the `loginId` from `local-users`, or the id
+ *   `forget-account` and `login-with-key --use-login-id` take: core's
+ *   `loginId` is random and the username hash is only the `userId`, so
+ *   passing this value to either of those fails, with `404 USER_NOT_FOUND`
+ *   and a stash that cannot be found. Use `local-users` for a login id.
  */
 export const adminHashUsername = route({
   core: 'context.$internalStuff.hashUsername',
@@ -216,7 +208,7 @@ export const adminHashUsername = route({
   returns: asObject({
     userId: doc(
       asString,
-      'Base58. The login server\u2019s hash of the username, which is what it keys an account\u2019s stash by \u2014 not a `loginId`. This field was called `loginId`, which made it look interchangeable with every other login id in the API; it is not, and the only thing the route is for is reproducing the server\u2019s hash.'
+      'Base58. The login server\u2019s hash of the username, which is what it keys an account\u2019s stash by. It is not a `loginId` and not interchangeable with the login ids elsewhere in the API: the route exists to reproduce the server\u2019s hash.'
     )
   }),
 
@@ -255,19 +247,14 @@ export const adminMakeLobby = route({
         'What the lobby should hold. Defaults to `{}`. `publicKey` is not among the fields: core generates the lobby\u2019s keypair itself and writes that field over whatever it was handed, so a caller creating a lobby has only these two to say.'
       )
     ),
-    // `asCoreValue` plus a `typeof body.period === 'number'` check in the
-    // handler meant `{"period":"30"}` over REST was *silently ignored* and
-    // the lobby polled at the default rate, while the generated table
-    // advertised `--period-seconds='<json>'` where a number belongs.
-    //
     // Floored, because core's unit is milliseconds and this field's is
-    // seconds: an unbounded value let `--period-seconds=0` poll as fast as
-    // the network answers, from a route that needs no session, against
-    // Edge's production login server.
+    // seconds: an unbounded value would let `--period-seconds=0` poll as
+    // fast as the network answers, from a route that needs no session,
+    // against Edge's production login server.
     period: asOptional(
       doc(
         asMinSeconds(0.25),
-        'Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int — above that it clamps to 1ms, so the longest interval a caller could ask for became the fastest poll the loop could make.'
+        'Poll interval in seconds. At least 0.25 and at most 2147483 (about 24.8 days); the engine converts to the milliseconds core takes, and Node holds a timer delay in a 32-bit signed int and clamps a longer one to 1 ms, which would turn the longest interval into the fastest poll.'
       )
     )
   }).withRest,
@@ -290,11 +277,10 @@ export const adminMakeLobby = route({
     const lobby = await internal.makeLobby(
       ctx.body.lobbyRequest ?? {},
       // Seconds in, milliseconds out. Core's `makeLobby` forwards this to
-      // `makePeriodicTask`, whose parameter is named `msGap`, so passing the
-      // documented `--period-seconds=30` straight through polled
-      // `GET /v2/lobby/{id}` every 30 *milliseconds* — about 33 requests a
-      // second for the handle's whole five-minute TTL, roughly 10,000
-      // requests, with the engine's single event loop saturated throughout.
+      // `makePeriodicTask`, whose parameter is named `msGap`, so passing
+      // `--period-seconds=30` straight through would poll
+      // `GET /v2/lobby/{id}` every 30 *milliseconds*, about 33 requests a
+      // second for the handle's whole five-minute TTL.
       ctx.body.period == null ? undefined : Math.round(ctx.body.period * 1000)
     )
     // A lobby polls the login server until it is closed. Returning only its id
@@ -336,9 +322,9 @@ export const adminDeleteLobbyHandle = route({
     // Only a lobby, and only through `get`, which also refuses a handle that
     // is mid-call. This route needs no session — admin lobbies belong to
     // none — so without the kind filter
-    // `POST /admin/lobby-handle/delete/<tx_…>` discarded another session's
-    // staged transaction, and `<swap_…>` ran `quote.close()` on its live
-    // quote, from an unauthenticated path.
+    // `POST /admin/lobby-handle/delete/<tx_…>` would discard another
+    // session's staged transaction, and `<swap_…>` would run `quote.close()`
+    // on its live quote, from an unauthenticated path.
     ctx.state.objects.get(ctx.params.objectId, 'lobby')
     const deleted = await ctx.state.objects.release(ctx.params.objectId)
     if (!deleted) {
@@ -382,9 +368,7 @@ export const adminSendLobbyReply = route({
   body: asObject({
     lobbyId: doc(asString, 'Which lobby to answer.'),
     // The wire shape, so the reference says what to send; the handler
-    // decodes it with core's own cleaner. `asObject(asUnknown)` plus a cast
-    // meant this route could not succeed for *any* input — see
-    // `decodeLobbyRequest`.
+    // decodes it with core's own cleaner, in `decodeLobbyRequest`.
     lobbyRequest: doc(
       asLobbyRequestWire,
       'The object from `admin-fetch-lobby-request`, unchanged.'
@@ -479,8 +463,7 @@ export const adminRepoGet = route({
     )
     // `disklet.getText` rejects an absent file with a plain `Error`, which
     // would fall through as `500 INTERNAL_ERROR` on a route that declares
-    // `NOT_FOUND` and never produced it. `dataStore.ts` closes the same gap
-    // the same way.
+    // `NOT_FOUND`. `dataStore.ts` closes the same gap the same way.
     try {
       const text = await disklet.getText(path)
       return { text }

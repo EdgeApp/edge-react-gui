@@ -35,9 +35,9 @@ const walletStateCmd = command(
         deleted: 'boolstr',
         hidden: 'boolstr',
         'sort-index': 'string',
-        // The route's own body field, published in the usage line and
-        // refused by this parser until now. Every other route whose body is
-        // a structured value offers the same escape hatch —
+        // The route's own body field, published in the usage line. Every
+        // other route whose body is a structured value offers the same
+        // escape hatch —
         // `--spend-info`, `--lobby-request`, `--transaction` — and it is
         // the only way to change several wallets in one call, which is what
         // `EdgeWalletStates` is for.
@@ -47,9 +47,9 @@ const walletStateCmd = command(
     const rawStates = args.string('wallet-states')
     if (rawStates != null) {
       const whole = parseJsonFlag(rawStates, 'wallet-states', walletStateCmd)
-      // Every flag of the other form, not only `--wallet-id`. Refusing that
-      // one and returning meant `--archived`, `--deleted`, `--hidden` and
-      // `--sort-index` given beside the map were silently dropped — the map
+      // Every flag of the other form, not only `--wallet-id`. Refusing only
+      // that one would let `--archived`, `--deleted`, `--hidden` and
+      // `--sort-index` given beside the map be silently dropped — the map
       // applied and the flags ignored with no diagnostic, which is the
       // contradictory pair the engine side refuses rather than ranks.
       const alongside = [
@@ -123,19 +123,17 @@ const balanceCmd = command(
       printJson(raw)
       return
     }
-    // Cleaned, because this arm acts on the answer: a cast made a missing
-    // `balances` an `undefined.filter` deep in the client rather than a
-    // named version-skew failure.
+    // Cleaned, because this arm acts on the answer: a cast would make a
+    // missing `balances` an `undefined.filter` deep in the client rather than
+    // a named version-skew failure.
     const result = readBalances(raw, 'balance-map')
     const balances = result.balances.filter(entry => entry.tokenId === tokenId)
     if (balances.length === 0) {
-      // A filter that matches nothing answered `{"balances": []}` and exit
-      // 0, so a script could not tell "no such token on this wallet" from
-      // "zero balance" — the same silent-wrong-answer shape
-      // `change-enabled-token-ids` had, where a mistyped contract address
-      // was a no-op. `wallet.balanceMap` carries every asset the wallet
-      // tracks, including an enabled token sitting at zero and one whose
-      // config the plugin no longer has, so an empty result means the
+      // Answering `{"balances": []}` and exit 0 for a filter that matches
+      // nothing would leave a script unable to tell "no such token on this
+      // wallet" from "zero balance". `wallet.balanceMap` carries every asset
+      // the wallet tracks, including an enabled token sitting at zero and one
+      // whose config the plugin no longer has, so an empty result means the
       // wallet does not track this asset at all.
       throw new ApiClientError({
         code: 'TOKEN_NOT_FOUND',
@@ -185,10 +183,10 @@ const txListCmd = command(
         'export-format': 'string',
         out: 'string',
         'bitwave-account': 'string',
-        // Both were advertised by `edge-cli help get-transactions`, which is
-        // generated from the route declaration, and refused here, which is
-        // hand-written — so the one branch that writes the wallet's synced
-        // `exportTxInfo.json` had no reachable caller at all.
+        // Advertised by `edge-cli help get-transactions`, which is generated
+        // from the route declaration, so this hand-written parser has to take
+        // it: it is the only way to reach the branch that writes the wallet's
+        // synced `exportTxInfo.json`.
         'save-export-prefs': 'boolean'
       }
     })
@@ -221,10 +219,8 @@ const txListCmd = command(
     const query = new URLSearchParams()
     query.set('walletId', args.requireString('wallet-id'))
     // One list, so a flag and the query field it fills are declared
-    // together. They were nine `const` declarations and, eleven lines later,
-    // nine `if (x != null) query.set(…)` statements — a flag→field mapping
-    // that existed only as the pairing of two blocks, where a renamed flag
-    // with its second edit missed drops the value in silence.
+    // together: a flag→field mapping split across two blocks would let a
+    // renamed flag with its second edit missed drop the value in silence.
     for (const [flag, field] of PASS_THROUGH_QUERY) {
       const value = args.string(flag)
       if (value != null) query.set(field, value)
@@ -268,16 +264,14 @@ function exportFilePath(
   format: TxExportFormat,
   count: number
 ): string {
-  // `path.resolve` already ignores the cwd for an absolute input, so the
-  // `isAbsolute` branch the helper here used to take only skipped
-  // normalising a path that was already absolute.
+  // `path.resolve` already ignores the cwd for an absolute input, so an
+  // absolute `out` needs no branch of its own.
   const resolved = path.resolve(out)
   if (count <= 1) return resolved
   // The suffixes come from `TX_EXPORT_FORMAT_INFO`, which is keyed by
-  // `TxExportFormat`: this used to strip three of them in an `else if` chain
-  // and re-add them from two `if`s and a trailing `return`, so a fourth
-  // format — accepted by `asTxExportFormat` everywhere — was written with a
-  // `.csv` name. Longest first, so `.bitwave.csv` is matched before `.csv`.
+  // `TxExportFormat`, so every format `asTxExportFormat` accepts is written
+  // with its own name. Longest first, so `.bitwave.csv` is matched before
+  // `.csv`.
   let stem = resolved
   for (const suffix of TX_EXPORT_SUFFIXES) {
     if (stem.endsWith(suffix)) {
@@ -348,8 +342,8 @@ const changeEnabledTokenIdsCmd = command(
     let tokenIds: string[]
     if (disableAll) {
       // The empty set, which is what "disable every token on this wallet"
-      // means for an absolute setter — and which had no spelling at all:
-      // `--token-ids=` is refused, because an empty flag value is a
+      // means for an absolute setter, and this flag is its one clear
+      // spelling: `--token-ids=` is refused, because an empty flag value is a
       // forgotten value everywhere else in this CLI, and `--token-ids=,`
       // works but reads as a typo.
       tokenIds = []
@@ -362,9 +356,9 @@ const changeEnabledTokenIdsCmd = command(
       // --add / --remove are client-side sugar: core only has a full setter,
       // so read the current set first and send back the whole list.
       // Cleaned, not cast. The body below is the *complete desired set*, so
-      // an `enabledTokenIds` that did not arrive used to make
+      // an `enabledTokenIds` that did not arrive would make
       // `new Set(undefined)` — an empty set, not a throw — and `--add X`
-      // replaced every enabled asset on the wallet with `X` in the
+      // would replace every enabled asset on the wallet with `X` in the
       // account's synced wallet file, on every device.
       const current = readEnabledTokens(
         await ctx.client.get(

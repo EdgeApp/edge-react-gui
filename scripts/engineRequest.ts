@@ -1,20 +1,15 @@
 /**
  * One raw HTTP client for the test scripts.
  *
- * `testCliCaptcha` and `testEdgeLogin` each carried a byte-identical
- * forty-line copy of this, and `testCli` a third variant. They need the raw
- * status and body — `ApiClient` throws on a 4xx, which is exactly what these
- * scripts are asserting — so they cannot simply use the client; one copy
- * here is the next best thing.
+ * The scripts need the raw status and body, and `ApiClient` throws on a 4xx,
+ * which is exactly what they assert, so they cannot simply use the client;
+ * one copy here is the next best thing.
  *
- * It takes a *target*, because taking only a `socketPath` is what made the
- * TCP probes hand-rolled again: five of them, and the copies had already
- * diverged in the one way this module documents fixing — `rawPost` and the
- * `/engine/status` probe in `testCliSubscribe` carried neither
- * `res.on('error')` nor `res.on('aborted')` nor a `timeout`, so in the
- * *offline* suite an engine that accepted the connection and died mid-answer
- * hung `npm run test:cli:offline` in `precommit:cli` and in Travis instead
- * of failing a check.
+ * It takes a *target*, the unix socket or the TCP listener, so the TCP probes
+ * get the same `res.on('error')`, `res.on('aborted')` and `timeout` as every
+ * other request. Without them, an engine that accepts the connection and dies
+ * mid-answer hangs `npm run test:cli:offline` in `precommit:cli` and in
+ * Travis instead of failing a check.
  */
 import http from 'http'
 
@@ -108,7 +103,7 @@ export async function rawRequest(
           chunks.push(chunk)
         })
         // An engine that dies while answering ends the response without
-        // `end`, which left this promise unsettled for ever.
+        // `end`, which would leave this promise unsettled for ever.
         res.on('error', reject)
         res.on('aborted', () => {
           reject(new Error(`${method} ${urlPath}: response aborted`))
