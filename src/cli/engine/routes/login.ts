@@ -8,6 +8,7 @@ import type {
 import { base58 } from '../../../util/encoding'
 import { doc } from '../doc'
 import { EngineError, engineError, errorMessage } from '../errors'
+import type { HandleRecord } from '../objectHandles'
 import { route } from '../route'
 import type { RouteContext } from '../router'
 import {
@@ -160,32 +161,31 @@ function pendingSummary(
 }
 
 /**
- * The pending login a `pending_` handle holds.
+ * The handle that holds a pending login.
  *
- * Looked up through `ObjectHandleStore`, which owns it. A module-level
- * `Map` beside the store was a second copy of the same state, kept
- * consistent only because `onExpire` happened to be its one removal path —
- * and `poll-edge-login` already had to patch around that by deleting from
- * the map itself when the store reported `OBJECT_EXPIRED`.
+ * `ObjectHandleStore` owns the record, and this lookup translates one of its
+ * refusals: an id the engine does not hold is `PENDING_LOGIN_NOT_FOUND`, the
+ * code `poll-edge-login` and `cancel-request` both publish for it. Every
+ * other refusal keeps its own code, such as `OBJECT_EXPIRED` or
+ * `OBJECT_KIND_MISMATCH`, and an error without a code is an engine fault,
+ * which the server logs with its stack.
  */
-function getPending(ctx: RouteContext, pendingId: string): PendingRecord {
-  let record: PendingRecord | undefined
+function getPending(
+  ctx: RouteContext,
+  pendingId: string
+): HandleRecord<PendingRecord> {
   try {
-    record = ctx.state.objects.get<PendingRecord>(
-      pendingId,
-      'pendingLogin'
-    ).value
-  } catch {
-    record = undefined
+    return ctx.state.objects.get<PendingRecord>(pendingId, 'pendingLogin')
+  } catch (error: unknown) {
+    if (error instanceof EngineError && error.code === 'OBJECT_NOT_FOUND') {
+      throw engineError(
+        'PENDING_LOGIN_NOT_FOUND',
+        `No pending edge login: ${pendingId}`,
+        404
+      )
+    }
+    throw error
   }
-  if (record == null) {
-    throw engineError(
-      'PENDING_LOGIN_NOT_FOUND',
-      `No pending edge login: ${pendingId}`,
-      404
-    )
-  }
-  return record
 }
 
 /**
@@ -652,39 +652,9 @@ export const pollEdgeLogin = route({
   errors: ['PENDING_LOGIN_NOT_FOUND', 'OBJECT_EXPIRED', 'OBJECT_KIND_MISMATCH'],
 
   async handler(ctx) {
-    let expiresAt: string | undefined
-    try {
-      const handle = ctx.state.objects.get<PendingRecord>(
-        ctx.params.pendingId,
-        'pendingLogin'
-      )
-      expiresAt = ctx.state.objects.toInfo(handle).expiresAt
-    } catch (error: unknown) {
-      // `OBJECT_NOT_FOUND` becomes this route's own code, because an id this
-      // engine does not hold is exactly what `PENDING_LOGIN_NOT_FOUND`
-      // means and what `cancel-request` answers for the same state — two
-      // codes for one condition is what a script switching on `error.code`
-      // cannot work with. Everything else that already carries a code says
-      // what it means: discarding all but `OBJECT_EXPIRED` used to replace
-      // `OBJECT_KIND_MISMATCH` with whatever `getPending` decided two lines
-      // later.
-      if (error instanceof EngineError) {
-        if (error.code !== 'OBJECT_NOT_FOUND') throw error
-        throw engineError(
-          'PENDING_LOGIN_NOT_FOUND',
-          `No pending login: ${ctx.params.pendingId}`,
-          404
-        )
-      }
-      // Anything that is not an `EngineError` is an engine-side fault, not a
-      // missing pending login. Falling through handed it to `getPending`,
-      // which answers `404 PENDING_LOGIN_NOT_FOUND` for every failure — so a
-      // fault inside the handle store told a `--no-wait` QR flow, polling in
-      // a loop, that its login did not exist, and the cause reached no log
-      // because `server.ts` records a 4xx as a warning with no stack.
-      throw error
-    }
-    const record = getPending(ctx, ctx.params.pendingId)
+    const handle = getPending(ctx, ctx.params.pendingId)
+    const record = handle.value
+    const { expiresAt } = ctx.state.objects.toInfo(handle)
     if (
       record.pending.state === 'done' &&
       record.sessionId == null &&
@@ -713,10 +683,10 @@ export const cancelEdgeLogin = route({
   method: 'POST',
   path: '/pending-edge-login/cancel-request',
   cli: { command: 'cancel-request', positional: 'pendingId' },
-  errors: ['PENDING_LOGIN_NOT_FOUND'],
+  errors: ['PENDING_LOGIN_NOT_FOUND', 'OBJECT_EXPIRED', 'OBJECT_KIND_MISMATCH'],
 
   async handler(ctx) {
-    const record = getPending(ctx, ctx.params.pendingId)
+    const record = getPending(ctx, ctx.params.pendingId).value
     record.cancelled = true
     try {
       record.unwatchState?.()
