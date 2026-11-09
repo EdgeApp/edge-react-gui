@@ -25,9 +25,9 @@ import {
 import type { Category, EdgeCategory } from '../util/txDisplay'
 
 // No re-exports of the Node-safe helpers. This module imports `showError`
-// from Airship, so re-exporting them made it the public door to code that
-// exists precisely so it can load without react-native. Callers import from
-// `util/txDisplay` directly.
+// from Airship, so re-exporting them would make it the public door to code
+// that exists precisely so it can load without react-native. Callers import
+// from `util/txDisplay` directly.
 
 /**
  * Which string key names each category, by name rather than by value.
@@ -38,7 +38,7 @@ import type { Category, EdgeCategory } from '../util/txDisplay'
  * module that runs it is one nothing here imports. A table of key names is
  * both — one static object, and an indexed read that happens at call time.
  * `src/util/txDisplay/txActionLabels.ts` holds the same shape for the same
- * reason, with the measurement that chose it.
+ * reason.
  */
 const CATEGORY_KEYS: Record<Category, keyof typeof lstrings> = {
   transfer: 'fragment_transaction_transfer',
@@ -55,8 +55,8 @@ const CATEGORY_KEYS: Record<Category, keyof typeof lstrings> = {
  * scrolls, and `CategoryModal`'s subcategory memo calls it once per entry of
  * `state.ui.subcategories` — 116 of them on an account that has never edited
  * the list — on every keystroke in the field. Rebuilding a four-key literal
- * and reading all four strings to hand back one of them was that work times
- * four.
+ * and reading all four strings to hand back one of them would be that work
+ * times four.
  */
 export function categoryName(category: Category): string {
   return lstrings[CATEGORY_KEYS[category]]
@@ -83,13 +83,11 @@ const CATEGORIES_FILENAME = 'Categories.json'
  * Inside the same serialization key as `setNewSubcategory`, so the two
  * dispatches are ordered against each other. `CategoryModal` fires this on
  * mount and leaves its rows tappable for the whole disklet round trip, so a
- * mount read that resolved *after* an add had written and dispatched
- * overwrote Redux with the pre-add list: the row the user had just created
- * disappeared from `state.ui.subcategories` while the synced file held it,
- * and on the next open `handleCategoryUpdate`'s `categories.includes` gate
- * failed and wrote the same entry again. The file was right and the Redux
- * copy stale — the same "one update silently discards another's" the
- * serialization was added for, arriving on the read side.
+ * mount read that resolves *after* an add has written and dispatched would
+ * otherwise overwrite Redux with the pre-add list: the row the user just
+ * created would disappear from `state.ui.subcategories` while the synced
+ * file holds it, and on the next open `handleCategoryUpdate`'s
+ * `categories.includes` gate would fail and write the same entry again.
  */
 export function getSubcategories(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
@@ -99,9 +97,10 @@ export function getSubcategories(): ThunkAction<Promise<void>> {
       async () =>
         await readSyncedSubcategories(account).catch((error: unknown) => {
           // A file that will not parse still leaves the modal its 116
-          // standard rows; refusing left it empty, on every device, with
-          // nothing that would ever repair it. What the first add then does
-          // depends on why it could not be read: `readSubcategoriesForWrite`.
+          // standard rows; refusing would leave it empty, on every device,
+          // with nothing that would ever repair it. What the first add then
+          // does depends on why it could not be read:
+          // `readSubcategoriesForWrite`.
           if (!isContentFailure(error)) throw error
           reportWarning(
             `Could not read ${CATEGORIES_FILENAME}, showing the defaults: ${errorMessage(
@@ -112,10 +111,9 @@ export function getSubcategories(): ThunkAction<Promise<void>> {
         })
     )
     // Only when the list changed. Every `CategoryModal` mount reads the
-    // file, and the common answer is the list Redux already holds — a fresh
-    // array each time, which re-rendered the modal and rebuilt its 116
-    // sorted rows for nothing. The brief's rule: no dispatch when the
-    // derived state has not changed.
+    // file, and the common answer is the list Redux already holds, as a
+    // fresh array each time; dispatching it would re-render the modal and
+    // rebuild its 116 sorted rows for nothing.
     if (sameStrings(getState().ui.subcategories, subcategories)) return
     dispatch({
       type: 'SET_TRANSACTION_SUBCATEGORIES',
@@ -135,18 +133,17 @@ function sameStrings(a: readonly string[], b: readonly string[]): boolean {
  * Re-reads `Categories.json` and merges into what is on disk, rather than
  * into `state.ui.subcategories`. The redux copy is only as good as the read
  * that filled it, and a read that *failed* leaves it at the reducer's
- * initial `[]` — `getSubcategories` rejects, `useAsyncEffect` turns that
- * into a toast, and the modal stays open on an empty list. Writing that back
- * replaced the user's whole synced list with one entry, which is the loss
- * the strict read was added to prevent, arriving through the other door.
+ * initial `[]` — `getSubcategories` rejects, `useAsyncEffect` shows the
+ * error, and the modal stays open on an empty list. Writing that back would
+ * replace the user's whole synced list with one entry.
  *
  * A file that is there but cannot be read is handled by why, in
  * `readSubcategoriesForWrite`: text that is not a JSON object even after a
  * sync is kept as `Categories.json.unreadable-<ms>` and the list starts
  * again from the defaults; a list this version cannot read, or a file that
  * will not decrypt or be read, is refused with the file untouched.
- * Refusing every unreadable file was a one-way door: nothing rewrote it, so
- * every add failed on every device for good.
+ * Refusing every unreadable file would be a one-way door: nothing rewrites
+ * it, so every add would fail on every device for good.
  */
 export function setNewSubcategory(
   newSubcategory: string
@@ -154,14 +151,14 @@ export function setNewSubcategory(
   return async (dispatch, getState) => {
     const { account } = getState().core
     try {
-      // Serialized, because the re-read above is only half the fix: two of
-      // these interleave and both see the same on-disk list, each merges
-      // its own entry, and the later `setText` wins. `CategoryModal`'s rows
+      // Serialized, because the re-read alone is not enough: two of these
+      // interleaving would both see the same on-disk list, each merge its
+      // own entry, and the later `setText` would win. `CategoryModal`'s rows
       // have no in-flight guard and the modal stays tappable for a whole
-      // disklet round trip, so a second tap loses one of the two entries
-      // from the user's synced list with nothing shown — the same
-      // whole-file read-modify-write `exportTxInfo.json` and `Settings.json`
-      // already go through this for.
+      // disklet round trip, so a second tap would lose one of the two
+      // entries from the user's synced list with nothing shown. It is the
+      // same whole-file read-modify-write that `exportTxInfo.json` and
+      // `Settings.json` are serialized for.
       const merged = await serializeByKey(
         `categories:${account.rootLoginId}`,
         async () => {
@@ -193,8 +190,8 @@ export function formatCategory(split: EdgeCategory): string {
 /**
  * The file's shape, from the cleaner that reads it.
  *
- * Declared rather than derived, a hand-written interface beside the cleaner
- * described the same file twice; a shape change is a compile error now.
+ * Derived rather than declared, so the file is described once and a shape
+ * change is a compile error.
  */
 export type CategoriesFile = ReturnType<typeof asCategoriesFile>
 
@@ -202,15 +199,14 @@ async function writeSyncedSubcategories(
   account: EdgeAccount,
   subcategories: CategoriesFile
 ): Promise<void> {
-  // Through the uncleaner, like every other file this CLI writes — an
-  // `asJSON` cleaner's uncleaner returns the JSON text, so this is the
-  // `JSON.stringify` and the shape check in one.
+  // Through the uncleaner: an `asJSON` cleaner's uncleaner returns the JSON
+  // text, so this is the `JSON.stringify` and the shape check in one.
   //
-  // No `catch`. It had one, which called `showError` and resolved, so the
-  // caller dispatched `SET_TRANSACTION_SUBCATEGORIES` whether or not
-  // anything reached the synced repo: the new subcategory showed as saved,
-  // survived the session, and was gone at the next login and on every other
-  // device. The thunk's own `catch` shows the error exactly once.
+  // No `catch`, so the caller dispatches `SET_TRANSACTION_SUBCATEGORIES`
+  // only once the write has landed. Swallowing a failure here would show
+  // the new subcategory as saved for the session while it is gone at the
+  // next login and on every other device. The thunk's own `catch` shows the
+  // error exactly once.
   await account.disklet.setText(
     CATEGORIES_FILENAME,
     wasCategoriesFile(subcategories)
@@ -222,9 +218,9 @@ async function writeSyncedSubcategories(
  *
  * Not `asMaybe(asArray(asString), defaultCategories)`: substituting the
  * defaults for a list with one bad entry is the same loss as substituting
- * them for an unreadable file, and it happened silently. A `categories` that
- * is absent is the one case the defaults are right for, because that is what
- * a fresh account has.
+ * them for an unreadable file, and it would happen silently. A `categories`
+ * that is absent is the one case the defaults are right for, because that is
+ * what a fresh account has.
  */
 const asCategoriesInner = asObject({
   categories: asOptional(asArray(asString), () => [...defaultCategories])
@@ -234,15 +230,12 @@ const asCategoriesInner = asObject({
  * `asPlainObjectValue` before the shape, because `asObject` accepts an
  * array — the same object test the synced write door uses.
  *
- * The third reader of this pattern, and the one the guard was not added to.
- * `'[]'` and `'["Expense:Mine"]'` cleaned to the 116 defaults and reported a
- * successful read, so `setNewSubcategory` merged its one entry into those
- * defaults and `writeSyncedSubcategories` put them on `account.disklet` —
- * the user's whole subcategory list replaced by the defaults plus one
- * entry, on the *synced* repo, on every device. An array is the likeliest
- * shape for a half-synced file that is valid JSON and not these settings,
- * which is why `localAccountSettings.ts` guards against it too, and the
- * synced settings reads share this same check (`asJsonObject`).
+ * Without it, `'[]'` and `'["Expense:Mine"]'` would clean to the 116
+ * defaults and report a successful read of a fresh account's list. An
+ * array is the likeliest shape for a half-synced file that is valid JSON
+ * and not these settings, which is why `localAccountSettings.ts` guards
+ * against it too, and the synced settings reads share this same check
+ * (`asJsonObject`).
  */
 const asCategoriesFile = asJSON((raw: unknown) =>
   asCategoriesInner(asPlainObjectValue(raw))
@@ -252,32 +245,20 @@ const wasCategoriesFile = uncleaner(asCategoriesFile)
 /**
  * The account's synced subcategory list. A read, and only a read.
  *
- * It used to seed the file with the defaults when it was absent, which put
- * a `setText` inside the one function both callers funnel through — and
- * only one of them holds the `serializeByKey` key. So the single write that
- * was *not* serialized was the one in the shared path: `CategoryModal`
- * dispatches `getSubcategories` on mount, a tap in the window before it
- * resolves runs `setNewSubcategory`, which takes the key, re-reads (still
- * absent), seeds, merges and writes 117 — and the mount's unlocked write
- * of the bare 116 lands last, on the *synced* repo, while Redux has
- * already been told 117.
+ * An absent file is answered with the defaults, not seeded with them, so a
+ * read cannot fail for a write's reason: on a fresh account whose repo
+ * cannot be written, `CategoryModal` would otherwise render an empty list,
+ * offering none of the 116 standard categories, on the screen whose whole
+ * purpose is to offer them. The defaults need no file to produce.
  *
- * Removing the write also stops a read failing for a write's reason. The
- * seed was awaited, and `writeSyncedSubcategories` deliberately no longer
- * swallows a failure, so on a fresh account whose repo could not be
- * written this threw out of a function whose job is to read — and
- * `CategoryModal` rendered an empty list, offering none of the 116
- * standard categories, on the screen whose whole purpose is to offer them.
- * The defaults need no file to produce.
+ * The file is created the first time there is something to put in it:
+ * `setNewSubcategory` reads it, merges its entry and writes, inside the
+ * `serializeByKey` key. `mergeExportTxInfo` is the same shape — its reader
+ * never writes, and the absent-file arm lives inside the serialized block.
  *
- * The file is still created the first time there is something to put in
- * it: `setNewSubcategory` reads this, merges its entry and writes, inside
- * the key. `mergeExportTxInfo` is the same shape — its reader never
- * writes, and the absent-file arm lives inside the serialized block.
- *
- * Exported for its test: the loss this guards against — a rewrite of the
- * synced list from the defaults on a file that is present and unreadable —
- * is invisible to the caller, which gets a plausible list either way.
+ * Exported for its test: through `getSubcategories`, an absent file and one
+ * that will not parse both show the defaults, so the difference is only
+ * visible here.
  */
 export async function readSyncedSubcategories(
   account: EdgeAccount
@@ -286,13 +267,10 @@ export async function readSyncedSubcategories(
   try {
     text = await account.disklet.getText(CATEGORIES_FILENAME)
   } catch (error: unknown) {
-    // Only an absent file is answered with the defaults here. This caught
-    // everything, so a decryption or I/O failure on a file that is *there*
-    // read as a fresh account's list, and the next add wrote the 116
-    // defaults over the user's list — on the synced repo, for every device —
-    // with nothing kept and nothing said. A file that is there and cannot be
-    // read now goes to the caller, and only `readSubcategoriesForWrite`
-    // decides what a write may do about it.
+    // Only an absent file is answered with the defaults here. A decryption
+    // or I/O failure on a file that is *there* must not read as a fresh
+    // account's list: it goes to the caller, and only
+    // `readSubcategoriesForWrite` decides what a write may do about it.
     // `isMissingFile` exists for this; `localAccountSettings.ts` and
     // `exportTxInfo.ts` both make this exact check.
     if (!isMissingFile(error)) throw error
@@ -306,10 +284,10 @@ export async function readSyncedSubcategories(
     return [...defaultCategories]
   }
   // Cleaned, not `JSON.parse(text).categories`: a file that parses without
-  // the key — `{}` — returned `undefined` into `SET_TRANSACTION_SUBCATEGORIES`
+  // the key, `{}`, would put `undefined` into `SET_TRANSACTION_SUBCATEGORIES`
   // and so into `state.ui.subcategories`, which `uiReducer.ts` types
-  // `string[]`; `CategoryModal` then did `categories.map(...)` and threw on
-  // open, with nothing in between to notice.
+  // `string[]`, and `CategoryModal`'s `categories.map(...)` would throw on
+  // open.
   return asCategoriesFile(text).categories
 }
 

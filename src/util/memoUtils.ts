@@ -80,14 +80,14 @@ export function getMemoTitle(memoName: string = 'memo'): string {
 /**
  * The memo labels and titles, read at call time.
  *
- * These were module-scope `Record`s, which froze all sixteen strings to
- * whatever `lstrings` held when this module first evaluated. `applyLocale`
- * mutates `lstrings` in place, and the module that applies it —
- * `initLocale`, or `bootNodeLocale` in the CLI — is one nothing here
- * imports, so the values were right only if that had already run. This
- * module is on the CLI's own import graph as well as the GUI's, which is two
- * orders to be right in; read lazily there is no order in which it can be
- * wrong. `txActionLabels.ts` says the same thing about the same hazard.
+ * Module-scope `Record`s would freeze all sixteen strings to whatever
+ * `lstrings` held when this module first evaluated. `applyLocale` mutates
+ * `lstrings` in place, and the module that applies it, `initLocale` or
+ * `bootEngineLocale` in the CLI, is one nothing here imports, so the values
+ * would be right only if that had already run. This module is on the CLI's
+ * own import graph as well as the GUI's, which is two orders to be right in;
+ * read lazily there is no order in which it can be wrong. `txActionLabels.ts`
+ * says the same thing about the same hazard.
  */
 const memoLabels = (): Record<string, string> => ({
   comment: lstrings.memo_comment_label,

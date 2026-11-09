@@ -1,19 +1,14 @@
 /**
  * The fixtures the shared GUI/CLI suites read and write files with.
  *
- * Several suites built the same two stubs by hand — "an account whose
- * disklet returns this text", "a bitcoin wallet with one denomination" —
- * under the same names, each repeating its own absent-file sentinel, which
- * is how a change to what counts as an absent file ends up fixed in some of
- * them and not others. The suites that read or write an account file come
- * through here now; the ad-hoc `as unknown as EdgeAccount` literals that
- * remain elsewhere stand in for an account that is never read from.
+ * One copy of "an account whose disklet returns this text" and "a bitcoin
+ * wallet with one denomination", with one absent-file sentinel, so a change
+ * to what counts as an absent file reaches every suite that uses them.
  *
  * The denominations and the token map are here with them because the same
- * suites need both halves — a wallet to read a threshold from and a config
- * to look a denomination up in — and `spamThreshold.test.ts` was writing the
- * wallet out by hand twelve lines after importing this module. The
- * `currencyConfig` inside comes from the GUI's own `makeFakeCurrencyConfig`.
+ * suites need both halves: a wallet to read a threshold from and a config
+ * to look a denomination up in. The `currencyConfig` inside comes from the
+ * GUI's own `makeFakeCurrencyConfig`.
  */
 import type {
   EdgeAccount,
@@ -27,11 +22,10 @@ import { makeFakeCurrencyConfig } from './fakeCurrencyConfig'
  * The error disklet raises for a file that is not there.
  *
  * Verbatim from `node_modules/disklet/lib/disklet.js`, which rejects a
- * missing `getText` with `Cannot load "<path>"` from every in-memory backend
- * — and so does core's `encryptDisklet`, which is what the engine actually
- * reads through. A stub that invents its own wording tests the predicate
- * against a string production never produces: the sentinel here used to be
- * `File not found`, which appears in no JavaScript under `node_modules`.
+ * missing `getText` with `Cannot load "<path>"` from every in-memory backend,
+ * and core's `encryptDisklet` passes that rejection through unchanged. A stub
+ * that invents its own wording tests the predicate against a string
+ * production never produces.
  */
 export function missingFileError(path = 'file.json'): Error {
   return new Error(`Cannot load "${path}"`)
@@ -59,9 +53,7 @@ export interface FakeDiskletAccountOpts {
    * An error the *local* disklet raises instead of answering.
    *
    * For a file that is present and unreadable, which is a different case
-   * from absent: `account.localDisklet` is core's `encryptDisklet`, so a
-   * truncated file fails inside `JSON.parse`/`decryptText` and does not
-   * match `isMissingFile`.
+   * from absent: an error that does not match `isMissingFile`.
    */
   localError?: Error
   /** The same, for the *synced* disklet — `Categories.json` lives there. */
@@ -69,13 +61,10 @@ export interface FakeDiskletAccountOpts {
   /** Counts each synced read, for a test measuring repeat reads. */
   onSyncedRead?: () => void
   /**
-   * Every write, so a suite can assert what reached the disklet.
-   *
-   * There was no seam for one, so `localSettingsTrust.test.ts` replaced the
-   * fixture's own `setText` through `as any` at three sites — a cast through
-   * the return type, which is the hazard this module exists to remove, one
-   * layer up. An absent callback keeps the old behaviour: `setText` resolves
-   * and discards.
+   * Every write, so a suite can assert what reached the disklet without
+   * replacing the fixture's own `setText` through a cast, which is the
+   * hazard this module exists to remove. Without a callback, `setText`
+   * resolves and discards.
    */
   onLocalWrite?: (path: string, text: string) => void
   /** The same for the synced disklet, where `Categories.json` lives. */
@@ -202,10 +191,9 @@ export const USDC_TOKENS: EdgeTokenMap = {
  * A wallet with one denomination, and tokens if a test asks for them.
  *
  * Its `currencyConfig` comes from the GUI's own `makeFakeCurrencyConfig`, so
- * a wallet fixture and a config fixture are the same shape. Three suites
- * wrote this value out by hand — one of them twelve lines after importing
- * this module — which is how `allTokens` and the denomination list end up
- * answering differently in two tests of the same function.
+ * a wallet fixture and a config fixture are the same shape. One shared
+ * fixture keeps `allTokens` and the denomination list from answering
+ * differently in two tests of the same function.
  */
 export function makeFakeDenomWallet(
   opts: { pluginId?: string; id?: string; tokens?: EdgeTokenMap } = {}
@@ -233,9 +221,7 @@ export function makeFakeDenomWallet(
  * `findWalletId` reads `allKeys` as well, because core builds
  * `currencyWallets` only from `activeWalletIds` and only for wallets whose
  * api exists: an archived wallet is in `allKeys` and absent from the map,
- * which is the distinction those resolvers are about. Three suites wrote
- * this out by hand, two of them in one file, one a strict superset of the
- * other.
+ * which is the distinction those resolvers are about.
  *
  * `loaded` defaults to `allKeys`, so a caller that does not care about the
  * distinction passes one list.

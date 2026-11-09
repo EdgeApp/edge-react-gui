@@ -47,9 +47,9 @@ describe('splitCategory', () => {
   it('replaces an unrecognised prefix and keeps the user text whole', () => {
     // Nothing of an unrecognised string is a category this code knows, and
     // all of it is text a user, a dapp or `--metadata` put there. Slicing at
-    // the first colon destroyed it: `TransactionDetailsScene` round-trips
+    // the first colon would destroy it: `TransactionDetailsScene` round-trips
     // this pair through `joinCategory`, so opening and saving such a
-    // transaction wrote the `Shopping` segment away.
+    // transaction would write the `Shopping` segment away.
     expect(splitCategory('Shopping:Food')).toStrictEqual({
       category: 'income',
       subcategory: 'Shopping:Food'
@@ -58,8 +58,8 @@ describe('splitCategory', () => {
       category: 'income',
       subcategory: 'Foo:bar'
     })
-    // A bare word is the user's own text, not a category name, and used to
-    // come back with the internally appended colon still on it.
+    // A bare word is the user's own text, not a category name, and comes
+    // back without the colon `splitCategory` appends internally.
     expect(splitCategory('plain')).toStrictEqual({
       category: 'income',
       subcategory: 'plain'
@@ -118,13 +118,10 @@ const wallet: EdgeCurrencyWallet = {
     denominations: [BTC_DENOM]
   },
   currencyConfig: {
-    // One token, so the `tokenId != null` arms of
-    // `getCurrencyCodeWithAccount` and `currencyCodeForToken` are reachable:
-    // with an empty map every swap and stake asset this suite drives had
-    // `tokenId: null`, so both of those arms — including each one's
-    // warn-and-`''` for a token the config does not know — ran in no test,
-    // on either side of the extraction. A token swap and a token export are
-    // the ordinary case.
+    // One token, so the `tokenId != null` arm of `getCurrencyCodeWithAccount`
+    // is reachable, with its warn-and-`''` for a token the config does not
+    // know: with an empty map every swap and stake asset this suite drives
+    // would have `tokenId: null`. A token swap is the ordinary case.
     allTokens: { tok1: { currencyCode: 'WBTC' } },
     currencyInfo: {
       pluginId: 'bitcoin',
@@ -259,11 +256,10 @@ describe('getTxActionDisplayInfo', () => {
 
   // One case per outer `actionType`, because the derivation is a published
   // response contract — `get-transactions` returns `category`, `name` and
-  // `notes` from it — and only `swap`/`swap` and `stake`/`stake` above ran.
-  // `fiat` is the only arm with nested `fiatPlugin` / `fiatAsset` /
-  // `cryptoAsset`, `giftCard` reads `provider` and `card`, and
-  // `tokenApproval` appeared only as the *losing* `chainAction` below, so its
-  // own arm was never entered.
+  // `notes` from it. `fiat` is the only arm with nested `fiatPlugin` /
+  // `fiatAsset` / `cryptoAsset`, `giftCard` reads `provider` and `card`, and
+  // the `chainAction` case below, where `tokenApproval` *loses* to a
+  // `savedAction`, does not enter the `tokenApproval` arm.
   describe('every actionType arm', () => {
     const asset = { pluginId: 'bitcoin', tokenId: null }
 
@@ -441,12 +437,10 @@ describe('fillTxMetadataForDisplay', () => {
  * One case per inner `assetActionType` arm, because each writes a different
  * answer.
  *
- * The outer `actionType` arms are covered above; the inner switches were
- * sampled — `swap`/`swap` and `stake`/`stake` — leaving 12 of the 20
- * `assetActionType` values the engine accepts never reaching their arm. Each
- * dark one produces a different `category`, `subcategory` or `direction`
- * than its neighbours, and this is a published response contract:
- * `get-transactions` returns it and `TransactionListRow` renders it.
+ * The outer `actionType` arms are covered above. Each inner arm produces a
+ * different `category`, `subcategory` or `direction` than its neighbours,
+ * and this is a published response contract: `get-transactions` returns it
+ * and `TransactionListRow` renders it.
  */
 describe('every assetActionType arm', () => {
   const btc = { pluginId: 'bitcoin', tokenId: null }
@@ -573,8 +567,8 @@ describe('every assetActionType arm', () => {
   })
 
   it('leaves a stake with an unsupported number of assets uncategorised', () => {
-    // Three assets is the `console.warn` arm: it breaks out before setting a
-    // category, so the send default stands rather than a wrong stake label.
+    // Three assets is the `reportWarning` arm: it breaks out before setting
+    // a category, so the send default stands rather than a wrong stake label.
     const many = read(stakeAction([btc, btc, btc]), 'stake')
     expect(many.category).toBe('expense')
     expect(many.subcategory).toBe('')
@@ -589,9 +583,8 @@ describe('every assetActionType arm', () => {
 
   it('names a one-asset and a two-asset stake order differently', () => {
     // Each count picks its own published string — `…_notes_2s` against
-    // `…_1s` — so what a two-asset stake order is *called* in the details
-    // scene, in the list row and in a `get-transactions` response was
-    // decided by an arm no case entered.
+    // `…_1s` — which is what a two-asset stake order is *called* in the
+    // details scene, in the list row and in a `get-transactions` response.
     const one = read(stakeAction([btc]), 'stakeOrder')
     const two = read(stakeAction([btc, btc]), 'stakeOrder')
     expect(two.notes ?? '').not.toBe('')
@@ -613,17 +606,17 @@ describe('every assetActionType arm', () => {
   })
 
   it('leaves an asset-action type it does not know uncategorised', () => {
-    // The switch's own `default`, which nothing reached: a `savedAction` of
-    // a kind this version knows paired with an `assetActionType` it does
-    // not. The send default stands rather than a label from the wrong arm.
+    // The switch's own `default`: a `savedAction` of a kind this version
+    // knows paired with an `assetActionType` it does not. The send default
+    // stands rather than a label from the wrong arm.
     const unknown = read(stakeAction([btc]), 'somethingNew')
     expect(unknown.category).toBe('expense')
     expect(unknown.subcategory).toBe('')
   })
 
   it('names a one-asset claim order and unstake order', () => {
-    // The pair above is only ever entered with two assets, so the one-asset
-    // side is the dark one here.
+    // The case below enters this pair only with two assets, so this one
+    // covers the one-asset side.
     for (const type of ['claimOrder', 'unstakeOrder']) {
       const one = read(stakeAction([btc]), type)
       const two = read(stakeAction([btc, btc]), type)
@@ -669,8 +662,8 @@ describe('every assetActionType arm', () => {
   })
 
   it('leaves every stake arm uncategorised for an unsupported count', () => {
-    // The `console.error` arms the finding named: each breaks out before
-    // setting its category, so the send default stands rather than a label
+    // The `reportWarning` arms: each breaks out before setting its
+    // category, so the send default stands rather than a label
     // built from the wrong number of assets. One per arm, because each is
     // its own copy of the same three-way test.
     for (const type of [

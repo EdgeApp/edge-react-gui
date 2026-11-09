@@ -13,10 +13,8 @@ export type SyncedFileBase =
  * The text a write to a synced JSON file starts from — the one policy for
  * `Settings.json` and `Categories.json` on `account.disklet`.
  *
- * Moving or replacing a synced file reaches every device, and the two files
- * used to answer the same failure in opposite ways: categories wrote the
- * defaults over a file that would not decrypt, without syncing, while
- * settings refused it as a sync still in progress. So, for both:
+ * Moving or replacing a synced file reaches every device, so both files
+ * answer each failure the same way:
  *
  * - Absent: `absent`, which the caller answers with its defaults.
  * - Text that parses to an object: `text`, for the caller's own cleaner.
