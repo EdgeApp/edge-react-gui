@@ -62,6 +62,18 @@ describe('loadAppConfig', () => {
     expect(loadAppConfig().swapPlugins).toStrictEqual({ changenow: true })
   })
 
+  it('takes a working-directory file that declares only corePlugins', () => {
+    // A plugin switch is what the engine reads the file for, core or swap.
+    fakeHome({ swapPlugins: { changenow: false } })
+    const here = tempDir()
+    fs.writeFileSync(
+      path.join(here, 'config.json'),
+      JSON.stringify({ corePlugins: { ethereum: false } })
+    )
+    process.chdir(here)
+    expect(loadAppConfig().corePlugins).toStrictEqual({ ethereum: false })
+  })
+
   it('is not shadowed by an unrelated config.json', () => {
     // The GUI's own repo-root `config.json`, a container's, a tool's — none
     // of them says anything about swap plugins.
