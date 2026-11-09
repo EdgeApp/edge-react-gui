@@ -3,20 +3,19 @@ import { describe, expect, it, jest } from '@jest/globals'
 import { withDeadline } from '../../util/withDeadline'
 
 /**
- * The ceiling the rate queue did not have.
+ * The ceiling under the rate queue's requests.
  *
  * `fetchRates(..., 5000, ...)` reads like a 5-second deadline, but that
- * number is `asyncWaterfall`'s per-server stagger and the timer is armed only
- * `if (pending > 1)` — so with one server left there is no timer at all and
- * `asyncWaterfall([never, never], 300)` stays pending. One rates server that
- * accepts and never answers then wedged every rate caller in the process,
- * because `inQuery` stayed latched and `getHistoricalRate` never rejects.
+ * number is `asyncWaterfall`'s per-server stagger: it moves on to the next
+ * server and never gives up, so `asyncWaterfall([never, never], 300)` stays
+ * pending. Without a ceiling, one rates server that accepts and never
+ * answers would wedge every rate caller in the process, because `inQuery`
+ * would stay latched and `getHistoricalRate` never rejects.
  */
 describe('withDeadline', () => {
   it('rejects a promise that never settles', async () => {
     // `jestSetup.js` fakes every timer for the whole repo, so the deadline
-    // has to be advanced rather than waited for — the same trap the logger
-    // tests hit.
+    // has to be advanced rather than waited for.
     jest.useFakeTimers()
     try {
       const never = new Promise<string>(() => {})
@@ -50,8 +49,7 @@ describe('withDeadline', () => {
       const promise = withDeadline(Promise.resolve(1), 60_000, 'x')
       expect(await promise).toBe(1)
       // Otherwise a pass that answered in a millisecond would hold a timer
-      // for the rest of the window — the leak `asyncWaterfall`'s own stagger
-      // timers had, which `--detectOpenHandles` reported.
+      // for the rest of the window, a leak `--detectOpenHandles` reports.
       expect(jest.getTimerCount()).toBe(0)
     } finally {
       jest.useRealTimers()

@@ -45,8 +45,9 @@ describe('abortingFetch', () => {
   it('aborts a body that never arrives', async () => {
     // Room for the headers on a loaded machine — the server flushes them at
     // once — and a bound that still fails if the body read is never cut
-    // off. 300 ms covered the connect and the headers too, so a busy CI box
-    // aborted before the body read this case exists for.
+    // off. The deadline covers the connect and the headers too, so a much
+    // shorter one would let a busy CI box abort before the body read this
+    // case exists for.
     const started = Date.now()
     const response = await abortingFetch(2000)(url)
     // The headers are through, which is exactly the trap.

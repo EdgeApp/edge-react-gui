@@ -45,7 +45,7 @@ import {
   removeIsoPrefix
 } from './fiatConstants'
 
-// Re-export so existing importers of removeIsoPrefix from utils stay unchanged
+// Re-exported for the GUI modules that import removeIsoPrefix from utils
 export { removeIsoPrefix }
 
 // Re-exported, not declared: it lives in the leaf `fiatConstants.ts` so the
@@ -274,7 +274,7 @@ export function fixFiatCurrencyCode(currencyCode: string): string {
 
 // `calculateSpamThreshold` is not re-exported here. It lives in
 // `spamThreshold.ts` beside the threshold logic the CLI shares, and a
-// re-export made this module import that one — closing a cycle
+// re-export would make this module import that one, closing a cycle
 // `utils → spamThreshold → exchangeRates → network → utils`. Sparing three
 // call sites an import path is not worth a cycle; they name the real module.
 
@@ -397,17 +397,6 @@ export const getTotalFiatAmountFromExchangeRates = (
     }
   }
 
-  // No troubleshooting log. There was one — about eight template literals
-  // per token per wallet, built unconditionally — behind a gate that could
-  // not be opened: first a module-level `prevTotal` whose print was
-  // commented out, then `process.env.EDGE_LOG_FIAT_TOTAL`, and both callers
-  // are React Native code. In the RN bundle `process.env` is the shim
-  // `setUpGlobals.js` installs, which defines `NODE_ENV` and nothing else:
-  // no `babel-plugin-transform-inline-environment-variables`, no
-  // `react-native-config`, no metro transform. So the lines were always
-  // built and never printable, inside a `useSelector` that re-runs on every
-  // exchange-rate tick while the home scene is mounted. Git history has
-  // them for the next time a balance is wrong.
   return total
 }
 
@@ -417,16 +406,10 @@ type AsyncFunction = () => Promise<any>
  * Ask each server in turn, starting the next when the current one fails or
  * has not answered within `timeoutMs`, and answer with the first success.
  *
- * Event-driven rather than a race over an array of promises. The array
- * version tracked servers by their *position*, and positions moved: a
- * failure was spliced out by the index it was created at, after earlier
- * stagger timers had already been popped, and `pending` counted servers
- * passed over rather than servers still running — so a primary that was
- * slow and then failed, the common outage shape, took a still-live
- * fallback's promise out with it and threw while healthy servers were in
- * flight. Here a server is either running or settled, the counts are of
+ * Event-driven: a server is either running or settled, the counts are of
  * those, and the last failure is rethrown only when none is running and
- * none is left to start.
+ * none is left to start. So a primary that is slow and then fails, the
+ * common outage shape, does not throw while a fallback is still in flight.
  *
  * Each stagger timer is cleared as soon as it is no longer needed, so a
  * winning answer does not leave one armed for the rest of `timeoutMs`

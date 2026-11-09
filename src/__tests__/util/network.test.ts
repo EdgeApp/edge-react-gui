@@ -24,8 +24,8 @@ import {
 
 describe('fetchWaterfall', () => {
   it('refuses an empty server list instead of hanging', async () => {
-    // `asyncWaterfall([])` awaits `Promise.race([])`, which never settles, so
-    // an unconfigured list used to hang the caller forever.
+    // `asyncWaterfall([])` has nothing to try and resolves `undefined`, which
+    // every caller would die on, so an unconfigured list is refused by name.
     await expect(fetchWaterfall([], 'v1/infoRollup/edge')).rejects.toThrow(
       /No servers configured for v1\/infoRollup\/edge/
     )
@@ -50,11 +50,9 @@ describe('fetchWaterfall', () => {
     )
   })
 
-  // Two servers, because that is the only shape that runs what the rewrite
-  // changed. `fetchInfo`, `fetchRates`, `fetchReferral` and `fetchPush` all
-  // call this with two in production; with one, `pending > 1` is false, no
-  // stagger promise is pushed and the `finally` has nothing to clear — so
-  // the stagger timeout, the failover and the timer cleanup were all dark.
+  // Two servers, because one arms no stagger timer, so the stagger timeout,
+  // the failover and the timer cleanup never run. `fetchInfo` and
+  // `fetchRates` call this with two in production.
   it('moves to the next server when the first does not answer in time', async () => {
     jest.useFakeTimers()
     try {
@@ -87,11 +85,11 @@ describe('fetchWaterfall', () => {
     }
   })
 
-  // The leak itself, which is a *won* race rather than a lost one: with two
-  // servers the first gets a stagger timer, and when it answers first the
-  // race returns and `promises` is dropped — leaving that timer armed for the
-  // rest of `timeoutMs`. Behind a daemon that delays an exit; in a jest
-  // worker it reads as a leaked handle that hides the next real one.
+  // A *won* race rather than a lost one: with two servers the first gets a
+  // stagger timer, and when it answers first that timer has to be cleared,
+  // or it stays armed for the rest of `timeoutMs`. Behind a daemon that
+  // delays an exit; in a jest worker it reads as a leaked handle that hides
+  // the next real one.
   it('clears the stagger timer when the first server wins', async () => {
     jest.useFakeTimers()
     try {
@@ -116,13 +114,10 @@ describe('fetchWaterfall', () => {
   })
 
   it('survives a server that rejects with something that is not an object', async () => {
-    // The index used to be written onto the rejected value, which only
-    // works when it is an object: a string rejection made that assignment
-    // throw a `TypeError` under strict mode — so `promises.splice(undefined,
-    // 1)` removed the wrong entry, the `pop()` after it removed a second,
-    // and on the last server the error rethrown was the `TypeError` rather
-    // than the real failure. Behind the daemon's rates and `infoRollup`
-    // paths that costs a still-pending server its turn.
+    // A rejection can be any value, so nothing is written onto it: under
+    // strict mode, assigning to a string throws a `TypeError`. Behind the
+    // daemon's rates and `infoRollup` paths, bookkeeping that broke on it
+    // would cost a still-pending server its turn.
     let asked = 0
     const doFetch = jest.fn(async (uri: string) => {
       // A bare string, which is the shape this case is about.
@@ -169,7 +164,7 @@ describe('fetchWaterfall', () => {
       throw new Error(`down: ${uri}`)
     }) as unknown as EdgeFetchFunction
 
-    // `pending === 0` rethrows rather than resolving `undefined`, which a
+    // The last failure is rethrown rather than resolving `undefined`, which a
     // caller would read as a successful empty response.
     await expect(
       fetchWaterfall(
@@ -199,16 +194,13 @@ describe('configureNetwork', () => {
 })
 
 /**
- * The info-server rework, which no test could reach.
+ * The unsigned info rollup: `configureInfoServer`'s parameter capture,
+ * `fetchPublicRollup`'s "configureInfoServer has not run yet" guard, and its
+ * error arms.
  *
- * `configureInfoServer`'s parameter capture, `fetchPublicRollup`'s
- * "configureInfoServer has not run yet" guard and its error arm were
- * uncovered by the whole suite, and the CLI harnesses cannot reach them:
- * only `src/app.ts` and `src/util/keysStore.ts` call these, and the engine
- * signs its own rollup through `fetchPluginKeys`. The contract they carry is
- * `keysStore`'s cold-start fallback — when the signed fetch does not fill
- * `infoServerData.rollup`, this call is what fills it, and a call that
- * silently does nothing leaves every plugin with no `appKeys`.
+ * `keysStore`'s cold-start fallback depends on them: when the signed fetch
+ * does not fill `infoServerData.rollup`, this call is what fills it, and a
+ * call that silently does nothing leaves every plugin with no `appKeys`.
  */
 describe('fetchPublicRollup', () => {
   const warnings: string[] = []
@@ -236,8 +228,8 @@ describe('fetchPublicRollup', () => {
 
   it('does nothing but warn before configureInfoServer has run', async () => {
     // The state `keysStore`'s cold-start fallback can arrive in. Without a
-    // report this returned having done nothing at all, and the plugins'
-    // missing `appKeys` was the only symptom.
+    // report this would return having done nothing at all, and the plugins'
+    // missing `appKeys` would be the only symptom.
     let asked = 0
     const doFetch: any = async () => {
       ++asked
@@ -309,9 +301,9 @@ describe('fetchPublicRollup', () => {
 
   it('reports the error itself when nothing could be reached', async () => {
     // With the error, which is the whole point of that arm: "failed to
-    // reach the info server" for what may be a cleaner rejection from
-    // `asInfoRollup`, or "No servers configured", was the one line an
-    // investigator got.
+    // reach the info server" alone, for what may be a cleaner rejection from
+    // `asInfoRollup` or "No servers configured", would be the one line an
+    // investigator gets.
     configureInfoServer({
       osType: 'ios',
       osVersion: '18.1',
@@ -352,7 +344,7 @@ describe('fetchPublicRollup', () => {
     })
     await fetchPublicRollup(doFetch)
     // Said as what it is: the server answered, and its answer could not be
-    // read. "Failed to reach the info server" was wrong for this case.
+    // read. "Failed to reach the info server" would be wrong for this case.
     expect(warnings.join('\n')).toContain('Could not read the info rollup')
     expect(warnings.join('\n')).not.toContain('Failed to reach')
     // And the version check did not run on a rollup that was never stored.
@@ -360,9 +352,9 @@ describe('fetchPublicRollup', () => {
   })
 
   it('reports a failing onRollup as that, not as an unreachable server', async () => {
-    // `src/app.ts` passes `runOnce('checkAppVersion', checkAppVersion)`, so
-    // a version-check failure was reported as an unreachable server although
-    // the rollup had been stored two lines earlier.
+    // `src/app.ts` passes `runOnce('checkAppVersion', checkAppVersion)`, and
+    // a version-check failure is not an unreachable server: the rollup has
+    // already been stored by then.
     configureInfoServer({
       osType: 'ios',
       osVersion: '18.1',
@@ -391,15 +383,15 @@ describe('fetchPublicRollup', () => {
  * One in-flight request per resource, for the arm that fires on every
  * connectivity transition.
  *
- * `makePeriodicTask` ended the overlap on the info-server *poll* and left it
- * intact on the NetInfo reconnect arm, which writes the same module state
- * (`infoServerData.rollup` / `rollupRaw`, `coinrankListData.coins`) with
- * nothing serialising it. `fetchPublicRollup` has no ceiling of its own —
- * `fetchWaterfall`'s `timeoutMs` is `asyncWaterfall`'s per-server stagger,
- * armed only when more than one server is pending — so against an info
- * server that accepts the connection and stalls, a lift, a train or a
- * tethered laptop accumulated one pending request per transition for the
- * life of the app, and whichever answered last decided the rollup.
+ * `makePeriodicTask` keeps the info-server *poll* from overlapping itself,
+ * but the NetInfo reconnect arm writes the same module state
+ * (`infoServerData.rollup` / `rollupRaw`, `coinrankListData.coins`) outside
+ * it. `fetchPublicRollup` has no ceiling of its own — `fetchWaterfall`'s
+ * `timeoutMs` is `asyncWaterfall`'s per-server stagger, armed only when more
+ * than one server is pending — so against an info server that accepts the
+ * connection and stalls, a lift, a train or a tethered laptop would
+ * accumulate one pending request per transition for the life of the app,
+ * and whichever answered last would decide the rollup.
  * `infoServerPollStarted` does not cover it: that latch only stops a second
  * poll being installed.
  */
@@ -543,12 +535,11 @@ describe('refreshCoinrankList', () => {
 })
 
 /**
- * `initInfoServer`'s three decisions, none of which a test reached.
+ * `initInfoServer`'s three decisions.
  *
- * Every case above drives `fetchPublicRollup` directly, so the launch-fetch
- * gate, the claim taken before the first await, and the poll this round
- * moved onto `makePeriodicTask` were all unasserted — and that last one is
- * the overlap fix itself.
+ * The launch-fetch gate, the claim taken before the first await, and the
+ * poll on `makePeriodicTask`, which is what keeps polls from overlapping.
+ * Every case above drives `fetchPublicRollup` directly, so none reaches them.
  */
 describe('initInfoServer', () => {
   const realFetch = globalThis.fetch

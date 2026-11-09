@@ -3,14 +3,10 @@
  *
  * Table-free on purpose. The CLI client renders no localized string — `git
  * grep lstrings src/cli` outside `engine/` is empty — and `bootNodeLocale`
- * says so, but `spawnEngine.ts` imported `resolveLocaleTableOrEnglish` from
- * `locales/strings`, which statically imports `en_US.ts` and eleven JSON
- * tables and keeps them live through `allLocales`. Rollup cannot shake a
- * value `Object.keys` reads, so the committed `lib/edgeCli.js` carried all
- * eleven: 1.9 MB of a 3.63 MB bundle, over half the client, in tables it
- * never looks at, and about 20 ms per `edge` invocation just evaluating
- * those literals. Same class and same order of magnitude as the unused
- * `require`s the `treeshake` comment in `rollup.config.cli.mjs` removed.
+ * says so, while `locales/strings` statically imports `en_US.ts` and eleven
+ * JSON tables and keeps them live through `allLocales`. Importing the
+ * resolution from there would put every table into the client bundle,
+ * `lib/edgeCli.js`, which never looks at them.
  *
  * The client needs the key list, not the tables, so the list lives here and
  * `strings.ts` imports it rather than deriving it from `allLocales`. A test
@@ -51,22 +47,20 @@ const LOCALE_KEYS_BY_LOWER = new Map<string, LocaleKey>(
  * Exported because the *table* is what decides what a user sees, and two
  * tags that select the same one are the same choice: `en` and `en-US` both
  * answer in English, `de` and `de-DE` both merge `de.json`. The
- * engine-locale mismatch warning compared tags, so it fired once per command
- * for the life of an engine about a difference with no effect — which is
- * what a container or CI shell setting a bare `LANG=en` produces.
+ * engine-locale mismatch warning compares tables, so a difference with no
+ * effect, such as a container or CI shell setting a bare `LANG=en`, does
+ * not set it off once per command for the life of an engine.
  *
  * Locale tags arrive as 'en', 'en-US', 'en_US' or 'enUS'.
  *
  * Case-insensitively, because BCP 47 is: RFC 5646 §2.1.1 says "the tag is to
  * be treated as case-insensitive", `Intl.NumberFormat` treats it that way,
- * and the three new CLI inputs for it — `--locale`, `EDGE_CLI_LOCALE` and
+ * and the three CLI inputs for it — `--locale`, `EDGE_CLI_LOCALE` and
  * `locale` in `edge-cli.conf` — plus `LANG` are all typed by a human. A
- * case-sensitive lookup made `--locale=DE` give German number formatting
- * with English strings, print "No translation table for locale DE" on every
- * engine start, and publish `localeMatched: false` about a language the
- * build ships; `LANG=EN_US.UTF-8` made the mismatch warning fire on every
- * command for the life of the engine, which is the false alarm the table
- * comparison was introduced to end.
+ * case-sensitive lookup would make `--locale=DE` give German number
+ * formatting with English strings, print "No translation table for locale
+ * DE" on every engine start, and publish `localeMatched: false` about a
+ * language the build ships.
  */
 export function resolveLocaleTable(locale: string): LocaleKey | undefined {
   // Separators out, case down: `es_MX`, `es-MX`, `esMX` and `ES-mx` are one
@@ -87,10 +81,10 @@ export function resolveLocaleTable(locale: string): LocaleKey | undefined {
  *
  * `selectLocale` seeds English for every tag it finds no table for, so two
  * unshipped tags — and an unshipped tag against `en-US` — are one choice.
- * Comparing the raw `undefined` made the client's mismatch warning fire once
- * per command about an engine that was already answering in English, which
- * is the false alarm the table comparison was introduced to end: Edge ships
- * twelve tables, so most of a developer's `LANG` values resolve to nothing.
+ * Comparing the raw `undefined` would make the client's mismatch warning
+ * fire once per command about an engine that is already answering in
+ * English: Edge ships twelve tables, so most of a developer's `LANG` values
+ * resolve to nothing.
  */
 export function resolveLocaleTableOrEnglish(locale: string): LocaleKey {
   return resolveLocaleTable(locale) ?? 'en'

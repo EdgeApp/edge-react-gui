@@ -1,6 +1,7 @@
 /**
- * Node-safe fiat display constants. Split out of WalletAndCurrencyConstants
- * so util/utils.ts can import them without pulling in react-native Platform.
+ * Node-safe fiat display constants. Declared here, not in
+ * WalletAndCurrencyConstants, so util/utils.ts can import them without
+ * pulling in react-native Platform.
  */
 
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
@@ -10,12 +11,12 @@ export const FIAT_PRECISION = 2
 /**
  * Digits of precision for a `biggystring` division.
  *
- * Declared in this leaf and re-exported by `utils.ts`, where it used to
- * live, so the twenty-odd GUI importers keep working. `txExport/format.ts`
- * needs it and nothing else from `utils.ts`, which imports
- * `../locales/intl`, `../locales/strings` and `../selectors/WalletSelectors`
- * — so one constant dragged `date-fns`, the date locales and all eleven
- * translation tables into the CLI bundle.
+ * Declared in this leaf and re-exported by `utils.ts` for the GUI's
+ * importers. `txExport/format.ts` needs it and nothing else from `utils.ts`,
+ * which imports `../locales/intl`, `../locales/strings` and
+ * `../selectors/WalletSelectors`, so importing it from there would pull
+ * `date-fns`, the date locales and all eleven translation tables into the
+ * CLI bundle.
  */
 export const DECIMAL_PRECISION = 18
 
