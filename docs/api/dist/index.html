@@ -2088,7 +2088,7 @@ h5.alt code {
     <div class="pane resp">
     <h4>Response <span class="st ok">204</span></h4>
     <p class="lead dim">No body.</p>
-    <h5>Errors</h5><p class="errs"><a href="#err-PENDING_LOGIN_NOT_FOUND" class="err" title="No pending Edge login with that `pendingId`."><span class="st">404</span>PENDING_LOGIN_NOT_FOUND</a></p>
+    <h5>Errors</h5><p class="errs"><a href="#err-PENDING_LOGIN_NOT_FOUND" class="err" title="No pending Edge login with that `pendingId`."><span class="st">404</span>PENDING_LOGIN_NOT_FOUND</a> <a href="#err-OBJECT_EXPIRED" class="err" title="The handle was read after its TTL but before the 15-second sweeper released it. Once swept it is gone, so a handle past its TTL usually answers `OBJECT_NOT_FOUND` instead."><span class="st">410</span>OBJECT_EXPIRED</a> <a href="#err-OBJECT_KIND_MISMATCH" class="err" title="The handle exists but is a different kind (e.g. a swap quote passed to `sign-tx`)."><span class="st">400</span>OBJECT_KIND_MISMATCH</a></p>
   </div>
     <div class="pane notes"><h4>Notes</h4><ul><li>If the login already completed and a session exists, that session is force-logged-out too, so cancelling cannot leave an orphan visible in <code>engine-sessions</code>.</li></ul></div>
   </section><section class="endpoint" id="engineSessions">

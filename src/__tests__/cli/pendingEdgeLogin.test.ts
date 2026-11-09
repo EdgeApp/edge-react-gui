@@ -2,7 +2,12 @@ import { describe, expect, it } from '@jest/globals'
 
 import { ObjectHandleStore } from '../../cli/engine/objectHandles'
 import type { RouteContext } from '../../cli/engine/router'
-import { pollEdgeLogin, requestEdgeLogin } from '../../cli/engine/routes/login'
+import {
+  cancelEdgeLogin,
+  pollEdgeLogin,
+  requestEdgeLogin
+} from '../../cli/engine/routes/login'
+import { thrown } from '../../util/fake/thrownEngineError'
 
 /**
  * Who owns the session a QR login creates.
@@ -151,5 +156,46 @@ describe('a pending edge login that nobody claimed', () => {
 
     expect(h.loggedOut).toStrictEqual([])
     expect(h.liveSessions.has('sess_1')).toBe(true)
+  })
+})
+
+describe('cancel-request', () => {
+  it('maps an unknown pending id to PENDING_LOGIN_NOT_FOUND', async () => {
+    const h = makeHarness()
+    h.ctx.params.pendingId = 'pending_missing'
+    const error = await thrown(
+      async () => await cancelEdgeLogin.handler(h.ctx as never)
+    )
+    expect(error.code).toBe('PENDING_LOGIN_NOT_FOUND')
+    expect(error.status).toBe(404)
+  })
+
+  it('does not report a handle of another kind as a missing pending login', async () => {
+    // `getPending` used to catch every store failure and answer
+    // `PENDING_LOGIN_NOT_FOUND`, so cancelling a `tx_` handle looked like a
+    // typo'd id. A kind mismatch has to keep its own code.
+    const h = makeHarness()
+    const { objectId } = h.objects.create({
+      kind: 'transaction',
+      prefix: 'tx_',
+      value: { txid: 'a' }
+    })
+    h.ctx.params.pendingId = objectId
+    const error = await thrown(
+      async () => await cancelEdgeLogin.handler(h.ctx as never)
+    )
+    expect(error.code).toBe('OBJECT_KIND_MISMATCH')
+    expect(error.status).toBe(400)
+  })
+
+  it('does not report a handle-store fault as a missing pending login', async () => {
+    const h = makeHarness()
+    h.ctx.state.objects.get = () => {
+      throw new Error('store failed')
+    }
+    h.ctx.params.pendingId = 'pending_x'
+    await expect(cancelEdgeLogin.handler(h.ctx as never)).rejects.toThrow(
+      'store failed'
+    )
   })
 })

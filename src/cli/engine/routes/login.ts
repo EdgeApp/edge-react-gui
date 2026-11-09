@@ -169,23 +169,24 @@ function pendingSummary(
  * the map itself when the store reported `OBJECT_EXPIRED`.
  */
 function getPending(ctx: RouteContext, pendingId: string): PendingRecord {
-  let record: PendingRecord | undefined
   try {
-    record = ctx.state.objects.get<PendingRecord>(
-      pendingId,
-      'pendingLogin'
-    ).value
-  } catch {
-    record = undefined
+    return ctx.state.objects.get<PendingRecord>(pendingId, 'pendingLogin').value
+  } catch (error: unknown) {
+    // Only an absent handle is this route's 404. Mapping every store
+    // failure to `PENDING_LOGIN_NOT_FOUND` hid kind mismatches, in-use
+    // handles and engine faults as a missing lobby — and a 4xx is logged
+    // without a stack, so a store fault during `cancel-request` looked
+    // like a typo'd `pendingId`.
+    if (error instanceof EngineError) {
+      if (error.code !== 'OBJECT_NOT_FOUND') throw error
+      throw engineError(
+        'PENDING_LOGIN_NOT_FOUND',
+        `No pending edge login: ${pendingId}`,
+        404
+      )
+    }
+    throw error
   }
-  if (record == null) {
-    throw engineError(
-      'PENDING_LOGIN_NOT_FOUND',
-      `No pending edge login: ${pendingId}`,
-      404
-    )
-  }
-  return record
 }
 
 /**
@@ -713,7 +714,7 @@ export const cancelEdgeLogin = route({
   method: 'POST',
   path: '/pending-edge-login/cancel-request',
   cli: { command: 'cancel-request', positional: 'pendingId' },
-  errors: ['PENDING_LOGIN_NOT_FOUND'],
+  errors: ['PENDING_LOGIN_NOT_FOUND', 'OBJECT_EXPIRED', 'OBJECT_KIND_MISMATCH'],
 
   async handler(ctx) {
     const record = getPending(ctx, ctx.params.pendingId)
