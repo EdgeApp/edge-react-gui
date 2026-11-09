@@ -6,8 +6,10 @@ import {
   type DisableAsset,
   getDisabledSwapPlugins,
   isAssetDisabled,
+  isPaymentTypeNew,
   updateExchangeInfo
 } from '../../actions/ExchangeInfoActions'
+import { initialState } from '../../reducers/ExchangeInfoReducer'
 import type { Dispatch, RootState } from '../../types/reduxTypes'
 import { infoServerData } from '../../util/network'
 
@@ -97,6 +99,76 @@ describe('asExchangeInfo disableAssetsByPlugin', () => {
   })
 })
 
+describe('asExchangeInfo newPaymentTypes', () => {
+  const disablePlugins = { pix: true as const }
+
+  test('defaults to an empty map', () => {
+    expect(asExchangeInfo({}).buy.newPaymentTypes).toEqual({})
+    expect(
+      asExchangeInfo({ sell: { disablePlugins } }).sell.newPaymentTypes
+    ).toEqual({})
+  })
+
+  test('a malformed map keeps disablePlugins', () => {
+    const { buy } = asExchangeInfo({
+      buy: { disablePlugins, newPaymentTypes: 'bad' }
+    })
+    expect(buy).toEqual({ disablePlugins, newPaymentTypes: {} })
+  })
+
+  test('a malformed entry badges nothing and keeps the others', () => {
+    const { buy } = asExchangeInfo({
+      buy: {
+        disablePlugins,
+        newPaymentTypes: {
+          cashapp: { endIsoDate: '2026-12-01T00:00:00.000Z' },
+          pix: { endIsoDate: 'not a date' },
+          venmo: {}
+        }
+      }
+    })
+    const now = new Date('2026-11-01T00:00:00.000Z')
+    expect(buy.disablePlugins).toEqual(disablePlugins)
+    expect(isPaymentTypeNew(buy.newPaymentTypes, 'cashapp', now)).toBe(true)
+    expect(isPaymentTypeNew(buy.newPaymentTypes, 'pix', now)).toBe(false)
+    expect(isPaymentTypeNew(buy.newPaymentTypes, 'venmo', now)).toBe(false)
+  })
+
+  test('directions are independent', () => {
+    const { buy, sell } = asExchangeInfo({
+      buy: {
+        disablePlugins,
+        newPaymentTypes: { cashapp: { endIsoDate: '2026-12-01T00:00:00.000Z' } }
+      },
+      sell: { disablePlugins }
+    })
+    const now = new Date('2026-11-01T00:00:00.000Z')
+    expect(isPaymentTypeNew(buy.newPaymentTypes, 'cashapp', now)).toBe(true)
+    expect(isPaymentTypeNew(sell.newPaymentTypes, 'cashapp', now)).toBe(false)
+  })
+})
+
+describe('isPaymentTypeNew', () => {
+  const endIsoDate = new Date('2026-12-01T00:00:00.000Z')
+  const newPaymentTypes = { cashapp: { endIsoDate } }
+
+  test('true before endIsoDate', () => {
+    const now = new Date(endIsoDate.valueOf() - 1)
+    expect(isPaymentTypeNew(newPaymentTypes, 'cashapp', now)).toBe(true)
+  })
+
+  test('false from endIsoDate on', () => {
+    expect(isPaymentTypeNew(newPaymentTypes, 'cashapp', endIsoDate)).toBe(false)
+    const later = new Date(endIsoDate.valueOf() + 1)
+    expect(isPaymentTypeNew(newPaymentTypes, 'cashapp', later)).toBe(false)
+  })
+
+  test('false for an unlisted payment type', () => {
+    const now = new Date('2026-11-01T00:00:00.000Z')
+    expect(isPaymentTypeNew(newPaymentTypes, 'pix', now)).toBe(false)
+  })
+})
+
 describe('getDisabledSwapPlugins', () => {
   const request = {
     fromWallet: { currencyInfo: { pluginId: 'bitcoin' } },
@@ -143,6 +215,25 @@ describe('getDisabledSwapPlugins', () => {
 })
 
 describe('updateExchangeInfo', () => {
+  const run = async (
+    current: ReturnType<typeof asExchangeInfo>
+  ): Promise<jest.Mock> => {
+    const dispatch = jest.fn()
+    await updateExchangeInfo()(
+      dispatch as unknown as Dispatch,
+      () => ({ ui: { exchangeInfo: current } } as unknown as RootState)
+    )
+    return dispatch
+  }
+  const newApplePay = (endIsoDate: string): unknown => ({
+    exchangeInfo: {
+      buy: {
+        disablePlugins: {},
+        newPaymentTypes: { applepay: { endIsoDate } }
+      }
+    }
+  })
+
   test('keeps disableAssetsByPlugin from the raw rollup', async () => {
     infoServerData.rollupRaw = {
       exchangeInfo: {
@@ -153,16 +244,31 @@ describe('updateExchangeInfo', () => {
         }
       }
     }
-    const dispatch = jest.fn()
-    await updateExchangeInfo()(
-      dispatch as unknown as Dispatch,
-      () => ({} as unknown as RootState)
-    )
+    const dispatch = await run(initialState)
     const action = dispatch.mock.calls[0][0] as {
       data: ReturnType<typeof asExchangeInfo>
     }
     expect(action.data.swap.disableAssetsByPlugin).toEqual({
       lifi: { source: [{ pluginId: 'bitcoin' }], destination: [] }
     })
+  })
+
+  test('leaves state alone when the rollup carries the same info', async () => {
+    infoServerData.rollupRaw = newApplePay('2030-01-01T00:00:00.000Z')
+    const current = asExchangeInfo(
+      (infoServerData.rollupRaw as { exchangeInfo: unknown }).exchangeInfo
+    )
+    const dispatch = await run(current)
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+
+  test('picks up a changed expiry date', async () => {
+    infoServerData.rollupRaw = newApplePay('2030-01-01T00:00:00.000Z')
+    const current = asExchangeInfo(
+      (infoServerData.rollupRaw as { exchangeInfo: unknown }).exchangeInfo
+    )
+    infoServerData.rollupRaw = newApplePay('2031-01-01T00:00:00.000Z')
+    const dispatch = await run(current)
+    expect(dispatch).toHaveBeenCalledTimes(1)
   })
 })

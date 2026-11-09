@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
+import { isPaymentTypeNew } from '../../actions/ExchangeInfoActions'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import { CONFIG } from '../../config'
 import { COUNTRY_CODES } from '../../constants/CountryConstants'
@@ -351,6 +352,7 @@ const QuoteResult: React.FC<{
 }> = ({ providerQuotes, onPress, bestQuoteOverall, isApprovingQuote }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
+  const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
 
   // State for the which provider quote for this payment type to be displayed
   const [providerQuoteIndex, setProviderQuoteIndex] = React.useState(0)
@@ -433,6 +435,12 @@ const QuoteResult: React.FC<{
     providerQuote.paymentType === bestQuoteOverall.paymentType &&
     providerQuote.fiatAmount === bestQuoteOverall.fiatAmount
 
+  const isNew = isPaymentTypeNew(
+    exchangeInfo[providerQuote.direction].newPaymentTypes,
+    providerQuote.paymentType,
+    new Date()
+  )
+
   const fiatCurrencyCode = providerQuote.fiatCurrencyCode.replace('iso:', '')
   const formattedSelectedFiatAmount = hasSelectedAmounts
     ? formatNumber(providerQuote.fiatAmount, { toFixed: 2 })
@@ -492,6 +500,7 @@ const QuoteResult: React.FC<{
         icon: { uri: providerQuote.partnerIcon }
       }}
       isBestOption={isBestOption}
+      isNew={isNew}
       providerTestID={`providerPill_${providerQuote.paymentType}`}
       onPress={handlePress}
       onProviderPress={handleProviderPress}

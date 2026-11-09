@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`initialState 1`] = `
 {
@@ -72,9 +72,11 @@ exports[`initialState 1`] = `
     "exchangeInfo": {
       "buy": {
         "disablePlugins": {},
+        "newPaymentTypes": {},
       },
       "sell": {
         "disablePlugins": {},
+        "newPaymentTypes": {},
       },
       "swap": {
         "disableAssets": {

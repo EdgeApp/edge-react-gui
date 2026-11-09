@@ -1,5 +1,6 @@
 import {
   asArray,
+  asDate,
   asEither,
   asMaybe,
   asObject,
@@ -34,16 +35,25 @@ export const asNestedDisableMap: Cleaner<NestedDisableMap> = asObject(
 )
 
 const asFiatDirectionInfo = asObject({
-  disablePlugins: asNestedDisableMap
+  disablePlugins: asNestedDisableMap,
+  // Payment types to badge as "New" until `endIsoDate`. Each entry is cleaned on
+  // its own: a malformed one badges nothing and leaves everything else in place,
+  // `disablePlugins` included.
+  newPaymentTypes: asMaybe(
+    asObject(asMaybe(asObject({ endIsoDate: asDate }))),
+    () => ({})
+  )
 })
 type FiatDirectionInfo = ReturnType<typeof asFiatDirectionInfo>
 
 export const asExchangeInfo = asObject({
   buy: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({
-    disablePlugins: {}
+    disablePlugins: {},
+    newPaymentTypes: {}
   })),
   sell: asMaybe<FiatDirectionInfo>(asFiatDirectionInfo, () => ({
-    disablePlugins: {}
+    disablePlugins: {},
+    newPaymentTypes: {}
   })),
   swap: asMaybe(
     asObject({
@@ -132,6 +142,20 @@ export const getDisabledSwapPlugins = (
   return out
 }
 
+/**
+ * True while the info server lists the payment type as new. The badge follows
+ * the payment type across providers, and the date check expires it with no app
+ * or server change.
+ */
+export const isPaymentTypeNew = (
+  newPaymentTypes: FiatDirectionInfo['newPaymentTypes'],
+  paymentType: string,
+  now: Date
+): boolean => {
+  const entry = newPaymentTypes[paymentType]
+  return entry != null && now.valueOf() < entry.endIsoDate.valueOf()
+}
+
 export function updateExchangeInfo(): ThunkAction<Promise<void>> {
   return async (dispatch, getState) => {
     try {
@@ -143,6 +167,12 @@ export function updateExchangeInfo(): ThunkAction<Promise<void>> {
         | { exchangeInfo?: unknown }
         | undefined
       const data = asExchangeInfo(rollup?.exchangeInfo)
+      // This runs on every rollup, and the Send scene re-quotes when these
+      // objects change identity, so an identical payload must not replace
+      // them. JSON rather than `matchJson`, which sees all Dates as equal:
+      const unchanged =
+        JSON.stringify(data) === JSON.stringify(getState().ui.exchangeInfo)
+      if (unchanged) return
       dispatch({ type: 'UPDATE_EXCHANGE_INFO', data })
     } catch (e: any) {
       console.warn(`Failed to get info server exchangeInfo: ${e.message}`)
