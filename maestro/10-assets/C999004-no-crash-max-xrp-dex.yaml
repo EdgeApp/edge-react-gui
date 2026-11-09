@@ -34,7 +34,7 @@ tags:
     text: "XRP(?: .*)?"
 - tapOn: "Select Receiving Wallet"
 - tapOn: "Ripple USD.*"
-- tapOn: "MAX"
+- tapOn: "100%"
 - extendedWaitUntil:
     visible: "Tap to Change Provider"
     timeout: 15000

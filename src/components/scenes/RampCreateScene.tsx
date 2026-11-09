@@ -55,6 +55,7 @@ import type {
   NavigationBase
 } from '../../types/routerTypes'
 import type { GuiFiatType } from '../../types/types'
+import { getPercentExchangeAmount } from '../../util/amountPercent'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getHistoricalFiatRate } from '../../util/exchangeRates'
 import { isAssetNativeToChain } from '../../util/isAbstractedAssetChain'
@@ -62,8 +63,10 @@ import { logEvent } from '../../util/tracking'
 import {
   convertNativeToDenomination,
   DECIMAL_PRECISION,
-  mulToPrecision
+  mulToPrecision,
+  zeroString
 } from '../../util/utils'
+import { AmountPercentButtons } from '../buttons/AmountPercentButtons'
 import { DropdownInputButton } from '../buttons/DropdownInputButton'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
@@ -854,6 +857,26 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
     setLastUsedInput('crypto')
   })
 
+  const handlePercentPress = useHandler((percent: string) => {
+    if (denomination == null || selectedCrypto == null) return
+    if (selectedWallet == null) return
+
+    const exchangeAmount = getPercentExchangeAmount(
+      selectedWallet.balanceMap.get(selectedCrypto.tokenId) ?? '0',
+      percent,
+      denomination.multiplier,
+      cryptoMaxDecimals
+    )
+    if (zeroString(exchangeAmount)) {
+      showToast(lstrings.exchange_insufficient_funds_title)
+      return
+    }
+    // See handleFiatChangeText: choosing an amount cancels any in-flight max.
+    cancelPendingMax()
+    setAmountQuery({ exchangeAmount })
+    setLastUsedInput('crypto')
+  })
+
   const handleMaxPress = useHandler(async () => {
     // Preconditions to submit a max request
     if (
@@ -1161,7 +1184,7 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
           )}
         </View>
 
-        {/* Wallet Name and MAX Button Row */}
+        {/* Wallet Name Row, with the MAX Button on buy */}
         {selectedWallet == null ? null : (
           <View style={styles.walletNameMaxRowView}>
             {selectedWallet?.name != null ? (
@@ -1169,20 +1192,32 @@ export const RampCreateScene: React.FC<Props> = (props: Props) => {
                 {selectedWallet.name}
               </EdgeText>
             ) : null}
-            <EdgeTouchableOpacity
-              style={styles.maxButton}
-              onPress={handleMaxPress}
-              disabled={isComputingMax}
-            >
-              {isComputingMax ? (
-                <ActivityIndicator color={theme.iconTappable} />
-              ) : (
-                <EdgeText style={styles.maxButtonText}>
-                  {lstrings.trade_create_max}
-                </EdgeText>
-              )}
-            </EdgeTouchableOpacity>
+            {direction === 'sell' ? null : (
+              <EdgeTouchableOpacity
+                style={styles.maxButton}
+                onPress={handleMaxPress}
+                disabled={isComputingMax}
+              >
+                {isComputingMax ? (
+                  <ActivityIndicator color={theme.iconTappable} />
+                ) : (
+                  <EdgeText style={styles.maxButtonText}>
+                    {lstrings.trade_create_max}
+                  </EdgeText>
+                )}
+              </EdgeTouchableOpacity>
+            )}
           </View>
+        )}
+
+        {/* Percent pills pick a share of the balance to sell */}
+        {selectedWallet == null || direction !== 'sell' ? null : (
+          <AmountPercentButtons
+            maxPending={isComputingMax}
+            partialDisabled={cryptoInputDisabled}
+            onMaxPress={handleMaxPress}
+            onPercentPress={handlePercentPress}
+          />
         )}
 
         {/* Exchange Rate */}
