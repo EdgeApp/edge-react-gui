@@ -64,6 +64,32 @@ describe('makeRollupExchangeInfo', () => {
     expect(mockFetchPublicRollup).toHaveBeenCalledTimes(3)
   })
 
+  it('keeps the last one read when a rollup carries no exchangeInfo', async () => {
+    const warnings: string[] = []
+    const read = makeRollupExchangeInfo({
+      warn: message => {
+        warnings.push(message)
+      }
+    })
+    mockFetchPublicRollup.mockImplementation(
+      arrives({ swap: { disablePlugins: { changehero: true } } })
+    )
+    await read()
+
+    jest.advanceTimersByTime(5 * 60 * 1000)
+    mockFetchPublicRollup.mockImplementation(async () => {
+      infoServerData.rollupRaw = {}
+    })
+    expect((await read()).swap.disablePlugins).toStrictEqual({
+      changehero: true
+    })
+    mockFetchPublicRollup.mockImplementation(arrives(null))
+    expect((await read()).swap.disablePlugins).toStrictEqual({
+      changehero: true
+    })
+    expect(warnings).toHaveLength(2)
+  })
+
   it('answers the defaults before any rollup arrives', async () => {
     mockFetchPublicRollup.mockImplementation(async () => {})
     const read = makeRollupExchangeInfo({ warn: () => {} })
