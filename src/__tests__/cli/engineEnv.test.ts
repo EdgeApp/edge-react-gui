@@ -56,6 +56,29 @@ describe('engineEnv', () => {
     expect(engineEnv(source).EDGE_CLI_SESSION).toBeUndefined()
   })
 
+  it('withholds every spelling of a secret on Windows, where names ignore case', () => {
+    const out = engineEnv(
+      {
+        NODE_ENV: 'test',
+        PATH: 'C:\\bin',
+        edge_cli_password: 'hunter2',
+        Edge_Cli_Session: 'session-token'
+      },
+      'win32'
+    )
+    expect(out.edge_cli_password).toBeUndefined()
+    expect(out.Edge_Cli_Session).toBeUndefined()
+    expect(out.PATH).toBe('C:\\bin')
+  })
+
+  it('matches names exactly elsewhere, where another case is another variable', () => {
+    const out = engineEnv(
+      { NODE_ENV: 'test', edge_cli_password: 'not one of ours' },
+      'linux'
+    )
+    expect(out.edge_cli_password).toBe('not one of ours')
+  })
+
   it('keeps everything the engine does need', () => {
     const out = engineEnv(source)
     expect(out.PATH).toBe('/usr/bin')
