@@ -2,11 +2,13 @@ import { abs, lt, sub } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
+  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
@@ -14,8 +16,12 @@ import {
   getExchangeDenom,
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import {
+  convertNativeAmountToDisplayAmount,
+  convertTransactionFeeToDisplayFee
+} from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import {
@@ -36,6 +42,8 @@ interface OwnProps {
   wallet: EdgeCurrencyWallet
 }
 interface StateProps {
+  /** Display denomination of the asset the accelerated transaction sends */
+  amountDisplayDenomination: EdgeDenomination
   exchangeRates: GuiExchangeRates
   isoFiatCurrencyCode: string
   feeDisplayDenomination: EdgeDenomination
@@ -109,22 +117,60 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
       isoFiatCurrencyCode
     } = this.props
 
-    const feeDefaultDenomination = getExchangeDenom(wallet.currencyConfig, null)
-    const transactionFee = convertTransactionFeeToDisplayFee(
-      wallet.currencyInfo.pluginId,
-      null,
-      isoFiatCurrencyCode,
-      exchangeRates,
-      edgeTransaction,
-      feeDisplayDenomination,
-      feeDefaultDenomination
+    return formatAmount(
+      convertTransactionFeeToDisplayFee(
+        wallet.currencyInfo.pluginId,
+        null,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        edgeTransaction,
+        feeDisplayDenomination,
+        getExchangeDenom(wallet.currencyConfig, null)
+      ),
+      this.hasExchangeRate(null)
     )
+  }
 
-    const feeSyntax = `${transactionFee.cryptoSymbol ?? ''} ${
-      transactionFee.cryptoAmount
-    } (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
+  /**
+   * The amount one spend target receives, in the units and fiat rate of the
+   * asset being sent (a token send pays out in the token, not the parent
+   * currency the fee is paid in).
+   */
+  getSendAmountDisplay = (nativeAmount: string): string => {
+    const {
+      acceleratedTx,
+      amountDisplayDenomination,
+      exchangeRates,
+      wallet,
+      isoFiatCurrencyCode
+    } = this.props
+    const { tokenId } = acceleratedTx
 
-    return feeSyntax
+    return formatAmount(
+      convertNativeAmountToDisplayAmount(
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        nativeAmount,
+        amountDisplayDenomination,
+        getExchangeDenom(wallet.currencyConfig, tokenId)
+      ),
+      this.hasExchangeRate(tokenId)
+    )
+  }
+
+  /** Whether a fiat value can be shown for one of the wallet's assets */
+  hasExchangeRate = (tokenId: EdgeTokenId): boolean => {
+    const { exchangeRates, wallet, isoFiatCurrencyCode } = this.props
+    return (
+      getExchangeRate(
+        exchangeRates,
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        isoFiatCurrencyCode
+      ) !== 0
+    )
   }
 
   render(): React.ReactElement {
@@ -135,6 +181,10 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
 
     const oldFee = this.getTxFeeDisplay(replacedTx)
     const newFee = this.getTxFeeDisplay(acceleratedTx)
+
+    // Where the accelerated funds go. The plugin names every output of the
+    // replacement that is not the wallet's own.
+    const spendTargets = acceleratedTx.spendTargets ?? []
 
     const isLowerAmount = lt(
       getTxSendAmount(acceleratedTx),
@@ -149,9 +199,29 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         title={lstrings.transaction_details_accelerate_transaction_header}
       >
         <Paragraph>
-          {lstrings.transaction_details_accelerate_transaction_instructional}
+          {spendTargets.length > 0
+            ? lstrings.transaction_details_accelerate_transaction_instructional_recipient
+            : lstrings.transaction_details_accelerate_transaction_instructional}
         </Paragraph>
-        <View style={styles.container}>
+        <ScrollView style={styles.rows}>
+          {spendTargets.map((target, index) => (
+            <React.Fragment key={`${index}`}>
+              <EdgeRow
+                maximumHeight="large"
+                rightButtonType="copy"
+                title={
+                  lstrings.transaction_details_accelerate_transaction_recipient_title
+                }
+                body={target.publicAddress}
+              />
+              <EdgeRow
+                title={
+                  lstrings.transaction_details_accelerate_transaction_amount_title
+                }
+                body={this.getSendAmountDisplay(target.nativeAmount)}
+              />
+            </React.Fragment>
+          ))}
           <EdgeRow
             title={
               lstrings.transaction_details_accelerate_transaction_old_fee_title
@@ -166,7 +236,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
               body={newFee}
             />
           )}
-        </View>
+        </ScrollView>
         {isLowerAmount ? (
           <WarningCard
             title={
@@ -217,12 +287,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     maxHeight: theme.rem(20),
     marginVertical: theme.rem(0.5)
+  },
+  // The rows scroll once they outgrow their share of the modal, so every
+  // recipient stays reachable above the slider:
+  rows: {
+    flexGrow: 0,
+    maxHeight: theme.rem(20),
+    marginVertical: theme.rem(0.5)
   }
 }))
 
 export function AccelerateTxModal(props: OwnProps): React.ReactElement {
   const theme = useTheme()
 
+  const amountDisplayDenomination = useSelector(state =>
+    selectDisplayDenom(
+      state,
+      props.wallet.currencyConfig,
+      props.acceleratedTx.tokenId
+    )
+  )
   const exchangeRates = useSelector(state => state.exchangeRates)
   const feeDisplayDenomination = useSelector(state =>
     selectDisplayDenom(state, props.wallet.currencyConfig, null)
@@ -234,12 +318,33 @@ export function AccelerateTxModal(props: OwnProps): React.ReactElement {
   return (
     <AccelerateTxModalComponent
       {...props}
+      amountDisplayDenomination={amountDisplayDenomination}
       exchangeRates={exchangeRates}
       feeDisplayDenomination={feeDisplayDenomination}
       isoFiatCurrencyCode={isoFiatCurrencyCode}
       theme={theme}
     />
   )
+}
+
+/**
+ * Lays out an amount as "<crypto> (<fiat>)". The fee rows and the send amount
+ * rows share it, so they read the same way. Without an exchange rate the fiat
+ * value would read as zero, which looks like a real amount on a confirmation,
+ * so it is left out.
+ */
+function formatAmount(
+  amount: {
+    cryptoSymbol?: string
+    cryptoAmount: string
+    fiatSymbol?: string
+    fiatAmount: string
+  },
+  hasExchangeRate: boolean
+): string {
+  const crypto = `${amount.cryptoSymbol ?? ''} ${amount.cryptoAmount}`
+  if (!hasExchangeRate) return crypto
+  return `${crypto} (${amount.fiatSymbol ?? ''} ${amount.fiatAmount})`
 }
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
