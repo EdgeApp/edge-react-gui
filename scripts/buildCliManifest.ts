@@ -120,13 +120,12 @@ for (const name of [...packages].sort()) {
 /**
  * Peers of the CLI's own dependencies that an install would pull in.
  *
- * `edge-currency-accountbased` declares four React Native modules as
- * non-optional `peerDependencies` with an empty `peerDependenciesMeta`, so
- * npm 7+ installs them — measured on `{"edge-currency-accountbased":
- * "^4.99.0"}` alone: 920 packages, including `react-native` and `react`. The
- * app satisfies those peers from its own `dependencies`; a global CLI install
- * has no reason to carry React Native, and the engine never loads these
- * modules (`test:cli:node-safe` fails if anything on its graph does).
+ * `edge-currency-accountbased` declares React Native modules as
+ * `peerDependencies` and marks none of them optional, so npm 7+ installs
+ * them, and `react-native` and `react` with them. The app satisfies those
+ * peers from its own `dependencies`; a global CLI install has no reason to
+ * carry React Native, and the engine never loads these modules
+ * (`test:cli:node-safe` fails if anything on its graph does).
  *
  * Read from the installed tree, so this needs no network: a peer that
  * appears, or one that stops being optional, shows up here rather than in
@@ -208,19 +207,17 @@ const bundles = ['lib/edgeCli.js', 'lib/edgeEngine.js'].map(f =>
 )
 // Only under `--require-bundles`, and that flag is the whole gate. A `lib/`
 // that is merely *present* says nothing: it is gitignored, neither `verify`
-// nor `precommit:cli` builds it, and what is there is whatever some earlier
-// `npm run test:cli:offline:built` left. Reading it anyway turned the
-// `required − declared` direction into a trap — drop the last import of a
-// package and the fresh manifest correctly stops declaring it while the old
-// bundle still `require`s it, so a correct commit failed with
-// "✗ the built bundles require date-fns, which the manifest does not
-// declare" and no message saying to rebuild, which `npm run cli:manifest`
-// cannot fix because the list is graph-derived.
+// nor `precommit:cli` builds it before this check, and what is there is
+// whatever some earlier `npm run test:cli:offline:built` left. Reading it
+// anyway would make the `required − declared` direction a trap: drop the last
+// import of a package and the fresh manifest correctly stops declaring it
+// while the old bundle still `require`s it, so a correct commit fails with no
+// message saying to rebuild, and `npm run cli:manifest` cannot fix it because
+// the list is graph-derived.
 //
-// The two callers that want the cross-check — `publishCli.ts` and
-// `.travis.yml`'s `script` — already pass the flag after a build, so nothing
-// is lost, and `cli:manifest:check` goes back to being only what its name
-// says.
+// The two callers that want the cross-check, `publishCli.ts` and
+// `.travis.yml`'s `script`, pass the flag after a build, so
+// `cli:manifest:check` is only what its name says.
 const built = REQUIRE_BUNDLES && bundles.every(f => fs.existsSync(f))
 if (REQUIRE_BUNDLES && !built) {
   console.error(

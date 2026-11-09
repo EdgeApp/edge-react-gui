@@ -1,10 +1,9 @@
 /**
  * The EdgeProvider shim bundle, injected into the in-app browser.
  *
- * `@rollup/plugin-node-resolve`, the same plugin `rollup.config.cli.mjs`
- * uses: this config was on `rollup-plugin-node-resolve`, the pre-scope name
- * twelve majors behind, so the repository carried two packages doing one job
- * for its two rollup builds.
+ * It resolves with `@rollup/plugin-node-resolve`, the same plugin
+ * `rollup.config.cli.mjs` uses, so the repository's two rollup builds share
+ * one resolver package.
  */
 import babel from '@rollup/plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve'

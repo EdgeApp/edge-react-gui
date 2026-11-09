@@ -1,15 +1,12 @@
 /**
  * The decisions `publishCli.ts` makes before it builds or publishes anything.
  *
- * Lifted out of that script because it does its work at module scope and so
- * cannot be imported: `publishFlags.test.ts` asserted regexes against the
- * script's own *text* — `expect(source).toMatch(/value\.startsWith\('--'\)/)`
- * — which passes for a reformat that breaks the logic and fails for a
- * prettier line break that does not. The defect those regexes stand in for
- * is `--out` with the value left off falling through to
- * `npm publish --access public`, which the script documents as
- * irreversible: npm will not replace a version, so a mis-fired publish burns
- * the app's current version number. That is worth a test that runs the code.
+ * Separate from that script because it does its work at module scope and so
+ * cannot be imported, and these decisions are worth a test that runs the
+ * code rather than one that matches the script's text. `--out` with the
+ * value left off must not fall through to `npm publish --access public`,
+ * which the script documents as irreversible: npm will not replace a
+ * version, so a mis-fired publish burns the app's current version number.
  *
  * Pure: no filesystem, no `process.argv`, no spawning. The script stays the
  * shell that reads argv, touches the disk and runs npm.
@@ -32,13 +29,13 @@ interface PublishFlags {
 /**
  * A flag's value, or a stop.
  *
- * It used to be `argv[i + 1]`, so `npm run publish:cli -- --out` with the
- * path left off answered `undefined`, the `if (stageOnly != null)` gate was
- * false, and the script fell through to `npm publish --access public` — the
- * flag a reader reaches for to *avoid* publishing was the one whose typo
- * published. `--out --dry-run` was worse in the other direction: it staged
- * into a directory literally named `--dry-run` and did stop, so two
- * spellings of one mistake behaved oppositely.
+ * A missing value throws rather than answering `undefined` or the next
+ * flag. As plain `argv[i + 1]`, `npm run publish:cli -- --out` with the path
+ * left off would make the `if (stageOnly != null)` gate false and fall
+ * through to `npm publish --access public`, so the flag a reader reaches for
+ * to *avoid* publishing would be the one whose typo publishes, while
+ * `--out --dry-run` would stage into a directory literally named
+ * `--dry-run` and stop.
  */
 export function flagValue(argv: string[], flag: string): string | undefined {
   const i = argv.indexOf(flag)
@@ -72,10 +69,9 @@ export function parsePublishFlags(argv: string[]): PublishFlags {
  * The `files` allowlist the published manifest should carry.
  *
  * npm's `files` is an allowlist, so `--with-signer` has to add the addon to
- * it and not merely copy the file into the stage. It did only the latter: a
- * package.json with the unsigned four and an `edge_api_signer.node` beside
- * the bundles packs the four and drops the addon, so the flag published a
- * tarball that could not sign while the report said it had shipped.
+ * it and not merely copy the file into the stage: a package.json with the
+ * unsigned four and an `edge_api_signer.node` beside the bundles packs the
+ * four and drops the addon, publishing a tarball that cannot sign.
  */
 export function packedFilesFor(opts: {
   withSigner: boolean
@@ -93,8 +89,8 @@ export function packedFilesFor(opts: {
  * because either alone lies in one direction: the manifest alone says
  * "signed" for an addon npm will pack but that was never built, and the
  * directory alone says "signed" for an addon a reused `--out` left behind,
- * which suppressed the README's unsigned warning with no `--with-signer`
- * given at all.
+ * which would suppress the README's unsigned warning with no
+ * `--with-signer` given at all.
  */
 export function isSignedPublish(opts: {
   packedFiles: readonly string[]
@@ -108,14 +104,12 @@ export function isSignedPublish(opts: {
 /**
  * What `git status` established about the working tree.
  *
- * Three states, because "could not ask git" is not "clean". The dirty-tree
- * check used to read a `capture()` that answers `''` whenever the child
- * exits non-zero or fails to spawn, so every git failure passed the guard
- * silently — and this is the guard on the one action the script says cannot
- * be undone, since npm will not replace a version. A CI container where git
- * reports "detected dubious ownership in repository" (exit 128), an
- * extracted source tarball with no `.git`, and git missing from `PATH` all
- * published an unreproducible tree under the app's current version.
+ * Three states, because "could not ask git" is not "clean", and this is the
+ * guard on the one action the script says cannot be undone, since npm will
+ * not replace a version. A CI container where git reports "detected dubious
+ * ownership in repository" (exit 128), an extracted source tarball with no
+ * `.git`, and git missing from `PATH` are all `unknown`, never a clean tree
+ * to publish.
  */
 export type TreeState =
   | { kind: 'clean' }
@@ -125,9 +119,9 @@ export type TreeState =
 /**
  * What one `git status --porcelain` run says about the tree.
  *
- * Here rather than in the script, so the mapping that was the bug — every
- * failure read as clean — is something a test can run: a spawn that never
- * started, a non-zero exit, and the two answers that count.
+ * Here rather than in the script, so a test can run the mapping, in which
+ * no failure reads as clean: a spawn that never started, a non-zero exit,
+ * and the two answers that count.
  */
 export function treeStateOf(result: {
   error?: Error
@@ -272,15 +266,10 @@ export function headStateOf(
 /**
  * Why a publish must stop before anything is built.
  *
- * Two functions rather than one, because the refusals fall into two phases
- * and one function meant each caller had to *fabricate* the inputs for the
- * checks that did not apply to it yet: the pre-build call passed
- * `packedFiles: withSigner ? [CLI_SIGNER_FILE] : []` purely so the allowlist
- * check could not fire before a manifest existed, and the staged call passed
- * `treeIsDirty: false` purely so the dirty-tree check could not fire twice.
- * Which refusals a call could reach was therefore decided by arguments that
- * were not facts, and anyone adding a fifth had to work out per call site
- * which inputs were real.
+ * Separate from the staged checks below, because the refusals fall into
+ * phases: each call passes only the facts its phase has, rather than
+ * placeholder inputs that keep a check from firing before its phase or
+ * firing twice.
  *
  * Refusals rather than reports afterwards, because each of them is
  * irreversible once npm has the tarball.
@@ -329,10 +318,9 @@ export function preBuildRefusal(opts: {
 
   // Its own refusal, naming what git said, and with no override: the
   // README's links are pinned to HEAD, so a publish git cannot describe
-  // cannot be given working links either. `--allow-dirty` used to be offered
-  // here, and every case that reaches this — no git, no `.git`, "dubious
-  // ownership" — fails to read HEAD too, so the override only moved the
-  // failure past a full build.
+  // cannot be given working links either. Every case that reaches this (no
+  // git, no `.git`, "dubious ownership") fails to read HEAD too, so an
+  // override would only move the failure past a full build.
   if (treeState.kind === 'unknown') {
     return (
       `Could not determine whether the working tree is clean: ${treeState.reason}. ` +
@@ -409,10 +397,9 @@ export function preBuildRefusal(opts: {
 /**
  * Why a publish must stop once the manifest that will be published is known.
  *
- * The last check before the stage is final, and the way `--with-signer`
- * failed was silent: the addon in the directory, absent from the tarball,
- * and the report saying "included". `files` is npm's allowlist, so this is
- * the one assertion that distinguishes the two.
+ * The last check before the stage is final. A `--with-signer` addon can be
+ * in the directory and absent from the tarball, silently, and `files` is
+ * npm's allowlist, so this is the one assertion that distinguishes the two.
  */
 export function stagedManifestRefusal(opts: {
   flags: PublishFlags

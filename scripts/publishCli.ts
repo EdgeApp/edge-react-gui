@@ -57,7 +57,7 @@ const {
 const ROOT = path.resolve(__dirname, '..')
 const MANIFEST = path.join(ROOT, 'src/cli/generated/npmPackage.json')
 // From `npmMeta.ts`, which is where the decision lives. A second spelling
-// here is what let the manifest and the staging directory disagree.
+// here could let the manifest and the staging directory disagree.
 const SIGNER = CLI_SIGNER_FILE
 
 const argv = process.argv.slice(2)
@@ -67,9 +67,9 @@ const argv = process.argv.slice(2)
  *
  * The parsing, the `files` allowlist and the three refusals live in
  * `scripts/util/publishArgs.ts` so that they can be imported and run by a
- * test: this script does its work at module scope, so the only thing a test
- * could reach before was its source text, and a regex over source passes
- * for a reformat that breaks the logic. `--with-signer` is off by default
+ * test: this script does its work at module scope, so a test could otherwise
+ * reach only its source text, and a regex over source passes for a reformat
+ * that breaks the logic. `--with-signer` is off by default
  * and needs `edgeCliKey.json`, the CLI's own key pair, because the addon's
  * shards reconstruct the secret it carries and the runtime pad is a constant
  * in this public repository — see the note in `src/cli/npmMeta.ts`.
@@ -89,10 +89,9 @@ function run(command: string, args: string[], cwd = ROOT): void {
 /**
  * Ask git about the working tree, and say so when it could not be asked.
  *
- * The `capture` helper this replaces returned `''` for a child that exited
- * non-zero or failed to spawn, so `=== ''` read every git failure as a clean
- * tree — the dirty-tree refusal, on the one action this file says cannot be
- * undone, failed open. `treeStateOf` is the mapping, where a test runs it.
+ * A git failure must not read as a clean tree, or the dirty-tree refusal, on
+ * the one action this file says cannot be undone, fails open. `treeStateOf`
+ * is the mapping, where a test runs it.
  */
 function readTreeState(): TreeState {
   return treeStateOf(
@@ -131,8 +130,8 @@ function readHeadState(): HeadState {
 
 // A publish from a dirty tree cannot be reproduced from any commit, and the
 // one artifact nobody can re-derive later is the one in the registry. The
-// three refusals before anything is built live in `publishArgs.ts`, where a
-// test can run them: each one is irreversible once npm has the tarball.
+// refusals before anything is built live in `publishArgs.ts`, where a test
+// can run them: each one is irreversible once npm has the tarball.
 /** A key file's pair, or `undefined` when the file is absent. */
 function readKeyPair(name: string): ApiKeyPair | undefined {
   const file = path.join(ROOT, name)
@@ -181,9 +180,9 @@ if (!skipBuild) {
 
 // After the build, not before it. The manifest is generated and committed, so
 // a stale one would publish the wrong dependency list — and its one real
-// check reads the *built* bundles for the packages they require. Run first,
-// as it was, it inspected whatever `lib/` happened to hold: absent on a fresh
-// clone, where the check silently skipped, or left over from an older build.
+// check reads the *built* bundles for the packages they require. Run before
+// the build, it would inspect whatever `lib/` happened to hold: nothing on a
+// fresh clone, or the output of an older build.
 // `--require-bundles` makes an absent `lib/` a failure rather than a skip,
 // which is only safe to demand here, after the build that creates it.
 run('node', [
@@ -197,11 +196,10 @@ run('node', [
 // ----------------------------------------------------------------- staging
 
 // `files` in the generated manifest lists the unsigned set, and npm's
-// `files` is an allowlist — so `--with-signer` has to add the addon to it,
-// not merely copy the file into the stage. It did only the latter: a
-// package.json with the unsigned four and an `edge_api_signer.node` beside
-// the bundles packs the four and drops the addon, so the flag published a
-// tarball that could not sign while the report said it had shipped.
+// `files` is an allowlist, so `--with-signer` has to add the addon to it,
+// not merely copy the file into the stage: a package.json with the unsigned
+// four and an `edge_api_signer.node` beside the bundles packs the four and
+// drops the addon.
 const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8')) as Record<
   string,
   unknown
@@ -225,9 +223,7 @@ interface Staged {
   required: boolean
 }
 // Derived from the manifest's own `files`, so the staged directory and the
-// allowlist npm packs by cannot name different sets. They did: this list
-// was hand-written beside `CLI_PACKAGE_FILES` with the same four names, and
-// `--with-signer` added the addon to this one only.
+// allowlist npm packs by cannot name different sets.
 const STAGED_FROM: Record<string, string> = {
   'edgeCli.js': 'lib/edgeCli.js',
   'edgeEngine.js': 'lib/edgeEngine.js',
@@ -265,8 +261,8 @@ fs.chmodSync(path.join(stage, 'edgeCli.js'), 0o755)
 
 // From the manifest the tarball will carry, not from a file's presence in
 // a directory `--out` may have left behind: a reused stage with a stale
-// addon made this true with no `--with-signer` at all, which suppressed
-// the README's unsigned warning — the one paragraph that explains why the
+// addon would make this true with no `--with-signer` at all, and suppress
+// the README's unsigned warning, the one paragraph that explains why the
 // installed CLI refuses to start without an `edgeApiKey`.
 const packedFiles = manifest.files as string[]
 const signed = isSignedPublish({
@@ -279,7 +275,7 @@ const signed = isSignedPublish({
 // than a second description written to drift from it. The header is the part
 // that only makes sense once the thing has a package name.
 // `--omit=peer`, in the generated half as well as in the guide below it.
-// `edge-currency-accountbased` declares four React Native modules as
+// `edge-currency-accountbased` declares React Native modules as
 // non-optional peers, so a plain `npm install -g` pulls React Native into a
 // command-line tool — and the first code block on a registry page is the one
 // a reader copies. The precondition below refuses a header that disagrees
@@ -325,10 +321,10 @@ const header = [
  * The guide, with its links rewritten for a registry page.
  *
  * npm resolves a README's relative links against `repository.url` plus
- * `repository.directory`, which is `src/cli` — so `](./api/dist/index.html)`
- * pointed at `tree/HEAD/src/cli/api/dist/index.html`, which does not exist,
- * and the installed package ships none of those files either. The first of
- * them is the document's own pointer at the generated reference.
+ * `repository.directory`, which is `src/cli`, so `](./api/dist/index.html)`
+ * would point at `tree/HEAD/src/cli/api/dist/index.html`, which does not
+ * exist, and the installed package ships none of those files either. The
+ * first of them is the document's own pointer at the generated reference.
  *
  * Pinned to the commit being published, not to `master`: the docs are not
  * on `master` until a release reaches it, and afterwards `master` is a
@@ -358,17 +354,16 @@ if (leftoverLinks.length > 0) {
   )
 }
 
-// And the claim, because the README is the registry page: it used to say
-// "Published (npm): not yet … there is nothing for `npx` to fetch", nine
-// lines under a header telling the reader to `npm install -g` it.
+// And the claim, because the README is the registry page: a guide saying the
+// package is not published would sit a few lines under a header telling the
+// reader to `npm install -g` it.
 const DENIALS = [
   'not yet',
   'Until a package is published',
   'it is not an npm package name'
 ]
-// The install line the header writes has to be the one the guide endorses.
-// 2.review-repo.4's `--omit=peer` landed on the appended half only, so the
-// registry page's first code block was the one the document then called
+// The install line the header writes has to be the one the guide endorses,
+// or the registry page's first code block is one the document then calls
 // wrong.
 const guideInstall = `npm install -g ${CLI_PACKAGE_META.name} ${INSTALL_FLAGS}`
 if (!guide.includes(guideInstall)) {
@@ -391,10 +386,10 @@ if (denial != null) {
 fs.writeFileSync(path.join(stage, 'README.md'), header + guide)
 
 // Last check before the stage is final: `--with-signer` is the publish path
-// the CLI is meant to use once it has a key pair of its own, and the way it
-// failed was silent — the addon in the directory, absent from the tarball,
-// and the report saying "included". `files` is npm's allowlist, so this is
-// the one assertion that distinguishes the two.
+// the CLI is meant to use once it has a key pair of its own, and its failure
+// is silent: the addon in the directory but absent from the tarball, and the
+// report saying "included". `files` is npm's allowlist, so this is the one
+// assertion that distinguishes the two.
 const stageRefusal = stagedManifestRefusal({
   flags,
   packedFiles: manifest.files as string[],
