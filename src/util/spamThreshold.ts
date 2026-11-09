@@ -52,9 +52,10 @@ export const calculateSpamThreshold = (
  * Through the strict reader, so a `Settings.json` that is *there* and cannot
  * be read is not answered the way an absent one is. This value labels and
  * prices a whole `get-transactions` response and every CSV, QBO and Bitwave
- * file written from it: one unreadable read used to price the lot in
- * `iso:USD` and report USD back as the account's own default. An absent file
- * still gets the cleaner's default, which is what a fresh account has.
+ * file written from it, so answering one unreadable read with the default
+ * would price the lot in `iso:USD` and report USD back as the account's own
+ * default. An absent file still gets the cleaner's default, which is what a
+ * fresh account has.
  */
 export async function readDefaultIsoFiat(
   account: EdgeAccount
@@ -66,8 +67,8 @@ export async function readDefaultIsoFiat(
  * The same answer from settings a caller has already read.
  *
  * `get-transactions` needs `denominationSettings` out of the same file on its
- * export path, so going back through `readDefaultIsoFiat` there read and
- * parsed `Settings.json` a second time for a field it was holding.
+ * export path, so going back through `readDefaultIsoFiat` there would read
+ * and parse `Settings.json` a second time for a field it is already holding.
  */
 export function defaultIsoFiatOf(settings: { defaultIsoFiat: string }): string {
   // The cleaner's fallback covers an absent field; an empty *string* in the
@@ -106,24 +107,18 @@ export async function resolveListSpamThreshold(opts: {
   /**
    * Where an unreadable `Settings.json` is reported.
    *
-   * The only notice used to be `localAccountSettings`' own `console.warn`,
-   * which in the daemon goes to the startup log a clean stop deletes. A
-   * plain callback rather than the engine's `EngineReporter`, because this
+   * A plain callback rather than the engine's `EngineReporter`, because this
    * module is on the GUI's import graph too.
    */
   onWarn?: (message: string) => void
   /**
    * The caller's own deadline, forwarded to the rate queue.
    *
-   * `get-transactions` makes *two* rate queries and only the second had it.
-   * This one runs ~87 lines earlier, so on a listing with `--timeout=15`
-   * against a stalled rates server the engine spent ~31 s here —
-   * `RATE_QUERY_TIMEOUT_MS` plus a debounce — `readRequestBudgetMs` then
-   * found the caller's deadline already spent and fell back to the route's
-   * own 90 s default, and the request abandoned at 15 s cost ~120 s of work.
-   * That is the "the engine's inner deadline is always later than the
-   * caller's" the budget header exists to close, through the query ahead of
-   * the one that was closed.
+   * `get-transactions` makes *two* rate queries, and this is the first.
+   * Without the caller's deadline, a listing against a stalled rates server
+   * would wait out `RATE_QUERY_TIMEOUT_MS` plus a debounce here, however
+   * short its `--timeout`, which is the "the engine's inner deadline is
+   * always later than the caller's" the budget header exists to close.
    *
    * Only the *listing* pays it: the export arm short-circuits the floor to
    * `'0'`.
@@ -138,18 +133,18 @@ export async function resolveListSpamThreshold(opts: {
     return opts.queryOverride === '' ? '0' : opts.queryOverride
   }
 
-  // Lenient, and this is the one that matters most: a `Settings.json` that
-  // cannot be read used to fail *every* `get-transactions`, on the default
-  // path, with nothing here catching it.
+  // Lenient, and this is the one that matters most: through the strict
+  // reader, a `Settings.json` that cannot be read would fail *every*
+  // `get-transactions`, on the default path, with nothing here catching it.
   const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
     opts.account
   )
   // `trusted` is false for a file that is *there* and could not be read, and
-  // `spamFilterOn` then defaults to `true` — so an unreadable settings file
-  // applied the floor to an account that had turned the filter off, dropping
-  // rows from a listing and from an export the route documents as
-  // unfiltered, with `total` counted against the filtered set. No threshold
-  // is the safe direction, the same one a non-finite rate already takes.
+  // `spamFilterOn` then defaults to `true`, so applying the floor would
+  // filter an account that had turned the filter off, dropping rows from a
+  // listing and from an export the route documents as unfiltered, with
+  // `total` counted against the filtered set. No threshold is the safe
+  // direction, the same one a non-finite rate already takes.
   if (!trusted) {
     opts.onWarn?.(
       `${LOCAL_SETTINGS_FILENAME} is present and unreadable, so the spam ` +
@@ -165,11 +160,11 @@ export async function resolveListSpamThreshold(opts: {
   let rate = 0
   try {
     // Quantised to the hour. `getHistoricalCryptoRate` folds the date string
-    // into its cache key, so a millisecond-precision timestamp missed the
-    // cache on every call: each listing waited a full FETCH_FREQUENCY before
-    // the request even started, and left a permanent entry in the module-level
-    // rate map. In the GUI this value came from a Redux selector, so neither
-    // cost existed there.
+    // into its cache key, so a millisecond-precision timestamp would miss the
+    // cache on every call: each listing would wait a full FETCH_FREQUENCY
+    // before the request even started, and add an entry to the module-level
+    // rate map. In the GUI this value comes from a Redux selector, so neither
+    // cost exists there.
     const bucketedNow = new Date(
       Math.floor(Date.now() / RATE_BUCKET_MS) * RATE_BUCKET_MS
     ).toISOString()
@@ -185,8 +180,7 @@ export async function resolveListSpamThreshold(opts: {
   } catch {
     rate = 0
   }
-  // `isRateUnavailable`, whose own docblock cites this call site as its
-  // reason for existing, and which `fillTxsFiat` already uses. `0` is the
+  // `isRateUnavailable`, the same check `fillTxsFiat` makes. `0` is the
   // safe direction here: no floor rather than a wrong one.
   if (isRateUnavailable(rate)) rate = 0
   return calculateSpamThreshold(rate, denom)

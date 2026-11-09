@@ -188,8 +188,8 @@ describe('readLocalAccountSettingsForWrite', () => {
 
   it('leaves the file alone for an error the native bridge sent with no code', async () => {
     // React Native disklets cross the bridge as `new Error(message)` with no
-    // `code`, so "has a system code" could not tell I/O from content there,
-    // and a permission failure on an intact file reached the delete.
+    // `code`, so "has a system code" cannot tell I/O from content there, and
+    // a permission failure on an intact file would reach the delete.
     const deleted: string[] = []
     const failure = new Error('The file couldn’t be opened.')
     const account = makeFakeDiskletAccount({
@@ -254,15 +254,15 @@ describe('readLocalAccountSettingsForWrite', () => {
 })
 
 /**
- * The write side ran on a cleaner that cannot fail.
+ * The write side must not run on a cleaner that cannot fail.
  *
  * `uncleaner()` only sets a global flag and calls the cleaner, so
  * un-cleaning through `asLocalAccountSettings` — which is
- * `asMaybe(inner, () => inner({}))` — ran `asMaybe`'s `try/catch` in
- * un-cleaning mode: a settings object the published shape rejects was not
- * reported, it was replaced by the twelve defaults and stringified over
- * the user's `spendingLimits`. The read side was corrected in iteration 1
- * for the same reason; this is the same destruction by the other door.
+ * `asMaybe(inner, () => inner({}))` — would run `asMaybe`'s `try/catch` in
+ * un-cleaning mode: a settings object the published shape rejects would not
+ * be reported, it would be replaced by the twelve defaults and stringified
+ * over the user's `spendingLimits`. The read side guards the same
+ * destruction for the same reason; this is the other door.
  */
 describe('writeLocalAccountSettingsToDisk', () => {
   it('writes what it was given', async () => {
@@ -280,14 +280,14 @@ describe('writeLocalAccountSettingsToDisk', () => {
   })
 
   it('fails rather than writing the defaults for a value that is not settings', async () => {
-    // What the file-level `asMaybe` did on the write side: `uncleaner()`
-    // only sets a global flag and calls the cleaner, so un-cleaning through
-    // `asMaybe(inner, () => inner({}))` ran its `try/catch` in un-cleaning
-    // mode — each of these was *replaced* by the twelve defaults and
-    // stringified over `spendingLimits`, `passwordReminder`, `notifState`,
-    // `reviewTrigger`, `developerModeOn`, `isAccountBalanceVisible` and
-    // `tokenWarningsShown`. `[]` among them, because `asObject` accepts an
-    // array, which is why the guard is here as well as on the read.
+    // What the file-level `asMaybe` would do on the write side: un-cleaning
+    // through `asMaybe(inner, () => inner({}))` runs its `try/catch` in
+    // un-cleaning mode, so each of these would be *replaced* by the twelve
+    // defaults and stringified over `spendingLimits`, `passwordReminder`,
+    // `notifState`, `reviewTrigger`, `developerModeOn`,
+    // `isAccountBalanceVisible` and `tokenWarningsShown`. `[]` among them,
+    // because `asObject` accepts an array, which is why the guard is here as
+    // well as on the read.
     //
     // The per-field tolerance inside the shape stays: one field this
     // version cannot express still costs that field, which is what the
@@ -310,8 +310,8 @@ describe('writeLocalAccountSettingsToDisk', () => {
 describe('a field this version does not declare', () => {
   it('survives a read-modify-write', async () => {
     // A CLI and a GUI built at different versions share this file, and the
-    // CLI is published on its own now. The plain `asObject` dropped every
-    // key it did not declare on the first write.
+    // CLI is published on its own. A plain `asObject` would drop every key
+    // it did not declare on the first write.
     const written: string[] = []
     const account = makeFakeDiskletAccount({
       local: '{"spamFilterOn":true,"addedByANewerGui":{"seen":3}}',

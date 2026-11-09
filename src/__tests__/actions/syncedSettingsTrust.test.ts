@@ -36,10 +36,11 @@ const corrupt = (): Error => new SyntaxError('Unexpected end of JSON input')
 /**
  * The one write door, `updateSyncedSettings`.
  *
- * Every writer used to spread its change over a lenient read and hand the
- * whole object back, so a failed read wrote the defaults over the real file
- * on the synced repo, for every device — and a "heal" that re-read the file
- * successfully still wrote the stale, defaults-based object.
+ * It takes the change and applies it to a strict read made for the write. A
+ * writer that spread its change over a lenient read and handed the whole
+ * object back would write the defaults over the real file after a failed
+ * read, on the synced repo, for every device, and even a "heal" that re-read
+ * the file successfully would still write the stale, defaults-based object.
  */
 describe('updateSyncedSettings', () => {
   it('writes nothing when the file is present and unreadable', async () => {
@@ -61,9 +62,9 @@ describe('updateSyncedSettings', () => {
   })
 
   it('keeps the fields it was not asked to change once the file reads again', async () => {
-    // The case the old guard lost: the lenient read failed, so anything a
-    // caller built from it was the defaults. Once the file reads again, the
-    // write must land on the file — not on what the failed read produced.
+    // The lenient read fails, so anything a caller built from it is the
+    // defaults. Once the file reads again, the write must land on the file,
+    // not on what the failed read produced.
     const written: string[] = []
     const opts = { syncedError: corrupt() as Error | undefined }
     const account = makeFakeDiskletAccount({
@@ -104,11 +105,11 @@ describe('updateSyncedSettings', () => {
 
   it('keeps a file that is still not a settings object after a sync aside', async () => {
     // `asObject` accepts an array, and every field of
-    // `asSyncedAccountSettings` is `asMaybe` with its own default — so each
-    // of these used to read as a *successful* read of every default and be
-    // written back over the real file. Refusing instead left every synced
-    // setting unwritable on every device for good, since a file that has
-    // finished syncing is the same bytes everywhere. Now a sync gets its
+    // `asSyncedAccountSettings` is `asMaybe` with its own default, so each
+    // of these would otherwise read as a *successful* read of every default
+    // and be written back over the real file. Refusing would leave every
+    // synced setting unwritable on every device for good, since a file that
+    // has finished syncing is the same bytes everywhere. So a sync gets its
     // chance, and then the bytes are kept and the settings start again.
     for (const synced of ['[]', '"x"', '42', '{"countryCode":']) {
       const writes: Array<[string, string]> = []
@@ -230,16 +231,17 @@ describe('syncedSettingsAreTrusted', () => {
 })
 
 /**
- * The login-time migration, which is how the loss arrived unprompted.
+ * The login-time migration, which runs with no user action.
  *
- * Handed the login's lenient read, an unreadable file reached it as
- * `SYNCED_ACCOUNT_DEFAULTS` — `denominationSettings` `{}` and
- * `denominationSettingsOptimized` `false` — which takes the "nothing to
+ * Handed the login's lenient read, an unreadable file would reach it as
+ * `SYNCED_ACCOUNT_DEFAULTS` (`denominationSettings` `{}` and
+ * `denominationSettingsOptimized` `false`), which takes the "nothing to
  * clean, just set the flag" branch and writes the whole file out as
  * defaults. `defaultIsoFiat`, `denominationSettings`, `walletsSort`,
  * `mostRecentWallets`, `userPausedWallets`, `securityCheckedWallets`,
- * `preferredSwapPluginId` and `countryCode` all go, on the synced repo, for
- * every device — and the flag it sets means no later login retries.
+ * `preferredSwapPluginId` and `countryCode` would all go, on the synced
+ * repo, for every device, and the flag it sets means no later login
+ * retries.
  */
 describe('migrateDenominationSettings', () => {
   it('writes nothing when the file is present and unreadable', async () => {
@@ -288,9 +290,10 @@ describe('migrateDenominationSettings', () => {
 /**
  * Collections written by callers that read them earlier.
  *
- * The write door protected every field but the one being written: these
- * callers built the whole collection from a lenient read or from Redux and
- * handed it over, so a stale or empty copy replaced the file's own.
+ * The write door protects every field but the one being written, so a
+ * caller that built the whole collection from a lenient read or from Redux
+ * and handed it over would replace the file's own with a stale or empty
+ * copy. These callers change the collection as the file holds it.
  */
 describe('collection writes', () => {
   const fileWith = (

@@ -7,8 +7,8 @@ import type {
 import type { RootState } from '../types/reduxTypes'
 import { getDisplayDenom } from '../util/exchangeDenom'
 
-// `getExchangeDenom` only: `emptyEdgeDenomination` had no importer here,
-// and its own module is where the two tests that use it read it from.
+// `getExchangeDenom` only: nothing imports `emptyEdgeDenomination` from
+// here, and its own module is where the tests that use it read it from.
 export { getExchangeDenom } from '../util/exchangeDenom'
 
 /**

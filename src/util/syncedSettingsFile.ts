@@ -56,8 +56,8 @@ type DenominationSettingsSubset = ReturnType<
  * The fields of the synced settings that Node-safe code reads.
  *
  * The GUI's full `asSyncedAccountSettings` lives in `actions/SettingsActions`,
- * which imports Airship, so neither the CLI engine nor the extracted modules
- * can reach it. This is a narrow `.withRest` view of the same file with the
+ * which imports Airship, so neither the CLI engine nor the shared modules can
+ * reach it. This is a narrow `.withRest` view of the same file with the
  * same defaults — `syncedSettingsFile.test.ts` asserts the two agree, so the
  * subset cannot drift from the file the GUI writes.
  */
@@ -67,11 +67,11 @@ export const asSyncedSettingsSubset = asObject({
   autoLogoutTimeInSeconds: asMaybe(asNumber, 3600),
   defaultIsoFiat: asMaybe(asString, 'iso:USD'),
   // What units an amount is *shown* in. The GUI's export writes the display
-  // denomination into its CSV and QBO files, so an engine that only knew the
-  // exchange denomination wrote a different number for the same transaction
-  // — `AMT_ASSET=50000` with `DENOMINATION=bits` from the scene against
-  // `0.0005` and `BTC` from `edge-cli`, and QBO's `TRNAMT` carries no unit
-  // field at all to tell them apart.
+  // denomination into its CSV and QBO files, so an engine that knew only the
+  // exchange denomination would write a different number for the same
+  // transaction (`AMT_ASSET=500` with `DENOMINATION=bits` from the scene
+  // against `0.0005` and `BTC` from `edge-cli`), and QBO's `TRNAMT` carries
+  // no unit field at all to tell them apart.
   denominationSettings: asMaybe<DenominationSettingsSubset>(
     asDenominationSettingsSubset,
     () => ({})
@@ -85,16 +85,12 @@ export const asSyncedSettingsSubset = asObject({
 /**
  * The account's synced settings, with the cleaner's defaults applied.
  *
- * One reader. `readAutoLogoutSeconds` and `readDefaultIsoFiat` were the same
- * `getText` → `asMaybe(asJSON(…))` → field wrapper with an identical empty
- * `catch`, and each restated a default the cleaner already supplies — so
- * changing a default here left two call sites stale.
+ * One reader, so each default is stated once, in the cleaner.
  *
- * An absent file, or one this version cannot read, yields the defaults —
- * which is what every caller wanted from its own `catch`. A failure to read
- * a file that *is* there throws, so a caller that must not change its mind
- * on a transient failure can tell the two apart; `readSyncedSettingsOrThrow`
- * below is that caller's entry point.
+ * An absent file, or one that cannot be read, yields the defaults. A caller
+ * that must not change its mind on a transient failure uses
+ * `readSyncedSettingsOrThrow` below, which throws for a file that *is* there
+ * and cannot be read.
  */
 export async function readSyncedSettings(account: {
   disklet: { getText: (path: string) => Promise<string> }
@@ -112,20 +108,19 @@ export async function readSyncedSettings(account: {
  * The same read, letting a file that is there and unreadable out.
  *
  * The engine's auto-logout ticker re-reads this file every sweep and has a
- * `catch` whose stated job is to keep the last known window. That `catch`
- * was dead code, because `readSyncedSettings` swallows the failure itself —
- * so one unreadable read silently replaced a live `autoLogoutTimeInSeconds`
- * with the cleaner's 3600, and an account that had set `0` to disable
- * auto-logout was logged out an hour later, mid-script.
+ * `catch` whose stated job is to keep the last known window. Through
+ * `readSyncedSettings`, which swallows the failure itself, that `catch`
+ * would be dead code: one unreadable read would silently replace a live
+ * `autoLogoutTimeInSeconds` with the cleaner's 3600, and an account that had
+ * set `0` to disable auto-logout would be logged out an hour later,
+ * mid-script.
  *
- * "Unreadable" means the I/O, the decryption *and* the parse. Only the
- * first was let out at first, so the commonest shape of the failure — a
- * truncated or half-synced `Settings.json`, which reads fine and does not
- * parse — still came back as the defaults on the very path written to
- * refuse them. Every caller of this door is one that must not substitute:
- * the spam floor, an export's `defaultIsoFiat`, the denomination settings
- * and the auto-logout window. `readSyncedSettings` is the lenient door and
- * says so.
+ * "Unreadable" means the I/O, the decryption *and* the parse: the commonest
+ * shape of the failure is a truncated or half-synced `Settings.json`, which
+ * reads fine and does not parse. Every caller of this door is one that must
+ * not substitute: the spam floor, an export's `defaultIsoFiat`, the
+ * denomination settings and the auto-logout window. `readSyncedSettings` is
+ * the lenient door and says so.
  */
 export async function readSyncedSettingsOrThrow(account: {
   disklet: { getText: (path: string) => Promise<string> }
@@ -157,14 +152,13 @@ export async function readSyncedSettingsObjectOrThrow(account: {
     return {}
   }
   // A file that is there and cannot be read means one thing on both halves
-  // of this read. "As good as absent" was true of the value and false of
-  // the consequence: `asMaybe` here swallowed a truncated or half-synced
+  // of this read. An `asMaybe` here would swallow a truncated or half-synced
   // `Settings.json` into the cleaner's defaults, which is exactly what this
-  // function exists to refuse — `autoLogoutTimeInSeconds` silently became
-  // 3600 for an account that had set `0` to disable it, and
-  // `engine-sessions` reported the substituted value as though the user had
-  // chosen it, on the path written to prevent that. The tolerance belongs to
-  // `readSyncedSettings`, which has a stated fallback.
+  // function exists to refuse: `autoLogoutTimeInSeconds` would silently
+  // become 3600 for an account that had set `0` to disable it, and
+  // `engine-sessions` would report the substituted value as though the user
+  // had chosen it. The tolerance belongs to `readSyncedSettings`, which has
+  // a stated fallback.
   //
   // `asJsonObject` before any cleaner, because `asObject` accepts an array
   // — so `[]`, which is what a half-written file is likeliest to be when it

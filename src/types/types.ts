@@ -235,22 +235,21 @@ export const asReviewTriggerData = asObject({
  *
  * Exported for `readLocalAccountSettingsFromDisk`, the strict reader a
  * read-modify-write uses. `asLocalAccountSettings` below wraps this in
- * `asMaybe`, so the only thing that could fail there was `asJSON`'s parse:
- * a `Settings.json` that is valid JSON and not a settings object — `[]`,
- * which `asObject` accepts, `"x"`, `42` — came back as all twelve
- * defaults and was then written over the user's `spendingLimits`,
- * `passwordReminder`, `notifState`, `reviewTrigger`, `developerModeOn`,
- * `isAccountBalanceVisible` and `tokenWarningsShown`, which is the exact
- * destruction that reader and its `trusted` flag exist to prevent. The
- * per-field `asMaybe` tolerance inside stays: one unreadable *field* is
- * still answered with that field's default.
+ * `asMaybe`, so it cannot fail: a `Settings.json` that is valid JSON and not
+ * a settings object, such as `[]` (which `asObject` accepts), `"x"` or `42`,
+ * comes back from it as the defaults, which a write-back would put over the
+ * user's `spendingLimits`, `passwordReminder`, `notifState`,
+ * `reviewTrigger`, `developerModeOn`, `isAccountBalanceVisible` and
+ * `tokenWarningsShown`, which is the exact destruction that reader and its
+ * `trusted` flag exist to prevent. The per-field `asMaybe` tolerance inside
+ * stays: one unreadable *field* is still answered with that field's default.
  *
  * `.withRest`, so a key this version does not declare survives a
  * read-modify-write. Without it, one `local-settings --spam-filter-on` from
- * a CLI built at another version than the GUI dropped every field the GUI
- * had added since — and the CLI is now published on its own, so the two no
- * longer ship together. `asSyncedSettingsSubset` keeps unknown fields for
- * the same reason, and says so in its test.
+ * a CLI built at another version than the GUI would drop every field the
+ * GUI has added since, and the CLI is published on its own, so the two do
+ * not ship together. `asSyncedSettingsSubset` keeps unknown fields for the
+ * same reason, and says so in its test.
  */
 export const asLocalAccountSettingsInner = asObject({
   cameraScamWarningShown: asMaybe(asBoolean, false),
