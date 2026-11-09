@@ -898,6 +898,37 @@ describe('the staged flow', () => {
     expect(calls.broadcastTx[1].txid).toBe('tx-signed')
   })
 
+  it('records a send that reached the network despite BROADCAST_FAILED', async () => {
+    // The broadcast failed and the transaction is on the chain anyway, so a
+    // re-send would be refused as already known. The failure names the way
+    // to record it, and save-tx takes it without a second broadcast.
+    const objects = new ObjectHandleStore()
+    const { wallet, calls } = makeWallet({ broadcastFailsOnce: true })
+    const staged: any = await makeSpend.handler(
+      makeCtx({ objects, wallets: [wallet], body: body() })
+    )
+    const ctxFor = (extra: Record<string, unknown> = {}): any =>
+      makeCtx({
+        objects,
+        wallets: [wallet],
+        body: { objectId: staged.objectId, ...extra },
+        warnings: []
+      })
+    await signTx.handler(ctxFor())
+    const failure = await thrown(
+      async () => await broadcastTx.handler(ctxFor())
+    )
+    expect(failure.code).toBe('BROADCAST_FAILED')
+    expect(failure.message).toContain(
+      `save-tx ${staged.objectId} --broadcast-elsewhere`
+    )
+    const saved: any = await saveTx.handler(
+      ctxFor({ broadcastElsewhere: true })
+    )
+    expect(saved.saved).toBe(true)
+    expect(calls.broadcastTx).toHaveLength(1)
+  })
+
   it('will not save a bump nobody has broadcast', async () => {
     // `broadcast-tx` marks the handle sent, then `accelerate` puts an unsent
     // replacement into the same handle. The mark has to go with the
