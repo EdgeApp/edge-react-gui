@@ -10,11 +10,10 @@ import type { FillTxsFiatResult } from '../util/fillTxsFiat'
 import { fillTxsFiat } from '../util/fillTxsFiat'
 
 // No re-exports of the Node-safe exporters. This module is a Redux thunk,
-// so re-exporting them made it a second public door to code that exists
-// precisely so it can load without react-native — and two of the five had
-// no consumer at all. Callers import from `util/txExport` directly, which
-// is what `CategoriesActions.ts` says about its own extraction and what the
-// CLI and the jest suite already did.
+// so re-exporting them would make it a second public door to code that
+// exists precisely so it can load without react-native. Callers import from
+// `util/txExport` directly, as `CategoriesActions.ts` says of its own
+// extraction.
 
 /**
  * Price the transactions that carry no fiat amount.
@@ -27,12 +26,10 @@ import { fillTxsFiat } from '../util/fillTxsFiat'
  * caller can raise `--timeout`; the scene reports the count, which it can
  * only do if the count reaches it.
  *
- * The budget is scaled to the fill, which is the other half of the same
- * fix. The engine passes the client's own deadline; this side had no
- * deadline to pass and so took the fixed `RATE_CHAIN_TIMEOUT_MS` for every
- * size of fill — 90 s shared across the 102 passes a 10,000-transaction
- * export takes, so a restored wallet's full history hit the ceiling every
- * single time.
+ * The budget is scaled to the fill. The engine passes the client's own
+ * deadline; this side has none to pass, and the fixed
+ * `RATE_CHAIN_TIMEOUT_MS` is one 90 s budget for every size of fill, which a
+ * restored wallet's full history can exhaust.
  */
 export function updateTxsFiat(
   wallet: EdgeCurrencyWallet,

@@ -28,9 +28,9 @@ export type TxExportFormat = (typeof TX_EXPORT_FORMATS)[number]
 /**
  * One export format.
  *
- * A cleaner rather than `includes(part as TxExportFormat)`: the cast was
- * what made that check load-bearing, so a new format added to
- * `TX_EXPORT_FORMATS` and forgotten here would have been accepted silently.
+ * A cleaner rather than `includes(part as TxExportFormat)`: the cast would
+ * make that check load-bearing, so a new format added to `TX_EXPORT_FORMATS`
+ * and forgotten here would be accepted silently.
  */
 export const asTxExportFormat = asValue<TxExportFormat[]>(...TX_EXPORT_FORMATS)
 
@@ -46,8 +46,7 @@ export function parseExportFormats(raw: string | undefined): TxExportFormat[] {
     .filter(part => part !== '')
   const formats: TxExportFormat[] = []
   for (const part of parts) {
-    // Reports the field and the legal values, where the hand-rolled check
-    // said only `Unknown exportFormat "x"`.
+    // The cleaner's error names the legal values as well as the token it got.
     const format = asTxExportFormat(part)
     if (!formats.includes(format)) formats.push(format)
   }
@@ -57,16 +56,9 @@ export function parseExportFormats(raw: string | undefined): TxExportFormat[] {
 /**
  * What each format is called on disk, and as a MIME type.
  *
- * Three copies of this used to exist and none was exhaustive: the export
- * scene appended `.csv`, `.qbo` and `.bitwave.csv` with a `mimeType` in three
- * `if` blocks, the CLI's `exportFilePath` stripped the same three suffixes in
- * an `else if` chain and re-added them from two `if`s and a trailing
- * `return`, and the `get-transactions` route published a fourth statement of
- * them as prose. A fourth entry in `TX_EXPORT_FORMATS` was accepted
- * everywhere and then written with a `.csv` name by the CLI while the scene
- * wrote no file for it at all — which is the class this module's own
- * docblock warns about. Keyed by `TxExportFormat`, so adding a format
- * without a name here does not compile.
+ * The export scene and the CLI's `exportFilePath` both read these, so
+ * neither keeps its own list of suffixes. Keyed by `TxExportFormat`, so
+ * adding a format without a name here does not compile.
  */
 export const TX_EXPORT_FORMAT_INFO: Record<
   TxExportFormat,
@@ -98,11 +90,10 @@ export const TX_EXPORT_SUFFIXES: string[] = Object.values(TX_EXPORT_FORMAT_INFO)
 /**
  * One rendered export file, as a cleaner.
  *
- * The client declared the same wire shape a second time in
- * `clientResponses.ts` for the one response it *acts on* — writing each
- * `contents` to a path built from `format` on the user's disk — so a field
- * added here would have been stripped there with nothing to notice. Both
- * halves now read this declaration.
+ * Both halves read this declaration, including the client's
+ * `clientResponses.ts`, for the one response it *acts on*: writing each
+ * `contents` to a path built from `format` on the user's disk. A field added
+ * here is therefore not stripped there.
  */
 export const asTxExportFile = asObject({
   format: asTxExportFormat,
@@ -116,11 +107,10 @@ type TxExportFile = ReturnType<typeof asTxExportFile>
  *
  * A stored `exchangeAmount` is what the user typed on Transaction Details,
  * which saves it positive, while a fill computes `rate × nativeAmount`,
- * negative for a send. Keeping stored amounts (develop's spread dropped
- * them) made one export mix the two: two −1 BTC sends at 60,000, one with a
- * user-entered 50,000, came out as `50000` and `-60000`, and the edited row
- * alone took `getTransferTx`'s fee split. Each value takes the sign of
- * `nativeAmount` here, before any format sees it.
+ * negative for a send. Kept as they are, one export would mix the two: two
+ * −1 BTC sends at 60,000, one with a user-entered 50,000, would come out as
+ * `50000` and `-60000`. Each value takes the sign of `nativeAmount` here,
+ * before any format sees it.
  */
 function withFiatSign(tx: EdgeTransaction, isoFiat: string): EdgeTransaction {
   const fiat = tx.metadata?.exchangeAmount?.[isoFiat]
@@ -139,13 +129,12 @@ function withFiatSign(tx: EdgeTransaction, isoFiat: string): EdgeTransaction {
 /**
  * Render a set of formats from one set of resolved values.
  *
- * Which of the resolved values each formatter gets was written twice — once
- * in `TransactionsExportScene.handleSubmit` and once in the
- * `get-transactions` handler — and four rounds of review found the two
- * disagreeing about it: the fiat column, the CSV/QBO denomination, the
- * Bitwave denomination and the `DENOMINATION` name, each fixed by editing
- * both dispatches back into agreement. Nothing could compare them: the scene
- * component is not exported, so no test can reach its `handleSubmit`.
+ * One dispatch for `TransactionsExportScene.handleSubmit` and the
+ * `get-transactions` handler, so the two cannot disagree about which
+ * resolved value each formatter gets: the fiat column, the CSV/QBO
+ * denomination, the Bitwave denomination and the `DENOMINATION` name. The
+ * scene component is not exported, so no test can reach its `handleSubmit`
+ * to compare a second copy there.
  *
  * The three formats genuinely want different denominations. CSV and QBO
  * carry the amount beside a unit — CSV in its `DENOMINATION` column, QBO
@@ -155,8 +144,7 @@ function withFiatSign(tx: EdgeTransaction, isoFiat: string): EdgeTransaction {
  * `50000 BTC` for 0.0005 BTC.
  *
  * The `switch` is exhaustive with a `never` default, so a fourth format
- * cannot be half-wired: it used to fall into the engine's Bitwave branch and
- * dereference `bitwaveAccountId!` as `undefined`.
+ * cannot be half-wired.
  */
 export async function buildExportFiles(opts: {
   formats: TxExportFormat[]

@@ -188,13 +188,12 @@ test('export CSV matches reference data', function () {
 
 test('export CSV labels a token with its own denomination', function () {
   // The column an accounting importer uses to disambiguate `AMT_ASSET`.
-  // The scene used to derive it by matching the multiplier it was handed
-  // against `wallet.currencyInfo.denominations` — the *chain's* list — so
-  // every 18-decimal ERC-20 came out as `CURRENCY_CODE=DAI` with
-  // `DENOMINATION=ETH`, and a 6-decimal token such as USDC matched nothing
-  // and got `DENOMINATION=''`. Both halves now take the denomination they
-  // were given, so the scene and `edge-cli get-transactions` write the same
-  // label for the same wallet, token and range.
+  // The export writes the denomination it is given rather than matching the
+  // multiplier against `wallet.currencyInfo.denominations`, the *chain's*
+  // list, which would label every 18-decimal ERC-20 `DENOMINATION=ETH` and
+  // match nothing for a 6-decimal token such as USDC. The scene and
+  // `edge-cli get-transactions` both pass the denomination they were given,
+  // so they write the same label for the same wallet, token and range.
   const out = exportTransactionsToCSVInner(
     [...edgeTxs],
     'DAI',
@@ -231,10 +230,9 @@ test('export QBO keeps its declared charset', function () {
   // The header says `ENCODING:USASCII` / `CHARSET:1252`, which is what
   // accounting importers expect, so the bytes have to match it. A payee or
   // memo holds anything a dapp, `--metadata` or the engine's localized prose
-  // puts there, and those were previously emitted raw under an ASCII
-  // declaration. The alternative considered — declaring `ENCODING:UNICODE` —
-  // changed the format on 100% of exports and is not unambiguously UTF-8 in
-  // OFX 1.x.
+  // puts there, so everything outside printable ASCII is escaped as a
+  // numeric reference. Declaring `ENCODING:UNICODE` instead would change the
+  // format of every export and is not unambiguously UTF-8 in OFX 1.x.
   const out = exportTransactionsToQBO(
     [
       {
@@ -264,12 +262,12 @@ test('export QBO keeps its declared charset', function () {
 test('export QBO escapes characters outside the BMP', function () {
   // Every character in the case above is BMP, so all of them survive a
   // pattern that walks UTF-16 code units. An emoji does not: without the `u`
-  // flag `codePointAt(0)` saw half a surrogate pair and 🍕 came out as
+  // flag `codePointAt(0)` sees half a surrogate pair and 🍕 comes out as
   // `&#55356;&#57173;`, two lone surrogates, which are not characters in
-  // SGML, XML or OFX — so the promise that an importer can recover the
-  // original was false for exactly the inputs the case above lists. An emoji
-  // in a payee or memo is ordinary: a dapp sets it through `edgeProvider`,
-  // `--metadata` takes any string, and the notes field is free text.
+  // SGML, XML or OFX, so an importer could not recover the original. An
+  // emoji in a payee or memo is ordinary: a dapp sets it through
+  // `edgeProvider`, `--metadata` takes any string, and the notes field is
+  // free text.
   const out = exportTransactionsToQBO(
     [
       {

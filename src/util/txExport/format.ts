@@ -37,11 +37,11 @@ function padZero(val: string): string {
  *
  * The `u` flag is what makes that last sentence true outside the BMP. Without
  * it the pattern matches one UTF-16 code unit at a time, so `codePointAt(0)`
- * saw half a surrogate pair: `Tip 🍕` came out as `Tip &#55356;&#57173;`,
- * two lone surrogates, which are not characters in SGML, XML or OFX, so no
- * importer can turn them back. An emoji in a payee or memo is ordinary —
- * a dapp sets it through `edgeProvider`, the CLI's `--metadata` takes any
- * string, and the GUI's notes field is free text.
+ * would see half a surrogate pair: `Tip 🍕` would come out as
+ * `Tip &#55356;&#57173;`, two lone surrogates, which are not characters in
+ * SGML, XML or OFX, so no importer could turn them back. An emoji in a payee
+ * or memo is ordinary — a dapp sets it through `edgeProvider`, the CLI's
+ * `--metadata` takes any string, and the GUI's notes field is free text.
  */
 function escapeOFXString(str: string): string {
   str = str.replace(/&/g, '&amp;')
@@ -172,12 +172,12 @@ export function getTransferTx(
     edgeTransaction.metadata?.exchangeAmount?.[fiatCurrencyCode] ?? 0
 
   // Any sign: `buildExportFiles` gives every fiat value its transaction's
-  // sign, so a send's is negative, and `> 0` repriced only hand-edited rows
-  // — every priced transfer kept its whole amount, fee included, on the
-  // transfer row while the fee row carried 0. The fee row is a debit, so its
-  // fiat is the rate times its own negative amount, not an absolute value:
-  // a positive fee beside a negative transfer put the fiat total out by
-  // twice the fee.
+  // sign, so a send's is negative, and a `> 0` test would reprice only
+  // hand-edited rows, leaving every priced transfer's whole amount, fee
+  // included, on the transfer row while the fee row carries 0. The fee row
+  // is a debit, so its fiat is the rate times its own negative amount, not
+  // an absolute value: a positive fee beside a negative transfer would put
+  // the fiat total out by twice the fee.
   if (amountFiat !== 0) {
     const exchangeRate: string = div(
       amountFiat.toString(),
@@ -278,18 +278,10 @@ export function exportTransactionsToQBO(
     STMTTRN.push(use)
   }
 
-  // `USASCII`/`1252`, as the app has always written, and `escapeOFXString`
-  // now makes the declaration true instead of the header being changed to
-  // match the bytes.
-  //
-  // The defect was narrow: only a file carrying a non-ASCII payee or memo
-  // was ever mis-described, and the engine's localized prose made that
-  // reachable. Moving to `ENCODING:UNICODE` changed the format on 100% of
-  // exports, including the ASCII-only majority, inside a commit whose stated
-  // scope is a Node-safety extraction with no behaviour change — and OFX 1.x
-  // `UNICODE` is not unambiguously UTF-8 (readers have taken it as UCS-2),
-  // so an importer that honours the declaration could mis-decode the whole
-  // file where before it garbled only the non-ASCII characters.
+  // `USASCII`/`1252`, and `escapeOFXString` keeps every byte inside that
+  // declaration, so the header does not change to match the bytes:
+  // `ENCODING:UNICODE` would change the format of every export, including
+  // the ASCII-only majority.
   const header = {
     OFXHEADER: '100',
     DATA: 'OFXSGML',

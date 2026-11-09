@@ -49,9 +49,9 @@ export async function readExportTxInfoMap(
   // `asJSON`, so one cleaner owns both the parse and the shape — and
   // `asMaybe` per record, so one unreadable asset entry costs that entry
   // rather than the Export button. A whole file that will not parse is also
-  // tolerated, because nothing can be recovered from it and the GUI scene
-  // recovered by writing a fresh map; a genuine read or decryption failure
-  // still throws, out of `getText`, and the caller decides.
+  // tolerated, because nothing can be recovered from it and the next save
+  // writes a fresh map; a genuine read or decryption failure still throws,
+  // out of `getText`, and the caller decides.
   const map = asMaybe(asStoredExportTxInfoMap)(text) ?? {}
   const out: ExportTxInfoMap = {}
   for (const [key, value] of Object.entries(map)) {

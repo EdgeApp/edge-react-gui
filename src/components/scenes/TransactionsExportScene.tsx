@@ -76,18 +76,15 @@ interface StateProps {
   /**
    * The display denomination, as one prop rather than two.
    *
-   * `mapStateToProps` called `selectDisplayDenom` twice with identical
-   * arguments, once for `.multiplier` and once for `.name`, so one
-   * denomination arrived as two props and the lookup ran twice on every
-   * store change.
+   * One `selectDisplayDenom` lookup per store change supplies both the
+   * multiplier and the name.
    *
    * The *name* matters on its own and is not derived from the multiplier:
-   * `exportTransactionsToCSV` used to match it against
-   * `wallet.currencyInfo.denominations`, which is the *chain's* list. Every
-   * 18-decimal ERC-20 matched ETH there, so a DAI export said
-   * `CURRENCY_CODE=DAI` with `DENOMINATION=ETH`, and a 6-decimal token
-   * matched nothing and got `''`. The engine passes the name it resolved;
-   * this does the same.
+   * looking it up in `wallet.currencyInfo.denominations`, the *chain's*
+   * list, would match every 18-decimal ERC-20 to ETH, so a DAI export would
+   * say `CURRENCY_CODE=DAI` with `DENOMINATION=ETH`, and a 6-decimal token
+   * would match nothing and get `''`. The engine passes the name it
+   * resolved; this does the same.
    */
   displayDenom: EdgeDenomination
 }
@@ -381,9 +378,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     }
 
     // `undefined` until the modal answers, and `undefined` again if it is
-    // cancelled: the `?? ''` this replaces threw the distinction away, and
-    // `''` then fell back to the saved id — so cancelling meant "use the old
-    // one" on the field Bitwave attributes transactions by.
+    // cancelled, kept apart from `''` so a cancel never falls back to the
+    // saved id: cancelling would then mean "use the old one" on the field
+    // Bitwave attributes transactions by.
     let accountId: string | undefined
     const fileAccountId = exportTxInfo?.bitwaveAccountId ?? ''
 
@@ -415,8 +412,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<
 
     // Every decision that does not need the transactions, made before they
     // are read: the refusals below cost nothing but a toast, where deciding
-    // after the rate fetch made the user wait minutes for one. `plan.ts`
-    // states why each one differs from the engine's equivalent refusal.
+    // after the rate fetch would make the user wait minutes for one.
+    // `plan.ts` states how each one compares with the engine's equivalent
+    // refusal.
     const plan = planTxExport({
       wantCsv: isExportCsv,
       wantQbo: isExportQbo,
@@ -426,8 +424,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     })
 
     // The id is only part of the comparison when it was asked for; otherwise
-    // the check fired on every CSV-only export of an account that had one
-    // saved, and the write below then cleared it.
+    // the check would fire on every CSV-only export of an account that has
+    // one saved.
     const savedAccountId = plan.savedAccountIdPatch
     const idChanged =
       savedAccountId != null &&
@@ -451,11 +449,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<
         // Saving the preferences is a side errand, not a precondition.
         // `mergeExportTxInfo` refuses to write over a file it could not read
         // — rightly, since that would lose every asset's saved record — and
-        // an unguarded call let that refusal out of `handleSubmit`, into
-        // `usePendingPress`'s `showError`: the user got an error drop-down
-        // and no CSV, QBO or Bitwave file at all, because this runs before
-        // `getTransactions`. The read above tolerates the same failure for
-        // the same reason.
+        // this runs before `getTransactions`, so the refusal let out of
+        // `handleSubmit` would reach `usePendingPress`'s `showError` and
+        // leave the user with an error drop-down and no CSV, QBO or Bitwave
+        // file at all. The read above tolerates the same failure for the
+        // same reason.
         console.log(
           `Could not save ${EXPORT_TX_INFO_FILE} ${errorMessage(
             error
@@ -507,15 +505,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const txs = rawTxs.map(tx => {
       const { mergedData } = getTxActionDisplayInfo(tx, account, sourceWallet)
       // Not `{ ...tx, metadata: mergedData }`: `mergedData` carries only
-      // `name`, `category` and `notes`, so the spread replaced `tx.metadata`
-      // and dropped `exchangeAmount` — the fiat figure the user may have
-      // edited by hand on the transaction details scene. `updateTxsFiatDispatch`
-      // below then saw `amountFiat === 0`, re-queried the rates server for
-      // that date and wrote the market rate instead, or `0` for every
-      // transaction it could not price. `fillTxMetadataForDisplay` overlays
-      // the three fields this derivation owns and keeps the rest, which is
-      // what the CLI's `get-transactions --export-format` already does, so
-      // the two exports of one wallet and range agree.
+      // `name`, `category` and `notes`, so the spread would replace
+      // `tx.metadata` and drop `exchangeAmount`, the fiat figure the user may
+      // have edited by hand on the transaction details scene, and
+      // `updateTxsFiatDispatch` below would then write the market rate
+      // instead, or `0` for every transaction it could not price.
+      // `fillTxMetadataForDisplay` overlays the three fields this derivation
+      // owns and keeps the rest, as `get-transactions --export-format` does
+      // in the CLI, so the two exports of one wallet and range agree.
       return fillTxMetadataForDisplay(tx, mergedData)
     })
 
@@ -532,13 +529,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<
     const warnings =
       ratesWarning == null ? plan.warnings : [...plan.warnings, ratesWarning]
 
-    // One dispatch, shared with `get-transactions --export-format`: which of
-    // the resolved values each formatter gets was written out here and again
-    // in the engine handler, and four rounds of review found the two
-    // disagreeing about it — the fiat column, the CSV/QBO denomination, the
-    // Bitwave denomination, the `DENOMINATION` name. Nothing could compare
-    // them, because this component is not exported and no test can reach
-    // `handleSubmit`.
+    // One dispatch, shared with `get-transactions --export-format`, decides
+    // which of the resolved values each formatter gets: the fiat column, the
+    // CSV/QBO denomination, the Bitwave denomination, the `DENOMINATION`
+    // name. It lives outside this component, which is not exported, so the
+    // two exports agree and a test can reach it.
     //
     // CSV is always rendered, selected or not: the non-string result appears
     // to be a bug in the core, which we are relying on to determine if the

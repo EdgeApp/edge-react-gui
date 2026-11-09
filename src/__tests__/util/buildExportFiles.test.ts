@@ -10,18 +10,11 @@ import {
 /**
  * Which resolved value each export format gets.
  *
- * This dispatch was written twice — `TransactionsExportScene.handleSubmit`
- * had three `if (isExportX)` blocks and the `get-transactions` handler an
- * `if/else if/else` — and four rounds of review found the two disagreeing
- * about it: the fiat column, the CSV/QBO denomination, the Bitwave
- * denomination, the `DENOMINATION` name. Each was fixed by editing both
- * dispatches back into agreement, and nothing could compare them:
- * `TransactionsExportSceneComponent` is not exported, so no test can reach
- * its `handleSubmit`, and `TransactionExportActions.test.ts`,
- * `displayDenom.test.ts` and `getTransactions.test.ts` all drive the
- * formatters or the engine handler rather than the choice of argument.
+ * `TransactionsExportScene` and the `get-transactions` handler both export
+ * through this one dispatch, so it decides for both the fiat column, the
+ * CSV/QBO denomination, the Bitwave denomination and the `DENOMINATION` name.
  *
- * So the assertion that matters is the denominations: CSV and QBO carry the
+ * The assertion that matters is the denominations: CSV and QBO carry the
  * amount in the user's *display* units, beside a unit field (explicit in
  * CSV's `DENOMINATION`, implicit in QBO), while Bitwave's `amount` has to be
  * in the *exchange* denomination, because `amountTicker` is the asset's own
@@ -88,7 +81,7 @@ describe('buildExportFiles', () => {
     const { csv } = await build(['csv'])
     // 50000 native over a multiplier of 100 is 500 bits, which is also what
     // the GUI's wallet row shows for an account set to "bits". With the
-    // exchange multiplier it read 0.0005.
+    // exchange multiplier it would read 0.0005.
     expect(csv).toContain('500')
     expect(csv).not.toContain('0.0005')
     expect(csv).toContain('bits')
@@ -113,9 +106,9 @@ describe('buildExportFiles', () => {
   })
 
   it('refuses a bitwave export with no account id', async () => {
-    // Both callers check first, so this guard is what keeps the `!` out of
-    // the one place the id is spent — the engine's `else` arm used to pass
-    // `bitwaveAccountId!` as `undefined` for any format it did not name.
+    // Both callers check first, so this guard is what keeps a `!` out of the
+    // one place the id is spent: an arm passing `bitwaveAccountId!` would
+    // send `undefined` for any format its caller did not check.
     await expect(
       buildExportFiles({
         formats: ['bitwave'],
@@ -142,8 +135,8 @@ describe('TX_EXPORT_FORMAT_INFO', () => {
 
   it('orders the suffixes so the longest matches first', () => {
     // `exportFilePath` strips a suffix by the first match, and
-    // `.bitwave.csv` ends with `.csv`: stripping in declaration order left
-    // `name.bitwave` as the stem.
+    // `.bitwave.csv` ends with `.csv`: stripping in declaration order would
+    // leave `name.bitwave` as the stem.
     expect(TX_EXPORT_SUFFIXES[0]).toBe('.bitwave.csv')
     for (let i = 1; i < TX_EXPORT_SUFFIXES.length; ++i) {
       expect(TX_EXPORT_SUFFIXES[i - 1].length).toBeGreaterThanOrEqual(
