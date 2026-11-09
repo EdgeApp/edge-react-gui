@@ -41,9 +41,9 @@ const EXCHANGE_INFO_TTL_MS = 5 * 60 * 1000
  * The real source: the public rollup, fetched again once the last one read
  * is older than the app's interval.
  *
- * A fetch that fails keeps the last `exchangeInfo` read, or the defaults if
- * there is none, and is tried again on the next quote. `fetchPublicRollup`
- * reports its own failures.
+ * A fetch that fails, or a rollup without an `exchangeInfo`, keeps the last
+ * one read, or the defaults if there is none, and is tried again on the next
+ * quote. `fetchPublicRollup` reports its own failures.
  */
 export function makeRollupExchangeInfo(
   report: Pick<EngineReporter, 'warn'>
@@ -60,8 +60,17 @@ export function makeRollupExchangeInfo(
       | undefined
     // A rollup that arrived is a new object, so the same one means none did.
     if (raw === before) return current?.info ?? asExchangeInfo({})
+    // As the app does: its cleaner refuses a missing object, so it keeps the
+    // last one. Read as `{}`, a rollup without one turned every remote
+    // disable off until the next rollup.
+    if (raw?.exchangeInfo == null) {
+      report.warn(
+        'The info rollup carries no exchangeInfo, so swap quotes use the last one read'
+      )
+      return current?.info ?? asExchangeInfo({})
+    }
     try {
-      const info = asExchangeInfo(raw?.exchangeInfo ?? {})
+      const info = asExchangeInfo(raw.exchangeInfo)
       current = { info, at: Date.now() }
       return info
     } catch (error: unknown) {
