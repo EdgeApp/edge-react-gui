@@ -7,6 +7,7 @@
 ## 4.53.0 (staging)
 
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- added: Banxa VietQR payment method for VND buys
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
