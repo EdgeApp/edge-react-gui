@@ -566,7 +566,9 @@
         "If the login already completed and a session exists, that session is force-logged-out too, so cancelling cannot leave an orphan visible in `engine-sessions`."
       ],
       "errors": [
-        "PENDING_LOGIN_NOT_FOUND"
+        "PENDING_LOGIN_NOT_FOUND",
+        "OBJECT_EXPIRED",
+        "OBJECT_KIND_MISMATCH"
       ]
     },
     "change-enabled-token-ids": {

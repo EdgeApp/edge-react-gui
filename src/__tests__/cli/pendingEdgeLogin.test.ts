@@ -2,7 +2,12 @@ import { describe, expect, it } from '@jest/globals'
 
 import { ObjectHandleStore } from '../../cli/engine/objectHandles'
 import type { RouteContext } from '../../cli/engine/router'
-import { pollEdgeLogin, requestEdgeLogin } from '../../cli/engine/routes/login'
+import {
+  cancelEdgeLogin,
+  pollEdgeLogin,
+  requestEdgeLogin
+} from '../../cli/engine/routes/login'
+import { thrown } from '../../util/fake/thrownEngineError'
 
 /**
  * Who owns the session a QR login creates.
@@ -152,4 +157,49 @@ describe('a pending edge login that nobody claimed', () => {
     expect(h.loggedOut).toStrictEqual([])
     expect(h.liveSessions.has('sess_1')).toBe(true)
   })
+})
+
+/**
+ * The two routes that take a `pendingId` look it up the same way: only an id
+ * the engine does not hold becomes `PENDING_LOGIN_NOT_FOUND`, and every other
+ * failure keeps its own code, or reaches the server as the fault it is.
+ */
+describe('a pendingId the handle store refuses', () => {
+  const routes = [
+    ['poll-edge-login', pollEdgeLogin],
+    ['cancel-request', cancelEdgeLogin]
+  ] as const
+
+  for (const [command, route] of routes) {
+    it(`${command} answers PENDING_LOGIN_NOT_FOUND for an unknown id`, async () => {
+      const h = makeHarness()
+      h.ctx.params.pendingId = 'pending_unknown'
+      expect(
+        await thrown(async () => await route.handler(h.ctx as never))
+      ).toMatchObject({ code: 'PENDING_LOGIN_NOT_FOUND', status: 404 })
+    })
+
+    it(`${command} keeps OBJECT_KIND_MISMATCH for another kind of handle`, async () => {
+      const h = makeHarness()
+      const { objectId } = h.objects.create({
+        kind: 'transaction',
+        prefix: 'tx_',
+        value: { txid: 'a' }
+      })
+      h.ctx.params.pendingId = objectId
+      expect(
+        await thrown(async () => await route.handler(h.ctx as never))
+      ).toMatchObject({ code: 'OBJECT_KIND_MISMATCH', status: 400 })
+    })
+
+    it(`${command} passes a handle store fault through`, async () => {
+      const h = makeHarness()
+      const fault = new TypeError('handle store fault')
+      h.objects.get = () => {
+        throw fault
+      }
+      h.ctx.params.pendingId = 'pending_any'
+      await expect(route.handler(h.ctx as never)).rejects.toBe(fault)
+    })
+  }
 })
