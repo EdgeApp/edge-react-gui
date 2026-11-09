@@ -2177,7 +2177,7 @@
             "description": "No content."
           },
           "default": {
-            "description": "PENDING_LOGIN_NOT_FOUND",
+            "description": "PENDING_LOGIN_NOT_FOUND, OBJECT_EXPIRED, OBJECT_KIND_MISMATCH",
             "content": {
               "application/json": {
                 "schema": {
