@@ -1,19 +1,18 @@
 /**
  * The two decisions an export makes before it renders anything.
  *
- * Both used to live inline in `TransactionsExportScene.handleSubmit`, which
- * no test can reach — the component is not exported — so the GUI half of the
- * export had the engine's two refusals written a second time with nothing
- * comparing them. The divergence that matters is deliberate and is stated
- * here rather than in one of the two call sites:
+ * Here rather than inline in `TransactionsExportScene.handleSubmit`, which
+ * no test can reach because the component is not exported, so the GUI half
+ * of the export's refusals can be tested. The divergence that matters is
+ * deliberate and is stated here rather than in one of the two call sites:
  *
  * - **A missing Bitwave account id.** `get-transactions` answers `400
  *   MISSING_BITWAVE_ACCOUNT_ID`, because a REST caller asked for exactly the
  *   formats it named and a file it did not ask for is worse than an error.
  *   The scene drops the format and says so, because the user also ticked CSV
- *   and QBO in the same modal and `buildExportFiles` throwing took all three
- *   away after the whole rate fetch had already run. A cancelled id prompt
- *   is a missing id, not a reason to reuse the saved one.
+ *   and QBO in the same modal and `buildExportFiles` throwing would take all
+ *   three away after the whole rate fetch had already run. A cancelled id
+ *   prompt is a missing id, not a reason to reuse the saved one.
  * - **Settings that could not be read.** Both halves refuse. The engine's
  *   read throws, and this one reports `settingsUntrusted` with no formats:
  *   `denominationSettings` and `defaultIsoFiat` decide every number and
@@ -22,11 +21,11 @@
  * - **Rates the queue gave up on.** `get-transactions` refuses with `503
  *   RATES_INCOMPLETE` and names `--timeout`, which really does raise the
  *   queue's budget. The scene has no such control to offer, and refusing
- *   made a full-history export unobtainable: the budget is shared across the
- *   whole fill, so a restored wallet with nothing priced hit the ceiling
- *   every time and got no file at all, where the old code wrote one. So it
- *   writes the files and reports the count — a `0` fiat amount the user has
- *   been told about is not the silent one the refusal exists to prevent.
+ *   would make a full-history export unobtainable: the budget is shared
+ *   across the whole fill, so a restored wallet with nothing priced would
+ *   hit the ceiling every time and get no file at all. So it writes the
+ *   files and reports the count — a `0` fiat amount the user has been told
+ *   about is not the silent one the refusal exists to prevent.
  */
 import type { FillTxsFiatResult } from '../fillTxsFiat'
 import type { TxExportFormat } from './index'
@@ -49,9 +48,8 @@ export interface TxExportPlan {
    *
    * `mergeExportTxInfo` reads every field as `patch.x ?? prev?.x`, so
    * `undefined` keeps the old value and `''` — not being nullish — replaces
-   * it. That is why a cleared field could not be cleared: the scene turned
-   * every empty answer into `undefined`, so the old id survived a user
-   * deliberately emptying the box.
+   * it. Turning an empty answer into `undefined` would keep the old id after
+   * a user deliberately emptied the box.
    */
   savedAccountIdPatch: string | undefined
   warnings: TxExportWarning[]
@@ -63,13 +61,14 @@ export interface TxExportPlan {
  *
  * Before, because both refusals depend only on what the scene already has
  * when Export is pressed, and the rate fetch behind them can take minutes:
- * deciding afterwards made the user wait through the whole fill, priced in
- * a fiat the plan then threw away, to be told no file would be written.
- * The one judgement that needs the fill is `ratesIncompleteWarning` below.
+ * deciding afterwards would make the user wait through the whole fill,
+ * priced in a fiat the plan then throws away, to be told no file would be
+ * written. The one judgement that needs the fill is `ratesIncompleteWarning`
+ * below.
  *
- * CSV is always rendered whether or not it was ticked: `buildExportFiles`
- * relies on it to decide whether the date range is empty, and that check has
- * to run for every combination the user picked.
+ * CSV is always rendered whether or not it was ticked: the scene relies on
+ * it to decide whether the date range is empty, and that check has to run
+ * for every combination the user picked.
  */
 export function planTxExport(opts: {
   wantCsv: boolean
@@ -81,12 +80,11 @@ export function planTxExport(opts: {
    *
    * Three states rather than one string, because the modal is *pre-filled*
    * from the saved id — so a submit already carries it and there is nothing
-   * to fall back to. Falling back anyway is what made a cancel mean "use
-   * the old one": a user who turned Bitwave on, saw an id naming the wrong
-   * ledger account, and cancelled got an export that went ahead and wrote
-   * that stale id on every row of the `.bitwave.csv` — the field Bitwave
-   * attributes transactions by — and the only toast fired precisely when
-   * the id had *not* been used.
+   * to fall back to. Falling back anyway would make a cancel mean "use the
+   * old one": a user who turned Bitwave on, saw an id naming the wrong
+   * ledger account, and cancelled would get an export that wrote that stale
+   * id on every row of the `.bitwave.csv`, the field Bitwave attributes
+   * transactions by.
    */
   modalAccountId?: string
   /**

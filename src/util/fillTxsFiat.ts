@@ -32,17 +32,15 @@ export interface FillTxsFiatResult {
  * using each transaction's date. Skips a transaction whose fiat amount is
  * already non-zero, and persists nothing.
  *
- * This is the loop `updateTxsFiat` used to run inline;
- * `TransactionExportActions` is now a short thunk that reads `defaultIsoFiat`
- * out of Redux and calls this, so there is no parallel implementation to keep
- * in step.
+ * `TransactionExportActions`' `updateTxsFiat` is a short thunk that reads
+ * `defaultIsoFiat` out of Redux and calls this, so there is no parallel
+ * implementation to keep in step.
  *
  * Every rate is queued before anything is awaited. The rate queue batches
- * into one request of up to RATES_SERVER_MAX_QUERY_SIZE assets and
- * debounces by FETCH_FREQUENCY per batch, so awaiting in fixed-size groups
- * instead bought a fresh debounce every group: 1,200 unpriced transactions
- * cost ~120s of pure waiting in groups of ten, past the CLI client's own
- * socket timeout, against ~1.1s queued all at once.
+ * into requests below RATES_SERVER_MAX_QUERY_SIZE assets and spaces them
+ * FETCH_FREQUENCY apart, so awaiting in fixed-size groups instead would pay
+ * that spacing for every group, and a large wallet would wait past the CLI
+ * client's own socket timeout.
  */
 export async function fillTxsFiat(opts: {
   wallet: EdgeCurrencyWallet
@@ -78,9 +76,9 @@ export async function fillTxsFiat(opts: {
             // `RATE_UNAVAILABLE` means the queue gave up — its budget
             // expired, a request failed, the queue was stopped — not that
             // the server cannot price this date, which it spells `0`.
-            // Writing `0 * amount` for it is how an accounting export came
-            // back silently wrong instead of slow, so the field is left
-            // alone and the caller is told how many.
+            // Writing `0 * amount` for it would make an accounting export
+            // silently wrong instead of slow, so the field is left alone and
+            // the caller is told how many.
             if (isRateUnavailable(rate)) {
               ++unavailable
               return
@@ -102,9 +100,10 @@ export async function fillTxsFiat(opts: {
             }
           })
           .catch((error: unknown) => {
-            // Through the shared sink, because in the daemon `console` is a
-            // startup log a clean stop deletes — and a rates failure here is
-            // the reason a whole accounting export carries no fiat value.
+            // Through the shared sink, because in the daemon `console`
+            // reaches only the startup log, not the engine log, and a rates
+            // failure here is the reason a whole accounting export carries
+            // no fiat value.
             ++unavailable
             reportWarning(
               `could not price a transaction in ${isoFiat}: ${errorMessage(

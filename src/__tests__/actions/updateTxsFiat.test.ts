@@ -19,9 +19,9 @@ jest.mock('../../util/fillTxsFiat', () => ({
  * The GUI half of the scaled rate budget.
  *
  * `rateChainBudgetMs` is tabled on its own, but if this thunk stopped
- * passing it the scene would go back to the fixed 90 s, under which a
- * restored wallet's full history hit the ceiling every time — and the
- * engine passes its own deadline, so no other suite would notice.
+ * passing it the scene would fall back to the fixed 90 s, which a restored
+ * wallet's full history can outrun, and the engine passes its own deadline,
+ * so no other suite would notice.
  */
 describe('updateTxsFiat', () => {
   const run = async (count: number): Promise<number | undefined> => {

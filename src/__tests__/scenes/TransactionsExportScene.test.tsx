@@ -83,10 +83,9 @@ function makeWallet(): any {
 /**
  * The order the export scene acts in, which the plan tests cannot see.
  *
- * A refusal has to come before any history or rates work, and the warnings
- * have to be read before the share sheet covers the scene. Both were bugs:
- * the refusal used to follow a rate fetch of up to ten minutes, and the
- * warnings were a toast that faded under the sheet.
+ * A refusal has to come before any history or rates work, which can take up
+ * to ten minutes, and the warnings have to be read before the share sheet
+ * covers the scene, which a toast would fade under.
  */
 describe('TransactionsExportScene', () => {
   let shown: unknown[]
@@ -153,8 +152,8 @@ describe('TransactionsExportScene', () => {
   it('opens the share sheet only once the unpriced count is dismissed', async () => {
     // A modal that stays open until dismissed, so the order is decided by
     // the scene awaiting it — not by which call happens first. A toast is
-    // also `Airship.show`, with a matching `message`, and is never awaited:
-    // that was the bug, a warning fading under the share sheet.
+    // also `Airship.show`, with a matching `message`, and is never awaited,
+    // so a warning shown as one would fade under the share sheet.
     mockFill.mockImplementation(async () => ({ asked: 1, unavailable: 1 }))
     let dismiss: (value: 'ok') => void = () => {}
     jest.spyOn(Airship, 'show').mockImplementation((async (render: any) => {
