@@ -22,9 +22,8 @@ import { ApiClient } from './apiClient'
  * The engine could not be reached or could not be started.
  *
  * A type rather than a message, because `output.ts` maps this to the
- * documented exit code 7 and used to do it with a regex over the error's
- * prose — which missed cases and would silently change the published
- * contract on a reword.
+ * documented exit code 7, and a regex over the error's prose would miss
+ * cases and silently change the published contract on a reword.
  */
 export class EngineUnavailableError extends Error {
   constructor(message: string) {
@@ -36,11 +35,11 @@ export class EngineUnavailableError extends Error {
 /**
  * Quote one argument for a shell, so a printed command can be pasted.
  *
- * The `--no-spawn` hint interpolated the directory raw, and `-d` is never
- * absent because it defaults to `~/.config/edge-cli`. A path with a space
- * printed as `-d /Users/you/My Dir`, which the engine reads as `-d
- * /Users/you/My` plus an unknown argument — so the advice either failed
- * outright or started an engine under a different profile hash.
+ * The `--no-spawn` hint includes the directory, and `-d` is never absent
+ * because it defaults to `~/.config/edge-cli`. Unquoted, a path with a space
+ * would print as `-d /Users/you/My Dir`, which the engine reads as `-d
+ * /Users/you/My` plus an unknown argument, so the advice would either fail
+ * outright or start an engine under a different profile hash.
  */
 function shellQuote(value: string): string {
   if (/^[A-Za-z0-9_@%+=:,./-]+$/.test(value)) return value
@@ -73,11 +72,12 @@ export interface EnsureEngineOpts extends ProfileKey {
   /**
    * The config file the caller named with `-c`.
    *
-   * Forwarded, because without it the spawned engine read the *default*
-   * config instead. `testMode` lives in that file and feeds the profile
-   * hash, so the two halves computed different hashes, the client polled a
-   * socket the engine never bound, and the command died after the full
-   * 30-second spawn timeout leaving a detached engine behind.
+   * Forwarded, because without it the spawned engine would read the
+   * *default* config instead. `testMode` lives in that file and feeds the
+   * profile hash, so the two halves would compute different hashes, the
+   * client would poll a socket the engine never binds, and the command would
+   * die after the full 30-second spawn timeout, leaving a detached engine
+   * behind.
    */
   configPath?: string
   /** Test seam; see `EnsureEngineDeps`. Production leaves it unset. */
@@ -102,15 +102,15 @@ async function pingEngine(socketPath: string): Promise<boolean> {
  *
  * The comparison is the *table* each tag selects, not the tags: `en` and
  * `en-US` both answer in English and `de` and `de-DE` both merge `de.json`,
- * so comparing tags warned about a difference with no effect — and because
- * the hook is `onFirstResponse`, once per command for the life of that
- * engine. A bare `LANG=en`, which is what a container or a CI shell tends to
- * set, was enough to produce it.
+ * so comparing tags would warn about a difference with no effect — and
+ * because the hook is `onFirstResponse`, once per command for the life of
+ * that engine. A bare `LANG=en`, which is what a container or a CI shell
+ * tends to set, would be enough to produce it.
  *
  * `resolveLocaleTableOrEnglish`, because a tag with no table is English too:
- * Edge ships twelve, so `LANG=nl_NL.UTF-8` against a cron shell's `en-US`
- * compared `undefined` with `'en'` and warned, on every command, about two
- * engines answering the same language.
+ * Edge ships twelve, so otherwise `LANG=nl_NL.UTF-8` against a cron shell's
+ * `en-US` would compare `undefined` with `'en'` and warn, on every command,
+ * about two engines answering the same language.
  */
 export async function warnIfEngineLocaleDiffers(
   client: ApiClient
@@ -154,11 +154,11 @@ export function shouldTrimStartupLog(sizeBytes: number): boolean {
  * What the child's exit means for a client that is waiting for a socket.
  *
  * Two outcomes that call for opposite behaviour, and the distinction is one
- * exit-code comparison across two halves of the CLI — `ENGINE_EXIT_ALREADY_RUNNING`
- * is raised in `engine/index.ts` and read here. Nothing tested it, so a
- * drift in that constant, or a `signal == null` that stopped holding,
- * silently restored the old failure: the client reported "exit 7 / Stop it
- * first" about an engine it had started itself.
+ * exit-code comparison across two halves of the CLI:
+ * `ENGINE_EXIT_ALREADY_RUNNING` is raised in `engine/index.ts` and read
+ * here. A drift in that constant, or a `signal == null` that stopped
+ * holding, would have the client report "exit 7 / Stop it first" about an
+ * engine it had started itself.
  *
  * `'owned'` means someone else won `claimRunFile`, so an engine *is* coming
  * up and the poll should run to the deadline. Anything else is a startup
@@ -181,11 +181,9 @@ export function classifyEngineExit(
 /**
  * The seams `ensureEngine`'s three decisions are tested through.
  *
- * It closed over `spawn`, `pingEngine` and the two timings directly, so the
- * whole function was unreachable from a test — 4.3% of statements and 0% of
- * branches — and both fixes this branch put into it landed uncovered.
- * Injected the way the same branch injected `doFetch` into `fetchWaterfall`
- * and a request function into `httpsRequest`. Production passes nothing.
+ * `spawn`, `pingEngine` and the two timings, injected the way `doFetch` is
+ * into `fetchWaterfall` and a request function into `httpsRequest`.
+ * Production passes nothing.
  */
 export interface EnsureEngineDeps {
   spawn?: typeof spawn
@@ -199,14 +197,15 @@ export interface EnsureEngineDeps {
 /**
  * The child's environment, with the caller's credentials taken out.
  *
- * The engine is detached and long-lived, so `{ ...process.env }` handed it
- * every variable in `SECRET_FLAG_ENV` for its whole life: a
+ * The engine is detached and long-lived, so `{ ...process.env }` would hand
+ * it every variable in `SECRET_FLAG_ENV` for its whole life: a
  * `EDGE_CLI_PASSWORD=… edge-cli login-with-password` exits in a second
- * while the daemon it spawned keeps that password in `/proc/<pid>/environ`
- * for hours — and for ever at `--idle-timeout=0` — and in any core dump.
- * The engine never needs them: the *client* resolves each secret and sends
- * it in the request body, which is why `EDGE_CLI_API_KEY` is the one
- * credential forwarded here, deliberately and explicitly.
+ * while the daemon it spawned would keep that password in
+ * `/proc/<pid>/environ` for hours — and for ever at `--idle-timeout=0` —
+ * and in any core dump. The engine never needs them: the *client* resolves
+ * each secret and sends it in the request body, which is why
+ * `EDGE_CLI_API_KEY` is the one credential forwarded here, deliberately and
+ * explicitly.
  *
  * `EDGE_CLI_SESSION` goes too. It is a bearer token — holding one is full
  * account authority — and it is the client's own way of naming a session,
@@ -260,11 +259,10 @@ export function engineEntryCandidates(dir: string): string[] {
  * Make sure an engine is listening for this profile.
  *
  * Returns nothing. Its one caller is `ApiClient`'s `onConnectFail`, which
- * discards the result and retries the request — so reading the run file back
- * bought nothing and cost a failure mode: `Engine is up but run file is
- * missing` killed the command on a narrow but real race, where the socket
- * answers before `engine.json` is visible. The socket answering *is* the
- * readiness signal, which is what `pingEngine` tests.
+ * discards the result and retries the request, so reading the run file back
+ * would buy nothing and add a failure mode: the socket can answer before
+ * `engine.json` is visible. The socket answering *is* the readiness signal,
+ * which is what `pingEngine` tests.
  */
 export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   const profile = profileHash({
@@ -285,14 +283,14 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
 
   // Resolve the engine entry relative to this file, and nowhere else. The
   // sibling bundle comes first: rollup flattens src/cli into lib/edgeCli.js,
-  // so in a built or installed tree (npm, Homebrew's libexec,
-  // /usr/lib/edgecli) `__dirname` is the package's `lib/` and its sibling is
-  // lib/edgeEngine.js. Running from source, `__dirname` is src/cli/client,
-  // which has no edgeEngine.js, and `../engine/index.ts` is the source entry.
+  // so in a built or installed tree (an npm install, for one) `__dirname` is
+  // the package's `lib/` and its sibling is lib/edgeEngine.js. Running from
+  // source, `__dirname` is src/cli/client, which has no edgeEngine.js, and
+  // `../engine/index.ts` is the source entry.
   //
-  // Not the working directory. Two candidates resolved against it, which on
-  // a partial install meant `edge-cli` run inside any checkout or download
-  // spawned *that directory's* script as the detached daemon — handed
+  // Not the working directory. A candidate resolved against it would, on a
+  // partial install, have `edge-cli` run inside any checkout or download
+  // spawn *that directory's* script as the detached daemon, handed
   // `EDGE_CLI_API_KEY` and, over the socket, every password and PIN typed
   // afterwards. A missing engine is a clean exit 7 instead.
   const candidates = engineEntryCandidates(opts.deps?.entryDir ?? __dirname)
@@ -307,7 +305,7 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
     // An `EngineUnavailableError`, not a bare one: a broken or partial
     // install is exactly the "could not connect to or spawn the engine"
     // condition the published exit-code table assigns 7, and the generic
-    // `Error` arm reported it as `INTERNAL_ERROR` and exit 1, which a
+    // `Error` arm would report it as `INTERNAL_ERROR` and exit 1, which a
     // wrapper script branching on 7 mis-handles.
     throw new EngineUnavailableError(
       `Could not find edge-engine entry. Tried:\n${candidates
@@ -317,18 +315,16 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   }
 
   // One list, so the flags that reach the child and the flags the
-  // `--no-spawn` hint prints cannot drift. They had: the hint omitted
-  // `--tcp`, `-c` and `--locale`, so it told an operator to start an engine
-  // without the config file they had just supplied. `-k` is not in here — it
-  // crosses as `EDGE_CLI_API_KEY`, because `ps` shows an argv to every user
-  // on the host — so the hint names the variable separately below.
+  // `--no-spawn` hint prints cannot drift. `-k` is not in here — it crosses
+  // as `EDGE_CLI_API_KEY`, because `ps` shows an argv to every user on the
+  // host — so the hint names the variable separately below.
   const engineFlags: string[] = []
   if (opts.testMode) engineFlags.push('-t')
   if (opts.fake === true) engineFlags.push('--fake')
   if (opts.directory !== '' && opts.directory !== defaultDirectory()) {
     // The canonical form, so the directory the child opens is the same
     // string the profile hash was taken over. Forwarding the raw argv value
-    // let the two disagree.
+    // would let the two disagree.
     engineFlags.push('-d', canonicalDirectory(opts.directory))
   }
   if (opts.appId !== '') engineFlags.push('-a', opts.appId)
@@ -341,11 +337,12 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
 
   if (opts.noSpawn === true) {
     // The hint has to name *this* profile's flags. A hardcoded
-    // `npm run engine -- -t` started an engine on a different profile hash
-    // for anyone not on the default test profile, so the next command still
-    // found nothing listening. It also has to name a command the reader can
-    // actually run: `npm run engine` only exists inside this checkout, and
-    // `docs/EDGE_CLI.md` tells people to run `node lib/edgeCli.js`.
+    // `npm run engine -- -t` would start an engine on a different profile
+    // hash for anyone not on the default test profile, so the next command
+    // would still find nothing listening. It also has to name a command the
+    // reader can actually run: `npm run engine` only exists inside this
+    // checkout, and `docs/EDGE_CLI.md` tells people to run
+    // `node lib/edgeCli.js`.
     const runner = engineEntry.endsWith('.js')
       ? `${shellQuote(process.execPath)} ${shellQuote(engineEntry)}`
       : 'npm run engine --'
@@ -384,13 +381,12 @@ export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
   // includes paths and, on a failure, whatever the engine was doing.
   //
   // Appended, not truncated. This fd is the engine's stdout and stderr for
-  // its whole life, so `'w'` meant a second client's spawn attempt wiped
-  // the log of an engine that was still booting — and both children then
-  // wrote to one inode through independent fds at independent offsets, so
-  // the surviving engine's startup record was the one record a racing
-  // start could not be diagnosed from. Trimmed first when it has grown
-  // past the cap, since nothing else bounds it between
-  // `removeRunArtifacts` calls.
+  // its whole life, so with `'w'` a second client's spawn attempt would wipe
+  // the log of an engine that is still booting, and both children would
+  // then write to one inode through independent fds at independent offsets,
+  // losing the surviving engine's startup record, the one a racing start is
+  // diagnosed from. Trimmed first when it has grown past the cap, since
+  // nothing else bounds it between `removeRunArtifacts` calls.
   try {
     if (shouldTrimStartupLog(fs.statSync(startupLog).size)) {
       fs.truncateSync(startupLog, 0)

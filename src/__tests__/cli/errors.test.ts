@@ -67,10 +67,10 @@ const cases: Array<{
    *
    * Values rather than key names, because `toHaveProperty(key)` passes for a
    * key whose value is `undefined` — and every arm builds `details` as a
-   * fixed object literal, so the key is always present. The old assertion
-   * therefore held for a projection gutted to
+   * fixed object literal, so the key is always present. A key-name assertion
+   * would therefore hold for a projection gutted to
    * `{ challengeId: undefined, challengeUri: undefined }`, which is the one
-   * thing it existed to catch.
+   * thing it exists to catch.
    */
   details?: Record<string, unknown>
 }> = [
@@ -93,11 +93,9 @@ const cases: Array<{
   {
     code: 'OTP_REQUIRED',
     status: 401,
-    // Every field populated, so all seven can be asserted by value. Three
-    // of them were listed before and four were not, and the one that
-    // mattered most was absent: `voucherAuth`, the second credential whose
-    // redaction `redaction.test.ts` exists to pin. The two halves of that
-    // guard did not meet.
+    // Every field populated, so all seven can be asserted by value,
+    // `voucherAuth` among them: the second credential whose redaction
+    // `redaction.test.ts` exists to pin.
     error: new OtpError({
       login_id: 'ZGVhZGJlZWY=',
       otp_reset_auth: 'reset-token',
@@ -233,11 +231,10 @@ describe('toErrorBody', () => {
     // `mapCoreError`'s only network arm is core's `NetworkError`, which core
     // raises in exactly one place — `login-fetch.js`, the auth server. A
     // currency or swap plugin's own `fetch` rejects with a plain
-    // `TypeError: fetch failed` carrying `cause.code`, and nothing
-    // recognised it: `broadcast-tx`, `approve-swap-quote`,
-    // `get-max-spendable` and ~35 other declarations of `NETWORK_ERROR`
-    // answered `500 INTERNAL_ERROR` for the commonest retryable failure
-    // there is, so the declared code was unreachable and the script got
+    // `TypeError: fetch failed` carrying `cause.code`. Unrecognised,
+    // `broadcast-tx`, `approve-swap-quote`, `get-max-spendable` and the other
+    // routes declaring `NETWORK_ERROR` would answer `500 INTERNAL_ERROR` for
+    // the commonest retryable failure there is, and the script would get
     // exit 1 instead of the retryable `EXIT.NETWORK` the published table
     // promises.
     const failed = Object.assign(new TypeError('fetch failed'), {
@@ -288,9 +285,9 @@ describe('the published catalogue and mapCoreError agree', () => {
     const published = new Map(coreCodes.map(e => [e.code, e.status]))
     for (const { code, status } of cases) {
       // No `?? status` fallback: comparing a value against itself whenever
-      // the code is absent from the catalogue meant a case with a wrong code
-      // *and* a wrong status passed both assertions in this describe — the
-      // `missing` check above only tests catalogue ⊆ cases.
+      // the code is absent from the catalogue would let a case with a wrong
+      // code *and* a wrong status pass both assertions in this describe,
+      // since the `missing` check above only tests catalogue ⊆ cases.
       expect(published.has(code)).toBe(true)
       expect({ code, status }).toStrictEqual({
         code,
@@ -304,10 +301,10 @@ describe('the published catalogue and mapCoreError agree', () => {
  * Which failures a script may retry.
  *
  * `NETWORK_ERROR` is exit 6, which the published table presents as the
- * retryable class, and `get-payment-protocol-info` used to answer it for
- * every failure — a merchant's 404, an unparseable payload, a plugin with no
- * `getPaymentProtocolInfo` — so a URL that can never work told a script to
- * try again for ever. The route asks this function instead, and a plain
+ * retryable class. Answered by `get-payment-protocol-info` for every
+ * failure, a merchant's 404, an unparseable payload or a plugin with no
+ * `getPaymentProtocolInfo`, it would tell a script to retry a URL that can
+ * never work for ever. The route asks this function instead, and a plain
  * `Error` it does not recognise becomes `BAD_REQUEST`.
  */
 describe('isNetworkFailure', () => {

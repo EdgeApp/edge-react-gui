@@ -84,11 +84,11 @@ const asEngineConfig = asObject({
       ),
       appConfig: doc(
         asEither(asString, asValue(null)),
-        'The `config.json` that supplied `swapPlugins`, or null when none did — including when one was read and ignored, which is the shadowing case the field exists for. This is the *app’s* config file, not the CLI’s; it was called `config` and read as though it were `edge-cli.conf`.'
+        'The `config.json` that supplied `corePlugins` or `swapPlugins`, or null when none did, including when one was read and ignored, which is the shadowing case the field exists for. This is the *app’s* config file, not the CLI’s `edge-cli.conf`.'
       ),
       cliConfig: doc(
         asEither(asString, asValue(null)),
-        'The `edge-cli.conf` this engine was started with — `-c`, or the default `~/.config/edge-cli/edge-cli.conf` — or null when no such file was read. This is the file that decided `directory`, `appId`, `locale` and `apiKey`, and it was the one thing this object did not name.'
+        'The `edge-cli.conf` this engine was started with — `-c`, or the default `~/.config/edge-cli/edge-cli.conf` — or null when no such file was read. This is the file that decided `directory`, `appId`, `locale` and `apiKey`.'
       )
     }),
     'Where this engine\u2019s configuration came from. The profile a client hashes covers `appId`, the data directory, test mode and the login server \u2014 not these, so two invocations with the same flags from different directories share one daemon, and this is what says which configuration it is running on.'
@@ -140,8 +140,9 @@ export const engineStatus = route({
  * What the engine passed to `makeEdgeContext`. Contains no secrets. Use it to
  * assert tester hosts before a test run.
  *
- * @note Outside `-t` / `--test`, `servers` is an empty object — core is using
- *   its built-in production defaults, so there is nothing to echo back.
+ * @note Outside `-t` / `--test` and `--fake`, `servers` is an empty object —
+ *   core is using its built-in production defaults, so there is nothing to
+ *   echo back.
  * @coreNote Reflects the EdgeContextOptions the engine supplied at startup.
  */
 export const engineConfig = route({
@@ -192,9 +193,8 @@ export const engineStop = route({
   handler(ctx) {
     // Idempotent: a second stop against an engine already tearing down is
     // answered `ok` rather than 503, because what was asked for is already
-    // happening. `shutdown` guards itself as well, so this is belt and
-    // braces — but the 503 was the harmful part, since a client that retries
-    // it would start a replacement engine.
+    // happening, and a client that retries a 503 would start a replacement
+    // engine. `shutdown` guards itself as well, so this is belt and braces.
     if (ctx.state.shuttingDown) return { ok: true }
     // Respond first; process.exit inside shutdown would otherwise hang the client.
     setImmediate(() => {

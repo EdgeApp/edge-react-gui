@@ -13,10 +13,10 @@ import { errorMessage } from './errors'
  * default directory and any directory this call creates, and makes both
  * `0700`, including one an earlier run created laxer.
  *
- * Not an existing directory the caller named with `-d`: `-d .`, `-d ~` or a
- * shared folder turned to `0700` cut off every other user and service that
- * relied on its mode. That mode is the caller's; when it lets other users
- * in, the answer is a warning saying so.
+ * Not an existing directory the caller named with `-d`: turning `-d .`,
+ * `-d ~` or a shared folder to `0700` would cut off every other user and
+ * service that relies on its mode. That mode is the caller's; when it lets
+ * other users in, the answer is a warning saying so.
  *
  * Returns the warning to print, if any; both halves print it with their own
  * prefix.

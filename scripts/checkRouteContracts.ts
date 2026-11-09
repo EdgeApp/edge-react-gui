@@ -36,14 +36,12 @@ function handlerSources(): Map<string, string> {
 /**
  * Fields a handler pulls off `ctx.body` or the validated query.
  *
- * Through one level of aliasing as well as directly. Four admin repo
- * handlers bind the body first — `const body = ctx.body` and then
- * `const { syncKey } = body` — so neither direct pattern matched, the field
- * set came back empty, and the one check `tsc` cannot do (`.withRest` makes
- * a cleaned body indexable, so reading a field the cleaner would have
- * stripped is not a type error) was vacuous for
- * `POST /admin/send-lobby-reply`, `/admin/sync-repo`, `/admin/repo-set` and
- * `/admin/repo-delete`.
+ * Through one level of aliasing as well as directly. A handler that binds the
+ * body first, `const body = ctx.body` and then `const { lobbyId } = body`,
+ * matches neither direct pattern, so its field set would come back empty and
+ * the one check `tsc` cannot do (`.withRest` makes a cleaned body indexable,
+ * so reading a field the cleaner would have stripped is not a type error)
+ * would be vacuous for it.
  */
 function readsFrom(fn: string, source: 'body' | 'query'): Set<string> {
   const out = new Set<string>()
@@ -107,21 +105,17 @@ for (const r of extractRoutes()) {
   // `path:` literal it reads out of the source, and `extractRoutes` appends
   // the CLI positional to `routePath` — which `verifyApiDocs` *forbids*
   // writing into `path`, so for a route with a positional the two can never
-  // match. 20 of 117 lookups missed, and `if (fn != null)` made every miss a
-  // silent skip: all three handler checks below, including the one `tsc`
-  // cannot do, were off for `sign-tx`, `broadcast-tx`, `save-tx`,
-  // `object-get`, `swap-quote-get` and the eight admin repo routes.
+  // match.
   const fn = handlers.get(`${r.method} ${r.declaredPath}`)
   if (fn == null) {
     unmatched.push(r.id)
   } else {
     checkedHandlers++
     const bodyReads = readsFrom(fn, 'body')
-    // A declared body nothing is read from is the shape the alias hole hid:
-    // the check below ran, found no fields, and reported nothing. It is
-    // legitimate — a handler can pass `ctx.body` straight to core — so this
-    // is counted and printed rather than failed, which is what would have
-    // made four empty field sets visible.
+    // A declared body nothing is read from is also what a parser hole looks
+    // like: the check below runs, finds no fields, and reports nothing. It is
+    // legitimate, since a handler can pass `ctx.body` straight to core, so
+    // this is counted and printed rather than failed.
     if (r.body != null && names.size > 0 && bodyReads.size === 0) {
       bodyUnread.push(r.id)
     }
@@ -142,9 +136,7 @@ for (const r of extractRoutes()) {
 
     // A route that declares a query cleaner must read the cleaned result. A
     // handler that re-parses the raw URLSearchParams gets whatever the caller
-    // sent, so the declared type stops being the enforced type — which is how
-    // `waitForAll` came to be documented as a string while the command wanted
-    // a switch.
+    // sent, so the declared type stops being the enforced type.
     if (r.query != null) {
       const raw =
         /\b(optionalQuery(String|Int|Date|Boolean)|requireQuery(String|Int)|ctx\.query\.(get|has))\b/.exec(
@@ -172,15 +164,12 @@ for (const r of extractRoutes()) {
 }
 
 // ---------------------------------------------------------------------------
-// Every code the CLI can emit, against the catalogue — in both directions.
+// Every code the CLI can emit, against the catalogue.
 //
-// The existing check above is one-way: a code a route *declares* has to be in
-// the catalogue. That let the program emit conditions the catalogue had no way
-// to describe. `ENGINE_UNAVAILABLE` and `USAGE` are the ones that got through:
-// the client writes them to stderr on the most common failure a first-time
-// user meets, and neither appeared in `errorCodes`, in the HTML reference, in
-// the OpenAPI document or in the guide — so the exit-7 row described the
-// condition in prose while withholding the code a program would match on.
+// The check above is one-way: a code a route *declares* has to be in the
+// catalogue. On its own it would let the program emit codes the catalogue
+// cannot describe, such as `ENGINE_UNAVAILABLE` and `USAGE`, which the client
+// writes to stderr on the most common failure a first-time user meets.
 //
 // Scanned from the source rather than the declarations, because a code the
 // client invents never passes through a route.
@@ -220,10 +209,9 @@ for (const r of extractRoutes()) {
   }
 }
 
-// A gate that checks nothing has to say so. The summary used to print
-// `handlers.size` — the number of declarations *found* — so 20 skipped
-// routes read as 117 checked, and the one thing that would have revealed it
-// was the number the line did not report.
+// A gate that checks nothing has to say so: a route whose handler was not
+// found fails here, and the summary counts the declarations actually
+// checked rather than the number found.
 if (unmatched.length > 0) {
   problems.push(
     `${unmatched.length} route(s) have a declaration this gate could not ` +
@@ -243,8 +231,7 @@ console.log(
 )
 if (bodyUnread.length > 0) {
   // Not a failure: a handler may hand `ctx.body` to core whole. Printed
-  // because an empty field set is also what a parser hole looks like, and
-  // four of these were one.
+  // because an empty field set is also what a parser hole looks like.
   console.log(
     `  ${bodyUnread.length} with a declared body no field is read from: ` +
       bodyUnread.join(', ')

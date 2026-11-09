@@ -45,8 +45,7 @@ interface FetchedPluginKeys {
  * the engine booting with the layers it does know.
  *
  * Exported for its test, as `getKeysAppId` beside it is: for a plugin named
- * in two layers this decides which key the engine uses, and nothing stated
- * the order.
+ * in two layers this decides which key the engine uses.
  */
 export function pluginApiKeysFromRemote(
   keys: unknown
@@ -66,14 +65,11 @@ export function getKeysAppId(cliAppId: string): string {
   return cliAppId === '' ? 'edge' : cliAppId
 }
 
-// The signed response's public `rollup` is deliberately dropped. It used to
-// be cached into `infoServerData.rollup`, latched so only the first fetch
-// ever set it — and nothing in the engine reads that object: every consumer
-// (`infoUtils`, `versionCheck`, `keysStore` and six GUI scenes) is React
-// Native code the daemon never loads, and the five-minute refresh that keeps
-// it current in the app is `initInfoServer`'s interval, which the engine
-// never calls. A latched cache nothing reads and nothing refreshes is a
-// lifetime policy for a value that has none.
+// The signed response's public `rollup` is deliberately dropped: nothing in
+// the engine reads `infoServerData.rollup`. Its readers (`infoUtils`,
+// `versionCheck`, `keysStore` and other GUI modules) are React Native code
+// the daemon never loads, and the five-minute refresh that keeps it current
+// in the app is `initInfoServer`'s interval, which the engine never calls.
 
 export function cliOsParams(): {
   os: 'ios' | 'android'

@@ -96,7 +96,7 @@ export function buildAccountbasedPlugins(
 
 /**
  * Plugin ids served by `edge-currency-plugins`, whose engines all scan an
- * xpub for UTXOs. `UTXO_PLUGIN_IDS` in WalletAndCurrencyConstants.ts derives
+ * xpub for UTXOs. `getUtxoPluginIds` in WalletAndCurrencyConstants.ts derives
  * from this, so a chain added here is automatically picked up there.
  */
 export function buildUtxoPlugins(maps: CorePluginMaps): EdgeCorePluginsInit {

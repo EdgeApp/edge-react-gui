@@ -6,7 +6,6 @@ import { requireOwnedHandle } from '../../cli/engine/routes/helpers'
 import { deleteObject, getObject } from '../../cli/engine/routes/objects'
 import { thrownSync } from '../../util/fake/thrownEngineError'
 
-/** The error shape `engineError` produces. */
 /**
  * Just enough context for `requireOwnedHandle`: a handle store, and a session
  * store that answers for exactly one session id the way `SessionStore` does.
@@ -111,10 +110,10 @@ describe('requireOwnedHandle', () => {
       sessionId: 'other'
     })
 
-    // `get` applied the kind, expiry and in-use checks first, so asking for
-    // the wrong kind told A that B's id exists and is not a transaction.
-    // Ownership is the authorisation step; nothing about another session's
-    // handle is A's to learn.
+    // `get` applies the kind, expiry and in-use checks, so if it ran first,
+    // asking for the wrong kind would tell A that B's id exists and is not a
+    // transaction. Ownership is the authorisation step; nothing about another
+    // session's handle is A's to learn.
     const ctx = makeCtx({ objects, sessionId: 'live', liveSessionId: 'live' })
     expect(
       thrownSync(() => requireOwnedHandle(ctx, objectId, 'transaction'))
@@ -184,16 +183,6 @@ describe('requireOwnedHandle', () => {
 })
 
 /**
- * The two handle routes, which `REFUSAL_ONLY` excused with this suite.
- *
- * The excuse was not true: this file covered `requireOwnedHandle` and the
- * handle store, and `routes/objects.ts` itself ran at 0% of branches. The
- * projection is the part worth holding — a swap quote is a live core value
- * whose properties are getters, so handing it to `JSON.stringify` walks into
- * its wallets and their whole `allTokens` map, and the five scalars are the
- * only thing keeping the response small.
- */
-/**
  * A route's handler takes the typed context its declaration derives, whose
  * `query` carries a phantom field no hand-built object can satisfy. Same
  * shape as `spendHandlers.test.ts`'s `makeCtx`, which returns `any`.
@@ -203,6 +192,14 @@ const handlerOf = (declared: {
 }): ((ctx: RouteContext) => unknown) =>
   declared.handler as unknown as (ctx: RouteContext) => unknown
 
+/**
+ * The two handle routes, which `REFUSAL_ONLY` excuses with this suite.
+ *
+ * The projection is the part worth holding: a swap quote is a live core
+ * value whose properties are getters, so handing it to `JSON.stringify` walks
+ * into its wallets and their whole `allTokens` map, and the five scalars are
+ * the only thing keeping the response small.
+ */
 describe('object-get and object-delete', () => {
   it('returns a staged transaction whole', async () => {
     const objects = new ObjectHandleStore()

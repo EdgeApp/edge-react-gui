@@ -30,28 +30,15 @@ const MAX_CHALLENGE_NUMBER = 10_000_000
 /**
  * One HTTPS call, whichever verb and body it needs.
  *
- * `httpsGet` and `httpsPost` were the same 35 lines twice — the chunk
- * accumulator, the string-or-Buffer normalisation, the `end` resolve, the
- * `error`/`aborted` pair, the request timeout — differing only in the verb,
- * the payload and the wording of two messages. The second copy of the
- * `aborted` handler was commented "As in `httpsGet` above, and for the same
- * reason", which is the duplication saying so out loud.
- *
- * Both handlers matter: once headers have arrived Node routes a socket close
- * to the *response*, not the request, and clears the request timer — so
- * without them a connection dropped mid-body never settled and
- * `--solve-captcha` hung for ever, with no output and no recovery but
- * Ctrl-C. `req.setTimeout` cannot cover it. Same gap and same fix as
- * `apiClient`'s.
+ * The response's `error` and `aborted` handlers both matter: once headers
+ * have arrived Node routes a socket close to the *response*, not the
+ * request, and clears the request timer, so without them a connection
+ * dropped mid-body would never settle and `--solve-captcha` would hang for
+ * ever, with no output and no recovery but Ctrl-C. `req.setTimeout` cannot
+ * cover it. Same gap and same fix as `apiClient`'s.
  *
  * `request` is injectable so the two handlers can be asserted by running
- * them. The only check they had was `solveCaptcha.test.ts` counting
- * occurrences of `res.on('error'`, `res.on('aborted'` and `res.on('end'` in
- * this file's *source*, which its own comment explained by saying that
- * testing them for real would need a TLS server — while the sibling this is
- * modelled on, `apiClient`, is tested against a real server, and the same
- * branch threads a `doFetch` into `fetchWaterfall` and `cleanMultiFetch`
- * for exactly this reason. Production passes none and gets `https.request`.
+ * them. Production passes none and gets `https.request`.
  */
 type HttpsRequestFn = typeof https.request
 
@@ -116,8 +103,7 @@ export async function httpsRequest(
  * Split out from `solveCaptcha` so it can be tested: everything interesting
  * about it is pure given the page text — the scrape, the clean, and the cap
  * on a synchronous hash loop — while the function around it is two HTTPS
- * calls. `--solve-captcha` is the flag unattended runs depend on, and the
- * only exercise it had was a live request to login-tester.
+ * calls. `--solve-captcha` is the flag unattended runs depend on.
  */
 export function parseAltchaChallenge(pageText: string): AltchaChallenge {
   const match = /challenge:\s*(\{[^}]+\})/.exec(pageText)
@@ -127,9 +113,9 @@ export function parseAltchaChallenge(pageText: string): AltchaChallenge {
   // every field here comes from a page the CLI did not write, and
   // `maxnumber` is the bound of a synchronous hash loop. With `JSON.parse`
   // outside the cleaner, a capture that is not valid JSON — an unquoted key,
-  // a truncated blob — threw a bare `SyntaxError` straight out of here, past
-  // the `asMaybe` guard and the message just below that was written for
-  // exactly that case.
+  // a truncated blob — would throw a bare `SyntaxError` straight out of
+  // here, past the `asMaybe` guard and the message just below that is
+  // written for exactly that case.
   const challenge = asMaybe(asAltchaChallenge)(match[1])
   if (challenge == null) {
     throw new Error('Challenge in page is not in the expected shape')
@@ -172,8 +158,8 @@ export async function solveAltcha(
  * the four decisions above the transport — the non-2xx throw on the
  * challenge GET, the unsolvable challenge answering `false`, the POST
  * carrying `{ solution, trail: [] }`, and "Failed to solve CAPTCHA" — are
- * asserted by running them. They sit on the login retry path, and the only
- * thing that ran them needed the network.
+ * asserted by running them. They sit on the login retry path, and nothing
+ * else runs them without the network.
  */
 type SendFn = (
   method: 'GET' | 'POST',

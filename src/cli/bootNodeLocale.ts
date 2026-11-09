@@ -1,11 +1,11 @@
 /**
  * Side-effect locale *detection* for both CLI entries.
  *
- * Detection only. The client renders no localized string — `git grep lstrings
- * src/cli` outside `engine/` is empty — so applying the language here dragged
- * `locales/strings` and all eleven translation tables into `lib/edgeCli.js`
- * for a value it never reads. It needs the *tag*, to pass `--locale` to the
- * engine and to warn on a mismatch; `bootEngineLocale` is what applies it.
+ * Detection only. The client renders no localized string, so applying the
+ * language here would drag `locales/strings` and all eleven translation
+ * tables into `lib/edgeCli.js` for a value it never reads. It needs the
+ * *tag*, to pass `--locale` to the engine and to warn on a mismatch;
+ * `bootEngineLocale` is what applies it.
  *
  * Must be the first import in `src/cli/index.ts`.
  */

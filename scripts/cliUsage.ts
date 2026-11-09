@@ -1,11 +1,8 @@
 /**
  * How a command is typed, derived from its route declaration.
  *
- * There were three copies of this: one for the command table the CLI runs on,
- * one for `help`, and one for the HTML reference. They drifted, which is how
- * `local-settings` came to document `--spam-filter-on=<spamFilterOn>` in the
- * reference while `help` correctly said `--spam-filter-on=true|false`. One
- * function means they cannot disagree again.
+ * The command table the CLI runs on, `help` and the HTML reference all read
+ * it from here, so the three cannot disagree about how a command is typed.
  */
 import {
   type ExtractedCli,
@@ -43,8 +40,8 @@ function literalChoices(type: string): string | null {
  * one of those too — so the usage line says `[--flag[=false]]` rather than a
  * bare `[--flag]`. For `spend`'s `broadcast` and `save` the bare form is
  * inert (both default to true server-side), so advertising only that form
- * left no discoverable way to reach a sign-only or a no-save spend and
- * `edge-cli help spend` showed a flag that did nothing.
+ * would leave no discoverable way to reach a sign-only or a no-save spend,
+ * and `edge-cli help spend` would show a flag that did nothing.
  */
 function isSwitch(field: ExtractedField): boolean {
   return field.optional && bareType(field.type) === 'boolean'
@@ -54,9 +51,9 @@ function isSwitch(field: ExtractedField): boolean {
  * Whether a field has to be passed as a JSON argument.
  *
  * Structured is the default and scalar is the exception, because getting this
- * backwards is silent: a field whose cleaner names an interface — an
- * `EdgeMetadataChange` rather than a bare `unknown` — used to fall through to
- * a plain string flag and the engine received the *text* of the JSON.
+ * backwards is silent: a field whose cleaner names an interface, an
+ * `EdgeMetadataChange` rather than a bare `unknown`, would fall through to a
+ * plain string flag, and the engine would receive the *text* of the JSON.
  *
  * `buildCliCommands` picks a flag's `kind` from this, so the generated usage
  * line and the generated parser cannot disagree.
@@ -78,28 +75,26 @@ export function isJson(type: string): boolean {
  *
  * Here beside the usage line, because the two have to agree: `isSwitch`
  * publishes an optional boolean as `[--flag[=false]]`, which only parses as
- * `'boolean'`. `login-with-key` and `login-with-pin` hand-wrote
- * `'use-login-id': 'boolstr'` against that usage line, and `'boolstr'`
- * demands a value — so the bare form the bracket advertises answered
- * `--use-login-id requires a value`.
+ * `'boolean'`. `'boolstr'` demands a value, so under it the bare form the
+ * bracket advertises would fail with `--<flag> requires a value`.
  *
  * A JSON blob is anything the caller cannot express as a scalar flag.
  * Structured is the default and scalar is the exception, because getting this
- * backwards is silent: a field whose cleaner names an interface — an
- * `EdgeMetadataChange` rather than a bare `unknown` — used to fall through to
- * a string flag, and the engine then received the *text* of the JSON. The
- * body cleaner rejects that, but a route forwarding the value untouched would
- * have written the string into a synced file.
+ * backwards is silent: a field whose cleaner names an interface, an
+ * `EdgeMetadataChange` rather than a bare `unknown`, would fall through to a
+ * string flag, and the engine would receive the *text* of the JSON. The body
+ * cleaner rejects that, but a route forwarding the value untouched would
+ * write the string into a synced file.
  */
 export function kindOf(
   type: string,
   required: boolean
 ): 'string' | 'boolean' | 'boolstr' | 'json' {
   const bare = bareType(type)
-  // `boolean` now accepts both `--flag` and `--flag=false`, so requiredness
-  // is no longer the thing that decides. `boolstr` stays for a field that
-  // must be sent either way, where a bare `--flag` would be ambiguous about
-  // whether the caller meant to send anything at all.
+  // `boolean` accepts both `--flag` and `--flag=false`. `boolstr` is for a
+  // required field, which must be sent either way, where a bare `--flag`
+  // would be ambiguous about whether the caller meant to send anything at
+  // all.
   if (bare === 'boolean') return required ? 'boolstr' : 'boolean'
   return isJson(bare) ? 'json' : 'string'
 }
@@ -151,11 +146,10 @@ export function cliOptional(cli: ExtractedCli, field: ExtractedField): boolean {
 /**
  * How one client-side flag is supplied, unbracketed.
  *
- * Shared by the usage line and the parameter table, which had their own
- * copies — the line bracketed an optional and the table did not, so
- * `get-transactions --out` read as required in the one place a caller looks
- * up a single parameter. The placeholder names the flag rather than saying
- * `<value>`, for the same reason `valueForm` names the field.
+ * Shared by the usage line and the parameter table, so the two cannot
+ * disagree about a flag; each brackets an optional one itself. The
+ * placeholder names the flag rather than saying `<value>`, for the same
+ * reason `valueForm` names the field.
  */
 export function extraPassForm(x: ExtractedCliExtra): string {
   if (x.kind === 'boolean') return `--${x.name}`
@@ -178,10 +172,9 @@ export function usageFor(r: ExtractedRoute, cli: ExtractedCli): string {
   for (const f of [...(r.query ?? []), ...(r.body ?? [])]) {
     if (r.pathParams.includes(f.name)) continue
     // A field this binding presets is not the caller's to pass: the preset
-    // is the whole reason the alias exists. `spend-max` advertised
-    // `[--use-max]`, and because `generated.ts` applies the preset *before*
-    // the flags, `spend-max --use-max=false` was accepted and silently
-    // became a plain `spend`.
+    // is the whole reason the alias exists. `generated.ts` applies the preset
+    // *before* the flags, so an advertised `spend-max --use-max=false` would
+    // be accepted and silently become a plain `spend`.
     if (Object.prototype.hasOwnProperty.call(cli.preset, f.name)) continue
     parts.push(passForm(cli, f))
   }

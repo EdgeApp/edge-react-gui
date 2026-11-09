@@ -3,8 +3,8 @@
  *
  * The runtime pad comes from the generated edge_api_secret.h rather than a
  * literal here, so it is always the id scripts/makeApiSigner.ts baked into the
- * shards. A stale or hand-edited header fails the build instead of silently
- * producing signatures the login server rejects.
+ * shards. A header without the id fails the build with a message naming the
+ * generator.
  */
 
 #include <node_api.h>

@@ -20,7 +20,7 @@ const graph: ModuleGraph = require('../../../scripts/util/moduleGraph')
 /**
  * What decides the published package's `dependencies`.
  *
- * `npm run cli:manifest --check` regenerates and compares, so it is a
+ * `npm run cli:manifest:check` regenerates and compares, so it is a
  * staleness gate and cannot see a *wrong* answer; the bundle cross-check only
  * proves the manifest names what the bundles require. The subtle arm is the
  * type-only test: a bare `import './commands/all'` is how every command
@@ -87,8 +87,8 @@ describe('walkGraph', () => {
     const { modules, packages } = graph.walkGraph(graph.CLI_ENTRIES)
     expect(modules).toContain('src/cli/index.ts')
     expect(modules).toContain('src/cli/engine/index.ts')
-    // Through `sweepTicker.ts`, which is the import the hand-written shared
-    // list used to miss.
+    // A shared module outside `src/cli`, reached through `sweepTicker.ts`
+    // and `src/util/network.ts`.
     expect(modules).toContain('src/util/PeriodicTask.ts')
     // The modules it cares about, not a floor on the count: the count grows
     // with the route set, so `> 100` is an assertion that cannot hold in an

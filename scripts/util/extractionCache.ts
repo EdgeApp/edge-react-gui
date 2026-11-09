@@ -1,10 +1,10 @@
 /**
  * A cache for `extractRoutes`, keyed on the whole working tree.
  *
- * `docs:api:gates` runs six processes and five of them extract the same
- * routes from the same program — ~46 s of a 50 s chain on an idle machine,
- * measured, and the chain is in `verify`, in CI and behind `cliGateNeeded`
- * in the pre-commit hook. The first process now extracts and the rest read.
+ * Most of the processes `docs:api:gates` runs extract the same routes from
+ * the same program, and the chain is in `verify`, in CI and behind
+ * `cliGateNeeded` in the pre-commit hook. The first process extracts and
+ * the rest read.
  *
  * The key is what makes this safe in a *gate*, where a stale answer is a
  * false pass. The extracted types come from the whole program the route

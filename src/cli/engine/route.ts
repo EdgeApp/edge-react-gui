@@ -32,9 +32,9 @@ export interface CliFlagSpec {
    * structured field that is `'<json>'`. A `custom: true` command may parse
    * the same field some other way: `change-enabled-token-ids` takes
    * `asArray(asRequestTokenId)` and the hand-written command splits the raw
-   * value on commas, so the reference published `--token-ids='<json>'` while
-   * the documented spelling came back `404 TOKEN_NOT_FOUND Unknown token:
-   * ["…"]` — the program's own `UsageError` printed the real form.
+   * value on commas, so without an override the reference would publish
+   * `--token-ids='<json>'`, a spelling the command answers with
+   * `404 TOKEN_NOT_FOUND Unknown token: ["…"]`.
    */
   valueForm?: string
   /**
@@ -45,11 +45,11 @@ export interface CliFlagSpec {
    * built from the same declaration. A `custom: true` command can differ:
    * `create-account` publishes all three credentials as optional, because
    * over REST omitting them creates a light account, while the hand-written
-   * command refuses `create-account` with no `--password` and no `--pin`. So
-   * three surfaces disagreed — the reference bracketed them, the parameter
-   * table said `optional: true`, and the command's own refusal printed them
-   * unbracketed. This overrides the published CLI form only; the REST schema
-   * is untouched.
+   * command refuses `create-account` with no `--password` and no `--pin`.
+   * Left to the request field, the reference would bracket them and the
+   * parameter table would say `optional: true`, while the command's own
+   * refusal prints them unbracketed. This overrides the published CLI form
+   * only; the REST schema is untouched.
    */
   cliRequired?: boolean
   doc?: string
@@ -90,9 +90,9 @@ export interface CliSpec {
    * Booleans only, because that is all the pipeline carries:
    * `extractRoutes` reads the literal and keeps an entry only when its text
    * is `true` or `false`, and `asCommandSpec` cleans the persisted field as
-   * `asObject(asBoolean)`. Declared as `unknown` this invited
-   * `preset: { kind: 'swap' }`, which type-checks, passes all five
-   * documentation gates and emits a command that sends no preset at all.
+   * `asObject(asBoolean)`. A wider type would accept
+   * `preset: { kind: 'swap' }`, which would type-check, pass all five
+   * documentation gates and emit a command that sends no preset at all.
    */
   preset?: Record<string, boolean>
   /** Exit codes for a streaming command. */
@@ -106,7 +106,7 @@ export interface CliSpec {
    * `usageFor` assembles one argument per field, which assumes every field
    * is passed alongside every other. `change-wallet-states` has two
    * mutually exclusive forms — a single wallet by flags, or the whole
-   * `walletStates` map as JSON — and the assembled line read as "pass
+   * `walletStates` map as JSON — and the assembled line would read as "pass
    * `--wallet-states` *and* `--wallet-id`", which the command refuses in so
    * many words. `customUsage.test.ts` holds this against the flags the
    * hand-written command actually parses.
@@ -116,7 +116,7 @@ export interface CliSpec {
    * This binding's own one-line summary.
    *
    * Two commands on one route otherwise share the route's JSDoc first line,
-   * so `spend` and `spend-max` were both published as "Send funds."
+   * so `spend` and `spend-max` would both be published as "Send funds."
    */
   summary?: string
   /**
@@ -160,9 +160,7 @@ export interface RouteSpec<Q = unknown, B = unknown, R = unknown> {
    *
    * The API is core's signature in another representation, so a field core
    * does not know about is either a deliberate convenience or a mistake.
-   * Writing the reason is what tells the two apart: `currency-wallets` once
-   * carried a `waitForAll` that core has no parameter for — waiting is a
-   * separate method — and nothing caught it.
+   * Writing the reason is what tells the two apart.
    *
    * `checkCoreAlignment` resolves the real signature and fails on a
    * difference that is not listed here, or a listing that is no longer true.
@@ -212,11 +210,10 @@ const registry: Array<RouteSpec<any, any, any>> = []
  * modifier.
  *
  * Every route is nonetheless written `export const <name> = route({…})`, and
- * that is the convention rather than a statement about dependencies: about
- * half have an importer — a test, or a sibling route reusing a helper — and
- * the rest do not, and making the spelling depend on that would mean editing
- * a declaration to write a test about it. The uniform form is also what the
- * generator's `export const` scan and the reviewer's eye both read as "one
+ * that is the convention rather than a statement about dependencies: some
+ * have an importer — a test, or a sibling route reusing a helper — and most
+ * do not, and making the spelling depend on that would mean editing a
+ * declaration to write a test about it. The uniform form also reads as "one
  * route, one declaration".
  */
 export function route<Q, B, R>(spec: RouteSpec<Q, B, R>): RouteSpec<Q, B, R> {
@@ -253,9 +250,8 @@ function responseCheckMode(): ResponseCheckMode {
  * returning it would quietly delete fields the engine means to send — the
  * check exists to report drift, not to reshape anything.
  *
- * Exported for its test. `warn` is what production uses and what both
- * offline suites once ran without asserting — they set
- * `EDGE_CLI_CHECK_RESPONSES=strict` now, so a shape that drifts from the
+ * Exported for its test. `warn` is what production uses. Both offline suites
+ * set `EDGE_CLI_CHECK_RESPONSES=strict`, so a shape that drifts from the
  * published reference fails them, and `routeChecks.test.ts` covers all three
  * modes directly.
  */
@@ -296,14 +292,13 @@ function clean<T>(cleaner: Cleaner<T>, raw: unknown, what: string): T {
  * `?x=` means the parameter is absent, and this is the one layer that decides
  * that — so a required field reports as missing rather than arriving as `''`,
  * and `asOptional`'s fallback applies. Downstream code must not re-interpret
- * `''`: three such branches existed and none of them could fire.
+ * `''`: a branch that does can never fire.
  *
- * Exported for its test. The function itself is on the router's hot path —
- * every handler invocation goes through it, and `cleanSseQuery` calls it too
- * — but the *empty-value branch above* is unreachable from the CLI, because
- * `commandArgs.ts` refuses `--flag=` before a request is built, so only a
- * raw REST call can exercise it and the raw calls in the offline suites
- * touch three routes.
+ * Exported for its test. The function itself is on the router's hot path:
+ * every route with a `query` cleaner goes through it, and `cleanSseQuery`
+ * calls it too. But the *empty-value branch above* is unreachable from the
+ * CLI, because `commandArgs.ts` refuses `--flag=` before a request is built,
+ * so only a raw REST call can exercise it.
  */
 export function queryToObject(query: URLSearchParams): Record<string, unknown> {
   const out: Record<string, unknown> = {}
@@ -341,7 +336,7 @@ function positionalParam(spec: RouteSpec<any, any, any>): string | null {
  * A `strictBody` route's body: `asObject({…}).withRest`, keeping its shape.
  *
  * `.withRest` because that is the cleaner TypeScript infers a handler's
- * `ctx.body` from — a bare `asObject` with defaulted optionals left it
+ * `ctx.body` from — a bare `asObject` with defaulted optionals leaves it
  * `unknown` — and `.withRest` discards the `.shape` the check needs, so it
  * is put back here. Named `asObject…` so `extractRoutes` reads the literal
  * through it, as it does `asObject({…}).withRest`.

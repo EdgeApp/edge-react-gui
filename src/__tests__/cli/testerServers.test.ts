@@ -34,8 +34,8 @@ describe('isTesterConfig', () => {
   })
 
   it('refuses a production host with the word in its path or query', () => {
-    // The substring test over the whole URL read all three of these as the
-    // tester fleet.
+    // A substring test over the whole URL would read all three of these as
+    // the tester fleet.
     for (const url of [
       'https://login.edge.app/?x=-tester',
       'https://login.edge.app/tester-',

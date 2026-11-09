@@ -7,8 +7,8 @@ import { allSecretEnvNames } from '../../cli/secretFlags'
 /**
  * The daemon must not inherit the caller's credentials.
  *
- * The engine is detached and long-lived, so `{ ...process.env }` handed it
- * every variable in `SECRET_FLAG_ENV` for its whole life: a
+ * The engine is detached and long-lived, so `{ ...process.env }` would hand
+ * it every variable in `SECRET_FLAG_ENV` for its whole life: a
  * `EDGE_CLI_PASSWORD=… edge-cli login-with-password` exits in a second
  * while the engine it spawned keeps that password in `/proc/<pid>/environ`
  * for hours, and in any core dump. The engine never needs them — the client

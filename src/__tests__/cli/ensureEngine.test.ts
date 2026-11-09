@@ -15,16 +15,15 @@ import type * as SpawnEngineModule from '../../cli/client/spawnEngine'
 import { ENGINE_EXIT_ALREADY_RUNNING } from '../../cli/engine/discovery'
 
 /**
- * The three decisions `ensureEngine` makes, which nothing reached.
+ * The three decisions `ensureEngine` makes.
  *
- * `spawnEngine.ts` was 4.3% of statements and 0% of branches, so both fixes
- * this branch put into it landed with no test: the append-plus-trim of
- * `engine-startup.log`, and the `ENGINE_EXIT_ALREADY_RUNNING` arm that tells
- * "someone else owns the profile, keep waiting" from "this engine failed to
- * start". The second is a race whose whole content is an exit-code
- * comparison across two halves of the CLI, so a drift in that constant, or a
- * `signal == null` that stopped holding, silently restored the old failure —
- * exit 7 and "Stop it first" about an engine the client had started itself.
+ * Among them are the append-plus-trim of `engine-startup.log`, and the
+ * `ENGINE_EXIT_ALREADY_RUNNING` arm that tells "someone else owns the
+ * profile, keep waiting" from "this engine failed to start". The second is a
+ * race whose whole content is an exit-code comparison across two halves of
+ * the CLI, so a drift in that constant, or a `signal == null` that stopped
+ * holding, would silently answer exit 7 and "Stop it first" about an engine
+ * the client had started itself.
  *
  * `os.homedir` is stubbed because `discovery` resolves it at call time, and
  * `HOME` is not enough under jest.
@@ -124,10 +123,9 @@ describe('ensureEngine', () => {
   })
 
   it('keeps polling when the child exits because another engine owns it', async () => {
-    // The fix for 1.harness-review.14. The child exits immediately with
-    // `ENGINE_EXIT_ALREADY_RUNNING`, and the engine that *did* win the claim
-    // binds its socket a moment later — so this has to wait rather than
-    // report a startup failure.
+    // The child exits immediately with `ENGINE_EXIT_ALREADY_RUNNING`, and
+    // the engine that *did* win the claim binds its socket a moment later —
+    // so this has to wait rather than report a startup failure.
     const { ensureEngine } = load()
     let pings = 0
     const child = fakeChild()
@@ -217,10 +215,10 @@ describe('ensureEngine', () => {
   })
 
   it('appends to the startup log and trims it past the cap', async () => {
-    // `'w'` wiped the log of an engine that was still booting, and both
-    // children then wrote to one inode at independent offsets — so the
-    // surviving engine's startup record was the one record a racing start
-    // could not be diagnosed from. Appended, and trimmed only when it has
+    // Opened with `'w'`, the log of an engine that is still booting would be
+    // wiped, and both children would write to one inode at independent
+    // offsets, losing the surviving engine's startup record, the one a
+    // racing start is diagnosed from. Appended, and trimmed only when it has
     // grown past the cap.
     const { ensureEngine } = load()
     const { profileHash, runDir } = require('../../cli/engine/discovery')
@@ -253,7 +251,7 @@ describe('ensureEngine', () => {
 })
 
 /**
- * The wiring the 2.harness-review.3 fix is actually about.
+ * The wiring that hands the spawned engine its stripped environment.
  *
  * `engineEnv.test.ts` proves the helper strips the secrets; this proves the
  * child gets the stripped copy. Put back `...process.env` at the call site
@@ -309,11 +307,11 @@ describe('the spawned engine’s environment', () => {
 /**
  * Where the engine is looked for.
  *
- * Two candidates used to resolve against the working directory, so on a
- * partial install `edge-cli` run inside any checkout spawned that
- * directory's script as the daemon, handing it `EDGE_CLI_API_KEY` and every
- * password typed afterwards. Under jest `__dirname` always finds the source
- * entry first, so only the list itself can show a cwd candidate came back.
+ * Never against the working directory: on a partial install, `edge-cli` run
+ * inside any checkout would spawn that directory's script as the daemon,
+ * handing it `EDGE_CLI_API_KEY` and every password typed afterwards. Under
+ * jest `__dirname` always finds the source entry first, so only the list
+ * itself can show a cwd candidate came back.
  */
 describe('the engine entry', () => {
   it('is looked for beside this module and nowhere else', () => {

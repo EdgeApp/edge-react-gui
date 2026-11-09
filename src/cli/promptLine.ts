@@ -1,21 +1,20 @@
 /**
  * Split one prompt line into a command and its arguments.
  *
- * The prompt used `lib-cmdparse`, which is `shell-quote`'s `parse` called
- * with no environment. A *shell* parser is the wrong tool here, because the
+ * A *shell* parser such as `shell-quote` is the wrong tool here, because the
  * shell has already run: in one-shot mode the values arrive verbatim in
  * `process.argv`, and `docs/EDGE_CLI.md` promises the prompt behaves the
- * same way. Running a second expansion pass over text nobody quoted a second
- * time silently rewrote it:
+ * same way. A second expansion pass over text nobody quoted a second time
+ * would silently rewrite it:
  *
- *  - `--password=p$55w0rd` became `--password=p`, because `$55w0rd` expanded
- *    against an empty environment. `create-account` then made the account
- *    with the password `p`, reported success, and the user could never log in
- *    with what they typed.
- *  - `--memo=a#b` lost everything from the `#`, read as a comment.
- *  - `--search-string=a*b` came back as `{ op: 'glob', pattern: … }` and
- *    `wallet-list > out.txt` as `[{ op: '>' }, 'out.txt']` — objects, not
- *    strings, which reached `arg.startsWith('--')` and threw.
+ *  - `--password=p$55w0rd` would become `--password=p`, because `$55w0rd`
+ *    expands against an empty environment. `create-account` would then make
+ *    the account with the password `p` and report success, and the user
+ *    could never log in with what they typed.
+ *  - `--name=a#b` would lose everything from the `#`, read as a comment.
+ *  - `--search-string=a*b` would come back as `{ op: 'glob', pattern: … }`
+ *    and `currency-wallets > out.txt` as `[{ op: '>' }, 'out.txt']`:
+ *    objects, not strings.
  *
  * So this does quoting and nothing else: a value is literal unless it is
  * quoted, and quotes only decide where a word ends. No parameter expansion,
@@ -65,13 +64,11 @@ export function splitPromptLine(line: string): PromptLine {
         word += ch
         started = true
       } else if (quote === '"' && next !== '"' && next !== '\\') {
-        // Inside double quotes a backslash escapes only `"` and itself —
-        // POSIX, minus the `$` and backtick cases this parser has no
-        // expansion for. Escaping everything deleted the backslash from any
-        // double-quoted value: `--password="a\b"` became `ab` at the
-        // prompt and stayed `a\b` in one-shot mode, so an account created
-        // here had a password the user could not reproduce, reported as
-        // success. The guide promises the two modes take the same flags.
+        // Inside double quotes a backslash escapes only `"` and itself, as
+        // in POSIX, minus the `$` and backtick cases this parser has no
+        // expansion for. Any other backslash is kept, so `--password="a\b"`
+        // is `a\b` here as it is in one-shot mode: the guide promises the
+        // two modes take the same flags.
         word += ch
         started = true
       } else {

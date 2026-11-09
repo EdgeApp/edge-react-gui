@@ -10,10 +10,8 @@ const asKeysConfig = asObject({
 })
 
 /**
- * Derived from the cleaner. The `Cleaner<KeysConfig>` annotation it replaces
- * hid what the cleaner really returns — `edgeApiKey` has a `''` fallback, so
- * it is always present, which the interface happened to agree with only by
- * hand.
+ * Derived from the cleaner, so it says what the cleaner really returns:
+ * `edgeApiKey` has a `''` fallback, so it is always present.
  */
 type KeysConfig = ReturnType<typeof asKeysConfig>
 

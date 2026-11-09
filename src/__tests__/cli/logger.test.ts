@@ -89,9 +89,9 @@ describe('sweepOldLogs', () => {
   it('keeps a log whose profile still has a live run file', () => {
     const { sweepOldLogs } = load()
     // `unlinkSync` succeeds on POSIX for a file another process holds open,
-    // so the age test alone let one engine delete a live engine's log: the
-    // writer kept writing to an unlinked inode while `logger.logPath` still
-    // named the file.
+    // so the age test alone would let one engine delete a live engine's log:
+    // the writer would keep writing to an unlinked inode while
+    // `logger.logPath` still named the file.
     const live = seedLog('engine-liveprof.log', 30)
     seedRunFile('liveprof', process.pid)
     expect(sweepOldLogs()).toBe(0)
@@ -128,7 +128,7 @@ describe('sweepOldLogs', () => {
 })
 
 /**
- * The rename-and-reopen, which was reachable only by writing 8 MB.
+ * The rename-and-reopen, under a ceiling far below the 8 MB default.
  *
  * What it does: end the current stream, rename the log to `.1`, open a fresh
  * one at `0o600` with its own `error` handler, and reset the byte count —
@@ -213,8 +213,8 @@ describe('EngineLogger roll', () => {
 
     // Nothing was renamed, so there is one file, it has every line, and the
     // lines are in order: a failed roll must cost neither a line nor its
-    // place. The old behaviour ended the stream before learning the rename
-    // had failed, which left two streams appending to one path.
+    // place. Ending the stream before learning the rename had failed would
+    // leave two streams appending to one path.
     expect(fs.existsSync(`${logger.logPath}.1`)).toBe(false)
     const text = fs.readFileSync(logger.logPath, 'utf8')
     expect(text).toContain('past the ceiling')
@@ -234,10 +234,10 @@ describe('EngineLogger roll', () => {
     const warned = jest.spyOn(console, 'error').mockImplementation(() => {})
     try {
       // The realistic trigger: one `sudo edge-cli …` leaves the log
-      // root-owned, and every later non-root start of that profile used to
-      // die at construction with a raw stack — `openSync` throws before the
-      // `'error'` handler exists, so the policy this file states, that
-      // logging is never worth the process, was not what it did.
+      // root-owned, and `openSync` throws before the `'error'` handler
+      // exists. Uncaught, every later non-root start of that profile would
+      // die at construction with a raw stack, against the policy `logger.ts`
+      // states, that logging is never worth the process.
       const logger = new EngineLogger('eaccesprof')
       logger.info('a line that has nowhere to go')
       await logger.close()
@@ -261,12 +261,12 @@ describe('EngineLogger roll', () => {
   })
 
   it('keeps writing through two rolls inside the retry window', async () => {
-    // The retry window spaces out attempts after a failed reopen. Every
-    // successful reopen started it too, and every roll reopens, so a roll
-    // within `REOPEN_RETRY_MS` of the one before found the window still
-    // open: `roll()` had already nulled the stream, and every line was
-    // dropped until the window passed. Under the fake clock both rolls here
-    // happen at the same instant.
+    // The retry window spaces out attempts after a failed reopen, and only a
+    // failure starts it. Every roll reopens, so if a successful reopen
+    // started it too, a roll within `REOPEN_RETRY_MS` of the one before would
+    // find the window open after `roll()` had nulled the stream, and drop
+    // every line until the window passed. Under the fake clock both rolls
+    // here happen at the same instant.
     const { EngineLogger } = load()
     seedCurrentLog('quickrolls', 100)
     const logger = new EngineLogger('quickrolls', 150)
@@ -284,12 +284,12 @@ describe('EngineLogger roll', () => {
  * A log the engine cannot write must cost the lines and nothing else.
  *
  * The stream's `'error'` handler nulls it — EACCES, ENOSPC, a logs directory
- * that went read-only mid-run — and `write` kept counting bytes past that.
- * So every further `maxBytes` of *discarded* text called `roll()`, which
- * renamed the log over `.1` and opened a stream that failed the same way:
- * the one previous generation this class promises to keep, clobbered
- * repeatedly by an empty file, which is the only record of what the daemon
- * was doing when the disk filled.
+ * that went read-only mid-run — and `write` must stop counting bytes there.
+ * Otherwise every further `maxBytes` of *discarded* text would call
+ * `roll()`, which renames the log over `.1` and opens a stream that fails the
+ * same way: the one previous generation this class promises to keep,
+ * clobbered repeatedly by an empty file, though it is the only record of
+ * what the daemon was doing when the disk filled.
  */
 describe('EngineLogger with a dead stream', () => {
   it('does not roll on output it is discarding', async () => {
@@ -321,13 +321,12 @@ describe('EngineLogger with a dead stream', () => {
   })
 
   it('reopens the file rather than going quiet for ever', async () => {
-    // `roll()` nulls the stream before it renames, so a single failed
-    // reopen — EMFILE, a momentary ENOSPC, a logs directory read-only for a
-    // second — used to be permanent: `write` returns early on a null
-    // stream, so `engine-<profile>.log` stopped existing for the life of
-    // the daemon while `logger.logPath` and the `Ready` line still named
-    // it, and the only notice went to `engine-startup.log`, which the next
-    // ordinary stop deletes.
+    // `roll()` nulls the stream before it renames, so unless `write` tries
+    // again, a single failed reopen — EMFILE, a momentary ENOSPC, a logs
+    // directory read-only for a second — is permanent: `engine-<profile>.log`
+    // stops existing for the life of the daemon while `logger.logPath` and
+    // the `Ready` line still name it, and the only notice goes to
+    // `engine-startup.log`, which the next ordinary stop deletes.
     const { EngineLogger } = load()
     fs.mkdirSync(logsDir(), { recursive: true })
     const file = path.join(logsDir(), 'engine-reopen.log')
@@ -346,12 +345,9 @@ describe('EngineLogger with a dead stream', () => {
 
   it('survives an error on the stream a roll left behind', async () => {
     // `roll()` keeps the old stream alive as `previous` while it drains, so
-    // its `'error'` handler can fire *after* the new stream is assigned.
-    // Both handlers used to clear `this.stream` unconditionally, so an
-    // out-of-space error on the old stream retired the healthy new one and
-    // the daemon ran with no file log for the rest of its life — with no
-    // re-open path and one stderr line in a startup log a clean stop
-    // deletes.
+    // its `'error'` handler can fire *after* the new stream is assigned. A
+    // handler that cleared `this.stream` unconditionally would let an
+    // out-of-space error on the old stream retire the healthy new one.
     const { EngineLogger } = load()
     fs.mkdirSync(logsDir(), { recursive: true })
     const file = path.join(logsDir(), 'engine-rollerror.log')
@@ -393,8 +389,9 @@ describe('EngineLogger with a dead stream', () => {
       .rolledFlushes
     logger.info('the line that fills the first generation')
     expect(flushes.size).toBe(1)
-    // A second roll, before the first generation's `end()` has settled: one
-    // slot was overwritten here, and nothing awaited the first callback.
+    // A second roll, before the first generation's `end()` has settled: a
+    // single slot would be overwritten here, and nothing would await the
+    // first callback.
     logger.info('x'.repeat(200))
     expect(flushes.size).toBe(2)
 

@@ -16,10 +16,10 @@ import { accountPath } from './paths'
 /**
  * The three auth flags every login route takes.
  *
- * One declaration, because the five handlers below had it five times — the
- * flags, the usage tail, and the three body fields — and `docs:api:verify`
- * gates each usage string against its route declaration, so changing the
- * auth tail was five edits that had to agree.
+ * One declaration for the five handlers below — the flags, the usage tail,
+ * and the three body fields — because `docs:api:verify` gates each usage
+ * string against its route declaration, and five copies of the auth tail
+ * would be five edits that have to agree.
  */
 const AUTH_FLAGS = {
   otp: 'string',
@@ -120,17 +120,15 @@ const keyLoginCmd = command(
         'username-or-login-id': 'string',
         'login-key': 'string',
         // Declared by the route and published in the usage line, so the
-        // parser has to take it. It did not, and `edge-cli help` printed it
-        // anyway: the flag gate only asked whether an accepted flag was
-        // declared, never whether a declared one was accepted.
+        // parser has to take it.
         //
         // `'boolean'`, not `'boolstr'`: the usage line publishes
         // `[--use-login-id[=false]]`, and `'boolstr'` demands a value, so a
         // bare `--use-login-id` — the spelling the bracket advertises and
-        // the only one that means true — was `--use-login-id requires a
-        // value`. This is the same shape every generated optional boolean
-        // uses: sent only when given, so the route's `asOptional` default
-        // survives an absent flag.
+        // the only one that means true — would be refused with
+        // `--use-login-id requires a value`. This is the same shape every
+        // generated optional boolean uses: sent only when given, so the
+        // route's `asOptional` default survives an absent flag.
         'use-login-id': 'boolean',
         ...AUTH_FLAGS
       }
@@ -160,8 +158,8 @@ const pinLoginCmd = command(
       flags: {
         'username-or-login-id': 'string',
         pin: 'string',
-        // As `login-with-key`: declared, published, and refused until now,
-        // and `'boolean'` for the same reason.
+        // As `login-with-key`: declared and published, so taken, and
+        // `'boolean'` for the same reason.
         'use-login-id': 'boolean',
         ...AUTH_FLAGS
       }

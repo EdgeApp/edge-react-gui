@@ -20,12 +20,11 @@ const gate: GatePaths = require('../../../scripts/util/cliGatePaths')
 /**
  * The CLI gates must be able to see an edit to anything the CLI shares.
  *
- * `precommit:cli` skips the gates when nothing it watches is staged, and its
- * pathspec used to be written by hand in `package.json`: `src/cli scripts
- * docs/EDGE_CLI.md docs/api`. Eighteen of the modules the Node-safety smoke
- * test loads live under `src/util` and `src/locales`, so a GUI developer who
- * re-added a `react-native` import to one of them committed with that smoke
- * test and both offline suites skipped.
+ * `precommit:cli` skips the gates when nothing it watches is staged. Most of
+ * the modules the Node-safety smoke test loads live under `src/util` and
+ * `src/locales`, so a pathspec that missed them would let a `react-native`
+ * import added to one of them commit with that smoke test and both offline
+ * suites skipped.
  */
 describe('CLI gate paths', () => {
   it('covers every module the smoke test loads', () => {
@@ -33,11 +32,8 @@ describe('CLI gate paths', () => {
   })
 
   it('names every module outside src/cli that the CLI loads', () => {
-    // The mirror of the case above, and the half that was missing: that one
-    // proves `GATE_PATHS` reaches the list, this one proves the list is the
-    // set the CLI actually loads. It fails on `src/util/PeriodicTask.ts` —
-    // a value import of `src/cli/engine/sweepTicker.ts`, which `SessionStore`
-    // and `ObjectHandleStore` both run — if that entry is taken back out.
+    // The mirror of the case above: that one proves `GATE_PATHS` reaches the
+    // list, this one proves the list is the set the CLI actually loads.
     expect(gate.unwatchedCliModules()).toStrictEqual([])
   })
 
@@ -45,12 +41,10 @@ describe('CLI gate paths', () => {
     // The question the other two do not ask. Both of them compare a
     // hand-written list against something; this one walks the CLI's own
     // entry points and asks whether every module they reach is under a path
-    // that makes the gate run. Four were not —
-    // `src/configKeysMerge.ts`, `src/configKeysSchema.ts`,
-    // `src/selectors/WalletSelectors.ts` and `src/types/types.ts` — so a
-    // commit staging only one of them printed "no CLI changes" and skipped
-    // `docs:api:gates`, `cli:manifest:check`, `cli:plugins:check`,
-    // `test:cli:node-safe` and `test:cli:offline`.
+    // that makes the gate run. A commit staging only a module that is not
+    // would print "no CLI changes" and skip `docs:api:gates`,
+    // `cli:manifest:check`, `cli:plugins:check`, `test:cli:node-safe` and
+    // `test:cli:offline`.
     expect(gate.ungatedCliModules()).toStrictEqual([])
   })
 
@@ -89,15 +83,13 @@ describe('CLI gate paths', () => {
 
   it('gates every repository file the manifest generator reads', () => {
     // The direction `unwatchedCliModules()` establishes for the module
-    // graph, applied to the generator's other inputs. `package-lock.json`
-    // was the one that got away: the round-2 fix made every dependency
-    // *value* in the committed manifest a resolution out of the lock, and
-    // the lock was not a gate path — so a lock-only commit skipped
-    // `cli:manifest:check`, `npm run prepare` regenerated the manifest in
-    // CI, and `docs:api:committed` turned `develop` red with nothing local
-    // having warned. Adding a second input would do it again.
-    // The generator arrives with the commit that publishes the package, so
-    // a tree without it is a tree with no manifest to stale — and one that
+    // graph, applied to the generator's other inputs. Every dependency
+    // *value* in the committed manifest is a resolution out of
+    // `package-lock.json`, so an input outside the gate paths would let a
+    // commit that changes it skip `cli:manifest:check`, and CI would then
+    // fail at `docs:api:committed` once `npm run prepare` regenerates the
+    // manifest, with nothing local having warned.
+    // A tree without the generator has no manifest to stale, and one that
     // *claims* it, through a `cli:manifest` script, must have the file.
     const generatorPath = path.join(ROOT, 'scripts/buildCliManifest.ts')
     const pkg = JSON.parse(

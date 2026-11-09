@@ -5,8 +5,8 @@ import { errorMessage, type ErrorResponse } from '../engine/errors'
 import { ApiClientError, ClientRequestError } from './apiClient'
 import { EXIT, exitCodeForApiError, printErrorEnvelope } from './exitCodes'
 import { EngineUnavailableError } from './spawnEngine'
-// Re-exported, so every existing `import { EXIT } from './output'` still
-// resolves while the table itself lives in a module the docs build can read.
+// Re-exported, so `import { EXIT }` from this module resolves while the
+// table itself lives in a module the docs build can read.
 export { EXIT, exitCodeForApiError } from './exitCodes'
 
 export function printJson(value: unknown): void {
@@ -109,8 +109,7 @@ export function printError(error: unknown): number {
   }
   if (error instanceof EngineUnavailableError) {
     // The documented exit 7. Keyed off the type rather than a regex over the
-    // message, which already missed "Engine is up but run file is missing"
-    // and would have changed the published contract on any reword.
+    // message, so rewording a message cannot change the published contract.
     printErrorBody({
       code: 'ENGINE_UNAVAILABLE',
       message: error.message,
@@ -130,8 +129,7 @@ export function printError(error: unknown): number {
  * Write one error envelope to stderr.
  *
  * The writer itself is in `exitCodes.ts`, because `bootNodeLocale.ts` needs
- * it and cannot import this module — that would cycle through `spawnEngine`
- * — and two untyped copies of the envelope were what that produced.
+ * it and cannot import this module: that would cycle through `spawnEngine`.
  */
 const printErrorBody = (error: ErrorResponse['body']['error']): void => {
   printErrorEnvelope(error)

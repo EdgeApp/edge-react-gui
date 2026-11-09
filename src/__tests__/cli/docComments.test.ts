@@ -12,9 +12,8 @@ const ROOT = path.resolve(__dirname, '../../..')
 /**
  * Every `.ts` file the CLI owns, plus the GUI modules it shares.
  *
- * Both halves: this walked `src/cli` and `scripts` and nothing else, so
- * `src/util/txDisplay/`, `src/util/txExport/`, `src/locales/` and the rest
- * were outside it — and the extracted GUI slice is exactly where a move
+ * Both halves, because the extracted GUI slice, `src/util/txDisplay/`,
+ * `src/util/txExport/`, `src/locales/` and the rest, is exactly where a move
  * leaves a block behind.
  *
  * The trees come from `GATE_PATHS`, which `precommit:cli` already decides on,
@@ -46,10 +45,8 @@ describe('doc comments', () => {
     // The assertion below is `toEqual([])`, which an empty file list
     // satisfies — so a `GATE_PATHS` that is renamed or narrowed would leave
     // this suite green over nothing, which is the state it exists to make
-    // impossible. It walks every entry in `GATE_PATHS` — twelve since
-    // `package-lock.json` and the shared app modules joined it — and about
-    // 276 files when this was written; the floor is there to catch a list
-    // that collapsed, not to track the count.
+    // impossible. It walks every entry in `GATE_PATHS`; the floor is there to
+    // catch a list that collapsed, not to track the count.
     expect(sources().length).toBeGreaterThan(200)
     for (const gate of GATE_PATHS) {
       expect(fs.existsSync(path.join(ROOT, gate))).toBe(true)
@@ -63,9 +60,7 @@ describe('doc comments', () => {
    * Editing a doc comment's neighbourhood — inserting a helper above the
    * symbol the comment belongs to, or moving the symbol down — leaves the
    * block behind attached to the wrong thing, and the symbol it was written
-   * for has no doc on hover. It happened six times while this CLI was
-   * written, twice at the same site after it was fixed by hand, which is why
-   * it is a test rather than a convention.
+   * for has no doc on hover.
    */
   it('has no JSDoc block stacked on another', () => {
     const stacked: string[] = []

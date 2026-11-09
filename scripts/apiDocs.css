@@ -90,7 +90,7 @@ pre.json { background: transparent; border: 1px dashed var(--line); }
 .pane.cli.none p { margin: 0; }
 .cmd + .cmd { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
 /* A command line is a sentence, not a table: wrap it at the spaces rather
-   than making the reader scroll a pane sideways. `get-transactions` is 322
+   than making the reader scroll a pane sideways. `get-transactions` is 350
    characters. */
 .usage, .ex { white-space: pre-wrap; overflow-wrap: break-word; }
 .usage { background: var(--code); }

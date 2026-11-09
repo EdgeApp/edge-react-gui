@@ -9,34 +9,32 @@ import { REQUEST_BUDGET_HEADER, requestBudgetFor } from '../requestBudget'
 /**
  * The error envelope every failure arrives in, on both transports.
  *
- * Cleaned, not cast. `'error' in parsed` was the only guard, so
- * `{"error":"boom"}` built an `ApiClientError` from the string: `code` and
- * `status` were `undefined`, `super(body.message)` was `super(undefined)`,
- * and the CLI printed `{"error":{"code":undefined,…}}` and exited 1. The
- * same reasoning is written out on `sessionFile.ts`'s own cleaner.
+ * Cleaned, not cast. With only an `'error' in parsed` guard,
+ * `{"error":"boom"}` would build an `ApiClientError` from the string, with
+ * `code` and `status` `undefined`, and the CLI would print
+ * `{"error":{"code":undefined,…}}` and exit 1. The same reasoning is written
+ * out on `sessionFile.ts`'s own cleaner.
  *
  * The cleaner itself is the engine's, beside `toErrorBody` which writes the
  * envelope: one declaration for the writer and the reader, re-exported here
- * under the name this file's callers already use.
+ * under the name this file's callers use.
  */
 export const asApiErrorBody = asErrorBody
 
 /**
  * A failure of the *call*, not of the engine.
  *
- * The client's own deadline and a connection that dies mid-answer both fell
- * through `printError`'s generic arm, which writes
- * `{"code":"INTERNAL_ERROR","status":500}` and exits 1 — so a caller was
- * told the engine answered 500 when no HTTP response had existed, under a
- * code the catalogue declares `origin: 'engine'` and the guide describes as
- * an engine or plugin fault. `--timeout` is documented as a routine thing to
- * raise, which makes this the expected outcome of a long call rather than an
+ * The client's own deadline and a connection that dies mid-answer would
+ * otherwise fall through `printError`'s generic arm, which writes
+ * `{"code":"INTERNAL_ERROR","status":500}` and exits 1, telling the caller
+ * the engine answered 500 when no HTTP response existed, under a code the
+ * catalogue declares `origin: 'engine'` and the guide describes as an engine
+ * or plugin fault. `--timeout` is documented as a routine thing to raise,
+ * which makes this the expected outcome of a long call rather than an
  * exception.
  *
- * `spawnEngine.ts` already made this argument for the other half and fixed
- * it with `EngineUnavailableError` — "the generic `Error` arm reported it as
- * `INTERNAL_ERROR` and exit 1, which a wrapper script branching on 7
- * mis-handles". This is the same move for the client's own deadline.
+ * `EngineUnavailableError` in `spawnEngine.ts` is the same idea for an
+ * engine the client cannot reach.
  */
 export class ClientRequestError extends Error {
   code: 'REQUEST_TIMEOUT' | 'CONNECTION_CLOSED'
@@ -48,7 +46,7 @@ export class ClientRequestError extends Error {
     this.code = code
     // 504 for a deadline the client set and 503 for a connection that went
     // away: both are "no answer arrived", and both map to the network exit
-    // code through the published unlisted-503 rule and an explicit row.
+    // code through their rows in `EXIT_CODE_BY_ERROR`.
     this.status = code === 'REQUEST_TIMEOUT' ? 504 : 503
   }
 }
@@ -80,13 +78,10 @@ interface ApiClientOptions {
   /**
    * The engine's unix socket. The only transport this client speaks.
    *
-   * There were `host` and `port` fields beside it, and they could not work:
-   * the engine's TCP listener requires an `X-Edge-Token` header and this
-   * client never sent one, so every TCP request would have been a 401. No
-   * call site set them either — the client always talks to the engine it
-   * spawned, over the socket — and `--tcp` is forwarded to the *engine*, for
-   * other local scripts to use. Removed rather than wired up, the way
-   * `idleTimeoutSeconds` and `spawnTimeoutMs` were.
+   * The client always talks to the engine it spawned, over the socket. The
+   * engine's TCP listener requires an `X-Edge-Token` header, which this
+   * client does not send; `--tcp` is forwarded to the *engine*, for other
+   * local scripts to use.
    */
   socketPath?: string
   /**
@@ -96,8 +91,8 @@ interface ApiClientOptions {
    * client destroys the socket and reports a failure while the engine runs
    * the request to completion, so for `broadcast-tx` the caller is told the
    * call failed after the funds have left, and a long `get-transactions`,
-   * `wait-for-all-wallets` or `resync-blockchain` had no way to ask for more
-   * time.
+   * `wait-for-all-wallets` or `resync-blockchain` needs a way to ask for
+   * more time.
    */
   timeoutMs?: number
 
@@ -106,7 +101,7 @@ interface ApiClientOptions {
    *
    * `SHUTDOWN_WAIT_MS` by default, which is the sum of the engine's own
    * teardown phases. A seam, so `apiClient.test.ts` can drive the ceiling
-   * without 150 seconds of real time — the arm past it is the one that
+   * without minutes of real time — the arm past it is the one that
    * decides between reporting a wedged engine and spawning a replacement
    * that cannot claim the profile.
    */
@@ -137,8 +132,7 @@ export const DEFAULT_TIMEOUT_MS = 120_000
  *
  * `ENOENT` is the socket file not being there at all, and `ECONNREFUSED` a
  * path left behind by an engine that is gone. No port: the unix socket is
- * the only transport this client speaks, which is why `host` and `port` were
- * removed from `ApiClientOptions` rather than wired up.
+ * the only transport this client speaks.
  */
 function isNotListening(error: unknown): boolean {
   const code = (error as { code?: string } | null)?.code
@@ -149,15 +143,14 @@ function isNotListening(error: unknown): boolean {
  * The engine died while this request was in flight, before it answered.
  *
  * The response's `aborted` handler covers a connection that dies
- * *mid-answer*, but an
- * engine killed before it writes any headers — `SIGKILL`, the OOM killer, a
- * container stop — reaches the *request* as a bare `ECONNRESET` or `EPIPE`.
- * Those fell through `printError`'s generic arm as
- * `{"code":"INTERNAL_ERROR","status":500}` and exit 1, which is the
- * mis-report `ClientRequestError` exists to prevent, for the commonest way
- * an engine dies. Not `isNotListening`: there the socket was never
- * connected, so nothing can have taken effect, and the client spawns an
- * engine and retries.
+ * *mid-answer*, but an engine killed before it writes any headers —
+ * `SIGKILL`, the OOM killer, a container stop — reaches the *request* as a
+ * bare `ECONNRESET` or `EPIPE`. Without this check those would fall through
+ * `printError`'s generic arm as `{"code":"INTERNAL_ERROR","status":500}` and
+ * exit 1, which is the mis-report `ClientRequestError` exists to prevent,
+ * for the commonest way an engine dies. Not `isNotListening`: there the
+ * socket was never connected, so nothing can have taken effect, and the
+ * client spawns an engine and retries.
  */
 function isConnectionLost(error: unknown): boolean {
   const code = (error as { code?: string } | null)?.code
@@ -170,10 +163,10 @@ function isConnectionLost(error: unknown): boolean {
  * `shutdown()` sets `shuttingDown` as its second statement and does not close
  * the listeners until the drain, the logouts and `context.close()` are done,
  * so for that whole window a bound socket answers `503
- * ENGINE_SHUTTING_DOWN`. Treating it as terminal made `engine-stop` followed
- * by any command in the same script a guaranteed failure, and every command
- * a race once the idle timer starts firing — which the guide presents as
- * invisible housekeeping.
+ * ENGINE_SHUTTING_DOWN`. Treating it as terminal would make `engine-stop`
+ * followed by any command in the same script a guaranteed failure, and every
+ * command a race once the idle timer starts firing, which the guide presents
+ * as invisible housekeeping.
  */
 function isShuttingDown(error: unknown): boolean {
   return (
@@ -221,10 +214,8 @@ export class ApiClient {
         if (!(await this.waitForSocketToClose())) {
           // Past the ceiling the engine is wedged rather than shutting down,
           // and a replacement cannot work: `claimRunFile` fails `wx` against
-          // the live run file, the user is told to run the `engine-stop`
-          // they just ran, and the child opens `engine-startup.log` with
-          // `'w'` in the live engine's run directory — truncating the one
-          // record of what the wedged daemon was doing. Report instead.
+          // the live run file, and the user is told to run the `engine-stop`
+          // they just ran. Report instead.
           throw new ApiClientError({
             code: 'ENGINE_SHUTTING_DOWN',
             status: 503,
@@ -252,13 +243,11 @@ export class ApiClient {
    * Poll until the engine stops answering, or give up.
    *
    * Bounded by `SHUTDOWN_WAIT_MS`, which is the sum of the engine's own
-   * teardown phases rather than a number picked here — it used to be 15 s
-   * against a 110 s drain, so a stop with a slow request in flight sent the
-   * next command off to spawn a replacement that could not claim the
-   * profile. Past the deadline the engine is wedged rather than shutting
-   * down, so this answers `false` and the caller reports that instead of
-   * spawning the replacement this paragraph used to promise it would not —
-   * the return value was `void`, so every outcome led to the same spawn.
+   * teardown phases rather than a number picked here, so a slow request
+   * still draining after a stop does not send the next command off to spawn
+   * a replacement that cannot claim the profile. Past the deadline the
+   * engine is wedged rather than shutting down, so this answers `false` and
+   * the caller reports that instead of spawning a replacement.
    *
    * The loop can tell the two apart: a shutting-down engine answers 503 on
    * `/engine/status`, and a gone one answers ENOENT or ECONNREFUSED.
@@ -272,11 +261,10 @@ export class ApiClient {
         // A plain answer means the wait is over: this is a *new* engine on
         // the same socket, not the one that was shutting down — that one
         // answers 503 and lands in the catch below. Without this the loop
-        // had no exit for the one reply that means "stop waiting", so an
-        // engine replaced by another invocation mid-wait left the client
-        // polling the full SHUTDOWN_WAIT_MS — 150 s and about 1,500
-        // requests — against a healthy engine that was ready in under a
-        // second.
+        // would have no exit for the one reply that means "stop waiting",
+        // and an engine replaced by another invocation mid-wait would leave
+        // the client polling for the full SHUTDOWN_WAIT_MS against a healthy
+        // engine.
         return true
       } catch (error: unknown) {
         // Gone: the socket is unlinked or refusing, which is what the wait
@@ -303,10 +291,9 @@ export class ApiClient {
     body?: unknown
   ): Promise<T> {
     // Asking an engine to stop must never *start* one. Without this, a stop
-    // sent after the daemon has already gone found nothing listening, took
-    // the auto-spawn path, and brought up a replacement engine purely to
-    // tell it to shut down — which then sat idle under a fresh profile
-    // directory. The offline suite's own leak check caught it.
+    // sent after the daemon has already gone would find nothing listening,
+    // take the auto-spawn path, and bring up a replacement engine purely to
+    // tell it to shut down.
     const isStop = method === 'POST' && path === '/engine/stop'
     if (isStop) {
       try {
@@ -314,8 +301,8 @@ export class ApiClient {
       } catch (error: unknown) {
         // Nothing listening means there is nothing to stop, which is what
         // the caller wanted. Reporting the raw `connect ENOENT` as a 500
-        // made a no-op fail, and spawning an engine to receive the stop was
-        // worse.
+        // would make a no-op fail, and spawning an engine to receive the
+        // stop would be worse.
         if (isNotListening(error)) {
           const noop: unknown = { ok: true }
           return noop as T
@@ -340,9 +327,9 @@ export class ApiClient {
       Accept: 'application/json',
       // So a route whose work has its own internal budget can match it to
       // the caller's. `get-transactions`'s fiat fill is the one that needs
-      // it: its chain *settles* the remainder when its budget expires, so a
-      // deadline the engine cannot see meant `--timeout` raised the client's
-      // patience and not the work's.
+      // it: its chain *settles* the remainder when its budget expires, so
+      // with a deadline the engine cannot see, `--timeout` would raise the
+      // client's patience and not the work's.
       [REQUEST_BUDGET_HEADER]: String(
         requestBudgetFor(this.opts.timeoutMs ?? DEFAULT_TIMEOUT_MS)
       )
@@ -375,13 +362,14 @@ export class ApiClient {
           })
           // Once headers have arrived Node routes a socket close to the
           // *response*, not the request, and `IncomingMessage` only emits it
-          // when something is listening. Without these two the promise never
-          // settled: `main()` never resolved, `process.exitCode` was never
-          // assigned, the loop drained, and the CLI exited **0** with empty
-          // stdout — so `edge-cli spend … && echo sent` printed `sent` for a
-          // request the engine died in the middle of answering. The socket
-          // timeout cannot cover it either, because the socket is already
-          // destroyed. `openStream` below always had the handler.
+          // when something is listening. Without these two the promise would
+          // never settle: `main()` would never resolve, `process.exitCode`
+          // would never be assigned, the loop would drain, and the CLI would
+          // exit **0** with empty stdout, so `edge-cli spend … && echo sent`
+          // would print `sent` for a request the engine died in the middle of
+          // answering. The socket timeout cannot cover it either, because the
+          // socket is already destroyed. `openStream` below has the same
+          // handlers.
           res.on('error', reject)
           res.on('aborted', () => {
             reject(
@@ -479,8 +467,8 @@ export class ApiClient {
     // Without the first-response hook, though. `openStream` resolves when
     // the stream *ends*, and the usual reason it ends is that the engine
     // went away — `engine-stop`, or the idle shutdown — so running the hook
-    // there sent `/engine/status` at a socket with nothing on it and
-    // `onConnectFail` spawned a replacement daemon to read a locale. The
+    // there would send `/engine/status` at a socket with nothing on it, and
+    // `onConnectFail` would spawn a replacement daemon to read a locale. The
     // warning is also useless to `subscribe`, which can only hear it once
     // its stream is over.
     await this.withEngine(
@@ -517,9 +505,9 @@ export class ApiClient {
             if (res.statusCode != null && res.statusCode >= 400) {
               let raw = ''
               res.setEncoding('utf8')
-              // This branch returns before the success branch's handler, so
-              // an engine that died while sending a 4xx body hung
-              // `subscribe` instead of reporting the status.
+              // This branch returns before the success branch's handlers, so
+              // without these an engine that died while sending a 4xx body
+              // would hang `subscribe` instead of reporting the status.
               res.on('error', reject)
               res.on('aborted', () => {
                 reject(
@@ -534,12 +522,9 @@ export class ApiClient {
               res.on('end', () => {
                 try {
                   // One cleaner, not `cleaner(JSON.parse(raw))`: the parsed
-                  // value is not used for anything else here. The one
-                  // `JSON.parse` this file keeps outside a cleaner is in
-                  // `sendRequest`, where a single parse feeds both the
-                  // envelope and the success payload — a line number would
-                  // move with every edit above it, which is how this
-                  // sentence came to point at the wrong one.
+                  // value is not used for anything else here. `sendRequest`
+                  // keeps its own `JSON.parse`, because there a single parse
+                  // feeds both the envelope and the success payload.
                   const envelope = asJSON(asApiErrorBody)(raw)
                   reject(new ApiClientError(envelope.error))
                 } catch {
@@ -575,8 +560,8 @@ export class ApiClient {
             res.on('error', reject)
             // The pair, as both siblings in this file register it. A
             // response destroyed mid-stream does emit `'error'` after
-            // `'aborted'` on this Node, so the promise settled either way —
-            // but with the bare word `aborted`, for the case `subscribe`
+            // `'aborted'` on this Node, so the promise would settle either
+            // way, but with the bare word `aborted`, for the case `subscribe`
             // meets most: an engine killed, a container stopped, a laptop
             // slept.
             res.on('aborted', () => {
@@ -612,8 +597,7 @@ export class ApiClient {
   }
 
   // No `put`, `patch` or `delete`: no route declares anything but GET or
-  // POST, nothing in `src/` or `scripts/` called them, and `request` takes
-  // the verb, so git history is enough for the day one is needed.
+  // POST, and `request` takes the verb.
 }
 
 /** Parse one `event:` / `data:` frame. Comment lines (`: ok`) are ignored. */

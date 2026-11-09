@@ -28,12 +28,9 @@ interface PendingRecord {
   /**
    * The session this login created, by id only.
    *
-   * A `SessionInfo` snapshot used to be cached here and returned verbatim for
-   * the rest of the handle's TTL, so `poll-edge-login` kept reporting a
-   * session the engine had already discarded — and its `expiresAt` and
-   * `lastActivityAt` were frozen at creation, so they were wrong even while
-   * the session was alive. The client wrote that dead id back into
-   * `session.json`.
+   * `pendingSummary` re-derives the session from it on every call, so
+   * `poll-edge-login` cannot report a session the engine has discarded, or
+   * an `expiresAt` and `lastActivityAt` frozen at creation.
    */
   sessionId?: string
   /**
@@ -117,10 +114,10 @@ const loginOptionFields = {
 /**
  * The type, derived from the fields rather than restated beside them.
  *
- * A hand-written `interface LoginOptions` named the same three fields and
- * `accountOptions` forwarded them one `if` at a time, so a fourth field
- * added to `loginOptionFields` would be published on every login route's
- * body and documented in `docs/api` while this silently dropped it.
+ * A field added to `loginOptionFields` is published on every login route's
+ * body and documented in `docs/api`, so building this cleaner and its type
+ * from the same fields is what keeps `accountOptions` forwarding it rather
+ * than silently dropping it.
  */
 const asLoginOptions = asObject(loginOptionFields)
 type LoginOptions = ReturnType<typeof asLoginOptions>
@@ -194,9 +191,9 @@ function getPending(
  *
  * Checked after core's login and the wallet wait, which is where a large
  * account spends the time that outlasts a client's timeout: the client has
- * exited `REQUEST_TIMEOUT` by then, so a session registered anyway was a
- * logged-in, syncing account under an id nobody received — and with
- * auto-logout off, one that kept the engine up for good.
+ * exited `REQUEST_TIMEOUT` by then, so a session registered anyway would be
+ * a logged-in, syncing account under an id nobody received, and with
+ * auto-logout off, one that keeps the engine up for good.
  */
 async function createSession(
   ctx: RouteContext,
@@ -326,11 +323,12 @@ function assertLoginId(value: string, useLoginId: boolean | undefined): void {
 /**
  * Core's "no such stash" as the 404 it is.
  *
- * `Cannot find stash '<base64 id>'` arrived as `500 INTERNAL_ERROR` with the
- * internal id in the message, where every other "no such account" in this
- * API is `USER_NOT_FOUND`. The id is not secret — it is a public account
- * identifier — but it is in the wrong alphabet and means nothing to the
- * caller, so the message says what happened instead.
+ * Unmapped, `Cannot find stash '<base64 id>'` would arrive as
+ * `500 INTERNAL_ERROR` with the internal id in the message, where every
+ * other "no such account" in this API is `USER_NOT_FOUND`. The id is not
+ * secret — it is a public account identifier — but it is in the wrong
+ * alphabet and means nothing to the caller, so the message says what
+ * happened instead.
  */
 function mapLoginIdFailure(
   error: unknown,
@@ -454,9 +452,7 @@ export const loginWithRecovery = route({
  * @note The command requires a password and a PIN; `--username` is optional,
  *   and omitting it claims no name. Creating a *light* account — no
  *   credentials at all — is REST-only, so the published command form marks
- *   the two the command insists on. The reference bracketed all three, the
- *   parameter table called them optional, and the command's own refusal
- *   printed two of them unbracketed: three descriptions of one program.
+ *   the two the command insists on.
  */
 export const createAccount = route({
   core: 'context.createAccount',
@@ -465,8 +461,9 @@ export const createAccount = route({
   cli: {
     command: 'create-account',
     custom: true,
-    // Optional over REST, required by the command. Without this the three
-    // surfaces disagreed; see the note above.
+    // Optional over REST, required by the command. Without this the
+    // published command form would mark them optional; see
+    // `CliFlagSpec.cliRequired`.
     flags: {
       password: { cliRequired: true },
       pin: { cliRequired: true }
@@ -566,11 +563,11 @@ export const requestEdgeLogin = route({
         // A session nobody was ever told about, torn down for the same
         // reason `cancel-request` tears one down: the watcher calls
         // `ensureEdgeSession` as soon as the phone approves, whether or not
-        // anyone is polling, so the ordinary `--no-wait` sequence — approve
-        // at t≈10s, nothing polls, the handle expires at t=300s — left an
-        // `EdgeAccount` open under an id no process had learned.
-        // `engine-sessions` truncates it, so `logout` could not name it, and
-        // it is the first hold in `heldByClients`, so it also kept the
+        // anyone is polling, so in the ordinary `--no-wait` sequence (the
+        // phone approves, nothing polls, the handle expires) it would leave
+        // an `EdgeAccount` open under an id no process has learned.
+        // `engine-sessions` truncates it, so `logout` cannot name it, and it
+        // is the first hold in `heldByClients`, so it would also keep the
         // engine alive indefinitely. Once `pendingSummary` has reported the
         // id the caller owns it, and expiry must not log it out underneath
         // them.

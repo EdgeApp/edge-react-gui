@@ -42,17 +42,16 @@ function helpFor(r: ExtractedRoute, cli: ExtractedCli): CommandHelp {
     params[f.name] = {
       pass: passForm(cli, f),
       doc: f.doc,
-      // The command's optionality, which can differ from the route's — the
-      // table and the usage line read it from the same place now, so they
-      // cannot say different things about the same flag.
+      // The command's optionality, which can differ from the route's. The
+      // table and the usage line read it from the same place, so they cannot
+      // say different things about the same flag.
       optional: cliOptional(cli, f)
     }
   }
   for (const x of cli.extra) {
-    // Bracketed when optional, like every request field: `passForm` does
-    // that and this did not, so the parameter table read as though
-    // `get-transactions --out` were required while its own `optional` flag
-    // beside it said `true` and the assembled usage line bracketed it.
+    // Bracketed when optional, as `passForm` brackets every request field, so
+    // the parameter table agrees with the `optional` flag beside it and with
+    // the usage line: `get-transactions --out` is optional in all three.
     const token = extraPassForm(x)
     params[x.name] = {
       pass: x.required === true ? token : `[${token}]`,
@@ -93,10 +92,10 @@ for (const r of extractRoutes()) {
       continue
     }
     // Two routes can share a command name — `local-settings` reads on GET and
-    // writes on POST. Keeping only the last one meant `help local-settings`
-    // showed the write usage alone, so the read form looked invalid. Merge
-    // both, so every form the command accepts is described: its usage line,
-    // its REST route, the fields a caller can send and what comes back.
+    // writes on POST. Merge both, so every form the command accepts is
+    // described: its usage line, its REST route, the fields a caller can send
+    // and what comes back. Keeping only one would leave `help local-settings`
+    // showing one form, and the other looking invalid.
     existing.alsoUsage = [...(existing.alsoUsage ?? []), entry.usage]
     existing.alsoRest = [
       ...(existing.alsoRest ?? []),

@@ -36,10 +36,9 @@ import {
 /**
  * What a thrown value says, whatever it is.
  *
- * Re-exported from `src/util/errorMessage.ts`, which is where it lives now:
- * the shared GUI/CLI modules the branch extracted need the same helper and
- * must not import the engine's error contract to get it. Every engine call
- * site still imports it from here.
+ * Re-exported from `src/util/errorMessage.ts`, where it lives because the
+ * shared GUI/CLI modules need the same helper and must not import the
+ * engine's error contract to get it.
  */
 import { errorMessage } from '../../util/errorMessage'
 
@@ -76,17 +75,14 @@ export function engineError(
 /**
  * The error envelope, as the cleaner that validates it.
  *
- * Here rather than in the client, which had its own `asApiErrorBody` while
- * this file declared the same shape as a hand-written interface — so the
- * writer side was an interface and the reader side a cleaner, and the one
- * place they differed was already recorded as a comment on
- * `ApiClientError`'s constructor. The client imports it, the way
- * `clientResponses.ts` imports `asSession` from the engine.
+ * Here rather than in the client, so the side that writes the envelope and
+ * the side that reads it share one declaration. The client imports it, the
+ * way `clientResponses.ts` imports `asSession` from the engine.
  *
  * Not in `schemas.ts` with the other published shapes, because the
  * generator reads route declarations and this envelope belongs to no route:
  * it is the response of *every* route's failure, and
- * `scripts/buildApiDocs.ts` writes its schema from the catalogue instead.
+ * `scripts/buildApiDocs.ts` writes its schema by hand instead.
  */
 export const asErrorBody = asObject({
   error: asObject({
@@ -100,9 +96,7 @@ export const asErrorBody = asObject({
 /**
  * The response every failure becomes.
  *
- * Named once. The `{ status, body: { error: { code, message, status,
- * details? } } }` shape was spelled out verbatim three times in this file and
- * again in the client's `output.ts`.
+ * Named once, for this file and the client alike.
  *
  * The fields come from `asErrorBody`, so a field added to the envelope is a
  * compile error here rather than a second declaration that drifts.
@@ -156,19 +150,15 @@ export function toErrorBody(error: unknown): ErrorResponse {
   // network arm is core's own `NetworkError` and core raises that in exactly
   // one place — `login-fetch.js`, the auth server. A currency or swap
   // plugin's own `fetch` rejects with a plain `TypeError: fetch failed`
-  // carrying `cause.code = ECONNREFUSED`/`ENOTFOUND`/`UND_ERR_*`, and
-  // nothing recognised it. So `broadcast-tx`, `approve-swap-quote`,
-  // `get-max-spendable` and the other ~35 declarations of `NETWORK_ERROR`
-  // answered `500 INTERNAL_ERROR` for the commonest retryable failure there
-  // is: the declared code was unreachable from those handlers, and
-  // `EXIT_CODE_BY_ERROR` gave the script exit 1 — "failed, with no more
-  // specific mapping" — where the published table promises the retryable
-  // `EXIT.NETWORK`.
+  // carrying `cause.code = ECONNREFUSED`/`ENOTFOUND`/`UND_ERR_*`. Without
+  // this, `broadcast-tx`, `approve-swap-quote`, `get-max-spendable` and the
+  // other routes that declare `NETWORK_ERROR` would answer
+  // `500 INTERNAL_ERROR` for the commonest retryable failure there is, and
+  // `EXIT_CODE_BY_ERROR` would give the script exit 1 where the published
+  // table promises the retryable `EXIT.NETWORK`.
   //
-  // `isNetworkFailure`'s own docblock already said it exists "because any
-  // route doing its own `catch` around a network call needs the same
-  // answer"; one route did that by hand and the rest misreported. Here, so
-  // every route gets the one classification.
+  // Here rather than in each route's own `catch`, so every route gets the
+  // one classification.
   if (isNetworkFailure(error)) {
     return {
       status: 503,
@@ -197,10 +187,9 @@ export function toErrorBody(error: unknown): ErrorResponse {
 /**
  * One core error type, and the response it becomes.
  *
- * A table rather than eighteen near-identical blocks. Each block wrote its
- * status *twice* — once for the HTTP response and once inside the body — so
- * half the file was a place for the two to disagree, and adding an arm meant
- * copying thirty lines and changing four things in it.
+ * A table rather than eighteen near-identical blocks: each arm states its
+ * status once, and `mapCoreError` writes it to both the HTTP response and
+ * the body, so the two cannot disagree and adding an arm is one entry.
  */
 interface CoreErrorArm<T> {
   /** The `asMaybe*` cleaner that recognises it. */
@@ -417,11 +406,10 @@ const NETWORK_FAILURE_MESSAGES = [
  * Whether a plain `Error` means the request never reached the other end.
  *
  * The question a route has to answer before it can call a failure retryable.
- * `get-payment-protocol-info` used to answer it by assertion — every failure
- * became `NETWORK_ERROR` with status 503, which the published exit-code table
- * presents as the retryable class — so a merchant's 404, a payload that will
- * not parse and a plugin with no `getPaymentProtocolInfo` all told a script
- * to try again for ever.
+ * `NETWORK_ERROR` with status 503 is what the published exit-code table
+ * presents as the retryable class, so a merchant's 404, a payload that will
+ * not parse or a plugin with no `getPaymentProtocolInfo` reported as one
+ * would tell a script to try again for ever.
  *
  * Exported for its test, and because any route doing its own `catch` around a
  * network call needs the same answer.

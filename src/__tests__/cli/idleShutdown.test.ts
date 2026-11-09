@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals'
 import { IdleShutdown } from '../../cli/engine/idleShutdown'
 
 /**
- * The third async engine component, and the one with no unit test.
+ * The third async engine component.
  *
  * Counts are injected, so each case drives the exact state the engine would
  * be in without needing a core, a socket or a session.
@@ -109,7 +109,8 @@ describe('IdleShutdown', () => {
     idle.beginRequest()
     expect(idle.requestsInFlight).toBe(1)
     // A cold login or a `resync-blockchain` outlives the idle timeout, and
-    // shutting down underneath it left the client holding a destroyed socket.
+    // shutting down underneath it would leave the client holding a destroyed
+    // socket.
     await jest.advanceTimersByTimeAsync(5 * 60 * 1000)
     expect(onFire).not.toHaveBeenCalled()
 
@@ -126,7 +127,8 @@ describe('IdleShutdown', () => {
     idle.notifyHandlesChanged()
     // `request-edge-login --no-wait` prints a lobby and exits, leaving no
     // session and no subscriber; the handle's TTL is exactly the default idle
-    // timeout, so the engine used to shut down under the QR code.
+    // timeout, so unless the handle holds it the engine shuts down under the
+    // QR code.
     expect(idle.idleShutdownAt).toBeNull()
     await jest.advanceTimersByTimeAsync(5 * 60 * 1000)
     expect(onFire).not.toHaveBeenCalled()
@@ -164,12 +166,11 @@ describe('IdleShutdown', () => {
   })
 
   it('re-arms when its own fire rejects, and says so once', async () => {
-    // The asymmetry this covers: three of the four shutdown triggers
-    // routed a rejection to `onShutdownFailure` and the idle one — the
-    // only one that runs unattended, on every engine, by default —
-    // discarded it here. `fire` clears `shuttingDown`, re-arms, and
-    // rethrows into `reset`'s own `catch`, which is one warn line. Every
-    // case in this suite used a resolving `jest.fn`, so nothing drove it.
+    // The idle trigger is the only shutdown trigger that runs unattended, on
+    // every engine, by default. When its `onFire` rejects, `fire` clears
+    // `shuttingDown`, re-arms, and rethrows into `reset`'s own `catch`, which
+    // is one warn line. The other cases here use a resolving `jest.fn`, so
+    // this is the one that drives a rejection.
     const warnings: string[] = []
     let calls = 0
     const idle = new IdleShutdown({
@@ -203,8 +204,9 @@ describe('IdleShutdown', () => {
   it('stays disarmed through the teardown its own caller performs', async () => {
     // `shutdown()` calls `stop()` and then tears the engine down, and the
     // teardown reports itself: `objects.clearAll()`, `sessions.logoutAll()`
-    // and `events.closeAll()` each notify. Advancing without notifying is
-    // what let the case above pass while the timer re-armed in production.
+    // and `events.closeAll()` each notify. Advancing without notifying, as
+    // the 'stop disarms it for good' case does, cannot catch a timer that
+    // re-arms during that teardown.
     const { idle, onFire, setSessions, setSubscribers, setHandles } = makeIdle({
       seconds: 60,
       sessions: 1,

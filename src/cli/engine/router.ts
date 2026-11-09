@@ -108,8 +108,8 @@ export class Router {
           params[key] = decodeURIComponent(match[i + 1])
         } catch {
           // `new URL()` accepts a malformed percent-escape and
-          // `decodeURIComponent` then throws `URIError`, which reached the
-          // handler's catch-all as a 500 — a caller's bad URL reported as an
+          // `decodeURIComponent` then throws `URIError`, which would reach the
+          // handler's catch-all as a 500: a caller's bad URL reported as an
           // engine fault, on routes whose declared errors are 400 and 404.
           throw engineError(
             'BAD_REQUEST',

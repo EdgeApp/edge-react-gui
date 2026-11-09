@@ -1,12 +1,10 @@
 /**
  * The client's global-flag parsers, each reporting the way bad argv is
- * reported: a `UsageError`, so the command exits 2 with a usage line.
+ * reported: a `UsageError`, so the command exits 2 with a `USAGE` envelope.
  *
- * Out of `src/cli/index.ts`, which calls `main()` at import and so could not
- * be loaded by a test — it was 0% of 143 statements, and the `--timeout`
- * ceiling and the `CliConfigError` mapping both landed with nothing seeing
- * the client's exit code or its message. The engine's half of the same
- * ceiling already lives in an importable leaf, `requestBudget.ts`.
+ * Out of `src/cli/index.ts`, which calls `main()` at import and so cannot be
+ * loaded by a test. The engine's half of the `--timeout` ceiling lives in an
+ * importable leaf too, `requestBudget.ts`.
  */
 import { UsageError } from '../command'
 import { type CliConfig, CliConfigError, loadConfig } from '../engine/cliConfig'
@@ -18,10 +16,10 @@ import { MAX_TIMER_MS } from '../timerCeiling'
  * `--timeout=<seconds>`, as milliseconds.
  *
  * On expiry the client destroys its socket while the engine runs the request
- * to completion, so a caller needs to be able to ask for longer — the
- * documented "Expensive" routes and a whole-wallet `get-transactions` can
- * outrun the default, and for `broadcast-tx` the report would be a failure
- * after the funds had left.
+ * to completion, so a caller needs to be able to ask for longer — a
+ * `resync-blockchain`, documented as expensive, and a whole-wallet
+ * `get-transactions` can outrun the default, and for `broadcast-tx` the
+ * report would be a failure after the funds had left.
  */
 export function clientTimeoutMs(raw: string | undefined): number | undefined {
   if (raw == null) return undefined
@@ -36,8 +34,8 @@ export function clientTimeoutMs(raw: string | undefined): number | undefined {
   // Node holds a timer's delay in a signed 32-bit integer, so
   // `http.request({ timeout })` above the ceiling warns and *clamps to
   // 1 ms*: `--timeout=1e9`, which is how a caller asks for "effectively
-  // never" on the `broadcast-tx` this flag exists for, failed instantly
-  // with `REQUEST_TIMEOUT` and exit 6 — the exact opposite. Refused rather
+  // never" on the `broadcast-tx` this flag exists for, would fail instantly
+  // with `REQUEST_TIMEOUT` and exit 6, the exact opposite. Refused rather
   // than clamped down, because silently waiting 24 days less than asked is
   // the same class of surprise. `MAX_TIMER_MS` is the ceiling the engine
   // already applies to the budget header this value becomes, in
@@ -57,9 +55,9 @@ export function clientTimeoutMs(raw: string | undefined): number | undefined {
  * The `--tcp` port, validated here rather than forwarded.
  *
  * The shared validator, reported the way the client reports bad argv:
- * `Number('abc')` is `NaN`, which reached the engine as `--tcp=NaN` and cost
- * the caller a 30-second spawn timeout followed by the engine's stack inside
- * the error envelope.
+ * `Number('abc')` is `NaN`, which would reach the engine as `--tcp=NaN` and
+ * cost the caller a 30-second spawn timeout followed by the engine's stack
+ * inside the error envelope.
  */
 export function clientTcpPort(raw: string | undefined): number | null {
   try {
@@ -73,8 +71,8 @@ export function clientTcpPort(raw: string | undefined): number | null {
  * The config file, with an unreadable one reported as bad argv.
  *
  * An explicit `-c` that is not there is an argv mistake. A plain `Error`
- * here printed an `INTERNAL_ERROR` envelope and exited 1 for a typo in a
- * path, with no usage line.
+ * here would print an `INTERNAL_ERROR` envelope and exit 1 for a typo in a
+ * path.
  */
 export function clientConfig(configPath: string | undefined): CliConfig {
   try {
@@ -88,10 +86,10 @@ export function clientConfig(configPath: string | undefined): CliConfig {
 /**
  * What the legacy `-u`/`-p` helper does once no session is the named user's.
  *
- * It used to run only when there was no session at all, and the session
- * file is per profile, not per user — so once any account had logged in on
- * a profile, `-u alice -p … delete-remote-account --yes` ran against the
- * account already there, bob's, and exited 0. The helper's one job is to
+ * The session file is per profile, not per user, so a helper that ran only
+ * when there was no session at all would send
+ * `-u alice -p … delete-remote-account --yes` to whichever account already
+ * holds the profile's session, and exit 0. The helper's one job is to
  * choose the account. `ensureNamedSession` asks the engine whose the
  * session in use and the saved session are, and uses either when it is the
  * named user's; it calls this only when neither is. Then, with `-p`, it logs

@@ -5,7 +5,8 @@
  * does not work, so the engine stores the live value under an `objectId` and
  * deletes it after OBJECT_HANDLE_TTL_MS (5 minutes) from create/update, or
  * sooner when the caller finishes (e.g. save-tx) or explicitly deletes the
- * handle. Reads do not refresh the TTL; only `update` does.
+ * handle. Reads do not refresh the TTL; `update` does, and `consume` and
+ * `hold` push it out across their call.
  *
  * Holds the four kinds in `ObjectHandleKind`: a staged `transaction` from
  * makeSpend, a `pendingLogin` from requestEdgeLogin, a `swap` quote, and a
@@ -72,9 +73,9 @@ export interface HandleRecord<T = unknown> {
    * `deleteMany`'s wait is bounded — a wedged call must not stop the engine
    * exiting — so a logout or a shutdown can walk away from a handle whose
    * operation is still running. `hold` reads this on the way out: re-arming
-   * such a record gave a signed transaction a fresh 5-minute window with its
-   * session already gone, so no later `deleteBySession` could match it and
-   * only the sweeper would ever reach it, against a dead account.
+   * such a record would give a signed transaction a fresh 5-minute window
+   * with its session already gone, so no later `deleteBySession` could match
+   * it and only the sweeper would ever reach it, against a dead account.
    */
   abandoned?: boolean
 }
@@ -87,10 +88,9 @@ function makeObjectId(prefix: string): string {
  * Where a release failure is written.
  *
  * `EngineLogger`'s shape, narrowed to what this store uses: everything the
- * engine reports with `console` goes to `engine-startup.log`, which a clean
- * stop deletes — so a `quote.close()` the exchange refused left no record at
- * all. The handle log line belongs in `engine-<profile>.log` with the rest of
- * the engine's history.
+ * engine reports with `console` goes only to `engine-startup.log`, and a
+ * `quote.close()` the exchange refused belongs in `engine-<profile>.log`
+ * with the rest of the engine's history.
  */
 type HandleLogger = EngineReporter
 
@@ -127,9 +127,9 @@ export class ObjectHandleStore {
    * `/request-edge-login` is not account-scoped, and `lobby`, because
    * `/admin/make-lobby` is not either. Both have a TTL equal to the default
    * idle timeout and both are created to be polled for their whole life, so
-   * without this the `--no-wait` flows those routes document left the engine
-   * with nothing to hold it and the idle timer tore the context down under
-   * the lobby the user was still showing a QR code for.
+   * without this the `--no-wait` flows those routes document would leave the
+   * engine with nothing to hold it and the idle timer would tear the context
+   * down under the lobby the user is still showing a QR code for.
    */
   get sessionlessCount(): number {
     let n = 0
@@ -181,10 +181,7 @@ export class ObjectHandleStore {
     const ids = [...this.handles.entries()]
       .filter(([, record]) => record.sessionId === sessionId)
       .map(([id]) => id)
-    // `redactSessionId`, which this module already imports and uses: a
-    // `sessionId` is a bearer token, and its own docblock says the
-    // redaction "was spelled out at four call sites, which is three too
-    // many". This was the fifth.
+    // `redactSessionId`, because a `sessionId` is a bearer token.
     await this.deleteMany(ids, `session ${redactSessionId(sessionId)}`)
   }
 
@@ -195,27 +192,27 @@ export class ObjectHandleStore {
   /**
    * Release a set of handles, waiting for any that are mid-call.
    *
-   * The bulk paths used to call `delete` straight away, which does not test
-   * `consuming` — so they bypassed the invariant the rest of the store
-   * honours, and `objectHandles.test.ts` asserts. Two states reached it: a
-   * `logout` from a second shell while `approve-swap-quote` was inside
-   * `consume`, which ran `onExpire` → `quote.close()` on a quote mid-approve;
-   * and a shutdown during a `broadcast-tx`, which released the handle under
-   * the call so `txHandleResponse` answered 404 after the money had left.
+   * `delete` does not test `consuming`, so calling it straight away would
+   * bypass the invariant the rest of the store honours, and
+   * `objectHandles.test.ts` asserts: a `logout` from a second shell while
+   * `approve-swap-quote` is inside `consume` would run `onExpire` →
+   * `quote.close()` on a quote mid-approve, and a shutdown during a
+   * `broadcast-tx` would release the handle under the call so
+   * `txHandleResponse` answers 404 after the money has left.
    *
    * Bounded, because a wedged call must not stop the engine exiting, and the
    * abandonment is logged rather than silent.
    *
    * Both phases run across the whole set rather than handle by handle, which
    * is what makes `this.busyWaitMs` and `HANDLE_TEARDOWN_WAIT_MS` the
-   * ceilings `shutdownTiming` adds them up as. The wait is the same either
-   * way — the deadline is absolute, so a handle only loses its turn once the
-   * whole budget is wall-clock spent — but the teardown was not: `delete`
-   * gives each `onExpire` its own `HANDLE_TEARDOWN_WAIT_MS`, so N quotes
-   * whose exchange is black-holing requests cost N × 5s in sequence. Six of
-   * them put `clearAll()` at 30s, and the session release after it at 30s
-   * again, past the ceiling the client waits on — so a daemon draining
-   * exactly as designed was reported to the operator as wedged.
+   * ceilings `shutdownTiming` adds them up as. The wait would be the same
+   * either way — the deadline is absolute, so a handle only loses its turn
+   * once the whole budget is wall-clock spent — but the teardown would not:
+   * `delete` gives each `onExpire` its own `HANDLE_TEARDOWN_WAIT_MS`, so in
+   * sequence N quotes whose exchange is black-holing requests would cost
+   * N × 5s, which soon passes the ceiling the client waits on, and a daemon
+   * draining exactly as designed would be reported to the operator as
+   * wedged.
    */
   private async deleteMany(ids: string[], why: string): Promise<void> {
     const deadline = Date.now() + this.busyWaitMs
@@ -244,10 +241,8 @@ export class ObjectHandleStore {
     }
     await Promise.all(releasing)
     if (abandoned.length > 0) {
-      // `this.logger`, not `console`: this is the one class that already
-      // holds a logger, and it used it eleven lines away while writing the
-      // abandonment — the thing a reader of a wedged engine most wants — to
-      // the file the stop deletes.
+      // `this.logger`, not `console`: the abandonment is the thing a reader
+      // of a wedged engine most wants, so it goes to the engine log.
       this.logger.warn(
         `${why}: gave up waiting for ${abandoned.join(', ')} after ` +
           `${this.busyWaitMs}ms; left in place`
@@ -364,8 +359,8 @@ export class ObjectHandleStore {
    * A failure releases too, because from outside the plugin there is no way
    * to tell a failure before the money moved from one after. A swap
    * `approve()` signs, broadcasts, and then does post-broadcast bookkeeping;
-   * an error from that last step used to unlock the handle, so a retry of
-   * `approve-swap-quote` re-signed and re-broadcast — on an account-based
+   * if an error from that last step unlocked the handle, a retry of
+   * `approve-swap-quote` would re-sign and re-broadcast — on an account-based
    * chain, a second real transfer of the user's funds. Releasing means a
    * retry answers `OBJECT_NOT_FOUND` and the caller has to fetch a fresh
    * quote, which is the only safe reading of an ambiguous failure.
@@ -399,11 +394,11 @@ export class ObjectHandleStore {
    * Hold a handle open across a call that does not consume it.
    *
    * `broadcast-tx` and `sign-tx` keep their handle afterwards, but their core
-   * call can outlive the TTL: the expiry was checked on the way *out*, through
-   * `update`, so a broadcast that crossed the boundary threw `OBJECT_EXPIRED`
-   * after the money had already left — no txid in the response, no handle left
-   * to `save-tx` with, and the transaction missing from local history until a
-   * sync found it.
+   * call can outlive the TTL, and with the expiry checked only on the way
+   * *out* a broadcast that crossed the boundary would throw `OBJECT_EXPIRED`
+   * after the money had already left — no txid in the response, no handle
+   * left to `save-tx` with, and the transaction missing from local history
+   * until a sync found it.
    */
   async hold<T, R>(
     record: HandleRecord<T>,
@@ -417,7 +412,7 @@ export class ObjectHandleStore {
       // Only when this record is still the one the store holds, and only
       // when nothing gave up on it: `deleteMany`'s wait is bounded, so a
       // logout or a shutdown can abandon a handle mid-call, and clearing
-      // `consuming` on such a record gave it a fresh window that no
+      // `consuming` on such a record would give it a fresh window that no
       // `deleteBySession` could ever match.
       if (this.handles.get(record.objectId) === record) {
         if (record.abandoned === true) {
@@ -475,10 +470,10 @@ export class ObjectHandleStore {
    * answer to "release this handle": the handle is gone either way, so a 500
    * would report a failure for an operation that succeeded. The part the
    * caller cannot see is in the engine log, with the handle's id and kind,
-   * written by `delete` before it rethrew. `cancel-request` found this the
-   * hard way: core's `cancelRequest()` throws when the lobby it refers to
-   * has already gone, which is the ordinary case for a login that completed
-   * before the caller cancelled it.
+   * written by `delete` before it rethrew. `cancel-request` relies on this:
+   * core's `cancelRequest()` throws when the lobby it refers to has already
+   * gone, which is the ordinary case for a login that completed before the
+   * caller cancelled it.
    */
   async release(objectId: string): Promise<boolean> {
     try {
@@ -493,20 +488,13 @@ export class ObjectHandleStore {
    * Release a handle, running its teardown.
    *
    * The handle leaves the map either way: it is gone, and nothing can call
-   * it again. A teardown that *failed* is a different matter, and this used
-   * to swallow it and still answer `true` — so `delete` could not reject for
-   * that reason at all, and the four sites written to catch it were
-   * unreachable code: `get`'s expiry path, `consume`'s `finally`, the
-   * sweeper's `onError` — which exists because "a hand-rolled
-   * `.catch(() => {})` discarded it" — and `sessions.releaseHandles`.
-   *
-   * What was lost is a liability: `quote.close()` is the engine's only
-   * cancellation of a real order at a swap partner, and it runs on a logout,
-   * a shutdown and every 5-minute expiry, so an exchange refusing it left
-   * the order live with no log line and no event. Reported here, where the
-   * `objectId` and `kind` are known, and rethrown so the caller can decide —
-   * the explicit release routes answer their caller, and the housekeeping
-   * paths carry on.
+   * it again. A teardown that *failed* is a different matter, and a
+   * liability: `quote.close()` is the engine's only cancellation of a real
+   * order at a swap partner, and it runs on a logout, a shutdown and every
+   * 5-minute expiry, so an exchange refusing it leaves the order live.
+   * Reported here, where the `objectId` and `kind` are known, and rethrown so
+   * the caller can decide — the explicit release routes answer their caller,
+   * and the housekeeping paths carry on.
    */
   async delete(objectId: string): Promise<boolean> {
     const record = this.handles.get(objectId)
@@ -517,11 +505,11 @@ export class ObjectHandleStore {
       try {
         // Bounded, because `onExpire` is caller-supplied and reaches
         // third-party code: a `swap` handle's is `quote.close()`, a plugin
-        // HTTP call to an exchange. `deleteMany` bounded only its wait for
-        // a call already in flight, so `clearAll()` — the shutdown's
-        // second phase — inherited whatever this took, and every other
-        // teardown phase has a ceiling for exactly that reason. A timeout
-        // is reported through the same arm as a refusal.
+        // HTTP call to an exchange. `deleteMany` bounds only its wait for a
+        // call already in flight, so without this `clearAll()` — the
+        // shutdown's second phase — would inherit whatever this took, and
+        // every other teardown phase has a ceiling for exactly that reason.
+        // A timeout is reported through the same arm as a refusal.
         await withDeadline(
           Promise.resolve(record.onExpire(record.value)),
           HANDLE_TEARDOWN_WAIT_MS,
@@ -532,9 +520,7 @@ export class ObjectHandleStore {
         // Redacted: a `sessionId` is a bearer token — holding one is full
         // account authority — and this line goes into a log file an
         // operator pastes into a bug report, kept for seven days by the
-        // sweep. `events.ts` and `server.ts` redact the same value; this
-        // was the one site that did not, reachable whenever a swap
-        // partner refuses a `quote.close()` at the handle's TTL.
+        // sweep. `events.ts` and `server.ts` redact the same value.
         const redactedOwner =
           record.sessionId == null
             ? undefined

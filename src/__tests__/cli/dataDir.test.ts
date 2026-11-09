@@ -8,8 +8,10 @@ import { secureDataDir } from '../../cli/engine/dataDir'
 /**
  * The account data directory's mode.
  *
- * Both halves `chmod`ed whatever `-d` named to `0700`, so `-d ~` or a
- * shared folder cut off every other user and service relying on its mode.
+ * The client and the engine both go through `secureDataDir`: a directory it
+ * creates is `0700`, and one that exists keeps its mode, because `chmod`ing
+ * whatever `-d` names to `0700` would let `-d ~` or a shared folder cut off
+ * every other user and service relying on its mode.
  */
 const made: string[] = []
 afterEach(() => {

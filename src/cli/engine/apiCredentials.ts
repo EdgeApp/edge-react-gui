@@ -1,18 +1,12 @@
 /**
  * Which key and which signer every request is made with.
  *
- * Four decisions used to live inline in `makeCoreContext`, behind
- * `if (opts.fake === true) return` and a `loadKeysFrom()` call — so jest
- * never reached them (both offline suites are `--fake`) and the only thing
- * that drove the real path was `scripts/testNodeApiSigner.ts`, wired to
- * `test:cli:node-hmac`, which appears in neither `.travis.yml` nor
- * `precommit` nor `precommit:cli` and needs the built addon plus tester
- * network besides.
- *
- * What was unguarded is not plumbing. Which signer is chosen decides which
- * `appKeys` layer the info server serves, so a regression here surfaces as a
- * plugin starting with no keys — the failure this engine is hardest to trace
- * back. Pure, so the combinations are a table.
+ * Which signer is chosen decides which `appKeys` layer the info server
+ * serves, so a regression here surfaces as a plugin starting with no keys —
+ * the failure this engine is hardest to trace back. Pure, so the
+ * combinations are a table, and out of `makeCoreContext`, where it would sit
+ * after an `if (opts.fake === true) return` that jest never passes (both
+ * offline suites are `--fake`).
  *
  * Node-safe: no react-native, no core, no I/O.
  */
@@ -62,13 +56,12 @@ export function resolveApiCredentials(
   // effective key is a different one: signing key B with A's secret fails
   // the `infoRollup` fetch, and `makeCoreContext` swallows that into a
   // single warn line, so every plugin quietly boots on the floor `appKeys`
-  // layer. The test is which key is in use, not how it got there — an
-  // explicit `-k` was the only case this checked, and a config-file
-  // `apiKey` that differs from `keys.json` produced exactly the mismatched
-  // pair the check exists to prevent. A config key that *equals* it keeps
-  // both, because then the pair is intact: treating any config key as an
-  // override is what used to turn off HMAC signing for anyone who wrote
-  // their own key into `edge-cli.conf`.
+  // layer. The test is which key is in use, not how it got there: a
+  // config-file `apiKey` that differs from `keys.json` is the same
+  // mismatched pair as an explicit `-k`. A config key that *equals* it keeps
+  // both, because then the pair is intact, and treating any config key as an
+  // override would turn off HMAC signing for anyone who wrote their own key
+  // into `edge-cli.conf`.
   const keyOwnsKeysJsonSecret = effectiveApiKey === keys.edgeApiKey
   const apiSecretHex = keyOwnsKeysJsonSecret
     ? keys.edgeApiSecret ?? undefined
@@ -86,8 +79,8 @@ export function resolveApiCredentials(
   if (apiSecretHex != null) {
     // Named, because `base16.parse` throws its own `Error: Invalid base16
     // character` with no mention of the file or the field: a hand-edited
-    // `keys.json` with a typo in the secret failed the engine's start with a
-    // message that read like a bug in the CLI.
+    // `keys.json` with a typo in the secret would fail the engine's start
+    // with a message that reads like a bug in the CLI.
     try {
       apiSecret = base16.parse(apiSecretHex.replace(/^0x/i, '').toUpperCase())
     } catch {

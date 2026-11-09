@@ -42,14 +42,13 @@ const REOPEN_RETRY_MS = 5_000
  * logger's whole surface — and so a test can pass a recorder.
  *
  * It exists because `console` is not a record. The engine runs detached with
- * `stdio: ['ignore', logFd, logFd]` pointed at `engine-startup.log`, and
- * `removeRunArtifacts` unlinks that file on every ordinary stop, so the nine
- * failures these modules report — an auto-logout that failed, an
- * `account.logout()` that left wallet engines syncing, a logout that gave up
- * on in-flight requests, handles abandoned mid-call, an event that would not
- * serialise, a failed idle shutdown, every sweep failure, a listener error
- * after `listen` resolved, and a unix socket whose `0600` could not be set —
- * were erased by the shutdown that followed them.
+ * `stdio: ['ignore', logFd, logFd]` pointed at `engine-startup.log`, which
+ * every ordinary stop retires, so the failures these modules report — an
+ * auto-logout that failed, an `account.logout()` that left wallet engines
+ * syncing, a logout that gave up on in-flight requests, handles abandoned
+ * mid-call, an event that would not serialise, a failed idle shutdown, every
+ * sweep failure, a listener error after `listen` resolved, and a unix socket
+ * whose `0600` could not be set — go to the engine log as well.
  */
 export interface EngineReporter {
   warn: (message: string, extra?: Record<string, unknown>) => void
@@ -86,17 +85,17 @@ export class EngineLogger {
   /**
    * Every rolled generation's flush, so `close` can wait for them all.
    *
-   * A roll ends the old stream and keeps writing to a new one. Nothing
-   * awaited that `end()`, so a shutdown in the moment after a roll — which
-   * `engine-stop` and SIGINT both are — could lose the tail of `.1`, the file
-   * that holds the lines leading up to whatever made the daemon busy enough
-   * to roll.
+   * A roll ends the old stream and keeps writing to a new one. Unless
+   * something awaits that `end()`, a shutdown in the moment after a roll —
+   * which `engine-stop` and SIGINT both are — could lose the tail of `.1`,
+   * the file that holds the lines leading up to whatever made the daemon busy
+   * enough to roll.
    *
-   * An array, not one slot: a single slot was overwritten by the next roll,
-   * so a daemon busy enough to roll twice before shutting down dropped the
-   * first generation's callback on the floor — the same loss this field
-   * exists to prevent, one roll further along. Each entry removes itself
-   * when it settles, so this cannot grow with the life of the process.
+   * A set, not one slot: a single slot would be overwritten by the next
+   * roll, so a daemon busy enough to roll twice before shutting down would
+   * drop the first generation's callback on the floor — the same loss this
+   * field exists to prevent, one roll further along. Each entry removes
+   * itself when it settles, so this cannot grow with the life of the process.
    */
   private readonly rolledFlushes = new Set<Promise<void>>()
   readonly logPath: string
@@ -105,9 +104,9 @@ export class EngineLogger {
    * The ceiling this instance rolls at.
    *
    * A parameter only so a test can reach `roll()`: with the module constant
-   * as the only ceiling, the one way in was to write 8 MB, so the whole
-   * rename-and-reopen — a `0o600` mode, a fresh `'error'` handler, and the
-   * `catch` that keeps writing to the old handle when the rename fails — was
+   * as the only ceiling, the one way in would be to write 8 MB, leaving the
+   * whole rename-and-reopen — a `0o600` mode, a fresh `'error'` handler, and
+   * the `catch` that keeps writing to the old handle when the rename fails —
    * unexercised. The engine never passes it.
    */
   private readonly maxBytes: number
@@ -122,12 +121,12 @@ export class EngineLogger {
     // Both of these throw *synchronously* — EACCES from a logs directory or
     // log file an earlier `sudo` run left root-owned, EROFS from a read-only
     // home, ENOSPC when the disk is full — and the `'error'` handler below
-    // cannot catch what happens before the stream exists. Unguarded, as
-    // `openSync` was, that killed the daemon at startup with a raw stack:
-    // every later non-root start of a profile whose log a root run had
-    // touched. The rule twelve lines down is the whole policy — logging is
-    // never worth the process — so a log the engine cannot open means it
-    // runs without a file log and says so once on stderr.
+    // cannot catch what happens before the stream exists. Unguarded, that
+    // would kill the daemon at startup with a raw stack on every later
+    // non-root start of a profile whose log a root run had touched. The rule
+    // in `watchStream` is the whole policy — logging is never worth the
+    // process — so a log the engine cannot open means it runs without a file
+    // log and says so once on stderr.
     try {
       fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
       this.stream = this.openStream()
@@ -174,16 +173,11 @@ export class EngineLogger {
    * which would kill a long-lived daemon mid-request and skip
    * `removeRunArtifacts`. Logging is never worth the process.
    *
-   * `if (this.stream === stream)` is the whole point of the helper. Both
-   * sites used to clear `this.stream` unconditionally, and `roll()` keeps
-   * the old stream alive as `previous` while it drains up to 8 MB — with
-   * the handler installed for it still attached — before assigning the new
-   * one. So an error on the *old* stream, draining out of space, nulled the
-   * *healthy* new one, `write` returned early for the rest of the process's
-   * life, and there is no re-open path: the daemon ran with no file log at
-   * all and the only notice was one stderr line in a startup log a clean
-   * stop deletes. That is the other half of the state the counter guard
-   * below was written for.
+   * `if (this.stream === stream)` is the whole point of the helper.
+   * `roll()` assigns the new stream while the old one, `previous`, is still
+   * draining up to 8 MB with the handler installed for it still attached, so
+   * an error on the *old* stream, draining out of space, must not null the
+   * *healthy* new one.
    */
   private watchStream(stream: fs.WriteStream): void {
     stream.on('error', (error: Error) => {
@@ -203,19 +197,20 @@ export class EngineLogger {
     })
     const text = line + '\n'
     // Nothing is counted that was not written. The `'error'` handler nulls
-    // the stream, and counting past that kept the ceiling climbing on text
-    // being discarded — so every further `maxBytes` of dropped lines called
-    // `roll()`, which renamed the log over `.1` and opened a stream that
-    // failed the same way. On a persistent ENOSPC or a logs directory that
-    // went read-only mid-run, the one previous generation this class
-    // promises to keep was clobbered repeatedly by an empty file: the only
+    // the stream, and counting past that would keep the ceiling climbing on
+    // text being discarded, so every further `maxBytes` of dropped lines
+    // would call `roll()`, rename the log over `.1` and open a stream that
+    // fails the same way. On a persistent ENOSPC or a logs directory gone
+    // read-only mid-run, the one previous generation this class promises to
+    // keep would be clobbered repeatedly by an empty file, and it is the only
     // record of what the daemon was doing when it ran out of space.
     if (this.stream == null && !this.reopen()) return
     if (this.stream == null) return
     this.bytesWritten += Buffer.byteLength(text)
-    // Written first, then rolled. Rolling first put the line that tripped the
-    // threshold into the *new* file while `bytesWritten` was reset to zero
-    // around it, so the fresh file's count was short by that line for ever.
+    // Written first, then rolled. Rolling first would put the line that
+    // tripped the threshold into the *new* file while `bytesWritten` is reset
+    // to zero around it, leaving the fresh file's count short by that line
+    // for ever.
     this.stream.write(text)
     if (this.bytesWritten > this.maxBytes) this.roll()
   }
@@ -225,10 +220,10 @@ export class EngineLogger {
    *
    * `openSync` first, rather than letting `createWriteStream` open lazily.
    * The lazy open is a race with everything that touches the path: a roll in
-   * that window renamed a file that did not exist yet and then the pending
-   * open re-created it, so the lines leading up to the roll went into the new
-   * generation instead of the one they filled — and an engine that died
-   * early lost its first lines entirely.
+   * that window would rename a file that does not exist yet and the pending
+   * open would then re-create it, so the lines leading up to the roll would go
+   * into the new generation instead of the one they filled, and an engine
+   * that died early would lose its first lines entirely.
    */
   private openStream(): fs.WriteStream {
     const fd = fs.openSync(this.logPath, 'a', 0o600)
@@ -247,10 +242,10 @@ export class EngineLogger {
     // reader following the old file keeps a consistent view — which is the
     // whole reason this renames rather than truncating.
     //
-    // Ending the stream first, as this used to, meant a failed rename left
-    // two streams on one path: the new one appended ahead of the old one's
-    // buffered flush, so lines came out of order, and anything still in the
-    // old stream's buffer landed after lines written later.
+    // Ending the stream first would mean a failed rename leaves two streams
+    // on one path: the new one appending ahead of the old one's buffered
+    // flush, so lines come out of order, and anything still in the old
+    // stream's buffer lands after lines written later.
     try {
       fs.renameSync(this.logPath, `${this.logPath}.1`)
     } catch {
@@ -294,13 +289,11 @@ export class EngineLogger {
   /**
    * Open a fresh stream, reporting failure rather than throwing.
    *
-   * Tried again on the next line, because a failed reopen used to be
-   * permanent: `roll()` nulls the stream before renaming, so one EMFILE, one
-   * ENOSPC or a logs directory that went read-only for a moment left
-   * `this.stream` null for the life of the daemon — `write` returns early on
-   * a null stream, so `engine-<profile>.log` silently stopped existing while
-   * `logger.logPath` and the `Ready` line still named it, and the only
-   * notice went to a file the next ordinary stop deletes. Rate-limited so a
+   * Tried again on the next line, so one EMFILE, one ENOSPC or a logs
+   * directory that went read-only for a moment does not leave `this.stream`
+   * null for the life of the daemon: `write` returns early on a null stream,
+   * so `engine-<profile>.log` would silently stop existing while
+   * `logger.logPath` and the `Ready` line still named it. Rate-limited so a
    * persistent failure costs one `openSync` per interval rather than one per
    * line.
    */
@@ -365,9 +358,9 @@ export class EngineLogger {
  * A log whose profile still has a live run file is kept, whatever its age.
  * `fs.unlinkSync` succeeds on POSIX for a file another process holds open,
  * so the `catch` below does not protect a live writer: an engine started
- * `--idle-timeout=0` and left quiet kept writing to an unlinked inode after
- * another engine's startup sweep removed it, so its log silently stopped
- * existing while `logger.logPath` and the `Ready` line still named it.
+ * `--idle-timeout=0` and left quiet would keep writing to an unlinked inode
+ * after another engine's startup sweep removed its log, which would silently
+ * stop existing while `logger.logPath` and the `Ready` line still named it.
  * `keep` is the file this process has open, which the caller knows.
  */
 export function sweepOldLogs(
@@ -405,9 +398,8 @@ export function sweepOldLogs(
 /**
  * Profiles whose run file names a process that is still running.
  *
- * The same test `sweepStaleProfiles` applies, read here directly rather than
- * imported, because this module is loaded before the engine has a profile
- * and must not drag the discovery module's `net` probe into that path.
+ * The pid test `sweepStaleProfiles` starts with, applied to run files read
+ * through `runFile.ts`.
  */
 function liveLogProfiles(): Set<string> {
   const live = new Set<string>()

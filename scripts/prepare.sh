@@ -41,8 +41,8 @@ node -r sucrase/register ./scripts/stringifyBridge.ts
 
 # Regenerate the API reference and the CLI's command table and help text
 # from the route declarations. All are committed, so a fresh clone works
-# without this; the writes are skipped when nothing changed, so prepare never
-# dirties git.
+# without this; the writes are skipped when nothing changed, so prepare
+# dirties git only when a committed artifact is stale.
 npm run docs:api
 
 # The published CLI's package manifest, which mirrors this package's version

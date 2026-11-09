@@ -1,18 +1,10 @@
 /**
  * Every global flag, once.
  *
- * The client's `HELP_TEXT`, the engine's `printHelp` and the table in
- * `docs/EDGE_CLI.md` each described the same flags in their own words, and
- * they had drifted: `-h, --help` was "Display options", "Show help" and
- * "Show options"; `-d, --directory` was "Working directory", "Working
- * directory for core data" and "Working directory for local Edge data"; and
- * `-k, --api-key` said "Auth server API key" on the client against "Override
- * API key from `keys.json`" on the engine — where the engine's wording is
- * the accurate one, because `-k` is forwarded and that is what it does.
- *
- * Both help texts are rendered from this list, and `scripts/verifyApiDocs.ts`
- * checks the guide's table against it in both directions, so the third copy
- * cannot drift either.
+ * The client's `HELP_TEXT` and the engine's `printHelp` are both rendered
+ * from this list, and `scripts/verifyApiDocs.ts` checks the table in
+ * `docs/EDGE_CLI.md` against it in both directions, so the three cannot
+ * describe the same flag in different words.
  *
  * No imports, so either entry point can use it.
  */
@@ -229,8 +221,7 @@ export const GLOBAL_FLAGS: GlobalFlag[] = [
  * Render the flags one half accepts, as aligned help lines.
  *
  * The column is computed from the longest spelling rather than hand-spaced,
- * which is what left the long-only flags starting two columns left of the
- * short-flag rows in the engine's help.
+ * so every row's description starts in the same column.
  */
 export function renderFlagHelp(who: 'client' | 'engine'): string {
   const rows = GLOBAL_FLAGS.filter(f => f.who === who || f.who === 'both')
@@ -243,11 +234,9 @@ export function renderFlagHelp(who: 'client' | 'engine'): string {
 /**
  * The flag an argument names, by any spelling the table gives it.
  *
- * One copy, because both parsers had it: the client as `matchFlag` and the
- * engine written out inside `ENGINE_FLAGS.find`, byte for byte. It is the
- * rule that decides which spellings argv accepts, and the drift this class
- * already produced was real — `-k=value` worked on one side and not the
- * other, which no table entry or help line mentioned.
+ * One copy for both parsers, because it is the rule that decides which
+ * spellings argv accepts: two copies could let `-k=value` work on one side
+ * and not the other, which no table entry or help line would mention.
  */
 export function matchFlag(
   flags: GlobalFlag[],
@@ -266,18 +255,16 @@ export function matchFlag(
 /**
  * The value a flag takes, from either spelling.
  *
- * Three implementations of "the token after a flag, refused when it is
- * missing, empty or itself a flag" — `parseArgs.ts`'s `takeValue`,
- * `commandArgs.ts`'s `takeValue`, and the engine's `requireNonEmpty` plus
- * `flagValue` — with two of them carrying a comment saying they must agree
- * with the others.
+ * One copy of "the token after a flag, refused when it is missing, empty or
+ * itself a flag", shared by `parseArgs.ts`, `commandArgs.ts` and the
+ * engine's `engineArgs.ts`, so the three parsers cannot disagree.
  *
  * `''` is refused as well as absent, because the two are the same forgotten
- * value: `-d ""` reached the profile hash as an empty directory while the
- * engine used its default, which is two engines and a 30-second spawn
+ * value: `-d ""` would reach the profile hash as an empty directory while
+ * the engine used its default, which is two engines and a 30-second spawn
  * timeout with a healthy one running. A value beginning with `-` is refused
- * for the same reason: `--directory --tcp=9312` created a directory named
- * `--tcp=9312` and dropped the TCP flag.
+ * for the same reason: `--directory --tcp=9312` would create a directory
+ * named `--tcp=9312` and drop the TCP flag.
  *
  * `reject` is the caller's error constructor, since the client, the
  * per-command parser and the engine each have their own, and `missing` is

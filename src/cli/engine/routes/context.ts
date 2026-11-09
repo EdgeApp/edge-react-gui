@@ -35,16 +35,14 @@ const asOtpResetBody = asObject({
   )
 }).withRest
 /**
- * The recovery-key body, which used to be a query.
+ * The recovery-key body.
  *
  * `recoveryKey` is a credential: with the answers it resets the account's
  * password, which is why `change-recovery` tells the user to keep it out of
- * band and why `EDGE_CLI_RECOVERY_KEY` exists. It was travelling in a URL —
- * the surface `redactUrl` strips values out of precisely because a query
- * string is written down by everything it passes through, and the one
- * `secretFlags.test.ts` claimed to be checking. `check-password-rules`,
- * `admin-repo-list` and `admin-repo-get` were moved to `POST` for this
- * reason and this route was missed.
+ * band and why `EDGE_CLI_RECOVERY_KEY` exists. So it travels in a body, not
+ * a URL: a query string is written down by everything it passes through,
+ * which is why `redactUrl` strips values out of one. `check-password-rules`,
+ * `admin-repo-list` and `admin-repo-get` are `POST` for the same reason.
  */
 const asRecoveryQuestionsBody = asObject({
   recoveryKey: doc(
@@ -208,10 +206,10 @@ const asBase64Bytes = (raw: unknown): Uint8Array => base64.parse(String(raw))
  *   while every other login id in the API — `local-users`, a login's
  *   `rootLoginId`, what `forget-account` and `login-with-key
  *   --use-login-id` take — is base58, and this route is the documented way
- *   to find which local account has a pending voucher or an OTP reset. So
- *   the natural next step was to act on the id it named, which failed with
- *   `404 USER_NOT_FOUND` while `local-users` listed the same account under
- *   the other spelling.
+ *   to find which local account has a pending voucher or an OTP reset, so
+ *   the natural next step is to act on the id it names. In base64 that id
+ *   would fail with `404 USER_NOT_FOUND` while `local-users` lists the same
+ *   account under the other spelling.
  */
 export const fetchLoginMessages = route({
   core: 'context.fetchLoginMessages',
@@ -220,11 +218,9 @@ export const fetchLoginMessages = route({
   cli: 'fetch-login-messages',
   returns: doc(
     asCoreValue,
-    // Core returns an *array*, with `loginId` as a field on each entry. The
-    // published shape said a map keyed by loginId, so a generated client was
-    // told to read `body[loginId].otpResetPending` — which is undefined.
-    // Nothing failed at runtime, because the handler passes core's value
-    // through under `asCoreValue`.
+    // Core returns an *array*, with `loginId` as a field on each entry, not
+    // a map keyed by loginId. Nothing checks the shape at runtime, because
+    // the handler passes core's value through under `asCoreValue`.
     'An `EdgeLoginMessage[]` from core: one entry per local login, each with its own `loginId`, `otpResetPending`, `pendingVouchers`, `recovery2Corrupt` and, where the stash has one, `username`. `loginId` is base58, like every other login id in this API \u2014 core answers it in base64 here, and an id in the wrong alphabet is one `forget-account` and `--use-login-id` reject.'
   ),
   errors: ['NETWORK_ERROR'],

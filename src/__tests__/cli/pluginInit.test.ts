@@ -20,12 +20,10 @@ function isEmptyInit(value: unknown): boolean {
 /**
  * The engine and the app must agree about what enables a plugin.
  *
- * The engine had its own `mergePluginInit`, same name and same signature as
- * the one `src/configKeysMerge.ts` exports and `configKeysMerge.test.ts`
- * already pins, and the two disagreed on six of ten cases — so that suite
- * was asserting behaviour the engine did not use. The same remote
- * `infoRollup` feeds both, so a divergence is the CLI and the app reading one
- * server's answer two ways.
+ * `pluginInitFor` wraps the `mergePluginInit` that `src/configKeysMerge.ts`
+ * exports and `configKeysMerge.test.ts` pins, and these cases hold the
+ * wrapper to it. The same remote `infoRollup` feeds both, so a divergence is
+ * the CLI and the app reading one server's answer two ways.
  */
 describe('pluginInitFor', () => {
   const noWarn = undefined
@@ -48,9 +46,8 @@ describe('pluginInitFor', () => {
       const engine = pluginInitFor('p', config, keys, noWarn)
       // The wrapper narrows to what `EdgeCorePluginsInit` can carry: an
       // absent answer becomes `false`, and an init with no options at all
-      // becomes `true` rather than `{}` — the same normalisation the
-      // currency path has always done, so the `monero === true` warning can
-      // see a plugin enabled with no key.
+      // becomes `true` rather than `{}`, the same normalisation the currency
+      // path does.
       const expected =
         shared == null ? false : isEmptyInit(shared) ? true : shared
       expect(engine).toStrictEqual(expected)
@@ -58,17 +55,17 @@ describe('pluginInitFor', () => {
   })
 
   it('keeps a plugin enabled when only the keys say false', () => {
-    // The disagreement that mattered: keys are never an off switch, only
-    // config.json is. The engine used to answer `false` here, so the same
-    // server response disabled a plugin in the CLI and not in the app.
+    // Keys are never an off switch, only config.json is. Answering `false`
+    // here would make the same server response disable a plugin in the CLI
+    // and not in the app.
     expect(pluginInitFor('p', true, false, noWarn)).toBe(true)
     expect(pluginInitFor('p', { a: 1 }, false, noWarn)).toStrictEqual({ a: 1 })
   })
 
   it('disables a plugin whose init is neither boolean nor object', () => {
-    // A server sending the *string* `"false"`. The engine answered `true`,
-    // switching a swap plugin on with no keys, where the currency path in the
-    // same file deliberately disables it and says so.
+    // A server sending the *string* `"false"`. Answering `true` would switch
+    // a swap plugin on with no keys, where the currency path in the same file
+    // deliberately disables it and says so.
     const warn = jest.fn()
     expect(pluginInitFor('changelly', 'false', undefined, warn)).toBe(false)
     expect(warn).toHaveBeenCalledTimes(1)
@@ -84,10 +81,9 @@ describe('pluginInitFor', () => {
 /**
  * The swap path and the currency path read one entry the same way.
  *
- * They did not: `initFromKeysEntry` was the currency path's, and the swap
- * path handed the merged value to core with no cleaner at all. These cases
- * run through `pluginInitFor`, the swap side, because that is the side that
- * had nothing.
+ * Both narrow a merged value through `toPluginInit`, which reads anything
+ * but a boolean with `initFromKeysEntry`. These cases run through
+ * `pluginInitFor`, the swap side's entry point.
  */
 describe('a keys entry on the swap path', () => {
   it('honours an explicit enabled: false', () => {
@@ -105,10 +101,10 @@ describe('a keys entry on the swap path', () => {
   })
 
   it('disables an array entry, with a warning', () => {
-    // `asObject` accepts an array: `["a","b"]` cleaned to
-    // `{"0":"a","1":"b"}` — `.withRest` keeps the indices — so the plugin
-    // was enabled with that as its init, and `[]` enabled it as `true`.
-    // Neither warned, and these entries come from `keys.json` and the info
+    // `asObject` accepts an array: `["a","b"]` cleans to `{"0":"a","1":"b"}`,
+    // since `.withRest` keeps the indices, so unchecked the plugin would be
+    // enabled with that as its init, and `[]` would enable it as `true`, with
+    // no warning either way. These entries come from `keys.json` and the info
     // server's signed `appKeys`.
     const warn = jest.fn()
     expect(pluginInitFor('changelly', undefined, ['a', 'b'], warn)).toBe(false)
@@ -140,11 +136,10 @@ describe('a keys entry on the swap path', () => {
 /**
  * The engine enables the plugins the app enables.
  *
- * It derived enablement on its own: with no keys every currency plugin came
- * on, the three testnets the app turns off included, and swap plugins
- * followed `config.json` alone, so `unizen` and `spookySwap` could be on while
- * `transfer`, `cosmosibc`, `velodrome` and `fantomsonicupgrade`, which the app
- * always enables, were off. It reads the app's table now.
+ * It reads the app's table, so with no keys the three testnets the app turns
+ * off stay off, `unizen` and `spookySwap` stay off whatever `config.json`
+ * says, and `transfer`, `cosmosibc`, `velodrome` and `fantomsonicupgrade`,
+ * which the app always enables, are on.
  */
 describe('buildPluginsInit', () => {
   const none = { appConfig: {}, pluginApiKeys: {}, warn: undefined }

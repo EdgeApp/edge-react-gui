@@ -12,8 +12,7 @@ import { engineError } from './errors'
  *
  * No `Date` arm: `JSON.stringify` calls `Date.prototype.toJSON` *before* the
  * replacer, so a replacer is handed the ISO string and can never see the
- * Date. The output is the same either way, which is why the arm went
- * unnoticed.
+ * Date.
  */
 export function jsonReplacer(_key: string, value: unknown): unknown {
   if (value instanceof Uint8Array) {

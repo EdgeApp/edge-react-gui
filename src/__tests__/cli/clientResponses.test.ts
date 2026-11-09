@@ -10,11 +10,11 @@ import {
 } from '../../cli/clientResponses'
 
 /**
- * The five responses the client acts on rather than prints.
+ * The responses the client acts on rather than prints.
  *
  * `ApiClient.request` ends `return parsed as T`, so every other command
  * trusts the engine's shape — harmless when the value is printed and
- * forgotten. These five are not: a login writes `sessionId` into the `0600`
+ * forgotten. These are not: a login writes `sessionId` into the `0600`
  * session file, and the edge-login poll drives a five-minute loop off
  * `state`. The module exists so that a version-skewed engine is a named
  * failure here instead of an `undefined` deep inside the client, and that
@@ -90,15 +90,13 @@ describe('readPendingEdgeLogin', () => {
 })
 
 /**
- * The three readers the cleaners round added, and the one that matters.
+ * The other three readers, and the one that matters.
  *
  * `change-enabled-token-ids --add/--remove` reads the current set and posts
  * back the *complete desired set*, so a response whose `enabledTokenIds`
- * did not arrive used to make `new Set(undefined)` — an empty set, not a
- * throw — and `--add X` replaced every enabled asset in the account's
- * synced wallet file, on every device. The previous round added the reader
- * and claimed this file covered the throw; it did not, because this file
- * imported two readers and the module names five.
+ * did not arrive has to throw: `new Set(undefined)` is an empty set, and
+ * `--add X` would then replace every enabled asset in the account's synced
+ * wallet file, on every device.
  */
 describe('readEnabledTokens', () => {
   it('passes a well-formed body through', () => {
@@ -134,10 +132,9 @@ describe('readExportedFiles', () => {
 /**
  * The arithmetic that decides whether a wallet keeps its tokens.
  *
- * It lived inline in the command handler, where nothing could reach it: the
- * one offline case that runs this path uses `--remove` of a token that is
- * not enabled, on the fake world's UTXO wallet, whose set is empty — so it
- * passed identically for `new Set(undefined)` and for the repair.
+ * Tabled here because the offline cases that run this path use the fake
+ * world's UTXO wallet, whose set is empty, so they pass the same whether or
+ * not the current set arrived.
  */
 describe('nextEnabledTokenIds', () => {
   it('keeps what was there when adding', () => {
@@ -154,8 +151,8 @@ describe('nextEnabledTokenIds', () => {
 
   it('applies the removals after the additions', () => {
     expect(nextEnabledTokenIds(['a'], ['b'], ['a'])).toStrictEqual(['b'])
-    // And a flag that both adds and removes one id removes it, which is
-    // the order the handler documented.
+    // And a flag that both adds and removes one id removes it: the removals
+    // apply after the additions.
     expect(nextEnabledTokenIds(['a'], ['c'], ['c'])).toStrictEqual(['a'])
   })
 

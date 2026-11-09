@@ -55,9 +55,9 @@ export const engineEvents = route({
       'Prints newline-delimited JSON and runs until interrupted. Exits 130 on SIGINT and 7 when the engine ends the stream. `subscribe` opens an unscoped stream, which only the engine stopping ends; a stream opened with `sessionId` is closed by that session logging out.'
   },
   // `type` is declared once, by `cli.extra` above, which is what carries its
-  // repeatability. Declaring it here as well published `--type` twice in the
-  // usage line. Inline, not a named const: `extractRoutes` reads this through
-  // the checker as an object *literal*.
+  // repeatability. Declaring it here as well would publish `--type` twice in
+  // the usage line. Inline, not a named const: `extractRoutes` reads this
+  // through the checker as an object *literal*.
   query: asObject({
     sessionId: asOptional(
       doc(

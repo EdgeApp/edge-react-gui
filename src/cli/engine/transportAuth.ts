@@ -86,8 +86,7 @@ export function allowedHostnamesFor(host: string): Set<string> {
  */
 export function hostnameOf(hostHeader: string): string | null {
   // Before `URL`, which strips surrounding whitespace rather than refusing
-  // it — so `127.0.0.1:9008 ` parsed as the loopback host and the docblock
-  // above was false about the one spelling it names.
+  // it, so `127.0.0.1:9008 ` would otherwise parse as the loopback host.
   if (/\s/.test(hostHeader)) return null
   try {
     const url = new URL(`http://${hostHeader}`)

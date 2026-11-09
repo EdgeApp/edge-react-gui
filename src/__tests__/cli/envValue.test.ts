@@ -5,12 +5,12 @@ import { emptyToUndefined } from '../../cli/envValue'
 /**
  * A variable that is set but blank is as good as unset.
  *
- * `''` is not nullish, so a blank `EDGE_CLI_SESSION` shadowed the session
- * file it was meant to override: `needsSession` tests `== null` and passed,
- * every account command then built `/account//…`, which the router cannot
- * match, and they all answered NOT_FOUND while a perfectly good
- * `session.json` sat unread. `EDGE_CLI_API_KEY` had the same shape on the
- * engine side, which is why there is one helper.
+ * `''` is not nullish, so a blank `EDGE_CLI_SESSION` would shadow the session
+ * file it overrides: `requireSession` tests `== null` and passes, every
+ * account command builds `/account//…`, which the router cannot match, and
+ * they all answer NOT_FOUND while a good `session.json` goes unread.
+ * `EDGE_CLI_API_KEY` has the same shape on the engine side, which is why
+ * there is one helper.
  */
 describe('emptyToUndefined', () => {
   it('treats an empty value as unset', () => {

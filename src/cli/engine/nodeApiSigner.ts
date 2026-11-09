@@ -6,10 +6,9 @@ import path from 'path'
 // cleaners from `edge-core-js`. This module is reached by the *mobile* build:
 // `scripts/makeApiSigner.ts` imports `NODE_API_SIGNER_BUNDLE_ID` from here,
 // and `scripts/prepare.sh`, `android/app/build.gradle` and the iOS build
-// phase all run it — so a Gradle generate task was loading the engine's
-// error contract to read one string. Measured in this worktree: 146 modules
-// in 1.75 s through `./errors`, against 69 in 32 ms through
-// `util/errorMessage`, whose own docblock states the rule.
+// phase all run it, so through `./errors` a Gradle generate task would load
+// the engine's error contract to read one string. `util/errorMessage`'s own
+// docblock states the rule.
 import { errorMessage } from '../../util/errorMessage'
 
 /**
@@ -39,10 +38,10 @@ let cachedNative: EdgeApiSignerNative | null | undefined
 /**
  * Whether a loaded module is the addon this file's interface declares.
  *
- * A separate function, and exported, because this is the arm that used to
- * fail in silence: a `.node` that loads and exports the wrong thing is a
- * built addon the engine then ignores, which is indistinguishable from an
- * addon that was never built. The `require` arm beside it has always warned.
+ * A separate function, and exported, so this arm can be tested: a `.node`
+ * that loads and exports the wrong thing is a built addon the engine then
+ * ignores, which without the warning is indistinguishable from an addon that
+ * was never built. The `require` arm beside it warns too.
  *
  * Only `signMessage` is required, because that is all `makeNodeApiSigner`
  * calls: `getApiKey` is part of the addon's own surface — the real one
@@ -85,13 +84,13 @@ function candidatePaths(): string[] {
  * Lazily load the N-API addon. Returns null when the binary is missing so
  * local/dev CLI can keep using keys.json apiKey/apiSecret.
  *
- * Both rejection paths say something. The shape check used to `continue` in
- * silence, so a `.node` that loaded and did not export this interface was
- * skipped without a word, `hasNodeApiSigner()` answered false, and an
- * operator who had just built the addon saw either keys.json signing or
- * `No HMAC credentials available for infoRollup appKeys` — a message naming
- * the wrong cause. The signer decides which `appKeys` layer the info server
- * serves, so the symptom is a plugin starting with no keys.
+ * Both rejection paths say something. A `.node` that loads and does not
+ * export this interface is skipped and `hasNodeApiSigner()` answers false,
+ * so without a word an operator who has just built the addon would see
+ * either keys.json signing or `No HMAC credentials available for infoRollup
+ * appKeys`, a message naming the wrong cause. The signer decides which
+ * `appKeys` layer the info server serves, so the symptom is a plugin
+ * starting with no keys.
  */
 function loadNodeApiSignerNative(): EdgeApiSignerNative | null {
   if (cachedNative !== undefined) return cachedNative

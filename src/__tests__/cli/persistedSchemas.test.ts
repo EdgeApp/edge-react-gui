@@ -34,7 +34,8 @@ describe('asEdgeMetadataChange', () => {
 
   it('refuses an array', () => {
     // `asObject` accepts one, and core's `mergeMetadata` then reads no
-    // properties off it, so the route answered 204 having written nothing.
+    // properties off it, so the route would answer 204 having written
+    // nothing.
     expect(() => asEdgeMetadataChange([])).toThrow('got an array')
   })
 
@@ -146,10 +147,10 @@ describe('asEdgeTxAction', () => {
   })
 
   it('refuses a non-integer nativeAmount, as core does', () => {
-    // Core declares `asIntegerString` here. Ours was `asString`, so "1.5"
-    // passed this route, core dispatched the change before awaiting the
-    // save, and the save then rejected — the engine served a `savedAction`
-    // the disk did not have, and the caller got a 500.
+    // Core declares `asIntegerString` here. With `asString`, "1.5" would pass
+    // this route, core dispatches the change before awaiting the save, and
+    // the save then rejects, so the engine serves a `savedAction` the disk
+    // does not have and the caller gets a 500.
     let message = ''
     try {
       asEdgeTxAction({
@@ -166,8 +167,8 @@ describe('asEdgeTxAction', () => {
   })
 
   it('names the missing field rather than the last alternative tried', () => {
-    // `asEither` reported `Expected "giftCard"` here, naming neither the
-    // field nor the shape the caller was actually aiming at.
+    // An `asEither` over the union would report `Expected "giftCard"` here,
+    // naming neither the field nor the shape the caller was aiming at.
     expect(() => asEdgeTxAction({ actionType: 'stake' })).toThrow('.pluginId')
   })
 
