@@ -17,10 +17,10 @@ import {
   UNPRICED_TTL_MS
 } from '../../util/exchangeRates'
 
-// Real timers: the queue debounces by FETCH_FREQUENCY before it fetches.
-// The injected `doFetch` below is the only thing keeping this suite off
-// `rates.edge.app` — `fetchRates` falls back to the real fetch without it, so
-// a case added with no fake goes to the network.
+// Real timers: the queue fetches on a timer, spacing requests by
+// FETCH_FREQUENCY. The injected `doFetch` below is the only thing keeping
+// this suite off `rates.edge.app` — `fetchRates` falls back to the real fetch
+// without it, so a case added with no fake goes to the network.
 beforeAll(() => {
   jest.useRealTimers()
 })
@@ -124,10 +124,8 @@ describe('the module-level rate cache', () => {
     expect(rateCacheSize()).toBe(0)
     expect(posts).toBe(1)
 
-    // But the repeat is free. Nothing absorbed it before, so an asset the
-    // server has no feed for re-paid the whole fill on every listing — 13
-    // requests and about a second per listing on a 1,200-transaction wallet,
-    // for ever.
+    // But the repeat is free, so an asset the server has no feed for does
+    // not repeat the whole fill on every listing.
     expect(await rateFor(date, unpricedFetch)).toBe(0)
     expect(posts).toBe(1)
 
@@ -151,7 +149,7 @@ describe('the module-level rate cache', () => {
     // `RATE_UNAVAILABLE`, not `0`. A failed request says nothing about
     // whether these dates can be priced, and `0` is the answer the server
     // itself gives for a date it cannot price — so settling a failure at `0`
-    // is what let an accounting export carry a zero fiat amount for an
+    // would let an accounting export carry a zero fiat amount for an
     // arbitrary tail of its range with nothing logged.
     expect(rates.every(rate => isRateUnavailable(rate))).toBe(true)
     expect(rateCacheSize()).toBe(0)
@@ -159,13 +157,13 @@ describe('the module-level rate cache', () => {
 
   it('folds the sentinel to 0 for the plain accessor', async () => {
     // `RATE_UNAVAILABLE` is `NaN`, and the GUI consumers are all written
-    // against the `0` this has always answered: `useHistoricalRate` defaults
-    // only `undefined`, so `NaN` reached `displayFiatAmount` and
-    // `add(NaN, '0')` threw out of `TransactionListRow`'s render, taking the
-    // transaction list down whenever the rates server was failing. The
-    // Paybis and ramp paths reach biggystring's `mul`/`div` with
-    // `String(rate)` and throw the same way. So the sentinel belongs to
-    // `…OrUnavailable`, and never leaves the module by any other door.
+    // against `0`: `useHistoricalRate` defaults only `undefined`, so `NaN`
+    // would reach `displayFiatAmount`, and `add(NaN, '0')` would throw out of
+    // `TransactionListRow`'s render, taking the transaction list down
+    // whenever the rates server is failing. The Paybis and ramp paths reach
+    // biggystring's `mul`/`div` with `String(rate)` and throw the same way.
+    // So the sentinel belongs to `…OrUnavailable`, and never leaves the
+    // module by any other door.
     clearRateCache()
     const date = '2019-05-01T04:00:00.000Z'
     const sentinel = await getHistoricalCryptoRateOrUnavailable(
@@ -192,13 +190,11 @@ describe('the module-level rate cache', () => {
   })
 
   it('folds the sentinel to 0 for the fiat accessor too', async () => {
-    // The other door out of the module, and the one the fold was *not*
-    // tested through: deleting `getHistoricalFiatRate`'s own
-    // `isRateUnavailable` left the suite green, so the sentinel could leak
-    // back out past the fix for the crypto accessor beside it. Same
-    // consumers, same crash — `amountQuotePlugin`, `paybisProvider`,
-    // `paybisRampPlugin` and `RampCreateScene` all hand the result to
-    // biggystring as `String(rate)`.
+    // The other door out of the module: `getHistoricalFiatRate` folds the
+    // sentinel with its own `isRateUnavailable`, which the crypto accessor's
+    // case cannot see. Same consumers, same crash — `amountQuotePlugin`,
+    // `paybisProvider`, `paybisRampPlugin` and `RampCreateScene` all hand the
+    // result to biggystring as `String(rate)`.
     clearRateCache()
     const date = '2019-05-02T04:00:00.000Z'
     const sentinel = await getHistoricalFiatRateOrUnavailable(
@@ -228,9 +224,9 @@ describe('the module-level rate cache', () => {
 
     // `addToQueue` deliberately arms no second timer while a pass is running,
     // so this key joins the queue without a request of its own. Deciding "no
-    // progress" from the queue's size made the in-flight pass resolve it as
-    // `0` without ever asking the server — a $0 fiat amount in an export and
-    // in a transaction-list row.
+    // progress" from the queue's size would make the in-flight pass resolve
+    // it as `0` without ever asking the server — a $0 fiat amount in an
+    // export and in a transaction-list row.
     let release: (value: unknown) => void = () => {}
     const held = new Promise(resolve => {
       release = resolve
@@ -279,9 +275,9 @@ describe('the module-level rate cache', () => {
     expect(rates.every(rate => rate === 30000)).toBe(true)
 
     // The exact size the policy produces, not merely "bounded": one eviction
-    // of a quarter fired at the 20,001st distinct key, so 20,100 inserts
-    // leave 15,100. `<= 20_000 && > 0` passed for an eviction that dropped
-    // the newest key, or all but one of them.
+    // of a quarter fires at the 20,001st distinct key, so 20,100 inserts
+    // leave 15,100. A check of `<= 20_000 && > 0` would pass for an eviction
+    // that dropped the newest key, or all but one of them.
     expect(rateCacheSize()).toBe(20_100 - (20_000 >> 2))
 
     // And *which* keys went: oldest first, because a Map iterates in
@@ -298,10 +294,10 @@ describe('the module-level rate cache', () => {
 
 describe('query scheduling', () => {
   it('fires immediately when the queue has been idle', async () => {
-    // A trailing-edge debounce spent a full FETCH_FREQUENCY before the first
-    // request, and every daemon request starts from an idle queue — so
-    // `get-transactions` paid it twice in series, a fixed ~2s floor
-    // independent of page size, and ~1s even when every rate was cached.
+    // A trailing-edge debounce would spend a full FETCH_FREQUENCY before the
+    // first request, and every daemon request starts from an idle queue, so
+    // `get-transactions` would pay it twice in series: a fixed floor
+    // independent of page size.
     stopRateQueue()
     clearRateCache()
     startRateQueue()
@@ -311,7 +307,7 @@ describe('query scheduling', () => {
     await rateFor('2024-01-01T00:00:00.000Z')
     const elapsed = Date.now() - started
 
-    // Well under FETCH_FREQUENCY, which is what the old path could not do.
+    // Well under FETCH_FREQUENCY, which a trailing-edge debounce cannot do.
     expect(elapsed).toBeLessThan(500)
     expect(posts).toBe(1)
   })
@@ -338,19 +334,18 @@ describe('query scheduling', () => {
 
 describe('a rates server that never answers', () => {
   it('settles every queued caller instead of hanging for ever', async () => {
-    // The defect: `fetchRates(..., 5000, ...)` reads like a ceiling, but that
-    // number is `asyncWaterfall`'s per-server stagger and the timer is armed
-    // only `if (pending > 1)` — measured, `asyncWaterfall([never, never],
-    // 300)` is still pending after two seconds. So `doQuery` stayed awaiting
-    // with `inQuery` latched, `addToQueue` arms no second timer while that is
-    // true, and `getHistoricalRate` never calls its own `reject`: every rate
-    // caller in the process waited for ever. In the engine that is
-    // `get-transactions` hanging to the client's deadline, permanently.
+    // `fetchRates(..., 5000, ...)` reads like a ceiling, but that number is
+    // `asyncWaterfall`'s per-server stagger. Without a deadline of its own,
+    // `doQuery` would stay awaiting with `inQuery` latched, `addToQueue` arms
+    // no second timer while that is true, and `getHistoricalRate` never
+    // calls its own `reject`: every rate caller in the process would wait for
+    // ever. In the engine that is `get-transactions` hanging to the client's
+    // deadline, permanently.
     //
     // The deadline is 30 s of real time, so this drives the module through a
     // `doFetch` that rejects the way the deadline does rather than waiting
-    // it out. What it pins is the recovery: the caller settles at 0, and the
-    // queue is usable afterwards.
+    // it out. What it pins is the recovery: the caller settles as
+    // unavailable, and the queue is usable afterwards.
     clearRateCache()
     const hangingThenFine: any = async () => {
       throw new Error('the rates server did not answer within 30000ms')
@@ -369,8 +364,7 @@ describe('a rates server that never answers', () => {
     // property this case is about.
     expect(isRateUnavailable(rate)).toBe(true)
 
-    // And the next pass works, rather than the queue staying latched: the
-    // recovery existed for a rejection and a hang never reached it.
+    // And the next pass works, rather than the queue staying latched.
     const after = await getHistoricalCryptoRateOrUnavailable(
       'bitcoin',
       null,
@@ -383,11 +377,11 @@ describe('a rates server that never answers', () => {
   })
 
   it('settles a server that answers and then stalls mid-body', async () => {
-    // The other door, and the one the deadline used to miss: under Node's
-    // `fetch` a response resolves as soon as headers arrive, so a 200 whose
-    // body never finishes left `doQuery` awaiting `response.json()` outside
-    // the budget, with `inQuery` latched and every later key queued into a
-    // `resolverMap` nothing would drain.
+    // The other door: under Node's `fetch` a response resolves as soon as
+    // headers arrive, so the deadline has to cover the body too. Outside it,
+    // a 200 whose body never finishes would leave `doQuery` awaiting
+    // `response.json()`, with `inQuery` latched and every later key queued
+    // into a `resolverMap` nothing would drain.
     //
     // The stall is modelled where the real one happens — inside the body
     // read — with a promise that never settles, and the deadline is driven
@@ -413,7 +407,7 @@ describe('a rates server that never answers', () => {
         100,
         stalling
       )
-      // Past the deadline, which now covers the body.
+      // Past the deadline, which covers the body.
       await jest.advanceTimersByTimeAsync(RATE_QUERY_TIMEOUT_MS + 1000)
       expect(isRateUnavailable(await pending)).toBe(true)
     } finally {
@@ -425,12 +419,13 @@ describe('a rates server that never answers', () => {
 describe('a caller with more keys than one request holds', () => {
   it('is bounded by one chain budget, not one per batch', async () => {
     // `RATE_QUERY_TIMEOUT_MS` bounds one upstream request and `doQuery`
-    // recurses once per batch, so the wait used to be (batches) × 30 s. A
-    // pass carries at most 99 keys, and `fillTxsFiat`'s docblock names 1,200
-    // unpriced transactions as the real case: 13 passes, about 390 s,
-    // against `apiClient`'s 120 s. The client reported `Request timed out`
-    // and the daemon kept working for four and a half more minutes with
-    // `inQuery` latched and every other rate caller queued behind it.
+    // recurses once per batch, so that bound alone would make the wait
+    // (batches) × 30 s. A pass carries at most 99 keys, and `fillTxsFiat`'s
+    // docblock names 1,200 unpriced transactions as the real case: 13
+    // passes, about 390 s, against `apiClient`'s 120 s. The client would
+    // report `Request timed out` while the daemon kept working for minutes
+    // more, with `inQuery` latched and every other rate caller queued behind
+    // it.
     clearRateCache()
     jest.useFakeTimers()
     try {
@@ -473,15 +468,14 @@ describe('a caller with more keys than one request holds', () => {
 
       // Two batches' worth of per-request deadlines, which is still inside
       // the callers' own budget: some keys have given up with their request
-      // and the rest are still waiting. The old shape needed 13 of these —
-      // about 390 s — to reach the end of 1,200 keys.
+      // and the rest are still waiting. The per-request bound alone would
+      // need 13 of these, about 390 s, to reach the end of 1,200 keys.
       await jest.advanceTimersByTimeAsync(RATE_QUERY_TIMEOUT_MS * 2 + 1000)
       expect(settled).toBeLessThan(1200)
 
       // And every caller's own budget settles the lot, below the client's
-      // 120 s deadline. The budget is per key now, not per chain: one
-      // caller's spent budget used to settle the whole queue process-wide,
-      // whoever had asked.
+      // 120 s deadline. The budget is per key, not per chain, so one caller's
+      // spent budget does not settle the whole queue process-wide.
       await jest.advanceTimersByTimeAsync(RATE_CHAIN_TIMEOUT_MS)
       const rates = await all
       expect(rates).toHaveLength(1200)
@@ -499,16 +493,15 @@ describe('a caller with more keys than one request holds', () => {
 
 describe('two callers with different budgets', () => {
   it('does not settle a patient caller on an impatient one\u2019s deadline', async () => {
-    // The deadline used to live with the *chain*, set by whichever caller
-    // armed it and then applied to everything queued when it expired:
-    // `settleQueuedAsUnavailable()` emptied the whole map, process-wide,
-    // whoever had asked. The engine serves requests concurrently, so
-    // `get-transactions --export-format=csv --timeout=600` was refused with
-    // `RATES_INCOMPLETE` whenever a `rates-query` (no budget, so 90 s) or a
-    // `--timeout=2` armed the chain first — and the error told the operator
-    // to raise `--timeout`, which could not help, because their own budget
-    // had never been consulted. `--timeout` is the one control the branch
-    // offers for "slow is better than wrong".
+    // Each key keeps its own callers' deadline. The engine serves requests
+    // concurrently, so a deadline that lived with the *chain*, set by
+    // whichever caller armed it and applied to everything queued when it
+    // expired, would refuse `get-transactions --export-format=csv
+    // --timeout=600` with `RATES_INCOMPLETE` whenever a `rates-query` (no
+    // budget, so 90 s) or a `--timeout=2` armed the chain first, and the
+    // error would tell the operator to raise `--timeout`, which could not
+    // help. `--timeout` is the one control the CLI offers for "slow is better
+    // than wrong".
     clearRateCache()
     startRateQueue()
     jest.useFakeTimers()
@@ -543,8 +536,8 @@ describe('two callers with different budgets', () => {
       )
 
       // The patient caller arrives while that pass is in flight, so it is
-      // not in the request's own group and its fate is decided by the
-      // chain's deadline alone. Ten minutes, like a long `--timeout`.
+      // not in the request's own group and its fate is decided by its own
+      // deadline alone. Ten minutes, like a long `--timeout`.
       await jest.advanceTimersByTimeAsync(50)
       const patient = getHistoricalCryptoRateOrUnavailable(
         'bitcoin',
@@ -563,9 +556,9 @@ describe('two callers with different budgets', () => {
       // The impatient caller gets what it asked for: nothing was learned
       // about its date inside the budget it gave.
       expect(isRateUnavailable(await impatient)).toBe(true)
-      // And the patient one gets a *price*. It used to be settled
-      // `RATE_UNAVAILABLE` by the other caller's expiry, which is the
-      // refusal an export could not do anything about.
+      // And the patient one gets a *price*, rather than being settled
+      // `RATE_UNAVAILABLE` by the other caller's expiry, which is a refusal
+      // an export could do nothing about.
       expect(await patient).toBe(30000)
     } finally {
       jest.useRealTimers()
@@ -577,11 +570,11 @@ describe('two callers with different budgets', () => {
 
 describe('a short caller behind a long request', () => {
   it('settles at its own deadline while the pass is still in flight', async () => {
-    // The other direction. A key's deadline was only checked when a pass
-    // began, and the pass in flight waits for its request — up to
-    // `RATE_QUERY_TIMEOUT_MS` — so `--timeout=5` arriving during a
-    // `--timeout=600` export's request waited the whole 30 s and timed out
-    // at the client instead of answering at 5 s.
+    // The other direction. The pass in flight waits for its request, up to
+    // `RATE_QUERY_TIMEOUT_MS`, so a key's deadline checked only when a pass
+    // begins would make a `--timeout=5` arriving during a `--timeout=600`
+    // export's request wait the whole 30 s and time out at the client
+    // instead of answering at 5 s.
     clearRateCache()
     startRateQueue()
     jest.useFakeTimers()
@@ -640,10 +633,10 @@ describe('a short caller behind a long request', () => {
 
 describe('a large fill', () => {
   it('queues thousands of keys in linear time', async () => {
-    // One key per transaction, all queued before anything is awaited. The
-    // expiry timer rescanned the whole queue on every enqueue, so a
-    // 10,000-key fill spent ~6 s on the JS thread first; 30,000 would be
-    // closer to a minute. Linear, it is a couple of seconds even loaded.
+    // One key per transaction, all queued before anything is awaited. An
+    // expiry timer that rescanned the whole queue on every enqueue would make
+    // this quadratic, holding the JS thread for most of a minute at 30,000
+    // keys.
     clearRateCache()
     startRateQueue()
     jest.useFakeTimers()
@@ -672,10 +665,10 @@ describe('a large fill', () => {
 
 describe('stopping the queue', () => {
   it('does not let a stopped pass answer a key the restarted queue holds', async () => {
-    // The epoch was checked once, after the per-group loop, and never after
-    // the request a group awaits. So a pass stopped mid-request woke up and
-    // settled every key of its group still in `resolverMap` — and after a
-    // restart those names belong to *new* callers, who then got the stale
+    // The epoch is checked after the request a group awaits, not only after
+    // the per-group loop. Otherwise a pass stopped mid-request would wake up
+    // and settle every key of its group still in `resolverMap`, and after a
+    // restart those names belong to *new* callers, who would get the stale
     // pass's answer instead of their own request's.
     stopRateQueue()
     clearRateCache()
@@ -716,12 +709,12 @@ describe('stopping the queue', () => {
 
   it('is not un-stopped by clearing the cache', async () => {
     // The engine's `shutdown` is `stopRateQueue()` and then
-    // `clearRateCache()` on the very next line, so while `clearRateCache`
-    // lifted the latch the stop did nothing at all: a `get-transactions`
-    // that outlived the bounded drain was still inside `fillTxsFiat`,
-    // still queueing dates, and those dates armed a debounce that fired
-    // rates requests during `context.close()`. Queue state does not follow
-    // from cache state; `startRateQueue` is the only door back.
+    // `clearRateCache()` on the very next line, so if `clearRateCache`
+    // lifted the latch the stop would do nothing at all: a `get-transactions`
+    // that outlived the bounded drain, still inside `fillTxsFiat` and still
+    // queueing dates, would arm a debounce that fired rates requests during
+    // `context.close()`. Queue state does not follow from cache state;
+    // `startRateQueue` is the only door back.
     stopRateQueue()
     clearRateCache()
     posts = 0
@@ -745,7 +738,7 @@ describe('stopping the queue', () => {
     // A server slow enough that the first pass is still inside its fetch
     // when the queue is stopped underneath it. `stopRateQueue` clears
     // `inQuery` but cannot cancel that pass, so without an epoch the pass
-    // carried on when it woke — recursing into `doQuery` with its own
+    // would carry on when it woke, recursing into `doQuery` with its own
     // `doFetch` and its own chain deadline, alongside whatever chain the
     // stop had made way for.
     let requested = 0
@@ -758,9 +751,8 @@ describe('stopping the queue', () => {
     const first = rateFor('2024-03-01T00:00:00.000Z', slowFetch)
     // Past `FETCH_FREQUENCY`, so the pass has fired and is *inside* the
     // fetch, which is the state this case is about. Stopping before the
-    // debounce fires cancels the timer instead and no pass ever exists —
-    // which is what the 50ms wait this replaces was really doing, so the
-    // arm the case is named for never ran.
+    // debounce fires cancels the timer instead and no pass ever exists, so a
+    // shorter wait would never reach the arm the case is named for.
     await new Promise(resolve => setTimeout(resolve, 1200))
     expect(requested).toBe(1)
     stopRateQueue()
@@ -771,26 +763,24 @@ describe('stopping the queue', () => {
     const postsAfterStop = posts
 
     // A stopped queue stays stopped: an arrival after the stop is settled at
-    // once rather than arming a fresh chain. `stopRateQueue` used to clear
-    // `inQuery` and record nothing, so the next date started a new chain —
-    // and the engine calls it from `shutdown` precisely so a debounce cannot
-    // fire against a closing context.
+    // once rather than arming a fresh chain. The engine calls `stopRateQueue`
+    // from `shutdown` precisely so a debounce cannot fire against a closing
+    // context.
     expect(isRateUnavailable(await rateFor('2024-03-09T00:00:00.000Z'))).toBe(
       true
     )
     expect(posts).toBe(postsAfterStop)
 
-    // And `startRateQueue` brings it back. It is its own door: when
-    // `clearRateCache` lifted the latch, the engine's own `shutdown` —
-    // `stopRateQueue()` and then `clearRateCache()` on the next line —
-    // un-stopped the queue it had just stopped.
+    // And `startRateQueue` brings it back. It is its own door: if
+    // `clearRateCache` lifted the latch, the engine's own `shutdown`
+    // (`stopRateQueue()` and then `clearRateCache()` on the next line) would
+    // un-stop the queue it had just stopped.
     startRateQueue()
     const second = await rateFor('2024-03-02T00:00:00.000Z')
     expect(second).toBe(30000)
 
     // Past the rest of the slow fetch and a full debounce, so the
-    // abandoned pass has woken and reached the epoch check. The case used
-    // to return before this point.
+    // abandoned pass has woken and reached the epoch check.
     const postsAfterSecond = posts
     await new Promise(resolve => setTimeout(resolve, 1500))
     expect(posts).toBe(postsAfterSecond)
@@ -804,16 +794,17 @@ describe('stopping the queue', () => {
 /**
  * A rejection raised outside `doQuery`'s per-group `try`.
  *
- * The `.catch` on `doQuery` in `addToQueue` is the fix for exactly that:
- * `inQuery` is set before the timer is armed, and the only place that
- * cleared it was `doQuery`'s own terminal branch — so a throw from building
- * the groups or stringifying the params left it latched for the life of the
- * process. Every later arrival then took the `!inQuery` false path, armed no
- * timer, and never settled at all, because `getHistoricalRate` never calls
- * its own `reject`. In the engine that is a `get-transactions` which hangs
- * to the client's deadline, for ever, on a daemon documented as long-lived.
+ * The `.catch` on `doQuery` in `addToQueue` exists for exactly that:
+ * `inQuery` is set before the timer is armed, and outside that `.catch` only
+ * `doQuery`'s own terminal branch clears it, so a throw from building the
+ * groups or stringifying the params would leave it latched for the life of
+ * the process. Every later arrival would then take the `!inQuery` false
+ * path, arm no timer, and never settle at all, because `getHistoricalRate`
+ * never calls its own `reject`. In the engine that is a `get-transactions`
+ * which hangs to the client's deadline, for ever, on a daemon documented as
+ * long-lived.
  *
- * The suite's existing failure case covers the per-group `try` inside
+ * The synchronous-transport case below covers the per-group `try` inside
  * `doQuery`, which is a different arm and does not touch the latch.
  */
 describe('a pass that rejects outside its own try', () => {
@@ -821,13 +812,9 @@ describe('a pass that rejects outside its own try', () => {
     // The arm the `.catch` on `doQuery` actually exists for, and the one the
     // synchronous-transport case below does *not* reach: `doFetch` is called
     // inside `doQuery`'s per-group `try`, while `JSON.stringify(group.params)`
-    // runs just before it. `inQuery` is set before the timer is armed and the
-    // only place that cleared it was `doQuery`'s own terminal branch, so a
-    // throw from here left it latched for the life of the process — every
-    // later arrival took the `!inQuery` false path, armed no timer and never
-    // settled at all, because `getHistoricalRate` never calls its own
-    // `reject`. In the engine that is a `get-transactions` that hangs to the
-    // client's deadline, for ever, on a daemon documented as long-lived.
+    // runs just before it. Without the `.catch`, a throw from here would
+    // leave `inQuery` latched for the life of the process, as the block
+    // above describes.
     //
     // A `BigInt` tokenId is the cheapest way in: `JSON.stringify` refuses it
     // and nothing before that point looks at the type.
@@ -892,13 +879,14 @@ describe('a pass that rejects outside its own try', () => {
       // hook, because the transport is called inside `doQuery`'s per-group
       // `try`. The two hooks are separate because the GUI shows them
       // differently: one pass of a retried queue is a warning, and routing
-      // it to `showError` meant scrolling a transaction list during a rates
-      // outage threw an error drop-down and a Sentry event per failed pass.
+      // it to `showError` would make scrolling a transaction list during a
+      // rates outage throw an error drop-down and a Sentry event per failed
+      // pass.
       expect(passReported).toStrictEqual(['sync boom'])
       expect(chainReported).toStrictEqual([])
 
       // The assertion the latch is about: a later caller settles at all.
-      // With `inQuery` left true this never resolved.
+      // With `inQuery` left true this would never resolve.
       const second = await rateFor('2024-04-02T00:00:00.000Z')
       expect(second).toBe(30000)
     } finally {
@@ -910,11 +898,9 @@ describe('a pass that rejects outside its own try', () => {
 /**
  * Both bounds on the unpriced map.
  *
- * Neither was tested: the case above it asserts that `UNPRICED_TTL_MS` is at
- * most fifteen minutes — the value of a constant, not the behaviour — and
- * then clears the cache, so nothing showed that an unpriced key is
- * re-queried once the TTL passes, or that the map stays bounded in a daemon
- * that never exits. The rate cache's own bound has a real test.
+ * An unpriced key is re-queried once the TTL passes, and the map stays
+ * bounded in a daemon that never exits. The earlier case that checks
+ * `UNPRICED_TTL_MS` asserts the value of a constant, not this behaviour.
  */
 describe('the unpriced map', () => {
   it('re-asks the server once the TTL has passed', async () => {
@@ -954,10 +940,9 @@ describe('the unpriced map', () => {
     expect(rateUnpricedCount()).toBe(0)
 
     // One entry per unpriceable date is what a daemon that never exits
-    // accumulates, so this map needs the same bound the rate cache has and
-    // had no test for it. Queued before anything is awaited, like the cache
-    // case above: the whole set costs one debounce and then one immediate
-    // pass per batch.
+    // accumulates, so this map needs the same bound the rate cache has.
+    // Queued before anything is awaited, like the cache case above: the
+    // whole set costs one debounce and then one immediate pass per batch.
     const begin = Date.UTC(2001, 0, 1)
     const day = 86_400_000
     const pending: Array<Promise<number>> = []
@@ -972,22 +957,20 @@ describe('the unpriced map', () => {
 
     // The exact size the policy produces, not merely "bounded": one
     // eviction of a quarter fires at the 20,001st key, so 20,100 inserts
-    // leave 15,100. `<= 20_000` passed for an eviction that dropped all but
-    // one of them.
+    // leave 15,100. A check of `<= 20_000` would pass for an eviction that
+    // dropped all but one of them.
     expect(rateUnpricedCount()).toBe(20_100 - (20_000 >> 2))
   }, 180_000)
 })
 
 /**
- * The per-group "chain budget spent" pre-check, which nothing entered.
+ * The per-group "chain budget spent" pre-check.
  *
  * `doQuery` states the rule twice: once before each group's request, so a
  * group that finds the chain spent settles rather than opening a request
- * nobody waits for, and once after the loop. Only the post-loop twin had a
- * test, so one of two spellings of one rule was unasserted — and the thing
- * both have to agree about is settling at `RATE_UNAVAILABLE` rather than
- * `0`: `0` is the answer for an asset the server cannot price, and these
- * keys were never asked about.
+ * nobody waits for, and once after the loop. Both spellings have to agree
+ * on settling at `RATE_UNAVAILABLE` rather than `0`: `0` is the answer for
+ * an asset the server cannot price, and these keys were never asked about.
  */
 describe('a chain whose budget is spent before the request', () => {
   it('settles the group as unavailable rather than asking', async () => {
@@ -999,10 +982,9 @@ describe('a chain whose budget is spent before the request', () => {
     // A budget already spent when the pass starts, so the pre-check is the
     // arm that runs. Zero, not one millisecond: `stopRateQueue` resets the
     // debounce, so the pass is armed with no delay at all, and whether 1 ms
-    // had elapsed by the time the timer fired depended on scheduling — on a
-    // quick tick the request went out, and under load the case failed in
-    // the pre-commit hook. `chainTimeoutMs` is the parameter `--timeout`
-    // threads through for exactly this reason.
+    // has elapsed by the time the timer fires depends on scheduling: on a
+    // quick tick the request would go out. `chainTimeoutMs` is the parameter
+    // `--timeout` threads through for exactly this reason.
     const rate = await getHistoricalCryptoRateOrUnavailable(
       'bitcoin',
       null,
