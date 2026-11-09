@@ -218,7 +218,8 @@ export interface EnsureEngineDeps {
  * surface.
  */
 export function engineEnv(
-  source: NodeJS.ProcessEnv = process.env
+  source: NodeJS.ProcessEnv = process.env,
+  platform: NodeJS.Platform = process.platform
 ): NodeJS.ProcessEnv {
   // A deny-list: the whole environment is copied and the withheld names
   // are blanked, so a credential variable `secretFlags.ts` does not know
@@ -231,8 +232,13 @@ export function engineEnv(
   // rebuild, then overwritten key by key with what is kept.
   const out: NodeJS.ProcessEnv = { ...source }
   const scratch: Record<string, string | undefined> = out
+  // Windows reads environment names without regard to case, so the client
+  // that resolves `EDGE_CLI_PASSWORD` resolves `edge_cli_password` too, and
+  // every spelling of a withheld name has to go.
+  const key = (name: string): string =>
+    platform === 'win32' ? name.toUpperCase() : name
   for (const name of Object.keys(source)) {
-    if (withheld.has(name)) scratch[name] = undefined
+    if (withheld.has(key(name))) scratch[name] = undefined
   }
   return out
 }
