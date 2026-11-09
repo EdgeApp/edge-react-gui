@@ -1,11 +1,10 @@
 /**
- * Save a transaction, then re-apply the metadata core dropped.
+ * Save a transaction, then re-apply the caller's metadata.
  *
- * `wallet.saveTx` does not keep the metadata a caller attached, so the two
- * places that broadcast — the GUI's send scene and the CLI's `spend` and
- * `save-tx` — followed it with a `saveTxMetadata` whose failure must not
- * undo the save. That sequence and the test for whether there is anything
- * worth saving are here rather than in either caller.
+ * `wallet.saveTx` writes a caller's metadata only for a transaction it has
+ * not saved before, so the CLI's `spend` and `save-tx` follow it with a
+ * `saveTxMetadata` whose failure must not undo the save. That sequence and the test for whether there is
+ * anything worth saving are here rather than in either caller.
  *
  * Not the metadata *edit* path: `save-tx-metadata` and the GUI's details
  * scene call `wallet.saveTxMetadata` directly, with no `saveTx` to follow.
@@ -45,28 +44,27 @@ export function hasPersistableTxMetadata(
 }
 
 /**
- * saveTx plus the saveTxMetadata re-apply used by SendScene2 and the CLI.
+ * saveTx plus the saveTxMetadata re-apply used by the CLI's `spend` and
+ * `save-tx`.
  *
- * Core derives its own metadata for a sent transaction, and a concurrent
- * engine callback can land after ours and drop what the caller asked for. So
- * the fields the caller actually supplied are written again afterwards.
+ * Saving a transaction core has already saved changes nothing, so the
+ * caller's metadata would not reach it. The fields the caller actually
+ * supplied are written again afterwards.
  *
  * Only non-empty fields are sent. Under `EdgeMetadataChange` an empty string
  * is a value, not "leave unchanged" — only `undefined` means that, and `null`
- * deletes — so sending all three verbatim let a caller who supplied one field
- * erase the other two.
+ * deletes — so sending all three verbatim would let a caller who supplied one
+ * field erase the other two.
  *
  * saveTx errors always throw. saveTxMetadata errors throw unless
- * `onMetadataError` is provided (the GUI uses that so a tagging failure
- * cannot look like a failed send after broadcast).
+ * `onMetadataError` is provided (both CLI callers use that so a tagging
+ * failure cannot look like a failed send after broadcast).
  *
- * This fires for a category or a note, not only for a payee name. The GUI
- * used to re-apply `if (payeeName != null)`, and the race its own comment
- * describes — core's `saveTx` dropping `tx.metadata` when the engine has
- * already registered the txid — drops *every* field, not just the name. So a
- * category arriving from a payment URI was silently losable before. The cost
- * is one extra round trip on a send that carries a category but no payee,
- * which buys back a field that could otherwise vanish on reload.
+ * This fires for a category or a note, not only for a payee name, because
+ * metadata that core drops loses *every* field, not just the name, and a
+ * category arriving from a payment URI would otherwise be lost with it. The
+ * cost is one extra round trip on a send that carries a category but no
+ * payee, which buys back a field that could otherwise vanish on reload.
  */
 export async function saveTxAndMetadata(
   wallet: EdgeCurrencyWallet,
