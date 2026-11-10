@@ -356,10 +356,16 @@ export const SettingsScene: React.FC<Props> = props => {
   })
 
   const handleChangeUsername = useHandler(async (): Promise<void> => {
-    // A remounted scene can be unlocked without holding the password. This
-    // prompts whenever the settings show locked or no password is held.
-    const heldPassword = isLocked ? undefined : validatedPassword
-    const password = heldPassword ?? (await unlockSettings())
+    // A remounted scene can be unlocked without holding the password, and the
+    // held password goes stale if the password changes while this scene stays
+    // mounted. Renaming rebuilds the login from the value passed here, and a
+    // stale value would restore the old password. This prompts whenever the
+    // settings show locked or the held password is missing or stale.
+    const isCurrent =
+      !isLocked &&
+      validatedPassword != null &&
+      (await account.checkPassword(validatedPassword))
+    const password = isCurrent ? validatedPassword : await unlockSettings()
     if (password == null) return
 
     navigation.navigate('changeUsername', { password })

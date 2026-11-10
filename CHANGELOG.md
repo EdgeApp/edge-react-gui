@@ -39,6 +39,8 @@
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
+- fixed: Change Username opens right after the password prompt, with no second tap.
+- fixed: Changing the username after changing the password keeps the new password.
 
 ## 4.52.3 (2026-11-04)
 
