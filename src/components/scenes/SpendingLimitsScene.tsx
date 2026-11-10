@@ -94,6 +94,7 @@ export const SpendingLimitsScene = (props: Props): React.ReactElement => {
         </View>
 
         <FilledTextInput
+          numeric
           disabled={!transactionIsEnabled}
           value={transactionAmount}
           onChangeText={setTransactionAmount}
