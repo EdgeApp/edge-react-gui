@@ -14,6 +14,7 @@ describe('SettingsScene', () => {
   const mockState: FakeState = {
     core: {
       account: {
+        checkPassword: async () => true,
         rootLoginId: 'XXX',
         currencyConfig: {},
         username: 'some user',
@@ -136,6 +137,51 @@ describe('SettingsScene', () => {
         password: 'secret'
       })
       rendered.unmount()
+    })
+
+    describe('when the password changed after unlocking', () => {
+      const staleState: FakeState = {
+        ...mockState,
+        core: {
+          ...mockState.core,
+          account: {
+            ...mockState.core?.account,
+            checkPassword: async (password: string) => password === 'newSecret'
+          }
+        }
+      }
+
+      it('prompts and renames with the newest password', async () => {
+        const show = jest
+          .spyOn(Airship, 'show')
+          .mockResolvedValueOnce('secret' as never)
+          .mockResolvedValueOnce('newSecret' as never)
+        const { navigate, rendered, tap } = renderScene(staleState)
+
+        await tap(lstrings.settings_button_unlock_settings)
+        await tap(lstrings.settings_button_change_username)
+
+        expect(show).toHaveBeenCalledTimes(2)
+        expect(navigate).toHaveBeenCalledWith('changeUsername', {
+          password: 'newSecret'
+        })
+        rendered.unmount()
+      })
+
+      it('stays on settings when the prompt is canceled', async () => {
+        const show = jest
+          .spyOn(Airship, 'show')
+          .mockResolvedValueOnce('secret' as never)
+          .mockResolvedValueOnce(undefined as never)
+        const { navigate, rendered, tap } = renderScene(staleState)
+
+        await tap(lstrings.settings_button_unlock_settings)
+        await tap(lstrings.settings_button_change_username)
+
+        expect(show).toHaveBeenCalledTimes(2)
+        expect(navigate).not.toHaveBeenCalled()
+        rendered.unmount()
+      })
     })
 
     it('prompts when already unlocked without a password', async () => {

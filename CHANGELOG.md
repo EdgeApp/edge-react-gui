@@ -40,6 +40,8 @@
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
+- fixed: Change Username opens right after the password prompt, with no second tap.
+- fixed: Changing the username after changing the password keeps the new password.
 
 ## 4.52.3 (2026-11-04)
 
