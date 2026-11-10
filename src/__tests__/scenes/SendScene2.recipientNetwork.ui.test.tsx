@@ -61,6 +61,13 @@ jest.mock('../../components/services/AirshipInstance', () => {
   return { ...actual, showToast: jest.fn() }
 })
 
+// A same-chain Zcash pick falls through to a ZNS reverse lookup over the
+// network:
+jest.mock('../../util/nameServices', () => ({
+  ...jest.requireActual<object>('../../util/nameServices'),
+  reverseLookupName: async () => null
+}))
+
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
@@ -369,6 +376,21 @@ afterAll(async () => {
   await context?.close()
 })
 
+/**
+ * Waits in act scopes, for up to four seconds, until `done` holds. A quote or
+ * a wallet pick settles on its own promise chain, and only an act scope that
+ * closes over it delivers it. waitFor polls outside act, so an update landing
+ * between its polls never renders.
+ */
+async function settleInAct(done: () => boolean): Promise<void> {
+  const deadline = Date.now() + 4000
+  while (!done() && Date.now() < deadline) {
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 20))
+    })
+  }
+}
+
 describe('SendScene2 recipient network', () => {
   const mockShowToast = jest.mocked(showToast)
 
@@ -585,13 +607,7 @@ describe('SendScene2 recipient network', () => {
             .UNSAFE_getByProps({ testID: 'addressTileMyself' })
             .props.onPress()
         })
-        // The tile settles the pick on its own promise chain, whose updates
-        // only reach the scene once an act scope closes over them:
-        for (let i = 0; i < 50 && tileProps().recipientAddress === ''; ++i) {
-          await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 20))
-          })
-        }
+        await settleInAct(() => tileProps().recipientAddress !== '')
         expect(tileProps().recipientAddress).not.toBe('')
         show.mockRestore()
       },
@@ -1159,15 +1175,7 @@ describe('SendScene2 recipient network', () => {
     // The fake provider refuses every quote. The refusal settles on the
     // quote's own promise chain, so only a closing act scope delivers it:
     await scene.enterSendAmount(ONE_BTC)
-    for (
-      let i = 0;
-      i < 50 && !scene.shows(lstrings.exchange_generic_error_title);
-      ++i
-    ) {
-      await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 20))
-      })
-    }
+    await settleInAct(() => scene.shows(lstrings.exchange_generic_error_title))
     expect(scene.shows(lstrings.exchange_generic_error_title)).toBe(true)
     expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
     scene.unmount()
