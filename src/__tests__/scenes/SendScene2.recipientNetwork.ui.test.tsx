@@ -34,6 +34,7 @@ import { EdgeRow } from '../../components/rows/EdgeRow'
 import { SendScene2 } from '../../components/scenes/SendScene2'
 import type * as AirshipInstance from '../../components/services/AirshipInstance'
 import { Airship, showToast } from '../../components/services/AirshipInstance'
+import { SafeSlider } from '../../components/themed/SafeSlider'
 import { StealthInfoText } from '../../components/themed/StealthInfoText'
 import { AddressTile2 } from '../../components/tiles/AddressTile2'
 import { lstrings } from '../../locales/strings'
@@ -124,6 +125,11 @@ const FIFTY_USD_OF_ETH = '37700000000000000'
 const SCAM_WARNING = 'Scam Warning'
 const SWAP_BEFORE_SEND = 'Swap before send'
 const ZCASH_TRANSPARENT_WARNING = 'Transparent Zcash payout'
+// A ZIP-316 unified address with a P2PKH receiver, which the provider pays
+// out to as a t1:
+const ZCASH_UNIFIED_ADDRESS =
+  'u1pg2aaph7jp8rpf6yhsza25722sg5fcn3vaca6ze27hqjw7jvvhhuxkpcg0ge9xh6drsgdkda8qjq5chpehkcpxf87rnjryjqwymdheptpvnljqqrjqzjwkc2ma6hcq666kgwfytxwac8eyex6ndgr6ezte66706e3vaqrd25dzvzkc69kw0jgywtd0cmq52q5lkw6uh7hyvzjse8ksx'
+const ZCASH_TRANSPARENT_ADDRESS = 't1Hsc1LR8yKnbbe3twRp88p6vFfC5t7DLbs'
 
 /**
  * A fake plugin whose parser accepts one address format, bare or inside a
@@ -206,16 +212,37 @@ const ftmCurrencyInfo: EdgeCurrencyInfo = {
 /**
  * The swap provider every send-to-address quote goes to. It records the
  * destination addresses each request reached it with, then declines the pair
- * as a provider with no route would.
+ * as a provider with no route would. With `fakeHoudiniQuotes.enabled` set it
+ * quotes the pair one to one instead, so the scene holds a live quote.
  */
 const quotedDestinations: EdgeAddress[][] = []
+const fakeHoudiniQuotes = { enabled: false }
 const fakeHoudiniPlugin: EdgeSwapPlugin = {
   swapInfo: { pluginId: 'houdini', displayName: 'Houdini', supportEmail: '' },
   async fetchSwapQuote(request) {
     quotedDestinations.push(
       await request.toWallet.getAddresses({ tokenId: null })
     )
-    throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+    if (!fakeHoudiniQuotes.enabled) {
+      throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+    }
+    return {
+      swapInfo: fakeHoudiniPlugin.swapInfo,
+      request,
+      isEstimate: false,
+      fromNativeAmount: request.nativeAmount,
+      toNativeAmount: request.nativeAmount,
+      networkFee: {
+        currencyCode: request.fromWallet.currencyInfo.currencyCode,
+        tokenId: null,
+        nativeAmount: '0'
+      },
+      pluginId: fakeHoudiniPlugin.swapInfo.pluginId,
+      approve: async () => {
+        throw new Error('The fake provider sends nothing')
+      },
+      close: async () => {}
+    }
   }
 }
 
@@ -396,6 +423,7 @@ describe('SendScene2 recipient network', () => {
 
   beforeEach(() => {
     mockShowToast.mockClear()
+    fakeHoudiniQuotes.enabled = false
   })
 
   interface RenderedSend {
@@ -444,6 +472,8 @@ describe('SendScene2 recipient network', () => {
     position: (text: string) => number
     /** Whether some text node on the scene reads exactly this. */
     shows: (text: string) => boolean
+    /** Whether the slider is shown and ready to slide. */
+    sliderLive: () => boolean
     /** The notes under the Stealth Send toggle, top to bottom. */
     stealthNotes: () => string[]
     /** Taps the Stealth Send toggle. */
@@ -695,6 +725,10 @@ describe('SendScene2 recipient network', () => {
         1,
       shows: text =>
         JSON.stringify(rendered.toJSON()).includes(JSON.stringify([text])),
+      sliderLive: () =>
+        rendered
+          .UNSAFE_queryAllByType(SafeSlider)
+          .some(slider => slider.props.disabled !== true),
       stealthNotes: () =>
         rendered
           .UNSAFE_queryAllByType(StealthInfoText)
@@ -1194,6 +1228,55 @@ describe('SendScene2 recipient network', () => {
     )
     expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
     scene.unmount()
+  })
+
+  describe('with a pasted Zcash address the provider quotes', () => {
+    /**
+     * Pastes a Zcash address on a Bitcoin send, enters an amount, and waits
+     * until the provider's quote for that address leaves the slider ready.
+     */
+    const renderQuotedPaste = async (
+      address: string,
+      stealth: boolean
+    ): Promise<RenderedSend> => {
+      fakeHoudiniQuotes.enabled = true
+      const scene = renderBitcoinSend()
+      await scene.pickRecipientAsset('Zcash')
+      expect(await scene.enterCrossChainAddress(address)).toBe(true)
+      if (stealth) await scene.toggleStealth()
+      expect(scene.stealthArmed()).toBe(stealth)
+
+      quotedDestinations.length = 0
+      await scene.enterSendAmount(ONE_BTC)
+      await settleInAct(scene.sliderLive)
+      expect(scene.sliderLive()).toBe(true)
+      expect(quotedDestinations.at(-1)).toEqual([
+        { addressType: 'publicAddress', publicAddress: address }
+      ])
+      expect(scene.shows(lstrings.exchange_generic_error_title)).toBe(false)
+      return scene
+    }
+
+    it('warns before the slide that a Stealth u1 send pays a t1', async () => {
+      const scene = await renderQuotedPaste(ZCASH_UNIFIED_ADDRESS, true)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(true)
+      expect(scene.shows(lstrings.stealth_zcash_transparent_payout_body)).toBe(
+        true
+      )
+      scene.unmount()
+    })
+
+    it('shows no warning for a Stealth send to a pasted t1', async () => {
+      const scene = await renderQuotedPaste(ZCASH_TRANSPARENT_ADDRESS, true)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+      scene.unmount()
+    })
+
+    it('shows no warning for a u1 send with Stealth off', async () => {
+      const scene = await renderQuotedPaste(ZCASH_UNIFIED_ADDRESS, false)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+      scene.unmount()
+    })
   })
 
   it('shows the scam warning on a plain send with no address', async () => {
