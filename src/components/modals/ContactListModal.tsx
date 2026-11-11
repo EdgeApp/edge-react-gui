@@ -1,18 +1,29 @@
 import * as React from 'react'
 import { Image } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
+import { Fontello } from '../../assets/vector'
 import { getMerchantThumbnail } from '../../hooks/redux/useContactThumbnail'
-import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { useHandler } from '../../hooks/useHandler'
 import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { GuiContact } from '../../types/types'
 import { normalizeForSearch } from '../../util/utils'
+import { ButtonsView } from '../buttons/ButtonsView'
+import { EdgeCard } from '../cards/EdgeCard'
+import { PersonIcon } from '../icons/ThemedIcons'
+import { Airship } from '../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
+import type { FilledTextInputRef } from '../themed/FilledTextInput'
 import { SelectableRow } from '../themed/SelectableRow'
-import { promptForContactsPermission } from './ContactsPermissionModal'
+import {
+  ContactsPermissionContent,
+  ContactsPermissionModal,
+  type ContactsPermissionResult,
+  markContactsPermissionShown,
+  requestContactsAccess
+} from './ContactsPermissionModal'
 import { ListModal } from './ListModal'
 
 export interface ContactModalResult {
@@ -33,8 +44,25 @@ export const ContactListModal: React.FC<Props> = ({
 }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const contacts = useSelector(state => state.contacts)
   const dispatch = useDispatch()
+
+  const textInputRef = React.useRef<FilledTextInputRef>(null)
+
+  const contacts = useSelector(state => state.contacts)
+  const contactsPermission = useSelector(state => state.permissions.contacts)
+  const contactsPermissionShown = useSelector(
+    state => state.ui.settings.contactsPermissionShown
+  )
+  const hasContactsAccess =
+    contactsPermission === 'granted' || contactsPermission === 'limited'
+
+  // The full permission card only appears until the user answers it once.
+  // While it shows, the text field stays unfocused so the keyboard does
+  // not cover it:
+  const [showPermissionCard, setShowPermissionCard] = React.useState(
+    !hasContactsAccess && !contactsPermissionShown
+  )
+  const [autoFocus] = React.useState(!showPermissionCard)
 
   const rowComponent = ({
     givenName,
@@ -69,10 +97,10 @@ export const ContactListModal: React.FC<Props> = ({
               resizeMode={thumbnail.fit ? 'contain' : 'cover'}
             />
           ) : (
-            <IonIcon
-              style={styles.tileAvatarIcon}
-              name="person"
+            <PersonIcon
+              color={theme.primaryText}
               size={theme.rem(1.5)}
+              style={styles.tileAvatarIcon}
             />
           )
         }
@@ -103,18 +131,59 @@ export const ContactListModal: React.FC<Props> = ({
     bridge.resolve({ contactName, thumbnailPath: null })
   }
 
-  useAsyncEffect(
-    async () => {
-      await dispatch(promptForContactsPermission())
-    },
-    [],
-    'ContactListModal'
+  const handleAllow = useHandler(async () => {
+    setShowPermissionCard(false)
+    await dispatch(requestContactsAccess())
+    textInputRef.current?.focus()
+  })
+
+  const handleDeny = useHandler(async () => {
+    setShowPermissionCard(false)
+    textInputRef.current?.focus()
+    await dispatch(markContactsPermissionShown())
+  })
+
+  const handleGrantAccess = useHandler(async () => {
+    // The keyboard would otherwise cover the full-screen modal:
+    textInputRef.current?.blur()
+    const result = await Airship.show<ContactsPermissionResult | undefined>(
+      bridge => <ContactsPermissionModal bridge={bridge} />
+    )
+    if (result === 'allow') await dispatch(requestContactsAccess())
+    textInputRef.current?.focus()
+  })
+
+  const listHeader = hasContactsAccess ? undefined : showPermissionCard ? (
+    <EdgeCard>
+      <ContactsPermissionContent />
+      <ButtonsView
+        primary={{ label: lstrings.string_allow, onPress: handleAllow }}
+        secondary={{ label: lstrings.string_deny, onPress: handleDeny }}
+        layout="row"
+      />
+    </EdgeCard>
+  ) : (
+    <SelectableRow
+      icon={
+        <Fontello
+          name="address-book"
+          color={theme.primaryText}
+          size={theme.rem(1.5)}
+          style={styles.tileAvatarIcon}
+        />
+      }
+      title={lstrings.contacts_permission_grant_access}
+      onPress={handleGrantAccess}
+    />
   )
 
   return (
     <ListModal
       bridge={bridge}
-      title={sprintf(lstrings.transaction_details_person_input, contactType)}
+      title={sprintf(
+        lstrings.transaction_details_person_input_title_1s,
+        contactType
+      )}
       label={contactType}
       searchIcon={false}
       onSubmitEditing={handleSubmitEditing}
@@ -122,8 +191,10 @@ export const ContactListModal: React.FC<Props> = ({
       rowsData={contacts}
       rowComponent={rowComponent}
       rowDataFilter={rowDataFilter}
+      listHeader={listHeader}
+      textInputRef={textInputRef}
       autoCapitalize="words"
-      autoFocus
+      autoFocus={autoFocus}
       autoSelect
     />
   )
@@ -135,7 +206,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(2)
   },
   tileAvatarIcon: {
-    color: theme.primaryText,
     marginRight: theme.rem(0.5)
   }
 }))

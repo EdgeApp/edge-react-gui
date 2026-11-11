@@ -1,43 +1,28 @@
 import * as React from 'react'
 
-const CACHE_MAX_SIZE = 10
+import { useHandler } from './useHandler'
 
+/**
+ * Filters a list by the latest filter text. The result follows `allData`,
+ * so rows that arrive after mount (such as contacts loaded once access is
+ * granted) show without the user typing again.
+ */
 export function useFilter<T>(
   allData: T[],
   filterData: (filter: string, item: T, index: number) => boolean = () => true
 ): [T[], (filter: string) => void] {
-  const [filteredData, setFilteredData] = React.useState(allData)
-  const [filteredDataCache, setFilteredDataCache] = React.useState<
-    Map<string, T[]>
-  >(new Map([['', allData]]))
-  const [fifoCache, setFifoCache] = React.useState([''])
+  const [filter, setFilter] = React.useState('')
+  const handleFilterData = useHandler(filterData)
 
-  const setFilter = (filter: string): void => {
-    // If already existing in cache just return the existing sort
-    const filteredDataCacheForFilter = filteredDataCache.get(filter)
-    if (filteredDataCacheForFilter != null) {
-      setFilteredData(filteredDataCacheForFilter)
-    } else {
-      // Create the new filtered Array
-      const newFilteredData = allData.filter((item, index) =>
-        filterData(filter, item, index)
-      )
-      // Updated the cache
-      filteredDataCache.set(filter, newFilteredData)
-      fifoCache.unshift(filter)
-      // Check if over maximum cache size
-      if (fifoCache.length >= CACHE_MAX_SIZE) {
-        const cacheKey = fifoCache.pop()
-        if (cacheKey != null) {
-          filteredDataCache.delete(cacheKey)
-        }
-      }
-      // Update state
-      setFifoCache(fifoCache)
-      setFilteredDataCache(filteredDataCache)
-      setFilteredData(newFilteredData)
-    }
-  }
+  const filteredData = React.useMemo(
+    () =>
+      filter === ''
+        ? allData
+        : allData.filter((item, index) =>
+            handleFilterData(filter, item, index)
+          ),
+    [allData, filter, handleFilterData]
+  )
 
   return [filteredData, setFilter]
 }

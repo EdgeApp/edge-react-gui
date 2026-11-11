@@ -10,6 +10,7 @@
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - added: Banxa VietQR payment method for VND buys
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
+- changed: Ask for contacts access only inside the transaction payee modal, not on receiving a transaction
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
 - changed: The feedback survey now uses the same keyboard offset on both platforms, replacing a per-platform workaround the old scroll library required.
@@ -26,6 +27,8 @@
 - fixed: Modals and the QR scanner no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above).
 - fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
+- fixed: Contacts access hanging on iOS 18 after sharing only selected contacts
+- fixed: System settings opening right after declining the contacts prompt
 - fixed: Zealot uploads of release merge builds, and failed Zealot uploads now fail the build
 - fixed: Staking positions that loaded slowly or never when a public RPC node rate limited requests, with the stake plugins now sharing a vetted node list per chain and moving to another node when one fails
 - fixed: Recognize promotions that only set a preferred exchange in the exchange settings, which now say the promotion is choosing it and offer to remove it, instead of showing a list whose taps were saved but silently overridden for the promotion's whole window
