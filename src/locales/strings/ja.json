@@ -771,7 +771,7 @@
   "transaction_details_recipient": "受取人",
   "transaction_details_sender": "送信元",
   "transaction_details_person_name": "%s 名前",
-  "transaction_details_person_input_title_1s": "Enter a %1$s",
+  "transaction_details_person_input": "%sを選択",
   "transaction_details_crypto_amount": "%s 金額",
   "transaction_details_amount_in_fiat": "%s での金額",
   "transaction_details_amount_current_price": "現在の価格での金額",

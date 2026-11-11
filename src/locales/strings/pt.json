@@ -771,7 +771,7 @@
   "transaction_details_recipient": "Destinatário",
   "transaction_details_sender": "Remetente",
   "transaction_details_person_name": "%s Nome",
-  "transaction_details_person_input_title_1s": "Enter a %1$s",
+  "transaction_details_person_input": "Escolha um %s",
   "transaction_details_crypto_amount": "Quantidade de %s",
   "transaction_details_amount_in_fiat": "Valor em %s",
   "transaction_details_amount_current_price": "Valor no preço atual",

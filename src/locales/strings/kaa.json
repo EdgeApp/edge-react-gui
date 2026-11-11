@@ -771,7 +771,7 @@
   "transaction_details_recipient": "Qabıllawshı",
   "transaction_details_sender": "Jiberiwshi",
   "transaction_details_person_name": "%s Name",
-  "transaction_details_person_input_title_1s": "Enter a %1$s",
+  "transaction_details_person_input": "Tańlaw %s",
   "transaction_details_crypto_amount": "%s Amount",
   "transaction_details_amount_in_fiat": "Amount in %s",
   "transaction_details_amount_current_price": "Amount at Current Price",

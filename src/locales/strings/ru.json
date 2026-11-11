@@ -771,7 +771,7 @@
   "transaction_details_recipient": "Получатель",
   "transaction_details_sender": "Отправитель",
   "transaction_details_person_name": "%s Имя",
-  "transaction_details_person_input_title_1s": "Enter a %1$s",
+  "transaction_details_person_input": "Выбрать %s",
   "transaction_details_crypto_amount": "%s сумма",
   "transaction_details_amount_in_fiat": "Сумма в %s",
   "transaction_details_amount_current_price": "Сумма по текущей цене",
