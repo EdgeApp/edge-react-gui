@@ -661,6 +661,9 @@ export async function buildIosMaestro(ctx: Stage) {
           '-workspace ios/edge.xcworkspace',
           '-scheme edge',
           '-sdk iphonesimulator',
+          // Apple silicon only, as scripts/deploy.ts builds it: zcash-native
+          // ships no x86_64 simulator slice.
+          '-arch arm64',
           '-configuration Release',
           '-derivedDataPath build/derivedData'
         ].join(' ')

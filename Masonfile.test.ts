@@ -732,7 +732,7 @@ describe('Masonfile', () => {
     )
     expect(commands(calls).slice(-2)).toEqual([
       'npm run prepare.ios',
-      'xcodebuild build -workspace ios/edge.xcworkspace -scheme edge -sdk iphonesimulator -configuration Release -derivedDataPath build/derivedData'
+      'xcodebuild build -workspace ios/edge.xcworkspace -scheme edge -sdk iphonesimulator -arch arm64 -configuration Release -derivedDataPath build/derivedData'
     ])
     expect(calls.filter(([kind]) => kind === 'exec').at(-1)).toEqual([
       'exec',
