@@ -8,6 +8,7 @@
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
 - added: Live Chat in the Help modal opens inside the app and tells support the app version, build, and OS version
+- added: Contact Support on the Authorize Device scene opens the in-app Live Chat with the Lock ID filled in
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - added: Banxa VietQR payment method for VND buys
 - added: Developer option that replaces confirmation sliders with buttons, for BrowserStack and other swipe-less test tools
