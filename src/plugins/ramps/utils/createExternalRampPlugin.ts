@@ -1,6 +1,7 @@
 import type { EdgeTokenId } from 'edge-core-js'
 
 import type { PluginViewParams } from '../../../components/scenes/GuiPluginViewScene'
+import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { lstrings } from '../../../locales/strings'
 import type { GuiPlugin } from '../../../types/GuiPluginTypes'
 import type { FiatPaymentType } from '../../gui/fiatPluginTypes'
@@ -167,7 +168,14 @@ export function createExternalRampPlugin(
           specialQuoteRateMessage: lstrings.tap_to_view_quote_amount_and_rate,
           approveQuote: async () => {
             // Launch!
-            const resolvedQuery = await support.resolveDeepQuery?.(request)
+            // The resolver can wait on a provider login, so show progress:
+            const resolvedQuery =
+              support.resolveDeepQuery == null
+                ? undefined
+                : await showToastSpinner(
+                    lstrings.fiat_plugin_finalizing_quote,
+                    support.resolveDeepQuery(request)
+                  )
             const navigationProps: PluginViewParams = {
               plugin: externalConfig.guiPlugin,
               deepPath: support.deepPath,
