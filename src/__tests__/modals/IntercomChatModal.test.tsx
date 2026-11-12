@@ -47,6 +47,31 @@ describe('getIntercomChatHtml', () => {
     const html = getIntercomChatHtml('abc123', API_BASE, {})
 
     expect(html).toContain("Intercom('showNewMessage')")
+    expect(html).toContain('var message = null')
+  })
+
+  it('sends the attributes as an update once the Messenger shows', () => {
+    const html = getIntercomChatHtml('abc123', API_BASE, { edge_lock_id: null })
+
+    expect(html).toContain(
+      `window.intercomSettings = {"api_base":"${API_BASE}","app_id":"abc123","hide_default_launcher":true}`
+    )
+    expect(html).toContain('var attributes = {"edge_lock_id":null}')
+    expect(html).toContain("Intercom('update', attributes)")
+  })
+
+  it('sends the given message through the composer', () => {
+    const html = getIntercomChatHtml(
+      'abc123',
+      API_BASE,
+      {},
+      'Lock ID: "1a2b3c4d"'
+    )
+
+    expect(html).toContain("Intercom('showNewMessage')")
+    expect(html).toContain('var message = "Lock ID: \\"1a2b3c4d\\""')
+    expect(html).toContain("doc.execCommand('insertText', false, message)")
+    expect(html).toContain('.intercom-composer-send-button')
   })
 
   it('keeps attribute values inside the script tag', () => {
@@ -55,6 +80,161 @@ describe('getIntercomChatHtml', () => {
     })
 
     expect(html).not.toContain('</script><script>alert(1)')
+  })
+
+  it('keeps the message inside the script tag', () => {
+    const html = getIntercomChatHtml(
+      'abc123',
+      API_BASE,
+      {},
+      '</script><script>alert(1)</script>'
+    )
+
+    expect(html).not.toContain('</script><script>alert(1)')
+  })
+})
+
+describe('getIntercomChatHtml page script', () => {
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  // Runs the page script against a queued Intercom and a stub Messenger frame.
+  // The composer drops the first `droppedInserts` inserts, as an editor that
+  // is not ready yet does. Text it keeps enables the send button, unless
+  // `enablesSendButton` is false:
+  function loadPage(
+    message?: string,
+    opts: {
+      droppedInserts?: number
+      enablesSendButton?: boolean
+      hasSendButton?: boolean
+    } = {}
+  ): {
+    calls: () => unknown[][]
+    click: jest.Mock
+    insertText: jest.Mock<(command: string, ui: boolean, text: string) => void>
+    postMessage: jest.Mock
+    sendButton: { click: jest.Mock; disabled: boolean } | null
+    show: () => void
+  } {
+    const {
+      droppedInserts = 0,
+      enablesSendButton = true,
+      hasSendButton = true
+    } = opts
+    const html = getIntercomChatHtml(
+      'abc123',
+      API_BASE,
+      { edge_lock_id: '1a2b3c4d' },
+      message
+    )
+    const script = /<script>([\s\S]*?)<\/script>/.exec(html)?.[1] ?? ''
+    const composer = { focus() {}, textContent: '' }
+    const click = jest.fn()
+    const postMessage = jest.fn()
+    const sendButton = hasSendButton ? { click, disabled: true } : null
+    let dropsLeft = droppedInserts
+    const insertText = jest.fn((command: string, ui: boolean, text: string) => {
+      if (dropsLeft > 0) {
+        dropsLeft--
+        return
+      }
+      composer.textContent += text
+      if (sendButton != null && enablesSendButton) sendButton.disabled = false
+    })
+    const messenger = {
+      execCommand: insertText,
+      querySelector: (selector: string) =>
+        selector === '.intercom-composer-send-button' ? sendButton : composer
+    }
+    const fakeWindow: {
+      Intercom?: { q: IArguments[] }
+      ReactNativeWebView: { postMessage: jest.Mock }
+    } = { ReactNativeWebView: { postMessage } }
+    const fakeDocument = {
+      createElement: () => ({}),
+      head: { appendChild() {} },
+      querySelector: () => ({ contentDocument: messenger })
+    }
+    // eslint-disable-next-line no-new-func, @typescript-eslint/no-implied-eval
+    new Function('window', 'document', script)(fakeWindow, fakeDocument)
+    const calls = (): unknown[][] =>
+      (fakeWindow.Intercom?.q ?? []).map(args => Array.from(args))
+    const show = calls().find(call => call[0] === 'onShow')?.[1] as () => void
+    return { calls, click, insertText, postMessage, sendButton, show }
+  }
+
+  it('updates and sends once per page', () => {
+    jest.useFakeTimers()
+    const page = loadPage('Hi')
+    page.show()
+    page.show()
+    jest.advanceTimersByTime(300)
+
+    expect(page.calls().filter(call => call[0] === 'update')).toEqual([
+      ['update', { edge_lock_id: '1a2b3c4d' }]
+    ])
+    expect(page.insertText).toHaveBeenCalledWith('insertText', false, 'Hi')
+    expect(page.insertText).toHaveBeenCalledTimes(1)
+    expect(page.click).toHaveBeenCalledTimes(1)
+    expect(
+      page.postMessage.mock.calls.filter(call => call[0] === 'sent')
+    ).toHaveLength(1)
+  })
+
+  it('sends nothing without a message', () => {
+    jest.useFakeTimers()
+    const page = loadPage()
+    page.show()
+    jest.advanceTimersByTime(300)
+
+    expect(page.insertText).not.toHaveBeenCalled()
+    expect(page.click).not.toHaveBeenCalled()
+    expect(page.postMessage).not.toHaveBeenCalledWith('sent')
+  })
+
+  it('reports nothing when the send button is missing', () => {
+    jest.useFakeTimers()
+    const page = loadPage('Hi', { hasSendButton: false })
+    page.show()
+    jest.advanceTimersByTime(300)
+
+    expect(page.insertText).toHaveBeenCalledTimes(1)
+    expect(page.postMessage).not.toHaveBeenCalledWith('sent')
+  })
+
+  it('inserts the message again when the composer drops it', () => {
+    jest.useFakeTimers()
+    const page = loadPage('Hi', { droppedInserts: 2 })
+    page.show()
+    jest.advanceTimersByTime(600)
+
+    expect(page.insertText).toHaveBeenCalledTimes(3)
+    expect(page.click).not.toHaveBeenCalled()
+    jest.advanceTimersByTime(300)
+
+    expect(page.insertText).toHaveBeenCalledTimes(3)
+    expect(page.click).toHaveBeenCalledTimes(1)
+    expect(page.postMessage).toHaveBeenCalledWith('sent')
+  })
+
+  it('waits for the send button to enable before sending', () => {
+    jest.useFakeTimers()
+    const page = loadPage('Hi', { enablesSendButton: false })
+    page.show()
+    jest.advanceTimersByTime(900)
+
+    expect(page.insertText).toHaveBeenCalledTimes(1)
+    expect(page.click).not.toHaveBeenCalled()
+    expect(page.postMessage).not.toHaveBeenCalledWith('sent')
+
+    if (page.sendButton == null) throw new Error('No send button')
+    page.sendButton.disabled = false
+    jest.advanceTimersByTime(300)
+
+    expect(page.click).toHaveBeenCalledTimes(1)
+    expect(page.postMessage).toHaveBeenCalledWith('sent')
   })
 })
 
@@ -68,23 +248,25 @@ describe('IntercomChatModal', () => {
   })
 
   function getWebViewProps(
-    apiBase?: string
+    extraProps: Partial<React.ComponentProps<typeof IntercomChatModal>> = {}
   ): React.ComponentProps<typeof WebView> {
     const rendered = render(
       <FakeProviders>
         <IntercomChatModal
           bridge={bridge}
           appId="abc123"
-          apiBase={apiBase}
           siteUri={SITE_URI}
+          {...extraProps}
         />
       </FakeProviders>
     )
     return rendered.UNSAFE_getByType(WebView).props
   }
 
-  function getHtml(apiBase?: string): string {
-    const { source } = getWebViewProps(apiBase)
+  function getHtml(
+    extraProps: Partial<React.ComponentProps<typeof IntercomChatModal>> = {}
+  ): string {
+    const { source } = getWebViewProps(extraProps)
     return (source as { html: string }).html
   }
 
@@ -114,8 +296,11 @@ describe('IntercomChatModal', () => {
     })
   }
 
-  function sendMessage(data: string): void {
-    const { onMessage } = getWebViewProps()
+  function sendMessage(
+    data: string,
+    extraProps: Partial<React.ComponentProps<typeof IntercomChatModal>> = {}
+  ): void {
+    const { onMessage } = getWebViewProps(extraProps)
     const event = { nativeEvent: { data } } as unknown as Parameters<
       NonNullable<typeof onMessage>
     >[0]
@@ -136,7 +321,19 @@ describe('IntercomChatModal', () => {
 
   it('uses the US Messenger host unless told otherwise', () => {
     expect(getHtml()).toContain('"api_base":"https://api-iam.intercom.io"')
-    expect(getHtml(API_BASE)).toContain(`"api_base":"${API_BASE}"`)
+    expect(getHtml({ apiBase: API_BASE })).toContain(`"api_base":"${API_BASE}"`)
+  })
+
+  it('sends the Lock ID and the message along with the app details', () => {
+    const html = getHtml({ lockId: '1a2b3c4d', message: 'Help' })
+
+    expect(html).toContain('"edge_lock_id":"1a2b3c4d"')
+    expect(html).toContain('"edge_os_version":"18.0.0"')
+    expect(html).toContain('var message = "Help"')
+  })
+
+  it('clears the Lock ID when the chat has none', () => {
+    expect(getHtml()).toMatch(/var attributes = \{[^}]*"edge_lock_id":null/)
   })
 
   it('loads the Messenger and its frames in place', () => {
@@ -189,6 +386,15 @@ describe('IntercomChatModal', () => {
     sendMessage('hide')
     expect(bridge.resolve).toHaveBeenCalledTimes(1)
     expect(openBrowserUri).not.toHaveBeenCalled()
+  })
+
+  it('reports the message once the page has sent it', () => {
+    const onMessageSent = jest.fn()
+    sendMessage('show', { message: 'Hi', onMessageSent })
+    expect(onMessageSent).not.toHaveBeenCalled()
+
+    sendMessage('sent', { message: 'Hi', onMessageSent })
+    expect(onMessageSent).toHaveBeenCalledTimes(1)
   })
 
   it('falls back to the support site when the Messenger cannot load', () => {
