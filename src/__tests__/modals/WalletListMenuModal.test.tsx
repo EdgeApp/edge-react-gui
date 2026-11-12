@@ -78,10 +78,16 @@ async function isOffered(
 }
 
 describe('WalletListMenuModal View in Explorer entry', () => {
-  it('shows for transparent wallets and their tokens', async () => {
+  it('shows for account-based wallets and their tokens', async () => {
     expect(await isOffered('ethereum', EXPLORER)).toBe(true)
-    expect(await isOffered('bitcoin', EXPLORER)).toBe(true)
+    expect(await isOffered('hedera', EXPLORER)).toBe(true)
     expect(await isOffered('ethereum', EXPLORER, TOKEN_ID)).toBe(true)
+  })
+
+  it('hides for UTXO wallets, whose receive address rotates', async () => {
+    for (const pluginId of ['bitcoin', 'bitcoincash', 'litecoin', 'dogecoin']) {
+      expect(await isOffered(pluginId, EXPLORER)).toBe(false)
+    }
   })
 
   it('hides for privacy wallets, even with an explorer template', async () => {
@@ -96,7 +102,11 @@ describe('WalletListMenuModal View in Explorer entry', () => {
     expect(await isOffered('ethereum', '', TOKEN_ID)).toBe(false)
   })
 
-  it('shows for keys-only plugins', async () => {
-    expect(await isOffered('bitcoinsv', EXPLORER)).toBe(true)
+  it('shows for keys-only account-based plugins', async () => {
+    expect(await isOffered('eos', EXPLORER)).toBe(true)
+  })
+
+  it('hides for keys-only UTXO plugins', async () => {
+    expect(await isOffered('bitcoinsv', EXPLORER)).toBe(false)
   })
 })
