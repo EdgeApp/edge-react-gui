@@ -72,7 +72,7 @@ Non-goals:
 | Repo | Deliverable | Scope |
 |---|---|---|
 | [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730) | `EdgeSwapSendRequest` beside `EdgeSwapRequest`, core-built [synthetic destination wallet](#synthetic-destination-wallet), `EdgeTxActionSwapSend`, `EdgeCurrencyConfig.parseUri` | [Section 5](#5-detailed-design-edge-core-js) |
-| [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) | HoudiniSwap plugin, chain mapping, destination-[memo](#memo) threading, the `swapSend` action | [Section 6](#6-detailed-design-edge-exchange-plugins) |
+| [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469) | Houdini plugin, chain mapping, destination-[memo](#memo) threading, the `swapSend` action | [Section 6](#6-detailed-design-edge-exchange-plugins) |
 | [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066) | Send scene becomes a send-to-address swap, Stealth toggles, cross-chain address entry | [Section 7](#7-detailed-design-edge-react-gui) |
 
 The seam is one request type. The GUI describes the destination as data (an `EdgeSwapSendRequest` naming a chain and its addresses); the core turns that description into an object shaped like a wallet; the plugin consumes it through the wallet surface it already knows. No plugin needs to learn about addresses-instead-of-wallets to quote one. The plugin that wins does name the result, by writing a `swapSend` action instead of a `swap` action, because it is the one party that knows the destination was an address and whether the route was private.
@@ -89,7 +89,7 @@ sequenceDiagram
   box edge-exchange-plugins
     participant Plug as houdini plugin
   end
-  participant H as HoudiniSwap API
+  participant H as Houdini API
 
   Send->>API: fetchSwapQuotes({ toPluginId, toAddresses, toMemos, privacy }, stealthOptions)
   API->>API: resolveSwapRequest: send request becomes toWallet
@@ -253,7 +253,7 @@ The parser receives the account's custom tokens, and a result that names its ass
 export const swapInfo: EdgeSwapInfo = {
   pluginId,
   isDex: false,
-  displayName: 'HoudiniSwap',
+  displayName: 'Houdini',
   supportEmail: 'support@houdiniswap.com'
 }
 ```
@@ -670,7 +670,7 @@ This is Houdini's dominant flow, around 60% of their traffic, which is why it ge
 
 ### Provider availability versus exchange settings
 
-Every request built by `makeStealthSwapRequestOptions` **ignores** the global exchange-settings enable flag for HoudiniSwap. That covers Stealth Send and swap-send on the send scene, and Stealth Swap on the Exchange scene. A swap with Stealth off keeps honoring the flag.
+Every request built by `makeStealthSwapRequestOptions` **ignores** the global exchange-settings enable flag for Houdini. That covers Stealth Send and swap-send on the send scene, and Stealth Swap on the Exchange scene. A swap with Stealth off keeps honoring the flag.
 
 The setting governs which providers the swap aggregator may pick among. A stealth request has nothing for it to govern: turning Stealth on names the one provider, and a private send is a send feature that happens to be powered by Houdini. Switching off a swap provider should not silently remove either.
 
@@ -916,7 +916,7 @@ On-device, iOS simulator, account `edge-funds`, against the live provider:
 10. **Stealth auto-disable mechanics, live**, on the phase 5 code state: ETH wallet, pasted LTC address, stealth armed, amount entered. The quote failed on the missing private route, the toggle turned itself off with the toast, the info line pinned, and the fallback re-quote of that code state executed through ChangeNOW (`0x2f281f4ea143a775355da7876290aaa2a9a7d44160a68eeac89b1ebe92ac284c`). It covers the toast, info line and `routeCaps` mechanics, which are the same lines the same-asset branch runs; the cross-asset fan-out it re-quoted through belongs to that code state alone.
 11. **Fixed-to fallback, live.** PIVX wallet ($89), stealth on, own PIVX address pasted, "Recipient gets" set to 1000 PIVX: the reverse quote failed (no receive-priced same-asset route), the toast fired, the send side became guaranteed at the rate-seeded 1000 PIVX, and the warning card appeared. Tapping "Recipient gets" afterwards refused with the pre-emptive toast; editing "You send" cleared the card. The post-fallback forward quote then surfaced the provider's PIVX deposit-address defect (retrospective item 4), which is unrelated to the fallback mechanism.
 12. **Pre-emptive stealth refusal, live.** Re-tapping the stealth toggle on the known-unavailable ETH to LTC pair refused to arm and toasted, without issuing another quote.
-13. **Houdini exclusivity, live (phase 6).** ETH wallet, pasted LTC address, 0.006 ETH, Stealth OFF: the quote went Houdini-only and surfaced `SwapCurrencyError: HoudiniSwap does not support ethereum:null to litecoin:null` in the error card, where the phase 5 code had produced an armed ChangeNOW quote on the same pair and amount. Repeated with Stealth ON: the toggle stayed on and the same error card appeared, with no auto-disable toast and no re-quote. Both amount entries went through the new flip-input modals (You send in ETH/USD, Recipient gets in LTC/USD via a borrowed Litecoin wallet). Amount errors were also confirmed unchanged: 0.002 ETH (below the provider minimum) produced the plain error card with the toggle still armed. The same-asset auto-disable degrade was NOT drivable this phase: the provider's route availability flapped during testing (private routes present on one probe, absent minutes later) and no funded same-asset pair lacked a private route at a fundable amount; the toast, `routeCaps`, and degrade mechanics are the same lines phase 5 drove to execution.
+13. **Houdini exclusivity, live (phase 6).** ETH wallet, pasted LTC address, 0.006 ETH, Stealth OFF: the quote went Houdini-only and surfaced `SwapCurrencyError: Houdini does not support ethereum:null to litecoin:null` in the error card, where the phase 5 code had produced an armed ChangeNOW quote on the same pair and amount. Repeated with Stealth ON: the toggle stayed on and the same error card appeared, with no auto-disable toast and no re-quote. Both amount entries went through the new flip-input modals (You send in ETH/USD, Recipient gets in LTC/USD via a borrowed Litecoin wallet). Amount errors were also confirmed unchanged: 0.002 ETH (below the provider minimum) produced the plain error card with the toggle still armed. The same-asset auto-disable degrade was NOT drivable this phase: the provider's route availability flapped during testing (private routes present on one probe, absent minutes later) and no funded same-asset pair lacked a private route at a fundable amount; the toast, `routeCaps`, and degrade mechanics are the same lines phase 5 drove to execution.
 
 14. **Amount-row title states, live (phase 13).** XLM wallet, "My Sonic" adopted as the destination, 158 XLM entered on the send side: the send row read `You send (Guaranteed)` in green with a bare amount and the receive row `Recipient gets (Estimated)` in orange with the `~` prefix, on a live quote of 1 XLM = 7.67561925 S. Editing "Recipient gets" to 1200 S swapped both, `Recipient gets (Guaranteed)` green and bare against `You send (Estimated)` orange with the tilde, and the reverse quote resolved at 1 XLM = 7.56043868 S with the slider armed. Nothing was sent.
 
@@ -939,7 +939,7 @@ On-device, iOS simulator, account `edge-funds`, against the live provider:
 ### Phase 2: production implementation
 
 - **Sketched:** replace every prototype hack with real wiring.
-- **Shipped:** the core `toAddressInfo` seam, the HoudiniSwap plugin, and `SendScene2` integrated in place with a 38-chain metadata table, linked amounts, expiry re-quoting, destination tags, and both Stealth toggles.
+- **Shipped:** the core `toAddressInfo` seam, the Houdini plugin, and `SendScene2` integrated in place with a 38-chain metadata table, linked amounts, expiry re-quoting, destination tags, and both Stealth toggles.
 - **Diverged:** the prototype's reroute of the wallet Send button and its `HoudiniSendScene` re-skin were deleted rather than adapted, and the price-delta UI was extracted for reuse instead of recreated. The provider restriction also changed inside the phase. The first cut restricted stealth sends alone and fanned plain cross-asset sends out to every provider; send-to-any became Houdini-exclusive instead. That fix was autosquashed into the feature commit, and neither the PR body nor this document recorded it, which set up the phase 5 regression.
 
 ### Phase 3: scanned payment URIs
@@ -1185,7 +1185,7 @@ Not our work, tracked so it is not rediscovered:
 
 ### Phase 32: the provider icon follows the theme
 
-- **Sketched:** the HoudiniSwap mark is one light color on a transparent background, so it vanished on a light theme. Review note: use the light-theme icon now on the CDN.
+- **Sketched:** the Houdini mark is one light color on a transparent background, so it vanished on a light theme. Review note: use the light-theme icon now on the CDN.
 - **Shipped:** `getSwapPluginIconUri` sends providers on a one-entry allowlist through `getThemedIconUri`, which asks the CDN for `icon-light.png` on a light theme.
 - **Diverged:** nothing.
 - **Held:** every other provider keeps the plain `icon.png` path, because the CDN has no light variant for them and the request would fail. Transaction rows were left without a logo until phase 34.
@@ -1199,9 +1199,9 @@ Not our work, tracked so it is not rediscovered:
 
 ### Phase 34: the provider logo reaches transaction rows
 
-- **Sketched:** a HoudiniSwap swap or send showed no logo in the transaction list or on its details scene, where every other provider has one. Review note: this is not deferred work, fix it before the feature lands.
+- **Sketched:** a Houdini swap or send showed no logo in the transaction list or on its details scene, where every other provider has one. Review note: this is not deferred work, fix it before the feature lands.
 - **Shipped:** `getPluginIdIcon` answers both scenes with the image and a `fit` flag. A provider on the themed allowlist resolves through `getSwapPluginIconUri`, so it gets the same `icon.png` or `icon-light.png` the swap scenes load, with `fit` set: the row and the details tile draw it whole, with no circular mask. Every other provider keeps its one static image from `pluginIdIcons`, drawn for the circle and cropped to it as before. That map is now private to its module so no caller can read it without a theme.
-- **Diverged:** the first cut returned only the image and let both scenes crop it to the thumbnail circle like every other provider. The HoudiniSwap logo is the mark above a wordmark that runs edge to edge, so the circle cut the wordmark down to a fragment. Seen on the simulator, then changed to fit the logo, which is how the swap scenes already draw it.
+- **Diverged:** the first cut returned only the image and let both scenes crop it to the thumbnail circle like every other provider. The Houdini logo is the mark above a wordmark that runs edge to edge, so the circle cut the wordmark down to a fragment. Seen on the simulator, then changed to fit the logo, which is how the swap scenes already draw it.
 - **Held:** a contact or merchant-name match still outranks the provider logo, as it does for every provider. No `MERCHANT_CONTACTS` entry was added: that map holds one static image per name, which cannot follow the theme. On a transaction row the direction arrow still overlaps the logo's lower right corner, as it does on every thumbnail. A mark-only image drawn for the circle would remove both the flag and the overlap; it needs a new asset on the content server, which is outside this change.
 
 ### Phase 35: the recipient comes back to the details scene
@@ -1228,7 +1228,7 @@ Not our work, tracked so it is not rediscovered:
 
 ### Phase 38: Stealth Swap stops honoring the provider switch
 
-- **Sketched:** the Exchange scene honored the HoudiniSwap switch in Exchange Settings while the send scene ignored it, so a Stealth Swap with the provider switched off got no quote. The Exchange scene should ignore the switch for a Stealth Swap as the send scene does, the kill switches should keep binding, and a declined terms modal should cancel that swap without prompting in a loop.
+- **Sketched:** the Exchange scene honored the Houdini switch in Exchange Settings while the send scene ignored it, so a Stealth Swap with the provider switched off got no quote. The Exchange scene should ignore the switch for a Stealth Swap as the send scene does, the kill switches should keep binding, and a declined terms modal should cancel that swap without prompting in a loop.
 - **Shipped:** `makeStealthSwapRequestOptions` force-enables Houdini for every caller, and the `ignoreProviderSetting` flag that only the send scene passed is gone ([Provider availability versus exchange settings](#provider-availability-versus-exchange-settings)). A terms decline on a Stealth Swap saves nothing, turns the Stealth toggle off, and returns to the create scene ([Saying that a swap is running](#saying-that-a-swap-is-running)). New tests run both switch states through the core's own quote selection.
 - **Diverged:** the first cut of the decline backed out and left the Stealth toggle on, one tap from the same modal. The shipped decline turns the toggle off and still writes nothing to the provider's switch, and the modal returns on each later Stealth attempt until it is accepted. On the simulator that decline also came back to an empty create scene, because the navigate carried no params; it now passes the pair.
 - **Held:** a swap with Stealth off honors the switch as before, and its decline still switches the provider off and re-quotes. The "no exchanges available" notice the create scene shows on focus when every provider is off is unchanged.
@@ -1447,7 +1447,7 @@ Reopen if: the swap flow itself gains send-to-address destinations, at which poi
 
 Chosen: the send scene maps a failed quote through the same `processSwapQuoteError` the wallet-to-wallet swap flow uses, extracted to `src/util/swapErrorDisplay.ts`, and wraps the result in an `I18nError` so `ErrorCard` renders the specific title and body.
 
-Evidence: `ErrorCard` renders anything that is not an `I18nError` as "Unexpected Error" with a canned "an unexpected error occurred, check your network connection" body and a Report Error button. Every swap-send failure took that path, so a user 0.1 TRX under the floor, a user on an unroutable pair, and a user with a genuine bug all saw the same card. The swap flow already had the mapping; the send scene simply was not using it. Verified on device: a 10 TRX send-to-address against a 10 USD provider floor now reads "Exchange Error / HoudiniSwap: Amount is too low, minimum is 10 USD".
+Evidence: `ErrorCard` renders anything that is not an `I18nError` as "Unexpected Error" with a canned "an unexpected error occurred, check your network connection" body and a Report Error button. Every swap-send failure took that path, so a user 0.1 TRX under the floor, a user on an unroutable pair, and a user with a genuine bug all saw the same card. The swap flow already had the mapping; the send scene simply was not using it. Verified on device: a 10 TRX send-to-address against a 10 USD provider floor now reads "Exchange Error / Houdini: Amount is too low, minimum is 10 USD".
 
 Rejected: **a bespoke error map for the send scene**, which would drift from the swap flow's within a release, and **passing the raw error through**, which loses the localized limit formatting the swap flow already does.
 
@@ -1485,7 +1485,7 @@ Reopen if: order ids themselves become privacy-sensitive, which would argue for 
 
 ### Scope the exchange-provider setting to swaps with Stealth off
 
-Chosen: every stealth request ignores the global HoudiniSwap enable flag, on the send scene and on the Exchange scene. A swap with Stealth off keeps honoring it.
+Chosen: every stealth request ignores the global Houdini enable flag, on the send scene and on the Exchange scene. A swap with Stealth off keeps honoring it.
 
 Evidence: the setting lives in Exchange settings and reads as a list of providers the swap aggregator may use. A stealth request involves no aggregation, because turning Stealth on names the one provider. A user turning off a swap provider is not asking for private sends or Stealth Swap to disappear, and would have no way to connect the two if they did.
 
@@ -1596,7 +1596,7 @@ Yet Another Object Bridge, the RPC layer that carries objects between the app's 
 - [Asana task 1216251688512498](https://app.asana.com/0/1215088146871429/1216251688512498)
 - [edge-react-gui#6066](https://github.com/EdgeApp/edge-react-gui/pull/6066), [edge-core-js#730](https://github.com/EdgeApp/edge-core-js/pull/730), [edge-exchange-plugins#469](https://github.com/EdgeApp/edge-exchange-plugins/pull/469)
 - Prototypes: [edge-react-gui#6054](https://github.com/EdgeApp/edge-react-gui/pull/6054), [edge-react-gui#6031](https://github.com/EdgeApp/edge-react-gui/pull/6031)
-- HoudiniSwap v2 partner API, mainnet native-token snapshot dated 2026-07-30 in `src/util/houdiniChains.ts`
+- Houdini v2 partner API, mainnet native-token snapshot dated 2026-07-30 in `src/util/houdiniChains.ts`
 
 ## 14. Post-implementation retrospective
 
