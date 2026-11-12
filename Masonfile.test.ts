@@ -549,9 +549,10 @@ describe('Masonfile', () => {
     expect(appStoreVersion('4.53.0')).toBe('4.53.0')
   })
 
-  it('builds each branch under its app ID: develop and beta their own', () => {
+  it('builds each branch under its app ID: develop, beta and coinhub their own', () => {
     expect(appFor('develop')).toBe('app.edge.develop')
     expect(appFor('beta')).toBe('app.edge.beta')
+    expect(appFor('coinhub')).toBe('app.coinhubatm.wallet')
     for (const branch of ['master', 'staging', 'feature/x'])
       expect(appFor(branch)).toBe('co.edgesecure.app')
   })

@@ -34,8 +34,10 @@ import { join } from 'node:path'
 // aliases and passwords, so they reach no other node. The AAB, kept as the
 // run's artifact, still carries the repository's test keystore
 // (android/app/airbitz.keystore), as a plain Gradle build signs it. The iOS
-// archive is built without code signing until the master holds Edge's
-// Apple team. Nothing is sent to the stores.
+// archive is built without code signing and signed afterwards on a Mac: ad
+// hoc under the branch's app ID on every branch, published to Mason's install
+// page, and on master also for the App Store, which master's run uploads to
+// TestFlight. develop and beta are never signed for distribution.
 //
 // Of the files scripts/secretFiles.ts copies in from Jenkins' secret folders,
 // those a build reads are project secret files on the Mason master, one name
@@ -65,10 +67,15 @@ import { join } from 'node:path'
 
 const APP = 'co.edgesecure.app'
 
-/** The app ID a branch builds: develop and beta have their own, as their deploy patches set. */
+/**
+ * The app ID a branch builds: develop and beta have their own, as their
+ * deploy patches set, and coinhub builds CoinHub's wallet, whose project
+ * sets its own bundle ID (and Apple team).
+ */
 export function appFor(branch: string): string {
   if (branch === 'develop') return 'app.edge.develop'
   if (branch === 'beta') return 'app.edge.beta'
+  if (branch === 'coinhub') return 'app.coinhubatm.wallet'
   return APP
 }
 
