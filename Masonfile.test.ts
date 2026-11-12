@@ -28,6 +28,7 @@ import {
   buildAndroidMaestro,
   signAndroidMaestro,
   setMaestroFlag,
+  simulatorApp,
   appStoreVersion,
   uploadIos,
   uploadsToTestflight,
@@ -117,6 +118,10 @@ function recordStage(branch: string): {
   }
   return { calls, ctx, root }
 }
+
+/** Where xcodebuild writes the iPhone Simulator app. */
+const SIMULATOR_PRODUCTS =
+  'build/derivedData/Build/Products/Release-iphonesimulator'
 
 const commands = (calls: Call[]): unknown[] =>
   calls.filter(([kind]) => kind === 'sh').map(call => call[1])
@@ -713,6 +718,11 @@ describe('Masonfile', () => {
   it('builds the iOS Maestro variant for the iPhone Simulator and publishes the zipped app', async () => {
     const { calls, ctx, root } = recordStage('develop')
     writeFileSync(join(root, 'config.json'), '{"A":1}')
+    // develop's deploy patch names the app Edge Develop, as xcodebuild writes it.
+    mkdirSync(join(root, SIMULATOR_PRODUCTS, 'Edge Develop.app'), {
+      recursive: true
+    })
+    mkdirSync(join(root, SIMULATOR_PRODUCTS, 'Edge Develop.app.dSYM'))
     expect(await buildIosMaestro(ctx)).toEqual({ version: '4.53.0-d' })
     expect(JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))).toEqual(
       {
@@ -731,7 +741,7 @@ describe('Masonfile', () => {
         '-c',
         '-k',
         '--keepParent',
-        'build/derivedData/Build/Products/Release-iphonesimulator/Edge.app',
+        `${SIMULATOR_PRODUCTS}/Edge Develop.app`,
         'build/edge-maestro.zip'
       ]
     ])
@@ -747,6 +757,21 @@ describe('Masonfile', () => {
         }
       ]
     ])
+  })
+
+  it('zips the one simulator app the build wrote, whatever the branch names it', async () => {
+    const { root } = recordStage('beta')
+    const products = join(root, SIMULATOR_PRODUCTS)
+    mkdirSync(products, { recursive: true })
+    await expect(simulatorApp(root)).rejects.toThrow(
+      `${SIMULATOR_PRODUCTS} should hold one app, but holds none`
+    )
+    mkdirSync(join(products, 'Edge Beta.app'))
+    expect(await simulatorApp(root)).toBe(`${SIMULATOR_PRODUCTS}/Edge Beta.app`)
+    mkdirSync(join(products, 'Edge.app'))
+    await expect(simulatorApp(root)).rejects.toThrow(
+      `${SIMULATOR_PRODUCTS} should hold one app, but holds `
+    )
   })
 
   it('builds the Android Maestro APK with the flag and stashes it for signing', async () => {

@@ -1,5 +1,5 @@
 import type { Setup, Stage, Tools } from '@mason/types'
-import { readFile, writeFile } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 // Runs the Jest suite, then builds Edge for iOS on a macOS arm64 machine and
@@ -155,9 +155,9 @@ export const MAESTRO_BRANCHES = [
 ]
 /** The stash the Android Maestro build leaves its unsigned APK in. */
 const UNSIGNED_MAESTRO_APK = 'android-maestro-apk'
-/** The iPhone Simulator app the iOS Maestro build makes, and the zip it publishes. */
-const SIMULATOR_APP =
-  'build/derivedData/Build/Products/Release-iphonesimulator/Edge.app'
+/** Where the iOS Maestro build's iPhone Simulator app lands, and the zip it publishes. */
+const SIMULATOR_PRODUCTS =
+  'build/derivedData/Build/Products/Release-iphonesimulator'
 const MAESTRO_ZIP = 'build/edge-maestro.zip'
 /** The stash the Android build leaves its unsigned-for-release APKs in. */
 const UNSIGNED_APKS = 'android-apks'
@@ -620,6 +620,24 @@ export async function setMaestroFlag(root: string): Promise<void> {
 }
 
 /**
+ * The one app the iPhone Simulator build wrote, as a path in the checkout.
+ * Its name is the branch's product name, which the deploy patches change
+ * (Edge Develop, Edge Beta), so it is found rather than named.
+ */
+export async function simulatorApp(root: string): Promise<string> {
+  const apps = (await readdir(join(root, SIMULATOR_PRODUCTS))).filter(name =>
+    name.endsWith('.app')
+  )
+  if (apps.length !== 1)
+    throw new Error(
+      `${SIMULATOR_PRODUCTS} should hold one app, but holds ${
+        apps.length === 0 ? 'none' : apps.join(', ')
+      }`
+    )
+  return `${SIMULATOR_PRODUCTS}/${apps[0]}`
+}
+
+/**
  * Builds the iOS Maestro variant as the Jenkinsfile does: the app with the
  * Maestro flag, for the iPhone Simulator, zipped and published as the
  * branch app's maestro variant (a download, never installed on a phone).
@@ -655,7 +673,7 @@ export async function buildIosMaestro(ctx: Stage) {
         '-c',
         '-k',
         '--keepParent',
-        SIMULATOR_APP,
+        await simulatorApp(ctx.workspace),
         MAESTRO_ZIP
       ])
   )
