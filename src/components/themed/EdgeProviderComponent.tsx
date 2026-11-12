@@ -189,12 +189,12 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
           )})`
           webView.current?.injectJavaScript(js)
         })
-        .catch(error => {
+        .catch((error: unknown) => {
           const message: RpcReturn = {
             error: {
               code: rpcErrorCodes.unknown,
               data: undefined,
-              message: error.message
+              message: error instanceof Error ? error.message : String(error)
             },
             id: clean.id,
             jsonrpc: '2.0',

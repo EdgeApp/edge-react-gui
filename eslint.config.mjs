@@ -337,8 +337,6 @@ export default [
       'src/components/text/TitleText.tsx',
       'src/components/themed/Alert.tsx',
 
-      'src/components/themed/EdgeProviderComponent.tsx',
-
       'src/components/themed/ExplorerCard.tsx',
       'src/components/themed/Fade.tsx',
 
