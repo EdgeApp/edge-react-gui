@@ -1,7 +1,12 @@
 import type { EdgeAccount } from 'edge-core-js'
-import { type InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
+import {
+  type ContactSupportInfo,
+  type InitialRouteName,
+  LoginScreen
+} from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -24,6 +29,7 @@ import { logEvent } from '../../util/tracking'
 import { makeYoloOtpOptions, type YoloOtpOptions } from '../../util/yoloLogin'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
+import { showIntercomChatModal } from '../modals/IntercomChatModal'
 import { showDevError, showError } from '../services/AirshipInstance'
 import { LoadingScene } from './LoadingScene'
 
@@ -173,6 +179,42 @@ export const LoginScene: React.FC<Props> = props => {
     performanceMarkersFromLoginUiPerfEvents(event)
   })
 
+  // A second tap while the chat is open must not send the message again:
+  const isChatOpen = React.useRef(false)
+  // Reopening the chat shows the message already sent, so it goes out once:
+  const sentMessage = React.useRef<string | undefined>(undefined)
+
+  const handleContactSupport = useHandler(
+    async (info: ContactSupportInfo): Promise<void> => {
+      const { intercomApiBase, intercomAppId, supportChatSite } = config
+      if (intercomAppId == null || supportChatSite == null) return
+      if (isChatOpen.current) return
+      isChatOpen.current = true
+      const { lockId } = info
+      const message =
+        lockId == null
+          ? lstrings.help_live_chat_authorize_device
+          : sprintf(lstrings.help_live_chat_authorize_device_1s, lockId)
+      const isNewMessage = message !== sentMessage.current
+      sentMessage.current = message
+      try {
+        await showIntercomChatModal({
+          appId: intercomAppId,
+          apiBase: intercomApiBase,
+          siteUri: supportChatSite,
+          lockId,
+          message: isNewMessage ? message : undefined
+        })
+      } finally {
+        isChatOpen.current = false
+      }
+    }
+  )
+
+  // Without an Intercom workspace, Login UI opens its own support article:
+  const hasSupportChat =
+    config.intercomAppId != null && config.supportChatSite != null
+
   return loggedIn ? (
     <LoadingScene />
   ) : (
@@ -194,6 +236,7 @@ export const LoginScene: React.FC<Props> = props => {
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
         onComplete={maybeHandleComplete}
+        onContactSupport={hasSupportChat ? handleContactSupport : undefined}
         onLogEvent={handleLogEvent}
         onLogin={handleLogin}
         onPerfEvent={handlePerfEvent}
