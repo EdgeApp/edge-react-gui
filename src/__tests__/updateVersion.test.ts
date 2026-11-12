@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-import { stampGradle } from '../../scripts/updateVersion'
+import { stampGradle, stampsIos } from '../../scripts/updateVersion'
 
 const gradle = readFileSync(
   join(__dirname, '../../android/app/build.gradle'),
@@ -24,6 +24,12 @@ describe('updateVersion', () => {
     expect(
       stampGradle(stamped, { version: '4.53.0', build: 26103004 })
     ).toContain('versionName "4.53.0"')
+  })
+
+  it('stamps the iOS project only on a Mac, where agvtool is', () => {
+    expect(stampsIos('darwin')).toBe(true)
+    expect(stampsIos('linux')).toBe(false)
+    expect(stampsIos('win32')).toBe(false)
   })
 
   it('refuses a build.gradle missing either line', () => {

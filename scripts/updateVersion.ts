@@ -28,9 +28,17 @@ async function main(): Promise<void> {
 
   console.log(versionFile)
 
-  // Update the native project files:
+  // Update the native project files. agvtool exists only on a Mac, and the
+  // Jenkinsfile also runs this script on Android agents, which only need
+  // build.gradle stamped:
   await updateAndroid(disklet, versionFile)
-  updateIos(cwd, versionFile)
+  if (stampsIos()) updateIos(cwd, versionFile)
+  else console.log('Not a Mac: the iOS project is left unstamped')
+}
+
+/** Whether this machine stamps the iOS project: only a Mac has agvtool. */
+export function stampsIos(platform: string = process.platform): boolean {
+  return platform === 'darwin'
 }
 
 /**
