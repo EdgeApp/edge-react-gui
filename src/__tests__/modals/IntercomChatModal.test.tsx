@@ -47,12 +47,48 @@ describe('getIntercomChatHtml', () => {
     const html = getIntercomChatHtml('abc123', API_BASE, {})
 
     expect(html).toContain("Intercom('showNewMessage')")
+    expect(html).toContain('var message = null')
+  })
+
+  it('sends the attributes as an update once the Messenger shows', () => {
+    const html = getIntercomChatHtml('abc123', API_BASE, { edge_lock_id: null })
+
+    expect(html).toContain(
+      `window.intercomSettings = {"api_base":"${API_BASE}","app_id":"abc123","hide_default_launcher":true}`
+    )
+    expect(html).toContain('var attributes = {"edge_lock_id":null}')
+    expect(html).toContain("Intercom('update', attributes)")
+  })
+
+  it('sends the given message through the composer', () => {
+    const html = getIntercomChatHtml(
+      'abc123',
+      API_BASE,
+      {},
+      'Lock ID: "1a2b3c4d"'
+    )
+
+    expect(html).toContain("Intercom('showNewMessage')")
+    expect(html).toContain('var message = "Lock ID: \\"1a2b3c4d\\""')
+    expect(html).toContain("doc.execCommand('insertText', false, message)")
+    expect(html).toContain('.intercom-composer-send-button')
   })
 
   it('keeps attribute values inside the script tag', () => {
     const html = getIntercomChatHtml('abc123', API_BASE, {
       edge_app_version: '</script><script>alert(1)</script>'
     })
+
+    expect(html).not.toContain('</script><script>alert(1)')
+  })
+
+  it('keeps the message inside the script tag', () => {
+    const html = getIntercomChatHtml(
+      'abc123',
+      API_BASE,
+      {},
+      '</script><script>alert(1)</script>'
+    )
 
     expect(html).not.toContain('</script><script>alert(1)')
   })
@@ -68,23 +104,25 @@ describe('IntercomChatModal', () => {
   })
 
   function getWebViewProps(
-    apiBase?: string
+    extraProps: Partial<React.ComponentProps<typeof IntercomChatModal>> = {}
   ): React.ComponentProps<typeof WebView> {
     const rendered = render(
       <FakeProviders>
         <IntercomChatModal
           bridge={bridge}
           appId="abc123"
-          apiBase={apiBase}
           siteUri={SITE_URI}
+          {...extraProps}
         />
       </FakeProviders>
     )
     return rendered.UNSAFE_getByType(WebView).props
   }
 
-  function getHtml(apiBase?: string): string {
-    const { source } = getWebViewProps(apiBase)
+  function getHtml(
+    extraProps: Partial<React.ComponentProps<typeof IntercomChatModal>> = {}
+  ): string {
+    const { source } = getWebViewProps(extraProps)
     return (source as { html: string }).html
   }
 
@@ -136,7 +174,19 @@ describe('IntercomChatModal', () => {
 
   it('uses the US Messenger host unless told otherwise', () => {
     expect(getHtml()).toContain('"api_base":"https://api-iam.intercom.io"')
-    expect(getHtml(API_BASE)).toContain(`"api_base":"${API_BASE}"`)
+    expect(getHtml({ apiBase: API_BASE })).toContain(`"api_base":"${API_BASE}"`)
+  })
+
+  it('sends the Lock ID and the message along with the app details', () => {
+    const html = getHtml({ lockId: '1a2b3c4d', message: 'Help' })
+
+    expect(html).toContain('"edge_lock_id":"1a2b3c4d"')
+    expect(html).toContain('"edge_os_version":"18.0.0"')
+    expect(html).toContain('var message = "Help"')
+  })
+
+  it('clears the Lock ID when the chat has none', () => {
+    expect(getHtml()).toMatch(/var attributes = \{[^}]*"edge_lock_id":null/)
   })
 
   it('loads the Messenger and its frames in place', () => {
