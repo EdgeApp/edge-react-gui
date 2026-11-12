@@ -8,7 +8,10 @@ import {
   type WalletListMenuKey
 } from '../../actions/WalletListMenuActions'
 import { Fontello } from '../../assets/vector'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants'
+import {
+  isUtxoPluginId,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/WalletAndCurrencyConstants'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { useHandler } from '../../hooks/useHandler'
 import { useWatch } from '../../hooks/useWatch'
@@ -462,12 +465,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 /**
- * Only wallets whose plugin has an explorer template get the explorer entry.
- * Privacy wallets are excluded because their address pages reveal little or
- * nothing. Keys-only wallets keep the entry: they show no live balance, so
- * the explorer is the only place to see what is left on chain.
+ * Only wallets whose plugin has an explorer template get the explorer entry,
+ * and only where one stable address stands for the whole wallet. Privacy
+ * wallets are excluded because their address pages reveal little or nothing.
+ * UTXO wallets are excluded because the entry opens the current receive
+ * address, which rotates and usually holds none of the wallet's balance or
+ * history. Keys-only account-based wallets keep the entry: they show no live
+ * balance, so the explorer is the only place to see what is left on chain.
  */
 function canViewInExplorer(currencyInfo: EdgeCurrencyInfo): boolean {
   const { addressExplorer, pluginId } = currencyInfo
-  return addressExplorer !== '' && !PRIVACY_PLUGIN_IDS.includes(pluginId)
+  return (
+    addressExplorer !== '' &&
+    !PRIVACY_PLUGIN_IDS.includes(pluginId) &&
+    !isUtxoPluginId(pluginId)
+  )
 }
