@@ -16,7 +16,7 @@ import { processSwapQuoteError } from '../../util/swapErrorDisplay'
 
 const swapInfo: EdgeSwapInfo = {
   pluginId: 'houdini',
-  displayName: 'HoudiniSwap',
+  displayName: 'Houdini',
   supportEmail: 'support@houdiniswap.com'
 }
 
@@ -186,10 +186,10 @@ describe('processSwapQuoteError', () => {
     // Houdini's minimums above the shared floor arrive this way, carrying the
     // real number, which beats any string we could substitute.
     const info = describeError(
-      new Error('HoudiniSwap: Amount is too low, minimum is 60 USD')
+      new Error('Houdini: Amount is too low, minimum is 60 USD')
     )
     expect(info?.message).toEqual(
-      'HoudiniSwap: Amount is too low, minimum is 60 USD'
+      'Houdini: Amount is too low, minimum is 60 USD'
     )
   })
 
@@ -197,7 +197,7 @@ describe('processSwapQuoteError', () => {
     // A 429 means the caller was too fast, not that the route is gone. The
     // plugin phrases it, and this path must not rewrite it into a pair error.
     const info = describeError(
-      new Error('HoudiniSwap: rate limit exceeded, please try again shortly')
+      new Error('Houdini: rate limit exceeded, please try again shortly')
     )
     expect(info?.message).toContain('rate limit exceeded')
     expect(info?.message).not.toContain('No enabled exchanges')

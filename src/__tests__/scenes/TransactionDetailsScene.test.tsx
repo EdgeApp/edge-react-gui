@@ -165,7 +165,7 @@ describe('TransactionDetailsScene', () => {
           actionType: 'swapSend',
           swapInfo: {
             pluginId: 'houdini',
-            displayName: 'HoudiniSwap',
+            displayName: 'Houdini',
             supportEmail: 'support@example.com'
           },
           orderId: '9zdiWHWi2Q4Y7NRPB8k7mL',
