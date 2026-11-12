@@ -203,6 +203,7 @@ export const ConnectWallets: React.FC<FioConnectWalletsProps> = props => {
               <View style={styles.switchContainer}>
                 <Switch
                   disabled={disabled}
+                  style={styles.switch}
                   onChange={() => {
                     handleSelectWallet(!value, item)
                   }}
@@ -323,6 +324,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   switchContainer: {
     alignItems: 'flex-end',
     paddingRight: theme.rem(0.25)
+  },
+  switch: {
+    // The iOS Switch defaults to `alignSelf: 'flex-start'`, which overrides
+    // the container's `alignItems`:
+    alignSelf: 'flex-end'
   },
   walletDetailsRowCurrency: {
     fontSize: theme.rem(1.25),
