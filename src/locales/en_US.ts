@@ -1015,6 +1015,11 @@ const strings = {
   transaction_details_accelerate_transaction_header: 'Accelerate Transaction',
   transaction_details_accelerate_transaction_instructional:
     'This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.',
+  transaction_details_accelerate_transaction_instructional_recipient:
+    'This will resend this transaction with its fee doubled to help prioritize it for network confirmation. Please review the recipient, amount, and new fee before confirming.',
+  transaction_details_accelerate_transaction_recipient_title:
+    'Recipient Address',
+  transaction_details_accelerate_transaction_amount_title: 'Send Amount',
   confirm_finish: 'Confirm & Finish',
   transaction_details_accelerate_transaction_old_fee_title: 'Old Fee',
   transaction_details_accelerate_transaction_new_fee_title: 'New Fee',

@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: The Accelerate Transaction confirmation shows the recipient address and send amount alongside the fees.
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
