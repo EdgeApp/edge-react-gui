@@ -61,7 +61,7 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { withWallet } from '../hoc/withWallet'
 import { ChatBubblesIcon, ChevronRightIcon } from '../icons/ThemedIcons'
-import { AddressModal } from '../modals/AddressModal'
+import { AddressModal, type AddressModalResult } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import {
   WalletListModal,
@@ -741,14 +741,16 @@ export class RequestSceneComponent extends React.Component<
       return
     }
 
-    const fioAddressTo = await Airship.show<string | undefined>(bridge => (
-      <AddressModal
-        bridge={bridge}
-        walletId={wallet.id}
-        currencyCode={currencyCode}
-        title={lstrings.fio_confirm_request_fio_title}
-      />
-    ))
+    const fioAddressTo = (
+      await Airship.show<AddressModalResult | undefined>(bridge => (
+        <AddressModal
+          bridge={bridge}
+          walletId={wallet.id}
+          currencyCode={currencyCode}
+          title={lstrings.fio_confirm_request_fio_title}
+        />
+      ))
+    )?.address
     if (fioAddressTo != null) {
       navigation.navigate('fioRequestConfirmation', {
         amounts: this.state.amounts,
