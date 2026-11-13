@@ -21,11 +21,18 @@
 - changed: Upgrade edge-login-ui-rn to v4.0.0
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - changed: On Android 16 and above, the back button and back gesture reach the app through predictive back, which React Native 0.86 supports, so the app no longer opts out of it.
+- changed: Upgrade react-native-worklets to 0.10.4, which stops the animation loop from running while the app is in the background on Android and fixes crashes when the JavaScript runtime shuts down.
+- changed: Upgrade react-native-reanimated to 4.5.5, fixing a crash when an event arrives for a view that has just unmounted, an iOS crash at launch, and scroll-driven animations on Android jumping back a frame.
 - changed: Rename the HoudiniSwap provider to Houdini and link its privacy pages on docs.houdini.com
 - fixed: Swaps with no exact receive quote switch to a send amount of the same value with a toast, not a no-provider error
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
 - fixed: Received-transaction and error dropdowns no longer slide in underneath the Android status bar on edge-to-edge devices.
+- fixed: The side menu opens promptly on large accounts. Every open and close re-ran three info-server refreshes, each re-rendering the whole app, and the wallet sort before the menu could start moving.
+- fixed: Hiding or showing balances takes effect right away instead of waiting for the setting to save, which could take several seconds on a large account.
+- fixed: The side menu's dimming overlay fades in with the menu on Android again, instead of blanking the screen for a frame as the menu starts to open.
+- fixed: The side menu no longer flashes an empty screen as it opens or closes on some Android devices.
+- fixed: Long tickers in Markets shrink to fit their column instead of running into the 24-hour change on Android.
 - fixed: Modals and the QR scanner no longer draw under the Android status bar or navigation bar on edge-to-edge devices (Android 15 and above).
 - fixed: The header, scene footer, tab bar, keyboard-avoiding buttons, and notification cards blur the scene behind them again on Android 12 and above, sampling the focused scene's content. Below Android 12 they keep their solid backgrounds.
 - fixed: See-through modal sheets on Android under the new architecture. Modals blur the screen behind them again on Android 12 and above via a new blur backend (the old one snapshots the window in a way the new architecture renders as empty), and use a solid background color below Android 12, where no blur implementation can render.
@@ -44,6 +51,7 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
+- fixed: Home's promo card no longer covers the Buy and Sell tiles when it appears after the screen loads. Reanimated dropped the last frame of layout animations, which left moved views just short of their target, or at their starting point on a busy device.
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
 - fixed: Change Username opens right after the password prompt, with no second tap.

@@ -208,9 +208,7 @@ const CoinRankRowComponent: React.FC<Props> = props => {
       <View style={styles.iconRowDataContainer}>
         <FastImage style={styles.icon} source={imageUrlObject} />
         <View style={styles.leftColumn}>
-          <EdgeText style={styles.currencyCode}>
-            {currencyCode.toUpperCase()}
-          </EdgeText>
+          <EdgeText>{currencyCode.toUpperCase()}</EdgeText>
           <EdgeText style={styles.assetSubText}>{assetSubTextString}</EdgeText>
         </View>
         <View style={styles.middleColumn}>
@@ -238,9 +236,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     margin: theme.rem(0)
-  },
-  currencyCode: {
-    width: theme.rem(5)
   },
   rank: {
     alignItems: 'flex-start',
@@ -279,7 +274,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     flexShrink: 1,
     marginLeft: theme.rem(1),
-    width: theme.rem(4.5)
+    marginRight: theme.rem(0.5),
+    width: theme.rem(5)
   },
   row: {
     flexDirection: 'row',
