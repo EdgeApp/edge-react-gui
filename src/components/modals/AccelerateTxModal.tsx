@@ -2,7 +2,6 @@ import { abs, lt, sub } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
-  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
@@ -17,7 +16,10 @@ import {
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
 import { useSelector } from '../../types/reactRedux'
-import { convertTransactionFeeToDisplayFee } from '../../util/utils'
+import {
+  convertNativeAmountToDisplayAmount,
+  convertTransactionFeeToDisplayFee
+} from '../../util/utils'
 import { WarningCard } from '../cards/WarningCard'
 import { EdgeRow } from '../rows/EdgeRow'
 import {
@@ -106,10 +108,23 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction): string => {
-    return this.formatAmount(
-      edgeTransaction,
-      null,
-      this.props.feeDisplayDenomination
+    const {
+      exchangeRates,
+      feeDisplayDenomination,
+      wallet,
+      isoFiatCurrencyCode
+    } = this.props
+
+    return formatAmount(
+      convertTransactionFeeToDisplayFee(
+        wallet.currencyInfo.pluginId,
+        null,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        edgeTransaction,
+        feeDisplayDenomination,
+        getExchangeDenom(wallet.currencyConfig, null)
+      )
     )
   }
 
@@ -119,42 +134,26 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
    * currency the fee is paid in).
    */
   getSendAmountDisplay = (nativeAmount: string): string => {
-    const { acceleratedTx, amountDisplayDenomination } = this.props
-    return this.formatAmount(
-      {
-        ...acceleratedTx,
-        networkFee: nativeAmount,
-        parentNetworkFee: undefined
-      },
-      acceleratedTx.tokenId,
-      amountDisplayDenomination
-    )
-  }
-
-  /**
-   * Formats the fee of a transaction as "<crypto> (<fiat>)" for the asset
-   * named by tokenId. The send amount reuses it by standing in for the fee.
-   */
-  formatAmount = (
-    edgeTransaction: EdgeTransaction,
-    tokenId: EdgeTokenId,
-    displayDenomination: EdgeDenomination
-  ): string => {
-    const { exchangeRates, wallet, isoFiatCurrencyCode } = this.props
-
-    const transactionFee = convertTransactionFeeToDisplayFee(
-      wallet.currencyInfo.pluginId,
-      tokenId,
-      isoFiatCurrencyCode,
+    const {
+      acceleratedTx,
+      amountDisplayDenomination,
       exchangeRates,
-      edgeTransaction,
-      displayDenomination,
-      getExchangeDenom(wallet.currencyConfig, tokenId)
-    )
+      wallet,
+      isoFiatCurrencyCode
+    } = this.props
+    const { tokenId } = acceleratedTx
 
-    return `${transactionFee.cryptoSymbol ?? ''} ${
-      transactionFee.cryptoAmount
-    } (${transactionFee.fiatSymbol ?? ''} ${transactionFee.fiatAmount})`
+    return formatAmount(
+      convertNativeAmountToDisplayAmount(
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        isoFiatCurrencyCode,
+        exchangeRates,
+        nativeAmount,
+        amountDisplayDenomination,
+        getExchangeDenom(wallet.currencyConfig, tokenId)
+      )
+    )
   }
 
   render(): React.ReactElement {
@@ -309,6 +308,21 @@ export function AccelerateTxModal(props: OwnProps): React.ReactElement {
       theme={theme}
     />
   )
+}
+
+/**
+ * Lays out an amount as "<crypto> (<fiat>)". The fee rows and the send amount
+ * rows share it, so they read the same way.
+ */
+function formatAmount(amount: {
+  cryptoSymbol?: string
+  cryptoAmount: string
+  fiatSymbol?: string
+  fiatAmount: string
+}): string {
+  return `${amount.cryptoSymbol ?? ''} ${amount.cryptoAmount} (${
+    amount.fiatSymbol ?? ''
+  } ${amount.fiatAmount})`
 }
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {
