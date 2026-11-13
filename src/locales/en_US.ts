@@ -1916,6 +1916,9 @@ const strings = {
   stake_reclaim_available_in_2s: 'Your unstaked %1$s can be reclaimed in %2$s.',
   stake_reclaim_unstake_first_2s:
     'Unstake %1$s first. Reclaiming is available %2$s after unstaking.',
+  stake_reclaim_delay_title: 'Reclaim Delay',
+  stake_reclaim_delay_message_3s:
+    'Unstaked %1$s stays locked for %2$s. After that, return it to your spendable balance with %3$s.',
   stake_duration_2s: '%1$s, %2$s',
   stake_duration_day_1s: '%1$s day',
   stake_duration_days_1s: '%1$s days',
