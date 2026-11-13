@@ -1,0 +1,563 @@
+import { asMaybe } from 'cleaners'
+import {
+  addEdgeCorePlugins,
+  type EdgeContext,
+  type EdgeCorePluginsInit,
+  type JsonObject,
+  lockEdgeCorePlugins,
+  makeEdgeContext,
+  makeFakeEdgeWorld
+} from 'edge-core-js'
+import accountbasedPluginsImport from 'edge-currency-accountbased'
+import currencyPluginsImport from 'edge-currency-plugins'
+import exchangePluginsImport from 'edge-exchange-plugins'
+
+import { mergePluginInit, resolvePluginMaps } from '../../configKeysMerge'
+import {
+  buildCurrencyPlugins,
+  buildSwapPlugins
+} from '../../util/corePluginsTable'
+import { configureInfoServer } from '../../util/network'
+import { isPlainObject } from '../../util/predicates'
+import { withDeadline } from '../../util/withDeadline'
+import { resolveApiCredentials } from './apiCredentials'
+import { loadAppConfigFrom } from './appConfig'
+import { defaultDirectory } from './cliConfig'
+import { cliHomeFile } from './cliHome'
+import { errorMessage } from './errors'
+import type { EventHub } from './events'
+import { configureExchangeInfo, makeRollupExchangeInfo } from './exchangeInfo'
+import { FAKE_SERVERS } from './fakeServers'
+import { cliOsParams, fetchPluginKeys, getKeysAppId } from './fetchPluginKeys'
+import { keysSearchPaths, loadKeysFrom, mergePluginApiKeys } from './keysConfig'
+import type { EngineLogger } from './logger'
+import { hasNodeApiSigner, makeNodeApiSigner } from './nodeApiSigner'
+import { asPluginKeysEntry, withoutUndefined } from './schemas'
+import { TESTER_SERVERS } from './testerServers'
+
+/**
+ * The ceiling on the signed `infoRollup` fetch during boot.
+ *
+ * Generous, because it is one request against a live server and the keys it
+ * returns gate the plugins; finite, because it runs after the run file is
+ * claimed and before the socket exists, which is the window in which a
+ * silent server makes every client wait out its spawn timeout.
+ */
+const PLUGIN_KEYS_TIMEOUT_MS = 20_000
+
+let pluginsLocked = false
+
+/**
+ * CJS/ESM interop: these packages often export `{ default: { bitcoin, … } }`.
+ */
+function unwrapPlugins(mod: Record<string, unknown>): Record<string, unknown> {
+  const inner = mod.default
+  // `isPlainObject`, the shared helper `keysConfig.ts` and `router.ts` use
+  // too. Only the `<= 2` clause is this function's own.
+  if (isPlainObject(inner) && Object.keys(mod).length <= 2) {
+    return inner
+  }
+  return mod
+}
+
+/**
+ * A plugin keys entry, as core's `pluginsInit` takes it.
+ *
+ * The one place either path, currency or swap, interprets a value that is
+ * neither `false`, nor absent, nor `true`, so an entry whose `enabled` or
+ * `edgeApiKey` is the wrong type does not reach a plugin's init untouched,
+ * and a value the cleaner rejects outright, such as the *string* `"false"`,
+ * is warned about and disabled.
+ *
+ * Disabled rather than enabled, because the alternative is a plugin running
+ * with keys nobody has looked at. `enabled: false` is honoured here on both
+ * paths, which is a deliberate difference from the app: the app never reads
+ * the field and passes it to core as an init option. `src/configKeysMerge.ts`
+ * says keys are never an off switch, and that is about a keys-side bare
+ * `false` wiping a baked credential; a field that says `enabled: false` is a
+ * server asking for the plugin to be off.
+ *
+ * `{}` and `{"enabled":true}` both become `true`: `asObject` materialises
+ * every declared key, so each cleans to an object carrying
+ * `edgeApiKey: undefined`, and counting those would make the init an object
+ * with one undefined key where it should be `true`.
+ */
+function initFromKeysEntry(
+  what: string,
+  value: unknown,
+  warn: ((message: string) => void) | undefined
+): boolean | JsonObject {
+  const entry = asMaybe(asPluginKeysEntry)(value)
+  if (entry == null) {
+    // `Array.isArray` first, because `typeof []` is "object" and the warning
+    // should say "array".
+    const kind = Array.isArray(value) ? 'array' : typeof value
+    warn?.(`${what} has an unusable init (${kind}); the plugin is disabled`)
+    return false
+  }
+  if (entry.enabled === false) return false
+  const { enabled, ...rest } = entry
+  const options = withoutUndefined(rest) as JsonObject
+  return Object.keys(options).length > 0 ? options : true
+}
+
+/**
+ * One plugin's init, as core takes it.
+ *
+ * The merge itself is `src/configKeysMerge.ts`'s `mergePluginInit`, which the
+ * app uses and `configKeysMerge.test.ts` pins, so the engine merges as the
+ * app does. The same remote `infoRollup` feeds both, so a keys-side `false`
+ * leaves `config: true` on in both ("Keys are never an off switch: only
+ * config.json can disable a plugin").
+ *
+ * This wrapper only narrows the shared function's `unknown` to what
+ * `EdgeCorePluginsInit` accepts, `boolean | JsonObject`, and names the
+ * plugin when it cannot — which is the currency path's own rule applied to
+ * the swap path.
+ */
+export function pluginInitFor(
+  pluginId: string,
+  configValue: unknown,
+  keysValue: unknown,
+  warn: ((message: string) => void) | undefined
+): boolean | JsonObject {
+  return toPluginInit(
+    `swap plugin ${pluginId}`,
+    mergePluginInit(configValue, keysValue),
+    warn
+  )
+}
+
+/**
+ * One merged init, narrowed to what core takes.
+ *
+ * Everything that is not a boolean, including something core cannot take
+ * such as a server sending the string `"false"`, goes through
+ * `initFromKeysEntry`, which disables a plugin whose entry it cannot read.
+ */
+function toPluginInit(
+  what: string,
+  merged: unknown,
+  warn: ((message: string) => void) | undefined
+): boolean | JsonObject {
+  if (typeof merged === 'boolean') return merged
+  if (merged == null) return false
+  return initFromKeysEntry(what, merged, warn)
+}
+
+/**
+ * Currency plugins the CLI leaves off, whatever the app's table, the keys or
+ * `config.json` say: the privacy coins.
+ *
+ * Their engines need the native libraries `edge-currency-accountbased` uses —
+ * `react-native-monero`, `react-native-pirate-wallet`, `react-native-zano` and
+ * `zcash-native` — which the CLI does not load.
+ */
+export const CLI_DISABLED_PLUGINS: readonly string[] = [
+  'monero',
+  'piratechain',
+  'zano',
+  'zcash'
+]
+
+/**
+ * Every plugin's init, as the app builds it, with the privacy coins off.
+ *
+ * `corePluginsTable.ts` is the app's table: which plugins exist, which turn
+ * on without keys, and the ones on or off whatever the keys say. It is fed
+ * the app's merge, `config.json`'s enablement over the keys through
+ * `resolvePluginMaps`, so the engine enables what the app enables. The keys
+ * are one map here, core and swap ids together, which the table tells apart.
+ * The plugins in `CLI_DISABLED_PLUGINS` stay off whatever the table, the keys
+ * or `config.json` say.
+ */
+export function buildPluginsInit(opts: {
+  appConfig: {
+    BETA_FEATURES?: boolean
+    corePlugins?: Record<string, unknown>
+    swapPlugins?: Record<string, unknown>
+  }
+  pluginApiKeys: Record<string, unknown>
+  warn: ((message: string) => void) | undefined
+}): EdgeCorePluginsInit {
+  const maps = resolvePluginMaps(
+    {
+      corePlugins: opts.appConfig.corePlugins ?? {},
+      swapPlugins: opts.appConfig.swapPlugins ?? {}
+    },
+    { corePlugins: opts.pluginApiKeys, swapPlugins: opts.pluginApiKeys }
+  )
+  const inputs = {
+    ...maps,
+    betaFeatures: opts.appConfig.BETA_FEATURES === true
+  }
+  const out: EdgeCorePluginsInit = {}
+  for (const [id, init] of Object.entries(buildCurrencyPlugins(inputs))) {
+    out[id] = toPluginInit(`plugin ${id}`, init, opts.warn)
+  }
+  for (const [id, init] of Object.entries(buildSwapPlugins(inputs))) {
+    out[id] = toPluginInit(`swap plugin ${id}`, init, opts.warn)
+  }
+  for (const id of CLI_DISABLED_PLUGINS) out[id] = false
+  return out
+}
+
+const currencyPlugins = unwrapPlugins(
+  currencyPluginsImport as unknown as Record<string, unknown>
+)
+const accountbasedPlugins = unwrapPlugins(
+  accountbasedPluginsImport as unknown as Record<string, unknown>
+)
+const exchangePlugins = unwrapPlugins(
+  exchangePluginsImport as unknown as Record<string, unknown>
+)
+
+function ensurePlugins(): void {
+  if (pluginsLocked) return
+  addEdgeCorePlugins(
+    currencyPlugins as Parameters<typeof addEdgeCorePlugins>[0]
+  )
+  addEdgeCorePlugins(
+    accountbasedPlugins as Parameters<typeof addEdgeCorePlugins>[0]
+  )
+  addEdgeCorePlugins(
+    exchangePlugins as Parameters<typeof addEdgeCorePlugins>[0]
+  )
+  lockEdgeCorePlugins()
+  pluginsLocked = true
+}
+
+interface MakeCoreContextOpts {
+  /**
+   * An API key the operator supplied explicitly, with `-k`.
+   *
+   * An override: it replaces the key *and* drops the keys.json secret and
+   * the native HMAC signer, which is what the guide documents `-k` and
+   * `EDGE_CLI_FORCE_KEYS_JSON=1` as doing.
+   */
+  apiKey?: string
+  /**
+   * An API key from the config file.
+   *
+   * Used as the key when there is no explicit one, and nothing more: it does
+   * not disable signing. Reading a config value as an override would turn
+   * HMAC signing off for anyone who put `apiKey` in `edge-cli.conf`.
+   */
+  configApiKey?: string
+  /**
+   * The `edge-cli.conf` that was read, for `engine-config` to publish.
+   *
+   * Passed in rather than re-derived: `index.ts` resolves `-c` and decides
+   * the directory, the appId and the locale from it, so the one call whose
+   * job is to say which configuration the engine is running on must name the
+   * same file that answered there.
+   */
+  cliConfigPath?: string | null
+  appId?: string
+  directory?: string
+  testMode?: boolean
+  /**
+   * Serve a `makeFakeEdgeWorld` context instead of talking to a server.
+   *
+   * The login, info and sync servers are emulated in-process and currency
+   * plugins are cut off from the network, so the whole API can be exercised
+   * with no account, no key and no internet. That is what lets the CLI tests
+   * run in a pre-commit hook.
+   */
+  fake?: boolean
+  events: EventHub
+  logger?: EngineLogger
+}
+
+/**
+ * A context backed by the in-process fake world.
+ *
+ * No API key is needed and `fetchPluginKeys` is skipped, because there is no
+ * server to authenticate to. Every plugin is *registered* — `ensurePlugins`
+ * runs before this function is reached, for a fake context as much as a real
+ * one — and only the `edge-currency-plugins` set is *enabled*, through
+ * `pluginsInit`. The swap and exchange-rate plugins exist to call other
+ * people's APIs, which is exactly what this mode forbids.
+ *
+ * `accountbasedPlugins` is left out for the same reason, and that is the
+ * first thing an author of a new offline case runs into: the real path
+ * enables it beside the currency set, so an accountbased chain type —
+ * `create-currency-wallets --type=wallet:ethereum` — has no plugin under
+ * `--fake` and is refused. Those engines reach a configured RPC endpoint as
+ * soon as a wallet exists, and the fake world intercepts no HTTP. The
+ * offline suites use UTXO chain types (`wallet:bitcoin`) throughout.
+ */
+async function makeFakeCoreContext(
+  opts: MakeCoreContextOpts
+): Promise<CoreContextBundle> {
+  const appId = opts.appId ?? ''
+  const directory = opts.directory ?? defaultDirectory()
+  const pluginsInit: EdgeCorePluginsInit = {}
+  for (const id of Object.keys(currencyPlugins)) pluginsInit[id] = true
+
+  const world = await makeFakeEdgeWorld([], {
+    onLog(event) {
+      opts.logger?.write(String(event.type ?? 'info'), event.message, {
+        source: event.source
+      })
+    }
+  })
+  const context = await world.makeEdgeContext({
+    appId,
+    apiKey: 'fake',
+    cleanDevice: true,
+    plugins: pluginsInit
+  })
+  opts.logger?.info('Using the fake world; no network, no server')
+
+  return {
+    context,
+    appId,
+    testMode: true,
+    directory,
+    servers: {
+      loginServer: FAKE_SERVERS.loginServer,
+      syncServer: FAKE_SERVERS.syncServer
+    },
+    pluginsInit,
+    currencyPluginIds: Object.keys(currencyPlugins),
+    // The fake world reads no `keys.json` and no app `config.json`; `--fake`
+    // needs no key at all. It is still started through `-c` like any other
+    // engine, so the CLI config file it was given is reported.
+    configFiles: {
+      cwd: process.cwd(),
+      keys: [],
+      appConfig: null,
+      cliConfig: opts.cliConfigPath ?? null
+    }
+  }
+}
+
+export interface CoreContextBundle {
+  context: EdgeContext
+  appId: string
+  testMode: boolean
+  directory: string
+  servers: {
+    loginServer?: string
+    infoServer?: string
+    changeServer?: string
+    syncServer?: string | string[]
+  }
+  pluginsInit: EdgeCorePluginsInit
+  /** Enabled currency/accountbased plugin ids (not swap). For wallet-create. */
+  currencyPluginIds: string[]
+  /**
+   * Where the configuration came from, so an operator can see which one is
+   * answering. Paths only — the values in them are the secrets.
+   */
+  configFiles: {
+    cwd: string
+    keys: string[]
+    appConfig: string | null
+    cliConfig: string | null
+  }
+}
+
+export async function makeCoreContext(
+  opts: MakeCoreContextOpts
+): Promise<CoreContextBundle> {
+  ensurePlugins()
+  if (opts.fake === true) return await makeFakeCoreContext(opts)
+  const { keys: keysConfig, paths: keysPaths } = loadKeysFrom()
+  const { config: appConfig, path: appConfigPath } = loadAppConfigFrom()
+  const pluginsInit: EdgeCorePluginsInit = {}
+
+  const appId = opts.appId ?? ''
+  const directory = opts.directory ?? defaultDirectory()
+  const testMode = opts.testMode === true
+  // The four decisions, in `resolveApiCredentials` so they can be tabled: it
+  // is pure, and this call is the only thing between it and the request
+  // signature. Inline here they would run in no automated test at all,
+  // because jest never passes the `--fake` return above.
+  const { effectiveApiKey, apiSecret, useNativeSigner, forceKeysJson } =
+    resolveApiCredentials(
+      { apiKey: opts.apiKey, configApiKey: opts.configApiKey },
+      keysConfig,
+      {
+        hasSigner: hasNodeApiSigner(),
+        forceKeysJson: process.env.EDGE_CLI_FORCE_KEYS_JSON === '1'
+      }
+    )
+  const apiSigner = useNativeSigner ? makeNodeApiSigner() : undefined
+
+  if (apiSigner == null && effectiveApiKey === '') {
+    // Names the install case, because that is the common one: a package
+    // from `npm install -g` carries no addon and no `keys.json`, so this is
+    // the first thing every command does, before the socket exists — the
+    // client reports a spawn timeout and the reason is only in the startup
+    // log.
+    throw new Error(
+      'No Edge API key available, so the engine cannot start. A CLI ' +
+        'installed from npm carries no native HMAC signer and no keys, so ' +
+        'it needs a key of its own: write {"edgeApiKey": "<key>"} to ' +
+        `${cliHomeFile('keys.json')}, or pass one with -k. ` +
+        `Searched: ${keysSearchPaths().join(', ')}. ` +
+        '`--fake` needs no key at all.'
+    )
+  }
+
+  const servers = testMode
+    ? {
+        loginServer: TESTER_SERVERS.loginServer,
+        infoServer: TESTER_SERVERS.infoServer,
+        changeServer: TESTER_SERVERS.changeServer,
+        syncServer: [...TESTER_SERVERS.syncServer]
+      }
+    : {}
+
+  if (testMode) {
+    opts.logger?.info('Using tester servers', { servers })
+  }
+  if (useNativeSigner) {
+    opts.logger?.info('Using Node native Edge API HMAC signer')
+  } else {
+    // The other half, logged as well. Which signer is in use decides which
+    // `appKeys` layer the info server serves, so an operator who has built
+    // the addon and is still being served the floor layer has to be able to
+    // tell "I asked for keys.json" from "the addon could not be loaded" —
+    // and the failure the second one leads to names HMAC credentials, not
+    // the signer.
+    opts.logger?.info(
+      forceKeysJson
+        ? 'Signing with the keys.json pair: asked for by -k or EDGE_CLI_FORCE_KEYS_JSON'
+        : 'Signing with the keys.json pair: no Edge API signer addon could be loaded'
+    )
+  }
+
+  try {
+    // Bounded here, because `keysServer.ts` says in so many words that it is
+    // the caller's job: its `FETCH_TIMEOUT_MS` is "a per-server stagger …
+    // Not a hard ceiling on the whole signed infoRollup call: with multiple
+    // info servers the waterfall can outlast this value", and it names the
+    // GUI's cold-start gate as what bounds the app. Unbounded, one info
+    // server that accepted a connection and never answered would hold
+    // `makeCoreContext` open — and with it the whole boot, *after* the run
+    // file is claimed and before the socket exists. Every client would then
+    // wait out its 30-second spawn timeout against a profile that looks
+    // claimed, for as long as the server stays silent.
+    //
+    // The keys are an overlay with a local fallback, which is why a
+    // deadline here is safe: the `catch` below already logs and carries on
+    // with `keys.json`.
+    const remote = await withDeadline(
+      fetchPluginKeys({
+        apiSigner,
+        apiKey: effectiveApiKey,
+        apiSecret,
+        appId,
+        testMode
+      }),
+      PLUGIN_KEYS_TIMEOUT_MS,
+      'the info server did not answer'
+    )
+    keysConfig.pluginApiKeys = mergePluginApiKeys(
+      remote.pluginApiKeys,
+      keysConfig.pluginApiKeys
+    )
+    const monero = asMaybe(asPluginKeysEntry)(remote.pluginApiKeys.monero)
+    const moneroHasKey = monero?.edgeApiKey != null && monero.edgeApiKey !== ''
+    opts.logger?.info('Fetched infoRollup appKeys', {
+      pluginApiKeys: Object.keys(remote.pluginApiKeys).length,
+      moneroEdgeApiKey: moneroHasKey,
+      assuranceLevel: remote.assuranceLevel,
+      signer: apiSigner != null ? 'native' : 'js'
+    })
+  } catch (error: unknown) {
+    const message = errorMessage(error)
+    opts.logger?.warn(
+      `infoRollup appKeys fetch failed; using local plugin keys: ${message}`
+    )
+  }
+
+  // The public rollup, for the swap routes' `exchangeInfo`, from the info
+  // servers `fetchPluginKeys` configured and with the device fields its signed
+  // fetch sends.
+  const osParams = cliOsParams()
+  configureInfoServer({
+    osType: osParams.os,
+    osVersion: osParams.osVersion,
+    appVersion: osParams.appVersion,
+    appId: getKeysAppId(appId)
+  })
+  configureExchangeInfo(
+    makeRollupExchangeInfo({
+      warn: message => {
+        opts.logger?.warn(message)
+      }
+    })
+  )
+
+  Object.assign(
+    pluginsInit,
+    buildPluginsInit({
+      appConfig,
+      pluginApiKeys: keysConfig.pluginApiKeys,
+      warn:
+        opts.logger != null
+          ? (message: string) => opts.logger?.warn(message)
+          : undefined
+    })
+  )
+
+  const enabledSwap = Object.keys(exchangePlugins).filter(
+    id => pluginsInit[id] !== false && pluginsInit[id] != null
+  )
+  opts.logger?.info('Swap plugins enabled', { plugins: enabledSwap })
+
+  const currencyPluginIds = [
+    ...Object.keys(currencyPlugins),
+    ...Object.keys(accountbasedPlugins)
+  ].filter(id => pluginsInit[id] !== false && pluginsInit[id] != null)
+
+  const context = await makeEdgeContext({
+    ...(apiSigner != null
+      ? { apiSigner }
+      : {
+          apiKey: effectiveApiKey,
+          apiSecret
+        }),
+    appId,
+    path: directory,
+    plugins: pluginsInit,
+    ...servers,
+    onLog(event) {
+      const type = String(event.type ?? 'info')
+      // `info` is a plugin's own poll-loop chatter and there is a lot of it.
+      // It still reaches a `subscribe` stream, which is where someone
+      // watching a live engine wants it; it is only kept out of the file
+      // unless EDGE_CLI_LOG_LEVEL asks for it.
+      if (type !== 'info' || process.env.EDGE_CLI_LOG_LEVEL === 'info') {
+        opts.logger?.write(type, event.message, { source: event.source })
+      }
+      opts.events.emit('core.log', {
+        source: event.source,
+        message: event.message,
+        type: event.type
+      })
+    }
+  })
+
+  return {
+    context,
+    appId,
+    testMode,
+    directory,
+    servers,
+    pluginsInit,
+    currencyPluginIds,
+    configFiles: {
+      // The daemon's own cwd, which is the shell's: `spawn` passes no `cwd`,
+      // and both loaders search `./<file>` before `~/.edge-cli/<file>`.
+      cwd: process.cwd(),
+      keys: keysPaths,
+      appConfig: appConfigPath,
+      cliConfig: opts.cliConfigPath ?? null
+    }
+  }
+}

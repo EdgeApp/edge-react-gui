@@ -9,6 +9,7 @@ temp/
 /android/google-java-format-*.jar
 /deploy-config.json
 /edgeKey.json
+/edgeCliKey.json
 /env.json
 /config.json
 /keys.json
@@ -22,6 +23,7 @@ android-release.bundle.map
 ios-release.bundle.map
 keystores/
 /.edgeApiSigner.stamp
+/.edgeCliApiSigner.stamp
 
 # Debugging
 overrideTheme.json
@@ -44,6 +46,9 @@ coverage/
 /ios/EdgeApiSecret.h
 /android/app/src/main/cpp/edge_api_secret.c
 /android/app/src/main/cpp/edge_api_secret.h
+/native/edge-api-signer/node/edge_api_secret.c
+/native/edge-api-signer/node/edge_api_secret.h
+/native/edge-api-signer/node/build/
 /vendor/*.tgz
 /vendor/edge-core-js-*.tgz
 /*.tgz
@@ -143,3 +148,9 @@ yarn-error.log
 
 # Maestro run output
 /maestro/screenshots
+
+# Edge CLI runtime
+.edge-cli/
+
+# Built CLI
+/lib/

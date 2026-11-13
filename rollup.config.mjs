@@ -1,5 +1,12 @@
+/**
+ * The EdgeProvider shim bundle, injected into the in-app browser.
+ *
+ * It resolves with `@rollup/plugin-node-resolve`, the same plugin
+ * `rollup.config.cli.mjs` uses, so the repository's two rollup builds share
+ * one resolver package.
+ */
 import babel from '@rollup/plugin-babel'
-import resolve from 'rollup-plugin-node-resolve'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 const extensions = ['.ts']
 const babelOpts = {
@@ -16,5 +23,5 @@ export default {
     file: './src/controllers/edgeProvider/client/rolledUp.js',
     format: 'iife'
   },
-  plugins: [resolve({ extensions }), babel(babelOpts)]
+  plugins: [nodeResolve({ extensions }), babel(babelOpts)]
 }

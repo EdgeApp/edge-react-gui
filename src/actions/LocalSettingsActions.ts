@@ -11,13 +11,20 @@ import {
   asNotifInfo,
   type LocalAccountSettings,
   type NotifInfo,
-  type NotifState,
   type PasswordReminder,
   type SpendingLimits
 } from '../types/types'
+import { errorMessage } from '../util/errorMessage'
+import {
+  LOCAL_SETTINGS_FILENAME,
+  readLocalAccountSettingsForWrite,
+  readLocalAccountSettingsOrDefaults,
+  writeLocalAccountSettingsToDisk
+} from '../util/localAccountSettings'
 import { logActivity } from '../util/logger'
+import { serializeByKey } from '../util/serializeByKey'
 
-export const LOCAL_SETTINGS_FILENAME = 'Settings.json'
+export { LOCAL_SETTINGS_FILENAME }
 
 // Long enough to read the instructions in the balance-hidden toast:
 const TOAST_HIDE_MS = 5000
@@ -29,21 +36,37 @@ watchAccountSettings(s => {
   localAccountSettings = s
 })
 
-let readSettingsFromDisk = false
+/**
+ * How much the cached settings can be trusted.
+ *
+ * Three states, not a boolean, because the write path has to tell "nothing
+ * has read the file yet" from "the read ran and could not read the file".
+ * The second is the dangerous one: the lenient reader answers it with the
+ * defaults, and a read-modify-write built on those persists them over a
+ * `Settings.json` that is present and merely unreadable — losing
+ * `spendingLimits`, `passwordReminder`, `notifState`, `reviewTrigger`,
+ * `developerModeOn`, `isAccountBalanceVisible` and `tokenWarningsShown`.
+ *
+ * `untrusted` forces a re-read on every read, so a transient failure heals
+ * itself; and it sends the write door to the file rather than to this
+ * cache, so a persistent one cannot overwrite the file it could not read.
+ */
+type SettingsTrust = 'unread' | 'trusted' | 'untrusted'
+let settingsTrust: SettingsTrust = 'unread'
 
 /**
  * Resets the local account settings cache. Must be called on logout to prevent
  * one account's settings from persisting to a subsequent account's session.
  */
 export const resetLocalAccountSettingsCache = (): void => {
-  readSettingsFromDisk = false
+  settingsTrust = 'unread'
   localAccountSettings = asLocalAccountSettings({})
 }
 
 export const getLocalAccountSettings = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
-  if (readSettingsFromDisk) return localAccountSettings
+  if (settingsTrust === 'trusted') return localAccountSettings
   const settings = await readLocalAccountSettings(account)
   return settings
 }
@@ -161,85 +184,65 @@ const writePasswordReminderSetting = async (
   account: EdgeAccount,
   passwordReminder: PasswordReminder
 ): Promise<LocalAccountSettings> =>
-  await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, passwordReminder }
-    return await writeLocalAccountSettings(account, updatedSettings)
-  })
+  await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    passwordReminder
+  }))
 
 const writeAccountBalanceVisibility = async (
   account: EdgeAccount,
   isAccountBalanceVisible: boolean
 ): Promise<LocalAccountSettings> => {
-  return await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, isAccountBalanceVisible }
-    return await writeLocalAccountSettings(account, updatedSettings)
-  })
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    isAccountBalanceVisible
+  }))
 }
 
 const writeDeveloperModeSetting = async (
   account: EdgeAccount,
   developerModeOn: boolean
 ): Promise<LocalAccountSettings> => {
-  return await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, developerModeOn }
-    return await writeLocalAccountSettings(account, updatedSettings)
-  })
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    developerModeOn
+  }))
 }
 
 const writeSpamFilterSetting = async (
   account: EdgeAccount,
   spamFilterOn: boolean
 ): Promise<LocalAccountSettings> => {
-  return await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, spamFilterOn }
-    return await writeLocalAccountSettings(account, updatedSettings)
-  })
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    spamFilterOn
+  }))
 }
 
 export const writeContactsPermissionShown = async (
   account: EdgeAccount,
   contactsPermissionShown: boolean
 ): Promise<LocalAccountSettings> => {
-  return await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, contactsPermissionShown }
-    return await writeLocalAccountSettings(account, updatedSettings)
-  })
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    contactsPermissionShown
+  }))
 }
 
 export const writeSpendingLimits = async (
   account: EdgeAccount,
   spendingLimits: SpendingLimits
 ): Promise<LocalAccountSettings> => {
-  return await getLocalAccountSettings(account).then(async settings => {
-    const updatedSettings = { ...settings, spendingLimits }
-    const out = writeLocalAccountSettings(account, updatedSettings)
-    logActivity(
-      `Set Spending Limits: ${account.username} -- ${JSON.stringify(
-        spendingLimits.transaction
-      )}`
-    )
-    return await out
-  })
-}
-
-/**
- * Manage the state of account notifications, used by both `NotificationView` and
- * `NotificationCenterScene`
- **/
-const writeAccountNotifState = async (
-  account: EdgeAccount,
-  notifState: NotifState
-): Promise<LocalAccountSettings> => {
-  const localSettings = await getLocalAccountSettings(account)
-  return await writeLocalAccountSettings(account, {
-    ...localSettings,
-    // Merge with existing notifState to prevent concurrent writes from
-    // overwriting each other's keys
-    notifState: {
-      ...localSettings.notifState,
-      ...notifState
-    }
-  })
+  const out = updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    spendingLimits
+  }))
+  logActivity(
+    `Set Spending Limits: ${account.username} -- ${JSON.stringify(
+      spendingLimits.transaction
+    )}`
+  )
+  return await out
 }
 
 /**
@@ -251,14 +254,16 @@ export const writeAccountNotifInfo = async (
   accountNotifStateKey: string,
   notifInfo: Partial<NotifInfo>
 ): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
-  return await writeAccountNotifState(account, {
-    ...settings.notifState,
-    [accountNotifStateKey]: {
-      ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})),
-      ...notifInfo
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    notifState: {
+      ...settings.notifState,
+      [accountNotifStateKey]: {
+        ...(settings.notifState[accountNotifStateKey] ?? asNotifInfo({})),
+        ...notifInfo
+      }
     }
-  })
+  }))
 }
 
 /**
@@ -268,9 +273,10 @@ export const writeAccountNotifInfo = async (
 export const writeNymWarningShown = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
-  const updatedSettings = { ...settings, isNymWarningShown: true }
-  return await writeLocalAccountSettings(account, updatedSettings)
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    isNymWarningShown: true
+  }))
 }
 
 /**
@@ -280,9 +286,10 @@ export const writeNymWarningShown = async (
 export const writeCameraScamWarningShown = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
-  const updatedSettings = { ...settings, cameraScamWarningShown: true }
-  return await writeLocalAccountSettings(account, updatedSettings)
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    cameraScamWarningShown: true
+  }))
 }
 
 /**
@@ -292,9 +299,10 @@ export const writeCameraScamWarningShown = async (
 export const writeLargeTxHistoryCardDismissed = async (
   account: EdgeAccount
 ): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
-  const updatedSettings = { ...settings, largeTxHistoryCardDismissed: true }
-  return await writeLocalAccountSettings(account, updatedSettings)
+  return await updateLocalAccountSettings(account, settings => ({
+    ...settings,
+    largeTxHistoryCardDismissed: true
+  }))
 }
 
 /**
@@ -306,16 +314,13 @@ export const writeTokenWarningsShown = async (
   account: EdgeAccount,
   pluginId: string
 ): Promise<LocalAccountSettings> => {
-  const settings = await getLocalAccountSettings(account)
   // Use a Set to ensure there's no duplicates when adding to this info
-  const updatedSettings = {
+  return await updateLocalAccountSettings(account, settings => ({
     ...settings,
     tokenWarningsShown: Array.from(
       new Set([...settings.tokenWarningsShown, pluginId])
     )
-  }
-
-  return await writeLocalAccountSettings(account, updatedSettings)
+  }))
 }
 
 export const readLocalAccountSettings = async (
@@ -324,36 +329,106 @@ export const readLocalAccountSettings = async (
   // If we've already read from disk, return the cached settings.
   // This prevents stale disk reads from overwriting newer in-memory writes
   // that may not have been persisted to disk yet.
-  if (readSettingsFromDisk) {
+  if (settingsTrust === 'trusted') {
     return localAccountSettings
   }
 
-  try {
-    const text = await account.localDisklet.getText(LOCAL_SETTINGS_FILENAME)
-    const json = JSON.parse(text)
-    const settings = asLocalAccountSettings(json)
-    emitAccountSettings(settings)
-    readSettingsFromDisk = true
-    return settings
-  } catch (error: unknown) {
-    // If Settings.json doesn't exist yet, return defaults without writing.
-    // Defaults can be derived from cleaners. Only write when values change.
-    const defaults = asLocalAccountSettings({})
-    emitAccountSettings(defaults)
-    readSettingsFromDisk = true
-    return defaults
-  }
+  // Lenient: this is the GUI's read-only cached reader, reached from
+  // `initializeAccount`, and a `Settings.json` that is present but
+  // unreadable must not stop the login. The trust state records that it
+  // could not be read, which does two things: this reader tries again on the
+  // next call, and `updateLocalAccountSettings` reads the file for itself
+  // rather than building on these defaults — the loss the strict reader
+  // exists to prevent.
+  const { settings, trusted } = await readLocalAccountSettingsOrDefaults(
+    account
+  )
+  emitAccountSettings(settings)
+  settingsTrust = trusted ? 'trusted' : 'untrusted'
+  return settings
 }
 
-export const writeLocalAccountSettings = async (
+/**
+ * Change the local settings, starting from what the file really holds.
+ *
+ * The one write door, and it takes the change rather than a finished
+ * object. A finished object built from the cache while it is `untrusted`
+ * would be the defaults plus one field, and writing it over a file that
+ * then read cleanly would lose `spendingLimits`, `passwordReminder`,
+ * `notifState` and the rest. Here the change is applied to the base this
+ * call established, so it always lands on the real file.
+ */
+export const updateLocalAccountSettings = async (
   account: EdgeAccount,
-  settings: LocalAccountSettings
+  update: (settings: LocalAccountSettings) => LocalAccountSettings
+): Promise<LocalAccountSettings> =>
+  // One write at a time per account, as `change-local-settings` does. Two
+  // writers racing on an unreadable file would both fail their reads and
+  // both recover it, and the second could remove or overwrite the file the
+  // first had just written, losing the first change.
+  await serializeByKey(
+    `localSettings:${account.rootLoginId}`,
+    async () => await updateLocalAccountSettingsNow(account, update)
+  )
+
+const updateLocalAccountSettingsNow = async (
+  account: EdgeAccount,
+  update: (settings: LocalAccountSettings) => LocalAccountSettings
 ): Promise<LocalAccountSettings> => {
+  let base = localAccountSettings
+  if (settingsTrust !== 'trusted') {
+    // Strictly, because this is a write path: an unreadable file must not be
+    // answered with the defaults and written back, and an absent one is
+    // answered with those defaults exactly as the lenient reader would.
+    //
+    // `untrusted` is the same call rather than a refusal. A refusal would
+    // never clear: a `Settings.json` that is present and broken does not
+    // repair itself, so every later write would fail the same way, spending
+    // limits included. The user cannot fix the file either: it is on
+    // `account.localDisklet` inside the app's private container, and
+    // `ios/edge/Info.plist` sets neither `UIFileSharingEnabled` nor
+    // `LSSupportsOpeningDocumentsInPlace`, so it is not in the Files app and
+    // on Android it is app-private.
+    //
+    // So the reader tries twice and then moves the file aside, which loses
+    // nothing a caller could have read anyway and leaves the bytes on the
+    // disklet for support; a file that will not decrypt has no bytes to keep
+    // and is deleted. The error below is for the case where even that fails:
+    // a disklet that cannot be read or written at all.
+    try {
+      const { settings, recovery } = await readLocalAccountSettingsForWrite(
+        account
+      )
+      base = settings
+      if (recovery?.kind === 'moved') {
+        logActivity(
+          `Moved unreadable ${LOCAL_SETTINGS_FILENAME} to ${recovery.to}`
+        )
+      } else if (recovery?.kind === 'deleted') {
+        logActivity(
+          `Deleted ${LOCAL_SETTINGS_FILENAME}, which would not decrypt: ${recovery.reason}`
+        )
+      }
+    } catch (error: unknown) {
+      // The door itself did not open, so there is no writable file to
+      // recover to. Logged first, because the translated message below is
+      // all the user sees and says nothing about the cause. Translated,
+      // because this one reaches the user — every writer in this module
+      // funnels through here, `SpendingLimitsScene` hands the rejection to
+      // `showError`, and `translateError` has no arm for a bare `Error`, so
+      // it renders `message` verbatim in the drop-down.
+      logActivity(
+        `Could not open ${LOCAL_SETTINGS_FILENAME} for writing: ${errorMessage(
+          error
+        )}`
+      )
+      throw new Error(lstrings.settings_not_saved_unreadable_file)
+    }
+    settingsTrust = 'trusted'
+  }
+  const settings = update(base)
   // Refresh cache, notify callers
   emitAccountSettings(settings)
-
-  const text = JSON.stringify(settings)
-  await account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
-
+  await writeLocalAccountSettingsToDisk(account, settings)
   return settings
 }

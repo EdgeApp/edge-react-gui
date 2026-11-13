@@ -13,9 +13,11 @@ import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import {
+  markSecurityChecked,
+  pushMostRecentWallet,
   readSyncedSettings,
-  writeMostRecentWalletsSelected,
-  writeSyncedSettings
+  updateSyncedSettings,
+  writeMostRecentWalletSelected
 } from '../actions/SettingsActions'
 import { ButtonsModal } from '../components/modals/ButtonsModal'
 import {
@@ -157,23 +159,31 @@ export function updateMostRecentWalletsSelected(
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
-    const { mostRecentWallets } = state.ui.settings
-    const currentMostRecentWallets = mostRecentWallets.filter(wallet => {
-      return wallet.id !== walletId || wallet.tokenId !== tokenId
+    // Redux at once, from Redux: session UI state, which a tap must update
+    // whether or not the file can be written.
+    dispatch({
+      type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
+      data: {
+        mostRecentWallets: pushMostRecentWallet(
+          state.ui.settings.mostRecentWallets,
+          walletId,
+          tokenId
+        )
+      }
     })
-    if (currentMostRecentWallets.length === 100) {
-      currentMostRecentWallets.pop()
-    }
-    currentMostRecentWallets.unshift({ id: walletId, tokenId })
-
-    writeMostRecentWalletsSelected(account, currentMostRecentWallets)
-      .then(() => {
+    // Then the file, from the file's own list: Redux holds `[]` for a
+    // session whose login read failed, and writing its list whole would
+    // replace the user's real one with a single entry.
+    writeMostRecentWalletSelected(account, walletId, tokenId)
+      .then(mostRecentWallets => {
         dispatch({
           type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
-          data: { mostRecentWallets: currentMostRecentWallets }
+          data: { mostRecentWallets }
         })
       })
       .catch((error: unknown) => {
+        // Shown, because Redux already has the new order and it reverts at
+        // the next login unless the user is told the save failed.
         showError(error)
       })
   }
@@ -342,8 +352,12 @@ export function checkCompromisedKeys(
     const { activeWalletIds, currencyWallets } = account
 
     // Get synced setting Settings.json with public key map securityCheckedWallets: {walletId: { checked: boolean, modalShown: number }}
+    // Read for deciding what to check; the write below records only what
+    // this pass changed and merges it into the file's own map.
     const settings = await readSyncedSettings(account)
     const securityCheckedWallets = { ...settings.securityCheckedWallets }
+    const checkedWalletIds: string[] = []
+    const shownWalletIds: string[] = []
 
     // Gather list to send to info server
     const hashedPubKeys = new Map<string, string>()
@@ -421,6 +435,7 @@ export function checkCompromisedKeys(
           ...securityCheckedWallets[walletId],
           checked: true
         }
+        checkedWalletIds.push(walletId)
       }
     }
     dispatch({
@@ -468,6 +483,7 @@ export function checkCompromisedKeys(
           modalShown: modalShown + 1
         }
       })
+      shownWalletIds.push(...migratableWalletIds)
 
       if (response === 'yes') {
         navigation.push('migrateWalletSelectCrypto', {
@@ -476,6 +492,17 @@ export function checkCompromisedKeys(
       }
     }
 
-    await writeSyncedSettings(account, { ...settings, securityCheckedWallets })
+    // Only the entries this pass changed, merged into what the file holds
+    // now. The map above comes from a lenient read before an info-server
+    // round trip and a modal, so writing it whole would replace every other
+    // wallet's record with a stale copy, or an empty one after a failed read.
+    await updateSyncedSettings(account, latest => ({
+      ...latest,
+      securityCheckedWallets: markSecurityChecked(
+        latest.securityCheckedWallets,
+        checkedWalletIds,
+        shownWalletIds
+      )
+    }))
   }
 }

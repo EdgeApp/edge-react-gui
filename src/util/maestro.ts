@@ -1,8 +1,12 @@
 import { CONFIG } from '../config'
+import { TESTER_SERVERS } from './testerServers'
 
-export const LOGIN_TEST_SERVER = 'https://login-tester.edge.app'
-export const INFO_TEST_SERVER = 'https://info-tester.edge.app'
-export const SYNC_TEST_SERVER = 'https://sync-tester-us1.edge.app'
+// One declaration of the fleet, in the leaf module that has no imports,
+// shared by the app's three constants and the CLI engine's `TESTER_SERVERS`,
+// so a renamed host changes in one place.
+export const LOGIN_TEST_SERVER = TESTER_SERVERS.loginServer
+export const INFO_TEST_SERVER = TESTER_SERVERS.infoServer
+export const SYNC_TEST_SERVER = TESTER_SERVERS.syncServer[0]
 
 export const isMaestro = (): boolean => CONFIG.ENABLE_MAESTRO_BUILD
 
