@@ -84,7 +84,7 @@ const makeSwapSendTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
     spendTargets: [{ publicAddress: DEPOSIT_ADDRESS, nativeAmount: '38693' }],
     savedAction: {
       actionType: 'swapSend',
-      swapInfo: { pluginId: 'houdini', displayName: 'HoudiniSwap' },
+      swapInfo: { pluginId: 'houdini', displayName: 'Houdini' },
       orderId: '9zdiWHWi2Q4Y7NRPB8k7mL',
       isEstimate: true,
       fromAsset: {
@@ -172,7 +172,7 @@ const makeSwapTx = (opts: SwapTxOpts = {}): EdgeTransaction => {
     spendTargets: [{ publicAddress: DEPOSIT_ADDRESS, nativeAmount: '38693' }],
     savedAction: {
       actionType: 'swap',
-      swapInfo: { pluginId: 'houdini', displayName: 'HoudiniSwap' },
+      swapInfo: { pluginId: 'houdini', displayName: 'Houdini' },
       orderId: '9zdiWHWi2Q4Y7NRPB8k7mL',
       isEstimate: true,
       fromAsset: { pluginId: 'bitcoin', tokenId: null, nativeAmount: '38693' },

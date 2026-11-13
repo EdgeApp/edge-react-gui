@@ -162,9 +162,9 @@ describe('getStealthDisableAssets', () => {
 describe('getStealthProviderName', () => {
   it("uses the provider's display name", () => {
     const named = {
-      swapConfig: { houdini: { swapInfo: { displayName: 'HoudiniSwap' } } }
+      swapConfig: { houdini: { swapInfo: { displayName: 'Houdini' } } }
     } as unknown as EdgeAccount
-    expect(getStealthProviderName(named)).toBe('HoudiniSwap')
+    expect(getStealthProviderName(named)).toBe('Houdini')
   })
 
   it('falls back to the plugin id without the provider', () => {
