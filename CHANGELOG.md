@@ -24,7 +24,7 @@
 - changed: Upgrade react-native-worklets to 0.10.4, which stops the animation loop from running while the app is in the background on Android and fixes crashes when the JavaScript runtime shuts down.
 - changed: Upgrade react-native-reanimated to 4.5.5, fixing a crash when an event arrives for a view that has just unmounted, an iOS crash at launch, and scroll-driven animations on Android jumping back a frame.
 - changed: Rename the HoudiniSwap provider to Houdini and link its privacy pages on docs.houdini.com
-- changed: Send scene tests cover the transparent Zcash payout warning on a pasted unified address
+- changed: Stealth sends to a pasted Zcash unified address pay out to its transparent address
 - fixed: Swaps with no exact receive quote switch to a send amount of the same value with a toast, not a no-provider error
 - fixed: The side menu's dimming overlay works again on both platforms. React Native 0.86 removed the `StyleSheet.absoluteFillObject` the drawer's overlay spreads, which collapsed it to nothing, so tapping outside the menu no longer closed it.
 - fixed: Text inputs mounted in the disabled state (such as the spending-limit amount) no longer flash their enabled look before dimming when a scene appears.
