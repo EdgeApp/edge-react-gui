@@ -6,8 +6,9 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { lstrings } from '../../locales/strings'
