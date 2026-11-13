@@ -22,7 +22,7 @@ export async function waitForWalletOtherMethods(
   wallet: EdgeCurrencyWallet,
   timeoutMs: number = OTHER_METHODS_TIMEOUT_MS
 ): Promise<void> {
-  if (Object.keys(wallet.otherMethods).length > 0) return
+  if (hasMethods(wallet.otherMethods)) return
 
   await new Promise<void>((resolve, reject) => {
     const handleReady = (): void => {
@@ -37,11 +37,26 @@ export async function waitForWalletOtherMethods(
       )
     }, timeoutMs)
     const unsubscribe = wallet.watch('otherMethods', otherMethods => {
-      if (Object.keys(otherMethods).length > 0) handleReady()
+      if (hasMethods(otherMethods)) handleReady()
     })
 
     // The methods may have arrived between the caller's check and the
     // subscription above, in which case the watcher never fires:
-    if (Object.keys(wallet.otherMethods).length > 0) handleReady()
+    if (hasMethods(wallet.otherMethods)) handleReady()
   })
+}
+
+/**
+ * True once an `otherMethods` object carries at least one method.
+ *
+ * The bridge defines a proxy's methods as non-enumerable properties, so
+ * `Object.keys` finds none on the GUI side even when they exist. The
+ * own property names include them, along with the bridge's own magic
+ * property, which is not a function:
+ */
+function hasMethods(otherMethods: object): boolean {
+  const record = otherMethods as Record<string, unknown>
+  return Object.getOwnPropertyNames(otherMethods).some(
+    name => typeof record[name] === 'function'
+  )
 }

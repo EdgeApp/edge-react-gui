@@ -828,6 +828,7 @@ const strings = {
   string_first_ravencoin_wallet_name: 'My Ravencoin',
   string_first_zcoin_wallet_name: 'My Firo',
   string_first_stellar_wallet_name: 'My Stellar',
+  string_first_stellar_testnet_wallet_name: 'My Stellar Testnet',
   string_first_tezos_wallet_name: 'My Tezos',
   string_first_axelar_wallet_name: 'My Axelar',
   string_first_coreum_wallet_name: 'My TX',
@@ -2014,6 +2015,18 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again:
     'Failed to send funds for sell transaction. Please try again.',
+  moneygram_activate_message_2s:
+    'MoneyGram pays out %1$s, which this wallet has not activated yet. Activating it costs %2$s in network fees.',
+  moneygram_activate_button: 'Activate',
+  moneygram_send_title: 'Send to MoneyGram',
+  moneygram_send_message_2s:
+    'Your MoneyGram cash out is waiting for %1$s, paid to the MoneyGram account %2$s. Send it now to finish the transfer.',
+  moneygram_send_later:
+    'Your MoneyGram transfer is saved. Edge will ask you to send it the next time you log in.',
+  moneygram_deposit_complete: 'MoneyGram deposit complete',
+  moneygram_withdraw_complete: 'MoneyGram cash out complete',
+  moneygram_transfer_failed_2s:
+    'MoneyGram transfer ended with status %1$s. %2$s',
   fiat_plugin_cannot_continue_camera_permission:
     'Cannot continue. Camera permission needed for ID verifications',
   fiat_plugin_purchase_limit_error_2s:
