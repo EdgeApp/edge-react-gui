@@ -6,7 +6,7 @@ import type {
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import type { AirshipBridge } from 'react-native-airship'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
@@ -184,7 +184,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         <Paragraph>
           {lstrings.transaction_details_accelerate_transaction_instructional}
         </Paragraph>
-        <View style={styles.container}>
+        <ScrollView style={styles.rows}>
           {spendTargets.map((target, index) => (
             <React.Fragment key={`${index}`}>
               <EdgeRow
@@ -217,7 +217,7 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
               body={newFee}
             />
           )}
-        </View>
+        </ScrollView>
         {isLowerAmount ? (
           <WarningCard
             title={
@@ -266,6 +266,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   container: {
+    maxHeight: theme.rem(20),
+    marginVertical: theme.rem(0.5)
+  },
+  // The rows scroll once they outgrow their share of the modal, so every
+  // recipient stays reachable above the slider:
+  rows: {
+    flexGrow: 0,
     maxHeight: theme.rem(20),
     marginVertical: theme.rem(0.5)
   }
