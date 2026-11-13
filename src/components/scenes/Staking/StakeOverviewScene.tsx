@@ -9,6 +9,7 @@ import { updateStakingPosition } from '../../../actions/scene/StakingActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import type {
@@ -25,10 +26,13 @@ import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import {
   enableStakeTokens,
+  formatStakeDuration,
   getAllocationLocktimeMessage,
   getPolicyIconUris,
   getPolicyTitleName,
-  getPositionAllocations
+  getPositionAllocations,
+  getSoonestUnlockMs,
+  MS_PER_DAY
 } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { AlertCardUi4 } from '../../cards/AlertCard'
@@ -40,7 +44,7 @@ import { withWallet } from '../../hoc/withWallet'
 import { SceneContainer } from '../../layout/SceneContainer'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
-import { showError } from '../../services/AirshipInstance'
+import { showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
@@ -207,6 +211,30 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       }
     }
 
+  // Explains why the claim action is disabled for policies with a lock delay
+  const handleDisabledClaimPress = useHandler(() => {
+    if (stakePolicy?.unstakeLockDays == null) return
+    const currencyCode = stakePolicy.stakeAssets[0].currencyCode
+    const unlockMs = getSoonestUnlockMs(rewardAllocations)
+    if (unlockMs != null) {
+      showToast(
+        sprintf(
+          lstrings.stake_reclaim_available_in_2s,
+          currencyCode,
+          formatStakeDuration(unlockMs)
+        )
+      )
+      return
+    }
+    showToast(
+      sprintf(
+        lstrings.stake_reclaim_unstake_first_2s,
+        currencyCode,
+        formatStakeDuration(stakePolicy.unstakeLockDays * MS_PER_DAY)
+      )
+    )
+  })
+
   // Renderers
   const renderCFAT = ({
     item
@@ -316,6 +344,10 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
                 : {
                     label: claimLabel,
                     disabled: !canClaim,
+                    onDisabledPress:
+                      stakePolicy.unstakeLockDays == null
+                        ? undefined
+                        : handleDisabledClaimPress,
                     onPress: handleModifyPress('claim')
                   }
             }

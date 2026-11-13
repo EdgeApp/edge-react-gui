@@ -1913,6 +1913,17 @@ const strings = {
   stake_amount_reclaim_1s: 'Amount of %1$s to Reclaim',
   stake_reclaimable_1s: '%1$s Pending Reclaim',
   stake_change_reclaim_success: 'Reclaim transaction sent successfully',
+  stake_reclaim_available_in_2s: 'Your unstaked %1$s can be reclaimed in %2$s.',
+  stake_reclaim_unstake_first_2s:
+    'Unstake %1$s first. Reclaiming is available %2$s after unstaking.',
+  stake_duration_2s: '%1$s, %2$s',
+  stake_duration_day_1s: '%1$s day',
+  stake_duration_days_1s: '%1$s days',
+  stake_duration_hour_1s: '%1$s hour',
+  stake_duration_hours_1s: '%1$s hours',
+  stake_duration_minute_1s: '%1$s minute',
+  stake_duration_minutes_1s: '%1$s minutes',
+  stake_duration_less_than_minute: 'less than a minute',
   stake_disabled_slider: 'Enter Amount',
   stake_warning_multiple_transactions:
     'Staking requires multiple transactions to confirm and may take 20 seconds or more to complete',

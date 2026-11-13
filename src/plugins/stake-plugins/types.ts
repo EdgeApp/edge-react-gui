@@ -120,6 +120,10 @@ export interface StakePolicy {
   // balance, so calling it a reward misrepresents what the user receives.
   claimLanguage?: StakeClaimLanguage
 
+  // Days that unstaked funds stay locked before the claim action can return
+  // them to the spendable balance, such as Tron's post-unfreeze delay
+  unstakeLockDays?: number
+
   // Staking policy properties
   isLiquidStaking?: boolean
 

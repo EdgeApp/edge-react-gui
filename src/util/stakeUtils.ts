@@ -24,6 +24,10 @@ import { getCurrencyIconUris } from './CdnUris'
 import { enableTokens } from './CurrencyWalletHelpers'
 import { getUkCompliantString } from './ukComplianceUtils'
 
+const MS_PER_MINUTE = 60 * 1000
+const MINUTES_PER_DAY = 24 * 60
+export const MS_PER_DAY = MINUTES_PER_DAY * MS_PER_MINUTE
+
 /**
  * Returns an array of all display names for a particular asset type
  */
@@ -120,6 +124,63 @@ export const getAllocationLocktimeMessage = (
         formatTimeDate(allocation.locktime)
       )})`
     : ''
+}
+
+/**
+ * Returns the time left until the soonest allocation unlocks, in
+ * milliseconds, or undefined if no allocation has a future locktime.
+ */
+export const getSoonestUnlockMs = (
+  allocations: PositionAllocation[],
+  now: Date = new Date()
+): number | undefined => {
+  let soonestMs: number | undefined
+  for (const allocation of allocations) {
+    if (allocation.locktime == null) continue
+    const remainingMs = new Date(allocation.locktime).valueOf() - now.valueOf()
+    if (!(remainingMs > 0)) continue
+    if (soonestMs == null || remainingMs < soonestMs) soonestMs = remainingMs
+  }
+  return soonestMs
+}
+
+/**
+ * Formats a duration with its two largest units, such as "13 days, 4 hours",
+ * dropping the second unit when it is zero.
+ */
+export const formatStakeDuration = (durationMs: number): string => {
+  const totalMinutes = Math.floor(durationMs / MS_PER_MINUTE)
+  const days = Math.floor(totalMinutes / MINUTES_PER_DAY)
+  const hours = Math.floor((totalMinutes % MINUTES_PER_DAY) / 60)
+  const minutes = totalMinutes % 60
+
+  const dayText = formatDurationUnit(
+    days,
+    lstrings.stake_duration_day_1s,
+    lstrings.stake_duration_days_1s
+  )
+  const hourText = formatDurationUnit(
+    hours,
+    lstrings.stake_duration_hour_1s,
+    lstrings.stake_duration_hours_1s
+  )
+  const minuteText = formatDurationUnit(
+    minutes,
+    lstrings.stake_duration_minute_1s,
+    lstrings.stake_duration_minutes_1s
+  )
+
+  const units =
+    days > 0
+      ? [dayText, hourText]
+      : hours > 0
+      ? [hourText, minuteText]
+      : [minuteText]
+  const [first, second] = units.filter((unit): unit is string => unit != null)
+
+  if (first == null) return lstrings.stake_duration_less_than_minute
+  if (second == null) return first
+  return sprintf(lstrings.stake_duration_2s, first, second)
 }
 
 /**
@@ -296,3 +357,14 @@ export const getPoliciesFromPlugins = (
       )
   )
 }
+
+/**
+ * Formats a count with its singular or plural unit, or returns undefined
+ * for a zero count so the unit can be left out of the duration.
+ */
+const formatDurationUnit = (
+  count: number,
+  singular: string,
+  plural: string
+): string | undefined =>
+  count > 0 ? sprintf(count === 1 ? singular : plural, count) : undefined

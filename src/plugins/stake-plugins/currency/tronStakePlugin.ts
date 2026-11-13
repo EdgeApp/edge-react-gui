@@ -23,6 +23,9 @@ import {
 const MIN_TRX_STAKE = '1000000' // 1 TRX
 const TRX_CURRENCY_CODE = 'TRX'
 const WITHDRAW_PREFIX = 'WITHDRAWEXPIREUNFREEZE_'
+// Stake 2.0 holds unfrozen TRX for 14 days before WithdrawExpireUnfreeze can
+// return it to the spendable balance
+const UNSTAKE_LOCK_DAYS = 14
 
 const stakeProviderInfo: StakeProviderInfo = {
   displayName: lstrings.stake_resource_display_name,
@@ -59,6 +62,7 @@ const policies: StakePolicy[] = [
       displayName: lstrings.stake_resource_display_name_v2
     },
     stakePolicyId: 'currency:tron:BANDWIDTH_V2',
+    unstakeLockDays: UNSTAKE_LOCK_DAYS,
     rewardAssets: [
       {
         pluginId: 'tron',
@@ -84,6 +88,7 @@ const policies: StakePolicy[] = [
       displayName: lstrings.stake_resource_display_name_v2
     },
     stakePolicyId: 'currency:tron:ENERGY_V2',
+    unstakeLockDays: UNSTAKE_LOCK_DAYS,
     rewardAssets: [
       {
         pluginId: 'tron',
