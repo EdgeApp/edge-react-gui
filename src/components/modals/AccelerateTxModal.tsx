@@ -2,6 +2,7 @@ import { abs, lt, sub } from 'biggystring'
 import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
+  EdgeTokenId,
   EdgeTransaction
 } from 'edge-core-js'
 import React, { PureComponent } from 'react'
@@ -15,6 +16,7 @@ import {
   getExchangeDenom,
   selectDisplayDenom
 } from '../../selectors/DenominationSelectors'
+import { getExchangeRate } from '../../selectors/WalletSelectors'
 import { useSelector } from '../../types/reactRedux'
 import {
   convertNativeAmountToDisplayAmount,
@@ -124,7 +126,8 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         edgeTransaction,
         feeDisplayDenomination,
         getExchangeDenom(wallet.currencyConfig, null)
-      )
+      ),
+      this.hasExchangeRate(null)
     )
   }
 
@@ -152,7 +155,21 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         nativeAmount,
         amountDisplayDenomination,
         getExchangeDenom(wallet.currencyConfig, tokenId)
-      )
+      ),
+      this.hasExchangeRate(tokenId)
+    )
+  }
+
+  /** Whether a fiat value can be shown for one of the wallet's assets */
+  hasExchangeRate = (tokenId: EdgeTokenId): boolean => {
+    const { exchangeRates, wallet, isoFiatCurrencyCode } = this.props
+    return (
+      getExchangeRate(
+        exchangeRates,
+        wallet.currencyInfo.pluginId,
+        tokenId,
+        isoFiatCurrencyCode
+      ) !== 0
     )
   }
 
@@ -312,17 +329,22 @@ export function AccelerateTxModal(props: OwnProps): React.ReactElement {
 
 /**
  * Lays out an amount as "<crypto> (<fiat>)". The fee rows and the send amount
- * rows share it, so they read the same way.
+ * rows share it, so they read the same way. Without an exchange rate the fiat
+ * value would read as zero, which looks like a real amount on a confirmation,
+ * so it is left out.
  */
-function formatAmount(amount: {
-  cryptoSymbol?: string
-  cryptoAmount: string
-  fiatSymbol?: string
-  fiatAmount: string
-}): string {
-  return `${amount.cryptoSymbol ?? ''} ${amount.cryptoAmount} (${
-    amount.fiatSymbol ?? ''
-  } ${amount.fiatAmount})`
+function formatAmount(
+  amount: {
+    cryptoSymbol?: string
+    cryptoAmount: string
+    fiatSymbol?: string
+    fiatAmount: string
+  },
+  hasExchangeRate: boolean
+): string {
+  const crypto = `${amount.cryptoSymbol ?? ''} ${amount.cryptoAmount}`
+  if (!hasExchangeRate) return crypto
+  return `${crypto} (${amount.fiatSymbol ?? ''} ${amount.fiatAmount})`
 }
 
 function getTxSendAmount(edgeTransaction: EdgeTransaction): string {

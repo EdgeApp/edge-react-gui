@@ -564,7 +564,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 ]
               }
             >
-               0.094 ($ 0.00)
+               0.094
             </Text>
           </View>
         </View>
@@ -649,7 +649,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 ]
               }
             >
-               0.000681 ($ 0.00)
+               0.000681
             </Text>
           </View>
         </View>
@@ -734,7 +734,7 @@ exports[`AccelerateTxModalComponent should render with loading props 1`] = `
                 ]
               }
             >
-               0.001362 ($ 0.00)
+               0.001362
             </Text>
           </View>
         </View>

@@ -9,6 +9,7 @@ import type {
 } from 'edge-core-js'
 import * as React from 'react'
 
+import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
 import { AccelerateTxModalComponent } from '../../components/modals/AccelerateTxModal'
 import { getTheme } from '../../components/services/ThemeContext'
 import { fakeAirshipBridge } from '../../util/fake/fakeAirshipBridge'
@@ -75,6 +76,7 @@ function renderModal(opts: {
   acceleratedTx: EdgeTransaction
   amountDisplayDenomination: EdgeDenomination
   feeDisplayDenomination: EdgeDenomination
+  exchangeRates?: GuiExchangeRates
 }): ReturnType<typeof render> {
   const fakeWallet: any = {
     fiatCurrencyCode: 'iso:USD',
@@ -90,7 +92,7 @@ function renderModal(opts: {
         replacedTx={opts.replacedTx}
         acceleratedTx={opts.acceleratedTx}
         wallet={fakeWallet}
-        exchangeRates={{ crypto: {}, fiat: {} }}
+        exchangeRates={opts.exchangeRates ?? { crypto: {}, fiat: {} }}
         amountDisplayDenomination={opts.amountDisplayDenomination}
         feeDisplayDenomination={opts.feeDisplayDenomination}
         theme={getTheme()}
@@ -136,9 +138,38 @@ describe('AccelerateTxModalComponent', () => {
     expect(rendered.getByText('bc1qfirstrecipient')).toBeTruthy()
     expect(rendered.getByText(/review the recipient/)).toBeTruthy()
     expect(rendered.getByText('bc1qsecondrecipient')).toBeTruthy()
-    expect(rendered.getByText('1 ($ 0.00)')).toBeTruthy()
-    expect(rendered.getByText('0.5 ($ 0.00)')).toBeTruthy()
+    expect(rendered.getByText('1')).toBeTruthy()
+    expect(rendered.getByText('0.5')).toBeTruthy()
     rendered.unmount()
+  })
+
+  it('shows fiat values only when there is an exchange rate', () => {
+    const txs = {
+      currencyInfo: btcCurrencyInfo,
+      replacedTx: makeTx('BTC', null, '-100681', '681'),
+      acceleratedTx: makeTx('BTC', null, '-101362', '1362', [
+        makeTarget('BTC', '100000', 'bc1qfirstrecipient')
+      ]),
+      amountDisplayDenomination: mbtc,
+      feeDisplayDenomination: mbtc
+    }
+
+    // Without a rate, neither the amount nor the fees claim a fiat value:
+    const withoutRate = renderModal(txs)
+    expect(withoutRate.getByText('1')).toBeTruthy()
+    expect(withoutRate.queryByText(/\$/)).toBeNull()
+    withoutRate.unmount()
+
+    const btcUsdRate = { current: 50000, yesterday: 50000, expiration: 0 }
+    const withRate = renderModal({
+      ...txs,
+      exchangeRates: {
+        crypto: { bitcoin: { '': { 'iso:USD': btcUsdRate } } },
+        fiat: {}
+      } as unknown as GuiExchangeRates
+    })
+    expect(withRate.getByText('1 ($ 50.00)')).toBeTruthy()
+    withRate.unmount()
   })
 
   it('shows a token amount in the token, not the parent currency', () => {
@@ -157,7 +188,7 @@ describe('AccelerateTxModalComponent', () => {
       feeDisplayDenomination: eth
     })
 
-    expect(rendered.getByText('25 ($ 0.00)')).toBeTruthy()
+    expect(rendered.getByText('25')).toBeTruthy()
     rendered.unmount()
   })
 
