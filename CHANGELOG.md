@@ -4,6 +4,7 @@
 
 ## 4.53.0 (staging)
 
+- added: DFX (app.dfx.swiss) as a SEPA fiat buy/sell ramp provider.
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
@@ -49,7 +50,6 @@
 - added: Logbox disable option to env.json
 - added: Reverse-resolve recipient addresses to ENS / Unstoppable Domains / ZNS names in the send flow, address modal, and transaction history.
 - added: Warning confirmation when sending a zero amount on EVM chains, since the transaction still spends gas.
-- added: DFX (app.dfx.swiss) as a SEPA fiat buy/sell ramp provider.
 - added: Remote enable/disable of gift card providers via the info server's giftCardInfo config, supporting whole-provider disabling for Phaze and Bitrefill and per-brand disabling for Phaze.
 - added: Exchange deep links (`edge://exchange/buy|sell|swap`) that open the flow with the asset pre-selected
 - added: Promo attribution for buy, sell and swap flows opened from deep links and promo cards

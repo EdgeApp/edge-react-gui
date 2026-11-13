@@ -37,6 +37,7 @@ export interface Props {
 
 interface WebViewEvent {
   canGoBack: boolean
+  url: string
 }
 
 export function EdgeProviderComponent(props: Props): React.ReactElement {
@@ -126,13 +127,15 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
 
   const handleLoadProgress = useHandler(
     (event: NativeSyntheticEvent<WebViewEvent>) => {
-      console.log('Plugin navigation: ', event.nativeEvent)
+      // The query can carry a login token (DFX `session`):
+      console.log('Plugin navigation: ', event.nativeEvent.url.split('?')[0])
       canGoBack.current = event.nativeEvent.canGoBack
     }
   )
 
   const handleNavigationStateChange = useHandler((event: WebViewEvent) => {
-    console.log('Plugin navigation: ', event)
+    // The query can carry a login token (DFX `session`):
+    console.log('Plugin navigation: ', event.url.split('?')[0])
     canGoBack.current = event.canGoBack
   })
 

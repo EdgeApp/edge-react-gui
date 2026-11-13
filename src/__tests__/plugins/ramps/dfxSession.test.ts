@@ -10,7 +10,8 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { fetchDfxSessionQuery } from '../../../plugins/ramps/dfx/dfxSession'
 
-const MESSAGE = 'By_signing_this_message,_you_confirm_ownership'
+const MESSAGE_PREFIX =
+  'By_signing_this_message,_you_confirm_that_you_are_the_sole_owner_of_the_provided_Blockchain_address._Your_ID:_'
 
 interface FetchCall {
   url: string
@@ -20,6 +21,7 @@ interface FetchCall {
 let fetchCalls: FetchCall[] = []
 let authStatus = 201
 let signBlockchains: string[] = []
+let signMessageText: ((address: string) => string) | undefined
 const realFetch = global.fetch
 const realWarn = console.warn
 
@@ -37,6 +39,7 @@ const makeWallet = (
   wallet: EdgeCurrencyWallet
   signMessage: jest.Mock<(message: string, opts?: unknown) => Promise<string>>
   signBytes: jest.Mock<(bytes: Uint8Array) => Promise<string>>
+  getAddresses: jest.Mock<(opts: unknown) => Promise<typeof addresses>>
 } => {
   const signMessage = jest.fn(
     async (message: string, opts?: unknown) => 'sig-' + message
@@ -44,19 +47,21 @@ const makeWallet = (
   const signBytes = jest.fn(
     async (bytes: Uint8Array) => '0xsig-' + Buffer.from(bytes).toString('utf8')
   )
+  const getAddresses = jest.fn(async (opts: unknown) => addresses)
   const wallet = {
     currencyInfo: { pluginId },
-    getAddresses: async () => addresses,
+    getAddresses,
     signMessage,
     signBytes
   } as unknown as EdgeCurrencyWallet
-  return { wallet, signMessage, signBytes }
+  return { wallet, signMessage, signBytes, getAddresses }
 }
 
 beforeEach(() => {
   fetchCalls = []
   authStatus = 201
   signBlockchains = ['Bitcoin']
+  signMessageText = undefined
   console.warn = jest.fn()
   global.fetch = (async (input: unknown, init?: RequestInit) => {
     const url = String(input)
@@ -64,8 +69,9 @@ beforeEach(() => {
       init?.body == null ? undefined : JSON.parse(init.body as string)
     fetchCalls.push({ url, body })
     if (url.includes('/auth/signMessage')) {
+      const address = decodeURIComponent(url.split('address=')[1])
       return textResponse(200, {
-        message: MESSAGE,
+        message: signMessageText?.(address) ?? MESSAGE_PREFIX + address,
         blockchains: signBlockchains
       })
     }
@@ -82,63 +88,50 @@ afterEach(() => {
 })
 
 describe('fetchDfxSessionQuery', () => {
-  it('logs a bitcoin wallet in with its segwit address', async () => {
-    const { wallet, signMessage } = makeWallet('bitcoin', [
+  it('logs a bitcoin wallet in with its first segwit address', async () => {
+    const { wallet, signMessage, getAddresses } = makeWallet('bitcoin', [
       { addressType: 'publicAddress', publicAddress: '1legacy' },
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
+    const message = MESSAGE_PREFIX + 'bc1segwit'
 
-    const query = await fetchDfxSessionQuery({
-      direction: 'buy',
-      wallet,
-      walletName: 'Edge'
-    })
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
-    expect(query).toEqual({
-      session: 'jwt-token',
-      blockchain: 'Bitcoin',
-      'asset-out': 'BTC'
-    })
+    expect(query).toEqual({ session: 'jwt-token' })
+    expect(getAddresses).toHaveBeenCalledWith({ tokenId: null, forceIndex: 0 })
     expect(fetchCalls[0].url).toBe(
       'https://api.dfx.swiss/v1/auth/signMessage?address=bc1segwit'
     )
-    expect(signMessage).toHaveBeenCalledWith(MESSAGE, {
+    expect(signMessage).toHaveBeenCalledWith(message, {
       otherParams: { publicAddress: 'bc1segwit' }
     })
     expect(fetchCalls[1]).toEqual({
       url: 'https://api.dfx.swiss/v1/auth',
       body: {
         address: 'bc1segwit',
-        signature: 'sig-' + MESSAGE,
+        signature: 'sig-' + message,
         wallet: 'Edge'
       }
     })
   })
 
-  it('signs the message bytes on EVM chains and selects the sell asset', async () => {
+  it('signs the message bytes on EVM chains', async () => {
     signBlockchains = ['Ethereum', 'Polygon', 'Base']
     const { wallet, signMessage, signBytes } = makeWallet('polygon', [
       { addressType: 'publicAddress', publicAddress: '0xabc' }
     ])
+    const message = MESSAGE_PREFIX + '0xabc'
 
-    const query = await fetchDfxSessionQuery({
-      direction: 'sell',
-      wallet,
-      walletName: 'Edge'
-    })
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
-    expect(query).toEqual({
-      session: 'jwt-token',
-      blockchain: 'Polygon',
-      'asset-in': 'POL'
-    })
+    expect(query).toEqual({ session: 'jwt-token' })
     expect(signMessage).not.toHaveBeenCalled()
     expect(Buffer.from(signBytes.mock.calls[0][0]).toString('utf8')).toBe(
-      MESSAGE
+      message
     )
     expect(fetchCalls[1].body).toEqual({
       address: '0xabc',
-      signature: '0xsig-' + MESSAGE,
+      signature: '0xsig-' + message,
       wallet: 'Edge'
     })
   })
@@ -148,11 +141,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'publicAddress', publicAddress: 'So1ana' }
     ])
 
-    const query = await fetchDfxSessionQuery({
-      direction: 'buy',
-      wallet,
-      walletName: 'Edge'
-    })
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
     expect(query).toBeUndefined()
     expect(fetchCalls).toHaveLength(0)
@@ -165,14 +154,35 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    const query = await fetchDfxSessionQuery({
-      direction: 'buy',
-      wallet,
-      walletName: 'Edge'
-    })
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
     expect(query).toBeUndefined()
     expect(console.warn).toHaveBeenCalled()
+  })
+
+  it('refuses to sign any text but the DFX message for the address', async () => {
+    signMessageText = () => 'Sign in to another service'
+    const { wallet, signMessage } = makeWallet('bitcoin', [
+      { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
+    ])
+
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+
+    expect(query).toBeUndefined()
+    expect(signMessage).not.toHaveBeenCalled()
+    expect(fetchCalls).toHaveLength(1)
+  })
+
+  it('refuses the DFX message when it names another address', async () => {
+    signMessageText = () => MESSAGE_PREFIX + 'bc1other'
+    const { wallet, signMessage } = makeWallet('bitcoin', [
+      { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
+    ])
+
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+
+    expect(query).toBeUndefined()
+    expect(signMessage).not.toHaveBeenCalled()
   })
 
   it('falls back when DFX does not accept the address on the chain', async () => {
@@ -181,11 +191,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'publicAddress', publicAddress: '0xabc' }
     ])
 
-    const query = await fetchDfxSessionQuery({
-      direction: 'buy',
-      wallet,
-      walletName: 'Edge'
-    })
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
     expect(query).toBeUndefined()
     expect(signBytes).not.toHaveBeenCalled()
@@ -200,11 +206,7 @@ describe('fetchDfxSessionQuery', () => {
         { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
       ])
 
-      const pending = fetchDfxSessionQuery({
-        direction: 'buy',
-        wallet,
-        walletName: 'Edge'
-      })
+      const pending = fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
       await jest.advanceTimersByTimeAsync(10000)
 
       expect(await pending).toBeUndefined()

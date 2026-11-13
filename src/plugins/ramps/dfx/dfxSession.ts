@@ -10,6 +10,12 @@ const DFX_API_URL = 'https://api.dfx.swiss/v1'
 // the user on the quote list.
 const DFX_LOGIN_TIMEOUT_MS = 10000
 
+// DFX's ownership message, which ends with the address being logged in.
+// Edge signs nothing else, so a bad or compromised API response cannot
+// collect the wallet's signature on other text.
+const DFX_SIGN_MESSAGE_PREFIX =
+  'By_signing_this_message,_you_confirm_that_you_are_the_sole_owner_of_the_provided_Blockchain_address._Your_ID:_'
+
 interface DfxChain {
   /** Blockchain name as DFX spells it (api.dfx.swiss/v1/asset) */
   readonly blockchain: string
@@ -21,7 +27,7 @@ interface DfxChain {
 
 /**
  * Chains where Edge logs the wallet into DFX before opening the webview.
- * Other DFX chains (Solana, Monero) open the plain deep link.
+ * Other DFX chains (Solana, Monero) open DFX without a login.
  */
 export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
   bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', isEvm: false },
@@ -38,17 +44,16 @@ export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
 }
 
 export interface DfxSessionParams {
-  readonly direction: 'buy' | 'sell'
   readonly wallet: EdgeCurrencyWallet
   /** Partner wallet name DFX attributes the user to */
   readonly walletName: string
 }
 
 /**
- * Signs DFX's ownership message with the wallet and returns the webview query
- * that opens DFX logged in with the wallet's address and asset preselected.
+ * Signs DFX's ownership message with the wallet and returns the `session`
+ * query parameter that opens DFX logged in with the wallet's address.
  * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the plain deep link instead.
+ * so the caller opens the link without a login.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -77,7 +82,7 @@ async function loginToDfx(
   params: DfxSessionParams,
   chain: DfxChain
 ): Promise<Record<string, string>> {
-  const { direction, wallet, walletName } = params
+  const { wallet, walletName } = params
   const address = await getDfxAddress(wallet)
 
   const signResponse = await fetch(
@@ -91,6 +96,9 @@ async function loginToDfx(
   )
   if (!blockchains.includes(chain.blockchain)) {
     throw new Error(`address not accepted on ${chain.blockchain}`)
+  }
+  if (message !== DFX_SIGN_MESSAGE_PREFIX + address) {
+    throw new Error('unexpected signMessage text')
   }
 
   // UTXO wallets sign the literal message: `signBytes` would base64 it
@@ -114,16 +122,17 @@ async function loginToDfx(
   }
   const { accessToken } = asDfxAuthResponse(await authResponse.text())
 
-  return {
-    session: accessToken,
-    blockchain: chain.blockchain,
-    [direction === 'buy' ? 'asset-out' : 'asset-in']: chain.asset
-  }
+  return { session: accessToken }
 }
 
-/** Prefers the segwit receive address on UTXO wallets. */
+/**
+ * DFX ties the login to the address, so it always uses the wallet's first
+ * address: the current receive address moves on once it receives funds, and
+ * a later login from it would reach DFX as a different user.
+ * Prefers the segwit address on UTXO wallets.
+ */
 async function getDfxAddress(wallet: EdgeCurrencyWallet): Promise<string> {
-  const addresses = await wallet.getAddresses({ tokenId: null })
+  const addresses = await wallet.getAddresses({ tokenId: null, forceIndex: 0 })
   const address =
     addresses.find(item => item.addressType === 'segwitAddress') ?? addresses[0]
   if (address == null) throw new Error('wallet has no receive address')
