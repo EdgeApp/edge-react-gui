@@ -93,12 +93,13 @@ It needs Node 20.19 or later on the 20 line, or 22.12 or later: the
 Solana plugins' dependencies `require()` an ESM-only module, which older
 Nodes cannot do, so there an install succeeds and Solana alone fails to load.
 
-`--omit=peer` because `edge-currency-accountbased` declares four React Native
-modules as non-optional peers — `react-native-monero`,
-`react-native-pirate-wallet`, `react-native-zano` and `zcash-native` —
-which npm 7+ installs by default and the CLI never loads. Without it a global
-install pulls React Native itself. `npx` resolves the same peers, so it takes
-the flag too — before the package name, where npm reads its own options.
+`--omit=peer` because `edge-currency-accountbased` declares its React Native
+modules as non-optional peers (`react-native-file-access`,
+`react-native-monero`, `react-native-pirate-wallet`, `react-native-zano` and
+`zcash-native`), which npm 7+ installs by default and the CLI never loads.
+Without it a global install pulls React Native itself. `npx` resolves the
+same peers, so it takes the flag too — before the package name, where npm
+reads its own options.
 
 Inside this checkout, `node lib/edgeCli.js` is the same program under a
 different name; `edge-cli` throughout this document means either. The app's
@@ -881,7 +882,7 @@ app's caret ranges. Lockstep is the point of pinning the CLI's version to the
 app's, and npm does not publish a lock — so a published `^2.22.1` would
 resolve again, elsewhere, later. `npm run cli:manifest` prints any dependency
 the lock does not resolve, and the non-optional peers an install would pull in
-beside them: `edge-currency-accountbased` declares four React Native modules
+beside them: `edge-currency-accountbased` declares its React Native modules
 that way, which is why the install line says `--omit=peer`.
 
 The dependency list is derived rather than written down. `rollup.config.cli.mjs`
