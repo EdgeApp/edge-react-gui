@@ -183,7 +183,9 @@ export class AccelerateTxModalComponent extends PureComponent<Props, State> {
         title={lstrings.transaction_details_accelerate_transaction_header}
       >
         <Paragraph>
-          {lstrings.transaction_details_accelerate_transaction_instructional}
+          {spendTargets.length > 0
+            ? lstrings.transaction_details_accelerate_transaction_instructional_recipient
+            : lstrings.transaction_details_accelerate_transaction_instructional}
         </Paragraph>
         <ScrollView style={styles.rows}>
           {spendTargets.map((target, index) => (

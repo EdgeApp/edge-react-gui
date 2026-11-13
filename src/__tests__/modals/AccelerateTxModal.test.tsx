@@ -134,6 +134,7 @@ describe('AccelerateTxModalComponent', () => {
     })
 
     expect(rendered.getByText('bc1qfirstrecipient')).toBeTruthy()
+    expect(rendered.getByText(/review the recipient/)).toBeTruthy()
     expect(rendered.getByText('bc1qsecondrecipient')).toBeTruthy()
     expect(rendered.getByText('1 ($ 0.00)')).toBeTruthy()
     expect(rendered.getByText('0.5 ($ 0.00)')).toBeTruthy()
@@ -171,6 +172,9 @@ describe('AccelerateTxModalComponent', () => {
 
     expect(rendered.queryByText('Recipient Address')).toBeNull()
     expect(rendered.queryByText('Send Amount')).toBeNull()
+    // ...and the text does not ask the user to review rows that are absent:
+    expect(rendered.queryByText(/review the recipient/)).toBeNull()
+    expect(rendered.getByText(/review new fee amount/)).toBeTruthy()
     rendered.unmount()
   })
 })
