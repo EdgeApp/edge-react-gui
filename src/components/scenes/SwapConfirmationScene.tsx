@@ -102,8 +102,11 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
     swapRequest,
     swapRequestOptions
   } = route.params
-  // A Stealth Swap's provider is fixed, so its powered-by card is not tappable:
+  // The powered-by card opens the provider picker only when there is another
+  // quote to pick. A Stealth Swap's provider is fixed, and a single quote
+  // leaves nothing to choose:
   const isStealth = swapRequest.privacy === 'required'
+  const canChangeProvider = !isStealth && quotes.length > 1
 
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -541,7 +544,7 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           <PoweredByCard
             iconUri={getSwapPluginIconUri(selectedQuote.pluginId, theme)}
             poweredByText={exchangeName}
-            onPress={isStealth ? undefined : handlePoweredByTap}
+            onPress={canChangeProvider ? handlePoweredByTap : undefined}
           />
         </EdgeAnim>
         {selectedQuote.isEstimate && !showPriceImpact ? (

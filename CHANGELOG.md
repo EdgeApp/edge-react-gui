@@ -13,6 +13,7 @@
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Ask for contacts access only inside the transaction payee modal, not on receiving a transaction
 - changed: Stealth Swap works with Houdini switched off in the exchange settings, as Stealth Send already does
+- changed: Swaps with a single provider quote no longer offer the provider picker
 - changed: Draw gradients with expo-linear-gradient and scroll around the keyboard with react-native-keyboard-controller, replacing two libraries that rendered through the new architecture's legacy compatibility layers (react-native-linear-gradient and the unmaintained react-native-keyboard-aware-scroll-view).
 - changed: The feedback survey now uses the same keyboard offset on both platforms, replacing a per-platform workaround the old scroll library required.
 - changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
