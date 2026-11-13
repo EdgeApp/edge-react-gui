@@ -3,5 +3,9 @@
   "compilerOptions": {
     "allowJs": false,
     "noEmit": true
-  }
+  },
+  // An exclude here replaces the base config's, so Pods stays out explicitly.
+  // Masonfile.ts runs on Mason's machines, typed by @mason/types (not on npm),
+  // and Masonfile.test.ts imports it, so both stay out of tsc:
+  "exclude": ["**/Pods/**", "Masonfile.ts", "Masonfile.test.ts"]
 }
