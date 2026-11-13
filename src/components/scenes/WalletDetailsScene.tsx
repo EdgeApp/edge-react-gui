@@ -40,6 +40,7 @@ import type {
   WalletsTabSceneProps
 } from '../../types/routerTypes'
 import type { GradientColors } from '../../types/Theme'
+import { getCoinrankAssetId } from '../../util/coinrankAssetId'
 import { getDisplayInfoCards } from '../../util/infoUtils'
 import { coinrankListData, infoServerData } from '../../util/network'
 import {
@@ -270,7 +271,12 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
     setFooterHeight(height)
   })
 
-  const assetId = coinrankListData.coins[currencyCode]
+  const assetId = getCoinrankAssetId(
+    coinrankListData.coins,
+    pluginId,
+    tokenId,
+    currencyCode
+  )
 
   // Bind scene scrollEnabled to shared disableScroll value
   const disableScroll = useSceneScrollContext(state => state.disableScroll)
@@ -283,6 +289,7 @@ const WalletDetailsComponent: React.FC<Props> = (props: Props) => {
   )
 
   const handlePressCoinRanking = useHandler(() => {
+    if (assetId == null) return
     navigation.navigate('coinRankingDetails', { assetId })
   })
 

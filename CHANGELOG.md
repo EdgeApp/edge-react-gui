@@ -50,6 +50,7 @@
 - fixed: Modals no longer sit behind the keyboard on Android, hiding their bottom buttons.
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
+- fixed: Revolut Euro (EURR) wallets no longer show the StablR Euro price chart
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
 - fixed: Home's promo card no longer covers the Buy and Sell tiles when it appears after the screen loads. Reanimated dropped the last frame of layout animations, which left moved views just short of their target, or at their starting point on a busy device.
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
