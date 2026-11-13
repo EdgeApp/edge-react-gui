@@ -34,6 +34,10 @@ interface Props {
   // True to dim the button & prevent interactions:
   disabled?: boolean
 
+  // Called when the user presses the button while it is disabled.
+  // The button keeps its dimmed look.
+  onDisabledPress?: () => void
+
   // If this is set, the component will insert a text node after its children:
   label?: string
 
@@ -67,6 +71,7 @@ export function EdgeButton(props: Props): React.ReactElement | null {
     disabled = false,
     label,
     onPress,
+    onDisabledPress,
     type = 'primary',
     spinner = false,
     mini = false,
@@ -197,11 +202,13 @@ export function EdgeButton(props: Props): React.ReactElement | null {
   return (
     <View style={[layoutContainerStyle, containerMargin]}>
       <EdgeTouchableOpacity
-        disabled={disabled || pending}
-        onPress={handlePress}
+        // A disabled button stays pressable when it has onDisabledPress
+        disabled={pending || (disabled && onDisabledPress == null)}
+        onPress={disabled ? onDisabledPress : handlePress}
         hitSlop={hitSlop}
         testID={testID}
-        activeOpacity={Platform.OS === 'ios' ? 0.6 : 0.7}
+        // Keep the dimmed look while a disabled button is pressed
+        activeOpacity={disabled ? opacity : Platform.OS === 'ios' ? 0.6 : 0.7}
         style={[
           styles.pillBase,
           type !== 'tertiary' ? styles.pillSolid : styles.pillTertiary,

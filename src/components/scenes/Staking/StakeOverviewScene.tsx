@@ -6,9 +6,13 @@ import { FlatList } from 'react-native-gesture-handler'
 import { sprintf } from 'sprintf-js'
 
 import { updateStakingPosition } from '../../../actions/scene/StakingActions'
-import { SCROLL_INDICATOR_INSET_FIX } from '../../../constants/constantSettings'
+import {
+  SCROLL_INDICATOR_INSET_FIX,
+  UNSTAKE_LOCK_WARNING
+} from '../../../constants/constantSettings'
 import { useAsyncEffect } from '../../../hooks/useAsyncEffect'
 import { useAsyncValue } from '../../../hooks/useAsyncValue'
+import { useHandler } from '../../../hooks/useHandler'
 import { lstrings } from '../../../locales/strings'
 import { getStakePlugins } from '../../../plugins/stake-plugins/stakePlugins'
 import type {
@@ -25,10 +29,13 @@ import { infoServerData } from '../../../util/network'
 import { makePeriodicTask } from '../../../util/PeriodicTask'
 import {
   enableStakeTokens,
+  formatStakeDuration,
   getAllocationLocktimeMessage,
   getPolicyIconUris,
   getPolicyTitleName,
-  getPositionAllocations
+  getPositionAllocations,
+  getSoonestUnlockMs,
+  MS_PER_DAY
 } from '../../../util/stakeUtils'
 import { SceneButtons } from '../../buttons/SceneButtons'
 import { AlertCardUi4 } from '../../cards/AlertCard'
@@ -38,9 +45,10 @@ import { fadeInDown10 } from '../../common/EdgeAnim'
 import { SceneWrapper } from '../../common/SceneWrapper'
 import { withWallet } from '../../hoc/withWallet'
 import { SceneContainer } from '../../layout/SceneContainer'
+import { ConfirmContinueModal } from '../../modals/ConfirmContinueModal'
 import { FillLoader } from '../../progress-indicators/FillLoader'
 import { Shimmer } from '../../progress-indicators/Shimmer'
-import { showError } from '../../services/AirshipInstance'
+import { Airship, showError, showToast } from '../../services/AirshipInstance'
 import { cacheStyles, type Theme, useTheme } from '../../services/ThemeContext'
 import { CryptoFiatAmountTile } from '../../tiles/CryptoFiatAmountTile'
 
@@ -207,6 +215,69 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
       }
     }
 
+  // Explains why the claim action is disabled for policies with a lock delay
+  const handleDisabledClaimPress = useHandler(() => {
+    if (stakePolicy?.unstakeLockDays == null) return
+    const currencyCode = stakePolicy.stakeAssets[0].currencyCode
+    const unlockMs = getSoonestUnlockMs(rewardAllocations)
+    if (unlockMs != null) {
+      showToast(
+        sprintf(
+          lstrings.stake_reclaim_available_in_2s,
+          currencyCode,
+          formatStakeDuration(unlockMs)
+        )
+      )
+      return
+    }
+    showToast(
+      sprintf(
+        lstrings.stake_reclaim_unstake_first_2s,
+        currencyCode,
+        formatStakeDuration(stakePolicy.unstakeLockDays * MS_PER_DAY)
+      )
+    )
+  })
+
+  // Notes the lock delay before the user's first unstake from such a policy.
+  // Resolves false if the user backs out.
+  const confirmUnstakeLock = async (): Promise<boolean> => {
+    if (stakePolicy?.unstakeLockDays == null) return true
+    const isWarned = await account.disklet.getText(UNSTAKE_LOCK_WARNING).then(
+      () => true,
+      () => false
+    )
+    if (isWarned) return true
+
+    const body = sprintf(
+      lstrings.stake_reclaim_delay_message_3s,
+      stakePolicy.stakeAssets[0].currencyCode,
+      formatStakeDuration(stakePolicy.unstakeLockDays * MS_PER_DAY),
+      claimLabel
+    )
+    const isConfirmed = await Airship.show<boolean>(bridge => (
+      <ConfirmContinueModal
+        bridge={bridge}
+        body={body}
+        isSkippable
+        title={lstrings.stake_reclaim_delay_title}
+        warning
+      />
+    ))
+    if (isConfirmed) await account.disklet.setText(UNSTAKE_LOCK_WARNING, '')
+    return isConfirmed
+  }
+
+  const handleUnstakePress =
+    (modification: 'unstake' | 'unstakeAndClaim') =>
+    async (): Promise<void> => {
+      const isConfirmed = await confirmUnstakeLock().catch((error: unknown) => {
+        showError(error)
+        return false
+      })
+      if (isConfirmed) handleModifyPress(modification)()
+    }
+
   // Renderers
   const renderCFAT = ({
     item
@@ -316,6 +387,10 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
                 : {
                     label: claimLabel,
                     disabled: !canClaim,
+                    onDisabledPress:
+                      stakePolicy.unstakeLockDays == null
+                        ? undefined
+                        : handleDisabledClaimPress,
                     onPress: handleModifyPress('claim')
                   }
             }
@@ -326,12 +401,12 @@ const StakeOverviewSceneComponent: React.FC<Props> = props => {
                   : {
                       label: lstrings.stake_unstake,
                       disabled: !canUnstake,
-                      onPress: handleModifyPress('unstake')
+                      onPress: handleUnstakePress('unstake')
                     }
                 : {
                     label: lstrings.stake_unstake_claim,
                     disabled: !canUnstakeAndClaim,
-                    onPress: handleModifyPress('unstakeAndClaim')
+                    onPress: handleUnstakePress('unstakeAndClaim')
                   }
             }
           />

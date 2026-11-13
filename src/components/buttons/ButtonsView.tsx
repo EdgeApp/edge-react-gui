@@ -20,6 +20,8 @@ export interface ButtonInfo {
   label: string
   onPress: () => void | Promise<void>
   disabled?: boolean
+  // Called when the user presses the button while it is disabled
+  onDisabledPress?: () => void
   spinner?: boolean
   testID?: string
 
@@ -77,7 +79,8 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
     index: number = 0
   ): React.ReactElement | null => {
     if (buttonProps == null) return null
-    const { label, onPress, disabled, spinner, testID } = buttonProps
+    const { label, onPress, disabled, onDisabledPress, spinner, testID } =
+      buttonProps
 
     const distance =
       animDistanceStart != null
@@ -98,6 +101,7 @@ export const ButtonsView = React.memo((props: ButtonsViewProps) => {
           onPress={onPress}
           type={type}
           disabled={disabled}
+          onDisabledPress={onDisabledPress}
           spinner={spinner}
           testID={testID}
         />
