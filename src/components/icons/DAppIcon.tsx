@@ -1,6 +1,7 @@
+import { asArray, asMaybe, asString } from 'cleaners'
 import * as React from 'react'
 import { View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import FastImage, { type OnLoadEvent } from 'react-native-fast-image'
 
 import { Fontello } from '../../assets/vector'
 import { useHandler } from '../../hooks/useHandler'
@@ -33,6 +34,12 @@ export const DAppIcon: React.FC<Props> = props => {
     setFailedUri(uri)
   })
 
+  // On iOS, FastImage decodes data URIs inline and reports a broken one as a
+  // 0x0 load instead of an error:
+  const handleLoad = useHandler((event: OnLoadEvent) => {
+    if (event.nativeEvent.width === 0) setFailedUri(uri)
+  })
+
   if (uri == null || uri === failedUri) {
     return (
       <View style={[styles.fallback, sizeStyle]} testID="dAppIconFallback">
@@ -52,6 +59,7 @@ export const DAppIcon: React.FC<Props> = props => {
       style={sizeStyle}
       testID="dAppIconImage"
       onError={handleError}
+      onLoad={handleLoad}
     />
   )
 }
@@ -64,12 +72,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 /**
+ * WalletConnect does not validate peer metadata, so `icons` can hold
+ * anything the dApp sends. Non-string entries and non-array values drop out.
+ */
+const asDAppIcons = asMaybe(asArray(asMaybe(asString)), [])
+
+/**
  * Picks the first dApp icon the app can draw. SVG is not supported by
  * FastImage, and relative paths have no host to load from.
  */
-export const pickDAppIconUri = (
-  icons: readonly string[] | undefined
-): string | undefined => icons?.find(isDrawableIconUri)
+export const pickDAppIconUri = (icons: unknown): string | undefined =>
+  asDAppIcons(icons).find(
+    (icon): icon is string => icon != null && isDrawableIconUri(icon)
+  )
 
 const isDrawableIconUri = (uri: string): boolean => {
   const lowerUri = uri.toLowerCase()

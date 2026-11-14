@@ -52,6 +52,19 @@ describe('pickDAppIconUri', () => {
     ).toBe('data:image/png;base64,AAAA')
   })
 
+  it('ignores malformed icons metadata', () => {
+    expect(pickDAppIconUri([null, 'https://dapp.example/a.png'])).toBe(
+      'https://dapp.example/a.png'
+    )
+    expect(pickDAppIconUri([null])).toBeUndefined()
+    expect(pickDAppIconUri([42, {}])).toBeUndefined()
+    expect(pickDAppIconUri('https://dapp.example/a.png')).toBeUndefined()
+    expect(pickDAppIconUri({ src: 'https://dapp.example/a.png' })).toBe(
+      undefined
+    )
+    expect(pickDAppIconUri(null)).toBeUndefined()
+  })
+
   it('keeps an svg-looking query on a raster path', () => {
     expect(pickDAppIconUri(['https://cdn.example/icon?format=.svg'])).toBe(
       'https://cdn.example/icon?format=.svg'
@@ -88,6 +101,32 @@ describe('DAppIcon', () => {
         <DAppIcon uri="https://dapp.example/other.png" />
       </FakeProviders>
     )
+    expect(rendered.queryByTestId('dAppIconImage')).not.toBeNull()
+    rendered.unmount()
+  })
+
+  it('falls back when the artwork decodes to nothing', () => {
+    const rendered = render(
+      <FakeProviders>
+        <DAppIcon uri="data:image/png;base64,AAAA" />
+      </FakeProviders>
+    )
+    fireEvent(rendered.getByTestId('dAppIconImage'), 'load', {
+      nativeEvent: { width: 0, height: 0 }
+    })
+    expect(rendered.queryByTestId('dAppIconFallback')).not.toBeNull()
+    rendered.unmount()
+  })
+
+  it('keeps artwork that loads', () => {
+    const rendered = render(
+      <FakeProviders>
+        <DAppIcon uri="https://dapp.example/logo.png" />
+      </FakeProviders>
+    )
+    fireEvent(rendered.getByTestId('dAppIconImage'), 'load', {
+      nativeEvent: { width: 64, height: 64 }
+    })
     expect(rendered.queryByTestId('dAppIconImage')).not.toBeNull()
     rendered.unmount()
   })
