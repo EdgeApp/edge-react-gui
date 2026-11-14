@@ -29,9 +29,13 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { ErrorCard } from '../../components/cards/ErrorCard'
 import type { RecipientAssetRow } from '../../components/modals/RecipientAssetListModal'
 import { EdgeRow } from '../../components/rows/EdgeRow'
-import { SendScene2 } from '../../components/scenes/SendScene2'
+import {
+  SendScene2,
+  type SendScene2Params
+} from '../../components/scenes/SendScene2'
 import type * as AirshipInstance from '../../components/services/AirshipInstance'
 import { Airship, showToast } from '../../components/services/AirshipInstance'
 import { SafeSlider } from '../../components/themed/SafeSlider'
@@ -75,6 +79,7 @@ const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
 const ZCASH_ADDRESS = /^(u1[a-z0-9]+|zs1[a-z0-9]+|t1[1-9A-HJ-NP-Za-km-z]{33})$/
 // An amount over the provider's floor, so the quote goes out:
 const ONE_BTC = '100000000'
+const TWO_BTC = '200000000'
 const ONE_ETH = '1000000000000000000'
 const ONE_ZEC = '100000000'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
@@ -122,7 +127,9 @@ const houdiniChains = asHoudiniChains(servedChains)
 const FIVE_USD_OF_ETH = '3770000000000000'
 const FIFTY_USD_OF_ETH = '37700000000000000'
 
-const SCAM_WARNING = 'Scam Warning'
+const IRREVERSIBLE = 'Cryptocurrency transactions are irreversible.'
+const ON_BITCOIN = 'Make sure the recipient is on the Bitcoin network.'
+const ON_ETHEREUM = 'Make sure the recipient is on the Ethereum network.'
 const SWAP_BEFORE_SEND = 'Swap before send'
 const ZCASH_TRANSPARENT_WARNING = 'Transparent Zcash payout'
 // A ZIP-316 unified address with a P2PKH receiver, which the provider pays
@@ -468,6 +475,8 @@ describe('SendScene2 recipient network', () => {
     destinationTag: () => string | undefined
     /** How many text nodes on the scene read exactly this. */
     count: (text: string) => number
+    /** How many error cards the scene shows. */
+    errorCards: () => number
     /** Where a text first appears on the scene, top to bottom, or -1. */
     position: (text: string) => number
     /** Whether some text node on the scene reads exactly this. */
@@ -493,10 +502,17 @@ describe('SendScene2 recipient network', () => {
         destination: Array<{ pluginId: string }>
       }
       sceneAccount?: EdgeAccount
+      /** Extra scene params, as a partner send passes them. */
+      sceneParams?: Partial<SendScene2Params>
     } = {}
   ): RenderedSend => {
     if (wallet == null) throw new Error('No wallet')
-    const { chains = houdiniChains, houdiniBans, sceneAccount = account } = opts
+    const {
+      chains = houdiniChains,
+      houdiniBans,
+      sceneAccount = account,
+      sceneParams = {}
+    } = opts
     const rootState: FakeState = {
       ...fakeRootState,
       core: { account: sceneAccount },
@@ -522,7 +538,8 @@ describe('SendScene2 recipient network', () => {
           {...fakeEdgeAppSceneProps('send2', {
             walletId: wallet.id,
             tokenId,
-            doCheckAndShowGetCryptoModal: false
+            doCheckAndShowGetCryptoModal: false,
+            ...sceneParams
           })}
         />
       </FakeProviders>
@@ -741,6 +758,7 @@ describe('SendScene2 recipient network', () => {
           await toggle.props.onPress?.()
         })
       },
+      errorCards: () => rendered.UNSAFE_queryAllByType(ErrorCard).length,
       unmount: () => {
         rendered.unmount()
       }
@@ -1279,37 +1297,95 @@ describe('SendScene2 recipient network', () => {
     })
   })
 
-  it('shows the scam warning on a plain send with no address', async () => {
+  it('closes a plain send with the reminders as a note', async () => {
     const scene = renderBitcoinSend()
 
-    expect(scene.count(SCAM_WARNING)).toBe(1)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
+    expect(scene.shows('Scam Warning')).toBe(false)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
 
-    // An entered address retires the card: off to Ethereum and back leaves a
+    // The note outlives address entry: off to Ethereum and back leaves a
     // plain Bitcoin send with its recipient filled in.
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     await scene.enterUnparsedAddress(BTC_ADDRESS)
     expect(scene.recipientAddress()).toBe(BTC_ADDRESS)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
     scene.unmount()
   })
 
-  it('shows the swap card alone on a swap-send with no address', async () => {
+  it('moves the reminders into the swap card on a swap-send', async () => {
     const scene = renderBitcoinSend()
 
     // Picking the recipient's asset makes the send a swap before any address:
     await scene.pickRecipientAsset('Ethereum')
     expect(scene.recipientAddress()).toBe('')
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
+    expect(scene.shows(ON_BITCOIN)).toBe(false)
 
-    // The swap card stays the only one once the address is in:
+    // The card stays the only message once the address is in:
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
     scene.unmount()
+  })
+
+  it('ends the Stealth card with the reminders', async () => {
+    const scene = renderBitcoinSend()
+    await scene.toggleStealth()
+
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.shows(lstrings.stealth_swap_send_warning_title_private)).toBe(
+      true
+    )
+    // The card carries the reminders once, so the note is gone:
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
+    scene.unmount()
+  })
+
+  it('hides the note under an error card', async () => {
+    const scene = renderBitcoinSend()
+    await scene.enterParsedAddress(BTC_ADDRESS)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+
+    // The wallet holds 1.3 BTC, so a 2 BTC spend fails:
+    await scene.enterAmount(TWO_BTC)
+    for (let i = 0; i < 50 && scene.shows(IRREVERSIBLE); ++i) {
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20))
+      })
+    }
+    expect(scene.errorCards()).toBe(1)
+    expect(scene.shows(IRREVERSIBLE)).toBe(false)
+    expect(scene.shows(ON_BITCOIN)).toBe(false)
+    scene.unmount()
+  })
+
+  it('leaves the note off a send with a hidden recipient', async () => {
+    for (const hiddenFeaturesMap of [
+      { address: true },
+      { scamWarning: true }
+    ]) {
+      const scene = renderSend(btcWallet, null, {
+        sceneParams: {
+          hiddenFeaturesMap,
+          spendInfo: {
+            tokenId: null,
+            spendTargets: [{ publicAddress: BTC_ADDRESS }]
+          }
+        }
+      })
+      expect(scene.shows(IRREVERSIBLE)).toBe(false)
+      expect(scene.shows(ON_BITCOIN)).toBe(false)
+      scene.unmount()
+    }
   })
 
   it('names the reason when no network takes the text', async () => {
