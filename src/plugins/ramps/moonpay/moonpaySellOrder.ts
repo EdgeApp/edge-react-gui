@@ -7,6 +7,7 @@ import {
   asString
 } from 'cleaners'
 import type { EdgeAccount, EdgeMemo, EdgeTxActionFiat } from 'edge-core-js'
+import { v4 } from 'uuid'
 
 import type { EdgeAsset } from '../../../types/types'
 import { resolveMoonpayAsset } from './moonpayAssetUtils'
@@ -19,10 +20,20 @@ export const MOONPAY_SUPPORT_EMAIL = 'support@moonpay.com'
 /** The one sell status where MoonPay is still waiting for the crypto. */
 const MOONPAY_SELL_STATUS_OPEN = 'waitingForDeposit'
 
+/** Sell statuses where MoonPay already has the deposit. */
+const MOONPAY_SELL_STATUSES_PAID = ['pending', 'completed']
+
+/**
+ * The account's synced store of the `externalTransactionId` values its sell
+ * widgets were opened with, one item per id.
+ */
+const MOONPAY_SELL_ORDER_STORE_ID = 'moonpay-sell-orders'
+
 // Cleaner for MoonPay GET /v3/sell_transactions/:id response
 const asMoonpaySellTransaction = asObject({
   status: asString,
   baseCurrencyAmount: asNumber,
+  externalTransactionId: asOptional(asEither(asString, asNull)),
   baseCurrency: asObject({
     code: asString,
     metadata: asOptional(asMetadata)
@@ -61,10 +72,53 @@ export interface MoonpayOpenSellOrder {
 
 export type MoonpaySellOrderResult =
   | MoonpayOpenSellOrder
+  /** MoonPay already has the deposit, and is paying or has paid out. */
+  | { type: 'paid'; status: string }
   /** The order exists but no longer takes a deposit. */
   | { type: 'notOpen'; status: string }
-  /** The order could not be read, or names an asset Edge cannot pin down. */
-  | { type: 'error'; reason: 'lookupFailed' | 'notFound' | 'unknownAsset' }
+  /**
+   * The order could not be read, was not opened from this account, or names
+   * an asset Edge cannot pin down.
+   */
+  | {
+      type: 'error'
+      reason: 'lookupFailed' | 'notFound' | 'notOwned' | 'unknownAsset'
+    }
+
+/**
+ * Make the `externalTransactionId` for a sell widget about to open, and save
+ * it to the account so `fetchMoonpaySellOrder` accepts the order it creates.
+ * MoonPay returns the id with the order, and nobody else can know it, so it
+ * proves the order was started from this account.
+ */
+export const makeMoonpayExternalTransactionId = async (
+  account: EdgeAccount
+): Promise<string> => {
+  const externalTransactionId = v4()
+  await account.dataStore.setItem(
+    MOONPAY_SELL_ORDER_STORE_ID,
+    externalTransactionId,
+    JSON.stringify({ created: new Date().toISOString() })
+  )
+  return externalTransactionId
+}
+
+const isOwnExternalTransactionId = async (
+  account: EdgeAccount,
+  externalTransactionId: string | null | undefined
+): Promise<boolean> => {
+  if (externalTransactionId == null || externalTransactionId === '')
+    return false
+  try {
+    await account.dataStore.getItem(
+      MOONPAY_SELL_ORDER_STORE_ID,
+      externalTransactionId
+    )
+    return true
+  } catch (error: unknown) {
+    return false
+  }
+}
 
 /**
  * Look a MoonPay sell order up by id and report what, if anything, the user
@@ -73,8 +127,11 @@ export type MoonpaySellOrderResult =
  * A "Send with Edge" link carries the deposit address, amount and currency in
  * a URL anybody can write, and names the currency by a ticker that several
  * networks share. The order itself is the authority, so every value in the
- * result comes from MoonPay's response and none from the link. Never throws:
- * a failure of any kind is an `error` result, and the caller sends nothing.
+ * result comes from MoonPay's response and none from the link. The order id
+ * alone proves nothing, since anyone can open a sell and share its id, so an
+ * order counts only when it carries an `externalTransactionId` this account
+ * saved with `makeMoonpayExternalTransactionId`. Never throws: a failure of
+ * any kind is an `error` result, and the caller sends nothing.
  */
 export const fetchMoonpaySellOrder = async (
   account: EdgeAccount,
@@ -101,7 +158,12 @@ export const fetchMoonpaySellOrder = async (
     return { type: 'error', reason: 'lookupFailed' }
   }
 
+  if (!(await isOwnExternalTransactionId(account, order.externalTransactionId)))
+    return { type: 'error', reason: 'notOwned' }
+
   const { status } = order
+  if (MOONPAY_SELL_STATUSES_PAID.includes(status))
+    return { type: 'paid', status }
   if (status !== MOONPAY_SELL_STATUS_OPEN) return { type: 'notOpen', status }
 
   const { baseCurrency, baseCurrencyAmount, depositWallet } = order

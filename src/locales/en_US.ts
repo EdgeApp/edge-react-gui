@@ -1226,6 +1226,12 @@ const strings = {
   payment_redirect_order_closed_title: 'Sell Order Closed',
   payment_redirect_order_closed_message:
     'This sell order is no longer waiting for a deposit, so nothing was sent. Start a new sell order to continue.',
+  payment_redirect_order_paid_title: 'Deposit Already Sent',
+  payment_redirect_order_paid_message:
+    'The deposit for this sell order was already sent. Edge did not open a second send. Check with the provider for the payout status.',
+  payment_redirect_not_owned_title: 'Sell Order Not Recognized',
+  payment_redirect_not_owned_message:
+    'Edge could not match this sell order to your account. Nothing was sent. Start a new sell order in Edge to continue.',
   payment_redirect_unverified_title: 'Unable to Verify Sell Order',
   payment_redirect_unverified_message:
     'Edge could not confirm this sell order with the provider, so nothing was sent. Check your connection and open the link again, or start a new sell order.',

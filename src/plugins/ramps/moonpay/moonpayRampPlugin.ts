@@ -77,6 +77,7 @@ import {
 } from './moonpayRampTypes'
 import {
   createMoonpayMemo,
+  makeMoonpayExternalTransactionId,
   makeMoonpaySellReceiptUrl,
   MOONPAY_DISPLAY_NAME,
   MOONPAY_SUPPORT_EMAIL
@@ -929,6 +930,11 @@ export const moonpayRampPlugin: RampPluginFactory = (
                 const urlObj = new URL(`${sellWidgetUrl}?`, true)
                 const queryObj: MoonpaySellWidgetQueryParams = {
                   apiKey,
+                  // Lets a "Send with Edge" link for this order prove it
+                  // came from this account:
+                  externalTransactionId: await makeMoonpayExternalTransactionId(
+                    account
+                  ),
                   refundWalletAddress: receiveAddress.publicAddress,
                   quoteCurrencyCode: fiatCurrencyObj.code,
                   paymentMethod,

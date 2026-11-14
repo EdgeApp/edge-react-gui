@@ -3,6 +3,7 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import {
   fetchMoonpaySellOrder,
+  makeMoonpayExternalTransactionId,
   makeMoonpaySellAction,
   type MoonpayOpenSellOrder
 } from '../../../plugins/ramps/moonpay/moonpaySellOrder'
@@ -10,8 +11,31 @@ import {
 const USDC_CONTRACT = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 const USDC_TOKEN_ID = 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
 
+const OWN_EXTERNAL_ID = 'own-external-id'
+
+/** A synced dataStore that holds only what was saved to it. */
+const makeDataStore = (
+  saved: string[] = []
+): { items: Map<string, string>; store: EdgeAccount['dataStore'] } => {
+  const items = new Map<string, string>(
+    saved.map(id => [`moonpay-sell-orders/${id}`, '{}'])
+  )
+  const store = {
+    getItem: async (storeId: string, itemId: string) => {
+      const item = items.get(`${storeId}/${itemId}`)
+      if (item == null) throw new Error(`No item ${itemId}`)
+      return item
+    },
+    setItem: async (storeId: string, itemId: string, value: string) => {
+      items.set(`${storeId}/${itemId}`, value)
+    }
+  } as unknown as EdgeAccount['dataStore']
+  return { items, store }
+}
+
 // Only the parts of an account the lookup reads:
 const fakeAccount = {
+  dataStore: makeDataStore([OWN_EXTERNAL_ID]).store,
   currencyConfig: {
     arbitrum: { allTokens: {} },
     base: { allTokens: {} },
@@ -38,11 +62,16 @@ interface FakeOrder {
   contractAddress?: string | null
   walletAddress?: string
   walletAddressTag?: string | null
+  externalTransactionId?: string | null
 }
 
 const makeOrder = (order: FakeOrder = {}): unknown => ({
   id: 'order-1',
   status: order.status ?? 'waitingForDeposit',
+  externalTransactionId:
+    order.externalTransactionId === undefined
+      ? OWN_EXTERNAL_ID
+      : order.externalTransactionId,
   baseCurrencyAmount: order.baseCurrencyAmount ?? 0.5,
   baseCurrency: {
     code: order.code ?? 'eth_arbitrum',
@@ -185,13 +214,61 @@ describe('fetchMoonpaySellOrder', () => {
     expect(result).toMatchObject({ type: 'open', exchangeAmount: '0.00212' })
   })
 
-  it('reports an order that no longer takes a deposit', async () => {
-    for (const status of ['failed', 'completed', 'pending']) {
+  it('tells a paid order apart from a closed one', async () => {
+    for (const status of ['completed', 'pending']) {
+      mockFetch(200, makeOrder({ status }))
+      expect(await fetchMoonpaySellOrder(fakeAccount, 'order-1', opts)).toEqual(
+        { type: 'paid', status }
+      )
+    }
+
+    for (const status of ['failed', 'someNewStatus']) {
       mockFetch(200, makeOrder({ status }))
       expect(await fetchMoonpaySellOrder(fakeAccount, 'order-1', opts)).toEqual(
         { type: 'notOpen', status }
       )
     }
+  })
+
+  it('refuses an order this account did not open', async () => {
+    // Another account's order, or one opened before the id was sent:
+    for (const externalTransactionId of ['someone-elses-id', null, '']) {
+      mockFetch(200, makeOrder({ externalTransactionId }))
+      expect(await fetchMoonpaySellOrder(fakeAccount, 'order-1', opts)).toEqual(
+        { type: 'error', reason: 'notOwned' }
+      )
+    }
+
+    // A closed order is refused before its status is reported:
+    mockFetch(
+      200,
+      makeOrder({ status: 'completed', externalTransactionId: 'other' })
+    )
+    expect(await fetchMoonpaySellOrder(fakeAccount, 'order-1', opts)).toEqual({
+      type: 'error',
+      reason: 'notOwned'
+    })
+  })
+
+  it('accepts the order a saved id was sent with', async () => {
+    const { items, store } = makeDataStore()
+    const account: EdgeAccount = { ...fakeAccount, dataStore: store }
+
+    const externalTransactionId = await makeMoonpayExternalTransactionId(
+      account
+    )
+
+    expect(externalTransactionId).toMatch(/^[0-9a-f-]{36}$/)
+    expect([...items.keys()]).toEqual([
+      `moonpay-sell-orders/${externalTransactionId}`
+    ])
+    mockFetch(200, makeOrder({ externalTransactionId }))
+    expect(await fetchMoonpaySellOrder(account, 'order-1', opts)).toMatchObject(
+      { type: 'open' }
+    )
+    expect(await makeMoonpayExternalTransactionId(account)).not.toBe(
+      externalTransactionId
+    )
   })
 
   it('reports an unknown order id', async () => {

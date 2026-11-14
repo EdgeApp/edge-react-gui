@@ -3,6 +3,7 @@ import { asMaybe } from 'cleaners'
 import type {
   EdgeAccount,
   EdgeAssetAction,
+  EdgeCurrencyWallet,
   EdgeParsedUri,
   EdgeSpendInfo,
   EdgeTokenId
@@ -570,22 +571,15 @@ async function handleLink(
       )
 
       if (order.type !== 'open') {
-        await Airship.show<'ok' | undefined>(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={
-              order.type === 'notOpen'
-                ? lstrings.payment_redirect_order_closed_title
-                : lstrings.payment_redirect_unverified_title
-            }
-            message={
-              order.type === 'notOpen'
-                ? lstrings.payment_redirect_order_closed_message
-                : lstrings.payment_redirect_unverified_message
-            }
-            buttons={{ ok: { label: lstrings.string_ok } }}
-          />
-        ))
+        await showPaymentRedirectNotice(
+          order.type === 'paid'
+            ? 'paid'
+            : order.type === 'notOpen'
+            ? 'closed'
+            : order.reason === 'notOwned'
+            ? 'notOwned'
+            : 'unverified'
+        )
         break
       }
 
@@ -611,6 +605,16 @@ async function handleLink(
       if (result?.type !== 'wallet') return false
       const wallet = account.currencyWallets[result.walletId]
       if (wallet == null) break
+
+      // MoonPay can still report the order as waiting for a while after the
+      // deposit goes out, and the emailed link must not offer a second send:
+      if (
+        transactionId != null &&
+        (await hasSellDeposit(wallet, tokenId, transactionId))
+      ) {
+        await showPaymentRedirectNotice('paid')
+        break
+      }
 
       const { multiplier } = getExchangeDenom(wallet.currencyConfig, tokenId)
       const nativeAmount = floor(mul(exchangeAmount, multiplier), 0)
@@ -963,6 +967,71 @@ async function handleLink(
  * when there is nothing to pre-select, and null when the user dismissed the
  * picker, which callers treat as "do not navigate".
  */
+const PAYMENT_REDIRECT_NOTICES = {
+  paid: {
+    title: lstrings.payment_redirect_order_paid_title,
+    message: lstrings.payment_redirect_order_paid_message
+  },
+  closed: {
+    title: lstrings.payment_redirect_order_closed_title,
+    message: lstrings.payment_redirect_order_closed_message
+  },
+  notOwned: {
+    title: lstrings.payment_redirect_not_owned_title,
+    message: lstrings.payment_redirect_not_owned_message
+  },
+  unverified: {
+    title: lstrings.payment_redirect_unverified_title,
+    message: lstrings.payment_redirect_unverified_message
+  }
+}
+
+/** Tell the user why a sell link opened no Send scene. */
+async function showPaymentRedirectNotice(
+  notice: keyof typeof PAYMENT_REDIRECT_NOTICES
+): Promise<void> {
+  const { title, message } = PAYMENT_REDIRECT_NOTICES[notice]
+  await Airship.show<'ok' | undefined>(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={title}
+      message={message}
+      buttons={{ ok: { label: lstrings.string_ok } }}
+    />
+  ))
+}
+
+/**
+ * True when the wallet's recent transactions include a deposit already
+ * recorded for this sell order. A failed read counts as no deposit, since the
+ * provider's order status already gates the send.
+ */
+async function hasSellDeposit(
+  wallet: EdgeCurrencyWallet,
+  tokenId: EdgeTokenId,
+  orderId: string
+): Promise<boolean> {
+  const stream = wallet.streamTransactions({ batchSize: 50, tokenId })
+  try {
+    const result = await stream.next()
+    if (result.done === true) return false
+    return result.value.some(
+      tx =>
+        tx.savedAction?.actionType === 'fiat' &&
+        tx.savedAction.orderId === orderId
+    )
+  } catch (error: unknown) {
+    console.warn(`Reading recent transactions failed: ${String(error)}`)
+    return false
+  } finally {
+    if (stream.return != null) {
+      await stream.return().catch((error: unknown) => {
+        console.warn(`Closing the transaction stream failed: ${String(error)}`)
+      })
+    }
+  }
+}
+
 async function pickLinkedWallet(
   account: EdgeAccount,
   // Taken from `pickWallet` rather than named directly, so this follows the
