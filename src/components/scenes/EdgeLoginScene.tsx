@@ -170,8 +170,7 @@ export const EdgeLoginScene: React.FC<Props> = props => {
  * Follows the OS text size, unlike the rest of the app, and wraps rather than
  * shrinks. A person who needs large text must still be able to read the warning.
  * The cap keeps the title on one line and, on larger phones, the whole warning
- * above the buttons, since Grant Full Access unlocks whether or not they
- * scrolled to the rest of it.
+ * above the buttons.
  */
 const ScalableText: React.FC<{
   children: string
