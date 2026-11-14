@@ -60,6 +60,18 @@ export interface IntercomChatOptions {
    * the user lands if the Messenger cannot load.
    */
   siteUri: string
+  /**
+   * The Lock ID of a device waiting for authorization, sent alongside the app
+   * details. Without one, the chat clears any Lock ID an earlier chat left.
+   */
+  lockId?: string
+  /**
+   * The user's first message, sent for them once the Messenger opens, so
+   * support sees the problem before the user types anything.
+   */
+  message?: string
+  /** Called once the page has pressed send on `message`. */
+  onMessageSent?: () => void
 }
 
 /**
@@ -78,7 +90,15 @@ interface Props extends IntercomChatOptions {
 }
 
 export const IntercomChatModal: React.FC<Props> = props => {
-  const { bridge, appId, apiBase = DEFAULT_INTERCOM_API_BASE, siteUri } = props
+  const {
+    bridge,
+    appId,
+    apiBase = DEFAULT_INTERCOM_API_BASE,
+    lockId,
+    message,
+    onMessageSent,
+    siteUri
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const { height: windowHeight } = useWindowDimensions()
@@ -92,9 +112,14 @@ export const IntercomChatModal: React.FC<Props> = props => {
   const source = React.useMemo(
     () => ({
       baseUrl: siteUri,
-      html: getIntercomChatHtml(appId, apiBase, getAppAttributes())
+      html: getIntercomChatHtml(
+        appId,
+        apiBase,
+        { ...getAppAttributes(), edge_lock_id: lockId ?? null },
+        message
+      )
     }),
-    [apiBase, appId, siteUri]
+    [apiBase, appId, lockId, message, siteUri]
   )
 
   // The modal stays mounted through its close animation, so a late load
@@ -129,6 +154,9 @@ export const IntercomChatModal: React.FC<Props> = props => {
         break
       case 'hide':
         handleClose()
+        break
+      case 'sent':
+        onMessageSent?.()
         break
       case 'show':
         setIsChatVisible(true)
@@ -249,22 +277,33 @@ function getAppAttributes(): Record<string, string> {
 
 /**
  * Builds the page that boots the Messenger. Intercom treats settings it doesn't
- * reserve as custom attributes on the visitor.
+ * reserve as custom attributes on the visitor, and a null clears one.
+ *
+ * The attributes go out as an update once the Messenger shows, so every chat
+ * refreshes them, even for a returning visitor whose boot settings Intercom
+ * can ignore. The page boots without them, because Intercom drops an update
+ * that matches the boot settings.
+ *
+ * Intercom's `showNewMessage` ignores its prefill text once Fin answers the
+ * workspace, so a message goes in through the composer itself. The Messenger
+ * frame shares this page's origin, so the page can reach into it. If Intercom
+ * changes that markup, the composer just opens empty.
  */
 export function getIntercomChatHtml(
   appId: string,
   apiBase: string,
-  attributes: Record<string, string>
+  attributes: Record<string, string | null>,
+  message?: string
 ): string {
   const settings = {
-    ...attributes,
     api_base: apiBase,
     app_id: appId,
     hide_default_launcher: true
   }
 
   // Stops a value from closing the script tag early:
-  const settingsJson = JSON.stringify(settings).replace(/</g, '\\u003c')
+  const toScript = (value: unknown): string =>
+    JSON.stringify(value).replace(/</g, '\\u003c')
   const widgetUri = `https://widget.intercom.io/widget/${encodeURIComponent(
     appId
   )}`
@@ -279,13 +318,40 @@ export function getIntercomChatHtml(
       function post(message) {
         window.ReactNativeWebView.postMessage(message)
       }
-      window.intercomSettings = ${settingsJson}
+      window.intercomSettings = ${toScript(settings)}
+      var attributes = ${toScript(attributes)}
+      var message = ${toScript(message ?? null)}
+      var isShown = false
+      function sendMessage(triesLeft) {
+        var frame = document.querySelector('iframe[name="intercom-messenger-frame"]')
+        var doc = frame == null ? null : frame.contentDocument
+        var composer = doc == null ? null : doc.querySelector('[data-testid="rich-text-editor-content"]')
+        if (composer == null) {
+          if (triesLeft > 0) setTimeout(function () { sendMessage(triesLeft - 1) }, 100)
+          return
+        }
+        composer.focus()
+        doc.execCommand('insertText', false, message)
+        // The send button enables once the composer sees the text:
+        setTimeout(function () {
+          var button = doc.querySelector('.intercom-composer-send-button')
+          if (button == null) return
+          button.click()
+          post('sent')
+        }, 300)
+      }
       var Intercom = function () {
         Intercom.q.push(arguments)
       }
       Intercom.q = []
       window.Intercom = Intercom
-      Intercom('onShow', function () { post('show') })
+      Intercom('onShow', function () {
+        post('show')
+        if (isShown) return
+        isShown = true
+        Intercom('update', attributes)
+        if (message != null) sendMessage(100)
+      })
       Intercom('onHide', function () { post('hide') })
       // Starts on a new message, unless a conversation is still open, in which
       // case the Messenger goes back to that:
