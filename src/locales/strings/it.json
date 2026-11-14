@@ -166,6 +166,7 @@
   "send_address_other_network_1s": "Questo indirizzo è su un'altra rete. Questo invio può andare solo a un indirizzo su %1$s.",
   "send_address_unrecognized_1s": "Questo indirizzo non corrisponde a nessuna rete a cui %1$s può inviare da questo portafoglio.",
   "send_recipient_network_changed_1s": "Rete di destinazione modificata in %1$s.",
+  "send_check_recipient_network_1s": "Make sure the recipient is on the %1$s network.",
   "send_address_no_network_selected": "Nessuna rete è stata selezionata, quindi l'indirizzo non è stato aggiunto.",
   "fragment_send_subtitle": "Invia",
   "fragment_send_myself": "Me stesso",
