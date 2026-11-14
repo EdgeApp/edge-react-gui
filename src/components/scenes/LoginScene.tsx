@@ -181,7 +181,8 @@ export const LoginScene: React.FC<Props> = props => {
 
   // A second tap while the chat is open must not send the message again:
   const isChatOpen = React.useRef(false)
-  // Reopening the chat shows the message already sent, so it goes out once:
+  // Reopening the chat shows the message already sent, so it goes out once.
+  // Only a chat that pressed send counts, so a chat closed early retries:
   const sentMessage = React.useRef<string | undefined>(undefined)
 
   const handleContactSupport = useHandler(
@@ -196,14 +197,16 @@ export const LoginScene: React.FC<Props> = props => {
           ? lstrings.help_live_chat_authorize_device
           : sprintf(lstrings.help_live_chat_authorize_device_1s, lockId)
       const isNewMessage = message !== sentMessage.current
-      sentMessage.current = message
       try {
         await showIntercomChatModal({
           appId: intercomAppId,
           apiBase: intercomApiBase,
           siteUri: supportChatSite,
           lockId,
-          message: isNewMessage ? message : undefined
+          message: isNewMessage ? message : undefined,
+          onMessageSent: () => {
+            sentMessage.current = message
+          }
         })
       } finally {
         isChatOpen.current = false
