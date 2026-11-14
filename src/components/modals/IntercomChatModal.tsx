@@ -70,6 +70,8 @@ export interface IntercomChatOptions {
    * support sees the problem before the user types anything.
    */
   message?: string
+  /** Called once the page has pressed send on `message`. */
+  onMessageSent?: () => void
 }
 
 /**
@@ -94,6 +96,7 @@ export const IntercomChatModal: React.FC<Props> = props => {
     apiBase = DEFAULT_INTERCOM_API_BASE,
     lockId,
     message,
+    onMessageSent,
     siteUri
   } = props
   const theme = useTheme()
@@ -151,6 +154,9 @@ export const IntercomChatModal: React.FC<Props> = props => {
         break
       case 'hide':
         handleClose()
+        break
+      case 'sent':
+        onMessageSent?.()
         break
       case 'show':
         setIsChatVisible(true)
@@ -329,7 +335,9 @@ export function getIntercomChatHtml(
         // The send button enables once the composer sees the text:
         setTimeout(function () {
           var button = doc.querySelector('.intercom-composer-send-button')
-          if (button != null) button.click()
+          if (button == null) return
+          button.click()
+          post('sent')
         }, 300)
       }
       var Intercom = function () {
