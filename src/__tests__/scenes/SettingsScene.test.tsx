@@ -202,4 +202,29 @@ describe('SettingsScene', () => {
       rendered.unmount()
     })
   })
+
+  it('saves the sliders-as-buttons switch', async () => {
+    const developerState: FakeState = {
+      ...mockState,
+      ui: { settings: { ...initialSettings, developerModeOn: true } }
+    }
+    const write = jest
+      .spyOn(DeviceSettingsActions, 'writeSlidersAsButtons')
+      .mockResolvedValue(undefined)
+
+    const rendered = render(
+      <FakeProviders initialState={developerState}>
+        <SettingsScene
+          {...fakeEdgeAppSceneProps('settingsOverview', undefined)}
+        />
+      </FakeProviders>
+    )
+    fireEvent.press(
+      rendered.getByText(lstrings.settings_developer_options_sliders_as_buttons)
+    )
+    await waitFor(() => {
+      expect(write).toHaveBeenCalledWith(true)
+    })
+    rendered.unmount()
+  })
 })
