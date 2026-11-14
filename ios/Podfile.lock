@@ -1,7 +1,7 @@
 PODS:
   - disklet (0.6.0):
     - React
-  - edge-core-js (2.55.0):
+  - edge-core-js (2.55.1):
     - React-Core
   - edge-currency-accountbased (4.107.1):
     - React-Core
@@ -3232,7 +3232,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
-  edge-core-js: ace5dd06953f17b43c866294c284b0e4fb09bb7f
+  edge-core-js: 49d06db12155ab91760eb0be3e91cb7b76634fe2
   edge-currency-accountbased: b79a2a5cc60b122535191a1e9f11c809b09cc132
   edge-currency-plugins: 07e55be0646b6690b66cdfc4b3531ec0221b5446
   edge-exchange-plugins: d001f9d05d5819907df3cc337f41bf52f98e2fc5
