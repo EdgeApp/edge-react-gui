@@ -3,6 +3,9 @@ import * as React from 'react'
 import {
   ActivityIndicator,
   Image,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   ScrollView,
   type TextStyle,
   View
@@ -44,6 +47,16 @@ export const EdgeLoginScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const [lobby, setLobby] = React.useState<EdgeLobby | undefined>(undefined)
   const [secondsLeft, setSecondsLeft] = React.useState(APPROVE_DELAY_SECONDS)
+  const [warningSeen, setWarningSeen] = React.useState(false)
+
+  // Where the end of the warning sits relative to the visible scroll area:
+  const scrollRef = React.useRef<ScrollView>(null)
+  const scrollMetrics = React.useRef({
+    flashed: false,
+    offset: 0,
+    viewHeight: 0,
+    warningBottom: 0
+  })
 
   useAsyncEffect(
     async () => {
@@ -68,16 +81,50 @@ export const EdgeLoginScene: React.FC<Props> = props => {
     'EdgeLoginScene'
   )
 
-  // The countdown starts once the warning is on screen:
+  const checkWarningSeen = useHandler(() => {
+    const metrics = scrollMetrics.current
+    const { offset, viewHeight, warningBottom } = metrics
+    if (warningSeen || viewHeight <= 0 || warningBottom <= 0) return
+    if (offset + viewHeight >= warningBottom - 1) {
+      setWarningSeen(true)
+    } else if (!metrics.flashed) {
+      // The scroll bar stays hidden until touched, so point at it once:
+      metrics.flashed = true
+      scrollRef.current?.flashScrollIndicators()
+    }
+  })
+
+  const handleScrollLayout = useHandler((event: LayoutChangeEvent) => {
+    scrollMetrics.current.viewHeight = event.nativeEvent.layout.height
+    checkWarningSeen()
+  })
+
+  const handleScroll = useHandler(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      scrollMetrics.current.offset = event.nativeEvent.contentOffset.y
+      checkWarningSeen()
+    }
+  )
+
+  // The warning only renders once the request loads, so a zero height means
+  // there is nothing on screen to read yet:
+  const handleWarningLayout = useHandler((event: LayoutChangeEvent) => {
+    const { height, y } = event.nativeEvent.layout
+    scrollMetrics.current.warningBottom = height > 0 ? y + height : 0
+    checkWarningSeen()
+  })
+
+  // The countdown starts once the end of the warning has been on screen,
+  // so large text on a small phone still gets the full time to read it:
   React.useEffect(() => {
-    if (lobby == null || secondsLeft <= 0) return
+    if (lobby == null || !warningSeen || secondsLeft <= 0) return
     const timeout = setTimeout(() => {
       setSecondsLeft(secondsLeft - 1)
     }, 1000)
     return () => {
       clearTimeout(timeout)
     }
-  }, [lobby, secondsLeft])
+  }, [lobby, secondsLeft, warningSeen])
 
   const handleAccept = useHandler(async () => {
     if (lobby?.loginRequest == null) return
@@ -112,8 +159,12 @@ export const EdgeLoginScene: React.FC<Props> = props => {
   return (
     <SceneWrapper>
       <ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
+        scrollEventThrottle={16}
+        onLayout={handleScrollLayout}
+        onScroll={handleScroll}
       >
         <View style={styles.topArea}>
           <CrossFade activeKey={lobby == null ? 'loader' : 'logo'}>
@@ -137,27 +188,32 @@ export const EdgeLoginScene: React.FC<Props> = props => {
             </View>
           </CrossFade>
         </View>
-        <EdgeAnim
-          enter={{ type: 'fadeIn', delay: 125 }}
-          visible={lobby != null}
-        >
-          <EdgeCard gradientBackground={theme.cardGradientWarning}>
-            <View style={styles.warning}>
-              <View style={styles.warningTitleRow}>
-                <WarningIcon color={theme.primaryText} size={theme.rem(1.5)} />
-                <ScalableText style={styles.warningTitle}>
-                  {lstrings.edge_login_warning_title}
+        <View testID="edgeLoginWarning" onLayout={handleWarningLayout}>
+          <EdgeAnim
+            enter={{ type: 'fadeIn', delay: 125 }}
+            visible={lobby != null}
+          >
+            <EdgeCard gradientBackground={theme.cardGradientWarning}>
+              <View style={styles.warning}>
+                <View style={styles.warningTitleRow}>
+                  <WarningIcon
+                    color={theme.primaryText}
+                    size={theme.rem(1.5)}
+                  />
+                  <ScalableText style={styles.warningTitle}>
+                    {lstrings.edge_login_warning_title}
+                  </ScalableText>
+                </View>
+                <ScalableText style={styles.warningText}>
+                  {lstrings.edge_login_warning_irreversible}
+                </ScalableText>
+                <ScalableText style={styles.warningEmphasis}>
+                  {lstrings.edge_login_warning_do_not_approve}
                 </ScalableText>
               </View>
-              <ScalableText style={styles.warningText}>
-                {lstrings.edge_login_warning_irreversible}
-              </ScalableText>
-              <ScalableText style={styles.warningEmphasis}>
-                {lstrings.edge_login_warning_do_not_approve}
-              </ScalableText>
-            </View>
-          </EdgeCard>
-        </EdgeAnim>
+            </EdgeCard>
+          </EdgeAnim>
+        </View>
       </ScrollView>
       <View style={styles.buttons}>
         <EdgeAnim

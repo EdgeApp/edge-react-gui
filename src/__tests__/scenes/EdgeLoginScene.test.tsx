@@ -5,8 +5,9 @@ import {
   render,
   type RenderResult
 } from '@testing-library/react-native'
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
+import { ScrollView } from 'react-native'
 
 import { EdgeLoginScene } from '../../components/scenes/EdgeLoginScene'
 import { lstrings } from '../../locales/strings'
@@ -35,14 +36,31 @@ const advanceSeconds = async (seconds: number): Promise<void> => {
   }
 }
 
-const renderLoadedScene = async (
-  approve: () => Promise<void>
+const fakeLobby = (approve: () => Promise<void>): EdgeLobby =>
+  ({
+    loginRequest: { approve, displayName: 'Fake App' }
+  } as unknown as EdgeLobby)
+
+/** Lays out a 500-point scroll area with the warning ending at `bottom`. */
+const layOutWarning = (rendered: RenderResult, bottom: number): void => {
+  fireEvent(rendered.UNSAFE_getByType(ScrollView), 'layout', {
+    nativeEvent: { layout: { height: 500, width: 320, x: 0, y: 0 } }
+  })
+  fireEvent(rendered.getByTestId('edgeLoginWarning'), 'layout', {
+    nativeEvent: { layout: { height: 200, width: 320, x: 0, y: bottom - 200 } }
+  })
+}
+
+const scrollTo = (rendered: RenderResult, offset: number): void => {
+  fireEvent.scroll(rendered.UNSAFE_getByType(ScrollView), {
+    nativeEvent: { contentOffset: { x: 0, y: offset } }
+  })
+}
+
+const renderScene = async (
+  fetchLobby: () => Promise<EdgeLobby>
 ): Promise<RenderResult> => {
-  const fakeAccount = {
-    fetchLobby: async () => ({
-      loginRequest: { approve, displayName: 'Fake App' }
-    })
-  } as unknown as EdgeAccount
+  const fakeAccount = { fetchLobby } as unknown as EdgeAccount
   const rootState: FakeState = {
     ...fakeRootState,
     core: { account: fakeAccount }
@@ -56,6 +74,15 @@ const renderLoadedScene = async (
     </FakeProviders>
   )
   await flush()
+  return rendered
+}
+
+/** Renders the scene with a warning that fits above the buttons. */
+const renderLoadedScene = async (
+  approve: () => Promise<void>
+): Promise<RenderResult> => {
+  const rendered = await renderScene(async () => fakeLobby(approve))
+  layOutWarning(rendered, 400)
   return rendered
 }
 
@@ -110,6 +137,49 @@ describe('EdgeLoginScene', () => {
     await flush()
 
     expect(approve).toHaveBeenCalledTimes(1)
+    rendered.unmount()
+  })
+
+  it('counts whole seconds from when the request loads', async () => {
+    let resolveLobby = (lobby: EdgeLobby): void => {}
+    const rendered = await renderScene(
+      async () =>
+        await new Promise<EdgeLobby>(resolve => {
+          resolveLobby = resolve
+        })
+    )
+
+    await advanceSeconds(3)
+    resolveLobby(fakeLobby(async () => {}))
+    await flush()
+    layOutWarning(rendered, 400)
+    rendered.getByText('Grant Full Access (5)')
+
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(999)
+    })
+    rendered.getByText('Grant Full Access (5)')
+    await act(async () => {
+      await jest.advanceTimersByTimeAsync(1)
+    })
+    rendered.getByText('Grant Full Access (4)')
+    rendered.unmount()
+  })
+
+  it('waits for the end of a tall warning to scroll into view', async () => {
+    const rendered = await renderScene(async () => fakeLobby(async () => {}))
+    layOutWarning(rendered, 800)
+
+    await advanceSeconds(5)
+    rendered.getByText('Grant Full Access (5)')
+
+    scrollTo(rendered, 200)
+    await advanceSeconds(1)
+    rendered.getByText('Grant Full Access (5)')
+
+    scrollTo(rendered, 300)
+    await advanceSeconds(1)
+    rendered.getByText('Grant Full Access (4)')
     rendered.unmount()
   })
 
