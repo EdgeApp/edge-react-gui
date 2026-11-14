@@ -127,6 +127,7 @@ export const WalletRestoreCard: React.FC<Props> = props => {
             false: theme.toggleButtonOff,
             true: theme.toggleButton
           }}
+          style={styles.switch}
           value={isSelected}
           onValueChange={handlePress}
         />
@@ -146,6 +147,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconContainer: {
     marginRight: theme.rem(1)
+  },
+  switch: {
+    // The iOS Switch defaults to `alignSelf: 'flex-start'`, which overrides
+    // the container's `alignItems`:
+    alignSelf: 'center'
   },
   textContainer: {
     flexDirection: 'column',
