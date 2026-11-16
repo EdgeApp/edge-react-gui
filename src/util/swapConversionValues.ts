@@ -1,15 +1,17 @@
 import type { EdgeSwapQuote } from 'edge-core-js'
 
 import { CryptoAmount } from './CryptoAmount'
-import type { SwapConversionValues } from './tracking'
+import type { SwapConversionValues, SwapMode } from './tracking'
 
 /**
  * Builds the conversion values a successful swap logs, from the quote the
- * user approved and the order id the provider returned.
+ * user approved, the order id the provider returned, and the flow that
+ * placed the order.
  */
 export const makeSwapConversionValues = (
   quote: EdgeSwapQuote,
-  orderId: string | undefined
+  orderId: string | undefined,
+  swapMode: SwapMode
 ): SwapConversionValues => {
   const { fromNativeAmount, toNativeAmount, pluginId, request } = quote
   const { fromWallet, fromTokenId, toWallet, toTokenId } = request
@@ -31,6 +33,7 @@ export const makeSwapConversionValues = (
       (fromTokenId == null ||
         fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
     orderId,
-    swapProviderId: pluginId
+    swapProviderId: pluginId,
+    swapMode
   }
 }

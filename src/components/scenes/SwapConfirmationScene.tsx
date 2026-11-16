@@ -357,7 +357,8 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
           logEvent('Exchange_Shift_Success', {
             conversionValues: makeSwapConversionValues(
               selectedQuote,
-              result.orderId
+              result.orderId,
+              isStealth ? 'stealthSwap' : 'swap'
             )
           })
         )
