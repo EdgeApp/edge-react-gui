@@ -21,6 +21,7 @@ import {
   type EdgeMetadata,
   type EdgeParsedUri,
   type EdgeSwapPlugin,
+  type EdgeSwapResult,
   type EdgeTokenId,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld,
@@ -56,6 +57,8 @@ import fakeUser from '../../util/fake/fakeUserDump.json'
 import { asHoudiniChains, type HoudiniChains } from '../../util/houdiniChains'
 import { withStatedAsset } from '../../util/paymentUri'
 import { getStealthProviderName } from '../../util/stealthSwap'
+import type { SwapMode } from '../../util/tracking'
+import * as tracking from '../../util/tracking'
 
 jest.useRealTimers()
 
@@ -223,7 +226,11 @@ const ftmCurrencyInfo: EdgeCurrencyInfo = {
  * quotes the pair one to one instead, so the scene holds a live quote.
  */
 const quotedDestinations: EdgeAddress[][] = []
-const fakeHoudiniQuotes = { enabled: false }
+const fakeHoudiniQuotes: {
+  enabled: boolean
+  /** What an approval resolves to. With none, approving throws. */
+  result?: EdgeSwapResult
+} = { enabled: false }
 const fakeHoudiniPlugin: EdgeSwapPlugin = {
   swapInfo: { pluginId: 'houdini', displayName: 'Houdini', supportEmail: '' },
   async fetchSwapQuote(request) {
@@ -246,6 +253,7 @@ const fakeHoudiniPlugin: EdgeSwapPlugin = {
       },
       pluginId: fakeHoudiniPlugin.swapInfo.pluginId,
       approve: async () => {
+        if (fakeHoudiniQuotes.result != null) return fakeHoudiniQuotes.result
         throw new Error('The fake provider sends nothing')
       },
       close: async () => {}
@@ -431,6 +439,7 @@ describe('SendScene2 recipient network', () => {
   beforeEach(() => {
     mockShowToast.mockClear()
     fakeHoudiniQuotes.enabled = false
+    fakeHoudiniQuotes.result = undefined
   })
 
   interface RenderedSend {
@@ -483,6 +492,8 @@ describe('SendScene2 recipient network', () => {
     shows: (text: string) => boolean
     /** Whether the slider is shown and ready to slide. */
     sliderLive: () => boolean
+    /** Completes a slide on the live slider. */
+    slide: () => Promise<void>
     /** The notes under the Stealth Send toggle, top to bottom. */
     stealthNotes: () => string[]
     /** Taps the Stealth Send toggle. */
@@ -746,6 +757,15 @@ describe('SendScene2 recipient network', () => {
         rendered
           .UNSAFE_queryAllByType(SafeSlider)
           .some(slider => slider.props.disabled !== true),
+      slide: async () => {
+        const slider = rendered
+          .UNSAFE_queryAllByType(SafeSlider)
+          .find(candidate => candidate.props.disabled !== true)
+        if (slider == null) throw new Error('No live slider')
+        await act(async () => {
+          await slider.props.onSlidingComplete(() => {})
+        })
+      },
       stealthNotes: () =>
         rendered
           .UNSAFE_queryAllByType(StealthInfoText)
@@ -1294,6 +1314,58 @@ describe('SendScene2 recipient network', () => {
       const scene = await renderQuotedPaste(ZCASH_UNIFIED_ADDRESS, false)
       expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
       scene.unmount()
+    })
+
+    it('logs the swap mode on an approved order', async () => {
+      const logEvent = jest
+        .spyOn(tracking, 'logEvent')
+        .mockImplementation(() => () => undefined)
+      const cases: Array<[boolean, SwapMode]> = [
+        [false, 'swapSend'],
+        [true, 'stealthSwapSend']
+      ]
+      try {
+        for (const [stealth, swapMode] of cases) {
+          logEvent.mockClear()
+          const scene = await renderQuotedPaste(
+            ZCASH_TRANSPARENT_ADDRESS,
+            stealth
+          )
+          fakeHoudiniQuotes.result = {
+            orderId: 'order-1',
+            destinationAddress: ZCASH_TRANSPARENT_ADDRESS,
+            transaction: {
+              blockHeight: 0,
+              currencyCode: 'BTC',
+              date: 0,
+              isSend: true,
+              memos: [],
+              nativeAmount: '-100000000',
+              networkFee: '1',
+              networkFees: [],
+              ourReceiveAddresses: [],
+              signedTx: '',
+              tokenId: null,
+              txid: 'txid',
+              walletId: 'wallet'
+            }
+          }
+          await scene.slide()
+          expect(logEvent).toHaveBeenCalledWith(
+            'Exchange_Shift_Success',
+            expect.objectContaining({
+              conversionValues: expect.objectContaining({
+                orderId: 'order-1',
+                swapProviderId: 'houdini',
+                swapMode
+              })
+            })
+          )
+          scene.unmount()
+        }
+      } finally {
+        logEvent.mockRestore()
+      }
     })
   })
 

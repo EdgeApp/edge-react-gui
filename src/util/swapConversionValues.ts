@@ -4,6 +4,22 @@ import { CryptoAmount } from './CryptoAmount'
 import type { SwapConversionValues, SwapMode } from './tracking'
 
 /**
+ * The mode of an order placed from the Send scene. A private order that pays
+ * out the asset it spends is a Stealth Send, the same split the transaction
+ * list makes between Stealth Send and Stealth Swap & Send.
+ */
+export const getSendSwapMode = (
+  request: EdgeSwapQuote['request']
+): SwapMode => {
+  if (request.privacy !== 'required') return 'swapSend'
+  const sameAsset =
+    request.fromWallet.currencyInfo.pluginId ===
+      request.toWallet.currencyInfo.pluginId &&
+    request.fromTokenId === request.toTokenId
+  return sameAsset ? 'stealthSend' : 'stealthSwapSend'
+}
+
+/**
  * Builds the conversion values a successful swap logs, from the quote the
  * user approved, the order id the provider returned, and the flow that
  * placed the order.

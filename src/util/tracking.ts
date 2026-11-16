@@ -101,9 +101,16 @@ export interface CryptoConversionValues {
 /**
  * Which swap flow placed an order: a wallet-to-wallet swap from the Exchange
  * scene or a swap to an address from the Send scene, each with or without
- * Stealth. The reports server reads it to report each mode on its own.
+ * Stealth. A Stealth send that pays out the asset it spends is `stealthSend`,
+ * the flow the transaction list titles Stealth Send. The reports server reads
+ * it to report each mode on its own.
  */
-export type SwapMode = 'swap' | 'swapSend' | 'stealthSwap' | 'stealthSwapSend'
+export type SwapMode =
+  | 'swap'
+  | 'swapSend'
+  | 'stealthSwap'
+  | 'stealthSwapSend'
+  | 'stealthSend'
 
 /**
  * Analytics: Swap
