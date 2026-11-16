@@ -27,8 +27,8 @@ import type { ThunkAction } from '../../types/reduxTypes'
 import type { SwapTabSceneProps } from '../../types/routerTypes'
 import type { GuiSwapInfo } from '../../types/types'
 import { getSwapPluginIconUri } from '../../util/CdnUris'
-import { CryptoAmount } from '../../util/CryptoAmount'
 import { logActivity } from '../../util/logger'
+import { makeSwapConversionValues } from '../../util/swapConversionValues'
 import { getSwapErrorCategory } from '../../util/swapErrorCategory'
 import { logEvent } from '../../util/tracking'
 import { convertNativeToExchange, DECIMAL_PRECISION } from '../../util/utils'
@@ -355,26 +355,10 @@ export const SwapConfirmationScene: React.FC<Props> = (props: Props) => {
         // released if the user leaves the swap tab in the meantime.
         dispatch(
           logEvent('Exchange_Shift_Success', {
-            conversionValues: {
-              conversionType: 'swap',
-              destAmount: new CryptoAmount({
-                nativeAmount: toNativeAmount,
-                tokenId: toTokenId,
-                currencyConfig: toWallet.currencyConfig
-              }),
-              sourceAmount: new CryptoAmount({
-                nativeAmount: fromNativeAmount,
-                tokenId: fromTokenId,
-                currencyConfig: fromWallet.currencyConfig
-              }),
-              isBuiltInAsset:
-                (toTokenId == null ||
-                  toWallet.currencyConfig.builtinTokens[toTokenId] != null) &&
-                (fromTokenId == null ||
-                  fromWallet.currencyConfig.builtinTokens[fromTokenId] != null),
-              orderId: result.orderId,
-              swapProviderId: pluginId
-            }
+            conversionValues: makeSwapConversionValues(
+              selectedQuote,
+              result.orderId
+            )
           })
         )
 
