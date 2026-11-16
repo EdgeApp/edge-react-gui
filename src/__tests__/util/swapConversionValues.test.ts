@@ -5,7 +5,10 @@ import type {
   EdgeTokenId
 } from 'edge-core-js'
 
-import { makeSwapConversionValues } from '../../util/swapConversionValues'
+import {
+  getSendSwapMode,
+  makeSwapConversionValues
+} from '../../util/swapConversionValues'
 
 /**
  * Only `builtinTokens` is read before a CryptoAmount is asked for a display
@@ -77,5 +80,41 @@ describe('makeSwapConversionValues', () => {
     )
     expect(values.isBuiltInAsset).toBe(false)
     expect(values.orderId).toBeUndefined()
+  })
+})
+
+describe('getSendSwapMode', () => {
+  /** Only the plugin ids, token ids and privacy are read. */
+  const makeRequest = (
+    toPluginId: string,
+    toTokenId: EdgeTokenId,
+    privacy?: 'required'
+  ): EdgeSwapQuote['request'] =>
+    ({
+      fromWallet: { currencyInfo: { pluginId: 'bitcoin' } },
+      fromTokenId: null,
+      toWallet: { currencyInfo: { pluginId: toPluginId } },
+      toTokenId,
+      privacy
+    } as unknown as EdgeSwapQuote['request'])
+
+  it('names a transparent order Swap & Send', () => {
+    expect(getSendSwapMode(makeRequest('ethereum', null))).toBe('swapSend')
+  })
+
+  it('names a private cross-asset order Stealth Swap & Send', () => {
+    expect(getSendSwapMode(makeRequest('ethereum', null, 'required'))).toBe(
+      'stealthSwapSend'
+    )
+    // Same chain, different asset:
+    expect(getSendSwapMode(makeRequest('bitcoin', 'token', 'required'))).toBe(
+      'stealthSwapSend'
+    )
+  })
+
+  it('names a private same-asset order Stealth Send', () => {
+    expect(getSendSwapMode(makeRequest('bitcoin', null, 'required'))).toBe(
+      'stealthSend'
+    )
   })
 })

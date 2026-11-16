@@ -131,7 +131,12 @@ import {
   makeStealthSwapRequestOptions,
   STEALTH_SWAP_PLUGIN_ID
 } from '../../util/stealthSwap'
+import {
+  getSendSwapMode,
+  makeSwapConversionValues
+} from '../../util/swapConversionValues'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
+import { logEvent } from '../../util/tracking'
 import {
   convertTransactionFeeToDisplayFee,
   darkenHexColor,
@@ -3430,6 +3435,22 @@ const SendComponent: React.FC<Props> = props => {
         broadcastAttemptedRef.current = true
         try {
           const result = await liveQuote.approve()
+          // The order is paid at this point, so a tracking failure must not
+          // reach the failure handler below. The mode comes from the request
+          // the provider priced, so it names the route the order took:
+          try {
+            dispatch(
+              logEvent('Exchange_Shift_Success', {
+                conversionValues: makeSwapConversionValues(
+                  liveQuote,
+                  result.orderId,
+                  getSendSwapMode(liveQuote.request)
+                )
+              })
+            )
+          } catch (error: unknown) {
+            console.log(error)
+          }
           playSendSound().catch((error: unknown) => {
             console.log(error) // Fail quietly
           })

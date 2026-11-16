@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Swap success events name the swap mode, including Swap & Send from the send scene
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 
 ## 4.53.0 (staging)
