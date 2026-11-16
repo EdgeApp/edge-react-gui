@@ -11,7 +11,7 @@
 | Supersedes | - |
 | Related | [Asana: Deeplink - New format](https://app.asana.com/0/1215088146871429/1210180856778864) |
 
-<!-- tdd-code-fingerprint: e0f7ccb57aa72bb65107b01ed0d5a596fac1e958 -->
+<!-- tdd-code-fingerprint: de54f63457d8f8dd556e967dadd02580878d3b2a -->
 
 Code blocks cite their file on the `jon/deeplink-new-format` branch rather than a commit sha: the doc is folded into the branch's first commit, so every push re-slots it ahead of the code it quotes and orphans any sha pinned before that push. The branch ref resolves for the life of the review, and these links move to `develop` when the branch merges. Direction came from the task description (growth's campaign-tracking request) and the operator's ruling on it.
 
@@ -401,7 +401,7 @@ Both parameters are optional and may appear in either order:
 | `send` or `send?stealth=<anything else>` | as above | Send, no stealth param: the toggle follows the user's saved choice |
 | Any of the above, picker dismissed | modal, dismissed | nothing, caller unchanged |
 
-The saved choice changes only on a tap of the toggle, which writes it to the account's synced settings (`setStealthSendEnabled`, and `setStealthSwapEnabled` on the swap scene). The tap handler returns that write, so the switch row stays locked until it lands and a second tap cannot persist a stale value. A param or link never writes it.
+The saved choice changes on a tap of the toggle, which writes it to the account's synced settings (`setStealthSendEnabled`, and `setStealthSwapEnabled` on the swap scene). The tap handler returns that write, so the switch row stays locked until it lands and a second tap cannot persist a stale value. Closing the Send scene's swap-send sheet without agreeing also saves Stealth Send off, per [Saying that a swap is running](stealth-send-swap.md#saying-that-a-swap-is-running). A param or link never writes it.
 
 There are no create-wallet rows because a new wallet is empty and has nothing to send. Auto-pick ignores balance: a lone empty wallet opens Send, which shows its Wallet Empty modal. The picker is not narrowed to assets Stealth Send serves. Send opens with the recipient asset set to the source asset, coin or token, so the toggle arms only when Houdini can route that asset to itself privately. Otherwise it opens dimmed and off with its reason under it: an asset Houdini does not serve, or one it serves with no private route to itself. A tap toasts the reason and saves nothing, and the link's `stealth=true` arms the toggle once the user picks a wallet, token, or recipient asset that has a route, within the same visit. The link takes no `promoId`, since conversion attribution is per tab and Send is not one of the exchange tabs.
 

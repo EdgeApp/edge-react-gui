@@ -947,23 +947,6 @@ const SendComponent: React.FC<Props> = props => {
     initialMount.current = false
   }
 
-  /**
-   * The first time this scene turns into a swap, say so. The recipient is no
-   * longer paid by this wallet, and the two-transaction shape is the part a
-   * user cannot infer from the scene. Shown once per account; the swap
-   * provider names itself so the copy survives a provider change.
-   */
-  const stealthSwapConfig = account.swapConfig[STEALTH_SWAP_PLUGIN_ID]
-  React.useEffect(() => {
-    if (!swapSendActive || stealthSwapConfig == null) return
-    showSwapSendWarningModal(
-      account.disklet,
-      stealthSwapConfig.swapInfo.displayName
-    ).catch((err: unknown) => {
-      showError(err)
-    })
-  }, [account.disklet, stealthSwapConfig, swapSendActive])
-
   const pendingInsufficientFees = React.useRef<
     InsufficientFundsError | undefined
   >(undefined)
@@ -2034,6 +2017,25 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   /**
+   * Switches the recipient asset to another one on the chain already
+   * selected, which is paid at the same address, so the address and its tag
+   * stay. The quote and the receive amount priced the previous asset, so both
+   * go. `swapAfter` says whether the send is still a swap afterwards, which
+   * decides where the memo lands.
+   */
+  const keepRecipientOnAsset = (
+    nextAsset: EdgeAsset | undefined,
+    swapAfter: boolean
+  ): void => {
+    carryMemoAcrossModes(swapAfter)
+    setPickedRecipientAsset(nextAsset)
+    setSwapQuote(undefined)
+    setReceiveNativeAmount(undefined)
+    setGuaranteedSide('send')
+    setPinValue(undefined)
+  }
+
+  /**
    * Flips the Stealth toggle, or refuses to, returning whether it moved.
    * Shared by a tap and by seeding, so an entry request or a saved choice gets
    * the same quote and memo handling as a tap.
@@ -2077,6 +2079,67 @@ const SendComponent: React.FC<Props> = props => {
     visitStealthRef.current = !stealth
     await dispatch(setStealthSendEnabled(account, !stealth))
   })
+
+  /**
+   * Dismissing the swap-send sheet without agreeing backs the send out of its
+   * swap. Stealth turns off and is saved off, like a tap, so the sheet does
+   * not return on the next launch. A picked cross-asset recipient goes, since
+   * the swap is the only route to it. On the chain already selected the
+   * address and tag stay, as picking the source asset back does; on another
+   * chain the whole recipient is cleared. Stealth goes through the same
+   * provider and would raise the same sheet, so the rest of the visit does
+   * not arm it again from the saved choice.
+   */
+  const handleSwapSendDeclined = useHandler(async (): Promise<void> => {
+    visitStealthRef.current = false
+    const stealthTurnedOff = stealth && flipStealth()
+    if (crossAssetPicked) {
+      if (
+        pickKeepsRecipient({
+          source: { pluginId, tokenId },
+          destination: { pluginId: destPluginId, tokenId: destTokenId },
+          picked: undefined
+        })
+      ) {
+        keepRecipientOnAsset(
+          undefined,
+          swapSendAllowed && stealth && !stealthTurnedOff
+        )
+      } else {
+        handleResetSendTransaction(spendInfo.spendTargets[0])()
+      }
+    }
+    if (stealthTurnedOff) {
+      await dispatch(setStealthSendEnabled(account, false))
+    }
+  })
+
+  /**
+   * The first time this scene turns into a swap, say so. The recipient is no
+   * longer paid by this wallet, and the two-transaction shape is the part a
+   * user cannot infer from the scene. Agreeing is remembered per account;
+   * dismissing backs out of the swap. The swap provider names itself so the
+   * copy survives a provider change.
+   */
+  const stealthSwapConfig = account.swapConfig[STEALTH_SWAP_PLUGIN_ID]
+  React.useEffect(() => {
+    if (!swapSendActive || stealthSwapConfig == null) return
+    showSwapSendWarningModal(
+      account.disklet,
+      stealthSwapConfig.swapInfo.displayName
+    )
+      .then(async declined => {
+        if (declined) await handleSwapSendDeclined()
+      })
+      .catch((err: unknown) => {
+        showError(err)
+      })
+  }, [
+    account.disklet,
+    handleSwapSendDeclined,
+    stealthSwapConfig,
+    swapSendActive
+  ])
 
   /**
    * Arms the toggle when the visit or the saved choice asks for it and a tap
@@ -2204,19 +2267,15 @@ const SendComponent: React.FC<Props> = props => {
             picked: nextAsset
           })
         ) {
-          // Another asset on the chain already selected is paid at the same
-          // address, so the address and its tag stay. The quote and the
-          // receive amount priced the previous asset, so both go. Picking the
-          // source asset back ends the swap unless Stealth holds it:
+          // Picking the source asset back ends the swap unless Stealth holds
+          // it:
           const nextCrossAsset =
             nextAsset != null &&
             (nextAsset.pluginId !== pluginId || nextAsset.tokenId !== tokenId)
-          carryMemoAcrossModes(swapSendAllowed && (stealth || nextCrossAsset))
-          setPickedRecipientAsset(nextAsset)
-          setSwapQuote(undefined)
-          setReceiveNativeAmount(undefined)
-          setGuaranteedSide('send')
-          setPinValue(undefined)
+          keepRecipientOnAsset(
+            nextAsset,
+            swapSendAllowed && (stealth || nextCrossAsset)
+          )
           return
         }
         // A new destination chain invalidates the entered address and tag, so
