@@ -50,7 +50,7 @@ const makeQuote = (
 describe('makeSwapConversionValues', () => {
   it('carries the quoted amounts, provider and order id', () => {
     const quote = makeQuote('usdc', null)
-    const values = makeSwapConversionValues(quote, 'order-1')
+    const values = makeSwapConversionValues(quote, 'order-1', 'stealthSwap')
 
     expect(values.conversionType).toBe('swap')
     expect(values.sourceAmount.nativeAmount).toBe('1000')
@@ -66,12 +66,14 @@ describe('makeSwapConversionValues', () => {
     expect(values.orderId).toBe('order-1')
     expect(values.swapProviderId).toBe('houdini')
     expect(values.isBuiltInAsset).toBe(true)
+    expect(values.swapMode).toBe('stealthSwap')
   })
 
   it('flags a swap that touches a custom token', () => {
     const values = makeSwapConversionValues(
       makeQuote(null, 'custom'),
-      undefined
+      undefined,
+      'swap'
     )
     expect(values.isBuiltInAsset).toBe(false)
     expect(values.orderId).toBeUndefined()

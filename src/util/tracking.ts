@@ -99,6 +99,13 @@ export interface CryptoConversionValues {
 }
 
 /**
+ * Which swap flow placed an order: a wallet-to-wallet swap from the Exchange
+ * scene or a swap to an address from the Send scene, each with or without
+ * Stealth. The reports server reads it to report each mode on its own.
+ */
+export type SwapMode = 'swap' | 'swapSend' | 'stealthSwap' | 'stealthSwapSend'
+
+/**
  * Analytics: Swap
  */
 export interface SwapConversionValues {
@@ -110,6 +117,7 @@ export interface SwapConversionValues {
 
   swapProviderId?: string
   orderId?: string
+  swapMode?: SwapMode
 }
 
 /**
@@ -410,6 +418,7 @@ export function logEvent(
               sourceAmount,
               swapProviderId,
               orderId,
+              swapMode,
               isBuiltInAsset
             } = conversionValues
 
@@ -433,6 +442,7 @@ export function logEvent(
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
+            if (swapMode != null) params.swapMode = swapMode
           }
         }
 

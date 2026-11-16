@@ -16,6 +16,7 @@ import {
   type EdgeCurrencyWallet,
   type EdgeSwapInfo,
   type EdgeSwapQuote,
+  type EdgeTransaction,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld
 } from 'edge-core-js'
@@ -291,6 +292,60 @@ describe('SwapConfirmationScene', () => {
       )
 
       unmount()
+    })
+
+    it('logs the swap mode on a successful approval', async () => {
+      if (btcWallet == null || ethWallet == null) return
+      jest.spyOn(fakeNavigation, 'push').mockImplementation(() => undefined)
+      const logEvent = jest
+        .spyOn(tracking, 'logEvent')
+        .mockImplementation(() => () => undefined)
+      const cases: Array<['required' | undefined, tracking.SwapMode]> = [
+        [undefined, 'swap'],
+        ['required', 'stealthSwap']
+      ]
+      for (const [privacy, swapMode] of cases) {
+        logEvent.mockClear()
+        // The transaction only reaches the mocked navigation:
+        const transaction: EdgeTransaction = {
+          blockHeight: 0,
+          currencyCode: 'BTC',
+          date: 0,
+          isSend: true,
+          memos: [],
+          nativeAmount: '-10000',
+          networkFee: '1',
+          networkFees: [],
+          ourReceiveAddresses: [],
+          signedTx: '',
+          tokenId: null,
+          txid: 'txid',
+          walletId: btcWallet.id
+        }
+        const approve = jest.fn(async () => ({
+          orderId: 'order-1',
+          transaction
+        }))
+        const quote = makeQuote(approve)
+        quote.request.fromTokenId = null
+        quote.request.toTokenId = null
+        quote.request.privacy = privacy
+        const { slide, unmount } = renderScene(quote)
+
+        await slide()
+        expect(logEvent).toHaveBeenCalledWith(
+          'Exchange_Shift_Success',
+          expect.objectContaining({
+            conversionValues: expect.objectContaining({
+              orderId: 'order-1',
+              swapProviderId: 'bitcoin',
+              swapMode
+            })
+          })
+        )
+
+        unmount()
+      }
     })
 
     it('requotes an expired quote without approving it', async () => {
