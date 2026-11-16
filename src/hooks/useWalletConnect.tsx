@@ -12,6 +12,7 @@ import type { EdgeCurrencyWallet, JsonObject } from 'edge-core-js'
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { pickDAppIconUri } from '../components/icons/DAppIcon'
 import { FlashNotification } from '../components/navigation/FlashNotification'
 import { Airship } from '../components/services/AirshipInstance'
 import { SPECIAL_CURRENCY_INFO } from '../constants/WalletAndCurrencyConstants'
@@ -71,10 +72,6 @@ export function useWalletConnect(): WalletConnect {
     session: SessionTypes.Struct,
     walletId: string
   ): WcConnectionInfo => {
-    const icon = session.peer.metadata.icons[0] ?? '.svg'
-    const iconUri = icon.endsWith('.svg')
-      ? 'https://content.edge.app/walletConnectLogo.png'
-      : icon
     const { date, time } = unixToLocaleDateTime(session.expiry)
     const expiration = `${date} at ${time}`
     const connection = {
@@ -84,7 +81,7 @@ export function useWalletConnect(): WalletConnect {
       walletName: getWalletName(currencyWallets[walletId]),
       walletId,
       uri: session.topic,
-      icon: iconUri
+      icon: pickDAppIconUri(session.peer.metadata.icons)
     }
     return connection
   }
