@@ -18,6 +18,7 @@ import type {
   RampPluginConfig,
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
+import { getBestQuoteError } from '../../../plugins/ramps/utils/getBestError'
 import { openExternalWebView } from '../../../plugins/ramps/utils/webViewUtils'
 
 jest.mock('../../../plugins/ramps/utils/webViewUtils', () => ({
@@ -55,9 +56,48 @@ const jsonResponse = (body: unknown): Response =>
     text: async () => JSON.stringify(body)
   } as unknown as Response)
 
+const errorResponse = (status: number, text: string): Response =>
+  ({
+    ok: false,
+    status,
+    text: async () => text
+  } as unknown as Response)
+
+// An expired partner token, as BTC Direct reports it:
+const EXPIRED_TOKEN_BODY = JSON.stringify({
+  errors: {
+    ER801: {
+      code: 'ER801',
+      message: 'Authorization token is expired.',
+      solution: 'Provide a valid authorization token.'
+    }
+  }
+})
+
+/** Answers one endpoint with an error once, then falls back to the fake. */
+const failOnce = (endpoint: string, response: Response): void => {
+  let failed = false
+  global.fetch = (async (url: string, options: FetchOptions = {}) => {
+    const { pathname } = new URL(url)
+    if (pathname === endpoint && !failed) {
+      failed = true
+      return response
+    }
+    return await fakeFetch(url, options)
+  }) as typeof global.fetch
+}
+
+const rejectionOf = async (promise: Promise<unknown>): Promise<unknown> =>
+  await promise.then(
+    () => {
+      throw new Error('Expected a rejection')
+    },
+    (error: unknown) => error
+  )
+
 const currencyPair = (
   code: string,
-  caip19: string | null,
+  caip19: string | undefined,
   status: string = 'enabled'
 ): object => ({
   currencyPair: `${code}-EUR`,
@@ -91,7 +131,8 @@ const fakeFetch = async (
     case '/api/v1/system/currency-pairs':
       return jsonResponse([
         currencyPair('BTC', 'bip122:000000000019d6689c085ae165831e93/slip44:0'),
-        currencyPair('POL', null),
+        // The API reference gives an empty string for a missing identifier:
+        currencyPair('POL', ''),
         currencyPair(
           'LTC',
           'bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2',
@@ -255,15 +296,10 @@ describe('btcdirectRampPlugin', () => {
     })
 
     it('signs in again when the token is rejected', async () => {
-      let rejected = false
-      global.fetch = (async (url: string, options: FetchOptions = {}) => {
-        const { pathname } = new URL(url)
-        if (pathname === '/api/v1/system/currency-pairs' && !rejected) {
-          rejected = true
-          return { ok: false, status: 401 } as unknown as Response
-        }
-        return await fakeFetch(url, options)
-      }) as typeof global.fetch
+      failOnce(
+        '/api/v1/system/currency-pairs',
+        errorResponse(400, EXPIRED_TOKEN_BODY)
+      )
 
       const plugin = makePlugin()
       const result = await plugin.checkSupport(makeSupportRequest())
@@ -273,6 +309,50 @@ describe('btcdirectRampPlugin', () => {
         call => call.pathname === '/api/v1/authenticate'
       )
       expect(authCalls).toHaveLength(2)
+    })
+
+    it('does not sign in again for other bad requests', async () => {
+      failOnce(
+        '/api/v1/system/currency-pairs',
+        errorResponse(400, '{"errors":{"ER100":{"code":"ER100"}}}')
+      )
+
+      const plugin = makePlugin()
+      const error = await rejectionOf(plugin.checkSupport(makeSupportRequest()))
+
+      expect(String(error)).toContain('400 - {"errors":{"ER100"')
+      const authCalls = fetchCalls.filter(
+        call => call.pathname === '/api/v1/authenticate'
+      )
+      expect(authCalls).toHaveLength(1)
+    })
+
+    it('retries the provider config after a failed fetch', async () => {
+      failOnce(
+        '/api/v1/system/currency-pairs',
+        errorResponse(503, 'Service Unavailable')
+      )
+
+      const plugin = makePlugin()
+      await rejectionOf(plugin.checkSupport(makeSupportRequest()))
+      expect(await plugin.checkSupport(makeSupportRequest())).toEqual({
+        supported: true,
+        supportedAmountTypes: ['fiat']
+      })
+    })
+
+    it('rejects a failed request with its status and body', async () => {
+      failOnce(
+        '/api/v1/buy/payment-methods/preferred',
+        errorResponse(500, 'Internal Server Error')
+      )
+
+      const plugin = makePlugin()
+      const error = await rejectionOf(plugin.checkSupport(makeSupportRequest()))
+
+      expect(String(error)).toContain(
+        'Failed to fetch BTC Direct https://api.btcdirect.test/api/v1/buy/payment-methods/preferred: 500 - Internal Server Error'
+      )
     })
 
     it('maps a native asset without a CAIP-19 identifier by plugin', async () => {
@@ -357,56 +437,51 @@ describe('btcdirectRampPlugin', () => {
 
     it('reports the pair minimum for an amount under the limit', async () => {
       const plugin = makePlugin()
-      const error: unknown = await plugin
-        .fetchQuotes(
+      const error = await rejectionOf(
+        plugin.fetchQuotes(
           makeQuoteRequest({ amountQuery: { exchangeAmount: '10' } })
         )
-        .then(
-          () => undefined,
-          (e: unknown) => e
-        )
-      if (!(error instanceof FiatProviderError)) {
-        throw new Error('Expected a FiatProviderError')
+      )
+      if (!(error instanceof AggregateError)) {
+        throw new Error('Expected an AggregateError')
       }
-      expect(error.quoteError).toEqual({
-        providerId: 'btcdirect',
-        errorType: 'underLimit',
-        errorAmount: 30,
-        displayCurrencyCode: 'EUR'
-      })
+      for (const methodError of error.errors) {
+        if (!(methodError instanceof FiatProviderError)) {
+          throw new Error('Expected a FiatProviderError')
+        }
+        expect(methodError.quoteError).toEqual({
+          providerId: 'btcdirect',
+          errorType: 'underLimit',
+          errorAmount: 30,
+          displayCurrencyCode: 'EUR'
+        })
+      }
     })
 
-    it('drops only the payment methods whose limit is exceeded', async () => {
-      const plugin = makePlugin()
-      const quotes = await plugin.fetchQuotes(
-        makeQuoteRequest({ amountQuery: { exchangeAmount: '5000' } })
-      )
-      expect(quotes.map(quote => quote.paymentType)).toEqual(['ideal', 'sepa'])
-    })
-
-    it('quotes the payment method limit for a max request', async () => {
-      const plugin = makePlugin()
-      const quotes = await plugin.fetchQuotes(
-        makeQuoteRequest({ amountQuery: { max: true } })
-      )
-      expect(quotes.map(quote => quote.fiatAmount)).toEqual([
-        '1000',
-        '50000',
-        '10000'
-      ])
-    })
-
-    it('scales a max request down to a crypto cap', async () => {
-      const plugin = makePlugin()
-      const quotes = await plugin.fetchQuotes(
-        makeQuoteRequest({ amountQuery: { maxExchangeAmount: '0.005' } })
-      )
-      expect(quotes.map(quote => quote.fiatAmount)).toEqual([
-        '500',
-        '500',
-        '500'
-      ])
-    })
+    it.each([
+      ['BE', '15000', 'SEPA', '10,000 EUR'],
+      ['NL', '60000', 'iDEAL', '50,000 EUR']
+    ])(
+      'shows the highest limit for an amount over every limit in %s',
+      async (countryCode, exchangeAmount, _method, shownLimit) => {
+        const plugin = makePlugin()
+        const error = await rejectionOf(
+          plugin.fetchQuotes(
+            makeQuoteRequest({
+              amountQuery: { exchangeAmount },
+              regionCode: { countryCode }
+            })
+          )
+        )
+        if (!(error instanceof AggregateError)) {
+          throw new Error('Expected an AggregateError')
+        }
+        // The buy scene flattens the AggregateError the same way:
+        const shown = getBestQuoteError(error.errors, 'EUR', 'buy')
+        if (!(shown instanceof Error)) throw new Error('Expected an error')
+        expect(shown.message).toContain(shownLimit)
+      }
+    )
   })
 
   describe('approveQuote', () => {

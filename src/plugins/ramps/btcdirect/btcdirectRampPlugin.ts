@@ -342,7 +342,11 @@ export const btcdirectRampPlugin: RampPluginFactory = (
         else if (result.quote != null) quotes.push(result.quote)
       }
 
-      if (quotes.length === 0 && errors.length > 0) throw errors[0]
+      // Throw every payment method's error, so the buy scene can show the
+      // highest limit any of them accepts:
+      if (quotes.length === 0 && errors.length > 0) {
+        throw new AggregateError(errors, 'All quotes failed')
+      }
 
       return quotes
     }
@@ -357,15 +361,18 @@ export const btcdirectRampPlugin: RampPluginFactory = (
 
 /**
  * Finds the Edge asset for a BTC Direct currency pair. The CAIP-19 identifier
- * is authoritative, since it also identifies tokens. A currency without one is
- * matched by its code against the known native assets.
+ * is authoritative, since it also identifies tokens. A currency without one
+ * (the field missing or empty) is matched by its code against the known native
+ * assets.
  */
 function getEdgeAsset(
   account: RampPluginConfig['account'],
   pair: BtcDirectCurrencyPair
 ): { pluginId: string; tokenId: EdgeTokenId } | undefined {
   const { caip19, code } = pair.baseCurrency
-  if (caip19 != null) return caip19ToEdgeAsset(account, caip19)
+  if (caip19 != null && caip19 !== '') {
+    return caip19ToEdgeAsset(account, caip19)
+  }
 
   const nativePluginId = NATIVE_ASSET_PLUGIN_IDS[code]
   if (nativePluginId == null) return

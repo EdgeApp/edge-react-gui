@@ -1,12 +1,14 @@
 import {
   asArray,
   asEither,
+  asJSON,
   asMaybe,
   asNull,
   asNumber,
   asObject,
   asOptional,
-  asString
+  asString,
+  asUnknown
 } from 'cleaners'
 
 export interface BtcDirectApiOptions {
@@ -48,6 +50,10 @@ export interface BtcDirectApi {
 // The partner token is valid for one hour. Refresh a little early:
 const TOKEN_TTL_MS = 55 * 60 * 1000
 
+// BTC Direct answers a missing (ER802), invalid (ER800) or expired (ER801)
+// token with a 400, not a 401:
+const TOKEN_ERROR_CODES = ['ER800', 'ER801', 'ER802']
+
 // -----------------------------------------------------------------------------
 // Cleaners
 // -----------------------------------------------------------------------------
@@ -55,6 +61,8 @@ const TOKEN_TTL_MS = 55 * 60 * 1000
 const asBtcDirectAuth = asObject({
   token: asString
 })
+
+const asBtcDirectErrorBody = asJSON(asObject({ errors: asObject(asUnknown) }))
 
 const asBtcDirectLimit = asObject({
   amount: asNumber,
@@ -185,7 +193,11 @@ export function makeBtcDirectApi(options: BtcDirectApiOptions): BtcDirectApi {
       })
 
     let response = await send()
-    if (response.status === 401) {
+    if (response.status === 400) {
+      const text = await response.text()
+      if (!isTokenError(text)) {
+        throw new Error(`Failed to fetch BTC Direct ${url}: 400 - ${text}`)
+      }
       // The token was revoked or expired early, so sign in again once:
       token.clear()
       response = await send()
@@ -218,4 +230,9 @@ export function makeBtcDirectApi(options: BtcDirectApiOptions): BtcDirectApi {
       return asBtcDirectCheckout(data)
     }
   }
+}
+
+function isTokenError(text: string): boolean {
+  const body = asMaybe(asBtcDirectErrorBody)(text)
+  return body != null && TOKEN_ERROR_CODES.some(code => code in body.errors)
 }
