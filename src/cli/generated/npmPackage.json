@@ -38,7 +38,7 @@
     "csv-stringify": "5.6.2",
     "date-fns": "2.29.3",
     "edge-core-js": "2.55.1",
-    "edge-currency-accountbased": "4.107.1",
+    "edge-currency-accountbased": "https://balls.edge.app/20261117112927-edge-currency-accountbased-4.107.1.tgz",
     "edge-currency-plugins": "3.18.0",
     "edge-exchange-plugins": "2.64.0",
     "edge-info-server": "3.16.1",
