@@ -110,10 +110,12 @@ interface SceneWrapperProps {
   // True if this scene has a bottom tab bar:
   hasTabs?: boolean
 
-  // True if the scene shows a WebView. The header and tab bar then use their
-  // plain tint instead of blurring the scene: their blur redraws the scene
-  // into an offscreen layer, and drawing a WebView there crashes Chromium on
-  // some Android devices (Vulkan rendering).
+  // True if the scene shows a WebView. On Android 12+ the chrome over the
+  // scene (header, footer, tab bar and notification cards) and the modals
+  // shown over it then use their plain tint instead of blurring the scene:
+  // that blur redraws the scene into an offscreen layer, and drawing a
+  // WebView there crashes Chromium on some devices (Vulkan rendering). iOS
+  // blurs natively and keeps its blur.
   hasWebView?: boolean
 
   // Settings for when using ScrollView
@@ -184,9 +186,10 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   const isIos = Platform.OS === 'ios'
 
   // Publish this scene's content as the blur target chrome samples while the
-  // scene is focused (see BlurBackground):
+  // scene is focused, or for a WebView scene, that no blur may sample it
+  // (see BlurBackground):
   const isSceneFocused = useIsFocused()
-  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused && !hasWebView)
+  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused, hasWebView)
 
   // Track dock height for content padding when dockProps is used
   const [dockHeight, setDockHeight] = useState(0)
