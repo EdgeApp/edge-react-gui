@@ -9,7 +9,6 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
-import { getDisabledSwapPlugins } from '../../actions/ExchangeInfoActions'
 import { useDisplayDenom } from '../../hooks/useDisplayDenom'
 import { lstrings } from '../../locales/strings'
 import { useSelector } from '../../types/reactRedux'
@@ -17,6 +16,7 @@ import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
 import { getWalletName } from '../../util/CurrencyWalletHelpers'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
+import { withAssetDisabledPlugins } from '../../util/swapRequestOptions'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { showPendingTxModal } from '../modals/PendingTxModal'
@@ -75,13 +75,14 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   const fetchQuotes = async (
     request: EdgeSwapRequest
   ): Promise<EdgeSwapQuote[]> => {
-    return await account.fetchSwapQuotes(request, {
-      ...swapRequestOptions,
-      disabled: {
-        ...swapRequestOptions.disabled,
-        ...getDisabledSwapPlugins(disableAssetsByPlugin, request)
-      }
-    })
+    return await account.fetchSwapQuotes(
+      request,
+      withAssetDisabledPlugins(
+        swapRequestOptions,
+        disableAssetsByPlugin,
+        request
+      )
+    )
   }
 
   /**

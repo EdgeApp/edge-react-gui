@@ -6,7 +6,7 @@ import {
   exportTransactionsToBitwave,
   exportTransactionsToCSVInner,
   exportTransactionsToQBO
-} from '../../actions/TransactionExportActions'
+} from '../../util/txExport'
 
 const csvResult = fs.readFileSync('./src/__tests__/exportCsvResult.csv', {
   encoding: 'utf8'
@@ -186,6 +186,36 @@ test('export CSV matches reference data', function () {
   expect(out).toEqual(csvResult)
 })
 
+test('export CSV labels a token with its own denomination', function () {
+  // The column an accounting importer uses to disambiguate `AMT_ASSET`.
+  // The export writes the denomination it is given rather than matching the
+  // multiplier against `wallet.currencyInfo.denominations`, the *chain's*
+  // list, which would label every 18-decimal ERC-20 `DENOMINATION=ETH` and
+  // match nothing for a 6-decimal token such as USDC. The scene and
+  // `edge-cli get-transactions` both pass the denomination they were given,
+  // so they write the same label for the same wallet, token and range.
+  const out = exportTransactionsToCSVInner(
+    [...edgeTxs],
+    'DAI',
+    'iso:USD',
+    '1000000000000000000',
+    'DAI'
+  )
+  expect(out).toContain('"DENOMINATION"')
+  expect(out).toContain('"DAI"')
+  expect(out).not.toContain('"ETH"')
+
+  // And a unit the user chose, which is what `selectDisplayDenom` answers.
+  const inBits = exportTransactionsToCSVInner(
+    [...edgeTxs],
+    'BTC',
+    'iso:USD',
+    '100',
+    'bits'
+  )
+  expect(inBits).toContain('"bits"')
+})
+
 test('export QBO matches reference data', function () {
   const out = exportTransactionsToQBO(
     [...edgeTxs],
@@ -194,6 +224,68 @@ test('export QBO matches reference data', function () {
     1524578071304
   )
   expect(out).toEqual(qboResult)
+})
+
+test('export QBO keeps its declared charset', function () {
+  // The header says `ENCODING:USASCII` / `CHARSET:1252`, which is what
+  // accounting importers expect, so the bytes have to match it. A payee or
+  // memo holds anything a dapp, `--metadata` or the engine's localized prose
+  // puts there, so everything outside printable ASCII is escaped as a
+  // numeric reference. Declaring `ENCODING:UNICODE` instead would change the
+  // format of every export and is not unambiguously UTF-8 in OFX 1.x.
+  const out = exportTransactionsToQBO(
+    [
+      {
+        ...edgeTxs[0],
+        metadata: {
+          name: 'Café Münster — naïve',
+          notes: 'Überweisung ✓',
+          category: 'Expense:Food'
+        }
+      }
+    ],
+    'iso:USD',
+    '100',
+    1524578071304
+  )
+  expect(out).toContain('ENCODING:USASCII')
+  expect(out).toContain('CHARSET:1252')
+  // Every byte inside the printable-ASCII range, so the declaration is true.
+  // eslint-disable-next-line no-control-regex
+  expect(/[^\x09\x0a\x0d\x20-\x7e]/.test(out)).toBe(false)
+  // And the original characters are recoverable, as numeric references.
+  expect(out).toContain('Caf&#233;')
+  expect(out).toContain('M&#252;nster')
+  expect(out).toContain('&#8212;')
+})
+
+test('export QBO escapes characters outside the BMP', function () {
+  // Every character in the case above is BMP, so all of them survive a
+  // pattern that walks UTF-16 code units. An emoji does not: without the `u`
+  // flag `codePointAt(0)` sees half a surrogate pair and 🍕 comes out as
+  // `&#55356;&#57173;`, two lone surrogates, which are not characters in
+  // SGML, XML or OFX, so an importer could not recover the original. An
+  // emoji in a payee or memo is ordinary: a dapp sets it through
+  // `edgeProvider`, `--metadata` takes any string, and the notes field is
+  // free text.
+  const out = exportTransactionsToQBO(
+    [
+      {
+        ...edgeTxs[0],
+        metadata: { name: 'Tip 🍕', notes: 'thanks 🙏', category: 'Expense' }
+      }
+    ],
+    'iso:USD',
+    '100',
+    1524578071304
+  )
+  // The real code points, not surrogate halves.
+  expect(out).toContain('&#127829;')
+  expect(out).toContain('&#128591;')
+  expect(out).not.toContain('&#55356;')
+  expect(out).not.toContain('&#55357;')
+  // eslint-disable-next-line no-control-regex
+  expect(/[^\x09\x0a\x0d\x20-\x7e]/.test(out)).toBe(false)
 })
 
 test('export Bitwave matches reference data', async function () {

@@ -1,0 +1,475 @@
+import { spawn } from 'child_process'
+import fs from 'fs'
+import path from 'path'
+
+import { resolveLocaleTableOrEnglish } from '../../locales/localeKeys'
+import { sleep } from '../../util/sleep'
+import { getDetectedLocale } from '../bootNodeLocale'
+import { defaultDirectory } from '../engine/cliConfig'
+import { secureDataDir } from '../engine/dataDir'
+import {
+  canonicalDirectory,
+  ENGINE_EXIT_ALREADY_RUNNING,
+  ensureRunDir,
+  profileHash,
+  type ProfileKey,
+  socketPathFor
+} from '../engine/discovery'
+import { allSecretEnvNames } from '../secretFlags'
+import { ApiClient } from './apiClient'
+
+/**
+ * The engine could not be reached or could not be started.
+ *
+ * A type rather than a message, because `output.ts` maps this to the
+ * documented exit code 7, and a regex over the error's prose would miss
+ * cases and silently change the published contract on a reword.
+ */
+export class EngineUnavailableError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'EngineUnavailableError'
+  }
+}
+
+/**
+ * Quote one argument for a shell, so a printed command can be pasted.
+ *
+ * The `--no-spawn` hint includes the directory, and `-d` is never absent
+ * because it defaults to `~/.config/edge-cli`. Unquoted, a path with a space
+ * would print as `-d /Users/you/My Dir`, which the engine reads as `-d
+ * /Users/you/My` plus an unknown argument, so the advice would either fail
+ * outright or start an engine under a different profile hash.
+ */
+function shellQuote(value: string): string {
+  if (/^[A-Za-z0-9_@%+=:,./-]+$/.test(value)) return value
+  return `'${value.replace(/'/g, `'\\''`)}'`
+}
+
+/** Last few KB of the spawned engine's output, for error messages. */
+function readTail(file: string, maxBytes: number): string {
+  try {
+    const text = fs.readFileSync(file, 'utf8').trimEnd()
+    if (text === '') return ''
+    return text.length > maxBytes ? text.slice(-maxBytes) : text
+  } catch {
+    return ''
+  }
+}
+
+export interface EnsureEngineOpts extends ProfileKey {
+  /** Serve an in-process fake world instead of a login server. */
+  fake?: boolean
+  /**
+   * An API key the caller gave *explicitly*, with `-k`.
+   *
+   * Only the explicit flag: a key that came from the config file is not
+   * forwarded, because the engine reads the same file itself and because
+   * `makeCoreContext` reads an explicit key as an operator override that
+   * turns off the keys.json secret and the native HMAC signer.
+   */
+  apiKey?: string
+  /**
+   * The config file the caller named with `-c`.
+   *
+   * Forwarded, because without it the spawned engine would read the
+   * *default* config instead. `testMode` lives in that file and feeds the
+   * profile hash, so the two halves would compute different hashes, the
+   * client would poll a socket the engine never binds, and the command would
+   * die after the full 30-second spawn timeout, leaving a detached engine
+   * behind.
+   */
+  configPath?: string
+  /** Test seam; see `EnsureEngineDeps`. Production leaves it unset. */
+  deps?: EnsureEngineDeps
+  noSpawn?: boolean
+  tcpPort?: number | null
+}
+
+async function pingEngine(socketPath: string): Promise<boolean> {
+  try {
+    const client = new ApiClient({ socketPath, timeoutMs: 3000 })
+    await client.get('/engine/status')
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Warn when the engine answers in a different language than this shell asked
+ * for.
+ *
+ * The comparison is the *table* each tag selects, not the tags: `en` and
+ * `en-US` both answer in English and `de` and `de-DE` both merge `de.json`,
+ * so comparing tags would warn about a difference with no effect — and
+ * because the hook is `onFirstResponse`, once per command for the life of
+ * that engine. A bare `LANG=en`, which is what a container or a CI shell
+ * tends to set, would be enough to produce it.
+ *
+ * `resolveLocaleTableOrEnglish`, because a tag with no table is English too:
+ * Edge ships twelve, so otherwise `LANG=nl_NL.UTF-8` against a cron shell's
+ * `en-US` would compare `undefined` with `'en'` and warn, on every command,
+ * about two engines answering the same language.
+ */
+export async function warnIfEngineLocaleDiffers(
+  client: ApiClient
+): Promise<void> {
+  try {
+    const status = await client.get<{ locale?: string }>('/engine/status')
+    const wanted = getDetectedLocale().languageTag
+    if (
+      status.locale != null &&
+      status.locale !== '' &&
+      resolveLocaleTableOrEnglish(status.locale) !==
+        resolveLocaleTableOrEnglish(wanted)
+    ) {
+      console.error(
+        `[edge-cli] Warning: engine locale is ${status.locale}; this client requested ${wanted}. Using the engine locale.`
+      )
+    }
+  } catch {
+    // Status is optional for locale mismatch; spend/login still work.
+  }
+}
+
+/** How long to wait for a spawned engine to answer. */
+const SPAWN_TIMEOUT_MS = 30_000
+
+/**
+ * When the appended startup log is trimmed instead of grown.
+ *
+ * `removeRunArtifacts` deletes it on an ordinary stop, so this only bounds a
+ * profile whose engine keeps failing to start — the case where the log is
+ * being read, so it should hold the recent attempts rather than all of them.
+ */
+const STARTUP_LOG_MAX_BYTES = 256 * 1024
+
+/** Whether the appended startup log has grown past the cap. */
+export function shouldTrimStartupLog(sizeBytes: number): boolean {
+  return sizeBytes > STARTUP_LOG_MAX_BYTES
+}
+
+/**
+ * What the child's exit means for a client that is waiting for a socket.
+ *
+ * Two outcomes that call for opposite behaviour, and the distinction is one
+ * exit-code comparison across two halves of the CLI:
+ * `ENGINE_EXIT_ALREADY_RUNNING` is raised in `engine/index.ts` and read
+ * here. A drift in that constant, or a `signal == null` that stopped
+ * holding, would have the client report "exit 7 / Stop it first" about an
+ * engine it had started itself.
+ *
+ * `'owned'` means someone else won `claimRunFile`, so an engine *is* coming
+ * up and the poll should run to the deadline. Anything else is a startup
+ * failure to report at once, with the log tail.
+ */
+export function classifyEngineExit(
+  code: number | null,
+  signal: NodeJS.Signals | null
+): { kind: 'owned' } | { kind: 'died'; info: string } {
+  if (signal == null && code === ENGINE_EXIT_ALREADY_RUNNING) {
+    return { kind: 'owned' }
+  }
+  return {
+    kind: 'died',
+    info:
+      signal != null ? `killed by ${signal}` : `exited with code ${code ?? 0}`
+  }
+}
+
+/**
+ * The seams `ensureEngine`'s three decisions are tested through.
+ *
+ * `spawn`, `pingEngine` and the two timings, injected the way `doFetch` is
+ * into `fetchWaterfall` and a request function into `httpsRequest`.
+ * Production passes nothing.
+ */
+export interface EnsureEngineDeps {
+  spawn?: typeof spawn
+  ping?: (socketPath: string) => Promise<boolean>
+  spawnTimeoutMs?: number
+  pollMs?: number
+  /** The directory the candidates resolve against; `__dirname` in use. */
+  entryDir?: string
+}
+
+/**
+ * The child's environment, with the caller's credentials taken out.
+ *
+ * The engine is detached and long-lived, so `{ ...process.env }` would hand
+ * it every variable in `SECRET_FLAG_ENV` for its whole life: a
+ * `EDGE_CLI_PASSWORD=… edge-cli login-with-password` exits in a second
+ * while the daemon it spawned would keep that password in
+ * `/proc/<pid>/environ` for hours — and for ever at `--idle-timeout=0` —
+ * and in any core dump. The engine never needs them: the *client* resolves
+ * each secret and sends it in the request body, which is why
+ * `EDGE_CLI_API_KEY` is the one credential forwarded here, deliberately and
+ * explicitly.
+ *
+ * `EDGE_CLI_SESSION` goes too. It is a bearer token — holding one is full
+ * account authority — and it is the client's own way of naming a session,
+ * not something the engine reads.
+ *
+ * The whole point of those variables is to shorten a credential's exposure
+ * window from "written in shell history" to "one process, one command", so
+ * widening it to one daemon lifetime is the same defect on a different
+ * surface.
+ */
+export function engineEnv(
+  source: NodeJS.ProcessEnv = process.env,
+  platform: NodeJS.Platform = process.platform
+): NodeJS.ProcessEnv {
+  // A deny-list: the whole environment is copied and the withheld names
+  // are blanked, so a credential variable `secretFlags.ts` does not know
+  // about *is* forwarded. What keeps the list honest is that it is derived
+  // — `allSecretEnvNames()` — so a variable added there is withheld here
+  // with no second edit. Blanked rather than deleted, because a dynamic
+  // `delete` is what the lint rule forbids.
+  const withheld = new Set<string>([...allSecretEnvNames(), 'EDGE_CLI_SESSION'])
+  // Seeded from the source so the declared `NODE_ENV` survives the
+  // rebuild, then overwritten key by key with what is kept.
+  const out: NodeJS.ProcessEnv = { ...source }
+  const scratch: Record<string, string | undefined> = out
+  // Windows reads environment names without regard to case, so the client
+  // that resolves `EDGE_CLI_PASSWORD` resolves `edge_cli_password` too, and
+  // every spelling of a withheld name has to go.
+  const key = (name: string): string =>
+    platform === 'win32' ? name.toUpperCase() : name
+  for (const name of Object.keys(source)) {
+    if (withheld.has(key(name))) scratch[name] = undefined
+  }
+  return out
+}
+
+/**
+ * Where the engine entry may be, given the directory this module runs from.
+ *
+ * Exported so a test can hold the list to its one rule: every candidate is
+ * under `dir`, and none depends on the working directory.
+ */
+export function engineEntryCandidates(dir: string): string[] {
+  return [
+    path.resolve(dir, 'edgeEngine.js'),
+    path.resolve(dir, '../engine/index.ts')
+  ]
+}
+
+/**
+ * Make sure an engine is listening for this profile.
+ *
+ * Returns nothing. Its one caller is `ApiClient`'s `onConnectFail`, which
+ * discards the result and retries the request, so reading the run file back
+ * would buy nothing and add a failure mode: the socket can answer before
+ * `engine.json` is visible. The socket answering *is* the readiness signal,
+ * which is what `pingEngine` tests.
+ */
+export async function ensureEngine(opts: EnsureEngineOpts): Promise<void> {
+  const profile = profileHash({
+    appId: opts.appId,
+    directory: opts.directory,
+    testMode: opts.testMode,
+    loginServer: opts.loginServer
+  })
+  // Read at every ping: on Windows the engine names its pipe when it claims
+  // the profile, and before that there is no path to read.
+  const socketPath = (): string => socketPathFor(profile)
+  const doSpawn = opts.deps?.spawn ?? spawn
+  const ping = opts.deps?.ping ?? pingEngine
+  const spawnTimeoutMs = opts.deps?.spawnTimeoutMs ?? SPAWN_TIMEOUT_MS
+  const pollMs = opts.deps?.pollMs ?? 250
+
+  if (await ping(socketPath())) return
+
+  // Resolve the engine entry relative to this file, and nowhere else. The
+  // sibling bundle comes first: rollup flattens src/cli into lib/edgeCli.js,
+  // so in a built or installed tree (an npm install, for one) `__dirname` is
+  // the package's `lib/` and its sibling is lib/edgeEngine.js. Running from
+  // source, `__dirname` is src/cli/client, which has no edgeEngine.js, and
+  // `../engine/index.ts` is the source entry.
+  //
+  // Not the working directory. A candidate resolved against it would, on a
+  // partial install, have `edge-cli` run inside any checkout or download
+  // spawn *that directory's* script as the detached daemon, handed
+  // `EDGE_CLI_API_KEY` and, over the socket, every password and PIN typed
+  // afterwards. A missing engine is a clean exit 7 instead.
+  const candidates = engineEntryCandidates(opts.deps?.entryDir ?? __dirname)
+  const engineEntry = candidates.find(p => {
+    try {
+      return fs.existsSync(p)
+    } catch {
+      return false
+    }
+  })
+  if (engineEntry == null) {
+    // An `EngineUnavailableError`, not a bare one: a broken or partial
+    // install is exactly the "could not connect to or spawn the engine"
+    // condition the published exit-code table assigns 7, and the generic
+    // `Error` arm would report it as `INTERNAL_ERROR` and exit 1, which a
+    // wrapper script branching on 7 mis-handles.
+    throw new EngineUnavailableError(
+      `Could not find edge-engine entry. Tried:\n${candidates
+        .map(p => `  - ${p}`)
+        .join('\n')}`
+    )
+  }
+
+  // One list, so the flags that reach the child and the flags the
+  // `--no-spawn` hint prints cannot drift. `-k` is not in here — it crosses
+  // as `EDGE_CLI_API_KEY`, because `ps` shows an argv to every user on the
+  // host — so the hint names the variable separately below.
+  const engineFlags: string[] = []
+  if (opts.testMode) engineFlags.push('-t')
+  if (opts.fake === true) engineFlags.push('--fake')
+  if (opts.directory !== '' && opts.directory !== defaultDirectory()) {
+    // The canonical form, so the directory the child opens is the same
+    // string the profile hash was taken over. Forwarding the raw argv value
+    // would let the two disagree.
+    engineFlags.push('-d', canonicalDirectory(opts.directory))
+  }
+  if (opts.appId !== '') engineFlags.push('-a', opts.appId)
+  if (opts.configPath != null && opts.configPath !== '') {
+    engineFlags.push('-c', opts.configPath)
+  }
+  if (opts.tcpPort != null) engineFlags.push(`--tcp=${opts.tcpPort}`)
+  const applied = getDetectedLocale()
+  engineFlags.push(`--locale=${applied.languageTag}`)
+
+  if (opts.noSpawn === true) {
+    // The hint has to name *this* profile's flags. A hardcoded
+    // `npm run engine -- -t` would start an engine on a different profile
+    // hash for anyone not on the default test profile, so the next command
+    // would still find nothing listening. It also has to name a command the
+    // reader can actually run: `npm run engine` only exists inside this
+    // checkout, and `docs/EDGE_CLI.md` tells people to run
+    // `node lib/edgeCli.js`.
+    const runner = engineEntry.endsWith('.js')
+      ? `${shellQuote(process.execPath)} ${shellQuote(engineEntry)}`
+      : 'npm run engine --'
+    const printed = engineFlags.map(shellQuote).join(' ')
+    // The variable, never its value: this string goes to a terminal, a log
+    // and whatever a supervisor captures. An operator who passed `-k` has
+    // the key already; what they cannot know is that it does not travel on
+    // the command line.
+    const prefix =
+      opts.apiKey != null && opts.apiKey !== ''
+        ? 'EDGE_CLI_API_KEY=<your --api-key value> '
+        : ''
+    throw new EngineUnavailableError(
+      `Engine is not running for profile ${profile} (socket ${socketPath()}). Start it with: ${prefix}${runner}${
+        printed === '' ? '' : ` ${printed}`
+      }`
+    )
+  }
+
+  const args = engineEntry.endsWith('.js')
+    ? [engineEntry, ...engineFlags]
+    : ['-r', 'sucrase/register', engineEntry, ...engineFlags]
+
+  // The core data directory holds the login stashes, so its mode is what
+  // keeps another local user out of them: `secureDataDir` says which
+  // directories it tightens and which it only warns about. Reported, because
+  // the engine starts either way.
+  const dataDirWarning = secureDataDir(opts.directory)
+  if (dataDirWarning != null) console.error(`[edge-cli] ${dataDirWarning}`)
+
+  // Capture the child's output: a detached engine that dies during startup
+  // (bad keys.json, plugin load failure) would otherwise fail silently and
+  // surface only as a spawn timeout.
+  const startupLog = path.join(ensureRunDir(profile), 'engine-startup.log')
+  // 0600 like its siblings: it captures the engine's stdout/stderr, which
+  // includes paths and, on a failure, whatever the engine was doing.
+  //
+  // Appended, not truncated. This fd is the engine's stdout and stderr for
+  // its whole life, so with `'w'` a second client's spawn attempt would wipe
+  // the log of an engine that is still booting, and both children would
+  // then write to one inode through independent fds at independent offsets,
+  // losing the surviving engine's startup record, the one a racing start is
+  // diagnosed from. Trimmed first when it has grown past the cap, since
+  // nothing else bounds it between `removeRunArtifacts` calls.
+  try {
+    if (shouldTrimStartupLog(fs.statSync(startupLog).size)) {
+      fs.truncateSync(startupLog, 0)
+    }
+  } catch {
+    // Not there yet, which is the ordinary first spawn.
+  }
+  const logFd = fs.openSync(startupLog, 'a', 0o600)
+  const child = doSpawn(process.execPath, args, {
+    detached: true,
+    // On Windows a detached child gets its own console window otherwise.
+    windowsHide: true,
+    stdio: ['ignore', logFd, logFd],
+    env: {
+      ...engineEnv(process.env),
+      EDGE_CLI_LOCALE: applied.languageTag,
+      // Not on argv: `ps` shows a command line to every user on the host,
+      // and this is a credential. The engine reads it as an explicit `-k`.
+      ...(opts.apiKey != null && opts.apiKey !== ''
+        ? { EDGE_CLI_API_KEY: opts.apiKey }
+        : {})
+    }
+  })
+  // An unhandled `'error'` on a ChildProcess is an uncaught exception — a
+  // spawn failure under fork pressure, or a `process.execPath` that moved
+  // after a Node upgrade — and it would kill the client with a raw Node stack
+  // instead of the JSON envelope every other failure produces, outside
+  // `main().catch` because it never becomes a rejection.
+  let spawnError: Error | undefined
+  let exitInfo: string | undefined
+  // Someone else won `claimRunFile`, so an engine *is* coming up — just not
+  // this child. Tracked apart from `exitInfo` because the two call for
+  // opposite behaviour: keep polling to the spawn deadline rather than
+  // reporting a startup failure.
+  let anotherEngineOwnsIt = false
+  child.once('error', (error: Error) => {
+    spawnError = error
+  })
+  // An engine that dies during startup — a bad keys.json, a plugin that
+  // throws, the "already running" exit — otherwise costs the caller the whole
+  // spawn timeout before anyone looks at the log.
+  child.once('exit', (code, signal) => {
+    const verdict = classifyEngineExit(code, signal)
+    if (verdict.kind === 'owned') {
+      anotherEngineOwnsIt = true
+      return
+    }
+    exitInfo = verdict.info
+  })
+  child.unref()
+  fs.closeSync(logFd)
+
+  const start = Date.now()
+  while (Date.now() - start < spawnTimeoutMs) {
+    await sleep(pollMs)
+    if (spawnError != null) {
+      throw new EngineUnavailableError(
+        `Could not start the engine: ${spawnError.message} (${process.execPath})`
+      )
+    }
+    if (exitInfo != null && !(await ping(socketPath()))) {
+      const earlyTail = readTail(startupLog, 2000)
+      throw new EngineUnavailableError(
+        `The engine ${exitInfo} during startup (profile ${profile}).` +
+          (earlyTail === ''
+            ? ` No engine output; see ${startupLog}.`
+            : `\n--- engine output (${startupLog}) ---\n${earlyTail}`)
+      )
+    }
+    if (await ping(socketPath())) return
+  }
+
+  const tail = readTail(startupLog, 2000)
+  throw new EngineUnavailableError(
+    `Timed out waiting for engine to start (profile ${profile})${
+      exitInfo != null
+        ? `; the process ${exitInfo}`
+        : anotherEngineOwnsIt
+        ? '; another engine owns the profile and never bound its socket'
+        : ''
+    }.` +
+      (tail === ''
+        ? ` No engine output; see ${startupLog}.`
+        : `\n--- engine output (${startupLog}) ---\n${tail}`)
+  )
+}
