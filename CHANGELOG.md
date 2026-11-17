@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - added: Swap success events name the swap mode, including Swap & Send from the send scene
+- fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection, for Bitcoin and EVM wallets, which Edge logs in to DFX
 - fixed: DFX sells entered in fiat open DFX with the crypto amount filled in
 - fixed: The header back button in Buy and Sell plugin scenes acting on the other tab's plugin
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
