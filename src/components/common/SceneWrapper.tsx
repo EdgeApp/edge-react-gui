@@ -110,6 +110,12 @@ interface SceneWrapperProps {
   // True if this scene has a bottom tab bar:
   hasTabs?: boolean
 
+  // True if the scene shows a WebView. The header and tab bar then use their
+  // plain tint instead of blurring the scene: their blur redraws the scene
+  // into an offscreen layer, and drawing a WebView there crashes Chromium on
+  // some Android devices (Vulkan rendering).
+  hasWebView?: boolean
+
   // Settings for when using ScrollView
   keyboardShouldPersistTaps?: 'always' | 'never' | 'handled'
 
@@ -162,6 +168,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
     footerHeight = 0,
     hasHeader = true,
     hasTabs = false,
+    hasWebView = false,
     padding = 0,
     renderFooter,
     scroll = false,
@@ -179,7 +186,7 @@ function SceneWrapperComponent(props: SceneWrapperProps): React.ReactElement {
   // Publish this scene's content as the blur target chrome samples while the
   // scene is focused (see BlurBackground):
   const isSceneFocused = useIsFocused()
-  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused)
+  const sceneBlurTargetRef = useSceneBlurTarget(isSceneFocused && !hasWebView)
 
   // Track dock height for content padding when dockProps is used
   const [dockHeight, setDockHeight] = useState(0)
