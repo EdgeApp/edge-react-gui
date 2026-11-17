@@ -44,7 +44,11 @@ export function GuiPluginViewScene(props: Props): React.ReactElement {
     navigation.pop()
 
   return (
-    <SceneWrapper hasTabs={route.name !== 'pluginView'} avoidKeyboard>
+    <SceneWrapper
+      hasTabs={route.name !== 'pluginView'}
+      hasWebView
+      avoidKeyboard
+    >
       <EdgeProviderComponent
         plugin={plugin}
         deepPath={deepPath}
