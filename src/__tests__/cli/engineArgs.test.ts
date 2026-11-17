@@ -75,14 +75,16 @@ describe('parseEngineArgs', () => {
       testMode: false,
       fake: false,
       help: false,
+      version: false,
       tcpPort: null,
       tcpHost: '127.0.0.1',
       idleTimeoutSeconds: 300
     })
-    expect(parseEngineArgs(['-t', '--fake', '-h'])).toMatchObject({
+    expect(parseEngineArgs(['-t', '--fake', '-h', '-v'])).toMatchObject({
       testMode: true,
       fake: true,
-      help: true
+      help: true,
+      version: true
     })
   })
 

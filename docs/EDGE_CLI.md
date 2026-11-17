@@ -87,6 +87,7 @@ on a `PATH`.
 ```sh
 npm install -g @edgeapp/cli --omit=peer   # or: npx --omit=peer @edgeapp/cli --help
 edge-cli --help
+edge-cli --version
 ```
 
 It needs Node 20.19 or later on the 20 line, or 22.12 or later: the
@@ -200,6 +201,7 @@ What differs at run time:
 | `-u, --username` | client | Legacy one-shot login helper |
 | `-p, --password` | client | Legacy one-shot login helper |
 | `-h, --help` | both | Show options |
+| `-v, --version` | both | Show the version this CLI was built from — the `version` in the app's `package.json` at build time, which the published package carries too |
 
 `-u` names the account an account command runs as, in one-shot mode and on
 every line of the prompt. The engine is asked whose the session in use is —

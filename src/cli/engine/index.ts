@@ -26,6 +26,7 @@ import { configureWarningSink } from '../../util/reportWarning'
 import { withDeadline } from '../../util/withDeadline'
 import { emptyToUndefined } from '../envValue'
 import { renderFlagHelp } from '../flagTable'
+import { CLI_VERSION } from '../version'
 import { API_VERSION } from './apiVersion'
 import { defaultDirectory, loadConfigFrom } from './cliConfig'
 import { secureDataDir } from './dataDir'
@@ -100,6 +101,10 @@ async function main(): Promise<void> {
   const args = parseEngineArgs(process.argv.slice(2))
   if (args.help) {
     printHelp()
+    process.exit(0)
+  }
+  if (args.version) {
+    console.log(CLI_VERSION)
     process.exit(0)
   }
 

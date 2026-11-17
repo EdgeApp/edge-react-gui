@@ -46,6 +46,12 @@ export const CLI: string[] =
     ? [process.env.EDGE_CLI_BIN]
     : ['-r', 'sucrase/register', 'src/cli/index.ts']
 
+/** The engine that goes with `CLI`: the bundle beside it, or the sources. */
+export const ENGINE: string[] =
+  process.env.EDGE_CLI_BIN != null
+    ? [path.join(path.dirname(process.env.EDGE_CLI_BIN), 'edgeEngine.js')]
+    : ['-r', 'sucrase/register', 'src/cli/engine/index.ts']
+
 /**
  * Where the CLI keeps its per-profile run directories.
  *

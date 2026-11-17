@@ -27,6 +27,7 @@ export interface EngineArgs {
   idleTimeoutSeconds: number
   configPath?: string
   help: boolean
+  version: boolean
 }
 
 /** An inline `--flag=` value, refused when empty. */
@@ -100,7 +101,8 @@ export function parseEngineArgs(argv: string[]): EngineArgs {
     tcpPort: null,
     tcpHost: '127.0.0.1',
     idleTimeoutSeconds: 300,
-    help: false
+    help: false,
+    version: false
   }
 
   // The table names each field as a string, so the writes go through one
