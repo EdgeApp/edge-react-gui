@@ -13,6 +13,7 @@ import type {
   RampPluginConfig,
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
+import { RampIpCountryError } from '../../../types/RampIpCountryError'
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showToastSpinner: async (message: string, promise: Promise<unknown>) =>
@@ -249,5 +250,22 @@ describe('dfxRampPlugin approveQuote', () => {
         'amount-out': '200'
       })
     })
+  })
+
+  it('does not open DFX when it blocks the country', async () => {
+    mockFetchSessionQuery.mockRejectedValueOnce(
+      new RampIpCountryError('DFX', 'Forbidden')
+    )
+    const navigate = jest.fn()
+    const plugin = dfxRampPlugin({
+      initOptions: {},
+      navigation: { navigate }
+    } as unknown as RampPluginConfig)
+
+    const [quote] = await plugin.fetchQuotes(request)
+    await expect(
+      quote.approveQuote({ coreWallet: request.wallet })
+    ).rejects.toBeInstanceOf(RampIpCountryError)
+    expect(navigate).not.toHaveBeenCalled()
   })
 })

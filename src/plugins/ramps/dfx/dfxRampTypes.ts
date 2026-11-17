@@ -1,5 +1,6 @@
 import {
   asArray,
+  asEither,
   asJSON,
   asNumber,
   asObject,
@@ -19,6 +20,16 @@ export const asInitOptions = asObject<InitOptions>({
   partnerIcon: asOptional(asString, `https://content.edge.app/dfx-logo.png`),
   wallet: asOptional(asString, 'Edge')
 }).withRest
+
+/**
+ * A failed request's body. DFX answers errors the way NestJS does,
+ * `{ statusCode, message, error }`, where `message` may be a list.
+ */
+export const asDfxErrorResponse = asJSON(
+  asObject({
+    message: asEither(asString, asArray(asString))
+  })
+)
 
 /** GET /v1/auth/signMessage: the ownership message to sign. */
 export const asDfxSignMessageResponse = asJSON(

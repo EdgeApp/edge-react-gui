@@ -1,10 +1,10 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
+import { RampIpCountryError } from '../../../types/RampIpCountryError'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
+import { fetchDfx } from './dfxApi'
 import { asDfxAuthResponse, asDfxSignMessageResponse } from './dfxRampTypes'
-
-const DFX_API_URL = 'https://api.dfx.swiss/v1'
 
 // The quote approval waits for the login, so a slow DFX API must not hold
 // the user on the quote list.
@@ -53,7 +53,9 @@ export interface DfxSessionParams {
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
  * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the link without a login.
+ * so the caller opens the link without a login. Throws RampIpCountryError
+ * when DFX blocks the country of the user's IP address, since DFX's own
+ * login would fail the same way.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -71,6 +73,7 @@ export async function fetchDfxSessionQuery(
     }
     return query
   } catch (error: unknown) {
+    if (error instanceof RampIpCountryError) throw error
     console.warn(
       `DFX session login failed, opening plain link: ${String(error)}`
     )
@@ -85,14 +88,8 @@ async function loginToDfx(
   const { wallet, walletName } = params
   const address = await getDfxAddress(wallet)
 
-  const signResponse = await fetch(
-    `${DFX_API_URL}/auth/signMessage?address=${encodeURIComponent(address)}`
-  )
-  if (!signResponse.ok) {
-    throw new Error(`signMessage returned ${signResponse.status}`)
-  }
   const { message, blockchains } = asDfxSignMessageResponse(
-    await signResponse.text()
+    await fetchDfx(`/auth/signMessage?address=${encodeURIComponent(address)}`)
   )
   if (!blockchains.includes(chain.blockchain)) {
     throw new Error(`address not accepted on ${chain.blockchain}`)
@@ -110,17 +107,13 @@ async function loginToDfx(
         otherParams: { publicAddress: address }
       })
 
-  const authResponse = await fetch(`${DFX_API_URL}/auth`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ address, signature, wallet: walletName })
-  })
-  if (!authResponse.ok) {
-    throw new Error(
-      `auth returned ${authResponse.status}: ${await authResponse.text()}`
-    )
-  }
-  const { accessToken } = asDfxAuthResponse(await authResponse.text())
+  const { accessToken } = asDfxAuthResponse(
+    await fetchDfx('/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address, signature, wallet: walletName })
+    })
+  )
 
   return { session: accessToken }
 }

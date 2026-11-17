@@ -6,6 +6,10 @@ import {
   translatePaymentProtoError
 } from '../types/PaymentProtoError'
 import {
+  RampIpCountryError,
+  translateRampIpCountryError
+} from '../types/RampIpCountryError'
+import {
   ResolutionError,
   translateResolutionError
 } from '../types/ResolutionError'
@@ -51,6 +55,9 @@ export function translateError(error: unknown): string {
   if (error instanceof PaymentProtoError)
     return translatePaymentProtoError(error)
   if (error instanceof ResolutionError) return translateResolutionError(error)
+  if (error instanceof RampIpCountryError) {
+    return translateRampIpCountryError(error)
+  }
 
   return asErrorMessage(error)
 }
