@@ -1834,10 +1834,10 @@ h5.alt code {
 </div>
     <div class="panes"><div class="pane cli">
     <h4>Command line</h4>
-    <pre class="usage"><code>request-edge-login [--no-wait]</code></pre>
+    <pre class="usage"><code>request-edge-login [--no-wait] [--show-qr]</code></pre>
     
-    <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--no-wait</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Print the lobby and exit instead of polling, so the QR can be displayed while <code>poll-edge-login</code> watches the same handle from another process.</td></tr></tbody></table>
-    <div class="note"><p>Prints the pending login, then polls every 2s for up to 5 minutes. On <code>done</code> it stores the session. With <code>--no-wait</code> it returns immediately and <code>poll-edge-login</code> takes over.</p>
+    <h5>Client-only flags</h5><table class="fields"><tbody><tr><td class="k"><code>--no-wait</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Print the lobby and exit instead of polling, so the QR can be displayed while <code>poll-edge-login</code> watches the same handle from another process.</td></tr><tr><td class="k"><code>--show-qr</code></td><td class="ty"><span class="flag opt">optional</span></td><td class="doc">Also draw the <code>uri</code> as a QR code below the JSON, for the Edge app to scan. It is drawn with explicit black and white backgrounds, so it scans whatever the terminal theme. The code follows the JSON on stdout, so a script that parses stdout should leave this off.</td></tr></tbody></table>
+    <div class="note"><p>Prints the pending login, then polls every 2s for up to 5 minutes. On <code>done</code> it stores the session. With <code>--no-wait</code> it returns immediately and <code>poll-edge-login</code> takes over. With <code>--show-qr</code> it also draws the QR code.</p>
 </div>
   </div><div class="pane rest">
     <h4>REST</h4>

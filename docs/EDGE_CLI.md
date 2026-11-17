@@ -601,6 +601,16 @@ that drives its own polling wants:
 Approve from another logged-in Edge device (Scan QR), or paste `uri` /
 `lobbyId` via **Scan QR → Enter** (useful with Maestro on the iOS simulator).
 
+`--show-qr` also draws `uri` as a QR code below the JSON, for the Edge app to
+scan. Both go to stdout, so a script that parses stdout should leave the flag
+off. Each module is two spaces on an explicit black or white
+background: no block characters, which split apart on terminals that add
+space between lines, and no reliance on the terminal's own background, so it
+scans on a dark theme or a light one. The code has the standard 4-module quiet
+zone; a terminal too small for that gets a compact form, and one too small for
+either gets a note to enlarge it or zoom out. Allow about 75 columns and 40
+rows.
+
 After `--no-wait`, poll it yourself with `poll-edge-login <pendingId>` (or
 `GET /pending-edge-login/{pendingId}`) until `state` is `done` — it then carries
 the session — or `error`. `fetch-lobby <lobbyId>` reads the lobby without
