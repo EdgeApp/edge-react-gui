@@ -9,6 +9,7 @@ import {
   createExternalRampPlugin,
   type DirectionSupportData
 } from '../utils/createExternalRampPlugin'
+import { fetchDfxSellCryptoAmount } from './dfxQuote'
 import { asInitOptions } from './dfxRampTypes'
 import { DFX_SESSION_CHAINS, fetchDfxSessionQuery } from './dfxSession'
 
@@ -78,8 +79,9 @@ const DFX_CRYPTO_ASSETS = Object.keys(DFX_CHAINS).map(pluginId => ({
  * Carries the user's quote choices into DFX's app (its query parameters,
  * github.com/DFXswiss/app#query-parameters): the language, the fiat, the
  * crypto asset and its blockchain, and the amount the user entered.
- * DFX has no amount for the fiat side of a sell, so a fiat-entered sell
- * opens without one.
+ * A fiat-entered sell carries the fiat as `amount-out`, which DFX only turns
+ * into a crypto amount once the user picks a bank account, so
+ * `resolveDeepQuery` swaps in the crypto amount when DFX can quote it.
  */
 export function makeDfxRequestQuery(
   request: RampQuoteRequest,
@@ -105,11 +107,43 @@ export function makeDfxRequestQuery(
   if ('exchangeAmount' in amountQuery) {
     // The input side is the fiat on a buy and the crypto on a sell:
     const isInputAmount = isBuy === (amountType === 'fiat')
-    if (isInputAmount) query['amount-in'] = amountQuery.exchangeAmount
-    else if (isBuy) query['amount-out'] = amountQuery.exchangeAmount
+    query[isInputAmount ? 'amount-in' : 'amount-out'] =
+      amountQuery.exchangeAmount
   }
 
   return query
+}
+
+/**
+ * The crypto amount for a fiat-entered sell, from DFX's quote for the
+ * fiat in `amount-out`. On a sell, the request query names the crypto as
+ * `asset-in` and the fiat as `asset-out`. Undefined for other requests or
+ * without a quote.
+ */
+async function fetchFiatSellCryptoAmount(
+  request: RampQuoteRequest,
+  query: Record<string, string>
+): Promise<string | undefined> {
+  const {
+    blockchain,
+    'asset-in': asset,
+    'asset-out': fiat,
+    'amount-out': fiatAmount
+  } = query
+  if (
+    request.direction !== 'sell' ||
+    blockchain == null ||
+    asset == null ||
+    fiatAmount == null
+  ) {
+    return undefined
+  }
+  return await fetchDfxSellCryptoAmount({
+    blockchain,
+    asset,
+    fiat,
+    fiatAmount
+  })
 }
 
 export const dfxRampPlugin: RampPluginFactory = config => {
@@ -129,14 +163,19 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   const resolveDeepQuery = async (
     request: RampQuoteRequest
   ): Promise<Record<string, string>> => {
-    const sessionQuery = await fetchDfxSessionQuery({
-      wallet: request.wallet,
-      walletName: initOptions.wallet
-    })
-    return {
-      ...makeDfxRequestQuery(request, initOptions.wallet),
-      ...sessionQuery
+    const query = makeDfxRequestQuery(request, initOptions.wallet)
+    const [sessionQuery, sellCryptoAmount] = await Promise.all([
+      fetchDfxSessionQuery({
+        wallet: request.wallet,
+        walletName: initOptions.wallet
+      }),
+      fetchFiatSellCryptoAmount(request, query)
+    ])
+    if (sellCryptoAmount != null) {
+      delete query['amount-out']
+      query['amount-in'] = sellCryptoAmount
     }
+    return { ...query, ...sessionQuery }
   }
 
   return createExternalRampPlugin(

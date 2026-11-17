@@ -4,6 +4,7 @@
 
 - added: Swap success events name the swap mode, including Swap & Send from the send scene
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
+- fixed: DFX sells entered in fiat open DFX with the crypto amount filled in
 - fixed: The header back button in Buy and Sell plugin scenes acting on the other tab's plugin
 
 ## 4.53.0 (staging)
