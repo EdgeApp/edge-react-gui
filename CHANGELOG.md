@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- added: Swap success events name the swap mode, including Swap & Send from the send scene
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)
