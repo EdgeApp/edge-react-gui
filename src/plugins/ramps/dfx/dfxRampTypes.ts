@@ -1,4 +1,11 @@
-import { asArray, asJSON, asObject, asOptional, asString } from 'cleaners'
+import {
+  asArray,
+  asJSON,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 
 export interface InitOptions {
   readonly partnerIcon: string
@@ -24,5 +31,33 @@ export const asDfxSignMessageResponse = asJSON(
 export const asDfxAuthResponse = asJSON(
   asObject({
     accessToken: asString
+  })
+)
+
+/** GET /v1/asset: the assets DFX trades, with the ids its quotes take. */
+export const asDfxAssets = asJSON(
+  asArray(
+    asObject({
+      id: asNumber,
+      name: asString,
+      blockchain: asString
+    })
+  )
+)
+
+/** GET /v1/fiat: the fiat currencies, with the ids its quotes take. */
+export const asDfxFiats = asJSON(
+  asArray(
+    asObject({
+      id: asNumber,
+      name: asString
+    })
+  )
+)
+
+/** PUT /v1/sell/quote: `amount` is the crypto to send for `targetAmount`. */
+export const asDfxSellQuoteResponse = asJSON(
+  asObject({
+    amount: asNumber
   })
 )
