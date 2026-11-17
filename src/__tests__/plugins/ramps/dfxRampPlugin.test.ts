@@ -8,7 +8,10 @@ import {
   dfxRampPlugin,
   makeDfxRequestQuery
 } from '../../../plugins/ramps/dfx/dfxRampPlugin'
-import { fetchDfxSessionQuery } from '../../../plugins/ramps/dfx/dfxSession'
+import {
+  DfxIpCountryError,
+  fetchDfxSessionQuery
+} from '../../../plugins/ramps/dfx/dfxSession'
 import type {
   RampPluginConfig,
   RampQuoteRequest
@@ -211,5 +214,20 @@ describe('dfxRampPlugin approveQuote', () => {
         'amount-out': '200'
       })
     })
+  })
+
+  it('does not open DFX when it blocks the country', async () => {
+    mockFetchSessionQuery.mockRejectedValueOnce(new DfxIpCountryError())
+    const navigate = jest.fn()
+    const plugin = dfxRampPlugin({
+      initOptions: {},
+      navigation: { navigate }
+    } as unknown as RampPluginConfig)
+
+    const [quote] = await plugin.fetchQuotes(request)
+    await expect(
+      quote.approveQuote({ coreWallet: request.wallet })
+    ).rejects.toBeInstanceOf(DfxIpCountryError)
+    expect(navigate).not.toHaveBeenCalled()
   })
 })

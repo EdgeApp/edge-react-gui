@@ -1,5 +1,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
+import { lstrings } from '../../../locales/strings'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
 import { asDfxAuthResponse, asDfxSignMessageResponse } from './dfxRampTypes'
@@ -43,6 +45,18 @@ export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
   }
 }
 
+/**
+ * DFX refuses logins from some countries by the IP address, whatever
+ * region the user picked in Edge. Opening DFX anyway only lands the user on
+ * DFX's own login, which fails the same way, so this one stops the launch.
+ */
+export class DfxIpCountryError extends Error {
+  constructor() {
+    super(sprintf(lstrings.ramp_provider_ip_country_blocked_1s, 'DFX'))
+    this.name = 'DfxIpCountryError'
+  }
+}
+
 export interface DfxSessionParams {
   readonly wallet: EdgeCurrencyWallet
   /** Partner wallet name DFX attributes the user to */
@@ -53,7 +67,8 @@ export interface DfxSessionParams {
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
  * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the link without a login.
+ * so the caller opens the link without a login. Throws DfxIpCountryError
+ * when DFX blocks the user's country.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -71,6 +86,7 @@ export async function fetchDfxSessionQuery(
     }
     return query
   } catch (error: unknown) {
+    if (error instanceof DfxIpCountryError) throw error
     console.warn(
       `DFX session login failed, opening plain link: ${String(error)}`
     )
@@ -116,9 +132,12 @@ async function loginToDfx(
     body: JSON.stringify({ address, signature, wallet: walletName })
   })
   if (!authResponse.ok) {
-    throw new Error(
-      `auth returned ${authResponse.status}: ${await authResponse.text()}`
-    )
+    const text = await authResponse.text()
+    // DFX answers 403 "The country of IP address is not allowed":
+    if (authResponse.status === 403 && /country/i.test(text)) {
+      throw new DfxIpCountryError()
+    }
+    throw new Error(`auth returned ${authResponse.status}: ${text}`)
   }
   const { accessToken } = asDfxAuthResponse(await authResponse.text())
 
