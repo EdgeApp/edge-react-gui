@@ -213,8 +213,11 @@ manifest.files = packedFilesFor({
 // manifests should not.
 delete manifest.$comment
 
-const stage =
+// Absolute, so the staged addon below is required as a file: a relative
+// `--out` such as `build/cli-package` would be looked up as a package name.
+const stage = path.resolve(
   stageOnly ?? fs.mkdtempSync(path.join(os.tmpdir(), 'edge-cli-publish-'))
+)
 fs.mkdirSync(stage, { recursive: true })
 
 interface Staged {
