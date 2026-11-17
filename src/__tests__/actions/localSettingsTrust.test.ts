@@ -90,6 +90,64 @@ describe('settings trust', () => {
     expect(keptCopies).toBe(1)
   })
 
+  it("keeps a change settled after a logout out of the next account's cache", async () => {
+    // The change's read of the file is held until after the logout, so it
+    // settles once the cache belongs to the next account.
+    const missing = (): Error =>
+      Object.assign(new Error('Cannot load "Settings.json"'), {
+        code: 'ENOENT'
+      })
+    const files = new Map<string, string>([
+      ['Settings.json', JSON.stringify({ developerModeOn: false })]
+    ])
+    let releaseRead = (): void => {}
+    const readHeld = new Promise<void>(resolve => {
+      releaseRead = resolve
+    })
+    const account = {
+      ...makeFakeDiskletAccount(),
+      localDisklet: {
+        getText: async (path: string) => {
+          await readHeld
+          const text = files.get(path)
+          if (text == null) throw missing()
+          return text
+        },
+        setText: async (path: string, text: string) => {
+          files.set(path, text)
+        },
+        delete: async (path: string) => {
+          files.delete(path)
+        }
+      }
+    } as unknown as Parameters<typeof updateLocalAccountSettings>[0]
+    const nextAccount = {
+      ...makeFakeDiskletAccount({ rootLoginId: 'root456' }),
+      localDisklet: {
+        getText: async () => {
+          throw missing()
+        },
+        setText: async () => {},
+        delete: async () => {}
+      }
+    } as unknown as Parameters<typeof getLocalAccountSettings>[0]
+
+    const change = updateLocalAccountSettings(account, latest => ({
+      ...latest,
+      developerModeOn: true
+    }))
+    resetLocalAccountSettingsCache()
+    releaseRead()
+    await change
+
+    // Written to the account it was made for:
+    const written = JSON.parse(files.get('Settings.json') ?? '{}')
+    expect(written.developerModeOn).toBe(true)
+    // And not cached for the next one, which reads its own file:
+    const next = await getLocalAccountSettings(nextAccount)
+    expect(next.developerModeOn).toBe(false)
+  })
+
   it('files an unreadable file away rather than writing over it', async () => {
     const written: Array<[string, string]> = []
     const deleted: string[] = []
