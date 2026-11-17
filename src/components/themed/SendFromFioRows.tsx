@@ -14,7 +14,7 @@ import {
   FIO_NO_BUNDLED_ERR_CODE
 } from '../../util/FioAddressUtils'
 import { SectionView } from '../layout/SectionView'
-import { AddressModal } from '../modals/AddressModal'
+import { AddressModal, type AddressModalResult } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { EdgeRow } from '../rows/EdgeRow'
@@ -157,15 +157,17 @@ export class SendFromFioRowsComponent extends React.PureComponent<
 
   selectAddress = async (): Promise<void> => {
     const { currencyCode, coreWallet } = this.props
-    const response = await Airship.show<string | undefined>(bridge => (
-      <AddressModal
-        bridge={bridge}
-        title={lstrings.fio_select_address}
-        currencyCode={currencyCode}
-        walletId={coreWallet.id}
-        useUserFioAddressesOnly
-      />
-    ))
+    const response = (
+      await Airship.show<AddressModalResult | undefined>(bridge => (
+        <AddressModal
+          bridge={bridge}
+          title={lstrings.fio_select_address}
+          currencyCode={currencyCode}
+          walletId={coreWallet.id}
+          useUserFioAddressesOnly
+        />
+      ))
+    )?.address
     if (response != null && response !== '') {
       await this.setFioAddress(response)
     }

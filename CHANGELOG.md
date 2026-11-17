@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- fixed: Warn before the first send to any ENS, Unstoppable Domains, Zano or ZcashNames name, not only FIO handles
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)

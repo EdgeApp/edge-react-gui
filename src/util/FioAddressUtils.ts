@@ -1,12 +1,5 @@
 import { div } from 'biggystring'
-import {
-  asArray,
-  asJSON,
-  asMaybe,
-  asNumber,
-  asObject,
-  asString
-} from 'cleaners'
+import { asMaybe, asNumber, asObject, asString } from 'cleaners'
 import type { Disklet } from 'disklet'
 import type {
   EdgeAccount,
@@ -14,7 +7,6 @@ import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeSpendInfo,
-  EdgeSpendTarget,
   EdgeTransaction
 } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
@@ -36,7 +28,6 @@ import { DECIMAL_PRECISION, truncateDecimals } from './utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
-const FIO_SENT_ADDRESSES = 'FioSentAddresses.json'
 const FIO_EXPIRED_CHECK = 'FioExpiredCheck.json'
 const MONTH = 1000 * 60 * 60 * 24 * 30
 const DEFAULT_BUNDLE_SET_VALUE = 1
@@ -660,105 +651,6 @@ export const getFioAddressCache = async (
   } catch (e: any) {
     return { addresses: {} }
   }
-}
-
-/**
- * FIO addresses this account has sent funds to, each mapped to the public
- * addresses it resolved to at the time, keyed in lower case. Unlike the FIO
- * address cache, which also records handles from incoming requests and
- * received transactions, only sends whose handle the user typed or scanned
- * and accepted write here, so a stranger cannot add a handle to it.
- */
-const asFioSentAddresses = asJSON(
-  asObject({ addresses: asMaybe(asObject(asArray(asString)), {}) })
-)
-
-/** A send to a FIO address, with the public address the handle resolved to. */
-export interface FioSentAddress {
-  fioAddress: string
-  publicAddress: string
-}
-
-/**
- * A FIO handle the address tile resolved and the user accepted for one spend
- * target. `paidAddress` is the address the tile gave the target, which can be
- * a normalized form of the resolved `send.publicAddress` (an EVM checksum,
- * for one).
- */
-export interface TileFioRecipient {
-  paidAddress: string | undefined
-  send: FioSentAddress
-}
-
-const getFioSentAddresses = async (
-  account: EdgeAccount
-): Promise<Record<string, string[]>> => {
-  try {
-    const text = await account.disklet.getText(FIO_SENT_ADDRESSES)
-    return asFioSentAddresses(text).addresses
-  } catch (error: unknown) {
-    // A missing or unreadable file means no sends are recorded yet:
-    return {}
-  }
-}
-
-/**
- * True when this account has sent to the FIO address while it resolved to
- * this public address. A handle whose owner has since pointed it somewhere
- * else counts as new.
- */
-export const hasSentToFioAddress = async (
-  account: EdgeAccount,
-  fioAddress: string,
-  publicAddress: string
-): Promise<boolean> => {
-  const sent = await getFioSentAddresses(account)
-  return sent[fioAddress.toLowerCase()]?.includes(publicAddress) ?? false
-}
-
-/**
- * The FIO sends a broadcast made that the user accepted in the address tile.
- * `tileRecipients` holds what the tile resolved for each target; a target's
- * `otherParams` are not consulted, because a caller such as an Edge Provider
- * `requestSpend` can fill them with anything. A target counts only while it
- * still pays the address the tile gave it. The recorded address is the one
- * FIO resolved, the same form the address tile checks against later.
- */
-export const getAcceptedFioSends = (
-  spendTargets: EdgeSpendTarget[],
-  tileRecipients: WeakMap<EdgeSpendTarget, TileFioRecipient>
-): FioSentAddress[] => {
-  const sends: FioSentAddress[] = []
-  for (const target of spendTargets) {
-    const tileRecipient = tileRecipients.get(target)
-    if (
-      tileRecipient?.paidAddress != null &&
-      tileRecipient.paidAddress === target.publicAddress
-    ) {
-      sends.push(tileRecipient.send)
-    }
-  }
-  return sends
-}
-
-export const addToFioSentAddresses = async (
-  account: EdgeAccount,
-  sends: FioSentAddress[]
-): Promise<void> => {
-  const sent = await getFioSentAddresses(account)
-  let changed = false
-  for (const { fioAddress, publicAddress } of sends) {
-    const key = fioAddress.toLowerCase()
-    const publicAddresses = sent[key] ?? []
-    if (publicAddresses.includes(publicAddress)) continue
-    sent[key] = [...publicAddresses, publicAddress]
-    changed = true
-  }
-  if (!changed) return
-  await account.disklet.setText(
-    FIO_SENT_ADDRESSES,
-    JSON.stringify({ addresses: sent })
-  )
 }
 
 export const checkRecordSendFee = async (
