@@ -17,9 +17,11 @@ tags:
       USERNAME: ${MAESTRO_EDGE_IP2FA_MEXICO_USERNAME}
       PASSWORD: ${MAESTRO_EDGE_IP2FA_MEXICO_PASSWORD}
 
+# An IP lock shows the Authorize Device scene without the 2FA code field:
 - extendedWaitUntil:
-    visible: "Username and password are correct. This device cannot log in due\
-    \ to an unrecognized IP address."
+    visible: "Approve from another device"
     timeout: 15000
+- assertNotVisible:
+    id: "otpCodeFormField.textInput"
 
 - stopApp

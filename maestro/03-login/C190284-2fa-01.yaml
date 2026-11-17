@@ -20,21 +20,18 @@ tags:
       PASSWORD: ${MAESTRO_EDGE_2FA_PASSWORD}
 
 - extendedWaitUntil:
-    visible: "Username and password are correct. This device cannot log in because\
-    \ it does not have the right 2-factor code."
+    visible:
+      id: "otpCodeFormField.textInput"
     timeout: 15000
-- assertVisible: "Enter 2FA code"
-- tapOn: "Enter 2FA code"
+- tapOn:
+    id: "otpCodeFormField.textInput"
 - inputText: ${MAESTRO_EDGE_2FA_BACKUP_CODE}
-- assertVisible: "Submit"
 
 # Workaround for keyboard autocomplete suggestion conflicts on some android screensizes
 - hideKeyboard:
     optional: true
 
-- tapOn:
-    text: "Submit"
-    optional: true
+- tapOn: "Verify Code"
 
 # If the request notifications modal show with "Security is Our Priority"
 # Cancel it
