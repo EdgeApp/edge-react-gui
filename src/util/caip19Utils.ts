@@ -40,6 +40,27 @@ const BIP122_GENESIS = {
   litecoin: '12a765e31ffd4059bada1e25190f6e98'
 } as const
 
+// Other BIP-122 genesis hashes that only `caip19ToEdgeAsset` reads:
+const BIP122_GENESIS_ALIASES: Record<string, string> = {
+  // Dogecoin genesis block:
+  '1a91e3dace36e2be3bf030a65679fe82': 'dogecoin',
+  // BCH by block 478558, the last block before the fork (used by BTC Direct):
+  '0000000000000000011865af4122fe3b': 'bitcoincash'
+}
+
+// Chains whose CAIP-19 identifiers only name the native asset,
+// keyed by CAIP-2 chain id:
+const NATIVE_ONLY_CHAINS: Record<string, string> = {
+  'algorand:wGHE2Pwdvd7S12BL5FaOP20EGYesN73k': 'algorand',
+  'cardano:mainnet': 'cardano',
+  'cip34:1-764824073': 'cardano',
+  'hedera:mainnet': 'hedera',
+  'monero:mainnet': 'monero',
+  'stellar:pubnet': 'stellar',
+  'xrpl:0': 'ripple',
+  'zcash:mainnet': 'zcash'
+}
+
 // Solana mainnet genesis hash (first 32 chars, base58)
 // See: https://namespaces.chainagnostic.org/solana/caip2
 const SOLANA_MAINNET_GENESIS = '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp'
@@ -161,11 +182,11 @@ export function edgeAssetToCaip19(
  * Supported formats:
  * - eip155:{chainId}/erc20:{contract} - EVM tokens
  * - eip155:{chainId}/slip44:{coinType} - EVM native assets
- * - bip122:{genesisHash}/slip44:{coinType} - BTC, BCH, LTC
+ * - bip122:{genesisHash}/slip44:{coinType} - BTC, BCH, LTC, DOGE
  * - solana:{genesisHash}/slip44:501 - Solana native
  * - tron:{chainRef}/trc20:{contract} - TRC20 tokens
- * - monero:mainnet/slip44:128 - Monero native
- * - zcash:mainnet/slip44:133 - Zcash native
+ * - {chainId}/slip44:{coinType} - native assets of the chains in
+ *   NATIVE_ONLY_CHAINS (ADA, ALGO, HBAR, XLM, XMR, XRP, ZEC)
  *
  * Special cases:
  * - Polygon precompile 0x...1010 treated as native MATIC (Phaze API workaround)
@@ -231,7 +252,8 @@ export function caip19ToEdgeAsset(
     const [assetNs, assetRef] = assetPart.split(':')
 
     // Determine pluginId from genesis hash
-    let pluginId = genesisToPlugin[reference]
+    let pluginId =
+      genesisToPlugin[reference] ?? BIP122_GENESIS_ALIASES[reference]
 
     // Fallback: BTC genesis hash with slip44:145 means BCH
     // (some implementations may use BTC's genesis for BCH)
@@ -294,20 +316,12 @@ export function caip19ToEdgeAsset(
     }
   }
 
-  // Monero - native only
-  if (namespace === 'monero' && reference === 'mainnet') {
+  // Native-only chains
+  const nativePluginId = NATIVE_ONLY_CHAINS[chainPart]
+  if (nativePluginId != null) {
     const [assetNs] = assetPart.split(':')
     if (assetNs === 'slip44') {
-      return { pluginId: 'monero', tokenId: null }
-    }
-    return
-  }
-
-  // Zcash - native only
-  if (namespace === 'zcash' && reference === 'mainnet') {
-    const [assetNs] = assetPart.split(':')
-    if (assetNs === 'slip44') {
-      return { pluginId: 'zcash', tokenId: null }
+      return { pluginId: nativePluginId, tokenId: null }
     }
   }
 }
