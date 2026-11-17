@@ -3,7 +3,7 @@
 ## Unreleased (develop)
 
 - fixed: Android crash when opening DFX and other web pages on some Android 12+ phones, where the blurred header and tab bar redrew the page
-- fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection
+- fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection, for Bitcoin and EVM wallets, which Edge logs in to DFX
 - fixed: DFX sells entered in fiat open DFX with the crypto amount filled in
 - fixed: The header back button in Buy and Sell plugin scenes acting on the other tab's plugin
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval

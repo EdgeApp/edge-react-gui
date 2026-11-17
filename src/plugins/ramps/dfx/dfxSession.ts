@@ -1,12 +1,10 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
 
-import { lstrings } from '../../../locales/strings'
+import { RampIpCountryError } from '../../../types/RampIpCountryError'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
+import { fetchDfx } from './dfxApi'
 import { asDfxAuthResponse, asDfxSignMessageResponse } from './dfxRampTypes'
-
-const DFX_API_URL = 'https://api.dfx.swiss/v1'
 
 // The quote approval waits for the login, so a slow DFX API must not hold
 // the user on the quote list.
@@ -45,18 +43,6 @@ export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
   }
 }
 
-/**
- * DFX refuses logins from some countries by the IP address, whatever
- * region the user picked in Edge. Opening DFX anyway only lands the user on
- * DFX's own login, which fails the same way, so this one stops the launch.
- */
-export class DfxIpCountryError extends Error {
-  constructor() {
-    super(sprintf(lstrings.ramp_provider_ip_country_blocked_1s, 'DFX'))
-    this.name = 'DfxIpCountryError'
-  }
-}
-
 export interface DfxSessionParams {
   readonly wallet: EdgeCurrencyWallet
   /** Partner wallet name DFX attributes the user to */
@@ -67,8 +53,9 @@ export interface DfxSessionParams {
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
  * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the link without a login. Throws DfxIpCountryError
- * when DFX blocks the user's country.
+ * so the caller opens the link without a login. Throws RampIpCountryError
+ * when DFX blocks the country of the user's IP address, since DFX's own
+ * login would fail the same way.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -86,7 +73,7 @@ export async function fetchDfxSessionQuery(
     }
     return query
   } catch (error: unknown) {
-    if (error instanceof DfxIpCountryError) throw error
+    if (error instanceof RampIpCountryError) throw error
     console.warn(
       `DFX session login failed, opening plain link: ${String(error)}`
     )
@@ -101,14 +88,8 @@ async function loginToDfx(
   const { wallet, walletName } = params
   const address = await getDfxAddress(wallet)
 
-  const signResponse = await fetch(
-    `${DFX_API_URL}/auth/signMessage?address=${encodeURIComponent(address)}`
-  )
-  if (!signResponse.ok) {
-    throw new Error(`signMessage returned ${signResponse.status}`)
-  }
   const { message, blockchains } = asDfxSignMessageResponse(
-    await signResponse.text()
+    await fetchDfx(`/auth/signMessage?address=${encodeURIComponent(address)}`)
   )
   if (!blockchains.includes(chain.blockchain)) {
     throw new Error(`address not accepted on ${chain.blockchain}`)
@@ -126,20 +107,13 @@ async function loginToDfx(
         otherParams: { publicAddress: address }
       })
 
-  const authResponse = await fetch(`${DFX_API_URL}/auth`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ address, signature, wallet: walletName })
-  })
-  if (!authResponse.ok) {
-    const text = await authResponse.text()
-    // DFX answers 403 "The country of IP address is not allowed":
-    if (authResponse.status === 403 && /country/i.test(text)) {
-      throw new DfxIpCountryError()
-    }
-    throw new Error(`auth returned ${authResponse.status}: ${text}`)
-  }
-  const { accessToken } = asDfxAuthResponse(await authResponse.text())
+  const { accessToken } = asDfxAuthResponse(
+    await fetchDfx('/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address, signature, wallet: walletName })
+    })
+  )
 
   return { session: accessToken }
 }

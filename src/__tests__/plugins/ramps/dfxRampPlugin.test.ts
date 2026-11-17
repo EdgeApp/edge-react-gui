@@ -8,14 +8,12 @@ import {
   dfxRampPlugin,
   makeDfxRequestQuery
 } from '../../../plugins/ramps/dfx/dfxRampPlugin'
-import {
-  DfxIpCountryError,
-  fetchDfxSessionQuery
-} from '../../../plugins/ramps/dfx/dfxSession'
+import { fetchDfxSessionQuery } from '../../../plugins/ramps/dfx/dfxSession'
 import type {
   RampPluginConfig,
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
+import { RampIpCountryError } from '../../../types/RampIpCountryError'
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showToastSpinner: async (message: string, promise: Promise<unknown>) =>
@@ -255,7 +253,9 @@ describe('dfxRampPlugin approveQuote', () => {
   })
 
   it('does not open DFX when it blocks the country', async () => {
-    mockFetchSessionQuery.mockRejectedValueOnce(new DfxIpCountryError())
+    mockFetchSessionQuery.mockRejectedValueOnce(
+      new RampIpCountryError('DFX', 'Forbidden')
+    )
     const navigate = jest.fn()
     const plugin = dfxRampPlugin({
       initOptions: {},
@@ -265,7 +265,7 @@ describe('dfxRampPlugin approveQuote', () => {
     const [quote] = await plugin.fetchQuotes(request)
     await expect(
       quote.approveQuote({ coreWallet: request.wallet })
-    ).rejects.toBeInstanceOf(DfxIpCountryError)
+    ).rejects.toBeInstanceOf(RampIpCountryError)
     expect(navigate).not.toHaveBeenCalled()
   })
 })
