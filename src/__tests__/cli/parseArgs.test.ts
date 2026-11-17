@@ -160,6 +160,7 @@ describe('parseCliArgs', () => {
     expect(options.test).toBe(true)
     expect(options['app-id']).toBe('edge.app')
     expect(options['api-key']).toBe('key123')
+    expect(parseCliArgs(['-v']).options.version).toBe(true)
   })
 
   it('reads the boolean switches', () => {
@@ -167,12 +168,14 @@ describe('parseCliArgs', () => {
       '--fake',
       '--no-spawn',
       '--solve-captcha',
-      '--help'
+      '--help',
+      '--version'
     ])
     expect(options.fake).toBe(true)
     expect(options['no-spawn']).toBe(true)
     expect(options['solve-captcha']).toBe(true)
     expect(options.help).toBe(true)
+    expect(options.version).toBe(true)
   })
 
   it('refuses an unknown option', () => {

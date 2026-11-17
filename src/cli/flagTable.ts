@@ -214,6 +214,17 @@ export const GLOBAL_FLAGS: GlobalFlag[] = [
     docName: '-h, --help',
     who: 'both',
     description: 'Show options'
+  },
+  {
+    spelling: '-v, --version',
+    long: '--version',
+    short: '-v',
+    takesValue: false,
+    clientField: 'version',
+    engineField: 'version',
+    docName: '-v, --version',
+    who: 'both',
+    description: 'Show the version this CLI was built from'
   }
 ]
 

@@ -61,6 +61,7 @@ import { TESTER_SERVERS } from './engine/testerServers'
 import { emptyToUndefined } from './envValue'
 import { type CliOptions, parseCliArgs, showCliHelp } from './parseArgs'
 import { splitPromptLine, UnterminatedQuoteError } from './promptLine'
+import { CLI_VERSION } from './version'
 
 function formatUsage(cmd: {
   name: string
@@ -490,6 +491,13 @@ async function invokeCommand(
 
 async function main(): Promise<number> {
   const { argv, options } = parseCliArgs(process.argv.slice(2))
+
+  // Like `--help`, it needs no engine, so it is answered before one is
+  // looked for, whatever command follows it.
+  if (options.version === true) {
+    console.log(CLI_VERSION)
+    return EXIT.OK
+  }
 
   if (options.help === true && argv.length === 0) {
     showCliHelp()

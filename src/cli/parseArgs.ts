@@ -27,6 +27,7 @@ export interface CliOptions {
   tcp?: string
   timeout?: string
   help?: boolean
+  version?: boolean
 }
 
 interface ParsedArgs {

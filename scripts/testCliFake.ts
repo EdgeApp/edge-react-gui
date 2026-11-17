@@ -20,6 +20,7 @@ import path from 'path'
 import { renderTerminalQr } from '../src/cli/client/terminalQr'
 import {
   CLI,
+  ENGINE,
   parseLeadingJson,
   runDirOfSocket,
   runRoot,
@@ -707,6 +708,31 @@ function checkEngineUnavailable(): void {
 }
 
 /**
+ * `--version`, from the client and the engine alike, is `package.json`'s.
+ *
+ * Against the bundles, that is the version rollup inlined when it built
+ * them, so this fails on a `lib/` built from another version.
+ */
+function checkVersion(): void {
+  const { version } = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+  const client = cli('--version')
+  check(
+    '--version prints the version the CLI was built from',
+    client.status === 0 && client.out.trim() === version,
+    `status=${String(client.status)} out=${client.out.trim()}`
+  )
+  const engine = spawnSync('node', [...ENGINE, '--version'], {
+    encoding: 'utf8'
+  })
+  const engineOut = (engine.stdout ?? '') + (engine.stderr ?? '')
+  check(
+    'the engine prints the same version',
+    engine.status === 0 && engineOut.trim() === version,
+    `status=${String(engine.status)} out=${engineOut.trim()}`
+  )
+}
+
+/**
  * A 401 on an overridden session must not clear the persisted one.
  *
  * Runs while a real session is logged in, so the file holds a usable id. The
@@ -845,6 +871,7 @@ function main(): void {
     // `help <name>` answers for a registered name, and a newer command
     // would fail this case on any tree that predates it.
     ok('help', 'help', 'engine-status')
+    checkVersion()
 
     // ------------------------------------------------------ credentials
     ok('check-password', 'check-password', `--password=${PASS}`)
