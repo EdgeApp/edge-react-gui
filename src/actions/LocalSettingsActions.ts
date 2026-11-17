@@ -55,10 +55,17 @@ type SettingsTrust = 'unread' | 'trusted' | 'untrusted'
 let settingsTrust: SettingsTrust = 'unread'
 
 /**
+ * Advanced by every logout, so a change still queued across one stays out
+ * of the next account's cache.
+ */
+let settingsEpoch = 0
+
+/**
  * Resets the local account settings cache. Must be called on logout to prevent
  * one account's settings from persisting to a subsequent account's session.
  */
 export const resetLocalAccountSettingsCache = (): void => {
+  ++settingsEpoch
   settingsTrust = 'unread'
   localAccountSettings = asLocalAccountSettings({})
 }
@@ -138,7 +145,7 @@ export function toggleAccountBalanceVisibility(): ThunkAction<Promise<void>> {
       showToast(lstrings.fragment_wallets_balance_hidden_toast, TOAST_HIDE_MS)
     }
 
-    // A failed save leaves the UI as it is: writeLocalAccountSettings has
+    // A failed save leaves the UI as it is: updateLocalAccountSettings has
     // already cached the new value, so the next settings save persists it.
     await writeAccountBalanceVisibility(account, isAccountBalanceVisible)
   }
@@ -365,74 +372,108 @@ export const readLocalAccountSettings = async (
 export const updateLocalAccountSettings = async (
   account: EdgeAccount,
   update: (settings: LocalAccountSettings) => LocalAccountSettings
-): Promise<LocalAccountSettings> =>
-  // One write at a time per account, as `change-local-settings` does. Two
-  // writers racing on an unreadable file would both fail their reads and
-  // both recover it, and the second could remove or overwrite the file the
-  // first had just written, losing the first change.
-  await serializeByKey(
-    `localSettings:${account.rootLoginId}`,
-    async () => await updateLocalAccountSettingsNow(account, update)
-  )
-
-const updateLocalAccountSettingsNow = async (
-  account: EdgeAccount,
-  update: (settings: LocalAccountSettings) => LocalAccountSettings
 ): Promise<LocalAccountSettings> => {
+  const epoch = settingsEpoch
+  // The base and the change are settled one at a time per account, in call
+  // order. Two writers racing on an unreadable file would both fail their
+  // reads and both recover it, and the second could remove or overwrite the
+  // file the first had just written, losing the first change.
+  const settings = await serializeByKey(
+    `localSettings:${account.rootLoginId}`,
+    async () => await settleLocalAccountSettings(account, update, epoch)
+  )
+  // The disk writes go one at a time per account too, in the same order, so
+  // the last write is the last change. Settling does not wait for them: two
+  // quick changes are both decided at once, before a logout can come between
+  // them, and only their writes wait.
+  await serializeByKey(
+    `localSettingsWrite:${account.rootLoginId}`,
+    async () => {
+      await writeLocalAccountSettingsToDisk(account, settings)
+    }
+  )
+  return settings
+}
+
+/**
+ * The settings `update` makes, applied to the file's real contents, and
+ * cached unless a logout has come since the change was asked for: the cache
+ * then belongs to the next account, so the change is applied to this
+ * account's file alone.
+ */
+const settleLocalAccountSettings = async (
+  account: EdgeAccount,
+  update: (settings: LocalAccountSettings) => LocalAccountSettings,
+  epoch: number
+): Promise<LocalAccountSettings> => {
+  if (epoch !== settingsEpoch) {
+    return update(await readLocalAccountSettingsBase(account))
+  }
   let base = localAccountSettings
   if (settingsTrust !== 'trusted') {
-    // Strictly, because this is a write path: an unreadable file must not be
-    // answered with the defaults and written back, and an absent one is
-    // answered with those defaults exactly as the lenient reader would.
-    //
-    // `untrusted` is the same call rather than a refusal. A refusal would
-    // never clear: a `Settings.json` that is present and broken does not
-    // repair itself, so every later write would fail the same way, spending
-    // limits included. The user cannot fix the file either: it is on
-    // `account.localDisklet` inside the app's private container, and
-    // `ios/edge/Info.plist` sets neither `UIFileSharingEnabled` nor
-    // `LSSupportsOpeningDocumentsInPlace`, so it is not in the Files app and
-    // on Android it is app-private.
-    //
-    // So the reader tries twice and then moves the file aside, which loses
-    // nothing a caller could have read anyway and leaves the bytes on the
-    // disklet for support; a file that will not decrypt has no bytes to keep
-    // and is deleted. The error below is for the case where even that fails:
-    // a disklet that cannot be read or written at all.
-    try {
-      const { settings, recovery } = await readLocalAccountSettingsForWrite(
-        account
-      )
-      base = settings
-      if (recovery?.kind === 'moved') {
-        logActivity(
-          `Moved unreadable ${LOCAL_SETTINGS_FILENAME} to ${recovery.to}`
-        )
-      } else if (recovery?.kind === 'deleted') {
-        logActivity(
-          `Deleted ${LOCAL_SETTINGS_FILENAME}, which would not decrypt: ${recovery.reason}`
-        )
-      }
-    } catch (error: unknown) {
-      // The door itself did not open, so there is no writable file to
-      // recover to. Logged first, because the translated message below is
-      // all the user sees and says nothing about the cause. Translated,
-      // because this one reaches the user — every writer in this module
-      // funnels through here, `SpendingLimitsScene` hands the rejection to
-      // `showError`, and `translateError` has no arm for a bare `Error`, so
-      // it renders `message` verbatim in the drop-down.
-      logActivity(
-        `Could not open ${LOCAL_SETTINGS_FILENAME} for writing: ${errorMessage(
-          error
-        )}`
-      )
-      throw new Error(lstrings.settings_not_saved_unreadable_file)
-    }
+    base = await readLocalAccountSettingsBase(account)
+    // A logout can land while the file is being read, too.
+    if (epoch !== settingsEpoch) return update(base)
     settingsTrust = 'trusted'
   }
   const settings = update(base)
   // Refresh cache, notify callers
   emitAccountSettings(settings)
-  await writeLocalAccountSettingsToDisk(account, settings)
   return settings
+}
+
+/**
+ * What the file holds, read strictly for a write, recovering it when it is
+ * unreadable.
+ */
+const readLocalAccountSettingsBase = async (
+  account: EdgeAccount
+): Promise<LocalAccountSettings> => {
+  // Strictly, because this is a write path: an unreadable file must not be
+  // answered with the defaults and written back, and an absent one is
+  // answered with those defaults exactly as the lenient reader would.
+  //
+  // `untrusted` is the same call rather than a refusal. A refusal would
+  // never clear: a `Settings.json` that is present and broken does not
+  // repair itself, so every later write would fail the same way, spending
+  // limits included. The user cannot fix the file either: it is on
+  // `account.localDisklet` inside the app's private container, and
+  // `ios/edge/Info.plist` sets neither `UIFileSharingEnabled` nor
+  // `LSSupportsOpeningDocumentsInPlace`, so it is not in the Files app and
+  // on Android it is app-private.
+  //
+  // So the reader tries twice and then moves the file aside, which loses
+  // nothing a caller could have read anyway and leaves the bytes on the
+  // disklet for support; a file that will not decrypt has no bytes to keep
+  // and is deleted. The error below is for the case where even that fails:
+  // a disklet that cannot be read or written at all.
+  try {
+    const { settings, recovery } = await readLocalAccountSettingsForWrite(
+      account
+    )
+    if (recovery?.kind === 'moved') {
+      logActivity(
+        `Moved unreadable ${LOCAL_SETTINGS_FILENAME} to ${recovery.to}`
+      )
+    } else if (recovery?.kind === 'deleted') {
+      logActivity(
+        `Deleted ${LOCAL_SETTINGS_FILENAME}, which would not decrypt: ${recovery.reason}`
+      )
+    }
+    return settings
+  } catch (error: unknown) {
+    // The door itself did not open, so there is no writable file to
+    // recover to. Logged first, because the translated message below is
+    // all the user sees and says nothing about the cause. Translated,
+    // because this one reaches the user — every writer in this module
+    // funnels through here, `SpendingLimitsScene` hands the rejection to
+    // `showError`, and `translateError` has no arm for a bare `Error`, so
+    // it renders `message` verbatim in the drop-down.
+    logActivity(
+      `Could not open ${LOCAL_SETTINGS_FILENAME} for writing: ${errorMessage(
+        error
+      )}`
+    )
+    throw new Error(lstrings.settings_not_saved_unreadable_file)
+  }
 }
