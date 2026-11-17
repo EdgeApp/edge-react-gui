@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- added: MoneyGram cash in and cash out for Stellar through SEP-24, with USDC trustline setup before a deposit (testnet prototype)
+- fixed: FIO connected-wallet and name refreshes waiting 10 minutes after login on accounts with a FIO wallet
 - fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 
 ## 4.53.0 (staging)

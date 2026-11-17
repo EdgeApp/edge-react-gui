@@ -62,6 +62,7 @@ function buildAccountbasedPlugins(): EdgeCorePluginsInit {
     solana: coreInit('solana'),
     sonic: coreInit('sonic'),
     stellar: true,
+    stellartestnet: coreInit('stellartestnet'),
     sui: true,
     telos: true,
     tezos: true,

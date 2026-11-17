@@ -149,6 +149,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ripple',
   'wallet:rsk',
   'wallet:stellar',
+  'wallet:stellartestnet',
   'wallet:dash',
   'wallet:tezos',
   'wallet:digibyte',
@@ -426,6 +427,18 @@ export const SPECIAL_CURRENCY_INFO: Record<string, SpecialCurrencyInfo> = {
     displayBuyCrypto: false,
     isImportKeySupported: true,
     unstoppableDomainsTicker: 'XLM'
+  },
+  stellartestnet: {
+    initWalletName: lstrings.string_first_stellar_testnet_wallet_name,
+    dummyPublicAddress:
+      'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
+    minimumPopupModals: {
+      minimumNativeBalance: '10000000',
+      modalMessage: lstrings.request_xlm_minimum_notification_body,
+      alertMessage: lstrings.request_xlm_minimum_notification_alert_body
+    },
+    displayBuyCrypto: false,
+    isImportKeySupported: true
   },
   ripple: {
     initWalletName: lstrings.string_first_ripple_wallet_name,

@@ -3,6 +3,7 @@ import { bitsofgoldRampPlugin } from './bitsofgold/bitsofgoldRampPlugin'
 import { dfxRampPlugin } from './dfx/dfxRampPlugin'
 import { infiniteRampPlugin } from './infinite/infiniteRampPlugin'
 import { libertyxRampPlugin } from './libertyx/libertyxRampPlugin'
+import { moneygramRampPlugin } from './moneygram/moneygramRampPlugin'
 import { moonpayRampPlugin } from './moonpay/moonpayRampPlugin'
 import { paybisRampPlugin } from './paybis/paybisRampPlugin'
 import type { RampPluginFactory } from './rampPluginTypes'
@@ -15,6 +16,7 @@ export const pluginFactories: Record<string, RampPluginFactory> = {
   dfx: dfxRampPlugin,
   infinite: infiniteRampPlugin,
   libertyx: libertyxRampPlugin,
+  moneygram: moneygramRampPlugin,
   moonpay: moonpayRampPlugin,
   paybis: paybisRampPlugin,
   revolut: revolutRampPlugin,
