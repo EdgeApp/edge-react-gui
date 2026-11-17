@@ -619,14 +619,23 @@ const TEST_SERVER_BRANCHES = ['paul/dfxRampIssuesWip']
 
 /**
  * Points this test build at the tester servers, where the test accounts
- * live, by setting ENABLE_TEST_SERVERS in config.json.
+ * live, by setting ENABLE_TEST_SERVERS in config.json. The tester servers
+ * supply no DFX entry, so the build bakes DFX's (keyless) ramp plugin in.
  */
 export async function setTestServersFlag(root: string): Promise<void> {
   const file = join(root, 'config.json')
   const config = JSON.parse(await readFile(file, 'utf8'))
   await writeFile(
     file,
-    JSON.stringify({ ...config, ENABLE_TEST_SERVERS: true }, null, 2)
+    JSON.stringify(
+      {
+        ...config,
+        ENABLE_TEST_SERVERS: true,
+        rampPlugins: { ...config.rampPlugins, dfx: {} }
+      },
+      null,
+      2
+    )
   )
 }
 
