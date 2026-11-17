@@ -37,6 +37,13 @@ export interface Props {
 
 interface WebViewEvent {
   canGoBack: boolean
+  url: string
+}
+
+interface WebViewErrorEvent {
+  code: number
+  description: string
+  url: string
 }
 
 export function EdgeProviderComponent(props: Props): React.ReactElement {
@@ -126,15 +133,26 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
 
   const handleLoadProgress = useHandler(
     (event: NativeSyntheticEvent<WebViewEvent>) => {
-      console.log('Plugin navigation: ', event.nativeEvent)
+      // The query can carry a login token (DFX `session`):
+      console.log('Plugin navigation: ', event.nativeEvent.url.split('?')[0])
       canGoBack.current = event.nativeEvent.canGoBack
     }
   )
 
   const handleNavigationStateChange = useHandler((event: WebViewEvent) => {
-    console.log('Plugin navigation: ', event)
+    // The query can carry a login token (DFX `session`):
+    console.log('Plugin navigation: ', event.url.split('?')[0])
     canGoBack.current = event.canGoBack
   })
+
+  const handleError = useHandler(
+    (event: NativeSyntheticEvent<WebViewErrorEvent>) => {
+      // Without this handler the webview logs the whole event, URL query
+      // (and any DFX `session` token) included:
+      const { code, description, url } = event.nativeEvent
+      console.warn('Plugin load error: ', url.split('?')[0], code, description)
+    }
+  )
 
   // Mechanism to force-restart the webview:
   const [webViewKey, setWebViewKey] = React.useState(0)
@@ -234,6 +252,7 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
       ref={webView}
       source={{ uri }}
       userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
+      onError={handleError}
       onLoadProgress={handleLoadProgress}
       onMessage={handleMessage}
       onNavigationStateChange={handleNavigationStateChange}
