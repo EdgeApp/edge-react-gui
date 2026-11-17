@@ -340,6 +340,8 @@
   "help_faq_text": "Preguntas frecuentes",
   "help_live_chat": "Chat en vivo",
   "help_live_chat_text": "Ayuda rápida de un agente en vivo",
+  "help_live_chat_authorize_device": "I need help authorizing this device to log in.",
+  "help_live_chat_authorize_device_1s": "I need help authorizing this device to log in. My Lock ID is %1$s.",
   "help_call_agent": "Llamar para recibir ayuda",
   "help_call_agent_text": "Nuestros agentes también están disponibles por teléfono",
   "help_official_site": "Visitar el sitio oficial",
