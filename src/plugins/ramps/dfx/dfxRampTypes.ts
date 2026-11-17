@@ -4,7 +4,8 @@ import {
   asNumber,
   asObject,
   asOptional,
-  asString
+  asString,
+  uncleaner
 } from 'cleaners'
 
 export interface InitOptions {
@@ -54,6 +55,15 @@ export const asDfxFiats = asJSON(
     })
   )
 )
+
+/** PUT /v1/sell/quote: the fiat to receive, by DFX's asset and fiat ids. */
+export const asDfxSellQuoteRequest = asObject({
+  asset: asObject({ id: asNumber }),
+  currency: asObject({ id: asNumber }),
+  targetAmount: asNumber
+})
+
+export const wasDfxSellQuoteRequest = uncleaner(asJSON(asDfxSellQuoteRequest))
 
 /** PUT /v1/sell/quote: `amount` is the crypto to send for `targetAmount`. */
 export const asDfxSellQuoteResponse = asJSON(

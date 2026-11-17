@@ -116,21 +116,32 @@ export function makeDfxRequestQuery(
 
 /**
  * The crypto amount for a fiat-entered sell, from DFX's quote for the
- * fiat in `amount-out`. Undefined for other requests or without a quote.
+ * fiat in `amount-out`. On a sell, the request query names the crypto as
+ * `asset-in` and the fiat as `asset-out`. Undefined for other requests or
+ * without a quote.
  */
 async function fetchFiatSellCryptoAmount(
   request: RampQuoteRequest,
   query: Record<string, string>
 ): Promise<string | undefined> {
-  const fiatAmount = query['amount-out']
-  const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
-  if (request.direction !== 'sell' || fiatAmount == null || chain == null) {
+  const {
+    blockchain,
+    'asset-in': asset,
+    'asset-out': fiat,
+    'amount-out': fiatAmount
+  } = query
+  if (
+    request.direction !== 'sell' ||
+    blockchain == null ||
+    asset == null ||
+    fiatAmount == null
+  ) {
     return undefined
   }
   return await fetchDfxSellCryptoAmount({
-    blockchain: chain.blockchain,
-    asset: chain.asset,
-    fiat: query['asset-out'],
+    blockchain,
+    asset,
+    fiat,
     fiatAmount
   })
 }

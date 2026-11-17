@@ -52,6 +52,7 @@ const makeRequest = (
 
 afterEach(() => {
   locale.localeIdentifier = realLocaleId
+  jest.clearAllMocks()
 })
 
 describe('makeDfxRequestQuery', () => {
@@ -172,6 +173,43 @@ describe('dfxRampPlugin approveQuote', () => {
       ...requestQuery,
       session: 'jwt'
     })
+  })
+
+  it('does not quote a crypto-entered buy', async () => {
+    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+    const cryptoBuy = makeRequest('bitcoin', {
+      amountQuery: { exchangeAmount: '0.01' },
+      amountType: 'crypto'
+    })
+
+    expect(await approveDeepQuery(cryptoBuy)).toEqual({
+      wallet: 'Edge',
+      lang: 'en',
+      blockchain: 'Bitcoin',
+      'asset-in': 'CHF',
+      'asset-out': 'BTC',
+      'amount-out': '0.01'
+    })
+    expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
+  })
+
+  it('does not quote a crypto-entered sell', async () => {
+    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+    const cryptoSell = makeRequest('bitcoin', {
+      amountQuery: { exchangeAmount: '0.01' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(await approveDeepQuery(cryptoSell)).toEqual({
+      wallet: 'Edge',
+      lang: 'en',
+      blockchain: 'Bitcoin',
+      'asset-in': 'BTC',
+      'asset-out': 'CHF',
+      'amount-in': '0.01'
+    })
+    expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
   })
 
   describe('a fiat-entered sell', () => {

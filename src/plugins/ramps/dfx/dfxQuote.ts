@@ -1,7 +1,11 @@
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
-import { asDfxAssets, asDfxFiats, asDfxSellQuoteResponse } from './dfxRampTypes'
-
-const DFX_API_URL = 'https://api.dfx.swiss/v1'
+import { fetchDfx } from './dfxApi'
+import {
+  asDfxAssets,
+  asDfxFiats,
+  asDfxSellQuoteResponse,
+  wasDfxSellQuoteRequest
+} from './dfxRampTypes'
 
 // Runs beside the login under the same quote-approval spinner:
 const DFX_QUOTE_TIMEOUT_MS = 10000
@@ -62,7 +66,7 @@ async function quoteSellAmount(params: DfxSellAmountParams): Promise<string> {
     await fetchDfx('/sell/quote', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      body: wasDfxSellQuoteRequest({
         asset: { id: dfxAsset.id },
         currency: { id: dfxFiat.id },
         targetAmount: Number(fiatAmount)
@@ -74,16 +78,4 @@ async function quoteSellAmount(params: DfxSellAmountParams): Promise<string> {
   // DFX rounds its amounts well within 8 decimals. toFixed keeps the
   // string a plain decimal, never exponent notation such as 1e-7:
   return quote.amount.toFixed(8).replace(/\.?0+$/, '')
-}
-
-async function fetchDfx(path: string, init?: RequestInit): Promise<string> {
-  const response = await fetch(`${DFX_API_URL}${path}`, init)
-  if (!response.ok) {
-    throw new Error(
-      `${path.split('?')[0]} returned ${
-        response.status
-      }: ${await response.text()}`
-    )
-  }
-  return await response.text()
 }
