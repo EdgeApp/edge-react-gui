@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native'
 import { uncleaner } from 'cleaners'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
@@ -118,18 +119,22 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
   // Sign up for back-button events:
   const webView = React.useRef<WebView>(null)
   const canGoBack = React.useRef<boolean>(false)
-  React.useEffect(() => {
-    setPluginScene({
-      goBack() {
-        if (webView.current == null || !canGoBack.current) {
-          navigation.goBack()
-          return false
-        }
-        webView.current.goBack()
-        return true
-      }
-    })
-  }, [navigation])
+  useFocusEffect(
+    React.useCallback(
+      () =>
+        setPluginScene({
+          goBack() {
+            if (webView.current == null || !canGoBack.current) {
+              navigation.goBack()
+              return false
+            }
+            webView.current.goBack()
+            return true
+          }
+        }),
+      [navigation]
+    )
+  )
 
   const handleLoadProgress = useHandler(
     (event: NativeSyntheticEvent<WebViewEvent>) => {
