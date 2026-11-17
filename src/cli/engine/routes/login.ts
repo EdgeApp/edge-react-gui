@@ -532,10 +532,14 @@ export const requestEdgeLogin = route({
       noWait: {
         kind: 'boolean',
         doc: 'Print the lobby and exit instead of polling, so the QR can be displayed while `poll-edge-login` watches the same handle from another process.'
+      },
+      showQr: {
+        kind: 'boolean',
+        doc: 'Also draw the `uri` as a QR code below the JSON, for the Edge app to scan. It is drawn with explicit black and white backgrounds, so it scans whatever the terminal theme. The code follows the JSON on stdout, so a script that parses stdout should leave this off.'
       }
     },
     notes:
-      'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over.'
+      'Prints the pending login, then polls every 2s for up to 5 minutes. On `done` it stores the session. With `--no-wait` it returns immediately and `poll-edge-login` takes over. With `--show-qr` it also draws the QR code.'
   },
   body: asObject({}).withRest,
   returns: asPendingEdgeLogin,

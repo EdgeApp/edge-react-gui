@@ -17,6 +17,7 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
+import { renderTerminalQr } from '../src/cli/client/terminalQr'
 import {
   CLI,
   parseLeadingJson,
@@ -1684,6 +1685,31 @@ function main(): void {
     ok('fetch-lobby', 'fetch-lobby', lobbyId)
     ok('approve-login-request', 'approve-login-request', lobbyId)
     ok('cancel-request', 'cancel-request', pendingId)
+
+    // `--show-qr` prints the JSON first and then, on the same stdout, the QR
+    // code of its `uri`.
+    {
+      const shown = spawnSync(
+        'node',
+        [...CLI, ...BASE, 'request-edge-login', '--no-wait', '--show-qr'],
+        {
+          encoding: 'utf8',
+          env: { ...process.env, EDGE_CLI_CHECK_RESPONSES: 'strict' }
+        }
+      )
+      const uri = String(parseLeadingJson(shown.stdout)?.uri ?? '')
+      const qr = renderTerminalQr(uri).lines.join('\n') + '\n'
+      check(
+        'request-edge-login --show-qr prints the JSON first',
+        shown.status === 0 && uri.startsWith('edge://edge/'),
+        shown.stdout.slice(0, 160)
+      )
+      check(
+        'request-edge-login --show-qr then draws the uri as a QR code',
+        uri !== '' && shown.stdout.endsWith(qr),
+        shown.stdout.replace(/\s+/g, ' ').slice(-160)
+      )
+    }
 
     // ------------------------------------------------------------ admin
     // Seconds, converted to the milliseconds core takes, with a floor: zero
