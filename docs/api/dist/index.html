@@ -6647,7 +6647,7 @@ h5.alt code {
   walletId: string
   txid: string
   tokenId?: string | null
-  savedAction: EdgeTxActionSwap | EdgeTxActionStake | EdgeTxActionFiat | EdgeTxActionTokenApproval | EdgeTxActionGiftCard
+  savedAction: EdgeTxActionSwap | EdgeTxActionSwapSend | EdgeTxActionStake | EdgeTxActionFiat | EdgeTxActionTokenApproval | EdgeTxActionGiftCard
   assetAction?: EdgeAssetAction
 }</code></pre>
     <details><summary>Example</summary><pre class="json"><code>{
@@ -6674,7 +6674,7 @@ h5.alt code {
 </tr>
 <tr>
   <td class="k"><code>savedAction</code></td>
-  <td class="ty"><span class="t">EdgeTxActionSwap | EdgeTxActionStake | EdgeTxActionFiat | EdgeTxActionTokenApproval | EdgeTxActionGiftCard</span></td>
+  <td class="ty"><span class="t">EdgeTxActionSwap | EdgeTxActionSwapSend | EdgeTxActionStake | EdgeTxActionFiat | EdgeTxActionTokenApproval | EdgeTxActionGiftCard</span></td>
   <td class="doc"><code>EdgeTxAction</code> describing what happened, discriminated on <code>actionType</code>: one of swap, swapSend, stake, fiat, tokenApproval or giftCard.</td>
 </tr>
 <tr>

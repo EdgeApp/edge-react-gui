@@ -218,7 +218,9 @@ export function setup(m: Setup) {
       // `npm run prepare` makes the config and API signer it needs without
       // secrets, so the tests run on any free machine.
       w.stage('test', {
-        on: [LINUX, MAC],
+        // WIP, on this test-build branch only: the packed edge-core-js ships
+        // its SQL addon for macOS arm64 alone, and Jest logs in through it.
+        on: MAC,
         tools: { node: '22' },
         timeout: '1h',
         activityTimeout: '30m',

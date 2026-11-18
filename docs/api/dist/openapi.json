@@ -7000,6 +7000,9 @@
                         "description": "EdgeTxActionSwap"
                       },
                       {
+                        "description": "EdgeTxActionSwapSend"
+                      },
+                      {
                         "description": "EdgeTxActionStake"
                       },
                       {

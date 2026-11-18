@@ -16,15 +16,11 @@
 'use strict'
 
 /** Relative requires whose file is not in the package. */
-const KNOWN_MISSING = [
-  'edge-currency-accountbased: ethereum/fees/ethMiningFees.js → ../abi/NODE_INTERFACE_ABI.json',
-  'edge-currency-accountbased: ethereum/networkAdapters/RpcAdapter.js → ../abi/ETH_BAL_CHECKER_ABI.json'
-]
+const KNOWN_MISSING = []
 
 /** Plugin families whose `*Tools.js` will not load. */
 const KNOWN_UNLOADABLE = [
   'binance/BinanceTools.js',
-  'ethereum/EthereumTools.js',
   'filecoin/FilecoinTools.js'
 ]
 

@@ -99,7 +99,13 @@ const unlocked: string[] = []
 for (const name of [...packages].sort()) {
   if (appPackage.dependencies[name] != null) {
     const pin = lockedVersion(name, lockPackages)
-    if (pin.offRegistry != null) offRegistry.push(pin.offRegistry)
+    // WIP, on this test-build branch only: a dependency packed into the dev
+    // Space is named by its tarball URL, as package.json names it, so the
+    // staged CLI installs the build it was tested with.
+    if (pin.offRegistry != null) {
+      dependencies[name] = appPackage.dependencies[name]
+      continue
+    }
     const locked = pin.version
     if (locked == null) {
       // A dependency the lock does not resolve is a lock that is out of step
