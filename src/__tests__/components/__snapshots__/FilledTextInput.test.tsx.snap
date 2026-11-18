@@ -561,6 +561,7 @@ exports[`FilledTextInput should render with some props 1`] = `
   >
     <Text
       allowFontScaling={false}
+      minimumFontScale={0.65}
       mode="danger"
       style={
         {
@@ -575,6 +576,7 @@ exports[`FilledTextInput should render with some props 1`] = `
     </Text>
     <Text
       allowFontScaling={false}
+      minimumFontScale={0.65}
       style={
         {
           "color": "#3dd9f4",

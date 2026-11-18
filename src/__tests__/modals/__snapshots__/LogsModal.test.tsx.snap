@@ -988,6 +988,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
           >
             <Text
               allowFontScaling={false}
+              minimumFontScale={0.65}
               style={
                 {
                   "color": "#3dd9f4",
@@ -999,6 +1000,7 @@ exports[`LogsModal should render with a logs modal 1`] = `
             />
             <Text
               allowFontScaling={false}
+              minimumFontScale={0.65}
               style={
                 {
                   "color": "#3dd9f4",

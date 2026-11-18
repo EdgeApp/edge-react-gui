@@ -2092,7 +2092,6 @@ exports[`SwapConfirmationScene should render with loading props 1`] = `
                   adjustsFontSizeToFit={false}
                   allowFontScaling={false}
                   minimumFontScale={0.65}
-                  minimumFontSize={11.05}
                   numberOfLines={1}
                   style={
                     [

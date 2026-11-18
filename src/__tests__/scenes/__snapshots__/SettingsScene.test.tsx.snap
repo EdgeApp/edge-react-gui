@@ -315,6 +315,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
           >
             <Text
               allowFontScaling={false}
+              minimumFontScale={0.65}
               selectable={false}
               style={
                 [
@@ -457,6 +458,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -648,6 +650,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -846,6 +849,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -1044,6 +1048,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -1242,6 +1247,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -1440,6 +1446,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -1638,6 +1645,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -1836,6 +1844,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -2034,6 +2043,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -2210,6 +2220,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
           >
             <Text
               allowFontScaling={false}
+              minimumFontScale={0.65}
               selectable={false}
               style={
                 [
@@ -2352,6 +2363,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2550,6 +2562,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2640,6 +2653,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    minimumFontScale={0.65}
                     style={
                       {
                         "color": "#00f1a2",
@@ -2729,6 +2743,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -2819,6 +2834,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
                 >
                   <Text
                     allowFontScaling={false}
+                    minimumFontScale={0.65}
                     style={
                       {
                         "color": "#00f1a2",
@@ -2908,6 +2924,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3104,6 +3121,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3300,6 +3318,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3496,6 +3515,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3694,6 +3714,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -3892,6 +3913,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -4090,6 +4112,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -4286,6 +4309,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -4484,6 +4508,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#888888",
@@ -4682,6 +4707,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -4880,6 +4906,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -5130,6 +5157,7 @@ exports[`SettingsScene should render SettingsScene 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
