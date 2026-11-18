@@ -244,7 +244,6 @@ exports[`LargeUtxoWalletCard should render 1`] = `
       allowFontScaling={false}
       ellipsizeMode="tail"
       minimumFontScale={0.65}
-      minimumFontSize={11.05}
       numberOfLines={1}
       style={
         [

@@ -66,11 +66,20 @@ export const Paragraph: React.FC<ParagraphProps> = (props: ParagraphProps) => {
 
 /**
  * The new architecture ignores `minimumFontScale` when it shrinks text to fit:
- * both platforms floor at an absolute `minimumFontSize` (4pt when unset) and
- * render long labels illegibly small. React Native's Text never forwards that
- * prop, so `patches/react-native+0.86.0.patch` adds it to the RCTText view
- * config and this derives it from the style's font size, in points on iOS and
- * in pixels on Android (its shrink loop compares against a pixel text size).
+ * both platforms floor at an absolute `minimumFontSize` (4pt on iOS and 4dp on
+ * Android when unset) and render long labels illegibly small. React Native's
+ * Text never forwards that prop, so `patches/react-native+0.86.0.patch` adds it
+ * to the RCTText view config and this derives it from the style's font size,
+ * in points on iOS and in pixels on Android (its shrink loop compares against
+ * a pixel text size).
+ *
+ * The floor is an absolute size, and Android applies it to every nested text
+ * run, so nested text smaller than `fontSize × minimumFontScale` is enlarged
+ * to it, and nested text a little smaller than the outer text can shrink less
+ * than `minimumFontScale` allows.
+ *
+ * Remove this, and the patch, once React Native forwards `minimumFontScale` on
+ * the new architecture (fixed upstream for 0.89).
  */
 export function minimumFontSizeProps(
   style: StyleProp<TextStyle>,
@@ -88,6 +97,9 @@ export function minimumFontSizeProps(
   return props as TextProps
 }
 
+/** How far shrink-to-fit text may shrink when the caller doesn't say. */
+export const DEFAULT_MINIMUM_FONT_SCALE = 0.65
+
 interface LabelProps extends TextProps {
   children: React.ReactNode
   ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip'
@@ -102,7 +114,14 @@ interface LabelProps extends TextProps {
 
 // TODO: Rename to LabelText
 export const EdgeText: React.FC<LabelProps> = (props: LabelProps) => {
-  const { children, style, disableFontScaling = false, ...rest } = props
+  const {
+    children,
+    style,
+    disableFontScaling = false,
+    adjustsFontSizeToFit = !disableFontScaling,
+    minimumFontScale = DEFAULT_MINIMUM_FONT_SCALE,
+    ...rest
+  } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -116,14 +135,16 @@ export const EdgeText: React.FC<LabelProps> = (props: LabelProps) => {
       allowFontScaling={false}
       style={[styles.common, style, androidAdjustTextStyle(theme)]}
       numberOfLines={numberOfLines}
-      adjustsFontSizeToFit={!disableFontScaling}
-      minimumFontScale={0.65}
+      adjustsFontSizeToFit={adjustsFontSizeToFit}
+      minimumFontScale={minimumFontScale}
       {...rest}
-      {...minimumFontSizeProps(
-        [styles.common, style],
-        rest.minimumFontScale ?? 0.65,
-        theme.rem(1)
-      )}
+      {...(adjustsFontSizeToFit
+        ? minimumFontSizeProps(
+            [styles.common, style],
+            minimumFontScale,
+            theme.rem(1)
+          )
+        : null)}
     >
       {children}
     </Text>

@@ -275,6 +275,7 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
       </View>
       <Text
         allowFontScaling={false}
+        minimumFontScale={0.65}
         style={
           {
             "color": "#FFFFFF",
@@ -287,6 +288,7 @@ exports[`FioAddressRegistered should render with loading props 1`] = `
       </Text>
       <Text
         allowFontScaling={false}
+        minimumFontScale={0.65}
         style={
           {
             "color": "#FFFFFF",

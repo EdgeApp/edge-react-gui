@@ -205,6 +205,7 @@ exports[`WalletListModal should render with loading props 1`] = `
         >
           <Text
             allowFontScaling={false}
+            minimumFontScale={0.65}
             style={
               [
                 {

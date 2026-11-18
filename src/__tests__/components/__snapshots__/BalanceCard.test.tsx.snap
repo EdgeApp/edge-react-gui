@@ -40,6 +40,7 @@ exports[`BalanceCard should render with loading props 1`] = `
   />
   <Text
     allowFontScaling={false}
+    minimumFontScale={0.65}
     onLayout={[Function]}
     style={
       [
@@ -191,6 +192,7 @@ exports[`BalanceCard should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -215,6 +217,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -287,6 +290,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -321,6 +325,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -355,6 +360,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -389,6 +395,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -423,6 +430,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -457,6 +465,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -491,6 +500,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -525,6 +535,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -559,6 +570,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -593,6 +605,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -620,6 +633,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </View>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -692,6 +706,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -726,6 +741,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -760,6 +776,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -794,6 +811,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -828,6 +846,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -862,6 +881,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -896,6 +916,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -930,6 +951,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -964,6 +986,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -998,6 +1021,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1073,6 +1097,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1107,6 +1132,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1141,6 +1167,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1175,6 +1202,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1209,6 +1237,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1243,6 +1272,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1277,6 +1307,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1311,6 +1342,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1345,6 +1377,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1379,6 +1412,7 @@ exports[`BalanceCard should render with loading props 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   [
                     {
@@ -1406,6 +1440,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </View>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -1430,6 +1465,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -1454,6 +1490,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {
@@ -1478,6 +1515,7 @@ exports[`BalanceCard should render with loading props 1`] = `
         </Text>
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             [
               {

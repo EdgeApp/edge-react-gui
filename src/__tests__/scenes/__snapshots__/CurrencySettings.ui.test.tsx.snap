@@ -422,6 +422,7 @@ exports[`CurrencySettings should render 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -435,6 +436,7 @@ exports[`CurrencySettings should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  minimumFontScale={0.65}
                   style={
                     {
                       "fontFamily": "Quicksand-Regular",
@@ -447,6 +449,7 @@ exports[`CurrencySettings should render 1`] = `
               </Text>
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -638,6 +641,7 @@ exports[`CurrencySettings should render 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -651,6 +655,7 @@ exports[`CurrencySettings should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  minimumFontScale={0.65}
                   style={
                     {
                       "fontFamily": "Quicksand-Regular",
@@ -663,6 +668,7 @@ exports[`CurrencySettings should render 1`] = `
               </Text>
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -854,6 +860,7 @@ exports[`CurrencySettings should render 1`] = `
             >
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
@@ -867,6 +874,7 @@ exports[`CurrencySettings should render 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  minimumFontScale={0.65}
                   style={
                     {
                       "fontFamily": "Quicksand-Regular",
@@ -879,6 +887,7 @@ exports[`CurrencySettings should render 1`] = `
               </Text>
               <Text
                 allowFontScaling={false}
+                minimumFontScale={0.65}
                 style={
                   {
                     "color": "#FFFFFF",
