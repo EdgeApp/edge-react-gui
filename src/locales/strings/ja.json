@@ -1051,6 +1051,7 @@
   "tap_to_change_provider": "タップしてプロバイダーを変更する",
   "tap_to_view_quote_amount_and_rate": "Select to view quote",
   "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
+  "ramp_provider_ip_country_blocked_1s": "%1$s doesn't accept connections from the country you're in. It checks where your internet connection is, not the region you chose in Edge.",
   "send_from_wallet": "%sから送信",
   "send_to_wallet": "%sに受信",
   "exchange_slow": "スワップを見つけるには通常よりも時間がかかります。\nしばらくお待ちください。",
