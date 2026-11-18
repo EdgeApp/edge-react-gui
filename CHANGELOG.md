@@ -2,6 +2,7 @@
 
 ## Unreleased (develop)
 
+- changed: Shrink-to-fit text that sets no minimum scale, such as the fallback symbols in fiat and crypto icons, now stops shrinking at 65% of its size, matching edge-login-ui-rn
 - added: Swap success events name the swap mode, including Swap & Send from the send scene
 - fixed: Android crash when opening DFX and other web pages on some Android 12+ phones, where the blurred header and tab bar redrew the page
 - fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection, for Bitcoin and EVM wallets, which Edge logs in to DFX

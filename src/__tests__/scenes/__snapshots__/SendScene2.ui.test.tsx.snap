@@ -1851,7 +1851,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -3972,7 +3971,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -6204,7 +6202,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -7920,7 +7917,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -9711,7 +9707,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -11173,7 +11168,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -13145,7 +13139,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -15068,7 +15061,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -16918,7 +16910,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             adjustsFontSizeToFit={false}
             allowFontScaling={false}
             minimumFontScale={0.65}
-            minimumFontSize={11.05}
             numberOfLines={1}
             style={
               [
@@ -18458,6 +18449,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  minimumFontScale={0.65}
                   style={
                     {
                       "color": "#FFFFFF",
