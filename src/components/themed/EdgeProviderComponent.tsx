@@ -22,6 +22,7 @@ import type { UriQueryMap } from '../../types/WebTypes'
 import { makePluginUri } from '../../util/GuiPluginTools'
 import { bestOfPlugins } from '../../util/ReferralHelpers'
 import { setPluginScene } from '../navigation/GuiPluginBackButton'
+import { makePluginBackHistory } from '../navigation/pluginBackHistory'
 import { showToast } from '../services/AirshipInstance'
 import { requestPermissionOnSettings } from '../services/PermissionsManager'
 
@@ -118,36 +119,47 @@ export function EdgeProviderComponent(props: Props): React.ReactElement {
 
   // Sign up for back-button events:
   const webView = React.useRef<WebView>(null)
-  const canGoBack = React.useRef<boolean>(false)
+  const backHistory = React.useMemo(
+    () =>
+      makePluginBackHistory(() => {
+        navigation.goBack()
+      }),
+    [navigation]
+  )
   useFocusEffect(
-    React.useCallback(
-      () =>
-        setPluginScene({
-          goBack() {
-            if (webView.current == null || !canGoBack.current) {
-              navigation.goBack()
-              return false
-            }
-            webView.current.goBack()
-            return true
+    React.useCallback(() => {
+      const release = setPluginScene({
+        goBack() {
+          if (webView.current == null || !backHistory.pressBack()) {
+            navigation.goBack()
+            return false
           }
-        }),
-      [navigation]
-    )
+          webView.current.goBack()
+          return true
+        }
+      })
+      return () => {
+        backHistory.cancel()
+        release()
+      }
+    }, [backHistory, navigation])
   )
 
   const handleLoadProgress = useHandler(
     (event: NativeSyntheticEvent<WebViewEvent>) => {
       // The query can carry a login token (DFX `session`):
       console.log('Plugin navigation: ', event.nativeEvent.url.split('?')[0])
-      canGoBack.current = event.nativeEvent.canGoBack
+      backHistory.onNavigation(
+        event.nativeEvent.url,
+        event.nativeEvent.canGoBack
+      )
     }
   )
 
   const handleNavigationStateChange = useHandler((event: WebViewEvent) => {
     // The query can carry a login token (DFX `session`):
     console.log('Plugin navigation: ', event.url.split('?')[0])
-    canGoBack.current = event.canGoBack
+    backHistory.onNavigation(event.url, event.canGoBack)
   })
 
   const handleError = useHandler(
