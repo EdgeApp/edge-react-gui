@@ -1051,6 +1051,7 @@
   "tap_to_change_provider": "Toque para alterar o provedor",
   "tap_to_view_quote_amount_and_rate": "Select to view quote",
   "failed_to_calculate_quote_rate": "Failed to calculate quote rate",
+  "ramp_provider_ip_country_blocked_1s": "%1$s doesn't accept connections from the country you're in. It checks where your internet connection is, not the region you chose in Edge.",
   "send_from_wallet": "Enviar de %s",
   "send_to_wallet": "Receber em %s",
   "exchange_slow": "Localizar um swap está demorando mais do que o normal.\nPor favor, aguarde...",
