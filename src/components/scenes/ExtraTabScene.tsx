@@ -24,7 +24,7 @@ export const ExtraTabScene: React.FC<Props> = props => {
     }
 
     return (
-      <SceneWrapper hasTabs>
+      <SceneWrapper hasTabs hasWebView>
         <EdgeProviderComponent
           plugin={plugin}
           navigation={navigation as NavigationBase}
@@ -34,7 +34,7 @@ export const ExtraTabScene: React.FC<Props> = props => {
   }
 
   return (
-    <SceneWrapper hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs hasWebView avoidKeyboard>
       <WebView
         allowFileAccess
         allowsInlineMediaPlayback

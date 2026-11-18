@@ -74,11 +74,18 @@ export const useBlurTarget = (): React.RefObject<View | null> | undefined =>
 // must never sample a tree containing itself. Each SceneWrapper publishes its
 // content view here while focused; chrome subscribes to the current one.
 //
+// A focused WebView scene publishes no target, and counts itself in
+// `webViewScenes` instead. On Android a blur redraws what it samples into an
+// offscreen layer, and drawing a WebView there crashes Chromium on some
+// devices (Vulkan rendering), so while one is focused the modal blurs, which
+// sample the app-level target holding that scene, fall back to their tint.
+//
 
 const sceneBlurRegistry: {
   ref: React.RefObject<View | null> | null
+  webViewScenes: number
   listeners: Set<() => void>
-} = { ref: null, listeners: new Set() }
+} = { ref: null, webViewScenes: 0, listeners: new Set() }
 
 const emitSceneBlur = (): void => {
   sceneBlurRegistry.listeners.forEach(listener => {
@@ -91,17 +98,30 @@ const subscribeSceneBlur = (listener: () => void): (() => void) => {
 }
 const getFocusedSceneBlurTarget = (): React.RefObject<View | null> | null =>
   sceneBlurRegistry.ref
+const getIsWebViewSceneFocused = (): boolean =>
+  sceneBlurRegistry.webViewScenes > 0
 
 /**
  * For SceneWrapper: returns a ref to attach to the scene's BlurTargetView,
- * published as the focused scene's blur target while `active`.
+ * published as the focused scene's blur target while `focused`. A WebView
+ * scene publishes no target, and keeps the modal blurs off it on Android
+ * while focused.
  */
 export function useSceneBlurTarget(
-  active: boolean
+  focused: boolean,
+  hasWebView: boolean = false
 ): React.RefObject<View | null> {
   const ref = React.useRef<View>(null)
   React.useEffect(() => {
-    if (!active) return
+    if (!focused) return
+    if (hasWebView) {
+      sceneBlurRegistry.webViewScenes += 1
+      emitSceneBlur()
+      return () => {
+        sceneBlurRegistry.webViewScenes -= 1
+        emitSceneBlur()
+      }
+    }
     sceneBlurRegistry.ref = ref
     emitSceneBlur()
     return () => {
@@ -110,9 +130,13 @@ export function useSceneBlurTarget(
         emitSceneBlur()
       }
     }
-  }, [active])
+  }, [focused, hasWebView])
   return ref
 }
+
+/** True while a focused WebView scene keeps the modal blurs off it. */
+const useIsWebViewSceneFocused = (): boolean =>
+  React.useSyncExternalStore(subscribeSceneBlur, getIsWebViewSceneFocused)
 
 interface AndroidBlurProps {
   rounded?: boolean
@@ -209,13 +233,20 @@ export const ChromeBlurBackground: React.FC<{ rounded?: boolean }> = props => {
 }
 
 /** The blur behind modal sheets. Modals mount in the Airship layer, outside
- * the BlurTarget, so on Android 12+ they can sample it for real blur. */
+ * the BlurTarget, so on Android 12+ they can sample it for real blur, except
+ * over a focused WebView scene, where they use the tint. */
 export const ModalBlurBackground: React.FC = () => {
   const theme = useTheme()
   const stylesLocal = getStyles(theme)
+  const isWebViewSceneFocused = useIsWebViewSceneFocused()
 
   if (isBlurDisabled) return null
-  if (isAndroid) return <AndroidBlur rounded />
+  if (isAndroid) {
+    if (isWebViewSceneFocused) {
+      return <View style={[stylesLocal.blurView, stylesLocal.roundCorner]} />
+    }
+    return <AndroidBlur rounded />
+  }
   return (
     <ExpoBlurView
       tint={theme.isDark ? 'dark' : 'light'}
@@ -226,12 +257,20 @@ export const ModalBlurBackground: React.FC = () => {
 }
 
 /** Full-screen blur with the tint flipped against the theme, for standing out
- * over content rather than blending in (the QR modal's underlay). */
+ * over content rather than blending in (the QR modal's underlay). Over a
+ * focused WebView scene, Android uses the flipped tint alone. */
 export const BlurUnderlayReversed: React.FC = () => {
   const theme = useTheme()
+  const stylesLocal = getStyles(theme)
+  const isWebViewSceneFocused = useIsWebViewSceneFocused()
 
   if (isBlurDisabled) return null
-  if (isAndroid) return <AndroidBlur reverseTint />
+  if (isAndroid) {
+    if (isWebViewSceneFocused) {
+      return <View style={stylesLocal.blurViewReversed} />
+    }
+    return <AndroidBlur reverseTint />
+  }
   return (
     <ExpoBlurView
       tint={theme.isDark ? 'light' : 'dark'}
@@ -256,6 +295,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
       ? theme.isDark
         ? '#161616aa'
         : '#ffffff55'
+      : undefined
+  },
+  // The blurView tint flipped against the theme:
+  blurViewReversed: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: isAndroid
+      ? theme.isDark
+        ? '#ffffff55'
+        : '#161616aa'
       : undefined
   },
   clip: {

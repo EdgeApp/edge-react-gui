@@ -83,7 +83,7 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   )
 
   return (
-    <SceneWrapper hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs hasWebView avoidKeyboard>
       <WebView
         allowUniversalAccessFromFileURLs
         geolocationEnabled

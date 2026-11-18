@@ -9,28 +9,29 @@ import {
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { fetchDfxSessionQuery } from '../../../plugins/ramps/dfx/dfxSession'
+import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import {
+  installFakeFetch,
+  makeTextResponse
+} from '../../../util/fake/fakeFetch'
+import { translateError } from '../../../util/translateError'
 
 const MESSAGE_PREFIX =
   'By_signing_this_message,_you_confirm_that_you_are_the_sole_owner_of_the_provided_Blockchain_address._Your_ID:_'
 
-interface FetchCall {
-  url: string
-  body?: unknown
+// DFX's answer to a login from a blocked country, as its NestJS API sends it:
+const IP_COUNTRY_BODY = {
+  statusCode: 403,
+  message: 'The country of IP address is not allowed',
+  error: 'Forbidden'
 }
 
-let fetchCalls: FetchCall[] = []
+let fakeFetch: ReturnType<typeof installFakeFetch>
 let authStatus = 201
+let authBody: unknown = {}
 let signBlockchains: string[] = []
 let signMessageText: ((address: string) => string) | undefined
-const realFetch = global.fetch
 const realWarn = console.warn
-
-const textResponse = (status: number, body: unknown): Response =>
-  ({
-    ok: status >= 200 && status < 300,
-    status,
-    text: async () => JSON.stringify(body)
-  } as unknown as Response)
 
 const makeWallet = (
   pluginId: string,
@@ -58,32 +59,26 @@ const makeWallet = (
 }
 
 beforeEach(() => {
-  fetchCalls = []
   authStatus = 201
+  authBody = { statusCode: 403, message: 'Forbidden', error: 'Forbidden' }
   signBlockchains = ['Bitcoin']
   signMessageText = undefined
   console.warn = jest.fn()
-  global.fetch = (async (input: unknown, init?: RequestInit) => {
-    const url = String(input)
-    const body =
-      init?.body == null ? undefined : JSON.parse(init.body as string)
-    fetchCalls.push({ url, body })
+  fakeFetch = installFakeFetch(({ url }) => {
     if (url.includes('/auth/signMessage')) {
       const address = decodeURIComponent(url.split('address=')[1])
-      return textResponse(200, {
+      return makeTextResponse(200, {
         message: signMessageText?.(address) ?? MESSAGE_PREFIX + address,
         blockchains: signBlockchains
       })
     }
-    if (authStatus !== 201) {
-      return textResponse(authStatus, { message: 'Forbidden' })
-    }
-    return textResponse(201, { accessToken: 'jwt-token' })
-  }) as typeof fetch
+    if (authStatus !== 201) return makeTextResponse(authStatus, authBody)
+    return makeTextResponse(201, { accessToken: 'jwt-token' })
+  })
 })
 
 afterEach(() => {
-  global.fetch = realFetch
+  fakeFetch.restore()
   console.warn = realWarn
 })
 
@@ -99,14 +94,15 @@ describe('fetchDfxSessionQuery', () => {
 
     expect(query).toEqual({ session: 'jwt-token' })
     expect(getAddresses).toHaveBeenCalledWith({ tokenId: null, forceIndex: 0 })
-    expect(fetchCalls[0].url).toBe(
+    expect(fakeFetch.calls[0].url).toBe(
       'https://api.dfx.swiss/v1/auth/signMessage?address=bc1segwit'
     )
     expect(signMessage).toHaveBeenCalledWith(message, {
       otherParams: { publicAddress: 'bc1segwit' }
     })
-    expect(fetchCalls[1]).toEqual({
+    expect(fakeFetch.calls[1]).toEqual({
       url: 'https://api.dfx.swiss/v1/auth',
+      method: 'POST',
       body: {
         address: 'bc1segwit',
         signature: 'sig-' + message,
@@ -129,7 +125,7 @@ describe('fetchDfxSessionQuery', () => {
     expect(Buffer.from(signBytes.mock.calls[0][0]).toString('utf8')).toBe(
       message
     )
-    expect(fetchCalls[1].body).toEqual({
+    expect(fakeFetch.calls[1].body).toEqual({
       address: '0xabc',
       signature: '0xsig-' + message,
       wallet: 'Edge'
@@ -144,12 +140,51 @@ describe('fetchDfxSessionQuery', () => {
     const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
     expect(query).toBeUndefined()
-    expect(fetchCalls).toHaveLength(0)
+    expect(fakeFetch.calls).toHaveLength(0)
     expect(signMessage).not.toHaveBeenCalled()
   })
 
   it('falls back when DFX rejects the login', async () => {
     authStatus = 403
+    const { wallet } = makeWallet('bitcoin', [
+      { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
+    ])
+
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+
+    expect(query).toBeUndefined()
+    expect(console.warn).toHaveBeenCalled()
+  })
+
+  it('stops the launch when DFX blocks the country of the IP address', async () => {
+    authStatus = 403
+    authBody = IP_COUNTRY_BODY
+    const { wallet } = makeWallet('bitcoin', [
+      { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
+    ])
+
+    const error = await fetchDfxSessionQuery({
+      wallet,
+      walletName: 'Edge'
+    }).catch((error: unknown) => error)
+
+    expect(error).toBeInstanceOf(RampIpCountryError)
+    expect(error).toMatchObject({
+      providerName: 'DFX',
+      serverMessage: JSON.stringify(IP_COUNTRY_BODY)
+    })
+    expect(translateError(error)).toBe(
+      "DFX doesn't accept connections from the country you're in. It checks where your internet connection is, not the region you chose in Edge."
+    )
+  })
+
+  it('falls back on other country refusals', async () => {
+    authStatus = 403
+    authBody = {
+      statusCode: 403,
+      message: 'Your country of residence is not supported',
+      error: 'Forbidden'
+    }
     const { wallet } = makeWallet('bitcoin', [
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
@@ -170,7 +205,7 @@ describe('fetchDfxSessionQuery', () => {
 
     expect(query).toBeUndefined()
     expect(signMessage).not.toHaveBeenCalled()
-    expect(fetchCalls).toHaveLength(1)
+    expect(fakeFetch.calls).toHaveLength(1)
   })
 
   it('refuses the DFX message when it names another address', async () => {
