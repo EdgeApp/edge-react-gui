@@ -256,6 +256,7 @@
 - changed: Adopt the iOS UIScene lifecycle, removing the deprecated app-delegate window and lifecycle APIs ahead of Xcode 27.
 - changed: Target Android 16 (API level 36), which Google Play requires for app updates submitted after Aug 30, 2026. Predictive back is opted out of for now, since React Native 0.79 cannot handle it, so the back button behaves exactly as it did before.
 - changed: Sign MoonPay buy/sell widget URLs and bind them to the customer's IP via the info server, for MoonPay's on-ramp IP-matching security upgrade.
+- changed: Lock the send confirmation slider for the rest of the scene once a broadcast has been attempted, whether the broadcast reported success or failure, and replace the generic failure card with a message that the transaction may have gone through, pointing at the block explorer or confirmation email before trying again.
 - changed: Style the entire "Already have an account? Sign in" line in the getting-started USP carousel with the tertiary link color, not just "Sign in".
 - changed: Refresh the buy, sell, sort, scan-QR and FIO names icons to the updated design.
 - changed: Display "MoonPay" instead of "Moonpay" wherever the partner name appears in the app.
@@ -265,6 +266,7 @@
 - changed: Add maestro test selectors (testIDs) to the swap scene's from and to wallet pills.
 - changed: The balance card title now reads "Unhide Balance" while balances are hidden, and hiding balances shows a toast explaining how to bring them back.
 - changed: Deep links now wait only for the account state they actually use, so a link that just opens a scene, such as the buy/sell entry, follows immediately after login instead of waiting for every wallet to finish loading.
+- changed: Buy/sell crypto amount field shows up to nine decimals, matching the asset's precision, instead of six
 - changed: Add maestro test selectors (testIDs) to Manage Tokens rows.
 - changed: Add maestro test selectors (testIDs) to the Wallet Settings name input and Done button.
 - changed: Add a maestro test selector (testID) to the split-wallet confirmation button.
