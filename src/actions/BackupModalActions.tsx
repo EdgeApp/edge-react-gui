@@ -64,7 +64,7 @@ export const checkAndShowLightBackupModal = (
       .finally(() => {
         isBackupModalShowing = false
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showDevError(error)
       })
     return true

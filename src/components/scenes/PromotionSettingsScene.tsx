@@ -30,7 +30,7 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class PromotionSettingsComponent extends React.Component<Props> {
-  render() {
+  render(): React.ReactElement {
     const { accountReferral, deviceReferral, removePromotion } = this.props
 
     return (
@@ -96,7 +96,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
     )
   }
 
-  handleAdd = () => {
+  handleAdd = (): void => {
     Airship.show<string | undefined>(bridge => (
       <TextInputModal
         autoCapitalize="none"
@@ -109,7 +109,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
           return true
         }}
       />
-    )).catch(err => {
+    )).catch((err: unknown) => {
       showError(err)
     })
   }

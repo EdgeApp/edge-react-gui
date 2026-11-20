@@ -25,7 +25,7 @@ interface Props {
 /**
  * A settings row with a switch component on the right side.
  */
-const SettingsSwitchRowComponent = (props: Props) => {
+const SettingsSwitchRowComponent: React.FC<Props> = props => {
   const { children, disabled, label, value, onPress } = props
   const theme = useTheme()
 

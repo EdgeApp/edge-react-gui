@@ -15,7 +15,7 @@ interface Props {
   futureValueColor?: string
 }
 
-const PercentageChangeArrowTileComponent = (props: Props) => {
+const PercentageChangeArrowTileComponent: React.FC<Props> = props => {
   const theme = useTheme()
   const {
     title,
@@ -29,7 +29,7 @@ const PercentageChangeArrowTileComponent = (props: Props) => {
   const currentValueString = `${toFixed(mul(currentValue, '100'), 1, 1)}%`
   const futureValueString = `${toFixed(mul(futureValue, '100'), 1, 1)}%`
 
-  const renderArrow = () => {
+  const renderArrow = (): React.ReactElement => {
     return (
       <View style={styles.arrowContainer}>
         <View style={styles.arrowTopLine} />

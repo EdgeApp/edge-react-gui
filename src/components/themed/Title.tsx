@@ -12,7 +12,7 @@ interface Props {
   text: string
 }
 
-export function Title(props: Props) {
+export const Title: React.FC<Props> = props => {
   const { leftIcon, text, rightIcon, styleLeftIcon, styleRightIcon } = props
 
   const theme = useTheme()
@@ -20,11 +20,13 @@ export function Title(props: Props) {
 
   return (
     <View style={styles.row}>
-      {leftIcon ? (
+      {leftIcon != null && leftIcon !== false ? (
         <View style={[styles.leftIcon, styleLeftIcon]}>{leftIcon}</View>
       ) : null}
       <EdgeText style={styles.text}>{text}</EdgeText>
-      {rightIcon ? <View style={styleRightIcon}>{rightIcon}</View> : null}
+      {rightIcon != null && rightIcon !== false ? (
+        <View style={styleRightIcon}>{rightIcon}</View>
+      ) : null}
     </View>
   )
 }

@@ -42,15 +42,23 @@ tags:
     id: "chevronBack"
 - tapOn:
     id: "chevronBack"
-# Live chat opens in new browser
+# Live chat opens inside the app, on the chat composer
 - tapOn: "Help"
 - tapOn: "Live Chat"
-# Ensure it opens to correct page AND chat is open
-- assertVisible: ".*support\\.edge\\.app.*" 
-- assertVisible: ".*Need Help\\? Reach Out via Our Chat Bubble!.*"
+- extendedWaitUntil:
+    visible:
+      id: "modal-close-button"
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Message…"
+    timeout: 25000
+- tapOn:
+    id: "modal-close-button"
+- extendedWaitUntil:
+    notVisible: "Message…"
+    timeout: 5000
 # Call button opens in phone app
-- launchApp:
-    stopApp: false
+- tapOn: "Help"
 - extendedWaitUntil:
     visible: "Call for Assistance"
     timeout: 15000

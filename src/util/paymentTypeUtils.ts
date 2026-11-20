@@ -28,6 +28,7 @@ const paymentTypeDisplayNames: Record<string, string> = {
   spei: lstrings.spei_bank_transfer,
   turkishbank: lstrings.turkish_bank_transfer,
   venmo: lstrings.venmo,
+  vietqr: lstrings.vietqr,
   wire: lstrings.bank_wire_transfer
 }
 

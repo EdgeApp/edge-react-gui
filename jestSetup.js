@@ -10,8 +10,24 @@ import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock'
 // --------------------------------------------------------------------
 
 jest.mock('@react-native-clipboard/clipboard', () => mockClipboard)
+jest.mock('react-native-haptic-feedback', () => ({
+  __esModule: true,
+  default: { trigger() {} }
+}))
 jest.mock('react-native-permissions', () => mockPermissions)
 jest.mock('react-native-safe-area-context', () => mockSafeAreaContext)
+// Firebase 25 instantiates a native event emitter on import, which crashes in
+// jest. Mock messaging (the only firebase module the app imports) to the methods
+// the app uses.
+jest.mock('@react-native-firebase/messaging', () => {
+  const messaging = () => ({
+    getToken: jest.fn(async () => 'mock-device-token'),
+    getInitialNotification: jest.fn(async () => null),
+    onMessage: jest.fn(() => () => {}),
+    onNotificationOpenedApp: jest.fn(() => () => {})
+  })
+  return { __esModule: true, default: messaging }
+})
 require('react-native-reanimated').setUpTests()
 
 // --------------------------------------------------------------------
@@ -19,6 +35,11 @@ require('react-native-reanimated').setUpTests()
 // --------------------------------------------------------------------
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+
+// The NativeEventEmitter automock above makes Keyboard.addListener return
+// undefined; return a removable subscription so effect cleanups
+// (showListener.remove()) don't throw.
+require('react-native').Keyboard.addListener = () => ({ remove: () => {} })
 
 for (const log in global.console) {
   global.console[log] = jest.fn()
@@ -61,6 +82,9 @@ jest.mock('react-native-image-colors', () => ({
 }))
 
 jest.mock('react-native-keyboard-controller', () => ({
+  // Stand in with a real ScrollView: the component wraps one, and tests
+  // assert on the scroll view's own props (such as its content padding):
+  KeyboardAwareScrollView: require('react-native').ScrollView,
   useReanimatedKeyboardAnimation: () => ({
     height: { value: 0 },
     progress: { value: 0 }
@@ -117,6 +141,18 @@ jest.mock('edge-login-ui-rn', () => ({
   getSupportedBiometryType() {
     return 'FaceID'
   }
+}))
+
+// expo-blur is ESM and reaches for native globals, like expo-linear-gradient:
+jest.mock('expo-blur', () => ({
+  BlurTargetView: 'BlurTargetView',
+  BlurView: 'ExpoBlurView'
+}))
+
+// expo-linear-gradient reaches for expo-modules-core's native globals on
+// import, which don't exist under the react-native jest preset:
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: 'ExpoLinearGradient'
 }))
 
 jest.mock('react-native-share', () => 'RNShare')
@@ -249,11 +285,6 @@ jest.mock('react-native-device-info', () => {
     getVersion: jest.fn(() => '1.2.3'),
     getSystemVersion: jest.fn(() => '18.0.0')
   }
-})
-
-jest.mock('react-native-keyboard-aware-scroll-view', () => {
-  const { ScrollView } = require('react-native')
-  return { KeyboardAwareScrollView: ScrollView }
 })
 
 jest.mock('react-native-reorderable-list', () => ({

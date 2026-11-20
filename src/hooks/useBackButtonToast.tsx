@@ -20,7 +20,7 @@ import type { NavigationBase } from '../types/routerTypes'
  * This hook uses `useFocusEffect` internally, which means it will crash
  * if used in a modal or anywhere else except a top-level scene.
  */
-export function useBackButtonToast() {
+export function useBackButtonToast(): void {
   const backPressedOnce = React.useRef(false)
   const account = useSelector(state => state.core.account)
   const dispatch = useDispatch()
@@ -35,7 +35,7 @@ export function useBackButtonToast() {
       () => {
         // Allow back if logged out or this is the second back press:
         if (account === defaultAccount || backPressedOnce.current) {
-          dispatch(logoutRequest(navigation)).catch(err => {
+          dispatch(logoutRequest(navigation)).catch((err: unknown) => {
             showError(err)
           })
           return
@@ -53,7 +53,7 @@ export function useBackButtonToast() {
           .then(() => {
             backPressedOnce.current = false
           })
-          .catch(err => {
+          .catch((err: unknown) => {
             showError(err)
           })
 

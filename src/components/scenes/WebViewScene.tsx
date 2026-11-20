@@ -11,11 +11,11 @@ export interface WebViewSceneParams {
 
 interface Props extends EdgeAppSceneProps<'webView'> {}
 
-export const WebViewScene = (props: Props) => {
+export const WebViewScene: React.FC<Props> = props => {
   const { uri } = props.route.params
 
   return (
-    <SceneWrapper avoidKeyboard>
+    <SceneWrapper hasWebView avoidKeyboard>
       <WebView source={{ uri }} />
     </SceneWrapper>
   )

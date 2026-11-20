@@ -10,11 +10,11 @@ export const ratioHorizontal = (width - guidelineBaseWidth) / guidelineBaseWidth
 export const ratioVertical =
   (height - guidelineBaseHeight) / guidelineBaseHeight
 
-export const scaleH = (size: number, factor: number = 0.3) => {
+export const scaleH = (size: number, factor: number = 0.3): number => {
   return size + size * factor * ratioHorizontal
 }
 
-export const scaleV = (size: number, factor: number = 0.3) => {
+export const scaleV = (size: number, factor: number = 0.3): number => {
   return size + size * factor * ratioVertical
 }
 

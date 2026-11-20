@@ -23,7 +23,7 @@ export interface Props {
  *
  * For backwards compatibility, takes a style prop and provides no built-in margins.
  */
-export const IconBadge = (props: Props) => {
+export const IconBadge: React.FC<Props> = props => {
   const { children, number, offsetX = 0, offsetY = 0, sizeRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)

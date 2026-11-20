@@ -53,7 +53,7 @@ const getPercentDeltaString = (
   assetToYestFiatRate: number,
   usdToWalletFiatRate: number,
   theme: Theme
-) => {
+): { percentString: string; deltaColorStyle: string } => {
   const yesterdayExchangeRate = assetToYestFiatRate * usdToWalletFiatRate
   const yesterdayDelta = assetToFiatRate - yesterdayExchangeRate
 

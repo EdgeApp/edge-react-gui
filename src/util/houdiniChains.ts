@@ -34,7 +34,7 @@ export interface HoudiniAssetSupport {
 }
 
 /**
- * A chain HoudiniSwap can pay out on, keyed by the Edge currency pluginId.
+ * A chain Houdini can pay out on, keyed by the Edge currency pluginId.
  *
  * Everything but `evmChainId` comes from the info server's `houdiniAssets`
  * rollup field, which mirrors Houdini's own asset list keyed by Edge

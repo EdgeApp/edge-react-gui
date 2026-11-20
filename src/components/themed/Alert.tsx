@@ -27,7 +27,7 @@ interface Props {
   onPress?: () => Promise<void> | void
 }
 
-export function Alert(props: Props) {
+export const Alert: React.FC<Props> = props => {
   const {
     children,
     marginRem,
@@ -53,7 +53,7 @@ export function Alert(props: Props) {
 
   const handlePress = useHandler(() => {
     if (onPress != null)
-      onPress()?.catch(err => {
+      onPress()?.catch((err: unknown) => {
         showError(err)
       })
   })
@@ -85,7 +85,7 @@ export function Alert(props: Props) {
     </View>
   )
 
-  return onPress ? (
+  return onPress != null ? (
     <EdgeTouchableOpacity onPress={handlePress}>{result}</EdgeTouchableOpacity>
   ) : (
     result

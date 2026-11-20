@@ -17,13 +17,13 @@ interface Props {
   disableCopy?: boolean
 }
 
-export function RawTextModal(props: Props) {
+export const RawTextModal: React.FC<Props> = props => {
   const { bridge, body, title, disableCopy = false } = props
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     bridge.resolve(undefined)
   }
-  const handleCopy = () => {
+  const handleCopy = (): void => {
     Clipboard.setString(body)
     showToast(lstrings.fragment_copied)
     bridge.resolve()

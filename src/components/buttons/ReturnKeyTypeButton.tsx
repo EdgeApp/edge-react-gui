@@ -11,7 +11,9 @@ interface ReturnKeyTypeButtonProps {
   onPress: () => void | Promise<void>
 }
 
-export const ReturnKeyTypeButton = (props: ReturnKeyTypeButtonProps) => {
+export const ReturnKeyTypeButton: React.FC<
+  ReturnKeyTypeButtonProps
+> = props => {
   const { returnKeyType, onPress } = props
 
   const theme = useTheme()

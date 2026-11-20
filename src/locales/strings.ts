@@ -28,7 +28,7 @@ if (languageTag !== 'en-US') selectLocale(languageTag)
 function mergeStrings(
   primary: Record<string, string>,
   secondary: Record<string, string>
-) {
+): void {
   for (const str of Object.keys(secondary)) {
     if (secondary[str] !== '') {
       primary[str] = secondary[str]

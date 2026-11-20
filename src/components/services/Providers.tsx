@@ -6,7 +6,7 @@ import { Platform } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { Provider } from 'react-redux'
-import { applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, legacy_createStore as createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import { fetchCountryCode } from '../../actions/CountryCodeActions'
@@ -17,8 +17,10 @@ import { renderStateProviders } from '../../state/renderStateProviders'
 import type { Dispatch, RootState, Store } from '../../types/reduxTypes'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker'
 import { perfLogger } from '../../util/middleware/perfLogger'
+import { BlurTarget, BlurTargetProvider } from '../common/BlurBackground'
 import { Main } from '../Main'
 import { Airship } from './AirshipInstance'
+import { PushLoginIdsService } from './PushLoginIdsService'
 import { useTheme } from './ThemeContext'
 
 interface Props {
@@ -29,7 +31,7 @@ interface Props {
  * Provides various global providers to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export function Providers(props: Props): React.ReactElement {
+export const Providers: React.FC<Props> = props => {
   const { context } = props
   const theme = useTheme()
   const isDesktop =
@@ -72,14 +74,20 @@ export function Providers(props: Props): React.ReactElement {
     <Provider store={store}>
       <LoginUiProvider
         isDesktop={isDesktop}
-        // @ts-expect-error: themeOverride prop typing mismatch
+        // @ts-expect-error - the app's Theme is a superset of login-ui's,
+        // and the provider merges it over its own defaults at runtime.
         themeOverride={theme}
       >
         <KeyboardProvider statusBarTranslucent>
           {renderStateProviders(
-            <Airship>
-              <Main />
-            </Airship>
+            <BlurTargetProvider>
+              <Airship>
+                <BlurTarget>
+                  <Main />
+                </BlurTarget>
+                <PushLoginIdsService context={context} />
+              </Airship>
+            </BlurTargetProvider>
           )}
         </KeyboardProvider>
       </LoginUiProvider>

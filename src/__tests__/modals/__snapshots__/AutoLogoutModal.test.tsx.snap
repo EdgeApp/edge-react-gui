@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AutoLogoutModal should render with loading props 1`] = `
 [
@@ -97,12 +97,12 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
+          "marginTop": 0,
           "paddingBottom": 97,
           "paddingTop": 0,
         },
       ]
     }
-    nativeID="1"
     style={
       [
         {
@@ -127,15 +127,15 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
           "borderColor": "rgba(255, 255, 255, 0)",
           "borderWidth": 0,
           "marginBottom": -86,
+          "marginTop": 0,
           "paddingBottom": 97,
           "paddingTop": 0,
         },
       ]
     }
   >
-    <BlurView
-      blurType="dark"
-      overlayColor="rgba(0, 0, 0, 0)"
+    <ExpoBlurView
+      intensity={100}
       style={
         [
           {
@@ -151,6 +151,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
           },
         ]
       }
+      tint="dark"
     />
     <View
       style={
@@ -189,6 +190,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={17.55}
         numberOfLines={2}
         style={
           [
@@ -806,21 +808,20 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
             }
           }
         >
-          <BVLinearGradient
+          <ExpoLinearGradient
             colors={
               [
-                4280299823,
-                4278214733,
+                "#20312f",
+                "#00604d",
               ]
             }
-            endPoint={
+            end={
               {
                 "x": 1,
                 "y": 0,
               }
             }
-            locations={null}
-            startPoint={
+            start={
               {
                 "x": 0,
                 "y": 0,
@@ -851,6 +852,7 @@ exports[`AutoLogoutModal should render with loading props 1`] = `
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
               minimumFontScale={0.65}
+              minimumFontSize={14.3}
               numberOfLines={1}
               style={
                 [

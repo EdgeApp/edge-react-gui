@@ -1,6 +1,7 @@
 import {
   asMaybeInsufficientFundsError,
   asMaybeSwapAddressError,
+  asMaybeSwapCurrencyError,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
   type EdgeSwapRequestOptions
@@ -20,11 +21,21 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { showInsufficientFeesModal } from '../modals/InsufficientFeesModal'
 import { showPendingTxModal } from '../modals/PendingTxModal'
 import { CancellableProcessingScene } from '../progress-indicators/CancellableProcessingScene'
-import { Airship } from '../services/AirshipInstance'
+import { Airship, showToast } from '../services/AirshipInstance'
+
+/**
+ * What to do when no provider can price an exact receive amount: quote this
+ * "from" request instead, and tell the caller its amounts changed.
+ */
+export interface ToQuoteFallback {
+  swapRequest: EdgeSwapRequest
+  onSwitch: () => void
+}
 
 export interface SwapProcessingParams {
   swapRequest: EdgeSwapRequest
   swapRequestOptions: EdgeSwapRequestOptions
+  toQuoteFallback?: ToQuoteFallback
   onCancel: () => void
   onDone: (quotes: EdgeSwapQuote[]) => void
 }
@@ -33,7 +44,13 @@ type Props = SwapTabSceneProps<'swapProcessing'>
 
 export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   const { route, navigation } = props
-  const { swapRequest, swapRequestOptions, onCancel, onDone } = route.params
+  const {
+    swapRequest: initialRequest,
+    swapRequestOptions,
+    toQuoteFallback,
+    onCancel,
+    onDone
+  } = route.params
 
   const account = useSelector(state => state.core.account)
   const countryCode = useSelector(state => state.ui.countryCode)
@@ -42,22 +59,82 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   )
 
   const fromDenomination = useDisplayDenom(
-    swapRequest.fromWallet.currencyConfig,
-    swapRequest.fromTokenId
+    initialRequest.fromWallet.currencyConfig,
+    initialRequest.fromTokenId
   )
   const toDenomination = useDisplayDenom(
-    swapRequest.toWallet.currencyConfig,
-    swapRequest.toTokenId
+    initialRequest.toWallet.currencyConfig,
+    initialRequest.toTokenId
   )
 
-  const doWork = async (isCancelled: () => boolean): Promise<void> => {
-    const quotes = await account.fetchSwapQuotes(swapRequest, {
+  // The request this scene is working on. It changes at most once, when a "to"
+  // quote gives way to its fallback. A re-render can run `doWork` again, and
+  // that run must stay on the fallback without switching a second time.
+  const activeRequest = React.useRef(initialRequest)
+
+  const fetchQuotes = async (
+    request: EdgeSwapRequest
+  ): Promise<EdgeSwapQuote[]> => {
+    return await account.fetchSwapQuotes(request, {
       ...swapRequestOptions,
       disabled: {
         ...swapRequestOptions.disabled,
-        ...getDisabledSwapPlugins(disableAssetsByPlugin, swapRequest)
+        ...getDisabledSwapPlugins(disableAssetsByPlugin, request)
       }
     })
+  }
+
+  /**
+   * Quotes the active request. A "to" request nothing can route tries its
+   * fallback, which tells a quote-direction limit apart from an unsupported
+   * pair: if the "from" quote cannot route either, the pair is the problem, so
+   * the original error stands and the user's amounts stay as they typed them.
+   * Any other outcome means the pair has a route, so the switch happens, even
+   * when the error is about the new amount (a limit or insufficient funds).
+   */
+  const fetchWithToFallback = async (
+    isCancelled: () => boolean
+  ): Promise<EdgeSwapQuote[]> => {
+    if (toQuoteFallback == null || activeRequest.current !== initialRequest) {
+      return await fetchQuotes(activeRequest.current)
+    }
+
+    let toError: Error | undefined
+    try {
+      const quotes = await fetchQuotes(initialRequest)
+      if (quotes.length > 0) return quotes
+    } catch (error: unknown) {
+      const currencyError = asMaybeSwapCurrencyError(error)
+      if (currencyError == null) throw error
+      toError = currencyError
+    }
+    if (isCancelled()) return []
+
+    const switchToFallback = (): void => {
+      if (isCancelled()) return
+      activeRequest.current = toQuoteFallback.swapRequest
+      toQuoteFallback.onSwitch()
+      showToast(lstrings.swap_fixed_to_unavailable_toast)
+    }
+
+    let fromQuotes: EdgeSwapQuote[]
+    try {
+      fromQuotes = await fetchQuotes(toQuoteFallback.swapRequest)
+    } catch (error: unknown) {
+      if (asMaybeSwapCurrencyError(error) != null) throw toError ?? error
+      switchToFallback()
+      throw error
+    }
+    if (fromQuotes.length === 0) {
+      if (toError != null) throw toError
+      return fromQuotes
+    }
+    switchToFallback()
+    return fromQuotes
+  }
+
+  const doWork = async (isCancelled: () => boolean): Promise<void> => {
+    const quotes = await fetchWithToFallback(isCancelled)
     if (isCancelled()) return
     if (quotes.length === 0) {
       // fetchSwapQuotes usually throws when nothing can route, but it resolves
@@ -70,6 +147,8 @@ export const SwapProcessingScene: React.FC<Props> = (props: Props) => {
   }
 
   const onError = async (error: unknown): Promise<void> => {
+    const swapRequest = activeRequest.current
+
     // Handle same-address requirement for swap flows requiring a split:
     const addressError = asMaybeSwapAddressError(error)
     if (addressError != null && addressError.reason === 'mustMatch') {

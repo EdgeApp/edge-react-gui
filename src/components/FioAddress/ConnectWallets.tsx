@@ -51,7 +51,7 @@ interface FioConnectWalletsProps {
 
 let flashListToggle = false // TODO: Hack to get FlashList to rerender when select wallet is tapped. Cache this with useMemo once we switch to hooks.
 
-export const ConnectWallets = (props: FioConnectWalletsProps) => {
+export const ConnectWallets: React.FC<FioConnectWalletsProps> = props => {
   const { disabled, fioAddressName, fioWallet, navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -203,6 +203,7 @@ export const ConnectWallets = (props: FioConnectWalletsProps) => {
               <View style={styles.switchContainer}>
                 <Switch
                   disabled={disabled}
+                  style={styles.switch}
                   onChange={() => {
                     handleSelectWallet(!value, item)
                   }}
@@ -323,6 +324,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   switchContainer: {
     alignItems: 'flex-end',
     paddingRight: theme.rem(0.25)
+  },
+  switch: {
+    // The iOS Switch defaults to `alignSelf: 'flex-start'`, which overrides
+    // the container's `alignItems`:
+    alignSelf: 'flex-end'
   },
   walletDetailsRowCurrency: {
     fontSize: theme.rem(1.25),

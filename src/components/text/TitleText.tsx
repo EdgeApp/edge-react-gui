@@ -9,7 +9,7 @@ interface Props {
   style?: TextStyle
 }
 
-export function TitleText(props: Props) {
+export const TitleText: React.FC<Props> = props => {
   const { children, style, ...otherProps } = props
   const theme = useTheme()
   const { text, androidAdjust } = getStyles(theme)

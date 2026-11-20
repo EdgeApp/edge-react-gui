@@ -72,7 +72,10 @@ export const asCleanError = (raw: any): CleanError => {
   }
 
   return {
-    message: ['Unexpected exception', ...(message ? [message] : [])].join(': '),
+    message: [
+      'Unexpected exception',
+      ...(message != null && message !== '' ? [message] : [])
+    ].join(': '),
     name: 'UnexpectedException',
     ...raw
   }

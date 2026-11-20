@@ -53,9 +53,9 @@ export function refreshAllFioAddresses(): ThunkAction<Promise<void>> {
       walletKey => currencyWallets[walletKey]
     )
     for (const { name, walletId } of fioAddresses) {
-      if (!connectedWalletsByFioAddress[name]) {
+      if (connectedWalletsByFioAddress[name] == null) {
         const fioWallet = fioWalletsById[walletId]
-        if (!fioWallet) continue
+        if (fioWallet == null) continue
         const ccWalletMap = await refreshConnectedWalletsForFioAddress(
           name,
           fioWallet,

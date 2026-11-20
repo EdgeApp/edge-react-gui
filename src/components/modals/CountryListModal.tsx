@@ -17,17 +17,21 @@ interface Props {
   bridge: AirshipBridge<string>
 }
 
-export const CountryListModal = ({
+export const CountryListModal: React.FC<Props> = ({
   countryCode: rawCountryCode,
   bridge
-}: Props) => {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const countryCode =
     rawCountryCode === '' ? getCountry() ?? 'US' : rawCountryCode
 
-  const rowComponent = ({ filename, name, 'alpha-2': alpha }: CountryData) => {
+  const rowComponent = ({
+    filename,
+    name,
+    'alpha-2': alpha
+  }: CountryData): React.ReactElement => {
     const logoName = filename ?? name.toLowerCase().replace(' ', '-')
     const source = { uri: `${FLAG_LOGO_URL}/${logoName}.png` }
 
@@ -43,7 +47,7 @@ export const CountryListModal = ({
     )
   }
 
-  const rowDataFilter = (searchText: string, country: CountryData) => {
+  const rowDataFilter = (searchText: string, country: CountryData): boolean => {
     const lowerCaseText = searchText.toLowerCase()
     const upperCaseText = searchText.toUpperCase()
     return (

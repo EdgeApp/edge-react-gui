@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ExchangeQuote should render with loading props 1`] = `
 <View
@@ -231,6 +231,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -255,6 +256,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={11.05}
         numberOfLines={1}
         style={
           [
@@ -287,6 +289,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={14.3}
         numberOfLines={1}
         style={
           [
@@ -318,6 +321,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [
@@ -377,6 +381,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [
@@ -409,6 +414,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [
@@ -454,6 +460,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [
@@ -486,6 +493,7 @@ exports[`ExchangeQuote should render with loading props 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={11.05}
           numberOfLines={1}
           style={
             [

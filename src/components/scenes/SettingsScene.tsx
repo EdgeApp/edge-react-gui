@@ -10,8 +10,6 @@ import {
 import * as React from 'react'
 import { Appearance, InteractionManager, Platform } from 'react-native'
 import { check } from 'react-native-permissions'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { showBackupModal } from '../../actions/BackupModalActions'
@@ -19,6 +17,7 @@ import {
   getDeviceSettings,
   writeDisableAnimations,
   writeForceLightAccountCreate,
+  writeSlidersAsButtons,
   writeThemeMode
 } from '../../actions/DeviceSettingsActions'
 import {
@@ -57,13 +56,17 @@ import { ConfirmContinueModal } from '../modals/ConfirmContinueModal'
 import { RadioListModal } from '../modals/RadioListModal'
 import { TextInputModal } from '../modals/TextInputModal'
 import { Airship, showDevError, showError } from '../services/AirshipInstance'
-import { requestContactsPermission } from '../services/PermissionsManager'
+import {
+  hasContactsAccess,
+  requestContactsPermission
+} from '../services/PermissionsManager'
 import { changeTheme, useTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../settings/SettingsHeaderRow'
 import { SettingsLabelRow } from '../settings/SettingsLabelRow'
 import { SettingsSwitchRow } from '../settings/SettingsSwitchRow'
 import { SettingsTappableRow } from '../settings/SettingsTappableRow'
 import { asPrivateNetworkingSetting } from '../themed/MaybePrivateNetworkingSetting'
+import { VectorIcon } from '../themed/VectorIcon'
 
 type Props = EdgeAppSceneProps<'settingsOverview'>
 
@@ -151,6 +154,9 @@ export const SettingsScene: React.FC<Props> = props => {
   )
   const [forceLightAccountCreate, setForceLightAccountCreate] =
     useState<boolean>(getDeviceSettings().forceLightAccountCreate)
+  const [slidersAsButtons, setSlidersAsButtons] = useState<boolean>(
+    getDeviceSettings().slidersAsButtons
+  )
   const [touchIdText, setTouchIdText] = React.useState<string>(
     lstrings.settings_button_use_touchID
   )
@@ -176,6 +182,21 @@ export const SettingsScene: React.FC<Props> = props => {
     await showBackupModal({ navigation: navigation as NavigationBase })
   })
 
+  /**
+   * Prompts for the password and returns it once validated.
+   * `showUnlockSettingsModal` unlocks the settings on success.
+   */
+  const unlockSettings = async (): Promise<string | undefined> => {
+    const password = await handleShowUnlockSettingsModal().catch(
+      (error: unknown) => {
+        showError(error)
+        return undefined
+      }
+    )
+    setValidatedPassword(password)
+    return password
+  }
+
   const handleLockUnlock = useHandler(async () => {
     if (!isLocked) {
       dispatch({
@@ -184,30 +205,14 @@ export const SettingsScene: React.FC<Props> = props => {
       })
       setValidatedPassword(undefined)
     } else {
-      const password = await handleShowUnlockSettingsModal().catch(
-        (error: unknown) => {
-          showError(error)
-          return undefined
-        }
-      )
-      setValidatedPassword(password)
+      await unlockSettings()
     }
   })
 
   /** Returns true if the settings are locked. Otherwise false if they're unlocked. */
   const hasLock = async (): Promise<boolean> => {
-    if (isLocked) {
-      const password = await handleShowUnlockSettingsModal().catch(
-        (error: unknown) => {
-          showError(error)
-          return undefined
-        }
-      )
-      if (password == null) return true
-      // `showUnlockSettingsModal` already unlocked the settings.
-      setValidatedPassword(password)
-    }
-    return false
+    if (!isLocked) return false
+    return (await unlockSettings()) == null
   }
 
   const handleUpdateTouchId = useHandler(async () => {
@@ -358,11 +363,19 @@ export const SettingsScene: React.FC<Props> = props => {
   })
 
   const handleChangeUsername = useHandler(async (): Promise<void> => {
-    // Check if settings are locked
-    if ((await hasLock()) || validatedPassword == null) return
+    // A remounted scene can be unlocked without holding the password, and the
+    // held password goes stale if the password changes while this scene stays
+    // mounted. Renaming rebuilds the login from the value passed here, and a
+    // stale value would restore the old password. This prompts whenever the
+    // settings show locked or the held password is missing or stale.
+    const isCurrent =
+      !isLocked &&
+      validatedPassword != null &&
+      (await account.checkPassword(validatedPassword))
+    const password = isCurrent ? validatedPassword : await unlockSettings()
+    if (password == null) return
 
-    // Navigate to change username with the validated password
-    navigation.navigate('changeUsername', { password: validatedPassword })
+    navigation.navigate('changeUsername', { password })
   })
 
   const handleChangeOtp = useHandler(async (): Promise<void> => {
@@ -484,11 +497,15 @@ export const SettingsScene: React.FC<Props> = props => {
     setForceLightAccountCreate(!forceLightAccountCreate)
     await writeForceLightAccountCreate(!forceLightAccountCreate)
   })
+  const handleToggleSlidersAsButtons = useHandler(async () => {
+    setSlidersAsButtons(!slidersAsButtons)
+    await writeSlidersAsButtons(!slidersAsButtons)
+  })
 
   useAsyncEffect(
     async () => {
       const currentContactsPermission = await check(permissionNames.contacts)
-      setLocalContactsPermissionOn(currentContactsPermission === 'granted')
+      setLocalContactsPermissionOn(hasContactsAccess(currentContactsPermission))
     },
     [],
     'SettingsScene'
@@ -553,8 +570,9 @@ export const SettingsScene: React.FC<Props> = props => {
         <>
           <SettingsHeaderRow
             icon={
-              <FontAwesomeIcon
+              <VectorIcon
                 color={theme.icon}
+                font="FontAwesome"
                 name="user-o"
                 size={iconSize}
               />
@@ -625,7 +643,14 @@ export const SettingsScene: React.FC<Props> = props => {
         </>
         <>
           <SettingsHeaderRow
-            icon={<IonIcon color={theme.icon} name="options" size={iconSize} />}
+            icon={
+              <VectorIcon
+                color={theme.icon}
+                font="Ionicons"
+                name="options"
+                size={iconSize}
+              />
+            }
             label={lstrings.settings_options_title_cap}
           />
           <EdgeCard sections>
@@ -748,6 +773,14 @@ export const SettingsScene: React.FC<Props> = props => {
                 label={lstrings.settings_developer_options_force_la}
                 value={forceLightAccountCreate}
                 onPress={handleToggleForceLightAccountCreate}
+              />
+            )}
+            {developerModeOn && (
+              <SettingsSwitchRow
+                key="slidersAsButtons"
+                label={lstrings.settings_developer_options_sliders_as_buttons}
+                value={slidersAsButtons}
+                onPress={handleToggleSlidersAsButtons}
               />
             )}
             {developerModeOn && (

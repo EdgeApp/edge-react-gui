@@ -29,6 +29,7 @@ const paymentTypeToThemeKey: Record<FiatPaymentType, keyof Theme | null> = {
   spei: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
   turkishbank: 'paymentTypeLogoBankTransfer', // Using bank transfer as fallback
   venmo: 'paymentTypeLogoVenmo',
+  vietqr: 'paymentTypeLogoVietQr',
   wire: 'paymentTypeLogoBankTransfer' // Using bank transfer as fallback
 }
 

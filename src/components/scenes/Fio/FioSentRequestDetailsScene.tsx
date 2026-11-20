@@ -40,7 +40,7 @@ interface StateProps {
 type Props = StateProps & OwnProps & ThemeProps
 
 class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
-  fiatAmount = (tokenCode: string, amount: string = '0') => {
+  fiatAmount = (tokenCode: string, amount: string = '0'): string => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
     const edgeAsset = fioCodeToEdgeAsset(
       this.props.account,
@@ -60,7 +60,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     return formatNumber(fiatAmount, { toFixed: 2 })
   }
 
-  amountField = () => {
+  amountField = (): React.ReactElement => {
     const { fiatSymbol, route } = this.props
     const {
       selectedFioSentRequest: { content }
@@ -74,7 +74,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     return <EdgeRow title={lstrings.fio_request_amount} body={text} />
   }
 
-  statusField = (status: FioRequestStatus) => {
+  statusField = (status: FioRequestStatus): React.ReactElement => {
     const styles = getStyles(this.props.theme)
     let statusLabel = (
       <EdgeText style={styles.status}>
@@ -97,7 +97,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     return <EdgeRow title={lstrings.string_status}>{statusLabel}</EdgeRow>
   }
 
-  render() {
+  render(): React.ReactElement {
     const { route, theme } = this.props
     const { selectedFioSentRequest } = route.params
     const styles = getStyles(theme)

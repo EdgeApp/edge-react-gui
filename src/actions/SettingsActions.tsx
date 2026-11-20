@@ -322,7 +322,8 @@ export const setRampCryptoSelection =
   }
 
 /**
- * Save the Send scene's Stealth Send toggle. Only a user tap calls this: a
+ * Save the Send scene's Stealth Send toggle. A user tap calls this, and so
+ * does closing the swap-send sheet without agreeing, which saves it off. A
  * navigation param or deep link arms the toggle for one visit and leaves the
  * saved value alone.
  */
@@ -655,7 +656,6 @@ export async function migrateDenominationSettings(
         savedDenom.multiplier !== defaultDenom.multiplier ||
         savedDenom.name !== defaultDenom.name
       ) {
-        // @ts-expect-error - DenominationSettings type allows undefined
         cleanedSettings[pluginId][currencyCode] = savedDenom
       } else {
         needsCleanup = true

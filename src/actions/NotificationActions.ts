@@ -239,6 +239,15 @@ const serverSettingsToNotificationSettings = (
   return data
 }
 
+/**
+ * Replaces the push server's list of logins for this device with the accounts
+ * saved on it. The server sends login approval pushes to every device listing
+ * the login, so this list has to shrink when an account is forgotten.
+ */
+export async function syncPushLoginIds(context: EdgeContext): Promise<void> {
+  await updateServerSettings(context, {})
+}
+
 async function updateServerSettings(
   context: EdgeContext,
   data: DeviceUpdatePayload

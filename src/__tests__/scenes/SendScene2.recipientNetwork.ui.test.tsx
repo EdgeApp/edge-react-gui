@@ -21,6 +21,7 @@ import {
   type EdgeMetadata,
   type EdgeParsedUri,
   type EdgeSwapPlugin,
+  type EdgeSwapResult,
   type EdgeTokenId,
   lockEdgeCorePlugins,
   makeFakeEdgeWorld,
@@ -29,11 +30,16 @@ import {
 import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
+import { ErrorCard } from '../../components/cards/ErrorCard'
 import type { RecipientAssetRow } from '../../components/modals/RecipientAssetListModal'
 import { EdgeRow } from '../../components/rows/EdgeRow'
-import { SendScene2 } from '../../components/scenes/SendScene2'
+import {
+  SendScene2,
+  type SendScene2Params
+} from '../../components/scenes/SendScene2'
 import type * as AirshipInstance from '../../components/services/AirshipInstance'
 import { Airship, showToast } from '../../components/services/AirshipInstance'
+import { SafeSlider } from '../../components/themed/SafeSlider'
 import { StealthInfoText } from '../../components/themed/StealthInfoText'
 import { AddressTile2 } from '../../components/tiles/AddressTile2'
 import { lstrings } from '../../locales/strings'
@@ -51,6 +57,8 @@ import fakeUser from '../../util/fake/fakeUserDump.json'
 import { asHoudiniChains, type HoudiniChains } from '../../util/houdiniChains'
 import { withStatedAsset } from '../../util/paymentUri'
 import { getStealthProviderName } from '../../util/stealthSwap'
+import type { SwapMode } from '../../util/tracking'
+import * as tracking from '../../util/tracking'
 
 jest.useRealTimers()
 
@@ -61,12 +69,20 @@ jest.mock('../../components/services/AirshipInstance', () => {
   return { ...actual, showToast: jest.fn() }
 })
 
+// A same-chain Zcash pick falls through to a ZNS reverse lookup over the
+// network:
+jest.mock('../../util/nameServices', () => ({
+  ...jest.requireActual<object>('../../util/nameServices'),
+  reverseLookupName: async () => null
+}))
+
 const BTC_ADDRESS = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq'
 const EVM_ADDRESS = '0xF0825Aec2c79189C6bB1FEe9293F9478103c9B9e'
 const OTHER_EVM_ADDRESS = '0x52908400098527886E0F7030069857D2E4169EE7'
 const ZCASH_ADDRESS = /^(u1[a-z0-9]+|zs1[a-z0-9]+|t1[1-9A-HJ-NP-Za-km-z]{33})$/
 // An amount over the provider's floor, so the quote goes out:
 const ONE_BTC = '100000000'
+const TWO_BTC = '200000000'
 const ONE_ETH = '1000000000000000000'
 const ONE_ZEC = '100000000'
 const USDT_TOKEN_ID = 'dac17f958d2ee523a2206206994597c13d831ec7'
@@ -114,9 +130,16 @@ const houdiniChains = asHoudiniChains(servedChains)
 const FIVE_USD_OF_ETH = '3770000000000000'
 const FIFTY_USD_OF_ETH = '37700000000000000'
 
-const SCAM_WARNING = 'Scam Warning'
+const IRREVERSIBLE = 'Cryptocurrency transactions are irreversible.'
+const ON_BITCOIN = 'Make sure the recipient is on the Bitcoin network.'
+const ON_ETHEREUM = 'Make sure the recipient is on the Ethereum network.'
 const SWAP_BEFORE_SEND = 'Swap before send'
 const ZCASH_TRANSPARENT_WARNING = 'Transparent Zcash payout'
+// A ZIP-316 unified address with a P2PKH receiver, which the provider pays
+// out to as a t1:
+const ZCASH_UNIFIED_ADDRESS =
+  'u1pg2aaph7jp8rpf6yhsza25722sg5fcn3vaca6ze27hqjw7jvvhhuxkpcg0ge9xh6drsgdkda8qjq5chpehkcpxf87rnjryjqwymdheptpvnljqqrjqzjwkc2ma6hcq666kgwfytxwac8eyex6ndgr6ezte66706e3vaqrd25dzvzkc69kw0jgywtd0cmq52q5lkw6uh7hyvzjse8ksx'
+const ZCASH_TRANSPARENT_ADDRESS = 't1Hsc1LR8yKnbbe3twRp88p6vFfC5t7DLbs'
 
 /**
  * A fake plugin whose parser accepts one address format, bare or inside a
@@ -199,16 +222,42 @@ const ftmCurrencyInfo: EdgeCurrencyInfo = {
 /**
  * The swap provider every send-to-address quote goes to. It records the
  * destination addresses each request reached it with, then declines the pair
- * as a provider with no route would.
+ * as a provider with no route would. With `fakeHoudiniQuotes.enabled` set it
+ * quotes the pair one to one instead, so the scene holds a live quote.
  */
 const quotedDestinations: EdgeAddress[][] = []
+const fakeHoudiniQuotes: {
+  enabled: boolean
+  /** What an approval resolves to. With none, approving throws. */
+  result?: EdgeSwapResult
+} = { enabled: false }
 const fakeHoudiniPlugin: EdgeSwapPlugin = {
   swapInfo: { pluginId: 'houdini', displayName: 'Houdini', supportEmail: '' },
   async fetchSwapQuote(request) {
     quotedDestinations.push(
       await request.toWallet.getAddresses({ tokenId: null })
     )
-    throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+    if (!fakeHoudiniQuotes.enabled) {
+      throw new SwapCurrencyError(fakeHoudiniPlugin.swapInfo, request)
+    }
+    return {
+      swapInfo: fakeHoudiniPlugin.swapInfo,
+      request,
+      isEstimate: false,
+      fromNativeAmount: request.nativeAmount,
+      toNativeAmount: request.nativeAmount,
+      networkFee: {
+        currencyCode: request.fromWallet.currencyInfo.currencyCode,
+        tokenId: null,
+        nativeAmount: '0'
+      },
+      pluginId: fakeHoudiniPlugin.swapInfo.pluginId,
+      approve: async () => {
+        if (fakeHoudiniQuotes.result != null) return fakeHoudiniQuotes.result
+        throw new Error('The fake provider sends nothing')
+      },
+      close: async () => {}
+    }
   }
 }
 
@@ -369,11 +418,28 @@ afterAll(async () => {
   await context?.close()
 })
 
+/**
+ * Waits in act scopes, for up to four seconds, until `done` holds. A quote or
+ * a wallet pick settles on its own promise chain, and only an act scope that
+ * closes over it delivers it. waitFor polls outside act, so an update landing
+ * between its polls never renders.
+ */
+async function settleInAct(done: () => boolean): Promise<void> {
+  const deadline = Date.now() + 4000
+  while (!done() && Date.now() < deadline) {
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 20))
+    })
+  }
+}
+
 describe('SendScene2 recipient network', () => {
   const mockShowToast = jest.mocked(showToast)
 
   beforeEach(() => {
     mockShowToast.mockClear()
+    fakeHoudiniQuotes.enabled = false
+    fakeHoudiniQuotes.result = undefined
   })
 
   interface RenderedSend {
@@ -418,10 +484,16 @@ describe('SendScene2 recipient network', () => {
     destinationTag: () => string | undefined
     /** How many text nodes on the scene read exactly this. */
     count: (text: string) => number
+    /** How many error cards the scene shows. */
+    errorCards: () => number
     /** Where a text first appears on the scene, top to bottom, or -1. */
     position: (text: string) => number
     /** Whether some text node on the scene reads exactly this. */
     shows: (text: string) => boolean
+    /** Whether the slider is shown and ready to slide. */
+    sliderLive: () => boolean
+    /** Completes a slide on the live slider. */
+    slide: () => Promise<void>
     /** The notes under the Stealth Send toggle, top to bottom. */
     stealthNotes: () => string[]
     /** Taps the Stealth Send toggle. */
@@ -441,10 +513,17 @@ describe('SendScene2 recipient network', () => {
         destination: Array<{ pluginId: string }>
       }
       sceneAccount?: EdgeAccount
+      /** Extra scene params, as a partner send passes them. */
+      sceneParams?: Partial<SendScene2Params>
     } = {}
   ): RenderedSend => {
     if (wallet == null) throw new Error('No wallet')
-    const { chains = houdiniChains, houdiniBans, sceneAccount = account } = opts
+    const {
+      chains = houdiniChains,
+      houdiniBans,
+      sceneAccount = account,
+      sceneParams = {}
+    } = opts
     const rootState: FakeState = {
       ...fakeRootState,
       core: { account: sceneAccount },
@@ -470,13 +549,16 @@ describe('SendScene2 recipient network', () => {
           {...fakeEdgeAppSceneProps('send2', {
             walletId: wallet.id,
             tokenId,
-            doCheckAndShowGetCryptoModal: false
+            doCheckAndShowGetCryptoModal: false,
+            ...sceneParams
           })}
         />
       </FakeProviders>
     )
     const tileProps = (): React.ComponentProps<typeof AddressTile2> =>
-      rendered.UNSAFE_getByType(AddressTile2).props
+      rendered.UNSAFE_getByType(AddressTile2).props as React.ComponentProps<
+        typeof AddressTile2
+      >
     const recipientGetsRow = (): React.ComponentProps<typeof EdgeRow> => {
       const row = rendered
         .UNSAFE_getAllByType(EdgeRow)
@@ -583,13 +665,7 @@ describe('SendScene2 recipient network', () => {
             .UNSAFE_getByProps({ testID: 'addressTileMyself' })
             .props.onPress()
         })
-        // The tile settles the pick on its own promise chain, whose updates
-        // only reach the scene once an act scope closes over them:
-        for (let i = 0; i < 50 && tileProps().recipientAddress === ''; ++i) {
-          await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 20))
-          })
-        }
+        await settleInAct(() => tileProps().recipientAddress !== '')
         expect(tileProps().recipientAddress).not.toBe('')
         show.mockRestore()
       },
@@ -677,6 +753,19 @@ describe('SendScene2 recipient network', () => {
         1,
       shows: text =>
         JSON.stringify(rendered.toJSON()).includes(JSON.stringify([text])),
+      sliderLive: () =>
+        rendered
+          .UNSAFE_queryAllByType(SafeSlider)
+          .some(slider => slider.props.disabled !== true),
+      slide: async () => {
+        const slider = rendered
+          .UNSAFE_queryAllByType(SafeSlider)
+          .find(candidate => candidate.props.disabled !== true)
+        if (slider == null) throw new Error('No live slider')
+        await act(async () => {
+          await slider.props.onSlidingComplete(() => {})
+        })
+      },
       stealthNotes: () =>
         rendered
           .UNSAFE_queryAllByType(StealthInfoText)
@@ -689,6 +778,7 @@ describe('SendScene2 recipient network', () => {
           await toggle.props.onPress?.()
         })
       },
+      errorCards: () => rendered.UNSAFE_queryAllByType(ErrorCard).length,
       unmount: () => {
         rendered.unmount()
       }
@@ -1157,15 +1247,7 @@ describe('SendScene2 recipient network', () => {
     // The fake provider refuses every quote. The refusal settles on the
     // quote's own promise chain, so only a closing act scope delivers it:
     await scene.enterSendAmount(ONE_BTC)
-    for (
-      let i = 0;
-      i < 50 && !scene.shows(lstrings.exchange_generic_error_title);
-      ++i
-    ) {
-      await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 20))
-      })
-    }
+    await settleInAct(() => scene.shows(lstrings.exchange_generic_error_title))
     expect(scene.shows(lstrings.exchange_generic_error_title)).toBe(true)
     expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
     scene.unmount()
@@ -1186,37 +1268,196 @@ describe('SendScene2 recipient network', () => {
     scene.unmount()
   })
 
-  it('shows the scam warning on a plain send with no address', async () => {
+  describe('with a pasted Zcash address the provider quotes', () => {
+    /**
+     * Pastes a Zcash address on a Bitcoin send, enters an amount, and waits
+     * until the provider's quote for that address leaves the slider ready.
+     */
+    const renderQuotedPaste = async (
+      address: string,
+      stealth: boolean
+    ): Promise<RenderedSend> => {
+      fakeHoudiniQuotes.enabled = true
+      const scene = renderBitcoinSend()
+      await scene.pickRecipientAsset('Zcash')
+      expect(await scene.enterCrossChainAddress(address)).toBe(true)
+      if (stealth) await scene.toggleStealth()
+      expect(scene.stealthArmed()).toBe(stealth)
+
+      quotedDestinations.length = 0
+      await scene.enterSendAmount(ONE_BTC)
+      await settleInAct(scene.sliderLive)
+      expect(scene.sliderLive()).toBe(true)
+      expect(quotedDestinations.at(-1)).toEqual([
+        { addressType: 'publicAddress', publicAddress: address }
+      ])
+      expect(scene.shows(lstrings.exchange_generic_error_title)).toBe(false)
+      return scene
+    }
+
+    it('warns before the slide that a Stealth u1 send pays a t1', async () => {
+      const scene = await renderQuotedPaste(ZCASH_UNIFIED_ADDRESS, true)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(true)
+      expect(scene.shows(lstrings.stealth_zcash_transparent_payout_body)).toBe(
+        true
+      )
+      scene.unmount()
+    })
+
+    it('shows no warning for a Stealth send to a pasted t1', async () => {
+      const scene = await renderQuotedPaste(ZCASH_TRANSPARENT_ADDRESS, true)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+      scene.unmount()
+    })
+
+    it('shows no warning for a u1 send with Stealth off', async () => {
+      const scene = await renderQuotedPaste(ZCASH_UNIFIED_ADDRESS, false)
+      expect(scene.shows(ZCASH_TRANSPARENT_WARNING)).toBe(false)
+      scene.unmount()
+    })
+
+    it('logs the swap mode on an approved order', async () => {
+      const logEvent = jest
+        .spyOn(tracking, 'logEvent')
+        .mockImplementation(() => () => undefined)
+      const cases: Array<[boolean, SwapMode]> = [
+        [false, 'swapSend'],
+        [true, 'stealthSwapSend']
+      ]
+      try {
+        for (const [stealth, swapMode] of cases) {
+          logEvent.mockClear()
+          const scene = await renderQuotedPaste(
+            ZCASH_TRANSPARENT_ADDRESS,
+            stealth
+          )
+          fakeHoudiniQuotes.result = {
+            orderId: 'order-1',
+            destinationAddress: ZCASH_TRANSPARENT_ADDRESS,
+            transaction: {
+              blockHeight: 0,
+              currencyCode: 'BTC',
+              date: 0,
+              isSend: true,
+              memos: [],
+              nativeAmount: '-100000000',
+              networkFee: '1',
+              networkFees: [],
+              ourReceiveAddresses: [],
+              signedTx: '',
+              tokenId: null,
+              txid: 'txid',
+              walletId: 'wallet'
+            }
+          }
+          await scene.slide()
+          expect(logEvent).toHaveBeenCalledWith(
+            'Exchange_Shift_Success',
+            expect.objectContaining({
+              conversionValues: expect.objectContaining({
+                orderId: 'order-1',
+                swapProviderId: 'houdini',
+                swapMode
+              })
+            })
+          )
+          scene.unmount()
+        }
+      } finally {
+        logEvent.mockRestore()
+      }
+    })
+  })
+
+  it('closes a plain send with the reminders as a note', async () => {
     const scene = renderBitcoinSend()
 
-    expect(scene.count(SCAM_WARNING)).toBe(1)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
+    expect(scene.shows('Scam Warning')).toBe(false)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
 
-    // An entered address retires the card: off to Ethereum and back leaves a
+    // The note outlives address entry: off to Ethereum and back leaves a
     // plain Bitcoin send with its recipient filled in.
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     await scene.enterUnparsedAddress(BTC_ADDRESS)
     expect(scene.recipientAddress()).toBe(BTC_ADDRESS)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
     expect(scene.shows(SWAP_BEFORE_SEND)).toBe(false)
     scene.unmount()
   })
 
-  it('shows the swap card alone on a swap-send with no address', async () => {
+  it('moves the reminders into the swap card on a swap-send', async () => {
     const scene = renderBitcoinSend()
 
     // Picking the recipient's asset makes the send a swap before any address:
     await scene.pickRecipientAsset('Ethereum')
     expect(scene.recipientAddress()).toBe('')
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
+    expect(scene.shows(ON_BITCOIN)).toBe(false)
 
-    // The swap card stays the only one once the address is in:
+    // The card stays the only message once the address is in:
     await scene.enterUnparsedAddress(`ethereum:${EVM_ADDRESS}@1`)
     expect(scene.recipientAddress()).toBe(EVM_ADDRESS)
-    expect(scene.count(SWAP_BEFORE_SEND)).toBe(1)
-    expect(scene.shows(SCAM_WARNING)).toBe(false)
+    expect(scene.shows(SWAP_BEFORE_SEND)).toBe(true)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_ETHEREUM)).toBe(1)
     scene.unmount()
+  })
+
+  it('ends the Stealth card with the reminders', async () => {
+    const scene = renderBitcoinSend()
+    await scene.toggleStealth()
+
+    expect(scene.stealthArmed()).toBe(true)
+    expect(scene.shows(lstrings.stealth_swap_send_warning_title_private)).toBe(
+      true
+    )
+    // The card carries the reminders once, so the note is gone:
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+    expect(scene.count(ON_BITCOIN)).toBe(1)
+    scene.unmount()
+  })
+
+  it('hides the note under an error card', async () => {
+    const scene = renderBitcoinSend()
+    await scene.enterParsedAddress(BTC_ADDRESS)
+    expect(scene.count(IRREVERSIBLE)).toBe(1)
+
+    // The wallet holds 1.3 BTC, so a 2 BTC spend fails:
+    await scene.enterAmount(TWO_BTC)
+    for (let i = 0; i < 50 && scene.shows(IRREVERSIBLE); ++i) {
+      await act(async () => {
+        await new Promise(resolve => setTimeout(resolve, 20))
+      })
+    }
+    expect(scene.errorCards()).toBe(1)
+    expect(scene.shows(IRREVERSIBLE)).toBe(false)
+    expect(scene.shows(ON_BITCOIN)).toBe(false)
+    scene.unmount()
+  })
+
+  it('leaves the note off a send with a hidden recipient', async () => {
+    for (const hiddenFeaturesMap of [
+      { address: true },
+      { scamWarning: true }
+    ]) {
+      const scene = renderSend(btcWallet, null, {
+        sceneParams: {
+          hiddenFeaturesMap,
+          spendInfo: {
+            tokenId: null,
+            spendTargets: [{ publicAddress: BTC_ADDRESS }]
+          }
+        }
+      })
+      expect(scene.shows(IRREVERSIBLE)).toBe(false)
+      expect(scene.shows(ON_BITCOIN)).toBe(false)
+      scene.unmount()
+    }
   })
 
   it('names the reason when no network takes the text', async () => {

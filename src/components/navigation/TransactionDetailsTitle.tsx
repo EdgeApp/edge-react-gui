@@ -7,7 +7,7 @@ import { unixToLocaleDateTime } from '../../util/utils'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export function TransactionDetailsTitle() {
+export const TransactionDetailsTitle: React.FC = () => {
   const route = useRoute<RouteProp<'transactionDetails'>>()
   const { edgeTransaction } = route.params
   const styles = getStyles(useTheme())

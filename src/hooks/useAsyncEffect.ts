@@ -85,7 +85,7 @@ function wakeup(state: State, tag?: string): void {
         state.running = false
         wakeup(state, tag)
       })
-      .catch(error => {
+      .catch((error: unknown) => {
         showError(error, { tag })
         state.running = false
         wakeup(state, tag)

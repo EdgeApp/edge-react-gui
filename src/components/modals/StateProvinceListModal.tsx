@@ -23,12 +23,12 @@ interface StateCountryListViewToken extends ViewToken {
   item: StateProvinceData
 }
 
-export const StateProvinceListModal = ({
+export const StateProvinceListModal: React.FC<Props> = ({
   countryCode,
   stateProvinces: rawStateProvinces,
   stateProvince,
   bridge
-}: Props) => {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 

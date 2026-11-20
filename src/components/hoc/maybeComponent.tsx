@@ -10,9 +10,9 @@ import React from 'react'
 export function maybeComponent<Props>(
   Component: React.ComponentType<Props>
 ): React.ComponentType<Props & { children?: React.ReactNode; when: boolean }> {
-  function MaybeComponent(
-    props: Props & { children?: React.ReactNode; when: boolean }
-  ) {
+  const MaybeComponent: React.FC<
+    Props & { children?: React.ReactNode; when: boolean }
+  > = props => {
     const { when, ...rest } = props
     const typeHack: React.Attributes & Props = rest as any
     return when ? <Component {...typeHack} /> : <>{props.children}</>

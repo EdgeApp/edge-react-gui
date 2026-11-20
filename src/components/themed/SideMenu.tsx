@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/drawer'
 import { DrawerActions } from '@react-navigation/native'
 import type { EdgeUserInfo } from 'edge-core-js'
+import { LinearGradient } from 'expo-linear-gradient'
 import hashjs from 'hash.js'
 import * as React from 'react'
 import {
@@ -14,7 +15,6 @@ import {
   ScrollView,
   View
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import Animated, {
   Easing,
   useAnimatedStyle,

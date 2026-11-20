@@ -25,7 +25,7 @@ interface Props {
  * Renders the crypto amount for a transaction object.
  * Used on the transaction details scene.
  */
-export function TxCryptoAmountRow(props: Props) {
+export const TxCryptoAmountRow: React.FC<Props> = props => {
   const { transaction, wallet } = props
   const { currencyInfo } = wallet
   const { currencyCode, nativeAmount, networkFee, swapData, tokenId } =
@@ -55,7 +55,9 @@ export function TxCryptoAmountRow(props: Props) {
         walletDefaultDenom.multiplier
       )(absoluteAmount)
       const symbolString =
-        currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+        currencyInfo.currencyCode === currencyCode &&
+        walletDefaultDenom.symbol != null &&
+        walletDefaultDenom.symbol !== ''
           ? walletDefaultDenom.symbol
           : swapData?.payoutCurrencyCode ?? ''
 
@@ -64,7 +66,9 @@ export function TxCryptoAmountRow(props: Props) {
 
     // It's a send, so the symbol is weirdly different for some reason:
     const symbolString =
-      currencyInfo.currencyCode === currencyCode && walletDefaultDenom.symbol
+      currencyInfo.currencyCode === currencyCode &&
+      walletDefaultDenom.symbol != null &&
+      walletDefaultDenom.symbol !== ''
         ? walletDefaultDenom.symbol
         : currencyCode
 
@@ -79,16 +83,17 @@ export function TxCryptoAmountRow(props: Props) {
           convertNativeToDisplay(walletDefaultDenom.multiplier)(networkFee)
         )
       )
-      const feeString = symbolString
-        ? sprintf(
-            lstrings.fragment_tx_detail_mining_fee_with_symbol,
-            convertedFee
-          )
-        : sprintf(
-            lstrings.fragment_tx_detail_mining_fee_with_denom,
-            convertedFee,
-            walletDefaultDenom.name
-          )
+      const feeString =
+        symbolString !== ''
+          ? sprintf(
+              lstrings.fragment_tx_detail_mining_fee_with_symbol,
+              convertedFee
+            )
+          : sprintf(
+              lstrings.fragment_tx_detail_mining_fee_with_denom,
+              convertedFee,
+              walletDefaultDenom.name
+            )
 
       return `${symbolString} ${convertedAmount} (${feeString})`
     }

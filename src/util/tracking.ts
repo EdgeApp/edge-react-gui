@@ -49,6 +49,7 @@ export type TrackingEventName =
   | 'Load_Install_Reason_Fail'
   | 'Push_Notification_Opened'
   | 'Sell_Quote'
+  | 'Sell_Payment_Redirect'
   | 'Sell_Quote_Next'
   | 'Sell_Success'
   | 'Signup_Welcome'
@@ -98,6 +99,20 @@ export interface CryptoConversionValues {
 }
 
 /**
+ * Which swap flow placed an order: a wallet-to-wallet swap from the Exchange
+ * scene or a swap to an address from the Send scene, each with or without
+ * Stealth. A Stealth send that pays out the asset it spends is `stealthSend`,
+ * the flow the transaction list titles Stealth Send. The reports server reads
+ * it to report each mode on its own.
+ */
+export type SwapMode =
+  | 'swap'
+  | 'swapSend'
+  | 'stealthSwap'
+  | 'stealthSwapSend'
+  | 'stealthSend'
+
+/**
  * Analytics: Swap
  */
 export interface SwapConversionValues {
@@ -109,6 +124,7 @@ export interface SwapConversionValues {
 
   swapProviderId?: string
   orderId?: string
+  swapMode?: SwapMode
 }
 
 /**
@@ -165,6 +181,11 @@ export interface TrackingValues extends LoginTrackingValues {
   destPluginId?: string // Currency plugin of the wallet being swapped to
   destTokenId?: EdgeTokenId // Token being swapped to (null for the native asset)
   errorCategory?: SwapErrorCategory // Coarse bucket for a failed approval
+
+  // Sell payment redirect link (Sell_Payment_Redirect)
+  fiatProviderId?: string // Provider the link belongs to
+  orderId?: string // Provider order the link points at
+  orderStatus?: string // Provider's status for that order, or why the lookup failed
 
   // Conversion values
   conversionValues?:
@@ -404,6 +425,7 @@ export function logEvent(
               sourceAmount,
               swapProviderId,
               orderId,
+              swapMode,
               isBuiltInAsset
             } = conversionValues
 
@@ -427,6 +449,7 @@ export function logEvent(
 
             if (orderId != null) params.orderId = orderId
             if (swapProviderId != null) params.swapProviderId = swapProviderId
+            if (swapMode != null) params.swapMode = swapMode
           }
         }
 

@@ -56,9 +56,10 @@ export const makeApprovableCall = async (
       skipChecks: dryrun,
       spendTargets: [
         {
-          nativeAmount: txInfo.value
-            ? txInfo.value.toString()
-            : nativeAmount ?? '0',
+          nativeAmount:
+            txInfo.value != null
+              ? txInfo.value.toString()
+              : nativeAmount ?? '0',
           publicAddress: txInfo.to,
           otherParams: { data: txInfo.data }
         }

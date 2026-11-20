@@ -85,6 +85,8 @@ export function getBuySettlementRange(
       return RANGE(0, 'minutes', 1, 'hours')
     case 'venmo':
       return RANGE(5, 'minutes', 24, 'hours')
+    case 'vietqr':
+      return RANGE(5, 'minutes', 24, 'hours')
     case 'wire':
       return POINT(5, 'minutes')
   }
@@ -143,6 +145,8 @@ export function getSellSettlementRange(
     case 'turkishbank':
       return RANGE(0, 'minutes', 1, 'hours')
     case 'venmo':
+      return RANGE(5, 'minutes', 24, 'hours')
+    case 'vietqr':
       return RANGE(5, 'minutes', 24, 'hours')
     case 'wire':
       return POINT(5, 'minutes')

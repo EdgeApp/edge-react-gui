@@ -257,6 +257,7 @@ const asDeviceSettingsInner = asObject({
   developerPluginUri: asMaybe(asString),
   disableAnimations: asMaybe(asBoolean, false),
   forceLightAccountCreate: asMaybe(asBoolean, false),
+  slidersAsButtons: asMaybe(asBoolean, false),
   themeMode: asMaybe(asThemeMode, 'dark'),
   isSurveyDiscoverShown: asMaybe(asBoolean, false),
   keysCache: asMaybe(
@@ -375,7 +376,8 @@ export interface WcConnectionInfo {
   walletName: string
   walletId: string
   uri: string
-  icon: string
+  /** Drawable dApp artwork, if any. `DAppIcon` falls back without it. */
+  icon?: string
 }
 export interface WalletConnectChainId {
   namespace: 'algorand' | 'bip122' | 'cosmos' | 'eip155'
@@ -455,6 +457,12 @@ export interface AppConfig {
     extraTabBarIconFont: string
     extraTabBarIconName: string
   }
+  /**
+   * The workspace region's Messenger host.
+   * Defaults to https://api-iam.intercom.io.
+   */
+  intercomApiBase?: string
+  intercomAppId?: string
   supportChatSite?: string
 }
 

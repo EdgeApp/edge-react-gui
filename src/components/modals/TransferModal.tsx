@@ -35,12 +35,12 @@ interface TransferOption {
  * Renders a modal with descritive options for transferring crypto in/out of
  * Edge, i.e.: buying/selling/sending/receiving crypto
  */
-export const TransferModal = ({
+export const TransferModal: React.FC<Props> = ({
   account,
   bridge,
   depositOrSend,
   navigation
-}: Props) => {
+}) => {
   const theme = useTheme()
   const style = styles(theme)
   const dispatch = useDispatch()

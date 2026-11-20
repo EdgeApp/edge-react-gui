@@ -8,7 +8,7 @@ import { lstrings } from '../../locales/strings'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase } from '../../types/routerTypes'
 
-export const AutoLogout = () => {
+export const AutoLogout: React.FC = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<NavigationBase>()
   const stateRef = React.useRef({
@@ -18,8 +18,10 @@ export const AutoLogout = () => {
   const settingsLoaded = useSelector(
     state => state.ui.settings.settingsLoaded ?? false
   )
-  const autoLogoutTimeInSeconds = useSelector(
-    state => state.ui.settings.autoLogoutTimeInSeconds || Infinity
+  const autoLogoutTimeInSeconds = useSelector(state =>
+    state.ui.settings.autoLogoutTimeInSeconds === 0
+      ? Infinity
+      : state.ui.settings.autoLogoutTimeInSeconds
   )
   const isAppForeground = useIsAppForeground()
 
@@ -28,12 +30,12 @@ export const AutoLogout = () => {
     const appForegrounded = !stateRef.current.isAppForeground && isAppForeground
     // Check if time for logout has expired
     const timestamp = new Date()
-    // @ts-expect-error
-    const differenceInSeconds = (timestamp - stateRef.current.timestamp) / 1000
+    const differenceInSeconds =
+      (timestamp.getTime() - stateRef.current.timestamp.getTime()) / 1000
     const timeExpired = differenceInSeconds > autoLogoutTimeInSeconds
     // Logout If all the conditions for autoLogout are met
     if (appForegrounded && settingsLoaded && timeExpired)
-      dispatch(logoutRequest(navigation)).catch(err => {
+      dispatch(logoutRequest(navigation)).catch((err: unknown) => {
         console.warn(
           sprintf(lstrings.auto_log_off_failed_message_s, String(err))
         )

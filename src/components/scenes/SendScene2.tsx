@@ -28,7 +28,8 @@ import {
   type TextInput,
   View
 } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import type { KeyboardAwareScrollViewRef } from 'react-native-keyboard-controller'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { sprintf } from 'sprintf-js'
 
 import type { GuiExchangeRates } from '../../actions/ExchangeRateActions'
@@ -65,6 +66,7 @@ import { config } from '../../theme/appConfig'
 import { useState } from '../../types/reactHooks'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { EdgeAppSceneProps, NavigationBase } from '../../types/routerTypes'
+import type { GradientColors } from '../../types/Theme'
 import type { EdgeAsset, FioRequest } from '../../types/types'
 import { describeAddressRejection } from '../../util/addressRejection'
 import {
@@ -129,7 +131,12 @@ import {
   makeStealthSwapRequestOptions,
   STEALTH_SWAP_PLUGIN_ID
 } from '../../util/stealthSwap'
+import {
+  getSendSwapMode,
+  makeSwapConversionValues
+} from '../../util/swapConversionValues'
 import { processSwapQuoteError } from '../../util/swapErrorDisplay'
+import { logEvent } from '../../util/tracking'
 import {
   convertTransactionFeeToDisplayFee,
   darkenHexColor,
@@ -303,7 +310,7 @@ const SendComponent: React.FC<Props> = props => {
     new WeakMap<EdgeSpendTarget, TileFioRecipient>()
   )
   const makeSpendCounter = React.useRef<number>(0)
-  const scrollViewRef = React.useRef<KeyboardAwareScrollView | null>(null)
+  const scrollViewRef = React.useRef<KeyboardAwareScrollViewRef>(null)
   const isSendingRef = React.useRef<boolean>(false)
 
   const initialMount = React.useRef<boolean>(true)
@@ -944,23 +951,6 @@ const SendComponent: React.FC<Props> = props => {
     }
     initialMount.current = false
   }
-
-  /**
-   * The first time this scene turns into a swap, say so. The recipient is no
-   * longer paid by this wallet, and the two-transaction shape is the part a
-   * user cannot infer from the scene. Shown once per account; the swap
-   * provider names itself so the copy survives a provider change.
-   */
-  const stealthSwapConfig = account.swapConfig[STEALTH_SWAP_PLUGIN_ID]
-  React.useEffect(() => {
-    if (!swapSendActive || stealthSwapConfig == null) return
-    showSwapSendWarningModal(
-      account.disklet,
-      stealthSwapConfig.swapInfo.displayName
-    ).catch((err: unknown) => {
-      showError(err)
-    })
-  }, [account.disklet, stealthSwapConfig, swapSendActive])
 
   const pendingInsufficientFees = React.useRef<
     InsufficientFundsError | undefined
@@ -2032,6 +2022,25 @@ const SendComponent: React.FC<Props> = props => {
   }
 
   /**
+   * Switches the recipient asset to another one on the chain already
+   * selected, which is paid at the same address, so the address and its tag
+   * stay. The quote and the receive amount priced the previous asset, so both
+   * go. `swapAfter` says whether the send is still a swap afterwards, which
+   * decides where the memo lands.
+   */
+  const keepRecipientOnAsset = (
+    nextAsset: EdgeAsset | undefined,
+    swapAfter: boolean
+  ): void => {
+    carryMemoAcrossModes(swapAfter)
+    setPickedRecipientAsset(nextAsset)
+    setSwapQuote(undefined)
+    setReceiveNativeAmount(undefined)
+    setGuaranteedSide('send')
+    setPinValue(undefined)
+  }
+
+  /**
    * Flips the Stealth toggle, or refuses to, returning whether it moved.
    * Shared by a tap and by seeding, so an entry request or a saved choice gets
    * the same quote and memo handling as a tap.
@@ -2075,6 +2084,67 @@ const SendComponent: React.FC<Props> = props => {
     visitStealthRef.current = !stealth
     await dispatch(setStealthSendEnabled(account, !stealth))
   })
+
+  /**
+   * Dismissing the swap-send sheet without agreeing backs the send out of its
+   * swap. Stealth turns off and is saved off, like a tap, so the sheet does
+   * not return on the next launch. A picked cross-asset recipient goes, since
+   * the swap is the only route to it. On the chain already selected the
+   * address and tag stay, as picking the source asset back does; on another
+   * chain the whole recipient is cleared. Stealth goes through the same
+   * provider and would raise the same sheet, so the rest of the visit does
+   * not arm it again from the saved choice.
+   */
+  const handleSwapSendDeclined = useHandler(async (): Promise<void> => {
+    visitStealthRef.current = false
+    const stealthTurnedOff = stealth && flipStealth()
+    if (crossAssetPicked) {
+      if (
+        pickKeepsRecipient({
+          source: { pluginId, tokenId },
+          destination: { pluginId: destPluginId, tokenId: destTokenId },
+          picked: undefined
+        })
+      ) {
+        keepRecipientOnAsset(
+          undefined,
+          swapSendAllowed && stealth && !stealthTurnedOff
+        )
+      } else {
+        handleResetSendTransaction(spendInfo.spendTargets[0])()
+      }
+    }
+    if (stealthTurnedOff) {
+      await dispatch(setStealthSendEnabled(account, false))
+    }
+  })
+
+  /**
+   * The first time this scene turns into a swap, say so. The recipient is no
+   * longer paid by this wallet, and the two-transaction shape is the part a
+   * user cannot infer from the scene. Agreeing is remembered per account;
+   * dismissing backs out of the swap. The swap provider names itself so the
+   * copy survives a provider change.
+   */
+  const stealthSwapConfig = account.swapConfig[STEALTH_SWAP_PLUGIN_ID]
+  React.useEffect(() => {
+    if (!swapSendActive || stealthSwapConfig == null) return
+    showSwapSendWarningModal(
+      account.disklet,
+      stealthSwapConfig.swapInfo.displayName
+    )
+      .then(async declined => {
+        if (declined) await handleSwapSendDeclined()
+      })
+      .catch((err: unknown) => {
+        showError(err)
+      })
+  }, [
+    account.disklet,
+    handleSwapSendDeclined,
+    stealthSwapConfig,
+    swapSendActive
+  ])
 
   /**
    * Arms the toggle when the visit or the saved choice asks for it and a tap
@@ -2202,19 +2272,15 @@ const SendComponent: React.FC<Props> = props => {
             picked: nextAsset
           })
         ) {
-          // Another asset on the chain already selected is paid at the same
-          // address, so the address and its tag stay. The quote and the
-          // receive amount priced the previous asset, so both go. Picking the
-          // source asset back ends the swap unless Stealth holds it:
+          // Picking the source asset back ends the swap unless Stealth holds
+          // it:
           const nextCrossAsset =
             nextAsset != null &&
             (nextAsset.pluginId !== pluginId || nextAsset.tokenId !== tokenId)
-          carryMemoAcrossModes(swapSendAllowed && (stealth || nextCrossAsset))
-          setPickedRecipientAsset(nextAsset)
-          setSwapQuote(undefined)
-          setReceiveNativeAmount(undefined)
-          setGuaranteedSide('send')
-          setPinValue(undefined)
+          keepRecipientOnAsset(
+            nextAsset,
+            swapSendAllowed && (stealth || nextCrossAsset)
+          )
           return
         }
         // A new destination chain invalidates the entered address and tag, so
@@ -3081,40 +3147,48 @@ const SendComponent: React.FC<Props> = props => {
     )
   }
 
+  // What every send needs said once: the address has to be on the network
+  // the funds are paid out on, and the send cannot be undone.
+  const sendReminders = [
+    sprintf(
+      lstrings.send_check_recipient_network_1s,
+      swapSendActive && destCurrencyInfo != null
+        ? destCurrencyInfo.displayName
+        : coreWallet.currencyInfo.displayName
+    ),
+    lstrings.warning_scam_message_irreversibility
+  ]
+
   /**
-   * The scam warning opens a plain send, until an address is entered. A
-   * swap-send has its own warning card and an error stands alone, so the
-   * scene never stacks this card on either.
+   * The reminders as a quiet note at the foot of a plain send. A swap-send
+   * carries them in its warning card instead, and an error card stands
+   * alone, so the note never shows with either card. A partner send that
+   * fixes and hides the recipient skips the note too.
    */
-  const renderScamWarning = (): React.ReactElement | null => {
-    if (swapSendActive || showErrorCard) return null
-    const { publicAddress } = spendInfo.spendTargets[0]
-
-    if (publicAddress === '' || publicAddress == null) {
-      const scamMessage = sprintf(
-        lstrings.warning_scam_message_financial_advice_s,
-        config.appName
-      )
-      const scamFooter = sprintf(
-        lstrings.warning_scam_footer_s,
-        config.supportEmail
-      )
-
-      return (
-        <AlertCardUi4
-          marginRem={[1.5, 0.5]}
-          title={lstrings.warning_scam_title}
-          type="warning"
-          body={[
-            scamMessage,
-            lstrings.warning_scam_message_irreversibility,
-            lstrings.warning_scam_message_unknown_recipients
-          ]}
-          footer={scamFooter}
-        />
-      )
+  const renderSendReminders = (): React.ReactElement | null => {
+    if (
+      swapSendActive ||
+      showErrorCard ||
+      hiddenFeaturesMap.address === true ||
+      hiddenFeaturesMap.scamWarning === true
+    ) {
+      return null
     }
-    return null
+    return (
+      <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
+        <View style={styles.sendReminders}>
+          {sendReminders.map(reminder => (
+            <EdgeText
+              key={reminder}
+              style={styles.sendReminderText}
+              numberOfLines={0}
+            >
+              {reminder}
+            </EdgeText>
+          ))}
+        </View>
+      </EdgeAnim>
+    )
   }
 
   const handleLearnMore = useHandler(async () => {
@@ -3148,13 +3222,16 @@ const SendComponent: React.FC<Props> = props => {
    * transaction: the provider pays them in a second one, once the deposit
    * confirms. That wait is the part the scene does not otherwise show, so it
    * sits with the other warning cards for as long as the send stays a swap,
-   * giving way only to an error.
+   * giving way only to an error. It closes with the send reminders, which
+   * have no note of their own on a swap-send.
    */
-  const swapSendWarningBody = `${
+  const swapSendWarningBody = [
     stealth
       ? lstrings.stealth_swap_send_warning_body_private
-      : lstrings.stealth_swap_send_warning_body
-  } ${lstrings.transaction_may_take_longer}`
+      : lstrings.stealth_swap_send_warning_body,
+    lstrings.transaction_may_take_longer,
+    ...sendReminders
+  ]
 
   const renderSwapSendWarning = (): React.ReactElement | null => {
     if (!swapSendActive || showErrorCard) return null
@@ -3358,6 +3435,22 @@ const SendComponent: React.FC<Props> = props => {
         broadcastAttemptedRef.current = true
         try {
           const result = await liveQuote.approve()
+          // The order is paid at this point, so a tracking failure must not
+          // reach the failure handler below. The mode comes from the request
+          // the provider priced, so it names the route the order took:
+          try {
+            dispatch(
+              logEvent('Exchange_Shift_Success', {
+                conversionValues: makeSwapConversionValues(
+                  liveQuote,
+                  result.orderId,
+                  getSendSwapMode(liveQuote.request)
+                )
+              })
+            )
+          } catch (error: unknown) {
+            console.log(error)
+          }
           playSendSound().catch((error: unknown) => {
             console.log(error) // Fail quietly
           })
@@ -4405,14 +4498,15 @@ const SendComponent: React.FC<Props> = props => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null && theme.isDark) {
-    const scaledColor = darkenHexColor(
-      iconColor,
-      theme.assetBackgroundColorScale
-    )
-    backgroundColors[0] = scaledColor
-  }
+  // Destructured rather than mutated so the gradient keeps its tuple type:
+  // `LinearGradient` needs a compile-time guarantee of two or more stops.
+  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
+  const backgroundColors: GradientColors = [
+    iconColor != null && theme.isDark
+      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      : firstColor,
+    ...restColors
+  ]
 
   React.useEffect(() => {
     // Hack: While you would think to use InteractionManager.runAfterInteractions,
@@ -4420,7 +4514,7 @@ const SendComponent: React.FC<Props> = props => {
     // determined and the scrollToEnd call would be effective.
     const timeout = setTimeout(() => {
       if (needsScrollToEnd.current) {
-        scrollViewRef.current?.scrollToEnd(true)
+        scrollViewRef.current?.scrollToEnd({ animated: true })
         needsScrollToEnd.current = false
       }
     }, SCROLL_TO_END_DELAY_MS)
@@ -4473,23 +4567,20 @@ const SendComponent: React.FC<Props> = props => {
         <View style={{ ...undoInsetStyle, marginTop: 0 }}>
           <KeyboardAwareScrollView
             style={styles.keyboardAwareScrollView}
-            innerRef={ref => {
-              const kbRef: KeyboardAwareScrollView | null = ref as any
-              scrollViewRef.current = kbRef
-            }}
+            ref={scrollViewRef}
             contentContainerStyle={{
               ...insetStyle,
               paddingTop: 0,
               paddingBottom: insetStyle.paddingBottom + theme.rem(0.5)
             }}
-            // The docked slider rides the keyboard, so a focused field
-            // (the PIN) has to clear it as well as the keyboard toolbar.
-            // The content padding already reserves the dock, so it goes in
-            // extraHeight (focus offset only), not extraScrollHeight (which
-            // also grows the keyboard inset). 75 is the library's default:
-            extraHeight={75 + insetStyle.paddingBottom}
-            extraScrollHeight={theme.rem(2.75)}
-            enableOnAndroid
+            // The docked slider rides the keyboard, so a focused field (the
+            // PIN) has to clear it. This library sets the gap between the
+            // focused input and the keyboard, whose height already includes
+            // any toolbar above the keys. The hidden PIN input sits at the
+            // bottom of its row, so the gap is the dock (in the bottom inset),
+            // the card's padding and margin below the row, and the same
+            // rem(0.5) the content keeps above the slider:
+            bottomOffset={insetStyle.paddingBottom + theme.rem(2)}
             scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
           >
             <EdgeAnim enter={{ type: 'fadeInUp', distance: 80 }}>
@@ -4530,14 +4621,12 @@ const SendComponent: React.FC<Props> = props => {
                 {renderAuthentication()}
               </EdgeCard>
             </EdgeAnim>
-            <EdgeAnim enter={{ type: 'fadeInDown', distance: 80 }}>
-              {renderScamWarning()}
-            </EdgeAnim>
             {renderPendingTransactionWarning()}
             {renderSwapSendWarning()}
             {renderZcashTransparentWarning()}
             {renderNymWarning()}
             {renderError()}
+            {renderSendReminders()}
             {sliderTopNode}
           </KeyboardAwareScrollView>
         </View>
@@ -4578,6 +4667,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText,
     fontSize: theme.rem(0.75)
   },
+  sendReminders: {
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(1)
+  },
+  sendReminderText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
   calcFeeSpinner: {
     marginLeft: theme.rem(1)
   },
@@ -4589,7 +4686,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     color: theme.primaryText,
+    // Hidden, but pinned to the bottom of the PIN row, because keyboard
+    // avoidance lifts the focused input: this way it lifts the whole row.
     position: 'absolute',
+    bottom: 0,
     width: 0,
     height: 0
   }

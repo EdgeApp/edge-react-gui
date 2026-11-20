@@ -7,6 +7,7 @@ import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
 import { useHandler } from '../../../hooks/useHandler'
 import type { BuySellTabSceneProps } from '../../../types/routerTypes'
+import { redactUrl } from '../../../util/redactUrl'
 
 export interface FiatPluginOpenWebViewParams {
   url: string
@@ -41,7 +42,9 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   const webViewRef = React.useRef<WebView>(null)
 
   const handleNavigationStateChange = useHandler((event: WebViewNavigation) => {
-    console.log('FiatPluginWebView navigation: ', event)
+    // Only the URL: Android reports it as the `title` too, before the page
+    // sets its own, so logging the rest of the event leaks what it redacts:
+    console.log('FiatPluginWebView navigation: ', redactUrl(event.url))
     if (onUrlChange != null) {
       const p = onUrlChange(event.url)
       p?.catch((error: unknown) => {
@@ -80,7 +83,7 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
   )
 
   return (
-    <SceneWrapper hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs hasWebView avoidKeyboard>
       <WebView
         allowUniversalAccessFromFileURLs
         geolocationEnabled

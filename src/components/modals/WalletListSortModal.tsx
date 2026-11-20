@@ -32,7 +32,10 @@ interface Props {
   sortOption: SortOption
 }
 
-export const WalletListSortModal = ({ bridge, sortOption }: Props) => {
+export const WalletListSortModal: React.FC<Props> = ({
+  bridge,
+  sortOption
+}) => {
   const renderRow = useHandler(([key, title]) => {
     return key === 'manual' ? (
       <SettingsTappableRow

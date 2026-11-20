@@ -17,7 +17,7 @@ interface Props {
  * A touchable element to place in the top navigation header.
  * Place a child element, such as an icon or text element in here.
  */
-export const NavigationButton = (props: Props) => {
+export const NavigationButton: React.FC<Props> = props => {
   const { children, paddingRem: marginRem, onPress } = props
   const theme = useTheme()
 

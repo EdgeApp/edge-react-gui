@@ -24,7 +24,7 @@ export class EdgeWalletSigner extends ethers.Signer {
 
     // TODO: Get EdgeWalletProvider to work so we can leverage the wallets network
     // const provider = new EdgeWalletProvider(wallet)
-    if (provider && !ethers.providers.Provider.isProvider(provider)) {
+    if (provider != null && !ethers.providers.Provider.isProvider(provider)) {
       ethers.logger.throwArgumentError('invalid provider', 'provider', provider)
     }
 

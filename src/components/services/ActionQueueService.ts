@@ -28,7 +28,7 @@ type ServiceProgramStates = Record<
   }
 >
 
-export const ActionQueueService = () => {
+export const ActionQueueService: React.FC = () => {
   const dispatch = useDispatch()
   const account: EdgeAccount = useSelector(state => state.core.account)
   const clientId: string = useSelector(state => state.core.context.clientId)
@@ -102,7 +102,7 @@ export const ActionQueueService = () => {
     const serviceProgramStates = serviceProgramStatesRef.current
 
     // Loop function
-    const task = async () => {
+    const task = async (): Promise<void> => {
       // Programs that require immediate attention
       const urgentProgramIds = activeProgramIds.filter(programId => {
         const { state } = actionQueueMap[programId]
@@ -111,14 +111,14 @@ export const ActionQueueService = () => {
         // impacting program heing handled by other clients.
         if (state.clientId !== clientId) return false
         // Don't execute programs which are currently being executed by service
-        if (state.executing && serviceProgramStates[programId]) {
+        if (state.executing && serviceProgramStates[programId] != null) {
           return false
         }
         // Detect program interruption if service is not evaluating the program
         // and program evaluation was executing an action op.
         if (
           state.executing &&
-          !serviceProgramStates[programId] &&
+          serviceProgramStates[programId] == null &&
           state.effective
         ) {
           dispatch(
@@ -129,7 +129,7 @@ export const ActionQueueService = () => {
             })
           )
             // Use console.warn to not spam user
-            .catch(err => {
+            .catch((err: unknown) => {
               console.warn(err)
             })
           return false
@@ -148,15 +148,14 @@ export const ActionQueueService = () => {
         await updateProgramState(state, true)
 
         // Use mock execution function if program is marked as mockMode
-        const context = program.mockMode
-          ? executionContextMock
-          : executionContext
+        const context =
+          program.mockMode === true ? executionContextMock : executionContext
 
         const { nextState } = await executeActionProgram(
           context,
           program,
           state
-        ).catch((error): ExecutionResults => {
+        ).catch((error: unknown): ExecutionResults => {
           const cleanError = asCleanError(error)
           console.warn(
             new Error('Action Program Exception: ' + cleanError.message)

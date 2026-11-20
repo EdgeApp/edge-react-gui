@@ -32,7 +32,7 @@ interface Props {
  * A settings row with an icon on the right side.
  * The default icon is a navigation arrow, but other options are available.
  */
-const SettingsTappableRowComponent = (props: Props) => {
+const SettingsTappableRowComponent: React.FC<Props> = props => {
   const {
     action = 'navigate',
     children,
@@ -43,7 +43,7 @@ const SettingsTappableRowComponent = (props: Props) => {
   } = props
   const theme = useTheme()
   const style = {
-    color: disabled ? theme.iconDeactivated : theme.iconTappable,
+    color: disabled === true ? theme.iconDeactivated : theme.iconTappable,
     fontSize: theme.rem(1),
     marginHorizontal: theme.rem(0.5)
   }

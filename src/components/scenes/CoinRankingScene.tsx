@@ -417,7 +417,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     assetView: {
       ...baseTextView,
       justifyContent: 'center',
-      width: theme.rem(4.75)
+      width: theme.rem(5.75)
     },
     assetText: {
       ...baseTextStyle,

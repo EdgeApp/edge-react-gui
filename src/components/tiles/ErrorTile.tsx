@@ -10,7 +10,7 @@ interface Props {
   numberOfLines?: number
 }
 
-export const ErrorTile = (props: Props) => {
+export const ErrorTile: React.FC<Props> = props => {
   const { message, numberOfLines = 3 } = props
   const theme = useTheme()
   const styles = getStyles(theme)

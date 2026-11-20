@@ -54,10 +54,12 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     })
   }
 
-  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
+  renderFiatTypeResult = (
+    data: FlatListItem<GuiFiatType>
+  ): React.ReactElement | null => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
-    if (!fiatCountry) {
+    if (fiatCountry == null) {
       return null
     }
 
@@ -68,7 +70,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         icon={
-          fiatCountry.logoUrl ? (
+          fiatCountry.logoUrl !== '' ? (
             <FastImage
               source={{ uri: fiatCountry.logoUrl }}
               style={styles.cryptoTypeLogo}
@@ -86,7 +88,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       const key = `currency_label_${entry.value}`
       const subTitle = lstrings[key as keyof typeof lstrings] ?? ''
@@ -139,21 +141,21 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     )
   }
 
-  onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
+  onSelectFiat = ({ value: selectedFiat }: { value: string }): void => {
     const { navigation } = this.props
-    if (!this.isValidFiat(selectedFiat)) {
+    if (this.isValidFiat(selectedFiat) == null) {
       showToast(lstrings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()
-      this.props.onSelectFiat(selectedFiat).catch(err => {
+      this.props.onSelectFiat(selectedFiat).catch((err: unknown) => {
         showDevError(err)
       })
       navigation.goBack()
     }
   }
 
-  isValidFiat = (selectedFiat: string) => {
+  isValidFiat = (selectedFiat: string): GuiFiatType | undefined => {
     const { supportedFiats } = this.state
 
     const isValid = supportedFiats.find(fiat => fiat.value === selectedFiat)
@@ -161,7 +163,7 @@ export class DefaultFiatSettingComponent extends React.Component<Props, State> {
     return isValid
   }
 
-  keyExtractor = (item: GuiFiatType) => `${item.label}${item.value}`
+  keyExtractor = (item: GuiFiatType): string => `${item.label}${item.value}`
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

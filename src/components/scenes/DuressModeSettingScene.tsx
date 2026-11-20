@@ -16,7 +16,7 @@ import { EdgeText, Paragraph } from '../themed/EdgeText'
 
 interface Props extends EdgeAppSceneProps<'duressModeSetting'> {}
 
-export const DuressModeSettingScene = (props: Props) => {
+export const DuressModeSettingScene: React.FC<Props> = props => {
   const { navigation } = props
   const account = useSelector(state => state.core.account)
 

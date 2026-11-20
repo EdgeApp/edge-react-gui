@@ -23,7 +23,9 @@ export const createEdgeMemo = (
 }
 
 /** Get a default memo, compatible with all potentially deprecated props */
-export const getLegacyUniqueIdentifier = (spendTarget?: EdgeSpendTarget) => {
+export const getLegacyUniqueIdentifier = (
+  spendTarget?: EdgeSpendTarget
+): string | undefined => {
   return spendTarget?.memo ?? spendTarget?.uniqueIdentifier
 }
 

@@ -46,7 +46,7 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
     this.opacity = new Animated.Value(0)
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { activity, bridge } = this.props
 
     // Animate in:
@@ -56,7 +56,7 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
       useNativeDriver: true
     }).start()
 
-    const hide = () => {
+    const hide = (): void => {
       if (this.unmounted) return
 
       // Animate out:
@@ -74,8 +74,8 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
         .then(result => {
           bridge.resolve(result)
         })
-        .catch(error => {
-          bridge.reject(error)
+        .catch((error: unknown) => {
+          bridge.reject(error as Error)
         })
         .finally(() => {
           hide()
@@ -89,7 +89,7 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
     this.unmounted = true
   }
 
-  render() {
+  render(): React.ReactElement {
     return (
       <Animated.View style={[styles.container, { opacity: this.opacity }]}>
         <View style={styles.darkness} />
@@ -98,7 +98,7 @@ export class AirshipFullScreenSpinner<T> extends React.Component<Props<T>> {
     )
   }
 
-  renderContent() {
+  renderContent(): React.ReactElement {
     const { activity, message } = this.props
     if (activity == null)
       return <UnscaledText style={styles.text}>{message}</UnscaledText>

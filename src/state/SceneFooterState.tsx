@@ -1,4 +1,5 @@
 import { useIsFocused } from '@react-navigation/native'
+import type * as React from 'react'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Platform } from 'react-native'
 import {
@@ -98,7 +99,7 @@ interface PortalSceneFooterProps {
   // The render function which should be memoized with useCallback
   children: FooterRender
 }
-export const PortalSceneFooter = (props: PortalSceneFooterProps) => {
+export const PortalSceneFooter: React.FC<PortalSceneFooterProps> = props => {
   const { children: render = defaultFooterRender } = props
   const setRenderFooter = useSceneFooterRenderState(
     state => state.setRenderFooter
@@ -146,7 +147,7 @@ export const PortalSceneFooter = (props: PortalSceneFooterProps) => {
  * expanded/collapsed states. Using this component multiple times will cause
  * thrashing for the footer state shared values.
  */
-export const FooterAccordionEventService = () => {
+export const FooterAccordionEventService: React.FC = () => {
   const scrollBeginEvent = useSceneScrollContext(
     state => state.scrollBeginEvent
   )
@@ -171,16 +172,16 @@ export const FooterAccordionEventService = () => {
   // fraction). A smaller value makes for a slower gesture animation.
   const scrollDeltaToRatioDeltaFactor = 1 / 100 // 100 pixels (points) constant
 
-  function snapWorklet() {
+  function snapWorklet(): void {
     'worklet'
     scrollYStart.value = undefined
     snapTo.value = Math.round(footerOpenRatio.value)
   }
-  function snap() {
+  function snap(): void {
     scrollYStart.value = undefined
     snapTo.value = Math.round(footerOpenRatio.value)
   }
-  function delayedSnap() {
+  function delayedSnap(): void {
     setTimeout(snap, 300)
   }
 

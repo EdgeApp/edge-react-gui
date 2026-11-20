@@ -21,7 +21,7 @@ export interface CurrencyNotificationParams {
 
 interface Props extends EdgeAppSceneProps<'currencyNotificationSettings'> {}
 
-export const CurrencyNotificationScene = (props: Props) => {
+export const CurrencyNotificationScene: React.FC<Props> = props => {
   const { route } = props
   const { currencyInfo } = route.params
   const { pluginId } = currencyInfo
@@ -33,14 +33,15 @@ export const CurrencyNotificationScene = (props: Props) => {
   const settings = useSelector((state: RootState) => state.notificationSettings)
 
   const updateSettings = (settingChange: 'hourly' | 'daily') => async () => {
+    const { hourlyChange, dailyChange } = settings.plugins[pluginId]
     const hourly =
       settingChange === 'hourly'
-        ? !settings.plugins[pluginId].hourlyChange
-        : !!settings.plugins[pluginId].hourlyChange
+        ? hourlyChange == null || hourlyChange === 0
+        : hourlyChange != null && hourlyChange !== 0
     const daily =
       settingChange === 'daily'
-        ? !settings.plugins[pluginId].dailyChange
-        : !!settings.plugins[pluginId].dailyChange
+        ? dailyChange == null || dailyChange === 0
+        : dailyChange != null && dailyChange !== 0
     const event = newPriceChangeEvent(
       currencyInfo,
       defaultIsoFiat,

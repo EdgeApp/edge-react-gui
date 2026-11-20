@@ -1,8 +1,12 @@
 import type { EdgeAccount } from 'edge-core-js'
-import { type InitialRouteName, LoginScreen } from 'edge-login-ui-rn'
+import {
+  type ContactSupportInfo,
+  type InitialRouteName,
+  LoginScreen
+} from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Keyboard, StatusBar, View } from 'react-native'
-import { BlurView } from 'rn-id-blurview'
+import { sprintf } from 'sprintf-js'
 
 import { getDeviceSettings } from '../../actions/DeviceSettingsActions'
 import { showSendLogsModal } from '../../actions/LogActions'
@@ -25,6 +29,7 @@ import { logEvent } from '../../util/tracking'
 import { makeYoloOtpOptions, type YoloOtpOptions } from '../../util/yoloLogin'
 import { DotsBackground } from '../common/DotsBackground'
 import { showHelpModal } from '../modals/HelpModal'
+import { showIntercomChatModal } from '../modals/IntercomChatModal'
 import { showDevError, showError } from '../services/AirshipInstance'
 import { LoadingScene } from './LoadingScene'
 
@@ -34,9 +39,6 @@ export interface LoginParams {
   experimentConfig: ExperimentConfig // TODO: Create a new provider instead to serve the experimentConfig globally
   loginUiInitialRoute?: InitialRouteName
 }
-
-// @ts-expect-error Sneak the BlurView over to the login UI:
-global.ReactNativeBlurView = BlurView
 
 interface Props extends RootSceneProps<'login'> {}
 
@@ -68,6 +70,11 @@ export const LoginScene: React.FC<Props> = props => {
 
   React.useEffect(() => {
     if (!firstRun) return
+    // The core context is an empty placeholder object until EdgeCoreManager
+    // finishes booting. On release builds this scene mounts first, so bail
+    // WITHOUT disarming firstRun; the context dep re-runs this effect once
+    // the real context lands, and YOLO can fire then.
+    if (context.loginWithPassword == null) return
     const { YOLO_USERNAME, YOLO_PASSWORD, YOLO_PIN, YOLO_OTP_KEY } = CONFIG
 
     const yoloLogin = (login: () => Promise<EdgeAccount>): void => {
@@ -172,6 +179,45 @@ export const LoginScene: React.FC<Props> = props => {
     performanceMarkersFromLoginUiPerfEvents(event)
   })
 
+  // A second tap while the chat is open must not send the message again:
+  const isChatOpen = React.useRef(false)
+  // Reopening the chat shows the message already sent, so it goes out once.
+  // Only a chat that pressed send counts, so a chat closed early retries:
+  const sentMessage = React.useRef<string | undefined>(undefined)
+
+  const handleContactSupport = useHandler(
+    async (info: ContactSupportInfo): Promise<void> => {
+      const { intercomApiBase, intercomAppId, supportChatSite } = config
+      if (intercomAppId == null || supportChatSite == null) return
+      if (isChatOpen.current) return
+      isChatOpen.current = true
+      const { lockId } = info
+      const message =
+        lockId == null
+          ? lstrings.help_live_chat_authorize_device
+          : sprintf(lstrings.help_live_chat_authorize_device_1s, lockId)
+      const isNewMessage = message !== sentMessage.current
+      try {
+        await showIntercomChatModal({
+          appId: intercomAppId,
+          apiBase: intercomApiBase,
+          siteUri: supportChatSite,
+          lockId,
+          message: isNewMessage ? message : undefined,
+          onMessageSent: () => {
+            sentMessage.current = message
+          }
+        })
+      } finally {
+        isChatOpen.current = false
+      }
+    }
+  )
+
+  // Without an Intercom workspace, Login UI opens config.supportSite:
+  const hasSupportChat =
+    config.intercomAppId != null && config.supportChatSite != null
+
   return loggedIn ? (
     <LoadingScene />
   ) : (
@@ -193,6 +239,7 @@ export const LoginScene: React.FC<Props> = props => {
         primaryLogoCallback={handleSendLogs}
         recoveryLogin={passwordRecoveryKey}
         onComplete={maybeHandleComplete}
+        onContactSupport={hasSupportChat ? handleContactSupport : undefined}
         onLogEvent={handleLogEvent}
         onLogin={handleLogin}
         onPerfEvent={handlePerfEvent}

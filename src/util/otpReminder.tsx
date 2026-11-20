@@ -79,7 +79,7 @@ export async function showOtpReminderModal(
 /**
  * Enable OTP and show a success modal
  */
-const enableOtp = async (account: EdgeAccount) => {
+const enableOtp = async (account: EdgeAccount): Promise<'ok' | undefined> => {
   await account.enableOtp()
   return await Airship.show<'ok' | undefined>(bridge => (
     <ButtonsModal

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { EdgeLogoHeader } from './EdgeLogoHeader'
 import { HeaderTitle } from './HeaderTitle'
 
-export function EdgeHeader(props: HeaderTitleProps) {
+export function EdgeHeader(props: HeaderTitleProps): React.ReactElement {
   const { children } = props
 
   if (typeof children === 'string' && children !== '')

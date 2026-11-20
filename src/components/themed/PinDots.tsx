@@ -3,11 +3,14 @@ import { View } from 'react-native'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
-export function PinDots(props: { pinLength: number; maxLength: number }) {
+export const PinDots: React.FC<{
+  pinLength: number
+  maxLength: number
+}> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const renderCircle = () => {
+  const renderCircle = (): React.ReactElement[] => {
     const circle: React.ReactElement[] = []
     for (let i = 0; i < props.maxLength; i++) {
       circle.push(

@@ -22,7 +22,7 @@ interface FiatListViewToken extends ViewToken {
   item: GuiFiatType
 }
 
-export const FiatListModal = (props: Props) => {
+export const FiatListModal: React.FC<Props> = props => {
   const { bridge } = props
 
   const theme = useTheme()
@@ -38,7 +38,10 @@ export const FiatListModal = (props: Props) => {
   )
   const [visibleRows, setVisibleRows] = React.useState<FiatListViewToken[]>([])
 
-  const fiatModalRowFilter = (searchText: string, item: GuiFiatType) => {
+  const fiatModalRowFilter = (
+    searchText: string,
+    item: GuiFiatType
+  ): boolean => {
     const lowerCaseText = searchText.toLowerCase()
     return (
       FIAT_COUNTRY[item.value]?.countryName
@@ -49,7 +52,7 @@ export const FiatListModal = (props: Props) => {
     )
   }
 
-  const renderFiatChoiceModalRow = (item: GuiFiatType) => {
+  const renderFiatChoiceModalRow = (item: GuiFiatType): React.ReactElement => {
     const fiatCountry = FIAT_COUNTRY[item.value]
 
     const key = `currency_label_${item.value}`

@@ -7,7 +7,7 @@ import { CryptoIcon } from '../icons/CryptoIcon'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export function CurrencySettingsTitle() {
+export const CurrencySettingsTitle: React.FC = () => {
   const route =
     useRoute<RouteProp<'currencySettings' | 'currencyNotificationSettings'>>()
   const { currencyInfo } = route.params

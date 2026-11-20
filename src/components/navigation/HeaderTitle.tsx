@@ -6,7 +6,7 @@ interface Props {
   title?: string
 }
 
-export const HeaderTitle = (props: Props) => {
+export const HeaderTitle: React.FC<Props> = props => {
   const { title } = props
 
   return <EdgeText>{title}</EdgeText>

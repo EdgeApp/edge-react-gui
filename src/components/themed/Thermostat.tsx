@@ -10,7 +10,7 @@ interface Props {
   textColor: string
 }
 
-export const Thermostat = ({ ratio, textColor }: Props) => {
+export const Thermostat: React.FC<Props> = ({ ratio, textColor }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const percent = Math.max(0, Math.min(1, ratio)) * 100

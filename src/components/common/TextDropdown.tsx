@@ -11,7 +11,7 @@ interface Props {
   message: string
 }
 
-export const TextDropdown = ({ bridge, message }: Props) => {
+export const TextDropdown: React.FC<Props> = ({ bridge, message }) => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (

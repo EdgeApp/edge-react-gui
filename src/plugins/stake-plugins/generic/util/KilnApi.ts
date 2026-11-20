@@ -5,7 +5,8 @@ import {
   asObject,
   asString,
   asValue,
-  type Cleaner
+  type Cleaner,
+  type ObjectCleaner
 } from 'cleaners'
 
 export class KilnError extends Error {
@@ -189,7 +190,7 @@ export interface KilnResponse<T> {
   data: T
 }
 
-const asKilnResponse = <T>(asT: Cleaner<T>) =>
+const asKilnResponse = <T>(asT: Cleaner<T>): ObjectCleaner<{ data: T }> =>
   asObject({
     data: asT
   })

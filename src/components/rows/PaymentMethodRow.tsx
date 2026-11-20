@@ -23,7 +23,7 @@ interface Props {
 // -----------------------------------------------------------------------------
 // A view representing the data from a wallet, used for rows, cards, etc.
 // -----------------------------------------------------------------------------
-const PaymentMethodRowComponent = (props: Props) => {
+const PaymentMethodRowComponent: React.FC<Props> = props => {
   const { marginRem, paymentMethod, pluginId } = props
 
   // #region Initialization
@@ -73,7 +73,7 @@ const PaymentMethodRowComponent = (props: Props) => {
 
   // #region Renderers
 
-  const renderPluginDisplay = () => (
+  const renderPluginDisplay = (): React.ReactElement => (
     <>
       <FastImage
         source={{ uri: partnerIconUri }}

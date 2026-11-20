@@ -19,7 +19,7 @@ interface Props {
   onPress?: () => void
 }
 
-export function IconMessageCard(props: Props) {
+export const IconMessageCard: React.FC<Props> = props => {
   const {
     iconOrUri,
     message,

@@ -50,7 +50,7 @@ export function getOrCreateLoanAccount(
   return async (_dispatch, getState) => {
     const state = getState()
     const existingLoanAccount = selectLoanAccount(state, wallet.id)
-    if (existingLoanAccount) return existingLoanAccount
+    if (existingLoanAccount != null) return existingLoanAccount
 
     const newLoanAccount = await makeLoanAccount(borrowPlugin, wallet)
     return newLoanAccount

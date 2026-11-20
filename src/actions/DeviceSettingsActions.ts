@@ -126,6 +126,12 @@ export const writeForceLightAccountCreate = async (
   await patchDeviceSettings({ forceLightAccountCreate })
 }
 
+export const writeSlidersAsButtons = async (
+  slidersAsButtons: boolean
+): Promise<void> => {
+  await patchDeviceSettings({ slidersAsButtons })
+}
+
 export const writeThemeMode = async (themeMode: ThemeMode): Promise<void> => {
   await patchDeviceSettings({ themeMode })
 }

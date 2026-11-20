@@ -11,13 +11,13 @@ export function NetworkActivity(props: Props): null {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    const handleNetworkState = (info: NetInfoState) => {
+    const handleNetworkState = (info: NetInfoState): void => {
       console.log('NetworkActivity - isConnected changed: ', info.isConnected)
       dispatch({
         type: 'NETWORK/NETWORK_STATUS',
         data: { isConnected: info.isConnected ?? false }
       })
-      if (!info.isConnected) {
+      if (info.isConnected !== true) {
         showError(lstrings.network_alert_title, { trackError: false })
       }
     }
@@ -25,7 +25,7 @@ export function NetworkActivity(props: Props): null {
     const netInfoUnsubscribe = NetInfo.addEventListener(handleNetworkState)
     NetInfo.fetch()
       .then(handleNetworkState)
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
 

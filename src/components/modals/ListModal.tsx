@@ -12,7 +12,10 @@ import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { useFilter } from '../../hooks/useFilter'
 import { useTheme } from '../services/ThemeContext'
 import { Paragraph } from '../themed/EdgeText'
-import { ModalFilledTextInput } from '../themed/FilledTextInput'
+import {
+  type FilledTextInputRef,
+  ModalFilledTextInput
+} from '../themed/FilledTextInput'
 import { ModalFooter } from '../themed/ModalParts'
 import { EdgeModal } from './EdgeModal'
 
@@ -42,9 +45,11 @@ interface Props<T> {
   secureTextEntry?: boolean // Defaults to 'false'
   autoFocus?: boolean // Defaults to 'false'
   autoSelect?: boolean // Defaults to 'false'
+  textInputRef?: React.Ref<FilledTextInputRef>
   // List Props
   rowsData?: T[] // Defaults to []
   fullScreen?: boolean
+  listHeader?: React.ReactElement // Rendered above the rows, scrolling with them
   rowComponent?: (props: T) => React.ReactElement
   rowDataFilter?: (filterText: string, data: T, index: number) => boolean
   onViewableItemsChanged?: (info: {
@@ -53,6 +58,8 @@ interface Props<T> {
   }) => void
 }
 
+// React.FC has no type parameters, so generic components use a function:
+/* eslint-disable edge/react-fc-component-definition */
 export function ListModal<T>({
   bridge,
   title,
@@ -62,27 +69,29 @@ export function ListModal<T>({
   rowsData = [],
   fullScreen = true,
   autoSelect = false,
+  textInputRef,
+  listHeader,
   rowComponent,
   rowDataFilter,
   onSubmitEditing,
   onViewableItemsChanged,
   label: placeholder,
   ...textProps
-}: Props<T>) {
+}: Props<T>): React.ReactElement {
   const theme = useTheme()
   const [text, setText] = React.useState<string>(initialValue)
   const [filteredRows, setFilteredRows] = useFilter(rowsData, rowDataFilter)
   const renderItem: ListRenderItem<T> = ({ item }) =>
-    rowComponent ? rowComponent(item) : null
-  const handleCancel = () => {
+    rowComponent != null ? rowComponent(item) : null
+  const handleCancel = (): void => {
     bridge.resolve(undefined)
   }
-  const handleChangeText = (text: string) => {
+  const handleChangeText = (text: string): void => {
     setText(text)
     setFilteredRows(text)
   }
 
-  const handleSubmitEditing = () => {
+  const handleSubmitEditing = (): void => {
     onSubmitEditing != null ? onSubmitEditing(text) : bridge.resolve(text)
   }
 
@@ -98,6 +107,7 @@ export function ListModal<T>({
       {message == null ? null : <Paragraph>{message}</Paragraph>}
       {!textInput ? null : (
         <ModalFilledTextInput
+          ref={textInputRef}
           // Our props:
           searchIcon
           blurOnClear={false}
@@ -117,6 +127,7 @@ export function ListModal<T>({
       <FlatList
         contentContainerStyle={scrollPadding}
         data={filteredRows}
+        ListHeaderComponent={listHeader}
         // estimatedItemSize={theme.rem(5)}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"

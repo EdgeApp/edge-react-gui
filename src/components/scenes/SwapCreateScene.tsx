@@ -29,6 +29,14 @@ import { useLinkPromoRelease } from '../../hooks/useLinkPromoRelease'
 import { useTabBlur } from '../../hooks/useTabBlur'
 import { useWatch } from '../../hooks/useWatch'
 import { lstrings } from '../../locales/strings'
+import {
+  getExchangeDenom,
+  selectDisplayDenom
+} from '../../selectors/DenominationSelectors'
+import {
+  convertNativeBetweenAssets,
+  getExchangeRate
+} from '../../selectors/WalletSelectors'
 import { useDispatch, useSelector } from '../../types/reactRedux'
 import type { NavigationBase, SwapTabSceneProps } from '../../types/routerTypes'
 import { getCurrencyCode } from '../../util/CurrencyInfoHelpers'
@@ -44,7 +52,11 @@ import {
   makeStealthSwapRequestOptions
 } from '../../util/stealthSwap'
 import type { SwapErrorDisplayInfo } from '../../util/swapErrorDisplay'
-import { zeroString } from '../../util/utils'
+import {
+  getDenomFromIsoCode,
+  roundToFiatPrecision,
+  zeroString
+} from '../../util/utils'
 import { EdgeButton } from '../buttons/EdgeButton'
 import { KavButtons } from '../buttons/KavButtons'
 import { SceneButtons } from '../buttons/SceneButtons'
@@ -145,6 +157,8 @@ export const SwapCreateScene: React.FC<Props> = props => {
   const account = useSelector(state => state.core.account)
   const currencyWallets = useWatch(account, 'currencyWallets')
   const exchangeInfo = useSelector(state => state.ui.exchangeInfo)
+  const exchangeRates = useSelector(state => state.exchangeRates)
+  const defaultIsoFiat = useSelector(state => state.ui.settings.defaultIsoFiat)
   const houdiniChains = useSelector(state => state.ui.houdiniChains)
   // Until the info server serves Houdini's list there is nothing a Stealth
   // Swap could route, so the toggle stays hidden and reads as off:
@@ -154,6 +168,11 @@ export const SwapCreateScene: React.FC<Props> = props => {
     toWalletId == null ? undefined : currencyWallets[toWalletId]
   const fromWallet: EdgeCurrencyWallet | undefined =
     fromWalletId == null ? undefined : currencyWallets[fromWalletId]
+  const fromDisplayDenom = useSelector(state =>
+    fromWallet == null
+      ? undefined
+      : selectDisplayDenom(state, fromWallet.currencyConfig, fromTokenId)
+  )
 
   const toWalletName = toWallet == null ? '' : getWalletName(toWallet)
   const fromWalletName = fromWallet == null ? '' : getWalletName(fromWallet)
@@ -304,6 +323,59 @@ export const SwapCreateScene: React.FC<Props> = props => {
     )
   }
 
+  /**
+   * The "from" request to fall back on when no provider can price the exact
+   * receive amount of a "to" request: the send amount worth the same at display
+   * rates. Without a rate on both sides there is nothing to seed it with, so the
+   * provider's error stands.
+   *
+   * The amount is rounded like a typed fiat amount. A provider carrying amounts
+   * as floats, such as Houdini, can round an exact 18-decimal amount up past the
+   * request, and the plugin then rejects the deposit.
+   */
+  const makeFromRequest = (
+    toRequest: EdgeSwapRequest
+  ): EdgeSwapRequest | undefined => {
+    if (toRequest.quoteFor !== 'to' || fromDisplayDenom == null) return
+    const fromMultiplier = getExchangeDenom(
+      toRequest.fromWallet.currencyConfig,
+      toRequest.fromTokenId
+    ).multiplier
+    const exactAmount = convertNativeBetweenAssets(
+      exchangeRates,
+      defaultIsoFiat,
+      toRequest.nativeAmount,
+      {
+        pluginId: toRequest.toWallet.currencyInfo.pluginId,
+        tokenId: toRequest.toTokenId,
+        multiplier: getExchangeDenom(
+          toRequest.toWallet.currencyConfig,
+          toRequest.toTokenId
+        ).multiplier
+      },
+      {
+        pluginId: toRequest.fromWallet.currencyInfo.pluginId,
+        tokenId: toRequest.fromTokenId,
+        multiplier: fromMultiplier
+      }
+    )
+    if (exactAmount == null) return
+    const { nativeAmount } = roundToFiatPrecision({
+      nativeAmount: exactAmount,
+      displayMultiplier: fromDisplayDenom.multiplier,
+      exchangeMultiplier: fromMultiplier,
+      fiatMultiplier: getDenomFromIsoCode(defaultIsoFiat).multiplier,
+      exchangeRate: getExchangeRate(
+        exchangeRates,
+        toRequest.fromWallet.currencyInfo.pluginId,
+        toRequest.fromTokenId,
+        defaultIsoFiat
+      )
+    })
+    if (zeroString(nativeAmount)) return
+    return { ...toRequest, quoteFor: 'from', nativeAmount }
+  }
+
   const getQuote = (swapRequest: EdgeSwapRequest): void => {
     if (exchangeInfo != null) {
       // A Stealth Swap asks Houdini alone, so Houdini's own bans refuse the
@@ -361,9 +433,31 @@ export const SwapCreateScene: React.FC<Props> = props => {
     const quoteRequestOptions = stealth
       ? makeStealthSwapRequestOptions(account, swapRequestOptions)
       : swapRequestOptions
+
+    // The confirmation scene replays this request when its quotes expire, so it
+    // follows the switch to the fallback:
+    let activeRequest = quoteRequest
+    const fromRequest = makeFromRequest(quoteRequest)
+
     navigation.navigate('swapProcessing', {
       swapRequest: quoteRequest,
       swapRequestOptions: quoteRequestOptions,
+      toQuoteFallback:
+        fromRequest == null
+          ? undefined
+          : {
+              swapRequest: fromRequest,
+              onSwitch: () => {
+                activeRequest = fromRequest
+                setInputNativeAmount(fromRequest.nativeAmount)
+                setInputNativeAmountFor('from')
+                fromInputRef.current?.setAmount(
+                  'crypto',
+                  fromRequest.nativeAmount
+                )
+                toInputRef.current?.setAmount('crypto', '0')
+              }
+            },
       onCancel: () => {
         navigation.goBack()
       },
@@ -373,7 +467,7 @@ export const SwapCreateScene: React.FC<Props> = props => {
           quotes,
           onApprove: resetState,
           onStealthTermsDeclined: handleStealthTermsDeclined,
-          swapRequest: quoteRequest,
+          swapRequest: activeRequest,
           swapRequestOptions: quoteRequestOptions
         })
       }

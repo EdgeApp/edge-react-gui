@@ -3,7 +3,7 @@ import { StatusBar } from 'react-native'
 
 import { type ThemeProps, withTheme } from './ThemeContext'
 
-function StatusBarManagerComponent(props: ThemeProps) {
+const StatusBarManagerComponent: React.FC<ThemeProps> = props => {
   const { theme } = props
   return (
     <StatusBar

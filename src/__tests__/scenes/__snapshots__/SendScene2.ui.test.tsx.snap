@@ -1,8 +1,14 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendScene2 1 spendTarget 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -26,22 +32,21 @@ exports[`SendScene2 1 spendTarget 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -186,7 +191,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -199,6 +204,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -207,10 +213,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -261,7 +263,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="9"
           >
             <View
               style={
@@ -351,6 +352,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -376,6 +378,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -510,7 +513,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="10"
           >
             <View
               style={
@@ -600,6 +602,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -660,12 +663,12 @@ exports[`SendScene2 1 spendTarget 1`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="11"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -763,21 +766,20 @@ exports[`SendScene2 1 spendTarget 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -836,7 +838,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="12"
                 >
                   <View
                     style={
@@ -875,6 +876,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -899,6 +901,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -924,6 +927,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -1056,7 +1060,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="13"
           >
             <View
               style={
@@ -1146,6 +1149,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1281,7 +1285,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="14"
           >
             <View
               style={
@@ -1371,6 +1374,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -1395,6 +1399,7 @@ exports[`SendScene2 1 spendTarget 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -1528,12 +1533,69 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="15"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -1563,7 +1625,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
         },
       ]
     }
-    nativeID="16"
     onLayout={[Function]}
     style={
       [
@@ -1621,7 +1682,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="17"
     >
       <View
         style={
@@ -1679,7 +1739,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 },
               ]
             }
-            nativeID="18"
             style={
               [
                 {
@@ -1731,7 +1790,6 @@ exports[`SendScene2 1 spendTarget 1`] = `
                 },
               ]
             }
-            nativeID="19"
             style={
               [
                 {
@@ -1830,7 +1888,13 @@ exports[`SendScene2 1 spendTarget 1`] = `
 
 exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -1854,22 +1918,21 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -2014,7 +2077,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -2027,6 +2090,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -2035,10 +2099,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -2089,7 +2149,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="20"
           >
             <View
               style={
@@ -2179,6 +2238,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -2204,6 +2264,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -2338,7 +2399,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="21"
           >
             <View
               style={
@@ -2428,6 +2488,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -2488,12 +2549,12 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="22"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -2591,21 +2652,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -2664,7 +2724,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="23"
                 >
                   <View
                     style={
@@ -2703,6 +2762,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -2727,6 +2787,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -2752,6 +2813,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -2884,7 +2946,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="24"
           >
             <View
               style={
@@ -2974,6 +3035,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3109,7 +3171,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="25"
           >
             <View
               style={
@@ -3199,6 +3260,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3223,6 +3285,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -3316,21 +3379,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -3386,6 +3448,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3411,6 +3474,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -3432,21 +3496,20 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -3502,6 +3565,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -3527,6 +3591,7 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -3588,12 +3653,69 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="26"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -3623,7 +3745,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
         },
       ]
     }
-    nativeID="27"
     onLayout={[Function]}
     style={
       [
@@ -3681,7 +3802,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="28"
     >
       <View
         style={
@@ -3739,7 +3859,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 },
               ]
             }
-            nativeID="29"
             style={
               [
                 {
@@ -3791,7 +3910,6 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
                 },
               ]
             }
-            nativeID="30"
             style={
               [
                 {
@@ -3890,7 +4008,13 @@ exports[`SendScene2 1 spendTarget with info tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -3914,22 +4038,21 @@ exports[`SendScene2 2 spendTargets 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -4074,7 +4197,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -4087,6 +4210,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -4095,10 +4219,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -4149,7 +4269,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="31"
           >
             <View
               style={
@@ -4239,6 +4358,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4264,6 +4384,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -4398,7 +4519,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="32"
           >
             <View
               style={
@@ -4491,7 +4611,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="33"
                 >
                   <View
                     style={
@@ -4530,6 +4649,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -4555,6 +4675,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -4650,21 +4771,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -4720,6 +4840,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -4780,12 +4901,12 @@ exports[`SendScene2 2 spendTargets 1`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="34"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -4883,21 +5004,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -4956,7 +5076,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="35"
                 >
                   <View
                     style={
@@ -4995,6 +5114,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -5019,6 +5139,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -5044,6 +5165,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -5176,7 +5298,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="36"
           >
             <View
               style={
@@ -5266,6 +5387,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5401,7 +5523,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="37"
           >
             <View
               style={
@@ -5491,6 +5612,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5515,6 +5637,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -5533,21 +5656,20 @@ exports[`SendScene2 2 spendTargets 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -5603,6 +5725,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -5627,6 +5750,7 @@ exports[`SendScene2 2 spendTargets 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -5760,12 +5884,69 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="38"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -5795,7 +5976,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
         },
       ]
     }
-    nativeID="39"
     onLayout={[Function]}
     style={
       [
@@ -5853,7 +6033,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="40"
     >
       <View
         style={
@@ -5911,7 +6090,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 },
               ]
             }
-            nativeID="41"
             style={
               [
                 {
@@ -5963,7 +6141,6 @@ exports[`SendScene2 2 spendTargets 1`] = `
                 },
               ]
             }
-            nativeID="42"
             style={
               [
                 {
@@ -6062,7 +6239,13 @@ exports[`SendScene2 2 spendTargets 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -6086,22 +6269,21 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -6246,7 +6428,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -6259,6 +6441,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -6267,10 +6450,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -6321,7 +6500,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="43"
           >
             <View
               style={
@@ -6411,6 +6589,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -6436,6 +6615,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -6570,7 +6750,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="44"
           >
             <View
               style={
@@ -6663,7 +6842,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="45"
                 >
                   <View
                     style={
@@ -6702,6 +6880,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -6727,6 +6906,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -6822,21 +7002,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -6895,7 +7074,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="46"
                 >
                   <View
                     style={
@@ -6934,6 +7112,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -6958,6 +7137,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -6983,6 +7163,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -7115,7 +7296,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="47"
           />
           <View
             collapsable={false}
@@ -7154,7 +7334,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="48"
           >
             <View
               style={
@@ -7244,6 +7423,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -7268,6 +7448,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -7286,21 +7467,20 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -7356,6 +7536,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -7380,6 +7561,7 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -7476,49 +7658,10 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
               </View>
             </View>
           </View>
-          <View
-            collapsable={false}
-            entering={
-              FadeInDown {
-                "build": [Function],
-                "delayV": 0,
-                "durationV": 300,
-                "easingV": [Function],
-                "initialValues": {
-                  "transform": [
-                    {
-                      "translateY": 80,
-                    },
-                  ],
-                },
-                "randomizeDelay": false,
-                "reduceMotionV": "system",
-              }
-            }
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
-            layout={
-              LinearTransition {
-                "build": [Function],
-                "durationV": 300,
-                "randomizeDelay": false,
-                "reduceMotionV": "system",
-              }
-            }
-            nativeID="49"
-          />
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -7548,7 +7691,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
         },
       ]
     }
-    nativeID="50"
     onLayout={[Function]}
     style={
       [
@@ -7606,7 +7748,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="51"
     >
       <View
         style={
@@ -7664,7 +7805,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 },
               ]
             }
-            nativeID="52"
             style={
               [
                 {
@@ -7716,7 +7856,6 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
                 },
               ]
             }
-            nativeID="53"
             style={
               [
                 {
@@ -7815,7 +7954,13 @@ exports[`SendScene2 2 spendTargets hide tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -7839,22 +7984,21 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -7999,7 +8143,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -8012,6 +8156,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -8020,10 +8165,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -8074,7 +8215,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="54"
           >
             <View
               style={
@@ -8164,6 +8304,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -8189,6 +8330,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -8323,7 +8465,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="55"
           >
             <View
               style={
@@ -8416,7 +8557,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="56"
                 >
                   <View
                     style={
@@ -8455,6 +8595,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -8480,6 +8621,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -8575,21 +8717,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -8645,6 +8786,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -8705,12 +8847,12 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="57"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -8848,7 +8990,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="58"
           />
           <View
             collapsable={false}
@@ -8887,7 +9028,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="59"
           >
             <View
               style={
@@ -8977,6 +9117,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -9001,6 +9142,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -9019,21 +9161,20 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -9089,6 +9230,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -9113,6 +9255,7 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -9246,12 +9389,69 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="60"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -9281,7 +9481,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
         },
       ]
     }
-    nativeID="61"
     onLayout={[Function]}
     style={
       [
@@ -9339,7 +9538,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="62"
     >
       <View
         style={
@@ -9397,7 +9595,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 },
               ]
             }
-            nativeID="63"
             style={
               [
                 {
@@ -9449,7 +9646,6 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
                 },
               ]
             }
-            nativeID="64"
             style={
               [
                 {
@@ -9548,7 +9744,13 @@ exports[`SendScene2 2 spendTargets hide tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -9572,22 +9774,21 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -9732,7 +9933,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -9745,6 +9946,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -9753,10 +9955,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -9807,7 +10005,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="65"
           >
             <View
               style={
@@ -9897,6 +10094,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -9922,6 +10120,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -10056,7 +10255,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="66"
           >
             <View
               style={
@@ -10149,7 +10347,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="67"
                 >
                   <View
                     style={
@@ -10188,6 +10385,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -10213,6 +10411,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -10348,7 +10547,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="68"
           />
           <View
             collapsable={false}
@@ -10387,7 +10585,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="69"
           >
             <View
               style={
@@ -10477,6 +10674,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -10501,6 +10699,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -10519,21 +10718,20 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -10589,6 +10787,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -10613,6 +10812,7 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -10709,49 +10909,10 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
               </View>
             </View>
           </View>
-          <View
-            collapsable={false}
-            entering={
-              FadeInDown {
-                "build": [Function],
-                "delayV": 0,
-                "durationV": 300,
-                "easingV": [Function],
-                "initialValues": {
-                  "transform": [
-                    {
-                      "translateY": 80,
-                    },
-                  ],
-                },
-                "randomizeDelay": false,
-                "reduceMotionV": "system",
-              }
-            }
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
-            layout={
-              LinearTransition {
-                "build": [Function],
-                "durationV": 300,
-                "randomizeDelay": false,
-                "reduceMotionV": "system",
-              }
-            }
-            nativeID="70"
-          />
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -10781,7 +10942,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
         },
       ]
     }
-    nativeID="71"
     onLayout={[Function]}
     style={
       [
@@ -10839,7 +10999,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="72"
     >
       <View
         style={
@@ -10897,7 +11056,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 },
               ]
             }
-            nativeID="73"
             style={
               [
                 {
@@ -10949,7 +11107,6 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
                 },
               ]
             }
-            nativeID="74"
             style={
               [
                 {
@@ -11048,7 +11205,13 @@ exports[`SendScene2 2 spendTargets hide tiles 3`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -11072,22 +11235,21 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -11232,7 +11394,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -11245,6 +11407,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -11253,10 +11416,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -11307,7 +11466,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="76"
           >
             <View
               style={
@@ -11397,6 +11555,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -11422,6 +11581,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -11556,7 +11716,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="77"
           >
             <View
               style={
@@ -11649,7 +11808,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="78"
                 >
                   <View
                     style={
@@ -11688,6 +11846,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -11713,6 +11872,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -11808,21 +11968,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -11878,6 +12037,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -11938,12 +12098,12 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="79"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -11968,21 +12128,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -12041,7 +12200,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="80"
                 >
                   <View
                     style={
@@ -12080,6 +12238,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -12104,6 +12263,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -12129,6 +12289,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -12261,7 +12422,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="81"
           />
           <View
             collapsable={false}
@@ -12300,7 +12460,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="82"
           >
             <View
               style={
@@ -12390,6 +12549,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -12414,6 +12574,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -12432,21 +12593,20 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -12502,6 +12662,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -12526,6 +12687,7 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -12659,12 +12821,69 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="83"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -12694,7 +12913,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
         },
       ]
     }
-    nativeID="84"
     onLayout={[Function]}
     style={
       [
@@ -12752,7 +12970,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="85"
     >
       <View
         style={
@@ -12810,7 +13027,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 },
               ]
             }
-            nativeID="86"
             style={
               [
                 {
@@ -12862,7 +13078,6 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
                 },
               ]
             }
-            nativeID="87"
             style={
               [
                 {
@@ -12961,7 +13176,13 @@ exports[`SendScene2 2 spendTargets lock tiles 1`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -12985,22 +13206,21 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -13145,7 +13365,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -13158,6 +13378,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -13166,10 +13387,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -13220,7 +13437,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="88"
           >
             <View
               style={
@@ -13310,6 +13526,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -13335,6 +13552,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -13469,7 +13687,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="89"
           >
             <View
               style={
@@ -13562,7 +13779,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="90"
                 >
                   <View
                     accessibilityState={
@@ -13625,6 +13841,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -13650,6 +13867,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -13672,21 +13890,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -13742,6 +13959,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -13802,12 +14020,12 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="91"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -13905,21 +14123,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -13978,7 +14195,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="92"
                 >
                   <View
                     style={
@@ -14017,6 +14233,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -14041,6 +14258,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -14066,6 +14284,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -14125,7 +14344,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="93"
           />
           <View
             collapsable={false}
@@ -14164,7 +14382,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="94"
           >
             <View
               style={
@@ -14254,6 +14471,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -14278,6 +14496,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -14296,21 +14515,20 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -14366,6 +14584,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -14390,6 +14609,7 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -14523,12 +14743,69 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="95"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -14558,7 +14835,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
         },
       ]
     }
-    nativeID="96"
     onLayout={[Function]}
     style={
       [
@@ -14616,7 +14892,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="97"
     >
       <View
         style={
@@ -14674,7 +14949,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 },
               ]
             }
-            nativeID="98"
             style={
               [
                 {
@@ -14726,7 +15000,6 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
                 },
               ]
             }
-            nativeID="99"
             style={
               [
                 {
@@ -14825,7 +15098,13 @@ exports[`SendScene2 2 spendTargets lock tiles 2`] = `
 
 exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -14849,22 +15128,21 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 0,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -15009,7 +15287,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -15022,6 +15300,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
       }
     >
       <RCTScrollView
+        bottomOffset={45}
         contentContainerStyle={
           {
             "paddingBottom": 11,
@@ -15030,10 +15309,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
             "paddingTop": 0,
           }
         }
-        enableOnAndroid={true}
-        extraHeight={75}
-        extraScrollHeight={62}
-        innerRef={[Function]}
         scrollIndicatorInsets={
           {
             "right": 1,
@@ -15084,7 +15359,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="100"
           >
             <View
               style={
@@ -15174,6 +15448,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -15199,6 +15474,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={3}
                       style={
                         [
@@ -15333,7 +15609,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="101"
           >
             <View
               style={
@@ -15426,7 +15701,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="102"
                 >
                   <View
                     accessibilityState={
@@ -15489,6 +15763,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -15514,6 +15789,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={3}
                         style={
                           [
@@ -15536,21 +15812,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -15606,6 +15881,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -15666,12 +15942,12 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                           "reduceMotionV": "system",
                         }
                       }
-                      nativeID="103"
                     >
                       <Text
                         adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={6}
                         style={
                           [
@@ -15696,21 +15972,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     </View>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -15769,7 +16044,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       "reduceMotionV": "system",
                     }
                   }
-                  nativeID="104"
                 >
                   <View
                     style={
@@ -15808,6 +16082,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         allowFontScaling={false}
                         ellipsizeMode="tail"
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -15832,6 +16107,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.3}
+                        minimumFontSize={13.5}
                         numberOfLines={1}
                         style={
                           [
@@ -15857,6 +16133,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -15916,7 +16193,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="105"
           />
           <View
             collapsable={false}
@@ -15955,7 +16231,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="106"
           >
             <View
               style={
@@ -16045,6 +16320,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -16069,6 +16345,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -16087,21 +16364,20 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                     </Text>
                   </View>
                 </View>
-                <BVLinearGradient
+                <ExpoLinearGradient
                   colors={
                     [
-                      452984831,
-                      452984831,
+                      "rgba(255, 255, 255, .1)",
+                      "rgba(255, 255, 255, .1)",
                     ]
                   }
-                  endPoint={
+                  end={
                     {
                       "x": 1,
                       "y": 0.5,
                     }
                   }
-                  locations={null}
-                  startPoint={
+                  start={
                     {
                       "x": 0,
                       "y": 0.5,
@@ -16157,6 +16433,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       allowFontScaling={false}
                       ellipsizeMode="tail"
                       minimumFontScale={0.65}
+                      minimumFontSize={11.05}
                       numberOfLines={1}
                       style={
                         [
@@ -16181,6 +16458,7 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                       adjustsFontSizeToFit={true}
                       allowFontScaling={false}
                       minimumFontScale={0.65}
+                      minimumFontSize={14.3}
                       numberOfLines={1}
                       style={
                         [
@@ -16314,12 +16592,69 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 "reduceMotionV": "system",
               }
             }
-            nativeID="107"
-          />
+          >
+            <View
+              style={
+                {
+                  "marginHorizontal": 22,
+                  "marginTop": 22,
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Make sure the recipient is on the Bitcoin network.
+              </Text>
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                minimumFontScale={0.65}
+                minimumFontSize={11.05}
+                numberOfLines={0}
+                style={
+                  [
+                    {
+                      "color": "#FFFFFF",
+                      "fontFamily": "Quicksand-Regular",
+                      "fontSize": 22,
+                      "includeFontPadding": false,
+                    },
+                    {
+                      "color": "#3dd9f4",
+                      "fontSize": 17,
+                    },
+                    null,
+                  ]
+                }
+              >
+                Cryptocurrency transactions are irreversible.
+              </Text>
+            </View>
+          </View>
         </View>
       </RCTScrollView>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     jestAnimatedProps={
@@ -16349,7 +16684,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
         },
       ]
     }
-    nativeID="108"
     onLayout={[Function]}
     style={
       [
@@ -16407,7 +16741,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
           "reduceMotionV": "system",
         }
       }
-      nativeID="109"
     >
       <View
         style={
@@ -16465,7 +16798,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 },
               ]
             }
-            nativeID="110"
             style={
               [
                 {
@@ -16517,7 +16849,6 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
                 },
               ]
             }
-            nativeID="111"
             style={
               [
                 {
@@ -16615,7 +16946,13 @@ exports[`SendScene2 2 spendTargets lock tiles 3`] = `
 `;
 
 exports[`SendScene2 Render SendScene 1`] = `
-<View
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
   style={
     [
       {
@@ -16639,22 +16976,21 @@ exports[`SendScene2 Render SendScene 1`] = `
     ]
   }
 >
-  <BVLinearGradient
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 0,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -16799,7 +17135,7 @@ exports[`SendScene2 Render SendScene 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>
+  </ExpoLinearGradient>
   <View
     style={
       {
@@ -16812,6 +17148,7 @@ exports[`SendScene2 Render SendScene 1`] = `
     }
   >
     <RCTScrollView
+      bottomOffset={45}
       contentContainerStyle={
         {
           "paddingBottom": 11,
@@ -16820,10 +17157,6 @@ exports[`SendScene2 Render SendScene 1`] = `
           "paddingTop": 0,
         }
       }
-      enableOnAndroid={true}
-      extraHeight={75}
-      extraScrollHeight={62}
-      innerRef={[Function]}
       scrollIndicatorInsets={
         {
           "right": 1,
@@ -16874,7 +17207,6 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="0"
         >
           <View
             style={
@@ -16964,6 +17296,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -16989,6 +17322,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={14.3}
                     numberOfLines={3}
                     style={
                       [
@@ -17123,7 +17457,6 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="1"
         >
           <View
             style={
@@ -17213,6 +17546,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -17314,6 +17648,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={14.3}
                         numberOfLines={1}
                         style={
                           [
@@ -17334,6 +17669,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -17430,21 +17766,20 @@ exports[`SendScene2 Render SendScene 1`] = `
                   </Text>
                 </View>
               </View>
-              <BVLinearGradient
+              <ExpoLinearGradient
                 colors={
                   [
-                    452984831,
-                    452984831,
+                    "rgba(255, 255, 255, .1)",
+                    "rgba(255, 255, 255, .1)",
                   ]
                 }
-                endPoint={
+                end={
                   {
                     "x": 1,
                     "y": 0.5,
                   }
                 }
-                locations={null}
-                startPoint={
+                start={
                   {
                     "x": 0,
                     "y": 0.5,
@@ -17500,6 +17835,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                     allowFontScaling={false}
                     ellipsizeMode="tail"
                     minimumFontScale={0.65}
+                    minimumFontSize={11.05}
                     numberOfLines={1}
                     style={
                       [
@@ -17569,7 +17905,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                         "reduceMotionV": "system",
                       }
                     }
-                    nativeID="2"
                     style={
                       [
                         {
@@ -17647,6 +17982,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -17734,6 +18070,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -17823,6 +18160,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -17912,6 +18250,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         adjustsFontSizeToFit={true}
                         allowFontScaling={false}
                         minimumFontScale={0.65}
+                        minimumFontSize={11.05}
                         numberOfLines={1}
                         style={
                           [
@@ -17977,7 +18316,6 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="3"
         />
         <View
           collapsable={false}
@@ -18016,7 +18354,6 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="4"
         >
           <View
             style={
@@ -18112,6 +18449,7 @@ exports[`SendScene2 Render SendScene 1`] = `
               >
                 <Text
                   allowFontScaling={false}
+                  minimumFontScale={0.65}
                   style={
                     {
                       "color": "#FFFFFF",
@@ -18151,7 +18489,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                         },
                       ]
                     }
-                    nativeID="5"
                     pending={false}
                     style={
                       [
@@ -18192,7 +18529,6 @@ exports[`SendScene2 Render SendScene 1`] = `
                       }
                     }
                     jestInlineStyle={{}}
-                    nativeID="6"
                     pending={false}
                     style={
                       [
@@ -18221,8 +18557,7 @@ exports[`SendScene2 Render SendScene 1`] = `
                         style={
                           [
                             {
-                              "height": 31,
-                              "width": 51,
+                              "alignSelf": "flex-start",
                             },
                             {
                               "backgroundColor": "#888888",
@@ -18277,7 +18612,6 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="7"
         />
         <View
           collapsable={false}
@@ -18316,340 +18650,67 @@ exports[`SendScene2 Render SendScene 1`] = `
               "reduceMotionV": "system",
             }
           }
-          nativeID="8"
         >
           <View
             style={
-              [
-                {
-                  "alignSelf": "stretch",
-                  "borderRadius": 16,
-                },
-                {
-                  "marginBottom": 34,
-                  "marginLeft": 11,
-                  "marginRight": 11,
-                  "marginTop": 34,
-                },
-                {
-                  "paddingBottom": 11,
-                  "paddingLeft": 11,
-                  "paddingRight": 11,
-                  "paddingTop": 11,
-                },
-                undefined,
-              ]
+              {
+                "marginHorizontal": 22,
+                "marginTop": 22,
+              }
             }
           >
-            <View
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              minimumFontSize={11.05}
+              numberOfLines={0}
               style={
-                {
-                  "backgroundColor": "rgba(255, 255, 255, .1)",
-                  "borderRadius": 16,
-                  "bottom": 0,
-                  "left": 0,
-                  "overflow": "hidden",
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                }
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#3dd9f4",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
               }
             >
-              <BVLinearGradient
-                colors={
-                  [
-                    1886857999,
-                    1887591201,
-                    1887591201,
-                    1886857999,
-                  ]
-                }
-                endPoint={
-                  {
-                    "x": 0.9,
-                    "y": 0,
-                  }
-                }
-                locations={null}
-                startPoint={
-                  {
-                    "x": 0,
-                    "y": 0.9,
-                  }
-                }
-                style={
-                  {
-                    "bottom": 0,
-                    "left": 0,
-                    "position": "absolute",
-                    "right": 0,
-                    "top": 0,
-                  }
-                }
-              />
-            </View>
-            <View
+              Make sure the recipient is on the Bitcoin network.
+            </Text>
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              minimumFontScale={0.65}
+              minimumFontSize={11.05}
+              numberOfLines={0}
               style={
-                {
-                  "margin": 11,
-                }
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Quicksand-Regular",
+                    "fontSize": 22,
+                    "includeFontPadding": false,
+                  },
+                  {
+                    "color": "#3dd9f4",
+                    "fontSize": 17,
+                  },
+                  null,
+                ]
               }
             >
-              <View
-                style={
-                  {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  selectable={false}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontSize": 28,
-                      },
-                      {
-                        "marginRight": 4,
-                      },
-                      {
-                        "fontFamily": "Ionicons",
-                        "fontStyle": "normal",
-                        "fontWeight": "normal",
-                      },
-                      {},
-                    ]
-                  }
-                >
-                  
-                </Text>
-                <Text
-                  adjustsFontSizeToFit={true}
-                  allowFontScaling={false}
-                  minimumFontScale={0.65}
-                  numberOfLines={0}
-                  style={
-                    [
-                      {
-                        "color": "#FFFFFF",
-                        "fontFamily": "Quicksand-Regular",
-                        "fontSize": 22,
-                        "includeFontPadding": false,
-                      },
-                      {
-                        "flexShrink": 1,
-                        "fontFamily": "Quicksand-Medium",
-                        "marginLeft": 4,
-                      },
-                      null,
-                    ]
-                  }
-                >
-                  Scam Warning
-                </Text>
-              </View>
-              <View
-                style={
-                  {
-                    "marginTop": 11,
-                  }
-                }
-              >
-                <View
-                  style={
-                    {
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    • 
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={0}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Edge will not give financial advice.
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    • 
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={0}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Cryptocurrency transactions are irreversible.
-                  </Text>
-                </View>
-                <View
-                  style={
-                    {
-                      "flexDirection": "row",
-                    }
-                  }
-                >
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={1}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    • 
-                  </Text>
-                  <Text
-                    adjustsFontSizeToFit={true}
-                    allowFontScaling={false}
-                    minimumFontScale={0.65}
-                    numberOfLines={0}
-                    style={
-                      [
-                        {
-                          "color": "#FFFFFF",
-                          "fontFamily": "Quicksand-Regular",
-                          "fontSize": 22,
-                          "includeFontPadding": false,
-                        },
-                        {
-                          "fontSize": 17,
-                          "marginLeft": 4,
-                        },
-                        null,
-                      ]
-                    }
-                  >
-                    Do not send money to people or organizations you do not know.
-                  </Text>
-                </View>
-              </View>
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                minimumFontScale={0.65}
-                numberOfLines={10}
-                style={
-                  [
-                    {
-                      "color": "#FFFFFF",
-                      "fontFamily": "Quicksand-Regular",
-                      "fontSize": 22,
-                      "includeFontPadding": false,
-                    },
-                    {
-                      "fontSize": 17,
-                      "marginHorizontal": 6,
-                      "marginTop": 11,
-                    },
-                    null,
-                  ]
-                }
-              >
-                If you have any questions or concerns regarding this send, please contact support@edge.app
-              </Text>
-            </View>
+              Cryptocurrency transactions are irreversible.
+            </Text>
           </View>
         </View>
       </View>
     </RCTScrollView>
   </View>
-</View>
+</BlurTargetView>
 `;

@@ -33,7 +33,7 @@ export class AbortError extends Error {}
  */
 export const useAbortable = <Args extends unknown[], R>(
   definition: (maybeAbort: CheckAbortFn) => AbortableRoutine<Args, R>
-) => {
+): ((...args: Args) => Abortable<R>) => {
   const handler = useHandler((...args: Args): Abortable<R> => {
     let shouldAbort = false
     function maybeAbort<T>(value: T): T {

@@ -25,7 +25,7 @@ type Props = OwnProps & ThemeProps
 const fioAddressScreenText = `${lstrings.fio_address_details_screen_expires} `
 
 export class FioAddressRegistered extends React.Component<Props> {
-  renderExpDate() {
+  renderExpDate(): React.ReactElement | null {
     const { theme, route } = this.props
     const { expiration } = route.params
     if (expiration != null) {
@@ -42,7 +42,7 @@ export class FioAddressRegistered extends React.Component<Props> {
     return null
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme, navigation, route } = this.props
     const { fioName } = route.params
     const styles = getStyles(theme)

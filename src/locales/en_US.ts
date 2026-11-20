@@ -197,8 +197,6 @@ const strings = {
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message:
     'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  access_wallet_description: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
-  edge_description_warning: `You have scanned a QR code to login to your account from another device. Accepting this login will grant full access to your account and funds on that other device.\n\nDO NOT accept this login unless you trust the application and person who provided the QR code`,
   exchange_failed: 'Exchange Failed',
   exchange_congratulations: 'Congratulations!',
   exchange_congratulations_success: 'Your exchange is being processed!',
@@ -211,7 +209,6 @@ const strings = {
   managetokens_detected_tokens_header: 'Auto Detected Tokens',
   managetokens_all_tokens_header: 'All Tokens',
   managetokens_top_instructions: 'Select tokens to display in wallet:',
-  accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
   addtoken_invalid_information:
@@ -269,6 +266,8 @@ const strings = {
   send_address_unrecognized_1s:
     'This address does not match any network %1$s can send to from this wallet.',
   send_recipient_network_changed_1s: 'Recipient network changed to %1$s.',
+  send_check_recipient_network_1s:
+    'Make sure the recipient is on the %1$s network.',
   send_address_no_network_selected:
     'No network was selected, so the address was not added.',
   fragment_send_subtitle: 'Send',
@@ -318,6 +317,12 @@ const strings = {
   fragment_wallets_wallet_engine_failed_1s: 'Engine Failed: %1$s',
   fragment_wallets_view_private_view_key: 'Private View Key',
   fragment_wallets_view_private_view_key_warning_s: `The private view key allows the receiver to see the balance in your %1$s wallet. Do not share this key unless necessary, such as for tax purposes, accounting, or similar reasons.`,
+  fragment_wallets_view_in_explorer: 'View in Explorer',
+  wallet_menu_explorer_no_address_error:
+    'Unable to load a wallet address to view.',
+  wallet_menu_explorer_no_account_title: 'No Account Yet',
+  wallet_menu_explorer_no_account_message:
+    'This wallet does not have an account on the network yet, so the explorer has nothing to show. Try again after the wallet receives its first deposit.',
   fragment_wallets_view_xpub: 'View XPub Address',
   fragment_wallets_sign_message: 'Sign Message',
   sign_message_title: 'Sign Message',
@@ -490,6 +495,10 @@ const strings = {
   help_faq_text: 'Commonly asked questions',
   help_live_chat: 'Live Chat',
   help_live_chat_text: 'Quick help from a live agent',
+  help_live_chat_authorize_device:
+    'I need help authorizing this device to log in.',
+  help_live_chat_authorize_device_1s:
+    'I need help authorizing this device to log in. My Lock ID is %1$s.',
   help_call_agent: 'Call for Assistance',
   help_call_agent_text: 'Our agents are also available by phone',
   help_official_site: 'Visit Official Site',
@@ -542,6 +551,7 @@ const strings = {
   select_wallet_to_send_from: 'Select Wallet to Send From',
   send_confirmation_calculating_fee: 'Calculating Fee',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_button_confirm: 'Confirm',
   send_confirmation_balance: 'Balance',
   send_confirmation_zero_amount_title: 'Send Zero Amount?',
   send_confirmation_zero_amount_message:
@@ -624,6 +634,9 @@ const strings = {
   settings_default_screen_home: 'Home',
   settings_default_screen_assets: 'Assets',
   settings_developer_options_force_la: 'Force Light Account Creation',
+  swap_fixed_to_unavailable_toast:
+    'No provider can quote an exact receive amount for this pair. Your send amount is fixed instead, at about the same value.',
+  settings_developer_options_sliders_as_buttons: 'Replace Sliders with Buttons',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_dex: 'Prefer Decentralized',
@@ -977,7 +990,7 @@ const strings = {
   transaction_details_recipient: 'Recipient',
   transaction_details_sender: 'Sender',
   transaction_details_person_name: '%s Name',
-  transaction_details_person_input: 'Choose a %s',
+  transaction_details_person_input_title_1s: 'Enter a %1$s',
   transaction_details_crypto_amount: '%s Amount',
   transaction_details_amount_in_fiat: 'Amount in %s',
   transaction_details_amount_current_price: 'Amount at Current Price',
@@ -1007,6 +1020,11 @@ const strings = {
   transaction_details_accelerate_transaction_header: 'Accelerate Transaction',
   transaction_details_accelerate_transaction_instructional:
     'This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.',
+  transaction_details_accelerate_transaction_instructional_recipient:
+    'This will resend this transaction with its fee doubled to help prioritize it for network confirmation. Please review the recipient, amount, and new fee before confirming.',
+  transaction_details_accelerate_transaction_recipient_title:
+    'Recipient Address',
+  transaction_details_accelerate_transaction_amount_title: 'Send Amount',
   confirm_finish: 'Confirm & Finish',
   transaction_details_accelerate_transaction_old_fee_title: 'Old Fee',
   transaction_details_accelerate_transaction_new_fee_title: 'New Fee',
@@ -1259,6 +1277,19 @@ const strings = {
   alert_deep_link_no_wallet:
     'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
   alert_deep_link_no_wallet_for_uri: 'No wallets exist that support this link.',
+  payment_redirect_checking_order: 'Checking sell order...',
+  payment_redirect_order_closed_title: 'Sell Order Closed',
+  payment_redirect_order_closed_message:
+    'This sell order is no longer waiting for a deposit, so nothing was sent. Start a new sell order to continue.',
+  payment_redirect_order_paid_title: 'Deposit Already Sent',
+  payment_redirect_order_paid_message:
+    'The deposit for this sell order was already sent. Edge did not open a second send. Check with the provider for the payout status.',
+  payment_redirect_not_owned_title: 'Sell Order Not Recognized',
+  payment_redirect_not_owned_message:
+    'Edge could not match this sell order to your account. Nothing was sent. Start a new sell order in Edge to continue.',
+  payment_redirect_unverified_title: 'Unable to Verify Sell Order',
+  payment_redirect_unverified_message:
+    'Edge could not confirm this sell order with the provider, so nothing was sent. Check your connection and open the link again, or start a new sell order.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
   create_wallet_failed: 'Failed to create wallet',
@@ -1267,6 +1298,13 @@ const strings = {
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   error_must_select_state_province_s: 'Must select state/province for %1$s',
   edge_login_failed: 'Failed to Login',
+  edge_login_warning_title: 'Warning!',
+  edge_login_warning_irreversible:
+    'You are about to grant full access to your account on another device - this action is NOT reversible',
+  edge_login_warning_do_not_approve:
+    'DO NOT approve a QR code given to you by someone else',
+  edge_login_grant_access_button: 'Grant Full Access',
+  edge_login_grant_access_countdown_1s: 'Grant Full Access (%1$s)',
   edge_login_fail_stale_qr:
     'The scanned QR code was invalid. \n\nPlease generate a new QR code on the device you intend to log in to and try again.',
   edge_login_fail_message:
@@ -1304,6 +1342,8 @@ const strings = {
   tap_to_change_provider: 'Tap to Change Provider',
   tap_to_view_quote_amount_and_rate: 'Select to view quote',
   failed_to_calculate_quote_rate: 'Failed to calculate quote rate',
+  ramp_provider_ip_country_blocked_1s:
+    "%1$s doesn't accept connections from the country you're in. It checks where your internet connection is, not the region you chose in Edge.",
   send_from_wallet: 'Send from %s',
   send_to_wallet: 'Receive to %s',
   exchange_slow: 'Locating a swap is taking longer than usual.\nPlease wait...',
@@ -1585,6 +1625,7 @@ const strings = {
   delete_account_feedback: 'Account %s deleted',
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
+  contacts_permission_grant_access: 'Grant Contacts Access',
   contacts_permission_modal_body_1:
     '%1$s would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
   contacts_permission_modal_body_2:
@@ -2356,6 +2397,7 @@ const strings = {
   spei_bank_transfer: 'SPEI Bank Transfer',
   turkish_bank_transfer: 'Turkish Bank Transfer',
   venmo: 'Venmo',
+  vietqr: 'VietQR',
   bank_wire_transfer: 'Bank Wire Transfer',
 
   // #region UK Compliance

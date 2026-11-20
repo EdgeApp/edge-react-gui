@@ -15,7 +15,7 @@ export function useIsAccountFunded(): boolean {
     const { currencyWallets } = state.core.account
     const { userPausedWalletsSet } = state.ui.settings
     const unPausedWallets = Object.values(currencyWallets).filter(
-      wallet => !userPausedWalletsSet?.has(wallet.id)
+      wallet => userPausedWalletsSet?.has(wallet.id) !== true
     )
     const unSyncedWallets = unPausedWallets.filter(
       wallet => wallet.syncRatio < 1

@@ -14,7 +14,9 @@ export function createStateProvider<State>(
   getState: () => State
 ): [React.FunctionComponent<{ children: React.ReactNode }>, Selector<State>] {
   const Context = createContext<State | undefined>(undefined)
-  function WithContext({ children }: { children: React.ReactNode }) {
+  const WithContext: React.FC<{ children: React.ReactNode }> = ({
+    children
+  }) => {
     const value = getState()
     return <Context.Provider value={value}>{children}</Context.Provider>
   }

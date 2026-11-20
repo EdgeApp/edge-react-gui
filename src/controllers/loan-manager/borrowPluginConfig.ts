@@ -20,13 +20,10 @@ const pluginConfigs: Record<string, EdgeCorePluginOptions> = {
   // Example: aavePolygon: {...},
 }
 
-export const borrowPluginMap: BorrowPluginMap = Object.keys(allPlugins).reduce(
-  (map, key) => {
-    // @ts-expect-error
-    const factory = allPlugins[key]
-    const config = pluginConfigs[key]
-    const plugin = factory(config)
-    return { ...map, [key]: plugin }
-  },
-  {}
-)
+export const borrowPluginMap: BorrowPluginMap = Object.entries(
+  allPlugins
+).reduce((map, [key, factory]) => {
+  const config = pluginConfigs[key]
+  const plugin = factory(config)
+  return { ...map, [key]: plugin }
+}, {})

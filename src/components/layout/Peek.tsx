@@ -6,7 +6,7 @@ interface Props {
   isShown: boolean
 }
 
-export const Peek = (props: Props) => {
+export const Peek: React.FC<Props> = props => {
   const { children, isShown } = props
   const opacity = isShown ? 1 : 0
 

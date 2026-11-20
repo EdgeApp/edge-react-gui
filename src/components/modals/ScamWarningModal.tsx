@@ -16,9 +16,9 @@ import { EdgeModal } from './EdgeModal'
  * account creation, etc, the first time they interact with or open those
  * features.
  */
-export const ScamWarningModal = (props: {
+export const ScamWarningModal: React.FC<{
   bridge: AirshipBridge<'yes' | 'no' | undefined>
-}) => {
+}> = props => {
   const { bridge } = props
 
   const handleYesPress = useHandler(async () => {

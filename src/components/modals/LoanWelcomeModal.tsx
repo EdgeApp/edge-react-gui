@@ -12,9 +12,9 @@ import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ButtonsModal } from './ButtonsModal'
 
-export const LoanWelcomeModal = (props: {
+export const LoanWelcomeModal: React.FC<{
   bridge: AirshipBridge<'ok' | undefined>
-}) => {
+}> = props => {
   const theme = useTheme()
   const styles = getStyles(theme)
   const { bridge } = props

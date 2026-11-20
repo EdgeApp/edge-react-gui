@@ -1,4 +1,4 @@
-import { mul } from 'biggystring'
+import { div, mul, toFixed } from 'biggystring'
 import type {
   EdgeCurrencyInfo,
   EdgeCurrencyWallet,
@@ -8,7 +8,11 @@ import type {
 
 import type { GuiExchangeRates } from '../actions/ExchangeRateActions'
 import type { RootState } from '../types/reduxTypes'
-import { convertNativeToExchange, zeroString } from '../util/utils'
+import {
+  convertNativeToExchange,
+  DECIMAL_PRECISION,
+  zeroString
+} from '../util/utils'
 
 export const getActiveWalletCurrencyInfos = (
   currencyWallets: Record<string, EdgeCurrencyWallet>
@@ -92,6 +96,48 @@ export const convertCurrency = (
   )
   const convertedAmount = mul(amount, exchangeRate)
   return convertedAmount
+}
+
+/** An asset in a cross-asset conversion. `multiplier` is its exchange denom's. */
+export interface ConvertibleAsset {
+  pluginId: string
+  tokenId: EdgeTokenId
+  multiplier: string
+}
+
+/**
+ * The native amount of `to` worth the same as `nativeAmount` of `from`, at
+ * display rates. Returns `undefined` when either asset has no rate, since there
+ * is nothing to convert through.
+ */
+export const convertNativeBetweenAssets = (
+  exchangeRates: GuiExchangeRates,
+  isoFiat: string,
+  nativeAmount: string,
+  from: ConvertibleAsset,
+  to: ConvertibleAsset
+): string | undefined => {
+  const fromRate = getExchangeRate(
+    exchangeRates,
+    from.pluginId,
+    from.tokenId,
+    isoFiat
+  )
+  const toRate = getExchangeRate(
+    exchangeRates,
+    to.pluginId,
+    to.tokenId,
+    isoFiat
+  )
+  if (fromRate <= 0 || toRate <= 0) return undefined
+
+  const fromExchange = div(nativeAmount, from.multiplier, DECIMAL_PRECISION)
+  const toExchange = div(
+    mul(fromExchange, String(fromRate)),
+    String(toRate),
+    DECIMAL_PRECISION
+  )
+  return toFixed(mul(toExchange, to.multiplier), 0, 0)
 }
 
 export const convertFiatCurrency = (

@@ -22,7 +22,7 @@ interface Props {
   ltv?: number
 }
 
-export const LoanDetailsSummaryCard = (props: Props) => {
+export const LoanDetailsSummaryCard: React.FC<Props> = props => {
   const { currencyCode, currencyIcon, details, total, ltv } = props
   const theme = useTheme()
   const styles = getStyles(theme)

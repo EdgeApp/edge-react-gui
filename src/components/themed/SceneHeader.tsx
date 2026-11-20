@@ -15,7 +15,7 @@ interface Props {
   withTopMargin?: boolean
 }
 
-const SceneHeaderComponent = (props: Props) => {
+const SceneHeaderComponent: React.FC<Props> = props => {
   const {
     children,
     style,

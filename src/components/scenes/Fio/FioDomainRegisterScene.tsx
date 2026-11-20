@@ -69,14 +69,14 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     walletLoading: false
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { fioWallets } = this.props
     if (fioWallets.length > 0) {
       this.setState({
         selectedWallet: fioWallets[0]
       })
     } else {
-      this.createFioWallet().catch(err => {
+      this.createFioWallet().catch((err: unknown) => {
         showError(err)
       })
     }
@@ -110,7 +110,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     } = this.state
     if (isValid && isAvailable === true && !loading && !walletLoading) {
       if (isConnected) {
-        if (!selectedWallet) {
+        if (selectedWallet == null) {
           showError(lstrings.create_wallet_failed_message)
           return
         }
@@ -124,15 +124,15 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  onDomainPress = async () => {
+  onDomainPress = async (): Promise<void> => {
     await this.setDomain()
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     await this.selectFioWallet()
   }
 
-  checkFioDomain(fioDomain: string) {
+  checkFioDomain(fioDomain: string): void {
     this.setState({
       loading: true
     })
@@ -156,9 +156,10 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
       try {
         const { fioPlugin } = this.props
-        const isAvailable = fioPlugin.otherMethods
-          ? await fioPlugin.otherMethods.validateAccount(fioDomain, true)
-          : false
+        const isAvailable =
+          fioPlugin.otherMethods != null
+            ? await fioPlugin.otherMethods.validateAccount(fioDomain, true)
+            : false
         this.setState({
           isAvailable,
           isValid: true,
@@ -178,7 +179,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }, 1000)
   }
 
-  handleFioDomainChange = (fioDomainChanged: string) => {
+  handleFioDomainChange = (fioDomainChanged: string): void => {
     if (!this.props.isConnected) {
       this.setState({
         fioDomain: fioDomainChanged,
@@ -195,16 +196,15 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  handleFioWalletChange = (walletId: string) => {
+  handleFioWalletChange = (walletId: string): void => {
     this.setState({
-      // @ts-expect-error
-      selectedWallet: this.props.fioWallets.find(
-        fioWallet => fioWallet.id === walletId
-      )
+      selectedWallet:
+        this.props.fioWallets.find(fioWallet => fioWallet.id === walletId) ??
+        null
     })
   }
 
-  selectFioWallet = async () => {
+  selectFioWallet = async (): Promise<void> => {
     const result = await Airship.show<WalletListResult>(bridge => (
       <WalletListModal
         bridge={bridge}
@@ -219,7 +219,7 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  setDomain = async () => {
+  setDomain = async (): Promise<void> => {
     const fioDomain = await Airship.show<string | undefined>(bridge => (
       <TextInputModal
         bridge={bridge}
@@ -229,13 +229,14 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         autoCorrect={false}
       />
     ))
-    if (fioDomain) this.handleFioDomainChange(fioDomain)
+    if (fioDomain != null && fioDomain !== '')
+      this.handleFioDomainChange(fioDomain)
   }
 
-  renderButton() {
+  renderButton(): React.ReactElement | null {
     const { isValid, isAvailable, loading, walletLoading } = this.state
 
-    if (isValid && isAvailable && !loading) {
+    if (isValid && isAvailable === true && !loading) {
       return (
         <EdgeAnim enter={fadeIn} exit={fadeOut}>
           <MainButton
@@ -253,10 +254,10 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     return null
   }
 
-  renderFioWallets() {
+  renderFioWallets(): React.ReactElement | undefined {
     const { fioWallets } = this.props
     const { selectedWallet } = this.state
-    if (fioWallets && fioWallets.length > 1) {
+    if (fioWallets != null && fioWallets.length > 1) {
       return (
         <EdgeRow
           rightButtonType="touchable"
@@ -272,21 +273,21 @@ export class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const { fioDomain, isAvailable, loading, errorMessage, isValid } =
       this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
-    if (fioDomain && !this.props.isConnected) {
+    if (fioDomain !== '' && !this.props.isConnected) {
       chooseHandleErrorMessage = lstrings.fio_address_register_screen_cant_check
     }
-    if (fioDomain && isAvailable === false) {
+    if (fioDomain !== '' && isAvailable === false) {
       chooseHandleErrorMessage =
         lstrings.fio_address_register_screen_not_available
     }
 
-    if (fioDomain && !isValid && errorMessage) {
+    if (fioDomain !== '' && !isValid && errorMessage !== '') {
       chooseHandleErrorMessage = errorMessage
     }
 

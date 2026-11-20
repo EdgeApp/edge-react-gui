@@ -23,9 +23,11 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import { lstrings } from '../../../locales/strings'
 import { getExchangeDenom } from '../../../selectors/DenominationSelectors'
-import type { StringMap } from '../../../types/types'
 import { CryptoAmount } from '../../../util/CryptoAmount'
+import { redactUrl } from '../../../util/redactUrl'
 import { removeIsoPrefix } from '../../../util/utils'
+import { MOONPAY_NETWORK_CODE_PLUGINID_MAP } from '../../ramps/moonpay/moonpayAssetUtils'
+import { makeMoonpayExternalTransactionId } from '../../ramps/moonpay/moonpaySellOrder'
 import { SendErrorBackPressed, SendErrorNoTransaction } from '../fiatPlugin'
 import type {
   FiatDirection,
@@ -48,8 +50,8 @@ import {
   addExactRegion,
   isDailyCheckDue,
   isReturnUrl,
+  makePaymentReturnUrl,
   NOT_SUCCESS_TOAST_HIDE_MS,
-  RETURN_URL_PAYMENT,
   validateExactRegion
 } from './common'
 import { signMoonpayUrl } from './moonpaySign'
@@ -182,6 +184,9 @@ type MoonpayBuyWidgetQueryParams = MoonpayWidgetQueryParams & {
 }
 
 type MoonpaySellWidgetQueryParams = MoonpayWidgetQueryParams & {
+  /** proves a "Send with Edge" link for the order came from this account */
+  externalTransactionId: string
+
   /** fiat currency code */
   quoteCurrencyCode: string
 
@@ -206,34 +211,6 @@ const MOONPAY_PAYMENT_TYPE_MAP: Partial<
   paypal: 'paypal',
   venmo: 'venmo',
   fasterpayments: 'gbp_bank_transfer'
-}
-
-const NETWORK_CODE_PLUGINID_MAP: StringMap = {
-  algorand: 'algorand',
-  arbitrum: 'arbitrum',
-  avalanche_c_chain: 'avalanche',
-  base: 'base',
-  binance_smart_chain: 'binancesmartchain',
-  bitcoin: 'bitcoin',
-  bitcoin_cash: 'bitcoincash',
-  cardano: 'cardano',
-  cosmos: 'cosmoshub',
-  dogecoin: 'dogecoin',
-  ethereum: 'ethereum',
-  hedera: 'hedera',
-  litecoin: 'litecoin',
-  optimism: 'optimism',
-  osmosis: 'osmosis',
-  polygon: 'polygon',
-  ripple: 'ripple',
-  solana: 'solana',
-  s_sonic: 'sonic',
-  stellar: 'stellar',
-  sui: 'sui',
-  tezos: 'tezos',
-  tron: 'tron',
-  ton: 'ton',
-  zksync: 'zksync'
 }
 
 // Special case memo creation for plugins (not used in current flow)
@@ -274,7 +251,7 @@ export const moonpayProvider: FiatProviderFactory = {
   makeProvider: async (
     params: FiatProviderFactoryParams
   ): Promise<FiatProvider> => {
-    const { apiKeys, getTokenIdFromContract } = params
+    const { apiKeys, getTokenIdFromContract, io } = params
     const apiKey = asApiKeys(apiKeys)
     if (apiKey == null) throw new Error('Moonpay missing apiKey')
     const out: FiatProvider = {
@@ -340,7 +317,7 @@ export const moonpayProvider: FiatProviderFactory = {
               const { metadata } = currency
               if (metadata == null) continue
               const { contractAddress, networkCode } = metadata
-              const pluginId = NETWORK_CODE_PLUGINID_MAP[networkCode]
+              const pluginId = MOONPAY_NETWORK_CODE_PLUGINID_MAP[networkCode]
               if (pluginId == null) continue
 
               let tokenId: EdgeTokenId
@@ -706,13 +683,21 @@ export const moonpayProvider: FiatProviderFactory = {
               const urlObj = new URL('https://sell.moonpay.com?', true)
               const queryObj: MoonpaySellWidgetQueryParams = {
                 apiKey,
+                // Lets a "Send with Edge" link for this order prove it came
+                // from this account:
+                externalTransactionId: await makeMoonpayExternalTransactionId(
+                  io.store
+                ),
                 refundWalletAddress: publicAddress,
                 quoteCurrencyCode: fiatCurrencyObj.code,
                 paymentMethod,
                 baseCurrencyCode: cryptoCurrencyObj.code,
                 lockAmount: true,
                 showAllCurrencies: false,
-                redirectURL: RETURN_URL_PAYMENT
+                redirectURL: makePaymentReturnUrl(providerId, {
+                  pluginId: coreWallet.currencyInfo.pluginId,
+                  tokenId: params.tokenId
+                })
               }
               if (params.amountType === 'crypto') {
                 queryObj.baseCurrencyAmount = moonpayQuote.baseCurrencyAmount
@@ -720,17 +705,21 @@ export const moonpayProvider: FiatProviderFactory = {
                 queryObj.quoteCurrencyAmount = moonpayQuote.quoteCurrencyAmount
               }
               urlObj.set('query', queryObj)
-              console.log('Approving moonpay sell quote url=' + urlObj.href)
+              console.log(
+                'Approving moonpay sell quote url=' + redactUrl(urlObj.href)
+              )
               const signedUrl = await signMoonpayUrl(urlObj.href)
 
               let inPayment = false
 
               const openWebView = async (): Promise<void> => {
                 const onUrlChangeAsync = async (uri: string): Promise<void> => {
-                  console.log('Moonpay WebView url change: ' + uri)
+                  console.log('Moonpay WebView url change: ' + redactUrl(uri))
 
                   if (isReturnUrl(uri, 'payment')) {
-                    console.log('Moonpay WebView launch payment: ' + uri)
+                    console.log(
+                      'Moonpay WebView launch payment: ' + redactUrl(uri)
+                    )
                     const urlObj = new URL(uri, true)
                     const { query } = urlObj
                     const {

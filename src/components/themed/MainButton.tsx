@@ -37,7 +37,7 @@ interface Props {
  * Use EdgeButton instead, and consider whether there is a genuine need for
  * special margins in MainButton use cases from a UI4 design perspective.
  */
-export function MainButton(props: Props) {
+export const MainButton: React.FC<Props> = props => {
   const {
     children,
     disabled = false,

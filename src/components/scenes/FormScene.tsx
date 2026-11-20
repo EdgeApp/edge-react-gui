@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { lstrings } from '../../locales/strings'
@@ -17,7 +17,7 @@ interface Props {
   sliderDisabled: boolean
 }
 
-export const FormScene = (props: Props) => {
+export const FormScene = (props: Props): React.ReactElement => {
   const {
     headerText,
     headerTertiary,
@@ -38,8 +38,7 @@ export const FormScene = (props: Props) => {
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
-        extraScrollHeight={theme.rem(2.75)}
-        enableOnAndroid
+        bottomOffset={theme.rem(2.75)}
         scrollIndicatorInsets={SCROLL_INDICATOR_INSET_FIX}
       >
         {children}

@@ -41,6 +41,7 @@ export const edgeConfig: AppConfig = {
   termsOfServiceSite: 'https://edge.app/tos/',
   website: 'https://edge.app',
   referralAppShareUrl: 'https://dl.edge.app',
+  intercomAppId: 'ourx4xix',
   supportChatSite: 'https://support.edge.app/hc/en-us?chat=open',
   quickActions: {
     uninstallWarningUrl:

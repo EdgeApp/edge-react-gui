@@ -6,7 +6,7 @@ import { THEME } from '../../theme/variables/airbitz'
 /**
  * Use this component just like its HTML equivalent.
  */
-export function B(props: { children: React.ReactNode }) {
+export const B: React.FC<{ children: React.ReactNode }> = props => {
   return (
     <UnscaledText style={{ fontFamily: THEME.FONTS.BOLD }}>
       {props.children}

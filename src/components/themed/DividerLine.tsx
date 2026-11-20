@@ -1,6 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 
+import type { GradientColors } from '../../types/Theme'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
@@ -8,7 +9,7 @@ interface Props {
   // The gap around the line. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number | number[]
-  colors?: string[]
+  colors?: GradientColors
 }
 
 const start = { x: 0, y: 0.5 }
@@ -25,7 +26,7 @@ const end = { x: 1, y: 0.5 }
  * @deprecated Use DividerLineUi4 instead, without custom margins where
  * possible.
  */
-export const DividerLine = (props: Props) => {
+export const DividerLine = (props: Props): React.ReactElement => {
   const { marginRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)

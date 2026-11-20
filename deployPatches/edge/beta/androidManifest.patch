@@ -1,5 +1,5 @@
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 1646a1d00..9031712a5 100644
+index 790c2bd72..103c867a4 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -32,8 +32,8 @@
@@ -12,4 +12,4 @@ index 1646a1d00..9031712a5 100644
 +    android:roundIcon="@mipmap/ic_launcher_beta_round"
      android:allowBackup="false"
      android:usesCleartextTraffic="true"
-     android:theme="@style/Theme.App.Starting">
+     android:theme="@style/AppTheme">

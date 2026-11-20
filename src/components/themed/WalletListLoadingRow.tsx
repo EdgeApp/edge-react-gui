@@ -9,7 +9,7 @@ interface Props {
   onPress?: () => void
 }
 
-function WalletListLoadingRowComponent(props: Props) {
+const WalletListLoadingRowComponent: React.FC<Props> = props => {
   const { onLongPress, onPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

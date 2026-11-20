@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-securerandom/android/build.gradle b/node_modules/react-native-securerandom/android/build.gradle
+index 4e725c3..bb212d2 100644
+--- a/node_modules/react-native-securerandom/android/build.gradle
++++ b/node_modules/react-native-securerandom/android/build.gradle
+@@ -56,7 +56,7 @@ repositories {
+                 excludeGroup "com.facebook.react"
+             }
+         }
+-    jcenter()
++    mavenCentral()
+ }
+ 
+ dependencies {

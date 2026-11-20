@@ -33,7 +33,7 @@ const weightedAverage = (nums: string[], weights: string[]): string => {
   return div(sum, weightSum, 10)
 }
 
-const InterestRateChangeTileComponent = (props: Props) => {
+const InterestRateChangeTileComponent: React.FC<Props> = props => {
   const { borrowEngine, newDebt } = props
   const { currencyWallet } = borrowEngine
 

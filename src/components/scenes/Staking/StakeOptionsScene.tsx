@@ -13,6 +13,7 @@ import type { StakePolicy } from '../../../plugins/stake-plugins/types'
 import { EMPTY_STAKE_POSITION_MAP } from '../../../reducers/StakingReducer'
 import { useSelector } from '../../../types/reactRedux'
 import type { EdgeAppSceneProps } from '../../../types/routerTypes'
+import type { GradientColors } from '../../../types/Theme'
 import { getCurrencyCode } from '../../../util/CurrencyInfoHelpers'
 import {
   getPluginFromPolicyId,
@@ -130,14 +131,15 @@ const StakeOptionsSceneComponent: React.FC<Props> = props => {
     iconAccentColor: iconColor ?? '#00000000'
   }
 
-  const backgroundColors = [...theme.assetBackgroundGradientColors]
-  if (iconColor != null && theme.isDark) {
-    const scaledColor = darkenHexColor(
-      iconColor,
-      theme.assetBackgroundColorScale
-    )
-    backgroundColors[0] = scaledColor
-  }
+  // Destructured rather than mutated so the gradient keeps its tuple type:
+  // `LinearGradient` needs a compile-time guarantee of two or more stops.
+  const [firstColor, ...restColors] = theme.assetBackgroundGradientColors
+  const backgroundColors: GradientColors = [
+    iconColor != null && theme.isDark
+      ? darkenHexColor(iconColor, theme.assetBackgroundColorScale)
+      : firstColor,
+    ...restColors
+  ]
 
   return (
     <SceneWrapper

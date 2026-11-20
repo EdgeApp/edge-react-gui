@@ -52,38 +52,40 @@ type Props = OwnProps & StateProps & ThemeProps
 class FioRequestRowComponent extends React.PureComponent<Props> {
   rowRef = React.createRef<SwipableRowRef>()
 
-  closeRow = () => {
+  closeRow = (): void => {
     if (this.rowRef.current != null) this.rowRef.current.close()
   }
 
-  onPress = () => {
+  onPress = (): void => {
     const { onPress, fioRequest } = this.props
-    onPress(fioRequest)?.catch(err => {
+    onPress(fioRequest)?.catch((err: unknown) => {
       showError(err)
     })
     this.closeRow()
   }
 
-  onSwipe = () => {
+  onSwipe = (): void => {
     const { onSwipe, fioRequest } = this.props
     onSwipe(fioRequest)
-      .catch(err => {
+      .catch((err: unknown) => {
         showError(err)
       })
       .finally(this.closeRow)
   }
 
-  requestedField = () => {
+  requestedField = (): React.JSX.Element => {
     const { displayDenomination, fioRequest, theme } = this.props
     const styles = getStyles(theme)
     const name =
-      displayDenomination.name || fioRequest.content.token_code.toUpperCase()
+      displayDenomination.name !== ''
+        ? displayDenomination.name
+        : fioRequest.content.token_code.toUpperCase()
     const value = `${lstrings.title_fio_requested} ${name}`
 
     return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
   }
 
-  showStatus = (status: FioRequestStatus) => {
+  showStatus = (status: FioRequestStatus): React.JSX.Element => {
     const { theme } = this.props
     const styles = getStyles(theme)
 
@@ -103,7 +105,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
     )
   }
 
-  render() {
+  render(): React.JSX.Element {
     const {
       displayDenomination,
       exchangeDenomination,
@@ -132,7 +134,7 @@ class FioRequestRowComponent extends React.PureComponent<Props> {
       ? fioRequest.time_stamp
       : `${fioRequest.time_stamp}Z`
     const dateValue = `${formatTime(new Date(safeDate))} ${
-      fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''
+      fioRequest.content.memo !== '' ? `- ${fioRequest.content.memo}` : ''
     }`
     return (
       <SwipeableRow
@@ -250,7 +252,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.deactivatedText
   },
   underlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: theme.sliderTabSend,
     flexDirection: 'row',
     justifyContent: 'flex-end'
@@ -289,10 +291,11 @@ export const FioRequestRow = connect<StateProps, unknown, OwnProps>(
     }
 
     const fiatSymbol = getFiatSymbol(removeIsoPrefix(defaultIsoFiat))
-    const fiatAmount =
-      formatNumber(mul(fiatPerCrypto, fioRequest.content.amount), {
-        toFixed: 2
-      }) || '0'
+    const fiatAmountFormatted = formatNumber(
+      mul(fiatPerCrypto, fioRequest.content.amount),
+      { toFixed: 2 }
+    )
+    const fiatAmount = fiatAmountFormatted !== '' ? fiatAmountFormatted : '0'
 
     return {
       exchangeDenomination,

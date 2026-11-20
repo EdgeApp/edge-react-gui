@@ -10,7 +10,7 @@ interface Props {
   error: Error
 }
 
-function WalletListErrorRowComponent(props: Props) {
+const WalletListErrorRowComponent: React.FC<Props> = props => {
   const { onLongPress, error } = props
   const theme = useTheme()
   const styles = getStyles(theme)

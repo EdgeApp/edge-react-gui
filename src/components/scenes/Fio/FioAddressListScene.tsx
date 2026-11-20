@@ -76,7 +76,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     return null
   }
 
-  async fetchData() {
+  async fetchData(): Promise<void> {
     const { refreshAllFioAddresses, isConnected } = this.props
     if (!isConnected) {
       showError(lstrings.fio_network_alert_text)
@@ -88,7 +88,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     this.willFocusSubscription = this.props.navigation.addListener(
       'focus',
       () => {
-        this.fetchData().catch(err => {
+        this.fetchData().catch((err: unknown) => {
           showError(err)
         })
       }
@@ -99,7 +99,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     if (this.willFocusSubscription != null) this.willFocusSubscription()
   }
 
-  onAddressPress = (fioAddress: FioAddress) => {
+  onAddressPress = (fioAddress: FioAddress): void => {
     const { navigation } = this.props
     const { name, bundledTxs } = fioAddress
     navigation.navigate('fioAddressDetails', {
@@ -108,7 +108,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     })
   }
 
-  onDomainPress = (fioDomain: FioDomain) => {
+  onDomainPress = (fioDomain: FioDomain): void => {
     const { fioWallets, navigation } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
     const fioWallet = fioWallets.find(
@@ -123,7 +123,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
     })
   }
 
-  render() {
+  render(): React.ReactElement {
     const { fioAddresses, fioDomains, loading, navigation, theme } = this.props
     const { initLoading } = this.state
     const styles = getStyles(theme)
@@ -143,7 +143,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.list}>
-              {!fioAddresses.length && (
+              {fioAddresses.length === 0 && (
                 <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>
               )}
               {fioAddresses.map((address: FioAddress) => (
@@ -166,7 +166,7 @@ export class FioAddressList extends React.Component<Props, LocalState> {
               withTopMargin
             />
             <View style={styles.list}>
-              {!fioDomains.length && (
+              {fioDomains.length === 0 && (
                 <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>
               )}
               {fioDomains.map((domain: FioDomain) => (

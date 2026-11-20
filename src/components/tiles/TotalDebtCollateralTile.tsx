@@ -5,11 +5,11 @@ import * as React from 'react'
 import { useTotalFiatAmount } from '../../util/borrowUtils'
 import { FiatAmountTile } from './FiatAmountTile'
 
-export const TotalDebtCollateralTile = (props: {
+export const TotalDebtCollateralTile: React.FC<{
   title: string
   wallet: EdgeCurrencyWallet
   debtsOrCollaterals: any[]
-}) => {
+}> = props => {
   const { title, wallet, debtsOrCollaterals } = props
 
   // Floor totalFiatAmount value at '0'

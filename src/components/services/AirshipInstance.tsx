@@ -36,7 +36,7 @@ export function showError(
     return
   Airship.show(bridge => (
     <AlertDropdown bridge={bridge} message={translatedMessage} error={error} />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -84,7 +84,7 @@ export function showDevError(
   error: unknown,
   options: ShowErrorWarningOptions = {}
 ): void {
-  showDevErrorAsync(error, options).catch(err => {
+  showDevErrorAsync(error, options).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -98,9 +98,10 @@ export function showWarning(
   options: ShowErrorWarningOptions = {}
 ): void {
   const { trackError: doTrackError = true, tag } = options
-  const translatedError = tag
-    ? `Tag: ${tag}. ` + translateError(error)
-    : translateError(error)
+  const translatedError =
+    tag != null && tag !== ''
+      ? `Tag: ${tag}. ` + translateError(error)
+      : translateError(error)
   if (doTrackError) {
     trackError(error, tag)
   }
@@ -109,7 +110,7 @@ export function showWarning(
   )
   Airship.show(bridge => (
     <AlertDropdown bridge={bridge} message={translatedError} warning />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -121,7 +122,7 @@ export function showWarning(
 export function showToast(message: string, autoHideMs?: number): void {
   Airship.show(bridge => (
     <AirshipToast bridge={bridge} autoHideMs={autoHideMs} message={message} />
-  )).catch(err => {
+  )).catch((err: unknown) => {
     console.error(err)
   })
 }
@@ -150,7 +151,7 @@ export async function showToastSpinner<T>(
         <ActivityIndicator />
       </AirshipToast>
     )
-  }).catch(err => {
+  }).catch((err: unknown) => {
     console.error(err)
   })
   return await activity
@@ -160,8 +161,7 @@ export async function showToastSpinner<T>(
  * Makes text red in dev mode.
  */
 export function redText(message: string): string {
-  // @ts-expect-error
-  if (!global.__DEV__) return message
+  if (!__DEV__) return message
   return `\x1b[31m${message}\x1b[39m`
 }
 
@@ -169,7 +169,6 @@ export function redText(message: string): string {
  * Makes text yellow in dev mode.
  */
 export function yellowText(message: string): string {
-  // @ts-expect-error
-  if (!global.__DEV__) return message
+  if (!__DEV__) return message
   return `\x1b[33m${message}\x1b[39m`
 }

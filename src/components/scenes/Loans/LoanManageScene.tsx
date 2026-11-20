@@ -137,7 +137,7 @@ interface Props extends EdgeAppSceneProps<'loanManage'> {
   loanAccount: LoanAccount
 }
 
-export const LoanManageSceneComponent = (props: Props) => {
+export const LoanManageSceneComponent: React.FC<Props> = props => {
   // -----------------------------------------------------------------------------
   // #region Constants
   // -----------------------------------------------------------------------------
@@ -539,8 +539,8 @@ export const LoanManageSceneComponent = (props: Props) => {
           setSelectedAsset({ wallet: selectedWallet, tokenId })
         }
       })
-      .catch(e => {
-        showError(e.message)
+      .catch((e: unknown) => {
+        showError(e instanceof Error ? e.message : e)
       })
   })
 

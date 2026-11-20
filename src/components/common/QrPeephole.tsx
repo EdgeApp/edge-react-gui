@@ -27,7 +27,7 @@ interface OwnProps {
 }
 type Props = OwnProps & ThemeProps
 
-const Component = (props: Props) => {
+const Component: React.FC<Props> = props => {
   const { width, height, theme, holeSize, holeX, holeY } = props
   const styles = getStyles(theme)
 

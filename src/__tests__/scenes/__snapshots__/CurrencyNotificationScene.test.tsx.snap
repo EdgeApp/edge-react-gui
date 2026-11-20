@@ -1,23 +1,34 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CurrencyNotificationComponent should render with loading props 1`] = `
-[
-  <BVLinearGradient
+<BlurTargetView
+  collapsable={false}
+  ref={
+    {
+      "current": null,
+    }
+  }
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <ExpoLinearGradient
     colors={
       [
-        4279900698,
-        4279900698,
+        "#1a1a1a",
+        "#1a1a1a",
       ]
     }
-    endPoint={
+    end={
       {
         "x": 1,
         "y": 1,
       }
     }
-    locations={null}
     onLayout={[Function]}
-    startPoint={
+    start={
       {
         "x": 0,
         "y": 0,
@@ -207,7 +218,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         </RNSVGGroup>
       </RNSVGGroup>
     </RNSVGSvgView>
-  </BVLinearGradient>,
+  </ExpoLinearGradient>
   <RCTScrollView
     collapsable={false}
     contentContainerStyle={
@@ -241,7 +252,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
     onScroll={[Function]}
@@ -313,6 +323,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             {
               "color": "#FFFFFF",
@@ -352,7 +363,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="1"
             pending={false}
             style={
               [
@@ -393,7 +403,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="2"
             pending={false}
             style={
               [
@@ -421,8 +430,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "height": 31,
-                      "width": 51,
+                      "alignSelf": "flex-start",
                     },
                     {
                       "backgroundColor": "#888888",
@@ -480,6 +488,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
       >
         <Text
           allowFontScaling={false}
+          minimumFontScale={0.65}
           style={
             {
               "color": "#FFFFFF",
@@ -519,7 +528,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 },
               ]
             }
-            nativeID="3"
             pending={false}
             style={
               [
@@ -560,7 +568,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
               }
             }
             jestInlineStyle={{}}
-            nativeID="4"
             pending={false}
             style={
               [
@@ -588,8 +595,7 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
                 style={
                   [
                     {
-                      "height": 31,
-                      "width": 51,
+                      "alignSelf": "flex-start",
                     },
                     {
                       "backgroundColor": "#888888",
@@ -605,6 +611,6 @@ exports[`CurrencyNotificationComponent should render with loading props 1`] = `
         </View>
       </View>
     </View>
-  </RCTScrollView>,
-]
+  </RCTScrollView>
+</BlurTargetView>
 `;

@@ -3,6 +3,7 @@
  * edge-login-ui-rn!
  */
 
+import { LinearGradient } from 'expo-linear-gradient'
 import * as React from 'react'
 import {
   ActivityIndicator,
@@ -12,7 +13,6 @@ import {
   View,
   type ViewStyle
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import { cacheStyles } from 'react-native-patina'
 
 import { usePendingPress } from '../../hooks/usePendingPress'
@@ -21,7 +21,11 @@ import { EdgeTouchableOpacity } from '../common/EdgeTouchableOpacity'
 import { type Theme, useTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 
-export type EdgeButtonType = 'primary' | 'secondary' | 'tertiary'
+export type EdgeButtonType =
+  | 'primary'
+  | 'secondary'
+  | 'destructive'
+  | 'tertiary'
 
 interface Props {
   children?: React.ReactNode
@@ -60,7 +64,7 @@ interface Props {
  * - Typically to be used as a child of ButtonsViewUi4.
  * - NOT meant to be used on its own outside of ButtonsViewUi4 unless layout='solo'
  */
-export function EdgeButton(props: Props): React.ReactElement | null {
+export const EdgeButton: React.FC<Props> = props => {
   const {
     layout = 'solo',
     children,
@@ -138,17 +142,25 @@ export function EdgeButton(props: Props): React.ReactElement | null {
       {type === 'tertiary' ? null : (
         <LinearGradient
           colors={
-            type === 'primary' ? theme.primaryButton : theme.secondaryButton
+            type === 'primary'
+              ? theme.primaryButton
+              : type === 'secondary'
+              ? theme.secondaryButton
+              : theme.dangerButton
           }
           start={
             type === 'primary'
               ? theme.primaryButtonColorStart
-              : theme.secondaryButtonColorStart
+              : type === 'secondary'
+              ? theme.secondaryButtonColorStart
+              : theme.dangerButtonColorStart
           }
           end={
             type === 'primary'
               ? theme.primaryButtonColorEnd
-              : theme.secondaryButtonColorEnd
+              : type === 'secondary'
+              ? theme.secondaryButtonColorEnd
+              : theme.dangerButtonColorEnd
           }
           style={styles.pillBackground}
         />
@@ -166,6 +178,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
                 ? styles.labelPrimary
                 : type === 'secondary'
                 ? styles.labelSecondary
+                : type === 'destructive'
+                ? styles.labelDestructive
                 : styles.labelTertiary,
               children == null ? null : styles.labelWithIcon
             ]}
@@ -186,6 +200,8 @@ export function EdgeButton(props: Props): React.ReactElement | null {
                 ? theme.primaryButtonText
                 : type === 'secondary'
                 ? theme.secondaryButtonText
+                : type === 'destructive'
+                ? theme.dangerButtonText
                 : theme.escapeButtonText
             }
           />
@@ -231,7 +247,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   const pillBackground: ViewStyle = {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: theme.rem(theme.buttonBorderRadiusRem)
   }
 
@@ -276,13 +292,18 @@ const getStyles = cacheStyles((theme: Theme) => {
       fontFamily: theme.secondaryButtonFont,
       fontSize: theme.rem(theme.secondaryButtonFontSizeRem)
     },
+    labelDestructive: {
+      color: theme.dangerButtonText,
+      fontFamily: theme.dangerButtonFont,
+      fontSize: theme.rem(theme.dangerButtonFontSizeRem)
+    },
     labelTertiary: {
       color: theme.escapeButtonText,
       fontFamily: theme.escapeButtonFont,
       fontSize: theme.rem(theme.escapeButtonFontSizeRem)
     },
     spinnerOverlay: {
-      ...StyleSheet.absoluteFillObject,
+      ...StyleSheet.absoluteFill,
       alignItems: 'center',
       justifyContent: 'center'
     }

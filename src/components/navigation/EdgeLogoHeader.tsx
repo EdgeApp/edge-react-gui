@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 import { lstrings } from '../../locales/strings'
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
-export function EdgeLogoHeader() {
+export const EdgeLogoHeader: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (

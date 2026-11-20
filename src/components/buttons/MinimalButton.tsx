@@ -31,7 +31,7 @@ interface Props {
 /**
  * A toggle-able button in 'minimalist' style
  */
-const MinimalButtonComponent = (props: Props) => {
+const MinimalButtonComponent: React.FC<Props> = props => {
   const { highlighted, disabled = false, label, marginRem, onPress } = props
 
   const [pending, handlePress] = usePendingPress(onPress)
@@ -61,7 +61,7 @@ const MinimalButtonComponent = (props: Props) => {
           adjustsFontSizeToFit
           minimumFontScale={0.25}
           numberOfLines={1}
-          style={highlighted ? styles.labelSelected : styles.label}
+          style={highlighted === true ? styles.labelSelected : styles.label}
         >
           {label}
         </UnscaledText>

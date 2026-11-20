@@ -28,7 +28,7 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-export const SwapSuccessScene = (props: Props) => {
+export const SwapSuccessScene: React.FC<Props> = props => {
   const { navigation, route } = props
   const { edgeTransaction, walletId } = route.params
   const theme = useTheme()
@@ -80,7 +80,7 @@ export const SwapSuccessScene = (props: Props) => {
     'SwapSuccessScene'
   )
 
-  const renderConfetti = () => {
+  const renderConfetti = (): React.ReactElement | null => {
     if (!showConfetti) return null
     return <ConfettiCannon {...confettiProps} />
   }

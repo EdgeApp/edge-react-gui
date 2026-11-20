@@ -19,7 +19,7 @@ interface Props {
  * If the right side is a string and onRightPress handler is provided, it will
  * be rendered as green tappable text, else it's up to the caller to decide.
  **/
-export const SectionHeader = (props: Props) => {
+export const SectionHeader: React.FC<Props> = props => {
   const { leftTitle, rightNode, onRightPress } = props
   const theme = useTheme()
   const styles = getStyles(theme)

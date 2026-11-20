@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 View 1`] = `
 <View
@@ -84,21 +84,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -129,6 +128,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -237,21 +237,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -282,6 +281,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -405,6 +405,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -511,21 +512,20 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -556,6 +556,7 @@ exports[`Buttons should render in a ButtonsView in a column layout in a flex:1 V
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -666,21 +667,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -711,6 +711,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -819,21 +820,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -864,6 +864,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 1 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -973,21 +974,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1018,6 +1018,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -1126,21 +1127,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1171,6 +1171,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 2 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -1280,21 +1281,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1325,6 +1325,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -1433,21 +1434,20 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -1478,6 +1478,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -1601,6 +1602,7 @@ exports[`Buttons should render in a ButtonsView in a column layout with 3 button
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -1715,21 +1717,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -1760,6 +1761,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -1863,21 +1865,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              872415231,
-              872415231,
+              "hsla(0, 0%, 100%, 0.20)",
+              "hsla(0, 0%, 100%, 0.20)",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 1,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -1908,6 +1909,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -2025,6 +2027,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -2129,21 +2132,20 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
           }
         }
       >
-        <BVLinearGradient
+        <ExpoLinearGradient
           colors={
             [
-              4280299823,
-              4278214733,
+              "#20312f",
+              "#00604d",
             ]
           }
-          endPoint={
+          end={
             {
               "x": 1,
               "y": 0,
             }
           }
-          locations={null}
-          startPoint={
+          start={
             {
               "x": 0,
               "y": 0,
@@ -2174,6 +2176,7 @@ exports[`Buttons should render in a ButtonsView in a row layout in a flex:1 View
             adjustsFontSizeToFit={true}
             allowFontScaling={false}
             minimumFontScale={0.65}
+            minimumFontSize={14.3}
             numberOfLines={1}
             style={
               [
@@ -2282,21 +2285,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2327,6 +2329,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -2430,21 +2433,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2475,6 +2477,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 1 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -2582,21 +2585,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2627,6 +2629,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -2730,21 +2733,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2775,6 +2777,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 2 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -2882,21 +2885,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -2927,6 +2929,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3030,21 +3033,20 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3075,6 +3077,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3192,6 +3195,7 @@ exports[`Buttons should render in a ButtonsView in a row layout with 3 buttons 1
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3292,21 +3296,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3337,6 +3340,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3432,21 +3436,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3477,6 +3480,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3587,6 +3591,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3682,21 +3687,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3727,6 +3731,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3822,21 +3827,20 @@ exports[`Buttons should render simple loose buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -3867,6 +3871,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -3977,6 +3982,7 @@ exports[`Buttons should render simple loose buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4077,21 +4083,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4122,6 +4127,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4235,21 +4241,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4280,6 +4285,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4408,6 +4414,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4521,21 +4528,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4566,6 +4572,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4679,21 +4686,20 @@ exports[`Buttons should render spinning buttons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -4724,6 +4730,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4852,6 +4859,7 @@ exports[`Buttons should render spinning buttons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -4970,21 +4978,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5053,6 +5060,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5150,21 +5158,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5233,6 +5240,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5383,6 +5391,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5480,21 +5489,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5563,6 +5571,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5660,21 +5669,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -5743,6 +5751,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5893,6 +5902,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -5990,21 +6000,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6073,6 +6082,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -6188,21 +6198,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6271,6 +6280,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -6439,6 +6449,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -6554,21 +6565,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            4280299823,
-            4278214733,
+            "#20312f",
+            "#00604d",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 0,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6637,6 +6647,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -6752,21 +6763,20 @@ exports[`Buttons should render with child icons 1`] = `
         }
       }
     >
-      <BVLinearGradient
+      <ExpoLinearGradient
         colors={
           [
-            872415231,
-            872415231,
+            "hsla(0, 0%, 100%, 0.20)",
+            "hsla(0, 0%, 100%, 0.20)",
           ]
         }
-        endPoint={
+        end={
           {
             "x": 1,
             "y": 1,
           }
         }
-        locations={null}
-        startPoint={
+        start={
           {
             "x": 0,
             "y": 0,
@@ -6835,6 +6845,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [
@@ -7003,6 +7014,7 @@ exports[`Buttons should render with child icons 1`] = `
           adjustsFontSizeToFit={true}
           allowFontScaling={false}
           minimumFontScale={0.65}
+          minimumFontSize={14.3}
           numberOfLines={1}
           style={
             [

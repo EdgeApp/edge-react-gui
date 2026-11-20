@@ -42,7 +42,7 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
             .then(() => {
               errorShown = false
             })
-            .catch(err => {
+            .catch((err: unknown) => {
               showDevError(err)
             })
         }
@@ -50,11 +50,11 @@ class EdgeContextCallbackManagerComponent extends React.Component<Props> {
     )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  render() {
+  render(): null {
     return null
   }
 }

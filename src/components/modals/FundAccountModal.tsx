@@ -27,7 +27,7 @@ interface Props {
 /**
  * Renders a modal with descritive options for funding an account
  */
-export const FundAccountModal = (props: Props) => {
+export const FundAccountModal: React.FC<Props> = props => {
   const { bridge, navigation } = props
   const theme = useTheme()
   const style = styles(theme)

@@ -10,7 +10,7 @@ import { IconBadge } from '../icons/IconBadge'
 import { useTheme } from '../services/ThemeContext'
 import { NavigationButton } from './NavigationButton'
 
-export const SideMenuButton = () => {
+export const SideMenuButton: React.FC = () => {
   const navigation = useNavigation()
   const theme = useTheme()
   const number = useNotifCount()

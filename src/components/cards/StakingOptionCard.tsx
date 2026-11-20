@@ -21,21 +21,21 @@ interface StakingOptionCardProps {
   stakeProviderInfo?: StakeProviderInfo
 }
 
-export function StakingOptionCard({
+export const StakingOptionCard: React.FC<StakingOptionCardProps> = ({
   apy,
   currencyLogos,
   isStaked,
   primaryText,
   secondaryText,
   stakeProviderInfo
-}: StakingOptionCardProps) {
+}) => {
   const theme = useTheme()
   const styles = getStyles(theme)
 
   const aprText: string | undefined =
     apy != null ? apy.toFixed(2) + '%' : undefined
 
-  const renderStakeProvider = () => {
+  const renderStakeProvider = (): React.ReactElement | null => {
     if (stakeProviderInfo == null) return null
     const { displayName, pluginId, stakeProviderId } = stakeProviderInfo
     const swapProviderIcon = getStakeProviderIcon(
@@ -45,7 +45,7 @@ export function StakingOptionCard({
     )
     return (
       <View style={styles.swapProvider}>
-        {swapProviderIcon ? (
+        {swapProviderIcon !== '' ? (
           <FastImage
             style={styles.swapProviderIcon}
             resizeMode={FastImage.resizeMode.contain}

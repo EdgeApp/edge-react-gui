@@ -48,7 +48,7 @@ const calculateNewShownData = (
     if (!userData.randomShown) {
       const targets = new Array(ATTEMPTS - attempt).fill(0)
       targets[0] = 1
-      if (targets[Math.floor(Math.random() * (ATTEMPTS - attempt)) - 1]) {
+      if (targets[Math.floor(Math.random() * (ATTEMPTS - attempt)) - 1] === 1) {
         userData.randomShown = true
         userData.showNext = true
       }
@@ -64,7 +64,7 @@ export const needToShowConfetti = async (
   const data: Record<string, ConfettiShownTimes> = await getConfettiShownTimes(
     disklet
   )
-  const userData: ConfettiShownTimes = data[userId] || {
+  const userData: ConfettiShownTimes = data[userId] ?? {
     doneAmount: 0,
     showNext: true,
     randomShown: false

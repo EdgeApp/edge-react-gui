@@ -26,7 +26,7 @@ import { WalletListSectionHeader } from '../themed/WalletListSectionHeader'
 
 interface Props extends EdgeAppSceneProps<'walletRestore'> {}
 
-export function WalletRestoreScene(props: Props) {
+export const WalletRestoreScene: React.FC<Props> = props => {
   const { navigation } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -128,7 +128,7 @@ export function WalletRestoreScene(props: Props) {
   )
 }
 
-const RestoreList = (props: {
+const RestoreList: React.FC<{
   insetStyle: InsetStyle
   restoreWalletInfos: EdgeWalletInfoFull[]
   searchText: string
@@ -136,7 +136,7 @@ const RestoreList = (props: {
     walletInfo: EdgeWalletInfoFull,
     isSelected: boolean
   ) => void
-}) => {
+}> = props => {
   const { insetStyle, restoreWalletInfos, searchText, onSelectionChanged } =
     props
   const theme = useTheme()

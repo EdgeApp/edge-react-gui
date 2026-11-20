@@ -10,12 +10,12 @@ export interface Props {
   onPress?: () => void
 }
 
-export const BackButton = (props: Props) => {
+export const BackButton: React.FC<Props> = props => {
   const { onPress } = props
   const navigation = useNavigation()
   const theme = useTheme()
 
-  const handlePress = () => {
+  const handlePress = (): void => {
     triggerHaptic('impactLight')
     if (onPress != null) {
       onPress()

@@ -98,7 +98,8 @@ const allowedPaymentTypes: AllowedPaymentTypes = {
     paypal: true,
     pix: true,
     sepa: false, // Leave this to Bity for now
-    turkishbank: true
+    turkishbank: true,
+    vietqr: true
   },
   sell: {
     ach: true, // Ramp constraint blocks ACH for Banxa
@@ -163,6 +164,7 @@ const asBanxaPaymentType = asValue(
   'KLARNACKO',
   'MANUALPAYMENT',
   'MONOOVAPAYID',
+  'OSLFCVIETQR',
   'PRIMERAP',
   'PRIMERCC',
   'PRIMERGP',
@@ -350,6 +352,7 @@ const typeMap: Record<BanxaPaymentType, FiatPaymentType> = {
   KLARNACKO: 'klarna',
   MANUALPAYMENT: 'turkishbank',
   MONOOVAPAYID: 'payid',
+  OSLFCVIETQR: 'vietqr',
   PRIMERAP: 'applepay',
   PRIMERCC: 'credit',
   PRIMERGP: 'googlepay',
@@ -1082,7 +1085,7 @@ export const banxaRampPlugin: RampPluginFactory = (
               const maxPrices = asBanxaPricesResponse(maxResponse)
               const maxPriceRow = maxPrices.data.prices.find(p => {
                 return (
-                  p.payment_method_id === paymentObj!.id &&
+                  p.payment_method_id === paymentObj.id &&
                   p.coin_code === banxaCoin &&
                   p.fiat_code === fiatCode
                 )
@@ -1170,7 +1173,7 @@ export const banxaRampPlugin: RampPluginFactory = (
           const banxaPrices = asBanxaPricesResponse(response)
           const priceRow = banxaPrices.data.prices.find(p => {
             return (
-              p.payment_method_id === paymentObj!.id &&
+              p.payment_method_id === paymentObj.id &&
               p.coin_code === banxaCoin &&
               p.fiat_code === fiatCode
             )

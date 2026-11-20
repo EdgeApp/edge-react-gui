@@ -1,4 +1,15 @@
-import { add, div, eq, gt, gte, lt, mul, toFixed } from 'biggystring'
+import {
+  add,
+  div,
+  eq,
+  gt,
+  gte,
+  log10,
+  lt,
+  mul,
+  round,
+  toFixed
+} from 'biggystring'
 import type {
   EdgeCurrencyConfig,
   EdgeCurrencyInfo,
@@ -497,9 +508,111 @@ export function maxPrimaryCurrencyConversionDecimals(
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }
 
+/**
+ * Rounds a crypto amount to the decimals that still matter at its fiat rate,
+ * removing extraneous sub-penny precision.
+ */
+export function roundToFiatPrecision(params: {
+  nativeAmount: string
+  displayMultiplier: string
+  exchangeMultiplier: string
+  fiatMultiplier: string
+  exchangeRate: number
+}): { displayAmount: string; nativeAmount: string } {
+  const { displayMultiplier } = params
+  const maxDecimals = maxPrimaryCurrencyConversionDecimals(
+    log10(displayMultiplier),
+    precisionAdjust({
+      primaryExchangeMultiplier: params.exchangeMultiplier,
+      secondaryExchangeMultiplier: params.fiatMultiplier,
+      exchangeSecondaryToPrimaryRatio: params.exchangeRate
+    })
+  )
+  const displayAmount = round(
+    div(params.nativeAmount, displayMultiplier, DECIMAL_PRECISION),
+    -maxDecimals
+  )
+  return { displayAmount, nativeAmount: mul(displayAmount, displayMultiplier) }
+}
+
 export const feeStyle = {
   danger: 'dangerText',
   warning: 'warningText'
+}
+
+/**
+ * Converts a native amount of an asset into its amount in a display
+ * denomination and its fiat value.
+ */
+export const convertNativeAmountToDisplayAmount = (
+  pluginId: string,
+  tokenId: EdgeTokenId,
+  isoFiatCurrencyCode: string,
+  exchangeRates: GuiExchangeRates,
+  nativeAmount: string,
+  displayDenomination: EdgeDenomination,
+  exchangeDenomination: EdgeDenomination
+): {
+  fiatSymbol: string
+  fiatAmount: string
+  cryptoSymbol?: string
+  cryptoAmount: string
+  /** The amount in the exchange denomination, for further rate lookups */
+  exchangeAmount: string
+  currencyName?: string
+} => {
+  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
+  const fiatSymbol =
+    secondaryDisplayDenomination?.symbol ??
+    secondaryDisplayDenomination?.name ??
+    ''
+
+  if (!gt(nativeAmount, '0')) {
+    return {
+      fiatSymbol,
+      fiatAmount: '0',
+      cryptoSymbol: displayDenomination?.symbol,
+      cryptoAmount: '0',
+      exchangeAmount: '0',
+      currencyName: displayDenomination?.name
+    }
+  }
+
+  const displayMultiplier =
+    displayDenomination != null ? displayDenomination.multiplier : ''
+  const exchangeMultiplier =
+    exchangeDenomination != null ? exchangeDenomination.multiplier : ''
+  const exchangeDenomAmount =
+    nativeAmount != null && nativeAmount !== ''
+      ? convertNativeToDisplay(exchangeMultiplier)(nativeAmount)
+      : ''
+  const exchangeToDisplayMultiplierRatio = div(
+    exchangeMultiplier,
+    displayMultiplier,
+    DECIMAL_PRECISION
+  )
+  const cryptoAmount = mul(
+    exchangeDenomAmount,
+    exchangeToDisplayMultiplierRatio
+  )
+  const exchangeAmount =
+    convertNativeToExchange(exchangeMultiplier)(nativeAmount)
+  const fiatAmount = convertCurrency(
+    exchangeRates,
+    pluginId,
+    tokenId,
+    isoFiatCurrencyCode,
+    exchangeAmount
+  )
+
+  return {
+    fiatSymbol,
+    fiatAmount: toFixed(fiatAmount, FIAT_PRECISION, FIAT_PRECISION),
+    cryptoSymbol: displayDenomination?.symbol,
+    cryptoAmount,
+    exchangeAmount,
+    currencyName: displayDenomination?.name
+  }
 }
 
 export const convertTransactionFeeToDisplayFee = (
@@ -519,83 +632,54 @@ export const convertTransactionFeeToDisplayFee = (
   nativeCryptoAmount: string
   currencyName?: string
 } => {
-  const secondaryDisplayDenomination = getDenomFromIsoCode(isoFiatCurrencyCode)
-
   let feeNativeAmount
   if (transaction.parentNetworkFee != null) {
     feeNativeAmount = transaction.parentNetworkFee
   } else feeNativeAmount = transaction.networkFee
 
+  const amount = convertNativeAmountToDisplayAmount(
+    pluginId,
+    tokenId,
+    isoFiatCurrencyCode,
+    exchangeRates,
+    feeNativeAmount,
+    feeDisplayDenomination,
+    feeDefaultDenomination
+  )
+
   if (gt(feeNativeAmount, '0')) {
-    const cryptoFeeSymbol = feeDisplayDenomination?.symbol ?? ''
-    const displayMultiplier =
-      feeDisplayDenomination != null ? feeDisplayDenomination.multiplier : ''
-    const exchangeMultiplier =
-      feeDefaultDenomination != null ? feeDefaultDenomination.multiplier : ''
-    const cryptoFeeExchangeDenomAmount =
-      feeNativeAmount != null && feeNativeAmount !== ''
-        ? convertNativeToDisplay(exchangeMultiplier)(feeNativeAmount)
-        : ''
-    const exchangeToDisplayMultiplierRatio = div(
-      exchangeMultiplier,
-      displayMultiplier,
-      DECIMAL_PRECISION
-    )
-    const cryptoAmount = mul(
-      cryptoFeeExchangeDenomAmount,
-      exchangeToDisplayMultiplierRatio
-    )
-    const cryptoFeeExchangeAmount =
-      convertNativeToExchange(exchangeMultiplier)(feeNativeAmount)
-    const fiatFeeAmount = convertCurrency(
-      exchangeRates,
-      pluginId,
-      tokenId,
-      isoFiatCurrencyCode,
-      cryptoFeeExchangeAmount
-    )
     const feeAmountInUSD = convertCurrency(
       exchangeRates,
       pluginId,
       tokenId,
       'iso:USD',
-      cryptoFeeExchangeAmount
+      amount.exchangeAmount
     )
-    const fiatAmount = {
-      amount: toFixed(fiatFeeAmount, FIAT_PRECISION, FIAT_PRECISION),
-      style:
+
+    return {
+      fiatSymbol: amount.fiatSymbol,
+      fiatAmount: amount.fiatAmount,
+      fiatStyle:
         parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD
           ? feeStyle.danger
           : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD
           ? feeStyle.warning
-          : undefined
-    }
-
-    return {
-      fiatSymbol:
-        secondaryDisplayDenomination?.symbol ??
-        secondaryDisplayDenomination?.name ??
-        '',
-      fiatAmount: fiatAmount.amount,
-      fiatStyle: fiatAmount.style,
-      cryptoSymbol: cryptoFeeSymbol,
-      cryptoAmount,
+          : undefined,
+      cryptoSymbol: amount.cryptoSymbol ?? '',
+      cryptoAmount: amount.cryptoAmount,
       nativeCryptoAmount: feeNativeAmount,
-      currencyName: feeDisplayDenomination?.name
+      currencyName: amount.currencyName
     }
   }
 
   return {
-    fiatSymbol:
-      secondaryDisplayDenomination?.symbol ??
-      secondaryDisplayDenomination?.name ??
-      '',
+    fiatSymbol: amount.fiatSymbol,
     fiatAmount: '0',
     fiatStyle: undefined,
-    cryptoSymbol: feeDisplayDenomination?.symbol,
+    cryptoSymbol: amount.cryptoSymbol,
     cryptoAmount: '0',
     nativeCryptoAmount: '0',
-    currencyName: feeDisplayDenomination?.name
+    currencyName: amount.currencyName
   }
 }
 

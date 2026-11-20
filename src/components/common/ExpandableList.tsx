@@ -27,7 +27,7 @@ interface Props {
   widthRem?: number
 }
 
-export const ExpandableList = (props: Props) => {
+export const ExpandableList: React.FC<Props> = props => {
   const { isExpanded, items, maxDisplayedItems = 4.75, widthRem } = props
 
   const theme = useTheme()
@@ -154,7 +154,7 @@ export const ExpandableList = (props: Props) => {
 
   const handleRowLayout = (event: {
     nativeEvent: { layout: { height: number } }
-  }) => {
+  }): void => {
     if (event != null && itemHeight === 0) {
       const { height } = event.nativeEvent.layout
       setItemHeight(height)

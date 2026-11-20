@@ -17,7 +17,7 @@ export function makeBuilder(executor: Executor): Builder {
       run
     }
   }
-  async function run() {
+  async function run(): Promise<void> {
     let local = {}
     for (const imperative of imperatives) {
       const definitions = await executor(global =>
@@ -26,7 +26,7 @@ export function makeBuilder(executor: Executor): Builder {
       if (typeof definitions === 'object') local = { ...local, ...definitions }
     }
   }
-  function inspect() {
+  function inspect(): string {
     return imperatives.map(imperative => imperative.toString()).join('\n')
   }
 

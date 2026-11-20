@@ -108,16 +108,16 @@ export class FioAddressRegisterSelectWallet extends React.Component<
   }
 
   componentDidMount(): void {
-    this.getRegInfo().catch(err => {
+    this.getRegInfo().catch((err: unknown) => {
       showError(err)
     })
   }
 
-  getRegInfo = async () => {
+  getRegInfo = async (): Promise<void> => {
     this.setState({ loading: true })
     const { fioDisplayDenomination, route, wallet: selectedWallet } = this.props
     const { fioAddress, selectedDomain, isFallback } = route.params
-    if (this.props.fioPlugin) {
+    if (this.props.fioPlugin != null) {
       try {
         const {
           activationCost,
@@ -157,25 +157,25 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     const { selectedDomain } = route.params
     const { activationCost } = this.state
 
-    if (!activationCost || activationCost === 0) return
+    if (activationCost === 0) return
 
-    if (selectedDomain.walletId) {
+    if (selectedDomain.walletId !== '') {
       await this.proceed(selectedDomain.walletId, null)
     } else {
       const { paymentWallet } = this.state
-      if (!paymentWallet?.id) return
+      if (paymentWallet?.id == null || paymentWallet.id === '') return
       await this.proceed(paymentWallet.id, paymentWallet.tokenId)
     }
   }
 
-  onWalletPress = async () => {
+  onWalletPress = async (): Promise<void> => {
     const { activationCost } = this.state
-    if (!activationCost || activationCost === 0) return
+    if (activationCost === 0) return
 
     await this.selectWallet()
   }
 
-  selectWallet = async () => {
+  selectWallet = async (): Promise<void> => {
     const { supportedAssets } = this.state
 
     const result = await Airship.show<WalletListResult>(bridge => (
@@ -192,7 +192,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     }
   }
 
-  proceed = async (walletId: string, tokenId: EdgeTokenId) => {
+  proceed = async (walletId: string, tokenId: EdgeTokenId): Promise<void> => {
     const {
       account,
       isConnected,
@@ -273,19 +273,20 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     }
   }
 
-  renderSelectWallet = () => {
+  renderSelectWallet = (): React.ReactElement => {
     const { account, route } = this.props
     const { selectedDomain, fioAddress } = route.params
     const { activationCost, paymentWallet, loading } = this.state
 
     const nextDisabled =
-      !activationCost ||
       activationCost === 0 ||
-      (!selectedDomain.walletId && !paymentWallet?.id)
+      (selectedDomain.walletId === '' &&
+        (paymentWallet?.id == null || paymentWallet.id === ''))
     const costStr = loading ? lstrings.loading : `${activationCost} ${FIO_STR}`
-    const walletName = !paymentWallet?.id
-      ? lstrings.choose_your_wallet
-      : getWalletName(account.currencyWallets[paymentWallet.id])
+    const walletName =
+      paymentWallet?.id == null || paymentWallet.id === ''
+        ? lstrings.choose_your_wallet
+        : getWalletName(account.currencyWallets[paymentWallet.id])
 
     return (
       <>
@@ -294,7 +295,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
             title={lstrings.fio_address_register_form_field_label}
             body={fioAddress}
           />
-          {!selectedDomain.walletId && (
+          {selectedDomain.walletId === '' && (
             <EdgeRow
               rightButtonType="touchable"
               title={lstrings.create_wallet_account_select_wallet}
@@ -318,7 +319,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
     )
   }
 
-  render() {
+  render(): React.ReactElement {
     const { theme } = this.props
     const { errorMessage } = this.state
     const styles = getStyles(theme)
@@ -337,7 +338,7 @@ export class FioAddressRegisterSelectWallet extends React.Component<
           {detailsText}
         </EdgeText>
         {this.renderSelectWallet()}
-        {errorMessage && (
+        {errorMessage != null && errorMessage !== '' && (
           <EdgeText style={styles.errorMessage} numberOfLines={3}>
             {errorMessage}
           </EdgeText>

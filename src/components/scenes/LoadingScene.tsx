@@ -9,7 +9,7 @@ import { useTheme } from '../services/ThemeContext'
  * component hierarchy. Use LoadingSplashScreen for rendering a loading state
  * above outside of the navigation/provider component tree.
  */
-export const LoadingScene = () => {
+export const LoadingScene: React.FC = () => {
   const theme = useTheme()
   return (
     <SceneWrapper hasHeader={false}>

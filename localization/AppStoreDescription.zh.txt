@@ -27,4 +27,4 @@ Edge钱包应用程序要求应用装置中的联系人列表、位置和个人�
 1. 在进行交易后，在使用者的通讯录当中自动完成联系人资料的填写
 2. 自动完成使用者通讯录中的联系人资料，以便通过电邮或短信发送付款请求
 
-任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 Neither Edge nor any 3rd party can access the information requested by the application.
+任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。任何个人信息或联系人列表信息都不会离开设备。 Edge或任何第三方都无权获知应用程序所使用的信息。 Neither Edge nor any 3rd party can access the information requested by the application.

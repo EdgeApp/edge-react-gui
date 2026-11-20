@@ -26,6 +26,7 @@ import paymentTypeLogoRevolut from '../../assets/images/paymentTypes/paymentType
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import paymentTypeLogoVenmo from '../../assets/images/paymentTypes/paymentTypeLogoVenmo.png'
+import paymentTypeLogoVietQr from '../../assets/images/paymentTypes/paymentTypeLogoVietQr.png'
 import paymentTypeVisa from '../../assets/images/paymentTypes/paymentTypeVisa.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { EDGE_CONTENT_SERVER_URI } from '../../constants/CdnConstants'
@@ -111,6 +112,8 @@ const palette = {
   warningInner: 'rgba(130, 91, 33, 0.44)',
   errorOuter: 'rgba(148, 71, 46, 0.44)',
   errorInner: 'rgba(150, 44, 49, 0.44)',
+  dangerOuter: '#bf360c',
+  dangerInner: '#c62828',
 
   darkestGreen: '#5c9067ec',
   darkGreen: '#77bb81ef',
@@ -124,7 +127,11 @@ const palette = {
   lightGreenOp25: '#77bb81f8',
 
   giftCardOverlayDark: 'rgba(0, 0, 0, .8)',
-  giftCardOverlayLight: 'rgba(0, 0, 0, .5)'
+  giftCardOverlayLight: 'rgba(0, 0, 0, .5)',
+
+  // Solid stand-ins for blur where it cannot render (Android below 12):
+  noBlurModal: '#f2f2f2',
+  noBlurChrome: '#f6f6f6'
 }
 
 const deviceWidth = Dimensions.get('window').width
@@ -203,6 +210,8 @@ export const edgeLight: Theme = {
   modalBorderWidth: 0,
   modalBorderRadiusRem: 1,
   modalBackground: palette.backgroundWhite,
+  modalBackgroundNoBlur: palette.noBlurModal,
+  chromeBackgroundNoBlur: palette.noBlurChrome,
   modalSceneOverlayColor: palette.blackOp50,
   modalDragbarColor: palette.darkGrayOp30,
 
@@ -296,6 +305,17 @@ export const edgeLight: Theme = {
   },
   secondaryButtonFontSizeRem: 1,
   secondaryButtonFont: palette.QuicksandRegular,
+
+  dangerButtonOutline: palette.transparent,
+  dangerButtonOutlineWidth: 0,
+  dangerButton: [palette.dangerOuter, palette.dangerInner, palette.dangerOuter],
+  dangerButtonColorStart: { x: 0, y: 0.25 },
+  dangerButtonColorEnd: { x: 1, y: 0.75 },
+  dangerButtonText: palette.white,
+  dangerButtonTextShadow: textNoShadow,
+  dangerButtonShadow: themeNoShadow,
+  dangerButtonFontSizeRem: 1,
+  dangerButtonFont: palette.QuicksandMedium,
 
   escapeButtonOutline: palette.transparent,
   escapeButtonOutlineWidth: 0,
@@ -493,6 +513,7 @@ export const edgeLight: Theme = {
   paymentTypeLogoSofort,
   paymentTypeLogoUpi,
   paymentTypeLogoVenmo,
+  paymentTypeLogoVietQr,
   paymentTypeVisa,
 
   primaryLogo: edgeLogo,

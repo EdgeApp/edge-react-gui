@@ -35,7 +35,7 @@ export const parseQuery = (query?: string): UriQueryMap => {
   if (query == null) return {}
   const dummyUrl = new URL('https://dummyurl.com?' + query, true)
   const test = dummyUrl.query
-  // @ts-expect-error
+  // @ts-expect-error url-parse types query values as possibly undefined
   return test
 }
 

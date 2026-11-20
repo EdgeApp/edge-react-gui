@@ -34,7 +34,7 @@ export function useWalletsSubscriber(
   })
 
   React.useEffect(() => {
-    function update(wallets: WalletMap) {
+    function update(wallets: WalletMap): void {
       const { cleanups, lastWallets, subscribe } = state.current
 
       cleanups.forEach((cleanup, walletId) => {

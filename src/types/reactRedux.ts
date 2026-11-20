@@ -13,7 +13,7 @@ export function connect<StateProps, DispatchProps, OwnProps>(
 ): (
   component: React.ComponentType<StateProps & DispatchProps & OwnProps>
 ) => React.FunctionComponent<OwnProps> {
-  // @ts-expect-error
+  // @ts-expect-error react-redux's connect types don't fit this narrower signature
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
 }
 

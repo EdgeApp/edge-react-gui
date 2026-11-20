@@ -12,7 +12,7 @@ interface Props {
   apr?: number
 }
 
-const AprCardComponent = (props: Props) => {
+const AprCardComponent: React.FC<Props> = props => {
   const { apr } = props
   const theme = useTheme()
   const styles = getStyles(theme)

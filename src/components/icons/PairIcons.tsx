@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image'
 
 import { cacheStyles, type Theme, useTheme } from '../services/ThemeContext'
 
-export function PairIcons({ icons }: { icons: string[] }) {
+export const PairIcons: React.FC<{ icons: string[] }> = ({ icons }) => {
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>

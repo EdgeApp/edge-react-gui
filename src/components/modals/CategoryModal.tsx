@@ -44,7 +44,7 @@ interface CategoryRow {
  * Allows the user to select a transaction category.
  * Returns a joined category string, such as "Expense:Food"
  */
-export function CategoryModal(props: Props) {
+export const CategoryModal: React.FC<Props> = props => {
   const { bridge, initialCategory } = props
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -111,7 +111,7 @@ export function CategoryModal(props: Props) {
     bridge.resolve(undefined)
   })
 
-  const handleCategoryUpdate = async (fullCategory: string) => {
+  const handleCategoryUpdate = async (fullCategory: string): Promise<void> => {
     if (!categories.includes(fullCategory)) {
       await dispatch(setNewSubcategory(fullCategory))
     }

@@ -1,8 +1,14 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
 [
-  <View
+  <BlurTargetView
+    collapsable={false}
+    ref={
+      {
+        "current": null,
+      }
+    }
     style={
       [
         {
@@ -26,22 +32,21 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
       ]
     }
   >
-    <BVLinearGradient
+    <ExpoLinearGradient
       colors={
         [
-          4279900698,
-          4279900698,
+          "#1a1a1a",
+          "#1a1a1a",
         ]
       }
-      endPoint={
+      end={
         {
           "x": 1,
           "y": 1,
         }
       }
-      locations={null}
       onLayout={[Function]}
-      startPoint={
+      start={
         {
           "x": 0,
           "y": 0,
@@ -231,7 +236,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
           </RNSVGGroup>
         </RNSVGGroup>
       </RNSVGSvgView>
-    </BVLinearGradient>
+    </ExpoLinearGradient>
     <View
       style={
         {
@@ -246,6 +251,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={18.2}
         numberOfLines={1}
         style={
           [
@@ -272,6 +278,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={11.05}
         numberOfLines={2}
         style={
           [
@@ -298,6 +305,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         adjustsFontSizeToFit={true}
         allowFontScaling={false}
         minimumFontScale={0.65}
+        minimumFontSize={11.05}
         numberOfLines={3}
         style={
           [
@@ -326,7 +334,7 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         Processing may take up to 24 hours to complete.
       </Text>
     </View>
-  </View>,
+  </BlurTargetView>,
   <View
     collapsable={false}
     footerHeight={0}
@@ -361,7 +369,6 @@ exports[`SwapSuccessSceneComponent should render with loading props 1`] = `
         },
       ]
     }
-    nativeID="0"
     onLayout={[Function]}
     stackHeight={0}
     style={

@@ -22,17 +22,19 @@ interface ModalFooterProps {
   onPress: () => void
 }
 
-export function ModalTitle(props: ModalTitleProps) {
+export const ModalTitle: React.FC<ModalTitleProps> = props => {
   const { center, children, icon = null, paddingRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
   const padding = sidesToPadding(mapSides(fixSides(paddingRem, 0), theme.rem))
   const androidAdjust = Platform.OS === 'android' ? styles.androidAdjust : null
-  const centerStyle = center ? styles.titleCenter : null
+  const centerStyle = center === true ? styles.titleCenter : null
 
   return (
     <View style={styles.titleContainer}>
-      {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
+      {icon != null && icon !== false ? (
+        <View style={styles.titleIconContainer}>{icon}</View>
+      ) : null}
       <UnscaledText
         style={[styles.titleText, centerStyle, padding, androidAdjust]}
       >
@@ -45,7 +47,7 @@ export function ModalTitle(props: ModalTitleProps) {
 /**
  * Renders a close button
  */
-export function ModalFooter(props: ModalFooterProps) {
+export function ModalFooter(props: ModalFooterProps): React.ReactElement {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -68,7 +70,9 @@ ModalFooter.bottomRem = 3
  * A consistently styled scroll area for use in modals. Should only be used
  * within ThemedModal.
  */
-export function ModalScrollArea(props: { children: React.ReactNode }) {
+export const ModalScrollArea: React.FC<{
+  children: React.ReactNode
+}> = props => {
   const { children } = props
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -91,7 +95,7 @@ export function ModalScrollArea(props: { children: React.ReactNode }) {
  * scroll implementation and does not use the ThemedModal's built-in 'scroll'
  * prop
  */
-export const ModalFooterFade = () => {
+export const ModalFooterFade: React.FC = () => {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (

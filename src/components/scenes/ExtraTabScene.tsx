@@ -10,7 +10,7 @@ import { EdgeProviderComponent } from '../themed/EdgeProviderComponent'
 
 interface Props extends EdgeAppSceneProps<'extraTab'> {}
 
-export function ExtraTabScene(props: Props) {
+export const ExtraTabScene: React.FC<Props> = props => {
   if (config.extraTab == null) throw new Error('No extra tab config info')
   const { tabTitleKey, tabType, webviewUrl } = config.extraTab
   const { navigation } = props
@@ -24,7 +24,7 @@ export function ExtraTabScene(props: Props) {
     }
 
     return (
-      <SceneWrapper hasTabs>
+      <SceneWrapper hasTabs hasWebView>
         <EdgeProviderComponent
           plugin={plugin}
           navigation={navigation as NavigationBase}
@@ -34,7 +34,7 @@ export function ExtraTabScene(props: Props) {
   }
 
   return (
-    <SceneWrapper hasTabs avoidKeyboard>
+    <SceneWrapper hasTabs hasWebView avoidKeyboard>
       <WebView
         allowFileAccess
         allowsInlineMediaPlayback
