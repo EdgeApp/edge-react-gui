@@ -230,7 +230,7 @@ export const BalanceCard: React.FC<Props> = props => {
         layout="row"
         secondary={{
           onPress: handleDeposit,
-          label: lstrings.loan_fragment_deposit
+          label: lstrings.fragment_request_subtitle
         }}
         secondary2={{
           onPress: handleSend,
