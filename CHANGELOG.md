@@ -2,15 +2,7 @@
 
 ## Unreleased (develop)
 
-- added: Swap success events name the swap mode, including Swap & Send from the send scene
-- added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
-- changed: Shrink-to-fit text that sets no minimum scale, such as the fallback symbols in fiat and crypto icons, now stops shrinking at 65% of its size, matching edge-login-ui-rn
-- fixed: Android crash when opening DFX and other web pages on some Android 12+ phones, where the blurred header and tab bar redrew the page
-- fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection, for Bitcoin and EVM wallets, which Edge logs in to DFX
-- fixed: DFX sells entered in fiat open DFX with the crypto amount filled in
-- fixed: The header back button in Buy and Sell plugin scenes acting on the other tab's plugin
-
-## 4.53.0 (staging)
+## 4.53.0 (2026-11-20)
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
 - added: Live Chat in the Help modal opens inside the app and tells support the app version, build, and OS version
@@ -19,6 +11,9 @@
 - added: `AGENT_TEST_MODE` config setting and iOS debug-build `EdgeTestAnimations` switch that quiet the app for automated UI tests
 - added: Banxa VietQR payment method for VND buys
 - added: Developer option that replaces confirmation sliders with buttons, for BrowserStack and other swipe-less test tools
+- added: Swap success events name the swap mode, including Swap & Send from the send scene
+- added: (Robinhood Chain) Etherscan as a transaction history source
+- added: (Stellar) Send to muxed (M) addresses, which some exchanges use instead of a memo ID
 - changed: The send scene's scam warning card is a short note on irreversibility and the recipient's network
 - changed: Blur on iOS now uses `expo-blur`, the same backend as Android 12+, so `rn-id-blurview` (an old-architecture view manager with no new-architecture support) is no longer a dependency.
 - changed: Ask for contacts access only inside the transaction payee modal, not on receiving a transaction
@@ -28,7 +23,7 @@
 - changed: Upgrade react-native-sound to 0.13.0 and react-native-haptic-feedback to 3.0.0, both now codegen-native under the new architecture.
 - changed: Upgrade react-native-performance to 6.0.0, fixing new-architecture detection and an Android event-emitter race.
 - changed: Upgrade to React Native 0.86, Expo SDK 57, and the new architecture on both platforms. On Android this substantially improves scrolling performance: in release-build benchmarks, dropped frames during wallet-list scrolling fell from 7.3% to 2.5%, the worst-case frame rate rose from 33 to 48 fps, and peak CPU fell 38%, at the cost of higher memory use.
-- changed: Upgrade edge-login-ui-rn to v4.0.0
+- changed: Upgrade edge-login-ui-rn to v4.2.0
 - changed: Android 11 and below now show solid backgrounds where blur effects used to be. Those Android versions cannot render blur under the new architecture, which painted a gray wash over the content instead.
 - changed: On Android 16 and above, the back button and back gesture reach the app through predictive back, which React Native 0.86 supports, so the app no longer opts out of it.
 - changed: Upgrade react-native-worklets to 0.10.4, which stops the animation loop from running while the app is in the background on Android and fixes crashes when the JavaScript runtime shuts down.
@@ -38,6 +33,15 @@
 - changed: The Accelerate Transaction confirmation shows the recipient address and send amount alongside the fees.
 - changed: MoonPay "Send with Edge" sell links verify the order, pin its network and save a sell record
 - changed: Stronger QR login warning with a red "Grant Full Access" button that unlocks 5 seconds after the whole warning is on screen
+- changed: Shrink-to-fit text that sets no minimum scale, such as the fallback symbols in fiat and crypto icons, now stops shrinking at 65% of its size, matching edge-login-ui-rn
+- changed: Redesign the Authorize Device scene with inline 2FA entry and a support link
+- changed: Show numbered scanning steps in the QR code login modal
+- changed: (Houdini) DEX-route swaps confirm through edge-autobot-server even after the app closes
+- changed: (Robinhood Chain) Explorer links open on Etherscan
+- changed: (Solana) Use the finalized commitment, which Alpenglow makes as fast as confirmed, and confirm sends by polling their status as well as over websockets
+- changed: (Stellar) Upgrade to @stellar/stellar-sdk 17.4.0, the SDK line for Protocol 30 (Bell)
+- changed: (Stellar) Bid fees from the ledger's base fee and how full it is, instead of fee percentiles that include smart contract fees
+- changed: (Sui) Sync and send through Mysten's GraphQL service instead of JSON-RPC nodes
 - fixed: FIO Crypto Handle wallet-connect toggles sit at the right edge of each row on iOS again
 - fixed: Restore Wallets toggles sit vertically centered on each card on iOS again
 - fixed: Swaps with no exact receive quote switch to a send amount of the same value with a toast, not a no-provider error
@@ -67,7 +71,6 @@
 - fixed: The amount field no longer clips its leading digits or shifts sideways while typing.
 - fixed: Tapping outside the side menu closes it again on Android versions that cannot animate the overlay.
 - fixed: Screen readers no longer announce the amount field's hidden sizing text, which read as the amount with a stray trailing zero.
-- fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
 - fixed: Home's promo card no longer covers the Buy and Sell tiles when it appears after the screen loads. Reanimated dropped the last frame of layout animations, which left moved views just short of their target, or at their starting point on a busy device.
 - fixed: Exchange Details amounts showing the display denomination's number with the exchange currency's label
 - fixed: WalletConnect and staking fiat values scaled by the display denomination
@@ -75,6 +78,29 @@
 - fixed: Changing the username after changing the password keeps the new password.
 - fixed: WalletConnect dApps without usable artwork show the WalletConnect icon instead of a blank space
 - fixed: The Stealth Send swap provider sheet can be closed without agreeing, turning Stealth off
+- fixed: Android crash when opening DFX and other web pages on some Android 12+ phones, where the blurred header and tab bar redrew the page
+- fixed: DFX shows an error instead of opening when it blocks the country of the user's internet connection, for Bitcoin and EVM wallets, which Edge logs in to DFX
+- fixed: DFX sells entered in fiat open DFX with the crypto amount filled in
+- fixed: The header back button in Buy and Sell plugin scenes acting on the other tab's plugin
+- fixed: Exchange info, gift card info, Houdini chain, and Zcash migration status refreshes running twice per interval
+- fixed: The Android keyboard no longer stays open with no input focused after a text input closes
+- fixed: Long usernames on the login screens no longer get cut off on Android
+- fixed: RBF acceleration re-uses the largest input of the replaced transaction, where it could pick a smaller one before
+- fixed: (0x Gasless) Save swaps under the transaction hash that mines, not a submitted one the relayer can replace and leave pending
+- fixed: (Arbitrum, Robinhood Chain) Sends no longer fail with "intrinsic gas too low" after the L1 data fee rises
+- fixed: (Cardano) Kiln pool APY reported 100x too high, and the KILN8 pool showing KILN7's APY
+- fixed: (Cosmos chains, BNB Beacon Chain, Stellar, XRP) Engines no longer fail with "Cannot access 'q' before initialization"
+- fixed: (EVM) A refused send names the node's reason instead of "[object Object]"
+- fixed: (EVM) A send Etherscan refuses is no longer reported as sent
+- fixed: (EVM) Balances not loading when the batch balance query fails
+- fixed: (Rootstock) Wallets stuck partway through sync
+- fixed: (Solana) Info server RPC node overrides not applying to sends and transaction history
+- fixed: (Stellar) A second send within about 20 seconds of another failing with "sequence must be of type string"
+- fixed: (Stellar) Account activations and path payments missing from transaction history. Existing wallets need a resync to show earlier ones
+- fixed: (Stellar) Sends to an address failing until restart after one lookup of its account failed or found it unactivated
+- fixed: (Sui) Balances, history and sends failing on every wallet
+- fixed: (Sui) Send amounts counting the network fee twice
+- fixed: (XRPDEX) Report unsupported pairs as a currency error, not insufficient funds
 
 ## 4.52.3 (2026-11-04)
 
