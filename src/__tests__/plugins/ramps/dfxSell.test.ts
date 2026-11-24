@@ -16,11 +16,9 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import {
   showError,
-  showToast,
-  showToastSpinner
+  showToast
 } from '../../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
-import { lstrings } from '../../../locales/strings'
 import type { FiatPluginOpenWebViewParams } from '../../../plugins/gui/scenes/FiatPluginWebView'
 import { fetchDfxSellFiatAmount } from '../../../plugins/ramps/dfx/dfxQuote'
 import {
@@ -39,10 +37,7 @@ import {
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showError: jest.fn(),
-  showToast: jest.fn(),
-  showToastSpinner: jest.fn(
-    async (_message: string, activity: Promise<unknown>) => await activity
-  )
+  showToast: jest.fn()
 }))
 jest.mock('../../../components/services/PermissionsManager', () => ({
   requestPermissionOnSettings: jest.fn(async () => false)
@@ -333,11 +328,6 @@ describe('openDfxSell', () => {
     expect(webView.onShouldStartLoad?.(redirect)).toBe(false)
     await settle()
 
-    expect(showToastSpinner).toHaveBeenCalledTimes(1)
-    expect(showToastSpinner).toHaveBeenCalledWith(
-      lstrings.loading,
-      expect.any(Promise)
-    )
     expect(fakeFetch.calls.map(call => call.url)).toEqual([
       'https://api.dfx.swiss/v1/sell/42'
     ])

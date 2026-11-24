@@ -11,8 +11,7 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import {
   showError,
-  showToast,
-  showToastSpinner
+  showToast
 } from '../../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
 import { lstrings } from '../../../locales/strings'
@@ -221,37 +220,32 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     let fiatAmount = enteredFiatAmount
     let saleFiatCurrencyCode = fiatCurrencyCode
     try {
-      const depositAddress = await showToastSpinner(
-        lstrings.loading,
-        (async (): Promise<string> => {
-          // The estimate resolves to undefined instead of rejecting, so it
-          // cannot fail the address fetch:
-          const [route, fiatEstimate] = await Promise.all([
-            fetchDfxSellRoute(routeId, deepQuery.session, chain),
-            fetchDfxSellFiatAmount({
-              blockchain: chain.blockchain,
-              asset: chain.asset,
-              fiat: dfxFiat,
-              cryptoAmount: amount
-            })
-          ])
-          if (fiatEstimate != null) fiatAmount = fiatEstimate
+      // The estimate resolves to undefined instead of rejecting, so it
+      // cannot fail the address fetch:
+      const [route, fiatEstimate] = await Promise.all([
+        fetchDfxSellRoute(routeId, deepQuery.session, chain),
+        fetchDfxSellFiatAmount({
+          blockchain: chain.blockchain,
+          asset: chain.asset,
+          fiat: dfxFiat,
+          cryptoAmount: amount
+        })
+      ])
+      if (fiatEstimate != null) fiatAmount = fiatEstimate
 
-          // The user picked another payout currency on DFX's page, so the
-          // estimate and the entered amount are in the wrong fiat:
-          if (route.fiat != null && route.fiat !== dfxFiat) {
-            saleFiatCurrencyCode = `iso:${route.fiat}`
-            fiatAmount =
-              (await fetchDfxSellFiatAmount({
-                blockchain: chain.blockchain,
-                asset: chain.asset,
-                fiat: route.fiat,
-                cryptoAmount: amount
-              })) ?? '0'
-          }
-          return route.depositAddress
-        })()
-      )
+      // The user picked another payout currency on DFX's page, so the
+      // estimate and the entered amount are in the wrong fiat:
+      if (route.fiat != null && route.fiat !== dfxFiat) {
+        saleFiatCurrencyCode = `iso:${route.fiat}`
+        fiatAmount =
+          (await fetchDfxSellFiatAmount({
+            blockchain: chain.blockchain,
+            asset: chain.asset,
+            fiat: route.fiat,
+            cryptoAmount: amount
+          })) ?? '0'
+      }
+      const { depositAddress } = route
 
       // The user left the widget while the route loaded:
       if (widgetClosed) {
