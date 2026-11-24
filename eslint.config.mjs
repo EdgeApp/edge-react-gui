@@ -164,6 +164,7 @@ export default [
       'Masonfile.*',
       'android/*',
       'artifacts/*',
+      'build/*',
       'ios/*',
       'lib/*',
       'src/plugins/contracts/*',
