@@ -27,7 +27,8 @@ interface DfxChain {
 
 /**
  * Chains where Edge logs the wallet into DFX before opening the webview.
- * Other DFX chains (Solana, Monero) open DFX without a login.
+ * The plugin offers DFX on these chains only: Edge has no signature login
+ * for DFX's other chains (Solana, Monero).
  */
 export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
   bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', isEvm: false },

@@ -3,6 +3,7 @@
 ## Unreleased (develop)
 
 - changed: DFX sells that Edge logs in to DFX open Edge's send scene with the deposit address and amount filled in, instead of showing an address to copy
+- fixed: DFX is no longer offered for Monero and Solana wallets, where it opened without the wallet's address and the order could not be finished
 
 ## 4.53.0 (2026-11-20)
 

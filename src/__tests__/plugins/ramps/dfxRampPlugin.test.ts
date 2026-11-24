@@ -76,7 +76,7 @@ describe('makeDfxRequestQuery', () => {
   })
 
   it('passes a crypto amount on a buy as the amount to receive', () => {
-    const request = makeRequest('monero', {
+    const request = makeRequest('bitcoin', {
       amountQuery: { exchangeAmount: '1.5' },
       amountType: 'crypto',
       fiatCurrencyCode: 'iso:EUR'
@@ -85,15 +85,15 @@ describe('makeDfxRequestQuery', () => {
     expect(makeDfxRequestQuery(request, 'Edge')).toEqual({
       wallet: 'Edge',
       lang: 'en',
-      blockchain: 'Monero',
+      blockchain: 'Bitcoin',
       'asset-in': 'EUR',
-      'asset-out': 'XMR',
+      'asset-out': 'BTC',
       'amount-out': '1.5'
     })
   })
 
   it('passes a crypto amount on a sell as the amount to send', () => {
-    const request = makeRequest('solana', {
+    const request = makeRequest('polygon', {
       amountQuery: { exchangeAmount: '2' },
       amountType: 'crypto',
       direction: 'sell'
@@ -102,8 +102,8 @@ describe('makeDfxRequestQuery', () => {
     expect(makeDfxRequestQuery(request, 'Edge')).toEqual({
       wallet: 'Edge',
       lang: 'en',
-      blockchain: 'Solana',
-      'asset-in': 'SOL',
+      blockchain: 'Polygon',
+      'asset-in': 'POL',
       'asset-out': 'CHF',
       'amount-in': '2'
     })
@@ -134,6 +134,32 @@ describe('makeDfxRequestQuery', () => {
     locale.localeIdentifier = 'ja_JP'
 
     expect(makeDfxRequestQuery(makeRequest('bitcoin'), 'Edge').lang).toBe('en')
+  })
+})
+
+describe('dfxRampPlugin checkSupport', () => {
+  const checkSupport = async (pluginId: string): Promise<boolean> => {
+    const plugin = dfxRampPlugin({
+      initOptions: {},
+      navigation: { navigate: jest.fn() }
+    } as unknown as RampPluginConfig)
+    const { supported } = await plugin.checkSupport({
+      direction: 'buy',
+      regionCode: { countryCode: 'CH' },
+      fiatAsset: { currencyCode: 'CHF' },
+      cryptoAsset: { pluginId, tokenId: null }
+    })
+    return supported
+  }
+
+  it('offers DFX on the chains with a login', async () => {
+    expect(await checkSupport('bitcoin')).toBe(true)
+    expect(await checkSupport('ethereum')).toBe(true)
+  })
+
+  it('does not offer DFX on chains without a login', async () => {
+    expect(await checkSupport('monero')).toBe(false)
+    expect(await checkSupport('solana')).toBe(false)
   })
 })
 
