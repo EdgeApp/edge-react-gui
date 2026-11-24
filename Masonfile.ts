@@ -79,7 +79,9 @@ import { basename, join } from 'node:path'
 // This needs a Mason master with stage configs, ctx.writeSecretFile,
 // build-number blocks, published variants, node selector lists, the
 // cocoapods and androidLicenses tools, and the setup label (so the signing
-// node, which lacks it, never runs a branch's setup).
+// node, which lacks it, never runs a branch's setup). The Linux node type
+// must list build-essential among its apt packages: node-gyp needs make and
+// a C compiler to build the CLI's signer there.
 
 const APP = 'co.edgesecure.app'
 
