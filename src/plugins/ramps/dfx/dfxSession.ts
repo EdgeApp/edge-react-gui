@@ -41,7 +41,8 @@ export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
     blockchain: 'BinanceSmartChain',
     asset: 'BNB',
     isEvm: true
-  }
+  },
+  monero: { blockchain: 'Monero', asset: 'XMR', isEvm: false }
 }
 
 export interface DfxSessionParams {
@@ -99,7 +100,7 @@ async function loginToDfx(
     throw new Error('unexpected signMessage text')
   }
 
-  // UTXO wallets sign the literal message: `signBytes` would base64 it
+  // Other wallets sign the literal message: `signBytes` would base64 it
   // first and DFX would verify a signature over the wrong data.
   const signature = chain.isEvm
     ? await wallet.signBytes(utf8.parse(message))

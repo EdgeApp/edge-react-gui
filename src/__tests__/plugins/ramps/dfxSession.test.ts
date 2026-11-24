@@ -152,6 +152,27 @@ describe('fetchDfxSessionQuery', () => {
     })
   })
 
+  it('logs a monero wallet in with its address', async () => {
+    signBlockchains = ['Monero']
+    const { wallet, signMessage, signBytes } = makeWallet('monero', [
+      { addressType: 'publicAddress', publicAddress: '4monero' }
+    ])
+    const message = MESSAGE_PREFIX + '4monero'
+
+    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+
+    expect(query).toEqual({ session: 'jwt-token' })
+    expect(signMessage).toHaveBeenCalledWith(message, {
+      otherParams: { publicAddress: '4monero' }
+    })
+    expect(signBytes).not.toHaveBeenCalled()
+    expect(fakeFetch.calls[1].body).toEqual({
+      address: '4monero',
+      signature: 'sig-' + message,
+      wallet: 'Edge'
+    })
+  })
+
   it('skips chains without a session login', async () => {
     const { wallet, signMessage } = makeWallet('solana', [
       { addressType: 'publicAddress', publicAddress: 'So1ana' }
