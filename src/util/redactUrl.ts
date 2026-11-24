@@ -9,7 +9,10 @@ import URL from 'url-parse'
  */
 const SECRET_QUERY_PARAMS = ['externalTransactionId', 'session']
 
-/** A secret parameter's name, in any letter case, and its raw value. */
+/**
+ * A secret parameter's name, in any letter case, and its raw value. `;`
+ * counts as a pair separator too, which can only ever hide more.
+ */
 const SECRET_PAIR = new RegExp(
   `([?&;](?:${SECRET_QUERY_PARAMS.join('|')})=)[^&]*`,
   'gi'
@@ -17,7 +20,8 @@ const SECRET_PAIR = new RegExp(
 
 /**
  * Hide every secret value still in the clear in the raw query text, from
- * the first `?` up to the next `#`. The path and fragment stay as they are.
+ * the first `?` up to the next `#`. When that `?` is inside the fragment,
+ * the fragment text after it is checked, which fails closed.
  */
 const redactRawQuery = (url: string): string => {
   const start = url.indexOf('?')
