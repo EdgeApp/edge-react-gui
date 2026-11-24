@@ -11,6 +11,7 @@ import {
 } from '../utils/createExternalRampPlugin'
 import { fetchDfxSellCryptoAmount } from './dfxQuote'
 import { asInitOptions } from './dfxRampTypes'
+import { openDfxSell } from './dfxSell'
 import { DFX_SESSION_CHAINS, fetchDfxSessionQuery } from './dfxSession'
 
 // DFX settles SEPA bank transfers within a few business days.
@@ -181,13 +182,38 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     return { ...query, ...sessionQuery }
   }
 
+  // A logged-in sell hands the order back to Edge, which fetches the deposit
+  // address with the session and opens the send scene. Without a session
+  // DFX's page shows the address for a manual transfer, as before.
+  const launchSell = async (
+    request: RampQuoteRequest,
+    deepQuery: Record<string, string> | undefined
+  ): Promise<boolean> => {
+    const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
+    if (deepQuery?.session == null || chain == null) return false
+    await openDfxSell({
+      config,
+      guiPlugin: guiPlugins.dfx,
+      deepPath: '/sell',
+      deepQuery,
+      request,
+      chain
+    })
+    return true
+  }
+
   return createExternalRampPlugin(
     'dfx',
     {
       guiPlugin: guiPlugins.dfx,
       partnerIcon: initOptions.partnerIcon,
       buy: { ...support, deepPath: '/buy', resolveDeepQuery },
-      sell: { ...support, deepPath: '/sell', resolveDeepQuery }
+      sell: {
+        ...support,
+        deepPath: '/sell',
+        resolveDeepQuery,
+        launchQuote: launchSell
+      }
     },
     config
   )

@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, it, jest } from '@jest/globals'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
+import URL from 'url-parse'
 
 import type { PluginViewParams } from '../../../components/scenes/GuiPluginViewScene'
 import { locale } from '../../../locales/intl'
+import type { FiatPluginOpenWebViewParams } from '../../../plugins/gui/scenes/FiatPluginWebView'
 import { fetchDfxSellCryptoAmount } from '../../../plugins/ramps/dfx/dfxQuote'
 import {
   dfxRampPlugin,
@@ -16,8 +18,14 @@ import type {
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
+  showError: jest.fn(),
+  showToast: jest.fn(),
   showToastSpinner: async (message: string, promise: Promise<unknown>) =>
     await promise
+}))
+
+jest.mock('../../../components/services/PermissionsManager', () => ({
+  requestPermissionOnSettings: async () => false
 }))
 
 jest.mock('../../../plugins/ramps/dfx/dfxQuote', () => ({
@@ -130,10 +138,10 @@ describe('makeDfxRequestQuery', () => {
 })
 
 describe('dfxRampPlugin approveQuote', () => {
-  /** Approves the plugin's quote and returns the deep query it opened. */
-  async function approveDeepQuery(
+  /** Approves the plugin's quote and returns the scene it opened. */
+  async function approveRoute(
     request: RampQuoteRequest
-  ): Promise<PluginViewParams['deepQuery']> {
+  ): Promise<[string, unknown]> {
     const navigate = jest.fn()
     const plugin = dfxRampPlugin({
       initOptions: {},
@@ -144,8 +152,26 @@ describe('dfxRampPlugin approveQuote', () => {
     await quote.approveQuote({ coreWallet: request.wallet })
 
     expect(navigate).toHaveBeenCalledTimes(1)
-    const [, params] = navigate.mock.calls[0] as [string, PluginViewParams]
-    return params.deepQuery
+    return navigate.mock.calls[0] as [string, unknown]
+  }
+
+  /** Approves the plugin's quote and returns the deep query it opened. */
+  async function approveDeepQuery(
+    request: RampQuoteRequest
+  ): Promise<PluginViewParams['deepQuery']> {
+    const [, params] = await approveRoute(request)
+    return (params as PluginViewParams).deepQuery
+  }
+
+  /** Approves a logged-in sell and returns the query DFX's page opened with. */
+  async function approveSellQuery(
+    request: RampQuoteRequest
+  ): Promise<Record<string, string | undefined>> {
+    const [route, params] = await approveRoute(request)
+    expect(route).toBe('guiPluginWebView')
+    const url = new URL((params as FiatPluginOpenWebViewParams).url, true)
+    expect(`${url.origin}${url.pathname}`).toBe('https://app.dfx.swiss/sell')
+    return url.query
   }
 
   const request = makeRequest('bitcoin')
@@ -170,6 +196,57 @@ describe('dfxRampPlugin approveQuote', () => {
     expect(await approveDeepQuery(request)).toEqual({
       ...requestQuery,
       session: 'jwt'
+    })
+  })
+
+  it('opens a buy in the plugin scene without a payment redirect', async () => {
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
+
+    const [route, params] = await approveRoute(request)
+
+    expect(route).toBe('pluginViewBuy')
+    expect((params as PluginViewParams).deepPath).toBe('/buy')
+    expect((params as PluginViewParams).deepQuery).not.toHaveProperty(
+      'redirect-uri'
+    )
+  })
+
+  describe('a crypto-entered sell', () => {
+    const cryptoSell = makeRequest('bitcoin', {
+      amountQuery: { exchangeAmount: '0.01' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+    const sellQuery = {
+      wallet: 'Edge',
+      lang: 'en',
+      blockchain: 'Bitcoin',
+      'asset-in': 'BTC',
+      'asset-out': 'CHF',
+      'amount-in': '0.01'
+    }
+
+    it('hands the payment back to Edge after a login', async () => {
+      mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
+
+      expect(await approveSellQuery(cryptoSell)).toEqual({
+        ...sellQuery,
+        session: 'jwt',
+        'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
+      })
+    })
+
+    it('opens the plugin scene as before without a login', async () => {
+      mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+
+      const [route, params] = await approveRoute(cryptoSell)
+
+      expect(route).toBe('pluginViewSell')
+      expect(params).toEqual({
+        plugin: expect.objectContaining({ pluginId: 'dfx' }),
+        deepPath: '/sell',
+        deepQuery: sellQuery
+      })
     })
   })
 
@@ -228,10 +305,11 @@ describe('dfxRampPlugin approveQuote', () => {
       mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
       mockFetchSellCryptoAmount.mockResolvedValueOnce('0.003502')
 
-      expect(await approveDeepQuery(fiatSell)).toEqual({
+      expect(await approveSellQuery(fiatSell)).toEqual({
         ...sellQuery,
         'amount-in': '0.003502',
-        session: 'jwt'
+        session: 'jwt',
+        'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
       expect(mockFetchSellCryptoAmount).toHaveBeenCalledWith({
         blockchain: 'Bitcoin',

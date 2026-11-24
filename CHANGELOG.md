@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- changed: DFX sells open Edge's send screen with the deposit address and amount filled in, instead of showing an address to copy
+
 ## 4.53.0 (2026-11-20)
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
