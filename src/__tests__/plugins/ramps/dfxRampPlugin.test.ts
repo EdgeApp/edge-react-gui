@@ -215,10 +215,10 @@ describe('dfxRampPlugin checkSupport', () => {
   it('offers DFX where Edge logs the wallet in', async () => {
     expect(await checkSupport('bitcoin')).toBe(true)
     expect(await checkSupport('ethereum')).toBe(true)
+    expect(await checkSupport('monero')).toBe(true)
   })
 
   it('does not offer DFX where Edge does not log the wallet in', async () => {
-    expect(await checkSupport('monero')).toBe(false)
     expect(await checkSupport('solana')).toBe(false)
   })
 })
