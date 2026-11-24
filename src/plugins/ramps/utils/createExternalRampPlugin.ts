@@ -70,17 +70,6 @@ export interface DirectionSupportData {
   readonly resolveDeepQuery?: (
     request: RampQuoteRequest
   ) => Promise<Record<string, string> | undefined>
-  /**
-   * Opens the provider for an approved quote in place of the plugin scene,
-   * for an order that returns to Edge, such as a sell the user pays from the
-   * send scene. Receives the deep query the plugin scene would open with.
-   * Returns false to open the plugin scene after all, such as when the order
-   * cannot return to Edge.
-   */
-  readonly launchQuote?: (
-    request: RampQuoteRequest,
-    deepQuery: Record<string, string> | undefined
-  ) => Promise<boolean>
 }
 
 /**
@@ -187,21 +176,13 @@ export function createExternalRampPlugin(
                     lstrings.fiat_plugin_finalizing_quote,
                     support.resolveDeepQuery(request)
                   )
-            const deepQuery =
-              resolvedQuery == null
-                ? support.deepQuery
-                : { ...support.deepQuery, ...resolvedQuery }
-            if (
-              support.launchQuote != null &&
-              (await support.launchQuote(request, deepQuery))
-            ) {
-              return
-            }
-
             const navigationProps: PluginViewParams = {
               plugin: externalConfig.guiPlugin,
               deepPath: support.deepPath,
-              deepQuery
+              deepQuery:
+                resolvedQuery == null
+                  ? support.deepQuery
+                  : { ...support.deepQuery, ...resolvedQuery }
             }
 
             if (request.direction === 'buy') {

@@ -37,11 +37,10 @@ const REQUEST: RampQuoteRequest = {
   regionCode: { countryCode: 'DE' }
 }
 
-/** Approves the plugin's first quote and returns the navigation it made. */
-async function approve(
-  resolveDeepQuery: DirectionSupportData['resolveDeepQuery'],
-  launchQuote?: DirectionSupportData['launchQuote']
-): Promise<jest.Mock> {
+/** Approves the plugin's first quote and returns the deep query it opened. */
+async function approveWith(
+  resolveDeepQuery: DirectionSupportData['resolveDeepQuery']
+): Promise<PluginViewParams['deepQuery']> {
   const navigate = jest.fn()
   const plugin = createExternalRampPlugin(
     'test-ramp',
@@ -58,8 +57,7 @@ async function approve(
         },
         deepPath: '/buy',
         deepQuery: { wallet: 'Edge', lang: 'en' },
-        resolveDeepQuery,
-        launchQuote
+        resolveDeepQuery
       }
     },
     { navigation: { navigate } } as unknown as RampPluginConfig
@@ -67,15 +65,6 @@ async function approve(
 
   const [quote] = await plugin.fetchQuotes(REQUEST)
   await quote.approveQuote({ coreWallet: REQUEST.wallet })
-  return navigate
-}
-
-/** Approves the plugin's first quote and returns the deep query it opened. */
-async function approveWith(
-  resolveDeepQuery: DirectionSupportData['resolveDeepQuery'],
-  launchQuote?: DirectionSupportData['launchQuote']
-): Promise<PluginViewParams['deepQuery']> {
-  const navigate = await approve(resolveDeepQuery, launchQuote)
 
   expect(navigate).toHaveBeenCalledTimes(1)
   const [route, params] = navigate.mock.calls[0] as [string, PluginViewParams]
@@ -95,36 +84,6 @@ describe('createExternalRampPlugin approveQuote', () => {
 
   it('keeps the static deep query when the resolver returns nothing', async () => {
     const deepQuery = await approveWith(async () => undefined)
-
-    expect(deepQuery).toEqual({ wallet: 'Edge', lang: 'en' })
-  })
-
-  it('hands the merged deep query to the launcher in place of the plugin scene', async () => {
-    const launchQuote = jest.fn(
-      async (
-        request: RampQuoteRequest,
-        deepQuery: Record<string, string> | undefined
-      ) => true
-    )
-
-    const navigate = await approve(
-      async () => ({ session: 'jwt' }),
-      launchQuote
-    )
-
-    expect(launchQuote).toHaveBeenCalledWith(REQUEST, {
-      wallet: 'Edge',
-      lang: 'en',
-      session: 'jwt'
-    })
-    expect(navigate).not.toHaveBeenCalled()
-  })
-
-  it('opens the plugin scene when the launcher does not open the provider', async () => {
-    const deepQuery = await approveWith(
-      async () => undefined,
-      async () => false
-    )
 
     expect(deepQuery).toEqual({ wallet: 'Edge', lang: 'en' })
   })
