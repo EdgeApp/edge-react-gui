@@ -1,5 +1,7 @@
+import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { locale } from '../../../locales/intl'
+import { lstrings } from '../../../locales/strings'
 import type {
   RampPluginFactory,
   RampQuoteRequest,
@@ -185,42 +187,59 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   // A logged-in sell hands the order back to Edge, which fetches the deposit
   // address with the session and opens the send scene. Without a session
   // DFX's page shows the address for a manual transfer, as before.
-  const launchSell = async (
-    request: RampQuoteRequest,
-    deepQuery: Record<string, string> | undefined
-  ): Promise<boolean> => {
+  const approveSell = async (request: RampQuoteRequest): Promise<void> => {
+    const deepQuery = {
+      ...support.deepQuery,
+      ...(await showToastSpinner(
+        lstrings.fiat_plugin_finalizing_quote,
+        resolveDeepQuery(request)
+      ))
+    }
     const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
     if (
-      deepQuery?.session == null ||
-      deepQuery.session === '' ||
-      chain == null
+      chain != null &&
+      deepQuery.session != null &&
+      deepQuery.session !== ''
     ) {
-      return false
+      await openDfxSell({
+        config,
+        guiPlugin: guiPlugins.dfx,
+        deepPath: '/sell',
+        deepQuery,
+        request,
+        chain
+      })
+      return
     }
-    await openDfxSell({
-      config,
-      guiPlugin: guiPlugins.dfx,
+    config.navigation.navigate('pluginViewSell', {
+      plugin: guiPlugins.dfx,
       deepPath: '/sell',
-      deepQuery,
-      request,
-      chain
+      deepQuery
     })
-    return true
   }
 
-  return createExternalRampPlugin(
+  const plugin = createExternalRampPlugin(
     'dfx',
     {
       guiPlugin: guiPlugins.dfx,
       partnerIcon: initOptions.partnerIcon,
       buy: { ...support, deepPath: '/buy', resolveDeepQuery },
-      sell: {
-        ...support,
-        deepPath: '/sell',
-        resolveDeepQuery,
-        launchQuote: launchSell
-      }
+      sell: { ...support, deepPath: '/sell', resolveDeepQuery }
     },
     config
   )
+
+  return {
+    ...plugin,
+    fetchQuotes: async (request, opts) => {
+      const quotes = await plugin.fetchQuotes(request, opts)
+      if (request.direction !== 'sell') return quotes
+      return quotes.map(quote => ({
+        ...quote,
+        approveQuote: async () => {
+          await approveSell(request)
+        }
+      }))
+    }
+  }
 }
