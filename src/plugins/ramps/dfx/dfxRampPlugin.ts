@@ -188,7 +188,7 @@ export const dfxRampPlugin: RampPluginFactory = config => {
         resolveDeepQuery(request)
       ))
     }
-    const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
+    const chain = DFX_SESSION_CHAINS[request.wallet.currencyInfo.pluginId]
     if (
       chain != null &&
       deepQuery.session != null &&
