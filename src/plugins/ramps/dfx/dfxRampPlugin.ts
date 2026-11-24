@@ -60,17 +60,11 @@ const DFX_FIAT_CURRENCY_CODES = ['EUR', 'CHF']
 // Languages DFX's app offers through its `lang` parameter.
 const DFX_LANGUAGES = ['en', 'de', 'fr', 'it']
 
-// Session-login chains plus the chains that open DFX without a login, keyed
-// by Edge pluginId with DFX's blockchain and native asset names.
-const DFX_CHAINS: Readonly<
-  Record<string, { readonly blockchain: string; readonly asset: string }>
-> = {
-  ...DFX_SESSION_CHAINS,
-  solana: { blockchain: 'Solana', asset: 'SOL' },
-  monero: { blockchain: 'Monero', asset: 'XMR' }
-}
-
-const DFX_CRYPTO_ASSETS = Object.keys(DFX_CHAINS).map(pluginId => ({
+// DFX is offered only on the chains where Edge logs the wallet in to DFX.
+// DFX also supports other chains, such as Solana and Monero, but Edge does
+// not log wallets on those chains in to DFX, so DFX would open without the
+// wallet's address.
+const DFX_CRYPTO_ASSETS = Object.keys(DFX_SESSION_CHAINS).map(pluginId => ({
   pluginId,
   tokenId: null
 }))
@@ -98,7 +92,7 @@ export function makeDfxRequestQuery(
       .toUpperCase()
   }
 
-  const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
+  const chain = DFX_SESSION_CHAINS[request.wallet.currencyInfo.pluginId]
   if (chain != null) {
     query.blockchain = chain.blockchain
     query[isBuy ? 'asset-out' : 'asset-in'] = chain.asset
@@ -158,11 +152,10 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // Opens DFX with the user's quote choices, logged in with the selected
-  // wallet's address where the chain supports a signature login. The choices
-  // stay when the login is unavailable or fails, but DFX does not open when
-  // it blocks the country of the user's IP address (RampIpCountryError). A
-  // fiat-entered sell opens with the crypto amount DFX quotes for the fiat,
-  // when it can quote one.
+  // wallet's address. The choices stay when the login fails, but DFX does
+  // not open when it blocks the country of the user's IP address
+  // (RampIpCountryError). A fiat-entered sell opens with the crypto amount
+  // DFX quotes for the fiat, when it can quote one.
   const resolveDeepQuery = async (
     request: RampQuoteRequest
   ): Promise<Record<string, string>> => {
