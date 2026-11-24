@@ -210,7 +210,7 @@ describe('dfxRampPlugin approveQuote', () => {
     'amount-in': '500'
   }
 
-  it('keeps the quote choices when the login is unavailable', async () => {
+  it('keeps the quote choices when the login fails', async () => {
     mockFetchSessionQuery.mockResolvedValueOnce(undefined)
 
     expect(await approveDeepQuery(request)).toEqual(requestQuery)
