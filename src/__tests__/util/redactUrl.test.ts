@@ -65,6 +65,24 @@ describe('redactUrl', () => {
     )
   })
 
+  it('hides a secret whose name is percent-encoded', () => {
+    const url = 'https://example.com/?%53ession=abc'
+
+    const redacted = redactUrl(url)
+
+    expect(redacted).not.toContain('abc')
+    expect(redacted).toBe('https://example.com/?%53ession=redacted')
+  })
+
+  it('hides a secret with an encoded name and an undecodable value', () => {
+    const url = 'https://example.com/?sess%69on=tok%E0en'
+
+    const redacted = redactUrl(url)
+
+    expect(redacted).not.toContain('tok')
+    expect(redacted).toBe('https://example.com/?sess%69on=redacted')
+  })
+
   it('hides every copy of a repeated secret', () => {
     const url = 'https://example.com/?session=a1&x=1&session=b2'
 
