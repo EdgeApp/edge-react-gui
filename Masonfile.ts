@@ -1,6 +1,6 @@
 import type { Setup, Stage, Tools } from '@mason/types'
 import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 
 // Runs the Jest suite, then builds Edge for iOS on a macOS arm64 machine and
 // for Android on a Linux x86_64 machine, or on a Mac when no Linux machine is
@@ -60,6 +60,20 @@ import { join } from 'node:path'
 // share with a shipped Jenkins build would otherwise symbolicate its crashes
 // against these files.
 //
+// The CLI builds in a workflow of its own, `cli`, as app.edge.cli: from any
+// branch on request, and on every push to master. Its package stage builds
+// a release (scripts/buildCliRelease.ts): for macOS and Linux, on arm64 and
+// x64, a tarball holding a Node.js runtime and the CLI's package, whose
+// dependencies install.sh then installs with that runtime's npm, so a
+// machine needs no Node.js of its own; and install.sh and SHA256SUMS. The
+// stage installs this Mac's tarball as `curl … | bash` would and runs the
+// offline suites against it, then keeps the release as the run's
+// app.edge.cli artifact. On master a release stage publishes it on GitHub as
+// cli-v<version>, package.json's version, never marked latest, since the
+// repository's latest release is the app's. That stage alone declares
+// CLI_RELEASE_GITHUB_TOKEN, and it has no checkout, so nothing an npm
+// install brought in runs beside the token.
+//
 // This needs a Mason master with stage configs, ctx.writeSecretFile,
 // build-number blocks, published variants, node selector lists, the
 // cocoapods and androidLicenses tools, and the setup label (so the signing
@@ -89,6 +103,7 @@ const SHIPPED = ['GoogleService-Info.plist', 'google-services.json']
 const SECRET_DIRECTORIES: Record<string, string> = {
   'config.json': '.',
   'edgeKey.json': '.',
+  'edgeCliKey.json': '.',
   'keys.json': '.',
   'deploy-config.json': '.',
   'GoogleService-Info.plist': 'ios/edge',
@@ -106,6 +121,23 @@ export function secretDirectory(name: string): string | undefined {
 const SHARED_SECRETS = ['config.json', 'edgeKey.json', 'keys.json']
 const IOS_SECRETS = [...SHARED_SECRETS, 'GoogleService-Info.plist']
 const ANDROID_SECRETS = [...SHARED_SECRETS, 'google-services.json']
+/** What the CLI's package reads: the key pair its Node signer is built from. */
+const CLI_SECRETS = ['edgeCliKey.json']
+/** The CLI's builds: their build-number sequence, and their run artifact. */
+const CLI_APP = 'app.edge.cli'
+/**
+ * The repository whose releases carry the CLI, and the value secret holding
+ * a token that publishes them there (contents: write). Only master's release
+ * stage declares it.
+ */
+const CLI_REPOSITORY = 'EdgeApp/edge-react-gui'
+const CLI_RELEASE_TOKEN = 'CLI_RELEASE_GITHUB_TOKEN'
+/** Where publish:cli stages the package, the release built from it, and a test install of it. */
+const CLI_STAGE = 'build/cli-package'
+const CLI_RELEASE = 'build/cli-release'
+const CLI_INSTALL = 'build/cli-install'
+/** The release, from master's package stage to its release stage. */
+const CLI_RELEASE_STASH = 'cli-release'
 /**
  * What signing an Android build reads, on the signing node only: each
  * branch's keystore, alias and password are in deploy-config.json, and the
@@ -333,6 +365,40 @@ export function setup(m: Setup) {
         },
         { failFast: false }
       )
+    }
+  )
+
+  // The CLI on its own, as app.edge.cli: from any branch on request, and on
+  // every push to master, whose run also publishes it as a GitHub release.
+  m.buildNumber(CLI_APP, {
+    format: 'YYMMDDCC',
+    timeZone: 'America/Los_Angeles'
+  })
+  m.workflow(
+    'cli',
+    { triggers: [{ push: true, branches: ['master'] }, { request: true }] },
+    w => {
+      // On a Mac, whose Xcode compiles the Node signer.
+      w.stage('package', {
+        on: MAC,
+        tools: { node: '22', xcode: '>=26' },
+        secrets: CLI_SECRETS,
+        buildNumbers: [CLI_APP],
+        timeout: '1h',
+        activityTimeout: '30m',
+        run: buildCli
+      })
+      // Only the stashed release and the token: no checkout, so nothing the
+      // package stage installed runs where the token is.
+      if (m.branch === 'master')
+        w.stage('release', {
+          on: MAC,
+          checkout: false,
+          secrets: [CLI_RELEASE_TOKEN],
+          timeout: '30m',
+          activityTimeout: '10m',
+          run: releaseCli
+        })
     }
   )
 }
@@ -854,4 +920,206 @@ export function versionSuffix(branch: string): string {
   if (Object.prototype.hasOwnProperty.call(special, branch))
     return special[branch]!
   return '-' + branch.replace(/[^0-9a-zA-Z]+/g, '-')
+}
+
+/**
+ * The CLI's version: package.json's, which `edge-cli --version` reports. It
+ * takes no branch suffix, unlike the app's: master's release is tagged
+ * cli-v<version>.
+ */
+export async function cliVersion(ctx: Stage): Promise<string> {
+  const { version } = JSON.parse(await ctx.fs.read('package.json'))
+  return version
+}
+
+/**
+ * Builds the CLI's release and keeps it as the run's app.edge.cli artifact:
+ * a tarball for each platform, install.sh and SHA256SUMS.
+ *
+ * The package is staged as `npm run publish:cli` stages one, once the
+ * offline suites pass against the rollup bundle, with the Node signer built
+ * from edgeCliKey.json, the key pair issued for the CLI; publish:cli checks
+ * that the staged addon signs with that key. scripts/buildCliRelease.ts then
+ * puts a Node.js runtime beside the package in each platform's tarball.
+ * Before anything is kept, install.sh installs this Mac's tarball from the
+ * release, as `curl … | bash` would from GitHub, and the offline suites run
+ * again against the installed CLI. On master the release is also stashed
+ * for the release stage.
+ */
+export async function buildCli(ctx: Stage) {
+  await ctx.log.section(
+    'Secret files',
+    async () => await writeSecrets(ctx, CLI_SECRETS)
+  )
+  const version = await cliVersion(ctx)
+  const build = ctx.getBuildNumber(CLI_APP)
+  ctx.describe(`Edge CLI ${version} (${build})`)
+  await ctx.log.section('Install packages', async () => await ctx.sh('npm ci'))
+  await ctx.log.section('Prepare', async () => await ctx.sh('npm run prepare'))
+  await ctx.log.section(
+    'Offline suites',
+    async () => await ctx.sh('npm run test:cli:offline:built')
+  )
+  await ctx.log.section(`Release ${version} (${build})`, async () => {
+    await ctx.sh(
+      `npm run publish:cli -- --out ${CLI_STAGE} --with-signer --allow-dirty --allow-unpushed --allow-broken-plugins`
+    )
+    await ctx.sh(
+      `node -r sucrase/register scripts/buildCliRelease.ts --package ${CLI_STAGE} --out ${CLI_RELEASE}`
+    )
+  })
+  await ctx.log.section('Install and test', async () => {
+    await ctx.sh(
+      `rm -rf ${CLI_INSTALL} && EDGE_CLI_RELEASE_DIR="$PWD/${CLI_RELEASE}" EDGE_CLI_PREFIX="$PWD/${CLI_INSTALL}/app" EDGE_CLI_BINDIR="$PWD/${CLI_INSTALL}/bin" bash ${CLI_RELEASE}/install.sh --user`
+    )
+    await ctx.sh(
+      `PATH="$PWD/${CLI_INSTALL}/app/current/node/bin:$PATH" EDGE_CLI_BIN="$PWD/${CLI_INSTALL}/app/current/package/edgeCli.js" npm run test:cli:offline`
+    )
+  })
+  await ctx.log.section('Save', async () => {
+    await ctx.artifacts.save(CLI_APP, `${CLI_RELEASE}/*`)
+    if (ctx.run.branch === 'master')
+      await ctx.stash(CLI_RELEASE_STASH, `${CLI_RELEASE}/*`)
+  })
+  return { version, build }
+}
+
+/**
+ * Publishes master's CLI release to GitHub as cli-v<version>, from the
+ * package stage's stash.
+ */
+export async function releaseCli(ctx: Stage) {
+  const { version, build } = await ctx.output<{
+    version: string
+    build: string
+  }>('package')
+  await ctx.log.section(
+    'Unstash the release',
+    async () => await ctx.unstash(CLI_RELEASE_STASH)
+  )
+  const dir = join(ctx.workspace, CLI_RELEASE)
+  const files = (await readdir(dir)).sort().map(name => join(dir, name))
+  const { url, published } = await ctx.log.section(
+    `GitHub release cli-v${version}`,
+    async () =>
+      await publishCliRelease({
+        repository: CLI_REPOSITORY,
+        token: ctx.secret(CLI_RELEASE_TOKEN),
+        version,
+        build,
+        commit: ctx.run.commit,
+        files
+      })
+  )
+  ctx.log.info(
+    published ? `Published ${url}` : `${url} was already published; kept it`
+  )
+  return { url, published }
+}
+
+/**
+ * Publishes the release files as cli-v<version>, which is never marked
+ * latest: the repository's latest release is the app's, and install.sh
+ * finds the newest cli-v release itself. The files go up to a draft, which
+ * is published only once all of them are there, so a release is never seen
+ * without its files. A release already published for the version is kept as
+ * it is, and a draft an earlier attempt left behind is replaced.
+ */
+export async function publishCliRelease(options: {
+  repository: string
+  token: string
+  version: string
+  build: string
+  commit: string
+  files: string[]
+  fetch?: typeof fetch
+}): Promise<{ url: string; published: boolean }> {
+  const call = options.fetch ?? fetch
+  const tag = `cli-v${options.version}`
+  const api = `https://api.github.com/repos/${options.repository}`
+  const request = async (
+    method: string,
+    url: string,
+    body?: string | Uint8Array,
+    type = 'application/json'
+  ): Promise<any> => {
+    const response = await call(url, {
+      method,
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${options.token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(body != null ? { 'Content-Type': type } : {})
+      },
+      ...(body != null ? { body } : {})
+    })
+    if (!response.ok)
+      throw new Error(
+        `GitHub answered ${method} ${url} with ${
+          response.status
+        }: ${await response.text()}`
+      )
+    return response.status === 204 ? undefined : await response.json()
+  }
+
+  const releases: Array<{
+    id: number
+    tag_name: string
+    draft: boolean
+    html_url: string
+  }> = await request('GET', `${api}/releases?per_page=100`)
+  for (const release of releases.filter(r => r.tag_name === tag)) {
+    if (!release.draft) return { url: release.html_url, published: false }
+    await request('DELETE', `${api}/releases/${release.id}`)
+  }
+
+  const draft = await request(
+    'POST',
+    `${api}/releases`,
+    JSON.stringify({
+      tag_name: tag,
+      target_commitish: options.commit,
+      name: `Edge CLI ${options.version}`,
+      body: cliReleaseNotes(options.version, options.build, options.commit),
+      draft: true,
+      make_latest: 'false'
+    })
+  )
+  for (const file of options.files)
+    await request(
+      'POST',
+      `https://uploads.github.com/repos/${options.repository}/releases/${
+        draft.id
+      }/assets?name=${encodeURIComponent(basename(file))}`,
+      await readFile(file),
+      'application/octet-stream'
+    )
+  const release = await request(
+    'PATCH',
+    `${api}/releases/${draft.id}`,
+    JSON.stringify({ draft: false, make_latest: 'false' })
+  )
+  return { url: release.html_url, published: true }
+}
+
+/** The release's notes: what it is, and how to install it. */
+export function cliReleaseNotes(
+  version: string,
+  build: string,
+  commit: string
+): string {
+  return [
+    `The Edge CLI ${version}, Mason build ${build}, from ${commit.slice(
+      0,
+      9
+    )}.`,
+    '',
+    'Install it on macOS or Linux, arm64 or x64; it brings its own Node.js:',
+    '',
+    '```sh',
+    `curl -fsSL https://github.com/${CLI_REPOSITORY}/releases/download/cli-v${version}/install.sh | bash -s -- --version ${version}`,
+    '```',
+    '',
+    'Add `--user` to install under ~/.edge-cli/app and ~/.local/bin without sudo, or `uninstall` to remove it. See docs/EDGE_CLI.md for the rest.'
+  ].join('\n')
 }
