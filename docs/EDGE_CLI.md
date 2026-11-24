@@ -81,8 +81,9 @@ where `loadNodeApiSignerNative` looks for it. `npm run test:cli:node-hmac`
 checks the result signs. See [HMAC_SIGNING.md](./HMAC_SIGNING.md).
 
 **From a release:** no Node.js needed. A release carries a tarball for macOS
-and Linux, on arm64 and x64, each holding a Node.js runtime and the CLI, and
-`install.sh` installs the CLI's dependencies with that runtime's npm. It
+on Apple silicon (arm64) and one for Linux on x64, each holding a Node.js
+runtime, the CLI and its Node signer, and `install.sh` installs the CLI's
+dependencies with that runtime's npm. It
 installs into `/opt/edge-cli`, linked as `/usr/local/bin/edge-cli` (one sudo
 prompt), or with `--user` into `~/.edge-cli/app` and `~/.local/bin`:
 
@@ -92,10 +93,8 @@ curl -fsSL …/installCli.sh | bash -s -- --version 4.53.0   # a release other t
 curl -fsSL …/installCli.sh | bash -s -- uninstall          # remove it; ~/.edge-cli's data stays
 ```
 
-Only the macOS arm64 tarball carries the Node signer. On the others the CLI
-needs an `edgeApiKey` of its own, as [Publishing without
-one](#publishing-without-one) describes. [Releases on
-GitHub](#releases-on-github) says how a release is made.
+Other machines install from npm. [Releases on GitHub](#releases-on-github)
+says how a release is made.
 
 **From npm:** the supported route for anyone who is not working on this
 repository. `@edgeapp/cli` is the package; `edge-cli` is the command it puts
@@ -1000,15 +999,17 @@ warning.
 
 ## Releases on GitHub
 
-Mason builds the CLI in a workflow of its own, `cli`, under the build-number
-sequence `app.edge.cli`: on request from any branch, and on every push to
-master. Its `package` stage stages the package as `publish:cli --out
---with-signer` does, after the offline suites pass against the built bundle,
-then `scripts/buildCliRelease.ts` builds the release:
+Mason builds the CLI in every run of the `build` workflow, as `app.edge.cli`,
+in a group of its own, `cli`, beside the app's builds and after the tests:
+`cli/mac` on a Mac for `darwin-arm64`, and `cli/linux` on a Linux machine for
+`linux-x64`. Each stages the package as `publish:cli --out --with-signer`
+does, after the offline suites pass against the built bundle, so each
+compiles its own platform's Node signer, then `scripts/buildCliRelease.ts`
+builds its release:
 
 | File | What it is |
 | --- | --- |
-| `edge-cli-<version>-<platform>.tar.gz` | For `darwin-arm64`, `darwin-x64`, `linux-x64` and `linux-arm64`: the official Node.js runtime, npm included, checked against nodejs.org's `SHASUMS256.txt`; the package, with a `package-lock.json` resolved at build time; and `bin/edge-cli`, which runs the package with that runtime. |
+| `edge-cli-<version>-<platform>.tar.gz` | The official Node.js runtime for the platform, npm included, checked against nodejs.org's `SHASUMS256.txt`; the package, with its signer and a `package-lock.json` resolved at build time; and `bin/edge-cli`, which runs the package with that runtime. |
 | `install.sh` | `scripts/installCli.sh`. |
 | `SHA256SUMS` | The digest of each file above. |
 
@@ -1016,25 +1017,25 @@ The dependencies are not in the tarballs. `install.sh` installs them with the
 runtime's own npm, `npm ci --omit=dev --omit=peer --ignore-scripts` against
 the lockfile, so every install of a release gets the tree the build resolved,
 with the prebuilt binaries for that machine. The version is `package.json`'s,
-the one `edge-cli --version` prints. The Node signer is built for the Mac that
-builds the release, so only the `darwin-arm64` tarball carries it.
+the one `edge-cli --version` prints.
 
-Before keeping anything, the stage installs its own platform's tarball with
-`install.sh`, as `curl … | bash` would, and runs the offline suites against
-the installed CLI. The release is kept as the run's `app.edge.cli` artifact.
-On master a `release` stage then publishes it on GitHub as `cli-v<version>`:
-a draft until every file is up, and never marked latest, because the
+Before keeping anything, each stage installs its tarball with `install.sh`,
+as `curl … | bash` would, and runs the offline suites against the installed
+CLI. Each release is kept as the run's `app.edge.cli.<platform>` artifact. On
+master a `cli-release` stage then gathers both platforms' files, writes one
+`SHA256SUMS` over them, and publishes them on GitHub as `cli-v<version>`: a
+draft until every file is up, and never marked latest, because the
 repository's latest release is the app's; `install.sh` finds the newest
 `cli-v` release itself. A version that already has a release keeps it, so the
-CLI's next release comes with the next app version. The `release` stage has no
-checkout, and it alone declares `CLI_RELEASE_GITHUB_TOKEN`: a value secret of
-the project on the Mason master, holding a token with `contents: write` on
-EdgeApp/edge-react-gui.
+CLI's next release comes with the next app version. The `cli-release` stage
+has no checkout, and it alone declares `CLI_RELEASE_GITHUB_TOKEN`: a value
+secret of the project on the Mason master, holding a token with `contents:
+write` on EdgeApp/edge-react-gui.
 
-To build and try a release locally:
+To build and try a release for this machine locally:
 
 ```sh
 npm run publish:cli -- --out build/cli-package   # add --with-signer to carry the signer
-node -r sucrase/register scripts/buildCliRelease.ts --package build/cli-package --out build/cli-release --platform darwin-arm64
+node -r sucrase/register scripts/buildCliRelease.ts --package build/cli-package --out build/cli-release
 EDGE_CLI_RELEASE_DIR=$PWD/build/cli-release bash build/cli-release/install.sh --user
 ```

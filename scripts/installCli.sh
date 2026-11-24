@@ -6,11 +6,11 @@
 #   curl -fsSL …/installCli.sh | bash -s -- --user             # without sudo, under ~/.edge-cli/app and ~/.local/bin
 #   curl -fsSL …/installCli.sh | bash -s -- uninstall          # remove it; the CLI's data is kept
 #
-# A release is tagged cli-v<version> and carries a tarball for each platform
-# (macOS and Linux, arm64 and x64), install.sh and SHA256SUMS. A tarball holds
-# a Node.js runtime and the CLI's package; the runtime's own npm then installs
+# A release is tagged cli-v<version> and carries a tarball for macOS on arm64
+# and one for Linux on x64, install.sh and SHA256SUMS. A tarball holds a
+# Node.js runtime and the CLI's package; the runtime's own npm then installs
 # the package's dependencies from its lockfile. Without --version, the newest
-# cli-v release is installed.
+# cli-v release is installed. Other machines install the CLI from npm.
 #
 # Releases come from EDGE_CLI_REPO (public: no token). GITHUB_TOKEN, or
 # `gh auth token` when the GitHub CLI is signed in, is sent when set.
@@ -119,7 +119,7 @@ fi
 
 get SHA256SUMS
 tarball=$(awk '{print $2}' "$work/SHA256SUMS" | grep -E "^edge-cli-[0-9][^ ]*-$platform\\.tar\\.gz$" | head -1 || true)
-[[ -n $tarball ]] || fail "the release has no $platform tarball"
+[[ -n $tarball ]] || fail "the release has no $platform tarball; install the Edge CLI from npm on this machine"
 get "$tarball"
 
 release=${tarball#edge-cli-}

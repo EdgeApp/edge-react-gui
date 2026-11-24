@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from '@jest/globals'
+import { createHash } from 'crypto'
 import {
   copyFileSync,
   mkdirSync,
@@ -35,6 +36,7 @@ import {
   versionSuffix,
   writeSecrets,
   buildCli,
+  cliPlatform,
   cliReleaseNotes,
   cliVersion,
   publishCliRelease,
@@ -51,8 +53,15 @@ function recordSetup(branch: string): { calls: Call[]; m: any } {
     branch,
     apiVersion: (...args: unknown[]) => calls.push(['apiVersion', ...args]),
     buildNumber: (...args: unknown[]) => calls.push(['buildNumber', ...args]),
-    stage: (...args: unknown[]) => calls.push(['stage', ...args]),
-    parallel: (...args: unknown[]) => calls.push(['parallel', ...args]),
+    // Each returns a reference, as Mason's builder does, for `needs`.
+    stage: (name: string, ...args: unknown[]) => {
+      calls.push(['stage', name, ...args])
+      return { name, kind: 'stage' }
+    },
+    parallel: (name: string, ...args: unknown[]) => {
+      calls.push(['parallel', name, ...args])
+      return { name, kind: 'group' }
+    },
     // The workflow's stages are recorded as if declared on `m`.
     workflow: (name: string, options: unknown, declare: (w: any) => void) => {
       calls.push(['workflow', name, options])
@@ -208,17 +217,16 @@ describe('Masonfile', () => {
       expect(calls.map(call => call[0])).toEqual([
         'apiVersion',
         'buildNumber',
-        'workflow',
-        'stage',
-        'parallel',
-        // The CLI's own workflow, which releases from master.
         'buildNumber',
         'workflow',
         'stage',
+        'parallel',
+        // The CLI's group, and master's release of it.
+        'parallel',
         ...(branch === 'master' ? ['stage'] : [])
       ])
       // Pushes to these branches build; any other branch on request.
-      expect(calls[2]).toEqual([
+      expect(calls[3]).toEqual([
         'workflow',
         'build',
         {
@@ -242,7 +250,7 @@ describe('Masonfile', () => {
       // The node type is what starts a pool machine; Linux is asked first.
       const linux = { type: 'linux-x86', os: 'linux', arch: 'x64' }
       const mac = { type: 'macos-arm64', os: 'macos', arch: 'arm64' }
-      const [, name, test] = calls[3] as [string, string, any]
+      const [, name, test] = calls[4] as [string, string, any]
       expect(name).toBe('test')
       expect(test.on).toEqual([linux, mac])
       expect(test.tools).toEqual({ node: '22' })
@@ -251,7 +259,7 @@ describe('Masonfile', () => {
       expect(test.secrets).toBeUndefined()
       expect(test.run).toBe(runTests)
 
-      const [, group, stages, options] = calls[4] as [string, string, any, any]
+      const [, group, stages, options] = calls[5] as [string, string, any, any]
       expect(group).toBe('build')
       expect(options).toEqual({ failFast: false })
       const configs = configsFor(branch)
@@ -738,7 +746,7 @@ describe('Masonfile', () => {
     ]) {
       const { calls, m } = recordSetup(branch)
       setup(m)
-      const stages = calls[4][2] as any
+      const stages = calls[5][2] as any
       const maestro = MAESTRO_BRANCHES.includes(branch)
       expect(Object.keys(stages)).toEqual(
         maestro
@@ -998,41 +1006,44 @@ describe('Masonfile', () => {
     expect(configsFor('master')).toEqual([])
   })
 
-  it('builds the CLI in its own workflow, and releases it from master', () => {
+  it('builds the CLI in every run, on a Mac and on Linux, and releases it from master', () => {
     const mac = { type: 'macos-arm64', os: 'macos', arch: 'arm64' }
+    const linux = { type: 'linux-x86', os: 'linux', arch: 'x64' }
     for (const branch of ['master', 'develop', 'paul/cli']) {
       const { calls, m } = recordSetup(branch)
       setup(m)
-      const cli = calls.slice(5)
-      expect(cli[0]).toEqual([
+      // Its own build-number sequence.
+      expect(calls[2]).toEqual([
         'buildNumber',
         'app.edge.cli',
         { format: 'YYMMDDCC', timeZone: 'America/Los_Angeles' }
       ])
-      expect(cli[1]).toEqual([
-        'workflow',
-        'cli',
-        { triggers: [{ push: true, branches: ['master'] }, { request: true }] }
-      ])
-      expect(cli[2]).toEqual([
-        'stage',
-        'package',
-        {
-          on: mac,
-          tools: { node: '22', xcode: '>=26' },
-          secrets: ['edgeCliKey.json'],
-          buildNumbers: ['app.edge.cli'],
-          timeout: '1h',
-          activityTimeout: '30m',
-          run: buildCli
-        }
-      ])
+      // Its own group, beside the app's builds, after the tests.
+      const [, group, members, options] = calls[6] as [string, string, any, any]
+      expect(group).toBe('cli')
+      expect(options).toEqual({
+        needs: [{ name: 'test', kind: 'stage' }],
+        failFast: false
+      })
+      const common = {
+        secrets: ['edgeCliKey.json'],
+        buildNumbers: ['app.edge.cli'],
+        timeout: '1h',
+        activityTimeout: '30m',
+        run: buildCli
+      }
+      // Each platform on its own OS, which compiles its signer.
+      expect(members).toEqual({
+        mac: { on: mac, tools: { node: '22', xcode: '>=26' }, ...common },
+        linux: { on: linux, tools: { node: '22' }, ...common }
+      })
       if (branch === 'master')
-        expect(cli[3]).toEqual([
+        expect(calls[7]).toEqual([
           'stage',
-          'release',
+          'cli-release',
           {
-            on: mac,
+            on: [linux, mac],
+            needs: [{ name: 'cli', kind: 'group' }],
             checkout: false,
             secrets: ['CLI_RELEASE_GITHUB_TOKEN'],
             timeout: '30m',
@@ -1040,7 +1051,7 @@ describe('Masonfile', () => {
             run: releaseCli
           }
         ])
-      else expect(cli).toHaveLength(3)
+      else expect(calls).toHaveLength(7)
       // The token reaches master's release stage and no other.
       const declares = (name: string): unknown[] =>
         calls.filter(call => JSON.stringify(call).includes(name))
@@ -1051,6 +1062,12 @@ describe('Masonfile', () => {
     expect(secretDirectory('edgeCliKey.json')).toBe('.')
   })
 
+  it('names each node’s platform as Node.js does', () => {
+    expect(cliPlatform({ os: 'macos', arch: 'arm64' })).toBe('darwin-arm64')
+    expect(cliPlatform({ os: 'linux', arch: 'x64' })).toBe('linux-x64')
+    expect(cliPlatform({ os: 'linux', arch: 'arm64' })).toBe('linux-arm64')
+  })
+
   it('versions the CLI with package.json alone, whatever the branch', async () => {
     for (const branch of ['master', 'develop', 'paul/cli']) {
       const { ctx } = recordStage(branch)
@@ -1058,16 +1075,18 @@ describe('Masonfile', () => {
     }
   })
 
-  it('builds, installs and tests the CLI release, and keeps it as app.edge.cli', async () => {
-    for (const branch of ['paul/cli', 'master']) {
+  it('builds, installs and tests the CLI release for its own platform', async () => {
+    for (const [branch, node, platform] of [
+      ['paul/cli', { os: 'macos', arch: 'arm64' }, 'darwin-arm64'],
+      ['master', { os: 'linux', arch: 'x64' }, 'linux-x64']
+    ] as const) {
       const { calls, ctx } = recordStage(branch)
-      const described: string[] = []
-      ctx.describe = (text: string) => described.push(text)
+      ctx.node = node
       expect(await buildCli(ctx)).toEqual({
         version: '4.53.0',
-        build: '26103001'
+        build: '26103001',
+        platform
       })
-      expect(described).toEqual(['Edge CLI 4.53.0 (26103001)'])
       expect(calls).toContainEqual(['getBuildNumber', 'app.edge.cli'])
       expect(calls).toContainEqual([
         'writeSecretFile',
@@ -1080,7 +1099,7 @@ describe('Masonfile', () => {
         'npm run prepare',
         'npm run test:cli:offline:built',
         'npm run publish:cli -- --out build/cli-package --with-signer --allow-dirty --allow-unpushed --allow-broken-plugins',
-        'node -r sucrase/register scripts/buildCliRelease.ts --package build/cli-package --out build/cli-release',
+        `node -r sucrase/register scripts/buildCliRelease.ts --package build/cli-package --out build/cli-release --platform ${platform}`,
         'rm -rf build/cli-install && EDGE_CLI_RELEASE_DIR="$PWD/build/cli-release" EDGE_CLI_PREFIX="$PWD/build/cli-install/app" EDGE_CLI_BINDIR="$PWD/build/cli-install/bin" bash build/cli-release/install.sh --user',
         'PATH="$PWD/build/cli-install/app/current/node/bin:$PATH" EDGE_CLI_BIN="$PWD/build/cli-install/app/current/package/edgeCli.js" npm run test:cli:offline'
       ])
@@ -1091,43 +1110,67 @@ describe('Masonfile', () => {
         'Install packages',
         'Prepare',
         'Offline suites',
-        'Release 4.53.0 (26103001)',
+        `Release 4.53.0 (26103001) for ${platform}`,
         'Install and test',
         'Save'
       ])
       expect(calls).toContainEqual([
         'save',
-        'app.edge.cli',
+        `app.edge.cli.${platform}`,
         'build/cli-release/*'
       ])
       // Only master's release goes on to the release stage.
-      const stashes = calls.filter(([kind]) => kind === 'stash')
-      expect(stashes).toEqual(
+      expect(calls.filter(([kind]) => kind === 'stash')).toEqual(
         branch === 'master'
-          ? [['stash', 'cli-release', 'build/cli-release/*']]
+          ? [['stash', `cli-release-${platform}`, 'build/cli-release/*']]
           : []
       )
     }
   })
 
-  it('publishes master’s stashed release with the token', async () => {
+  /** Master's release stage, with each platform's stash unpacked as Mason would. */
+  function releaseStage(
+    options: {
+      builds?: Record<string, { version: string; build: string }>
+      installers?: Record<string, string>
+    } = {}
+  ): { calls: Call[]; ctx: any; root: string } {
     const { calls, ctx, root } = recordStage('master')
-    mkdirSync(join(root, 'build/cli-release'), { recursive: true })
-    for (const name of [
-      'SHA256SUMS',
-      'install.sh',
-      'edge-cli-4.53.0-darwin-arm64.tar.gz'
-    ])
-      writeFileSync(join(root, 'build/cli-release', name), name)
+    const platforms: Record<string, string> = {
+      'cli/mac': 'darwin-arm64',
+      'cli/linux': 'linux-x64'
+    }
     ctx.run.commit = '0123456789abcdef'
     ctx.output = async (stage: string) => {
       calls.push(['output', stage])
-      return { version: '4.53.0', build: '26112301' }
+      return {
+        version: '4.53.0',
+        build: '26112301',
+        ...options.builds?.[stage],
+        platform: platforms[stage]
+      }
+    }
+    ctx.unstash = async (name: string, unstash: { into: string }) => {
+      calls.push(['unstash', name, unstash])
+      const platform = name.replace('cli-release-', '')
+      const dir = join(root, unstash.into, 'build/cli-release')
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(dir, `edge-cli-4.53.0-${platform}.tar.gz`), platform)
+      writeFileSync(
+        join(dir, 'install.sh'),
+        options.installers?.[platform] ?? '#!/bin/bash\n'
+      )
+      writeFileSync(join(dir, 'SHA256SUMS'), 'this platform alone')
     }
     ctx.secret = (name: string) => {
       calls.push(['secret', name])
       return 'the-token'
     }
+    return { calls, ctx, root }
+  }
+
+  it('releases both platforms on GitHub, with one SHA256SUMS over them', async () => {
+    const { calls, ctx, root } = releaseStage()
     const logged: string[] = []
     ctx.log.info = (text: string) => logged.push(text)
     const github = fakeGitHub([])
@@ -1141,19 +1184,59 @@ describe('Masonfile', () => {
     } finally {
       globalThis.fetch = saved
     }
-    expect(calls).toContainEqual(['output', 'package'])
-    expect(calls).toContainEqual(['unstash', 'cli-release'])
+    expect(calls).toContainEqual(['output', 'cli/mac'])
+    expect(calls).toContainEqual(['output', 'cli/linux'])
+    expect(calls).toContainEqual([
+      'unstash',
+      'cli-release-darwin-arm64',
+      { into: 'build/cli-parts/darwin-arm64' }
+    ])
+    expect(calls).toContainEqual([
+      'unstash',
+      'cli-release-linux-x64',
+      { into: 'build/cli-parts/linux-x64' }
+    ])
     expect(calls).toContainEqual(['secret', 'CLI_RELEASE_GITHUB_TOKEN'])
     // Every file, in name order, under its own name.
     expect(github.uploads.map(upload => upload.name)).toEqual([
       'SHA256SUMS',
       'edge-cli-4.53.0-darwin-arm64.tar.gz',
+      'edge-cli-4.53.0-linux-x64.tar.gz',
       'install.sh'
     ])
-    expect(github.uploads[0].body).toBe('SHA256SUMS')
+    // One SHA256SUMS, over both tarballs and the installer.
+    const sums = github.uploads[0].body.trim().split('\n')
+    expect(sums.map((line: string) => line.split('  ')[1])).toEqual([
+      'edge-cli-4.53.0-darwin-arm64.tar.gz',
+      'edge-cli-4.53.0-linux-x64.tar.gz',
+      'install.sh'
+    ])
+    for (const line of sums) {
+      const [digest, name] = line.split('  ')
+      expect(
+        createHash('sha256')
+          .update(readFileSync(join(root, 'build/cli-release', name)))
+          .digest('hex')
+      ).toBe(digest)
+    }
     expect(logged).toEqual([
       'Published https://github.com/EdgeApp/edge-react-gui/releases/tag/cli-v4.53.0'
     ])
+  })
+
+  it('refuses to release platforms that built different releases', async () => {
+    const versions = releaseStage({
+      builds: { 'cli/linux': { version: '4.53.0', build: '26112302' } }
+    })
+    await expect(releaseCli(versions.ctx)).rejects.toThrow(
+      'The platforms built different releases: darwin-arm64 4.53.0 (26112301), linux-x64 4.53.0 (26112302)'
+    )
+    const installers = releaseStage({
+      installers: { 'linux-x64': '#!/bin/bash\n# another\n' }
+    })
+    await expect(releaseCli(installers.ctx)).rejects.toThrow(
+      'The platforms built different install.sh files'
+    )
   })
 
   it('publishes a CLI release as a draft first, and never as the latest release', async () => {

@@ -1,6 +1,8 @@
 /**
- * Builds the CLI's release: for each platform a tarball that installs on a
- * machine with no Node.js, then `install.sh` and `SHA256SUMS` over them all.
+ * Builds the CLI's release: a tarball for each platform it is given (this
+ * machine's by default) that installs on a machine with no Node.js, then
+ * `install.sh` and `SHA256SUMS` over them all. Mason builds each platform on
+ * its own OS, so each tarball carries a signer compiled for it.
  *
  * Each tarball holds three things under `edge-cli-<version>-<platform>/`:
  *
@@ -28,7 +30,7 @@ import { promisify } from 'util'
 
 const run = promisify(execFile)
 
-/** The platforms `install.sh` installs on, as Node.js names its builds. */
+/** The platforms a release can carry, as Node.js names its builds. */
 export const PLATFORMS = [
   'darwin-arm64',
   'darwin-x64',
@@ -58,10 +60,20 @@ dir=$(CDPATH= cd -- "$(dirname -- "$(readlink -f -- "$0" 2>/dev/null || echo "$0
 exec "$dir/node/bin/node" "$dir/package/edgeCli.js" "$@"
 `
 
+/** This machine's platform, which a release carries by default. */
+export function hostPlatform(): CliPlatform {
+  const platform = `${process.platform}-${process.arch}`
+  if (!(PLATFORMS as readonly string[]).includes(platform)) {
+    throw new Error(`No CLI release is built for ${platform}`)
+  }
+  return platform as CliPlatform
+}
+
 export interface CliReleaseOptions {
   /** The package `publish:cli --out` staged. */
   packageDir: string
   out: string
+  /** This machine's platform by default. */
   platforms?: readonly CliPlatform[]
   /** The Node.js each tarball carries; the builder's own by default. */
   nodeVersion?: string
@@ -161,7 +173,7 @@ export async function buildCliRelease(
     const runtimes = `${nodeSource}/v${nodeVersion}`
     const sums = (await download(`${runtimes}/SHASUMS256.txt`)).toString('utf8')
     const files: string[] = []
-    for (const platform of options.platforms ?? PLATFORMS) {
+    for (const platform of options.platforms ?? [hostPlatform()]) {
       const top = `edge-cli-${version}-${platform}`
       const root = path.join(work, platform, top)
       fs.mkdirSync(root, { recursive: true })

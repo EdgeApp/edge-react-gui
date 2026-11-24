@@ -10,6 +10,7 @@ import {
   buildCliRelease,
   type CliPlatform,
   cliTarballName,
+  hostPlatform,
   PLATFORMS,
   sha256
 } from '../../../scripts/buildCliRelease'
@@ -272,6 +273,14 @@ describe('buildCliRelease', () => {
     ).rejects.toThrow(
       `SHASUMS256.txt lists no node-v${NODE}-linux-arm64.tar.gz`
     )
+  })
+
+  it('builds this machine’s platform when it is given none', () => {
+    if (installable) expect(hostPlatform()).toBe(here)
+    else
+      expect(() => hostPlatform()).toThrow(
+        `No CLI release is built for ${here}`
+      )
   })
 
   it('refuses a package whose version is not semver', async () => {
