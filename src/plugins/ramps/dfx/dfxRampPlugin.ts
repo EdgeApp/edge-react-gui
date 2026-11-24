@@ -190,7 +190,13 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     deepQuery: Record<string, string> | undefined
   ): Promise<boolean> => {
     const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
-    if (deepQuery?.session == null || chain == null) return false
+    if (
+      deepQuery?.session == null ||
+      deepQuery.session === '' ||
+      chain == null
+    ) {
+      return false
+    }
     await openDfxSell({
       config,
       guiPlugin: guiPlugins.dfx,

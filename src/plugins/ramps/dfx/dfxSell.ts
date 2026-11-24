@@ -30,9 +30,8 @@ import {
 import type { RampPluginConfig, RampQuoteRequest } from '../rampPluginTypes'
 import { makeSellPaymentRedirect } from '../utils/sellPaymentRedirect'
 import { fetchDfx } from './dfxApi'
+import { fetchDfxSellFiatAmount } from './dfxQuote'
 import { asDfxSellRedirectQuery, asDfxSellRoute } from './dfxRampTypes'
-
-const DFX_PROVIDER_ID = 'dfx'
 
 /** DFX's names for the blockchain and native asset of the selling wallet. */
 export interface DfxSellChain {
@@ -42,7 +41,7 @@ export interface DfxSellChain {
 
 export interface DfxSellParams {
   readonly config: RampPluginConfig
-  /** The DFX GUI plugin, with DFX's app URI and display name */
+  /** The DFX GUI plugin, with its id, app URI, name and permissions */
   readonly guiPlugin: GuiPlugin
   /** DFX's sell page, from within the GUI plugin's `baseUri` */
   readonly deepPath: string
@@ -135,21 +134,21 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
   const { config, guiPlugin, deepPath, deepQuery, request, chain } = params
   const { disklet, navigation, onLogEvent } = config
   const { fiatCurrencyCode, tokenId, wallet } = request
-  const { displayName } = guiPlugin
+  const { displayName, pluginId } = guiPlugin
 
-  // DFX's identity check needs the camera, as the plugin scene asked:
-  const deniedPermission = await requestPermissionOnSettings(
-    disklet,
-    'camera',
-    displayName,
-    true
-  )
-  if (deniedPermission) {
-    showToast(lstrings.fiat_plugin_cannot_continue_camera_permission)
-    return
+  // Ask for the GUI plugin's permissions the way the plugin scene does, and
+  // stop silently where it would leave:
+  for (const permission of guiPlugin.permissions ?? []) {
+    const deniedPermission = await requestPermissionOnSettings(
+      disklet,
+      permission,
+      displayName,
+      guiPlugin.mandatoryPermissions ?? false
+    )
+    if (deniedPermission) return
   }
 
-  const redirectUri = makePaymentReturnUrl(DFX_PROVIDER_ID, {
+  const redirectUri = makePaymentReturnUrl(pluginId, {
     pluginId: wallet.currencyInfo.pluginId,
     tokenId
   })
@@ -160,12 +159,13 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     deepQuery: { ...deepQuery, 'redirect-uri': redirectUri }
   })
 
-  // The fiat amount the user entered, if any. DFX only settles the fiat
-  // once the crypto arrives:
-  const fiatAmount =
+  // The fiat amount the user entered in Edge, or '0' for a quote without one:
+  const enteredFiatAmount =
     request.amountType === 'fiat' && 'exchangeAmount' in request.amountQuery
       ? request.amountQuery.exchangeAmount
       : '0'
+  // DFX's name for the fiat, as makeDfxRequestQuery writes it:
+  const dfxFiat = fiatCurrencyCode.replace(/^iso:/i, '').toUpperCase()
 
   let widgetClosed = false
   let inPayment = false
@@ -187,13 +187,16 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       throw e
     }
 
-    // DFX cancels to the bare redirect URI:
+    // Any payment redirect other than DFX's sell redirect closes the widget,
+    // such as DFX's cancel to the bare redirect URI:
     if (order == null) {
       closeWidget()
       return
     }
 
-    // DFX sent the crypto itself, so there is nothing to pay:
+    // DFX reports the crypto as sent already, so there is nothing to pay.
+    // This pops the WebView scene if the WebView had loaded the redirect
+    // page, which can happen on Android, and does nothing otherwise:
     if (order.isComplete) {
       redirect.closeRedirectPage()
       return
@@ -209,12 +212,24 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     let broadcastAttempted = false
     let sendSceneClosed = false
     let broadcastTx: EdgeTransaction | undefined
+    // The order on DFX's page can differ from the quote in Edge, so the sale
+    // saves DFX's fiat estimate for the crypto that is sent. Without one it
+    // saves the fiat amount the user entered in Edge for a fiat-entered
+    // quote, and '0' otherwise:
+    let fiatAmount = enteredFiatAmount
     try {
-      const depositAddress = await fetchDfxSellDepositAddress(
-        routeId,
-        deepQuery.session,
-        chain
-      )
+      // The estimate resolves to undefined instead of rejecting, so it
+      // cannot fail the address fetch:
+      const [depositAddress, fiatEstimate] = await Promise.all([
+        fetchDfxSellDepositAddress(routeId, deepQuery.session, chain),
+        fetchDfxSellFiatAmount({
+          blockchain: chain.blockchain,
+          asset: chain.asset,
+          fiat: dfxFiat,
+          cryptoAmount: amount
+        })
+      ])
+      if (fiatEstimate != null) fiatAmount = fiatEstimate
 
       // The user left the widget while the route loaded:
       if (widgetClosed) {
@@ -235,7 +250,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
         orderId: routeId,
         isEstimate: true,
         fiatPlugin: {
-          providerId: DFX_PROVIDER_ID,
+          providerId: pluginId,
           providerDisplayName: displayName
         },
         payinAddress: depositAddress,
@@ -339,8 +354,9 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
         // the order:
         if (widgetClosed) return
 
-        // DFX's page still shows the order, so the user returns to it.
-        // Only the redirect page is worth closing:
+        // DFX's page still shows the order, so the user returns to it. This
+        // pops the WebView scene if the WebView had loaded the redirect
+        // page, which can happen on Android, and does nothing otherwise:
         redirect.closeRedirectPage()
       }
 
@@ -372,7 +388,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
             tokenId,
             exchangeAmount: amount
           }),
-          fiatProviderId: DFX_PROVIDER_ID,
+          fiatProviderId: pluginId,
           orderId: routeId
         }
       })

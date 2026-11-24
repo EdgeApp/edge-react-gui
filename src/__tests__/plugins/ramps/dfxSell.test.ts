@@ -16,6 +16,7 @@ import {
 } from '../../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
 import type { FiatPluginOpenWebViewParams } from '../../../plugins/gui/scenes/FiatPluginWebView'
+import { fetchDfxSellFiatAmount } from '../../../plugins/ramps/dfx/dfxQuote'
 import {
   openDfxSell,
   parseDfxSellRedirect
@@ -37,6 +38,16 @@ jest.mock('../../../components/services/AirshipInstance', () => ({
 jest.mock('../../../components/services/PermissionsManager', () => ({
   requestPermissionOnSettings: jest.fn(async () => false)
 }))
+jest.mock('../../../plugins/ramps/dfx/dfxQuote', () => ({
+  fetchDfxSellFiatAmount: jest.fn(async () => '98.45')
+}))
+
+/** The parts of the real quote module a test calls through the mock. */
+interface ActualDfxQuote {
+  fetchDfxSellFiatAmount: typeof fetchDfxSellFiatAmount
+}
+
+const mockFetchFiatAmount = jest.mocked(fetchDfxSellFiatAmount)
 
 const REDIRECT_URI = 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
 const CHAIN = { blockchain: 'Bitcoin', asset: 'BTC' }
@@ -54,7 +65,8 @@ const GUI_PLUGIN: GuiPlugin = {
   pluginId: 'dfx',
   storeId: 'dfx',
   baseUri: 'https://app.dfx.swiss',
-  displayName: 'DFX'
+  displayName: 'DFX',
+  permissions: ['camera']
 } as unknown as GuiPlugin
 
 const DEEP_QUERY = {
@@ -142,8 +154,7 @@ describe('openDfxSell', () => {
     },
     broadcastTx
   } as unknown as EdgeCurrencyWallet
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const signedTx = { txid: 'txid' } as EdgeTransaction
+  const signedTx = { txid: 'txid' } as unknown as EdgeTransaction
 
   const request: RampQuoteRequest = {
     wallet,
@@ -173,20 +184,25 @@ describe('openDfxSell', () => {
     }
   }
 
-  /** Opens the sell and returns the widget's WebView params. */
-  const openWidget = async (): Promise<FiatPluginOpenWebViewParams> => {
+  /** Opens the sell for a GUI plugin. */
+  const openSell = async (guiPlugin: GuiPlugin): Promise<void> => {
     await openDfxSell({
       config: {
         navigation: { navigate, pop },
         onLogEvent,
         disklet: {}
       } as unknown as RampPluginConfig,
-      guiPlugin: GUI_PLUGIN,
+      guiPlugin,
       deepPath: '/sell',
       deepQuery: DEEP_QUERY,
       request,
       chain: CHAIN
     })
+  }
+
+  /** Opens the sell and returns the widget's WebView params. */
+  const openWidget = async (): Promise<FiatPluginOpenWebViewParams> => {
+    await openSell(GUI_PLUGIN)
     const webViews = paramsFor<FiatPluginOpenWebViewParams>('guiPluginWebView')
     expect(webViews).toHaveLength(1)
     return webViews[0]
@@ -232,24 +248,33 @@ describe('openDfxSell', () => {
     expect(url.query).toEqual({ ...DEEP_QUERY, 'redirect-uri': REDIRECT_URI })
   })
 
-  it('opens nothing when the user denies the camera', async () => {
+  it('opens DFX when the user declines the optional camera permission', async () => {
+    // A declined optional permission does not count as denied:
+    jest.mocked(requestPermissionOnSettings).mockResolvedValueOnce(false)
+
+    await openWidget()
+
+    expect(requestPermissionOnSettings).toHaveBeenCalledWith(
+      {},
+      'camera',
+      'DFX',
+      false
+    )
+  })
+
+  it('opens nothing when the user denies a mandatory permission', async () => {
     jest.mocked(requestPermissionOnSettings).mockResolvedValueOnce(true)
 
-    await openDfxSell({
-      config: {
-        navigation: { navigate, pop },
-        onLogEvent,
-        disklet: {}
-      } as unknown as RampPluginConfig,
-      guiPlugin: GUI_PLUGIN,
-      deepPath: '/sell',
-      deepQuery: DEEP_QUERY,
-      request,
-      chain: CHAIN
-    })
+    await openSell({ ...GUI_PLUGIN, mandatoryPermissions: true })
 
+    expect(requestPermissionOnSettings).toHaveBeenCalledWith(
+      {},
+      'camera',
+      'DFX',
+      true
+    )
     expect(navigate).not.toHaveBeenCalled()
-    expect(showToast).toHaveBeenCalledTimes(1)
+    expect(showToast).not.toHaveBeenCalled()
   })
 
   it('closes the widget once on the cancel redirect', async () => {
@@ -327,7 +352,7 @@ describe('openDfxSell', () => {
         tokenId: null,
         nativeAmount: '150000'
       },
-      fiatAsset: { fiatCurrencyCode: 'iso:CHF', fiatAmount: '100' }
+      fiatAsset: { fiatCurrencyCode: 'iso:CHF', fiatAmount: '98.45' }
     })
 
     // Back leaves the user on DFX's page for the order:
@@ -337,7 +362,66 @@ describe('openDfxSell', () => {
     expect(showError).not.toHaveBeenCalled()
   })
 
-  it('rounds an amount with more decimals than the asset has down', async () => {
+  it("saves DFX's fiat estimate for the crypto that is sent", async () => {
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    expect(mockFetchFiatAmount).toHaveBeenCalledWith({
+      blockchain: 'Bitcoin',
+      asset: 'BTC',
+      fiat: 'CHF',
+      cryptoAmount: '0.0015'
+    })
+    const [send] = paramsFor<SendScene2Params>('send2')
+    expect(send.spendInfo?.savedAction).toMatchObject({
+      isEstimate: true,
+      fiatAsset: { fiatCurrencyCode: 'iso:CHF', fiatAmount: '98.45' }
+    })
+  })
+
+  it('saves the entered fiat amount when DFX gives no estimate', async () => {
+    mockFetchFiatAmount.mockResolvedValueOnce(undefined)
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    const [send] = paramsFor<SendScene2Params>('send2')
+    expect(send.spendInfo?.savedAction).toMatchObject({
+      isEstimate: true,
+      fiatAsset: { fiatCurrencyCode: 'iso:CHF', fiatAmount: '100' }
+    })
+  })
+
+  it('opens the send scene when the estimate request fails', async () => {
+    // The real estimate, whose requests get the route's answer here, which
+    // is no asset list:
+    const actual = jest.requireActual<ActualDfxQuote>(
+      '../../../plugins/ramps/dfx/dfxQuote'
+    )
+    mockFetchFiatAmount.mockImplementationOnce(actual.fetchDfxSellFiatAmount)
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    expect(fakeFetch.calls.map(call => call.url)).toContain(
+      'https://api.dfx.swiss/v1/asset?blockchains=Bitcoin'
+    )
+    const sends = paramsFor<SendScene2Params>('send2')
+    expect(sends).toHaveLength(1)
+    expect(sends[0].spendInfo?.spendTargets).toEqual([
+      { nativeAmount: '150000', publicAddress: 'bc1deposit' }
+    ])
+    expect(sends[0].spendInfo?.savedAction).toMatchObject({
+      fiatAsset: { fiatCurrencyCode: 'iso:CHF', fiatAmount: '100' }
+    })
+    expect(showError).not.toHaveBeenCalled()
+  })
+
+  it('rounds down an amount with more decimals than the asset has', async () => {
     const webView = await openWidget()
 
     webView.onShouldStartLoad?.(
@@ -429,7 +513,7 @@ describe('openDfxSell', () => {
       conversionValues: expect.objectContaining({
         conversionType: 'sell',
         destFiatCurrencyCode: 'iso:CHF',
-        destFiatAmount: '100',
+        destFiatAmount: '98.45',
         fiatProviderId: 'dfx',
         orderId: '42'
       })

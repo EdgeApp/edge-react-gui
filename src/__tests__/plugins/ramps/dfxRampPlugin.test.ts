@@ -248,6 +248,14 @@ describe('dfxRampPlugin approveQuote', () => {
         deepQuery: sellQuery
       })
     })
+
+    it('opens the plugin scene as before with an empty session', async () => {
+      mockFetchSessionQuery.mockResolvedValueOnce({ session: '' })
+
+      const [route] = await approveRoute(cryptoSell)
+
+      expect(route).toBe('pluginViewSell')
+    })
   })
 
   it('does not quote a crypto-entered buy', async () => {

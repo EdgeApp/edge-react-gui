@@ -77,10 +77,28 @@ export const asDfxSellQuoteRequest = asObject({
 
 export const wasDfxSellQuoteRequest = uncleaner(asJSON(asDfxSellQuoteRequest))
 
+/** PUT /v1/sell/quote: the crypto to sell, by DFX's asset and fiat ids. */
+export const asDfxSellEstimateRequest = asObject({
+  asset: asObject({ id: asNumber }),
+  currency: asObject({ id: asNumber }),
+  amount: asNumber
+})
+
+export const wasDfxSellEstimateRequest = uncleaner(
+  asJSON(asDfxSellEstimateRequest)
+)
+
 /** PUT /v1/sell/quote: `amount` is the crypto to send for `targetAmount`. */
 export const asDfxSellQuoteResponse = asJSON(
   asObject({
     amount: asNumber
+  })
+)
+
+/** PUT /v1/sell/quote: `estimatedAmount` is the fiat for `amount`. */
+export const asDfxSellEstimateResponse = asJSON(
+  asObject({
+    estimatedAmount: asNumber
   })
 )
 

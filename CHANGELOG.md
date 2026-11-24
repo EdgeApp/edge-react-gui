@@ -2,7 +2,7 @@
 
 ## Unreleased (develop)
 
-- changed: DFX sells open Edge's send screen with the deposit address and amount filled in, instead of showing an address to copy
+- changed: DFX sells that Edge logs in to DFX open Edge's send screen with the deposit address and amount filled in, instead of showing an address to copy
 
 ## 4.53.0 (2026-11-20)
 
