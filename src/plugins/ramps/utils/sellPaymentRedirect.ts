@@ -7,9 +7,10 @@ export interface SellPaymentRedirect {
   /** Hand every URL the sell widget's WebView reports to this. */
   onUrlChange: (url: string) => Promise<void>
   /**
-   * Call once the send scene closed with nothing sent. Closes the redirect
-   * page if the WebView loaded it, and otherwise leaves the WebView on the
-   * provider's page for the order.
+   * Call when a payment redirect ends with nothing sent: the order was
+   * refused or is paid already, or the send scene closed without sending.
+   * Closes the redirect page if the WebView loaded it, and otherwise leaves
+   * the WebView on the provider's page for the order.
    */
   closeRedirectPage: () => void
 }

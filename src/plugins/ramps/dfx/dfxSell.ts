@@ -11,7 +11,8 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import {
   showError,
-  showToast
+  showToast,
+  showToastSpinner
 } from '../../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
 import { lstrings } from '../../../locales/strings'
@@ -100,16 +101,17 @@ export function parseDfxSellRedirect(
 }
 
 /**
- * Fetches the address that takes the deposit for a sell route. The redirect
- * is a deep link anyone can forge, so the address comes from DFX's API for
- * the logged-in user, never from the redirect.
+ * Fetches the address that takes the deposit for a sell route, and DFX's
+ * name for the fiat the route pays out if DFX names one. The redirect is a
+ * deep link anyone can forge, so the address comes from DFX's API for the
+ * logged-in user, never from the redirect.
  */
-async function fetchDfxSellDepositAddress(
+async function fetchDfxSellRoute(
   routeId: string,
   session: string,
   chain: DfxSellChain
-): Promise<string> {
-  const { deposit } = asDfxSellRoute(
+): Promise<{ depositAddress: string; fiat: string | undefined }> {
+  const { deposit, currency } = asDfxSellRoute(
     await fetchDfx(`/sell/${routeId}`, {
       headers: { Authorization: `Bearer ${session}` }
     })
@@ -122,7 +124,7 @@ async function fetchDfxSellDepositAddress(
       `DFX sell route ${routeId} does not take deposits on ${chain.blockchain}`
     )
   }
-  return deposit.address
+  return { depositAddress: deposit.address, fiat: currency?.name }
 }
 
 /**
@@ -213,23 +215,43 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     let sendSceneClosed = false
     let broadcastTx: EdgeTransaction | undefined
     // The order on DFX's page can differ from the quote in Edge, so the sale
-    // saves DFX's fiat estimate for the crypto that is sent. Without one it
-    // saves the fiat amount the user entered in Edge for a fiat-entered
-    // quote, and '0' otherwise:
+    // saves DFX's fiat estimate for the crypto that is sent, in the fiat the
+    // route pays out. Without one it saves the fiat amount the user entered
+    // in Edge when the quote was entered in that fiat, and '0' otherwise:
     let fiatAmount = enteredFiatAmount
+    let saleFiatCurrencyCode = fiatCurrencyCode
     try {
-      // The estimate resolves to undefined instead of rejecting, so it
-      // cannot fail the address fetch:
-      const [depositAddress, fiatEstimate] = await Promise.all([
-        fetchDfxSellDepositAddress(routeId, deepQuery.session, chain),
-        fetchDfxSellFiatAmount({
-          blockchain: chain.blockchain,
-          asset: chain.asset,
-          fiat: dfxFiat,
-          cryptoAmount: amount
-        })
-      ])
-      if (fiatEstimate != null) fiatAmount = fiatEstimate
+      const depositAddress = await showToastSpinner(
+        lstrings.loading,
+        (async (): Promise<string> => {
+          // The estimate resolves to undefined instead of rejecting, so it
+          // cannot fail the address fetch:
+          const [route, fiatEstimate] = await Promise.all([
+            fetchDfxSellRoute(routeId, deepQuery.session, chain),
+            fetchDfxSellFiatAmount({
+              blockchain: chain.blockchain,
+              asset: chain.asset,
+              fiat: dfxFiat,
+              cryptoAmount: amount
+            })
+          ])
+          if (fiatEstimate != null) fiatAmount = fiatEstimate
+
+          // The user picked another payout currency on DFX's page, so the
+          // estimate and the entered amount are in the wrong fiat:
+          if (route.fiat != null && route.fiat !== dfxFiat) {
+            saleFiatCurrencyCode = `iso:${route.fiat}`
+            fiatAmount =
+              (await fetchDfxSellFiatAmount({
+                blockchain: chain.blockchain,
+                asset: chain.asset,
+                fiat: route.fiat,
+                cryptoAmount: amount
+              })) ?? '0'
+          }
+          return route.depositAddress
+        })()
+      )
 
       // The user left the widget while the route loaded:
       if (widgetClosed) {
@@ -260,7 +282,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
           nativeAmount
         },
         fiatAsset: {
-          fiatCurrencyCode,
+          fiatCurrencyCode: saleFiatCurrencyCode,
           fiatAmount
         }
       }
@@ -381,7 +403,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       onLogEvent('Sell_Success', {
         conversionValues: {
           conversionType: 'sell',
-          destFiatCurrencyCode: fiatCurrencyCode,
+          destFiatCurrencyCode: saleFiatCurrencyCode,
           destFiatAmount: fiatAmount,
           sourceAmount: new CryptoAmount({
             currencyConfig: wallet.currencyConfig,

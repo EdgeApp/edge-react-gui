@@ -117,7 +117,7 @@ export const asDfxSellRedirectQuery = asObject({
 
 /**
  * GET /v1/sell/{id}: the sell route, with the address that takes the
- * deposit and the blockchains it takes it on.
+ * deposit, the blockchains it takes it on, and the fiat it pays out.
  */
 export const asDfxSellRoute = asJSON(
   asObject({
@@ -126,6 +126,7 @@ export const asDfxSellRoute = asJSON(
         address: asString,
         blockchains: asArray(asString)
       })
-    )
+    ),
+    currency: asOptional(asObject({ name: asString }))
   })
 )

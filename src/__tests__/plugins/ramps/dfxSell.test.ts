@@ -16,9 +16,11 @@ import URL from 'url-parse'
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
 import {
   showError,
-  showToast
+  showToast,
+  showToastSpinner
 } from '../../../components/services/AirshipInstance'
 import { requestPermissionOnSettings } from '../../../components/services/PermissionsManager'
+import { lstrings } from '../../../locales/strings'
 import type { FiatPluginOpenWebViewParams } from '../../../plugins/gui/scenes/FiatPluginWebView'
 import { fetchDfxSellFiatAmount } from '../../../plugins/ramps/dfx/dfxQuote'
 import {
@@ -37,7 +39,10 @@ import {
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showError: jest.fn(),
-  showToast: jest.fn()
+  showToast: jest.fn(),
+  showToastSpinner: jest.fn(
+    async (_message: string, activity: Promise<unknown>) => await activity
+  )
 }))
 jest.mock('../../../components/services/PermissionsManager', () => ({
   requestPermissionOnSettings: jest.fn(async () => false)
@@ -174,6 +179,7 @@ describe('openDfxSell', () => {
   let fakeFetch: ReturnType<typeof installFakeFetch>
   let fetchInits: Array<RequestInit | undefined> = []
   let routeBody: unknown
+  let routeStatus = 200
   let routeLoaded: Promise<void> = Promise.resolve()
 
   const paramsFor = <T>(route: string): T[] =>
@@ -222,10 +228,11 @@ describe('openDfxSell', () => {
         blockchains: ['Bitcoin']
       }
     }
+    routeStatus = 200
     routeLoaded = Promise.resolve()
     fakeFetch = installFakeFetch(async () => {
       await routeLoaded
-      return makeTextResponse(200, routeBody)
+      return makeTextResponse(routeStatus, routeBody)
     })
     // The fake fetch does not record headers, which carry the session:
     const fetchRoute = global.fetch
@@ -326,6 +333,11 @@ describe('openDfxSell', () => {
     expect(webView.onShouldStartLoad?.(redirect)).toBe(false)
     await settle()
 
+    expect(showToastSpinner).toHaveBeenCalledTimes(1)
+    expect(showToastSpinner).toHaveBeenCalledWith(
+      lstrings.loading,
+      expect.any(Promise)
+    )
     expect(fakeFetch.calls.map(call => call.url)).toEqual([
       'https://api.dfx.swiss/v1/sell/42'
     ])
@@ -480,6 +492,82 @@ describe('openDfxSell', () => {
 
     expect(paramsFor('send2')).toHaveLength(0)
     expect(showError).toHaveBeenCalledTimes(1)
+  })
+
+  // The user picked EUR on DFX's page for a quote in CHF:
+  const EUR_ROUTE = {
+    id: 42,
+    deposit: {
+      id: 7,
+      address: 'bc1deposit',
+      blockchain: 'Bitcoin',
+      blockchains: ['Bitcoin']
+    },
+    currency: { id: 2, name: 'EUR' }
+  }
+
+  it('records the sale in the fiat the route pays out', async () => {
+    routeBody = EUR_ROUTE
+    // The estimate in CHF, then the estimate in EUR:
+    mockFetchFiatAmount
+      .mockResolvedValueOnce('98.45')
+      .mockResolvedValueOnce('91.20')
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    expect(mockFetchFiatAmount).toHaveBeenCalledTimes(2)
+    expect(mockFetchFiatAmount).toHaveBeenLastCalledWith({
+      blockchain: 'Bitcoin',
+      asset: 'BTC',
+      fiat: 'EUR',
+      cryptoAmount: '0.0015'
+    })
+    const [send] = paramsFor<SendScene2Params>('send2')
+    expect(send.spendInfo?.savedAction).toMatchObject({
+      fiatAsset: { fiatCurrencyCode: 'iso:EUR', fiatAmount: '91.20' }
+    })
+
+    const tx = await send.alternateBroadcast?.(signedTx)
+    send.onBack?.()
+    await send.onDone?.(null, tx)
+    await settle()
+
+    expect(onLogEvent).toHaveBeenCalledWith('Sell_Success', {
+      conversionValues: expect.objectContaining({
+        destFiatCurrencyCode: 'iso:EUR',
+        destFiatAmount: '91.20'
+      })
+    })
+  })
+
+  it('saves 0 when DFX gives no estimate in the fiat the route pays out', async () => {
+    routeBody = EUR_ROUTE
+    mockFetchFiatAmount
+      .mockResolvedValueOnce('98.45')
+      .mockResolvedValueOnce(undefined)
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    const [send] = paramsFor<SendScene2Params>('send2')
+    expect(send.spendInfo?.savedAction).toMatchObject({
+      fiatAsset: { fiatCurrencyCode: 'iso:EUR', fiatAmount: '0' }
+    })
+  })
+
+  it('shows the error and keeps the widget open when the route fetch fails', async () => {
+    routeStatus = 500
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    expect(paramsFor('send2')).toHaveLength(0)
+    expect(showError).toHaveBeenCalledTimes(1)
+    expect(pop).not.toHaveBeenCalled()
   })
 
   it('opens nothing when the user leaves the widget during the route fetch', async () => {
