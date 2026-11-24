@@ -1,5 +1,7 @@
+import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { locale } from '../../../locales/intl'
+import { lstrings } from '../../../locales/strings'
 import type {
   RampPluginFactory,
   RampQuoteRequest,
@@ -11,6 +13,7 @@ import {
 } from '../utils/createExternalRampPlugin'
 import { fetchDfxSellCryptoAmount } from './dfxQuote'
 import { asInitOptions } from './dfxRampTypes'
+import { openDfxSell } from './dfxSell'
 import { DFX_SESSION_CHAINS, fetchDfxSessionQuery } from './dfxSession'
 
 // DFX settles SEPA bank transfers within a few business days.
@@ -174,7 +177,41 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     return { ...query, ...sessionQuery }
   }
 
-  return createExternalRampPlugin(
+  // A logged-in sell hands the order back to Edge, which fetches the deposit
+  // address with the session and opens the send scene. Without a session
+  // DFX's page shows the address for a manual transfer, as before.
+  const approveSell = async (request: RampQuoteRequest): Promise<void> => {
+    const deepQuery = {
+      ...support.deepQuery,
+      ...(await showToastSpinner(
+        lstrings.fiat_plugin_finalizing_quote,
+        resolveDeepQuery(request)
+      ))
+    }
+    const chain = DFX_SESSION_CHAINS[request.wallet.currencyInfo.pluginId]
+    if (
+      chain != null &&
+      deepQuery.session != null &&
+      deepQuery.session !== ''
+    ) {
+      await openDfxSell({
+        config,
+        guiPlugin: guiPlugins.dfx,
+        deepPath: '/sell',
+        deepQuery,
+        request,
+        chain
+      })
+      return
+    }
+    config.navigation.navigate('pluginViewSell', {
+      plugin: guiPlugins.dfx,
+      deepPath: '/sell',
+      deepQuery
+    })
+  }
+
+  const plugin = createExternalRampPlugin(
     'dfx',
     {
       guiPlugin: guiPlugins.dfx,
@@ -184,4 +221,18 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     },
     config
   )
+
+  return {
+    ...plugin,
+    fetchQuotes: async (request, opts) => {
+      const quotes = await plugin.fetchQuotes(request, opts)
+      if (request.direction !== 'sell') return quotes
+      return quotes.map(quote => ({
+        ...quote,
+        approveQuote: async () => {
+          await approveSell(request)
+        }
+      }))
+    }
+  }
 }
