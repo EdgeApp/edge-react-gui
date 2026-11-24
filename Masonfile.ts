@@ -79,9 +79,10 @@ import { basename, join } from 'node:path'
 // This needs a Mason master with stage configs, ctx.writeSecretFile,
 // build-number blocks, published variants, node selector lists, the
 // cocoapods and androidLicenses tools, and the setup label (so the signing
-// node, which lacks it, never runs a branch's setup). The Linux node type
-// must list build-essential among its apt packages: node-gyp needs make and
-// a C compiler to build the CLI's signer there.
+// node, which lacks it, never runs a branch's setup). The CLI's Linux stage
+// asks for build-essential, which a Linux node's privileged helper installs
+// (a pool machine runs `mason worker --install` as root): node-gyp needs make
+// and a C compiler to build the CLI's signer there.
 
 const APP = 'co.edgesecure.app'
 
@@ -395,7 +396,8 @@ export function setup(m: Setup) {
           },
           linux: {
             on: LINUX,
-            tools: { node: '22' },
+            // node-gyp's make and C compiler, which the Linux image lacks.
+            tools: { node: '22', apt: ['build-essential'] },
             secrets: CLI_SECRETS,
             buildNumbers: [CLI_APP],
             ...cliLimits,

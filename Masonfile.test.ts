@@ -1035,7 +1035,11 @@ describe('Masonfile', () => {
       // Each platform on its own OS, which compiles its signer.
       expect(members).toEqual({
         mac: { on: mac, tools: { node: '22', xcode: '>=26' }, ...common },
-        linux: { on: linux, tools: { node: '22' }, ...common }
+        linux: {
+          on: linux,
+          tools: { node: '22', apt: ['build-essential'] },
+          ...common
+        }
       })
       if (branch === 'master')
         expect(calls[7]).toEqual([
