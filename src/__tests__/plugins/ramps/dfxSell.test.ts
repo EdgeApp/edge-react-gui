@@ -6,7 +6,11 @@ import {
   it,
   jest
 } from '@jest/globals'
-import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeTransaction,
+  PendingFundsError
+} from 'edge-core-js'
 import URL from 'url-parse'
 
 import type { SendScene2Params } from '../../../components/scenes/SendScene2'
@@ -388,6 +392,7 @@ describe('openDfxSell', () => {
     webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
     await settle()
 
+    expect(mockFetchFiatAmount).toHaveBeenCalledTimes(1)
     const [send] = paramsFor<SendScene2Params>('send2')
     expect(send.spendInfo?.savedAction).toMatchObject({
       isEstimate: true,
@@ -520,6 +525,69 @@ describe('openDfxSell', () => {
     })
     expect(showToast).toHaveBeenCalledTimes(1)
     expect(showError).not.toHaveBeenCalled()
+  })
+
+  it('closes the widget and opens no second send when a broadcast fails', async () => {
+    const webView = await openWidget()
+    const redirect = makeSellRedirect(ORDER_QUERY)
+    broadcastTx.mockRejectedValueOnce(new Error('broadcast timed out'))
+
+    webView.onShouldStartLoad?.(redirect)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    // The send may have reached the network:
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow(
+      'broadcast timed out'
+    )
+    send.onBack?.()
+    await settle()
+
+    expect(pop).toHaveBeenCalledTimes(1)
+
+    // The order cannot open a second send:
+    webView.onShouldStartLoad?.(redirect)
+    await settle()
+    expect(paramsFor('send2')).toHaveLength(1)
+    expect(fakeFetch.calls).toHaveLength(1)
+    expect(showError).not.toHaveBeenCalled()
+  })
+
+  it('opens the send scene again when the wallet refuses the spend', async () => {
+    const webView = await openWidget()
+    const redirect = makeSellRedirect(ORDER_QUERY)
+    broadcastTx.mockRejectedValueOnce(new PendingFundsError())
+
+    webView.onShouldStartLoad?.(redirect)
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    // The wallet refuses before it submits anything:
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow()
+    send.onBack?.()
+    await settle()
+
+    expect(pop).not.toHaveBeenCalled()
+
+    webView.onShouldStartLoad?.(redirect)
+    await settle()
+    expect(paramsFor('send2')).toHaveLength(2)
+    expect(showError).not.toHaveBeenCalled()
+  })
+
+  it('refuses a broadcast that comes after Back', async () => {
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    // The user leaves while the send scene is still signing:
+    send.onBack?.()
+    await settle()
+    await expect(send.alternateBroadcast?.(signedTx)).rejects.toThrow(
+      'closed before broadcast'
+    )
+
+    expect(broadcastTx).not.toHaveBeenCalled()
+    expect(pop).not.toHaveBeenCalled()
   })
 
   it('shows a toast when the send scene sends nothing', async () => {
