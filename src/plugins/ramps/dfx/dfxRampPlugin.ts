@@ -63,9 +63,10 @@ const DFX_FIAT_CURRENCY_CODES = ['EUR', 'CHF']
 // Languages DFX's app offers through its `lang` parameter.
 const DFX_LANGUAGES = ['en', 'de', 'fr', 'it']
 
-// DFX is offered for the chains Edge can log the wallet in on. DFX has more
-// chains (Solana, Monero), but it opens without the wallet's address there
-// and the user cannot finish the order.
+// DFX is offered only on the chains where Edge logs the wallet in to DFX.
+// DFX also supports other chains, such as Solana and Monero, but Edge does
+// not log wallets on those chains in to DFX, so DFX would open without the
+// wallet's address.
 const DFX_CRYPTO_ASSETS = Object.keys(DFX_SESSION_CHAINS).map(pluginId => ({
   pluginId,
   tokenId: null
