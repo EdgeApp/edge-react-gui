@@ -10,8 +10,7 @@ import {
 } from './dfxRampTypes'
 
 // Bounds the crypto amount quote, which runs beside the login under the
-// quote-approval spinner, and the fiat estimate, which runs beside the route
-// fetch after DFX's payment redirect:
+// quote-approval spinner, and each fiat estimate after DFX's payment redirect:
 const DFX_QUOTE_TIMEOUT_MS = 10000
 
 /** The crypto and fiat of a DFX sell quote, by DFX's names. */
