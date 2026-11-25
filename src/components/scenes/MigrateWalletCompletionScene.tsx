@@ -11,8 +11,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import {
-  readSyncedSettings,
-  writeSyncedSettings
+  markSecurityChecked,
+  updateSyncedSettings
 } from '../../actions/SettingsActions'
 import { SCROLL_INDICATOR_INSET_FIX } from '../../constants/constantSettings'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants'
@@ -117,18 +117,15 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
   // Create the wallets and enable the tokens
   useAsyncEffect(
     async () => {
-      const settings = await readSyncedSettings(account)
-      const securityCheckedWallets = { ...settings.securityCheckedWallets }
+      // The old wallets that migrated, and nothing else: the record is
+      // merged into the file's own map when the work is done, so an entry
+      // this scene did not touch is never rewritten from a stale copy.
+      const migratedWalletIds: string[] = []
 
       const migrationPromises = []
       for (const bundle of sortedMigrateWalletListBundles) {
         const mainnetItem = bundle[bundle.length - 1]
         const { createWalletId: oldWalletId } = mainnetItem
-
-        securityCheckedWallets[oldWalletId] ??= {
-          checked: false,
-          modalShown: 0
-        }
 
         const oldWallet = currencyWallets[oldWalletId]
         const {
@@ -223,11 +220,7 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
                 )
               )
 
-              const { modalShown } = securityCheckedWallets[oldWalletId]
-              securityCheckedWallets[oldWalletId] = {
-                checked: true,
-                modalShown
-              }
+              migratedWalletIds.push(oldWalletId)
             } catch (e) {
               showError(e)
               for (const item of bundle) {
@@ -335,11 +328,7 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
               await makeSpendSignAndBroadcast(oldWallet, spendInfo)
               handleItemStatus(mainnetItem, 'complete')
 
-              const { modalShown } = securityCheckedWallets[oldWalletId]
-              securityCheckedWallets[oldWalletId] = {
-                checked: true,
-                modalShown
-              }
+              migratedWalletIds.push(oldWalletId)
             } catch (e) {
               showError(e)
               handleItemStatus(mainnetItem, 'error')
@@ -354,10 +343,19 @@ const MigrateWalletCompletionComponent: React.FC<Props> = props => {
       for (const migration of migrationPromises) {
         await migration()
       }
-      await writeSyncedSettings(account, {
-        ...settings,
-        securityCheckedWallets
-      })
+      try {
+        await updateSyncedSettings(account, latest => ({
+          ...latest,
+          securityCheckedWallets: markSecurityChecked(
+            latest.securityCheckedWallets,
+            migratedWalletIds
+          )
+        }))
+      } catch (error: unknown) {
+        // After the broadcasts: the funds have moved, so a bookkeeping
+        // write that cannot land must not keep the user on this scene.
+        showError(error)
+      }
 
       setDone(true)
       return () => {}

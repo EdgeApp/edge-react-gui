@@ -14,9 +14,33 @@
 - `npm test` - Run Jest tests (single run)
 - `npm run watch` - Run Jest tests in watch mode
 - `npm test -- --testNamePattern="test name"` - Run specific test by name
-- `npm run verify` - Run lint, typechain, tsc, and test (full verification)
-- `npm run precommit` - Full pre-commit check (localize, lint-staged, tsc, test)
+- `npm run verify` - Full verification: lint, typechain, tsc, the five
+  documentation gates, the published CLI manifest check, the plugin-package
+  check, the Node-safety smoke test, Jest, and the CLI's offline suites
+  against both the sources and the built bundle
+- `npm run precommit` - Pre-commit check: localize, update-eslint-warnings,
+  lint-staged, tsc and Jest on every commit. The documentation gates, the
+  manifest check, the plugin-package check, the Node-safety smoke test and
+  the CLI's offline suites run
+  only when the commit stages a path in `GATE_PATHS`
+  (`scripts/util/cliGatePaths.js`, which is the list) — about two and a half
+  minutes that a commit elsewhere has no reason to pay, and a hook people skip
+  with `--no-verify` also skips the `tsc` and `jest` that predate the CLI. CI
+  runs all of them regardless.
 - `tsc` - TypeScript type checking (via package.json script)
+
+### Edge CLI
+
+The repository also builds `edge-cli` and `edge-engine` from `src/cli/`.
+[`docs/EDGE_CLI.md`](docs/EDGE_CLI.md) is the guide; `docs/api/README.md`
+covers the route declarations the reference is generated from.
+
+- `npm run cli -- <command>` / `npm run engine` - run either half from source
+- `npm run build:cli` - the single-file bundles in `lib/`
+- `npm run docs:api` - regenerate the committed reference and command table
+- `npm run docs:api:gates` - the five read-only checks that it is in step
+- `npm run test:cli:offline` - the fake-world suites, no network
+- `npm run test:cli:network` - the suites that need the tester servers
 
 ## Swap Provider Integration
 
@@ -39,6 +63,8 @@ New swap icons live at `https://content.edge.app/exchangeIcons/<pluginId>/icon.p
 - **Naming**: camelCase for variables/functions, PascalCase for components/types
 - **Files**: `.tsx` for React components, `.ts` for utilities/hooks
 - **Error Handling**: Use proper error boundaries, avoid throwing in render
+- **Node-safe modules**: every module the CLI loads must stay importable under plain Node, with no `react-native*` module anywhere on its require graph — the CLI engine loads them without the app's bundler. That set is the CLI's module graph (`walkGraph(CLI_ENTRIES)` in `scripts/util/moduleGraph.js`) plus `SHARED_MODULES` in `scripts/util/cliGatePaths.js`; it is most of `src/cli`, `src/locales` and `src/util`, but not all of them — `src/util/rnUtils.ts` and `src/locales/initLocale.ts` are app-only and import `react-native` freely. Adding a `react-native*` import to a module in that set is what breaks the rule; reach platform code through an injected dependency or a `src/cli`-side module instead. `npm run test:cli:node-safe` is the check
+- **lstrings at module scope**: in those same three trees, read `lstrings` inside a function, never at module scope. `applyLocale` mutates `lstrings` in place and the CLI boots the locale from somewhere these modules do not import, so a module-scope capture is right only if the boot happened to run first. `src/util/txDisplay/txActionLabels.ts` is the pattern; `edge/no-module-scope-lstrings` enforces it
 - **Text Components**: Use `EdgeText`, `Paragraph`, `SmallText`, `WarningText` instead of raw text
 - **Component Reuse**: Strongly prefer reusing existing shared components over building new ones or dropping to raw library primitives. Before adding UI, look for a component that already covers the need (e.g. text via `EdgeText`), and keep color, sizing, and styling driven by `useTheme()` rather than hard-coded per call site. When nothing suitable exists, add a reusable, themed definition instead of a one-off
 - **Spacing**: Keep a minimum of 1rem TOTAL space between an element and its neighbors, including screen edges. "Total" is the sum contributed across nearby and parent elements, so examine them rather than each element in isolation: scene-edge padding from `SceneWrapper`/`SceneContainer` (`DEFAULT_MARGIN_REM`, 0.5rem) plus an element's own 0.5rem margins via `Space`/`useSpaceStyle` compose to the 1rem total. An explicit override always takes precedence: the "unless otherwise specified" escape hatch applies to every case, screen edges included. The only built-in exception is flex layouts, which rely on flex gap and alignment for sibling spacing; even there, the 1rem screen-edge minimum still applies. Express spacing in rem through the layout primitives instead of hard-coded pixel margins

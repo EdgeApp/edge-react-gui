@@ -1,7 +1,7 @@
 import { beforeAll, expect, it, jest } from '@jest/globals'
 import fetch from 'node-fetch'
 
-import { getHistoricalCryptoRate } from '../util/exchangeRates'
+import { getHistoricalCryptoRate, stopRateQueue } from '../util/exchangeRates'
 import { mswServer } from '../util/mswServer'
 import { snooze } from '../util/utils'
 
@@ -16,6 +16,8 @@ beforeAll(() => {
   mswServer.listen()
 })
 afterAll(() => {
+  // A debounce left armed in a shared jest worker hides the next real leak.
+  stopRateQueue()
   mswServer.close()
 })
 

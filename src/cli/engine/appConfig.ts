@@ -1,0 +1,84 @@
+/**
+ * Load GUI-style config.json (corePlugins, swapPlugins).
+ * Searches ./config.json then ~/.edge-cli/config.json.
+ */
+import { asBoolean, asObject, asOptional, asUnknown } from 'cleaners'
+
+import { configSearchPaths, readJsonConfig } from './readJsonConfig'
+
+const asAppConfigFile = asObject({
+  BETA_FEATURES: asOptional(asBoolean),
+  corePlugins: asOptional(asObject(asUnknown)),
+  swapPlugins: asOptional(asObject(asUnknown))
+})
+
+/** Derived from the cleaner, so the two cannot drift. */
+type AppConfigFile = ReturnType<typeof asAppConfigFile>
+
+/** Where `loadAppConfig` looks, in order. */
+function appConfigSearchPaths(): string[] {
+  return configSearchPaths('config.json')
+}
+
+function readAppConfigFile(path: string): AppConfigFile | null {
+  return readJsonConfig(path, asAppConfigFile, 'config.json')
+}
+
+/**
+ * Loads config.json from (in order):
+ * 1. ./config.json
+ * 2. ~/.edge-cli/config.json
+ *
+ * Missing files are skipped. Present but invalid JSON/cleaner failures throw,
+ * matching loadKeys, so a typo cannot silently disable every swap plugin.
+ *
+ * A file that parses but declares neither `corePlugins` nor `swapPlugins`
+ * does not shadow a later one that does — the same latch `loadKeys` applies
+ * to `edgeApiKey`, and for the same reason. `asAppConfigFile` drops unknown
+ * keys, so *any* `config.json` in the working directory parses to `{}`, and
+ * returning that would let an unrelated `config.json` in the directory a
+ * command runs from re-enable a swap plugin the user disabled in
+ * `~/.edge-cli/config.json`, with nothing said.
+ *
+ * A file whose `swapPlugins` is the wrong *type* does throw: a typo in the
+ * user's own file would otherwise silently re-enable every plugin they
+ * turned off. `readJsonConfig` names the path, so a `config.json` belonging
+ * to something else is diagnosable from the message.
+ */
+export function loadAppConfig(): AppConfigFile {
+  return loadAppConfigFrom().config
+}
+
+/**
+ * The same load, saying which file answered.
+ *
+ * `engine-config` publishes it. A daemon inherits the working directory of
+ * whichever command spawned it and searches `./config.json` first, so two
+ * invocations with identical flags from different directories hash to the
+ * same profile and are served by one engine — running on whichever
+ * configuration that first `cd` happened to be in, with nothing reporting
+ * which.
+ */
+export function loadAppConfigFrom(): {
+  config: AppConfigFile
+  path: string | null
+} {
+  for (const path of appConfigSearchPaths()) {
+    const parsed = readAppConfigFile(path)
+    if (parsed?.corePlugins != null || parsed?.swapPlugins != null) {
+      return { config: parsed, path }
+    }
+  }
+  return { config: asAppConfigFile({}), path: null }
+}
+
+/**
+ * The cleaner itself, for the drift test.
+ *
+ * `configSubsets.test.ts` feeds it what the app's own `config.json` /
+ * `keys.json` cleaner produces, so this narrower subset cannot stop
+ * accepting the file the app writes. The engine deliberately does not use
+ * the app's `makeConfig` loader, which fills defaults and writes the file
+ * back — a daemon asked to read a user's keys must not rewrite them.
+ */
+export const asAppConfigFileForTests = asAppConfigFile

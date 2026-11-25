@@ -12,7 +12,8 @@ import { sprintf } from 'sprintf-js'
 
 import {
   migrateDenominationSettings,
-  readSyncedSettings,
+  readSyncedSettingsForLogin,
+  resetSyncedSettingsTrust,
   type SyncedAccountSettings
 } from '../actions/SettingsActions'
 import { ConfirmContinueModal } from '../components/modals/ConfirmContinueModal'
@@ -107,7 +108,9 @@ export function initializeAccount(
 
     // Load all settings upfront so we can navigate immediately after LOGIN
     const [syncedSettings, localSettings] = await Promise.all([
-      readSyncedSettings(account),
+      // The read that fills Redux, so it is also the one whose outcome
+      // `syncedSettingsAreTrusted` reports.
+      readSyncedSettingsForLogin(account),
       readLocalAccountSettings(account)
     ])
 
@@ -215,11 +218,9 @@ export function initializeAccount(
     console.log('Wallet Infos:', filteredWalletInfos)
 
     // Run one-time migration to clean up denomination settings in background
-    migrateDenominationSettings(account, syncedSettings).catch(
-      (error: unknown) => {
-        console.log('Failed to migrate denomination settings:', error)
-      }
-    )
+    migrateDenominationSettings(account).catch((error: unknown) => {
+      console.log('Failed to migrate denomination settings:', error)
+    })
 
     await dispatch(refreshAccountReferral())
 
@@ -379,6 +380,10 @@ export function logoutRequest(
     Keyboard.dismiss()
     Airship.clear()
     resetLocalAccountSettingsCache()
+    // The synced twin of the same state, for the same reason: one account's
+    // login read must not decide whether the next account's export is
+    // trusted.
+    resetSyncedSettingsTrust()
     resetZnsClient()
     clearReverseLookupCache()
 
