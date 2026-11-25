@@ -1,3 +1,5 @@
+import { floor, gt } from 'biggystring'
+
 import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { locale } from '../../../locales/intl'
@@ -108,8 +110,12 @@ export function makeDfxRequestQuery(
     query[isInputAmount ? 'amount-in' : 'amount-out'] =
       amountQuery.exchangeAmount
   } else if ('maxExchangeAmount' in amountQuery && !isBuy) {
-    // A sell's Max is the most crypto the wallet can spend after fees:
-    query['amount-in'] = amountQuery.maxExchangeAmount
+    // A sell's Max is the most crypto the wallet can spend after fees.
+    // DFX turns the amount into a JavaScript number, so round it down to 8
+    // decimals: an EVM Max has 18, which DFX would show in full and could
+    // hand back a few wei above the Max:
+    const maxAmount = floor(amountQuery.maxExchangeAmount, -8)
+    if (gt(maxAmount, '0')) query['amount-in'] = maxAmount
   }
 
   return query

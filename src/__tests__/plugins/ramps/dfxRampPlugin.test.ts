@@ -139,6 +139,31 @@ describe('makeDfxRequestQuery', () => {
     })
   })
 
+  it.each([
+    ['an EVM Max', '0.123456789012345678', '0.12345678'],
+    ['a Max with 8 decimals', '0.99999999', '0.99999999']
+  ])('rounds %s down to 8 decimals', (name, maxExchangeAmount, amountIn) => {
+    const maxSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(maxSell, 'Edge')['amount-in']).toBe(amountIn)
+  })
+
+  it('leaves out a Max below 8 decimals', () => {
+    const dustSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount: '0.000000001' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(dustSell, 'Edge')).not.toHaveProperty(
+      'amount-in'
+    )
+  })
+
   it('leaves the amount out of a max quote', () => {
     const maxBuy = makeRequest('ethereum', { amountQuery: { max: true } })
     const query = makeDfxRequestQuery(maxBuy, 'Edge')
