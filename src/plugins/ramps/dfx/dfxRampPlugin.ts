@@ -171,10 +171,10 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // Opens DFX with the user's quote choices, logged in with the selected
-  // wallet's address. The choices stay when the login fails, but DFX does
-  // not open when it blocks the country of the user's IP address
-  // (RampIpCountryError). A fiat-entered sell opens with the crypto amount
-  // DFX quotes for the fiat, when it can quote one.
+  // wallet's address. DFX does not open when the login fails, or when DFX
+  // blocks the country of the user's IP address (RampIpCountryError). A
+  // fiat-entered sell opens with the crypto amount DFX quotes for the fiat,
+  // when it can quote one.
   const resolveDeepQuery = async (
     request: RampQuoteRequest
   ): Promise<Record<string, string>> => {
