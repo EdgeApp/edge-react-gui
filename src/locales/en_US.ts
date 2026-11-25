@@ -2046,6 +2046,8 @@ const strings = {
   fiat_plugin_sell_failed_try_again: 'Sell order failed. Please try again.',
   fiat_plugin_sell_failed_to_send_try_again:
     'Failed to send funds for sell transaction. Please try again.',
+  fiat_plugin_wallet_login_failed_1s:
+    'Failed to connect your wallet to %1$s. Please try again.',
   fiat_plugin_cannot_continue_camera_permission:
     'Cannot continue. Camera permission needed for ID verifications',
   fiat_plugin_purchase_limit_error_2s:

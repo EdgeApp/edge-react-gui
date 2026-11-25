@@ -430,26 +430,32 @@ describe('dfxRampPlugin approveQuote', () => {
     })
   })
 
-  // Sells approve through the plugin's own sell launcher, not the helper's:
+  // Sells approve through the plugin's own sell launcher, not the helper's,
+  // so each refusal is checked for both:
+  const sellRequest = makeRequest('bitcoin', { direction: 'sell' })
+  const blockedCountry = new RampIpCountryError('DFX', 'Forbidden')
+  const failedLogin = new Error(
+    'Failed to connect your wallet to DFX. Please try again.'
+  )
   it.each([
-    ['buy', request],
-    ['sell', makeRequest('bitcoin', { direction: 'sell' })]
+    ['a buy', 'DFX blocks the country', request, blockedCountry],
+    ['a sell', 'DFX blocks the country', sellRequest, blockedCountry],
+    ['a buy', 'the login fails', request, failedLogin],
+    ['a sell', 'the login fails', sellRequest, failedLogin]
   ])(
-    'does not open DFX for a %s when it blocks the country',
-    async (direction, blockedRequest) => {
-      mockFetchSessionQuery.mockRejectedValueOnce(
-        new RampIpCountryError('DFX', 'Forbidden')
-      )
+    'does not open DFX for %s when %s',
+    async (kind, reason, refusedRequest, error) => {
+      mockFetchSessionQuery.mockRejectedValueOnce(error)
       const navigate = jest.fn()
       const plugin = dfxRampPlugin({
         initOptions: {},
         navigation: { navigate }
       } as unknown as RampPluginConfig)
 
-      const [quote] = await plugin.fetchQuotes(blockedRequest)
+      const [quote] = await plugin.fetchQuotes(refusedRequest)
       await expect(
-        quote.approveQuote({ coreWallet: blockedRequest.wallet })
-      ).rejects.toBeInstanceOf(RampIpCountryError)
+        quote.approveQuote({ coreWallet: refusedRequest.wallet })
+      ).rejects.toBe(error)
       expect(navigate).not.toHaveBeenCalled()
     }
   )

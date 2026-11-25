@@ -16,6 +16,9 @@ import {
 } from '../../../util/fake/fakeFetch'
 import { translateError } from '../../../util/translateError'
 
+// The error the quote approval shows, so the user tries again:
+const LOGIN_FAILED = 'Failed to connect your wallet to DFX. Please try again.'
+
 const MESSAGE_PREFIX =
   'By_signing_this_message,_you_confirm_that_you_are_the_sole_owner_of_the_provided_Blockchain_address._Your_ID:_'
 
@@ -144,15 +147,15 @@ describe('fetchDfxSessionQuery', () => {
     expect(signMessage).not.toHaveBeenCalled()
   })
 
-  it('falls back when DFX rejects the login', async () => {
+  it('stops the launch when DFX rejects the login', async () => {
     authStatus = 403
     const { wallet } = makeWallet('bitcoin', [
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-
-    expect(query).toBeUndefined()
+    await expect(
+      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+    ).rejects.toThrow(LOGIN_FAILED)
     expect(console.warn).toHaveBeenCalled()
   })
 
@@ -178,7 +181,7 @@ describe('fetchDfxSessionQuery', () => {
     )
   })
 
-  it('falls back on other country refusals', async () => {
+  it('stops the launch on other country refusals too', async () => {
     authStatus = 403
     authBody = {
       statusCode: 403,
@@ -189,9 +192,9 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-
-    expect(query).toBeUndefined()
+    await expect(
+      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+    ).rejects.toThrow(LOGIN_FAILED)
     expect(console.warn).toHaveBeenCalled()
   })
 
@@ -201,9 +204,9 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-
-    expect(query).toBeUndefined()
+    await expect(
+      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+    ).rejects.toThrow(LOGIN_FAILED)
     expect(signMessage).not.toHaveBeenCalled()
     expect(fakeFetch.calls).toHaveLength(1)
   })
@@ -214,25 +217,25 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-
-    expect(query).toBeUndefined()
+    await expect(
+      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+    ).rejects.toThrow(LOGIN_FAILED)
     expect(signMessage).not.toHaveBeenCalled()
   })
 
-  it('falls back when DFX does not accept the address on the chain', async () => {
+  it('stops the launch when DFX does not accept the address on the chain', async () => {
     signBlockchains = ['Ethereum']
     const { wallet, signBytes } = makeWallet('base', [
       { addressType: 'publicAddress', publicAddress: '0xabc' }
     ])
 
-    const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-
-    expect(query).toBeUndefined()
+    await expect(
+      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+    ).rejects.toThrow(LOGIN_FAILED)
     expect(signBytes).not.toHaveBeenCalled()
   })
 
-  it('falls back when DFX does not answer in time', async () => {
+  it('stops the launch when DFX does not answer in time', async () => {
     jest.useFakeTimers()
     try {
       global.fetch = (async () =>
@@ -241,10 +244,13 @@ describe('fetchDfxSessionQuery', () => {
         { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
       ])
 
-      const pending = fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
+      // Caught at once, so the rejection is handled while time advances:
+      const error = fetchDfxSessionQuery({ wallet, walletName: 'Edge' }).catch(
+        (error: unknown) => error
+      )
       await jest.advanceTimersByTimeAsync(10000)
 
-      expect(await pending).toBeUndefined()
+      expect(await error).toMatchObject({ message: LOGIN_FAILED })
       expect(signMessage).not.toHaveBeenCalled()
       expect(console.warn).toHaveBeenCalled()
     } finally {
