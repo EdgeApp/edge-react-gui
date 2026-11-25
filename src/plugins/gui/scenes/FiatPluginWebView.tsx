@@ -1,7 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { WebView, type WebViewNavigation } from 'react-native-webview'
-import type { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes'
+import type {
+  ShouldStartLoadRequest,
+  WebViewErrorEvent
+} from 'react-native-webview/lib/WebViewTypes'
 
 import { SceneWrapper } from '../../../components/common/SceneWrapper'
 import { showError } from '../../../components/services/AirshipInstance'
@@ -53,6 +56,18 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
     }
   })
 
+  const handleError = useHandler((event: WebViewErrorEvent) => {
+    // Without this handler the WebView logs the whole event, URL query (and
+    // any DFX `session` token) included:
+    const { code, description, url } = event.nativeEvent
+    console.warn(
+      'FiatPluginWebView load error: ',
+      redactUrl(url),
+      code,
+      description
+    )
+  })
+
   const handleShouldStartLoad = useHandler(
     (event: ShouldStartLoadRequest): boolean => {
       // A frame inside the page must not be able to stand in for the page
@@ -93,6 +108,7 @@ export const FiatPluginWebViewComponent: React.FC<Props> = props => {
         ref={webViewRef}
         scalesPageToFit
         source={{ uri: url }}
+        onError={handleError}
         onMessage={handleMessage}
         onNavigationStateChange={handleNavigationStateChange}
         onShouldStartLoadWithRequest={

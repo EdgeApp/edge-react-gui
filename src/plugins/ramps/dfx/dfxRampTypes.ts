@@ -6,6 +6,7 @@ import {
   asObject,
   asOptional,
   asString,
+  asValue,
   uncleaner
 } from 'cleaners'
 
@@ -76,9 +77,56 @@ export const asDfxSellQuoteRequest = asObject({
 
 export const wasDfxSellQuoteRequest = uncleaner(asJSON(asDfxSellQuoteRequest))
 
+/** PUT /v1/sell/quote: the crypto to sell, by DFX's asset and fiat ids. */
+export const asDfxSellEstimateRequest = asObject({
+  asset: asObject({ id: asNumber }),
+  currency: asObject({ id: asNumber }),
+  amount: asNumber
+})
+
+export const wasDfxSellEstimateRequest = uncleaner(
+  asJSON(asDfxSellEstimateRequest)
+)
+
 /** PUT /v1/sell/quote: `amount` is the crypto to send for `targetAmount`. */
 export const asDfxSellQuoteResponse = asJSON(
   asObject({
     amount: asNumber
+  })
+)
+
+/** PUT /v1/sell/quote: `estimatedAmount` is the fiat for `amount`. */
+export const asDfxSellEstimateResponse = asJSON(
+  asObject({
+    estimatedAmount: asNumber
+  })
+)
+
+/**
+ * The query of the redirect DFX's sell page opens once the user confirms a
+ * sell. `amount` is the crypto to send, and `isComplete` is 'false' while
+ * the crypto still has to be sent.
+ */
+export const asDfxSellRedirectQuery = asObject({
+  routeId: asString,
+  amount: asString,
+  asset: asString,
+  blockchain: asString,
+  isComplete: asValue('true', 'false')
+})
+
+/**
+ * GET /v1/sell/{id}: the sell route, with the address that takes the
+ * deposit, the blockchains it takes it on, and the fiat it pays out.
+ */
+export const asDfxSellRoute = asJSON(
+  asObject({
+    deposit: asOptional(
+      asObject({
+        address: asString,
+        blockchains: asArray(asString)
+      })
+    ),
+    currency: asOptional(asObject({ name: asString }))
   })
 )
