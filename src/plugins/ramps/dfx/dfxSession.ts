@@ -1,6 +1,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
 import { fetchDfx } from './dfxApi'
@@ -52,10 +53,13 @@ export interface DfxSessionParams {
 /**
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
- * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the link without a login. Throws RampIpCountryError
- * when DFX blocks the country of the user's IP address, since DFX's own
- * login would fail the same way.
+ * Returns undefined for a chain without a session login, which opens DFX
+ * without one. Throws RampLoginError, which asks the user to try again and
+ * names the cause for error reports, when the login fails: without
+ * `session`, DFX would open with whatever login it last saved on the
+ * device, which can be another wallet or another Edge account. Throws
+ * RampIpCountryError when DFX blocks the country of the user's IP address,
+ * since DFX's own login would fail the same way.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -74,10 +78,7 @@ export async function fetchDfxSessionQuery(
     return query
   } catch (error: unknown) {
     if (error instanceof RampIpCountryError) throw error
-    console.warn(
-      `DFX session login failed, opening plain link: ${String(error)}`
-    )
-    return undefined
+    throw new RampLoginError('DFX', error)
   }
 }
 
@@ -114,6 +115,8 @@ async function loginToDfx(
       body: JSON.stringify({ address, signature, wallet: walletName })
     })
   )
+  // An empty `session` opens DFX without a login, like a failed login:
+  if (accessToken === '') throw new Error('DFX returned an empty access token')
 
   return { session: accessToken }
 }

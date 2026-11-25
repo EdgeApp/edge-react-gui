@@ -171,10 +171,10 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // Opens DFX with the user's quote choices, logged in with the selected
-  // wallet's address. The choices stay when the login fails, but DFX does
-  // not open when it blocks the country of the user's IP address
-  // (RampIpCountryError). A fiat-entered sell opens with the crypto amount
-  // DFX quotes for the fiat, when it can quote one.
+  // wallet's address. DFX does not open when the login fails, or when DFX
+  // blocks the country of the user's IP address (RampIpCountryError). A
+  // fiat-entered sell opens with the crypto amount DFX quotes for the fiat,
+  // when it can quote one.
   const resolveDeepQuery = async (
     request: RampQuoteRequest
   ): Promise<Record<string, string>> => {
@@ -194,8 +194,9 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // A logged-in sell hands the order back to Edge, which fetches the deposit
-  // address with the session and opens the send scene. Without a session
-  // DFX's page shows the address for a manual transfer, as before.
+  // address with the session and opens the send scene. Without a session,
+  // which only a chain without a session login leaves (a failed login
+  // throws), DFX's page shows the address for a manual transfer, as before.
   const approveSell = async (request: RampQuoteRequest): Promise<void> => {
     const deepQuery = {
       ...support.deepQuery,
