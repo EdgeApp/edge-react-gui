@@ -258,6 +258,7 @@ describe('dfxRampPlugin approveQuote', () => {
       expect(await approveSellQuery(cryptoSell)).toEqual({
         ...sellQuery,
         session: 'jwt',
+        assets: 'Bitcoin/BTC',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
     })
@@ -343,6 +344,7 @@ describe('dfxRampPlugin approveQuote', () => {
         ...sellQuery,
         'amount-in': '0.003502',
         session: 'jwt',
+        assets: 'Bitcoin/BTC',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
       expect(mockFetchSellCryptoAmount).toHaveBeenCalledWith({
@@ -364,20 +366,27 @@ describe('dfxRampPlugin approveQuote', () => {
     })
   })
 
-  it('does not open DFX when it blocks the country', async () => {
-    mockFetchSessionQuery.mockRejectedValueOnce(
-      new RampIpCountryError('DFX', 'Forbidden')
-    )
-    const navigate = jest.fn()
-    const plugin = dfxRampPlugin({
-      initOptions: {},
-      navigation: { navigate }
-    } as unknown as RampPluginConfig)
+  // Sells approve through the plugin's own sell launcher, not the helper's:
+  it.each([
+    ['buy', request],
+    ['sell', makeRequest('bitcoin', { direction: 'sell' })]
+  ])(
+    'does not open DFX for a %s when it blocks the country',
+    async (direction, blockedRequest) => {
+      mockFetchSessionQuery.mockRejectedValueOnce(
+        new RampIpCountryError('DFX', 'Forbidden')
+      )
+      const navigate = jest.fn()
+      const plugin = dfxRampPlugin({
+        initOptions: {},
+        navigation: { navigate }
+      } as unknown as RampPluginConfig)
 
-    const [quote] = await plugin.fetchQuotes(request)
-    await expect(
-      quote.approveQuote({ coreWallet: request.wallet })
-    ).rejects.toBeInstanceOf(RampIpCountryError)
-    expect(navigate).not.toHaveBeenCalled()
-  })
+      const [quote] = await plugin.fetchQuotes(blockedRequest)
+      await expect(
+        quote.approveQuote({ coreWallet: blockedRequest.wallet })
+      ).rejects.toBeInstanceOf(RampIpCountryError)
+      expect(navigate).not.toHaveBeenCalled()
+    }
+  )
 })

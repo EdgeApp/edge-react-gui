@@ -154,10 +154,18 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     tokenId
   })
   // The URL carries the login session, so this module never logs it and the
-  // WebView scene logs it through `redactUrl`, which hides `session`:
+  // WebView scene logs it through `redactUrl`, which hides `session`.
+  // `assets` leaves DFX's page only the wallet's own asset on its own chain,
+  // so the order DFX hands back is one this wallet can pay. It takes DFX's
+  // unique name: DFX also matches bare names, and ETH alone would still
+  // offer ETH on Arbitrum, Optimism and Base:
   const url = makePluginUri(guiPlugin, {
     deepPath,
-    deepQuery: { ...deepQuery, 'redirect-uri': redirectUri }
+    deepQuery: {
+      ...deepQuery,
+      assets: `${chain.blockchain}/${chain.asset}`,
+      'redirect-uri': redirectUri
+    }
   })
 
   // The fiat amount the user entered in Edge, or '0' for a quote without one:
@@ -180,6 +188,11 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
   // Opens the send scene for the sell order named in DFX's payment
   // redirect, and finishes the sale once it is sent:
   const handlePaymentRedirect = async (uri: string): Promise<void> => {
+    // While the send scene is open for an order, ignore every other
+    // redirect, so none of them can pop the send scene in place of the
+    // WebView:
+    if (inPayment) return
+
     let order: DfxSellOrder | undefined
     try {
       order = parseDfxSellRedirect(uri, redirectUri, chain)
@@ -203,7 +216,6 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       return
     }
 
-    if (inPayment) return
     inPayment = true
 
     const { amount, routeId } = order

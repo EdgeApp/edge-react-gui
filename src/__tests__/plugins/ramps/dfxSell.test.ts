@@ -246,12 +246,16 @@ describe('openDfxSell', () => {
     jest.useFakeTimers()
   })
 
-  it('opens DFX with the payment redirect and the unchanged query', async () => {
+  it("opens DFX with the payment redirect for the wallet's asset only", async () => {
     const webView = await openWidget()
 
     const url = new URL(webView.url, true)
     expect(`${url.origin}${url.pathname}`).toBe('https://app.dfx.swiss/sell')
-    expect(url.query).toEqual({ ...DEEP_QUERY, 'redirect-uri': REDIRECT_URI })
+    expect(url.query).toEqual({
+      ...DEEP_QUERY,
+      assets: 'Bitcoin/BTC',
+      'redirect-uri': REDIRECT_URI
+    })
   })
 
   it('opens DFX when the user declines the optional camera permission', async () => {
@@ -293,6 +297,19 @@ describe('openDfxSell', () => {
     expect(pop).toHaveBeenCalledTimes(1)
     expect(paramsFor('send2')).toHaveLength(0)
     expect(fakeFetch.calls).toHaveLength(0)
+  })
+
+  it('ignores the cancel redirect while the send scene is open', async () => {
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    expect(paramsFor('send2')).toHaveLength(1)
+
+    webView.onShouldStartLoad?.(REDIRECT_URI)
+    await settle()
+
+    expect(pop).not.toHaveBeenCalled()
   })
 
   it('opens nothing for an order DFX reports as sent', async () => {
