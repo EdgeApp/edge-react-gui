@@ -115,6 +115,8 @@ async function loginToDfx(
       body: JSON.stringify({ address, signature, wallet: walletName })
     })
   )
+  // An empty `session` opens DFX without a login, like a failed login:
+  if (accessToken === '') throw new Error('DFX returned an empty access token')
 
   return { session: accessToken }
 }

@@ -35,6 +35,7 @@ let authStatus = 201
 let authBody: unknown = {}
 let signBlockchains: string[] = []
 let signMessageText: ((address: string) => string) | undefined
+let accessToken = 'jwt-token'
 const realWarn = console.warn
 
 const makeWallet = (
@@ -67,6 +68,7 @@ beforeEach(() => {
   authBody = { statusCode: 403, message: 'Forbidden', error: 'Forbidden' }
   signBlockchains = ['Bitcoin']
   signMessageText = undefined
+  accessToken = 'jwt-token'
   console.warn = jest.fn()
   fakeFetch = installFakeFetch(({ url }) => {
     if (url.includes('/auth/signMessage')) {
@@ -77,7 +79,7 @@ beforeEach(() => {
       })
     }
     if (authStatus !== 201) return makeTextResponse(authStatus, authBody)
-    return makeTextResponse(201, { accessToken: 'jwt-token' })
+    return makeTextResponse(201, { accessToken })
   })
 })
 
@@ -172,6 +174,15 @@ describe('fetchDfxSessionQuery', () => {
     ])
 
     expectLoginError(await failLogin(wallet), '/auth returned 403')
+  })
+
+  it('stops the launch when DFX returns an empty token', async () => {
+    accessToken = ''
+    const { wallet } = makeWallet('bitcoin', [
+      { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
+    ])
+
+    expectLoginError(await failLogin(wallet), 'empty access token')
   })
 
   it('stops the launch when DFX blocks the country of the IP address', async () => {
