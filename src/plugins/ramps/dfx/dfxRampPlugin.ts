@@ -1,3 +1,5 @@
+import { floor } from 'biggystring'
+
 import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { locale } from '../../../locales/intl'
@@ -75,7 +77,8 @@ const DFX_CRYPTO_ASSETS = Object.keys(DFX_SESSION_CHAINS).map(pluginId => ({
 /**
  * Carries the user's quote choices into DFX's app (its query parameters,
  * github.com/DFXswiss/app#query-parameters): the language, the fiat, the
- * crypto asset and its blockchain, and the amount the user entered.
+ * crypto asset and its blockchain, and the amount the user entered or a
+ * sell's Max.
  * A fiat-entered sell carries the fiat as `amount-out`, which DFX only turns
  * into a crypto amount once the user picks a bank account, so
  * `resolveDeepQuery` swaps in the crypto amount when DFX can quote it.
@@ -106,6 +109,13 @@ export function makeDfxRequestQuery(
     const isInputAmount = isBuy === (amountType === 'fiat')
     query[isInputAmount ? 'amount-in' : 'amount-out'] =
       amountQuery.exchangeAmount
+  } else if ('maxExchangeAmount' in amountQuery && !isBuy) {
+    // A sell's Max is the most crypto the wallet can spend after fees.
+    // DFX turns the amount into a JavaScript number, so round it down to 8
+    // decimals: an EVM Max has 18, which DFX would show in full and could
+    // hand back a few wei above the Max. A Max below 8 decimals still goes,
+    // as 0, since without an amount DFX fills in its own default:
+    query['amount-in'] = floor(amountQuery.maxExchangeAmount, -8)
   }
 
   return query
