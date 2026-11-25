@@ -122,6 +122,23 @@ describe('makeDfxRequestQuery', () => {
     })
   })
 
+  it("passes a sell's Max as the amount to send", () => {
+    const maxSell = makeRequest('bitcoin', {
+      amountQuery: { maxExchangeAmount: '0.00041' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(maxSell, 'Edge')).toEqual({
+      wallet: 'Edge',
+      lang: 'en',
+      blockchain: 'Bitcoin',
+      'asset-in': 'BTC',
+      'asset-out': 'CHF',
+      'amount-in': '0.00041'
+    })
+  })
+
   it('leaves the amount out of a max quote', () => {
     const maxBuy = makeRequest('ethereum', { amountQuery: { max: true } })
     const query = makeDfxRequestQuery(maxBuy, 'Edge')
