@@ -566,8 +566,8 @@ describe('openDfxSell', () => {
     })
 
     const tx = await send.alternateBroadcast?.(signedTx)
-    send.onBack?.()
     await send.onDone?.(null, tx)
+    send.onBack?.()
     await settle()
 
     expect(onLogEvent).toHaveBeenCalledWith('Sell_Success', {
@@ -606,6 +606,61 @@ describe('openDfxSell', () => {
     expect(pop).not.toHaveBeenCalled()
   })
 
+  it('ignores another order during the route fetch', async () => {
+    let releaseRoute = (): void => {}
+    routeLoaded = new Promise<void>(resolve => {
+      releaseRoute = resolve
+    })
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    webView.onShouldStartLoad?.(
+      makeSellRedirect({ ...ORDER_QUERY, routeId: '43', amount: '0.002' })
+    )
+    releaseRoute()
+    await settle()
+
+    const sends = paramsFor<SendScene2Params>('send2')
+    expect(sends).toHaveLength(1)
+    expect(sends[0].spendInfo?.spendTargets[0].nativeAmount).toBe('150000')
+    expect(
+      fakeFetch.calls.filter(({ url }) => url.includes('/sell/43'))
+    ).toHaveLength(0)
+  })
+
+  it('handles redirects again when the send scene fails to open', async () => {
+    const webView = await openWidget()
+    navigate.mockImplementationOnce(() => {
+      throw new Error('Navigation failed')
+    })
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    webView.onShouldStartLoad?.(REDIRECT_URI)
+    await settle()
+
+    expect(showError).toHaveBeenCalledTimes(1)
+    expect(pop).toHaveBeenCalledTimes(1)
+  })
+
+  it('ignores redirects once the widget is closed', async () => {
+    const webView = await openWidget()
+
+    webView.onClose()
+    // Android loads the redirect page anyway, which a closed widget must
+    // not pop from under whatever scene is now on top:
+    await webView.onUrlChange?.(
+      makeSellRedirect({ ...ORDER_QUERY, isComplete: 'true' })
+    )
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+
+    expect(pop).not.toHaveBeenCalled()
+    expect(fakeFetch.calls).toHaveLength(0)
+    expect(paramsFor('send2')).toHaveLength(0)
+  })
+
   it('opens nothing when the user leaves the widget during the route fetch', async () => {
     let releaseRoute = (): void => {}
     routeLoaded = new Promise<void>(resolve => {
@@ -631,9 +686,10 @@ describe('openDfxSell', () => {
     await settle()
     const [send] = paramsFor<SendScene2Params>('send2')
     const tx = await send.alternateBroadcast?.(signedTx)
-    // The send scene pops itself before it reports the transaction:
-    send.onBack?.()
+    // The send scene pops itself and reports the transaction, then
+    // unmounts (onBack) once its animation ends:
     await send.onDone?.(null, tx)
+    send.onBack?.()
     await settle()
 
     expect(broadcastTx).toHaveBeenCalledWith(signedTx)

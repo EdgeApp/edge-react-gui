@@ -184,10 +184,11 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
   // Opens the send scene for the sell order named in DFX's payment
   // redirect, and finishes the sale once it is sent:
   const handlePaymentRedirect = async (uri: string): Promise<void> => {
-    // While the send scene is open, ignore every redirect, so none of them
-    // can pop the send scene in place of the WebView. Before then, a cancel
-    // still closes the widget, which drops an order whose route is loading:
-    if (sendSceneOpen) return
+    // While the send scene is open, ignore every redirect: closing the
+    // widget then would remove the WebView from under the send scene. Before
+    // then, a cancel still closes the widget, which drops an order whose
+    // route is loading. Once the widget is closed, nothing is left to do:
+    if (sendSceneOpen || widgetClosed) return
 
     let order: DfxSellOrder | undefined
     try {
@@ -320,7 +321,6 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       // The send scene calls onBack whenever it unmounts, so wait for it
       // here: leaving without sending lands in the catch below.
       await new Promise<EdgeTransaction>((resolve, reject) => {
-        sendSceneOpen = true
         navigation.navigate('send2', {
           ...sendParams,
           // The default broadcast, wrapped to record that the signed
@@ -365,6 +365,10 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
             }
           }
         })
+        // Set only once the scene is on its way, so a navigation that
+        // throws can't leave every later redirect ignored. The scene can't
+        // unmount (onBack) before navigate returns:
+        sendSceneOpen = true
       })
     } catch (e: unknown) {
       if (broadcastAttempted) {
