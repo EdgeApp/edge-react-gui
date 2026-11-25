@@ -29,6 +29,7 @@ import {
   buildAndroidMaestro,
   signAndroidMaestro,
   setMaestroFlag,
+  setTestServersFlag,
   simulatorApp,
   appStoreVersion,
   uploadIos,
@@ -40,7 +41,8 @@ import {
   cliReleaseNotes,
   cliVersion,
   publishCliRelease,
-  releaseCli
+  releaseCli,
+  TEST_SERVERS_PARAM
 } from './Masonfile'
 import { stampGradle } from './scripts/updateVersion'
 
@@ -79,7 +81,10 @@ afterEach(() => {
 })
 
 /** A checkout with package.json and build.gradle, and a recording `Stage` on it. */
-function recordStage(branch: string): {
+function recordStage(
+  branch: string,
+  params?: Record<string, unknown>
+): {
   calls: Call[]
   ctx: any
   root: string
@@ -96,7 +101,7 @@ function recordStage(branch: string): {
   const calls: Call[] = []
   const ctx = {
     workspace: root,
-    run: { branch },
+    run: { branch, params },
     sh: async (...args: unknown[]) => calls.push(['sh', ...args]),
     exec: async (...args: unknown[]) => calls.push(['exec', ...args]),
     publish: async (...args: unknown[]) => calls.push(['publish', ...args]),
@@ -236,7 +241,8 @@ describe('Masonfile', () => {
               branches: ['master', 'develop', 'staging', 'beta']
             },
             { request: true }
-          ]
+          ],
+          params: { testServers: TEST_SERVERS_PARAM }
         }
       ])
       // Each branch numbers its own app ID's builds.
@@ -792,6 +798,45 @@ describe('Masonfile', () => {
         ENABLE_MAESTRO_BUILD: true
       }
     )
+  })
+
+  it('declares testServers as an optional boolean, off by default', () => {
+    expect(TEST_SERVERS_PARAM).toEqual({ type: 'boolean', default: false })
+  })
+
+  it('sets the tester servers flag in config.json and keeps the rest', async () => {
+    const { root } = recordStage('develop')
+    writeFileSync(
+      join(root, 'config.json'),
+      '{"A":1,"ENABLE_TEST_SERVERS":false}'
+    )
+    await setTestServersFlag(root)
+    expect(JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))).toEqual(
+      {
+        A: 1,
+        ENABLE_TEST_SERVERS: true
+      }
+    )
+  })
+
+  it('points a build at the tester servers only when testServers is true', async () => {
+    for (const [params, expected] of [
+      [{ testServers: true }, true],
+      [{ testServers: false }, undefined],
+      [undefined, undefined]
+    ] as Array<[Record<string, unknown> | undefined, boolean | undefined]>) {
+      const { calls, ctx, root } = recordStage('feature/x', params)
+      writeFileSync(join(root, 'config.json'), '{"A":1}')
+      await buildAndroid(ctx)
+      const config = JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'))
+      expect(config.ENABLE_TEST_SERVERS).toBe(expected)
+      expect(config.A).toBe(1)
+      expect(
+        calls.some(
+          call => call[0] === 'section' && call[1] === 'Tester servers'
+        )
+      ).toBe(expected === true)
+    }
   })
 
   it('builds the iOS Maestro variant for the iPhone Simulator and publishes the zipped app', async () => {

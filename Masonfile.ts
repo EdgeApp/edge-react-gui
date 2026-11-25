@@ -219,6 +219,13 @@ const ANDROID_SIGNER = { labels: ['android-signing'] }
 /** The per-ABI APKs a master build publishes; build.gradle numbers them N+1 and N+2. */
 const ABI_SPLITS = ['armeabi-v7a', 'arm64-v8a']
 
+/**
+ * Points a build at the tester login, info and sync servers, where the test
+ * accounts live. Asked for per run (`"params": {"testServers": true}`), on
+ * any branch; left off, a build talks to production.
+ */
+export const TEST_SERVERS_PARAM = { type: 'boolean', default: false } as const
+
 export function setup(m: Setup) {
   m.apiVersion(1)
   // Date and a counter (26102901); iOS and Android of one run share the
@@ -244,7 +251,10 @@ export function setup(m: Setup) {
       triggers: [
         { push: true, branches: ['master', 'develop', 'staging', 'beta'] },
         { request: true }
-      ]
+      ],
+      params: {
+        testServers: TEST_SERVERS_PARAM
+      }
     },
     w => {
       // `npm run prepare` makes the config and API signer it needs without
@@ -445,6 +455,11 @@ async function prepare(
     'Secret files',
     async () => await writeSecrets(ctx, secrets)
   )
+  if (ctx.run.params?.testServers === true)
+    await ctx.log.section(
+      'Tester servers',
+      async () => await setTestServersFlag(ctx.workspace)
+    )
   if (options.maestro === true)
     await ctx.log.section(
       'Maestro',
@@ -692,6 +707,19 @@ export async function buildAndroid(ctx: Stage) {
       )
   )
   return { version }
+}
+
+/**
+ * Points this test build at the tester servers, where the test accounts
+ * live, by setting ENABLE_TEST_SERVERS in config.json.
+ */
+export async function setTestServersFlag(root: string): Promise<void> {
+  const file = join(root, 'config.json')
+  const config = JSON.parse(await readFile(file, 'utf8'))
+  await writeFile(
+    file,
+    JSON.stringify({ ...config, ENABLE_TEST_SERVERS: true }, null, 2)
+  )
 }
 
 /** Sets the Maestro flag in config.json, as scripts/deploy.ts does for a Maestro build. */
