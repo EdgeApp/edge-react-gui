@@ -1573,6 +1573,7 @@
   "fiat_plugin_sell_complete_message_3": "Se ha enviado un correo de confirmación a tu dirección de correo electrónico registrada",
   "fiat_plugin_sell_failed_try_again": "La orden de venta falló. Por favor, intenta de nuevo.",
   "fiat_plugin_sell_failed_to_send_try_again": "Error al enviar los fondos para la transacción de venta. Por favor, intenta de nuevo.",
+  "fiat_plugin_wallet_login_failed_1s": "Failed to connect your wallet to %1$s. Please try again.",
   "fiat_plugin_cannot_continue_camera_permission": "No se puede continuar. Se necesita permiso de cámara para la verificación de ID",
   "fiat_plugin_purchase_limit_error_2s": "Por favor, crea una cuenta completa para aumentar el límite de compra por encima de %1$s %2$s",
   "fiat_plugin_max_buy_quote_error": "El proveedor no puede crear la cotización de compra máxima",
