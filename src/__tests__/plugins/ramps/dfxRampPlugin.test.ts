@@ -16,6 +16,7 @@ import type {
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showError: jest.fn(),
@@ -446,9 +447,7 @@ describe('dfxRampPlugin approveQuote', () => {
   // so each refusal is checked for both:
   const sellRequest = makeRequest('bitcoin', { direction: 'sell' })
   const blockedCountry = new RampIpCountryError('DFX', 'Forbidden')
-  const failedLogin = new Error(
-    'Failed to connect your wallet to DFX. Please try again.'
-  )
+  const failedLogin = new RampLoginError('DFX', 'login timed out after 10000ms')
   it.each([
     ['a buy', 'DFX blocks the country', request, blockedCountry],
     ['a sell', 'DFX blocks the country', sellRequest, blockedCountry],

@@ -10,13 +10,14 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { fetchDfxSessionQuery } from '../../../plugins/ramps/dfx/dfxSession'
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 import {
   installFakeFetch,
   makeTextResponse
 } from '../../../util/fake/fakeFetch'
 import { translateError } from '../../../util/translateError'
 
-// The error the quote approval shows, so the user tries again:
+// What the quote approval shows for a failed login, so the user tries again:
 const LOGIN_FAILED = 'Failed to connect your wallet to DFX. Please try again.'
 
 const MESSAGE_PREFIX =
@@ -84,6 +85,23 @@ afterEach(() => {
   fakeFetch.restore()
   console.warn = realWarn
 })
+
+/** Logs the wallet in, expecting that to fail, and returns the error. */
+const failLogin = async (wallet: EdgeCurrencyWallet): Promise<unknown> =>
+  await fetchDfxSessionQuery({ wallet, walletName: 'Edge' }).then(
+    () => new Error('The login succeeded'),
+    (error: unknown) => error
+  )
+
+/**
+ * Checks a failed login: the user is asked to try again, while logs and
+ * error reports get the cause.
+ */
+const expectLoginError = (error: unknown, cause: string): void => {
+  expect(error).toBeInstanceOf(RampLoginError)
+  expect(translateError(error)).toBe(LOGIN_FAILED)
+  expect(error).toMatchObject({ message: expect.stringContaining(cause) })
+}
 
 describe('fetchDfxSessionQuery', () => {
   it('logs a bitcoin wallet in with its first segwit address', async () => {
@@ -153,10 +171,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    await expect(
-      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-    ).rejects.toThrow(LOGIN_FAILED)
-    expect(console.warn).toHaveBeenCalled()
+    expectLoginError(await failLogin(wallet), '/auth returned 403')
   })
 
   it('stops the launch when DFX blocks the country of the IP address', async () => {
@@ -192,10 +207,10 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    await expect(
-      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-    ).rejects.toThrow(LOGIN_FAILED)
-    expect(console.warn).toHaveBeenCalled()
+    expectLoginError(
+      await failLogin(wallet),
+      'Your country of residence is not supported'
+    )
   })
 
   it('refuses to sign any text but the DFX message for the address', async () => {
@@ -204,9 +219,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    await expect(
-      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-    ).rejects.toThrow(LOGIN_FAILED)
+    expectLoginError(await failLogin(wallet), 'unexpected signMessage text')
     expect(signMessage).not.toHaveBeenCalled()
     expect(fakeFetch.calls).toHaveLength(1)
   })
@@ -217,9 +230,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'segwitAddress', publicAddress: 'bc1segwit' }
     ])
 
-    await expect(
-      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-    ).rejects.toThrow(LOGIN_FAILED)
+    expectLoginError(await failLogin(wallet), 'unexpected signMessage text')
     expect(signMessage).not.toHaveBeenCalled()
   })
 
@@ -229,9 +240,7 @@ describe('fetchDfxSessionQuery', () => {
       { addressType: 'publicAddress', publicAddress: '0xabc' }
     ])
 
-    await expect(
-      fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
-    ).rejects.toThrow(LOGIN_FAILED)
+    expectLoginError(await failLogin(wallet), 'address not accepted on Base')
     expect(signBytes).not.toHaveBeenCalled()
   })
 
@@ -245,14 +254,11 @@ describe('fetchDfxSessionQuery', () => {
       ])
 
       // Caught at once, so the rejection is handled while time advances:
-      const error = fetchDfxSessionQuery({ wallet, walletName: 'Edge' }).catch(
-        (error: unknown) => error
-      )
+      const error = failLogin(wallet)
       await jest.advanceTimersByTimeAsync(10000)
 
-      expect(await error).toMatchObject({ message: LOGIN_FAILED })
+      expectLoginError(await error, 'login timed out after 10000ms')
       expect(signMessage).not.toHaveBeenCalled()
-      expect(console.warn).toHaveBeenCalled()
     } finally {
       jest.useRealTimers()
     }

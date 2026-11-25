@@ -1,8 +1,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import { sprintf } from 'sprintf-js'
 
-import { lstrings } from '../../../locales/strings'
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
 import { fetchDfx } from './dfxApi'
@@ -55,11 +54,12 @@ export interface DfxSessionParams {
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
  * Returns undefined for a chain without a session login, which opens DFX
- * without one. Throws an error asking the user to try again when the login
- * fails: without `session`, DFX would open with whatever login it last
- * saved on the device, which can be another wallet or another Edge
- * account. Throws RampIpCountryError when DFX blocks the country of the
- * user's IP address, since DFX's own login would fail the same way.
+ * without one. Throws RampLoginError, which asks the user to try again and
+ * names the cause for error reports, when the login fails: without
+ * `session`, DFX would open with whatever login it last saved on the
+ * device, which can be another wallet or another Edge account. Throws
+ * RampIpCountryError when DFX blocks the country of the user's IP address,
+ * since DFX's own login would fail the same way.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -78,8 +78,7 @@ export async function fetchDfxSessionQuery(
     return query
   } catch (error: unknown) {
     if (error instanceof RampIpCountryError) throw error
-    console.warn(`DFX session login failed: ${String(error)}`)
-    throw new Error(sprintf(lstrings.fiat_plugin_wallet_login_failed_1s, 'DFX'))
+    throw new RampLoginError('DFX', error)
   }
 }
 
