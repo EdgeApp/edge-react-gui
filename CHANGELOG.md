@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: DFX is no longer offered for Monero and Solana wallets, which Edge does not log in to DFX
+
 ## 4.53.0 (2026-11-20)
 
 - added: "View in Explorer" entry in the wallet menu for non-privacy, non-UTXO wallets
