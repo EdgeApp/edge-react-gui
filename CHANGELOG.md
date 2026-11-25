@@ -6,7 +6,7 @@
 - changed: DFX shows an error to try again when Edge can't log the wallet in to DFX, instead of opening DFX without a login
 - fixed: DFX is no longer offered for Monero and Solana wallets, which Edge does not log in to DFX
 - fixed: DFX sells started with Max open with the amount filled in
-- fixed: DFX buys only offer the asset and chain of the wallet picked in Edge
+- fixed: DFX buys and sells only offer the asset and chain of the wallet picked in Edge
 
 ## 4.53.0 (2026-11-20)
 
