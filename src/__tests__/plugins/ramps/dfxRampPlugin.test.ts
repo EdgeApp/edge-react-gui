@@ -278,6 +278,10 @@ describe('dfxRampPlugin approveQuote', () => {
       ...requestQuery,
       session: 'jwt'
     })
+    expect(mockFetchSessionQuery).toHaveBeenCalledWith({
+      wallet: request.wallet,
+      walletName: 'Edge'
+    })
   })
 
   it('opens a buy in the plugin scene without a payment redirect', async () => {
@@ -316,6 +320,12 @@ describe('dfxRampPlugin approveQuote', () => {
         session: 'jwt',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
+      expect(mockFetchSessionQuery).toHaveBeenCalledWith({
+        wallet: cryptoSell.wallet,
+        walletName: 'Edge'
+      })
+      // A crypto-entered sell needs no quote for its amount:
+      expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
     })
   })
 
@@ -335,28 +345,6 @@ describe('dfxRampPlugin approveQuote', () => {
       assets: 'Bitcoin/BTC',
       'amount-out': '0.01',
       session: 'jwt'
-    })
-    expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
-  })
-
-  it('does not quote a crypto-entered sell', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
-    const cryptoSell = makeRequest('bitcoin', {
-      amountQuery: { exchangeAmount: '0.01' },
-      amountType: 'crypto',
-      direction: 'sell'
-    })
-
-    expect(await approveSellQuery(cryptoSell)).toEqual({
-      wallet: 'Edge',
-      lang: 'en',
-      blockchain: 'Bitcoin',
-      'asset-in': 'BTC',
-      'asset-out': 'CHF',
-      assets: 'Bitcoin/BTC',
-      'amount-in': '0.01',
-      session: 'jwt',
-      'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
   })

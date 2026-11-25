@@ -36,7 +36,6 @@ let authBody: unknown = {}
 let signBlockchains: string[] = []
 let signMessageText: ((address: string) => string) | undefined
 let accessToken = 'jwt-token'
-const realWarn = console.warn
 
 const makeWallet = (
   pluginId: string,
@@ -69,7 +68,6 @@ beforeEach(() => {
   signBlockchains = ['Bitcoin']
   signMessageText = undefined
   accessToken = 'jwt-token'
-  console.warn = jest.fn()
   fakeFetch = installFakeFetch(({ url }) => {
     if (url.includes('/auth/signMessage')) {
       const address = decodeURIComponent(url.split('address=')[1])
@@ -85,7 +83,6 @@ beforeEach(() => {
 
 afterEach(() => {
   fakeFetch.restore()
-  console.warn = realWarn
 })
 
 /** Logs the wallet in, expecting that to fail, and returns the error. */
