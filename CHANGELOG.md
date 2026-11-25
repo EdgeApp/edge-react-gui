@@ -5,6 +5,7 @@
 - changed: DFX sells that Edge logs in to DFX open Edge's send scene with the deposit address and amount filled in, instead of showing an address to copy
 - fixed: DFX is no longer offered for Monero and Solana wallets, which Edge does not log in to DFX
 - fixed: DFX sells started with Max open with the amount filled in
+- fixed: DFX buys only offer the asset and chain of the wallet picked in Edge
 
 ## 4.53.0 (2026-11-20)
 

@@ -69,6 +69,7 @@ describe('makeDfxRequestQuery', () => {
       wallet: 'Edge',
       lang: 'de',
       blockchain: 'Bitcoin',
+      assets: 'Bitcoin/BTC',
       'asset-in': 'CHF',
       'asset-out': 'BTC',
       'amount-in': '500'
@@ -86,6 +87,7 @@ describe('makeDfxRequestQuery', () => {
       wallet: 'Edge',
       lang: 'en',
       blockchain: 'Bitcoin',
+      assets: 'Bitcoin/BTC',
       'asset-in': 'EUR',
       'asset-out': 'BTC',
       'amount-out': '1.5'
@@ -103,6 +105,7 @@ describe('makeDfxRequestQuery', () => {
       wallet: 'Edge',
       lang: 'en',
       blockchain: 'Polygon',
+      assets: 'Polygon/POL',
       'asset-in': 'POL',
       'asset-out': 'CHF',
       'amount-in': '2'
@@ -116,6 +119,7 @@ describe('makeDfxRequestQuery', () => {
       wallet: 'Edge',
       lang: 'en',
       blockchain: 'Ethereum',
+      assets: 'Ethereum/ETH',
       'asset-in': 'ETH',
       'asset-out': 'CHF',
       'amount-out': '500'
@@ -135,6 +139,7 @@ describe('makeDfxRequestQuery', () => {
       blockchain: 'Bitcoin',
       'asset-in': 'BTC',
       'asset-out': 'CHF',
+      assets: 'Bitcoin/BTC',
       'amount-in': '0.00041'
     })
   })
@@ -162,6 +167,20 @@ describe('makeDfxRequestQuery', () => {
     expect(makeDfxRequestQuery(dustSell, 'Edge')).not.toHaveProperty(
       'amount-in'
     )
+  })
+
+  it('locks a buy to the asset and chain of the wallet', () => {
+    const query = makeDfxRequestQuery(makeRequest('arbitrum'), 'Edge')
+
+    expect(query.blockchain).toBe('Arbitrum')
+    expect(query.assets).toBe('Arbitrum/ETH')
+  })
+
+  it('sets no asset filter for a chain DFX is not offered on', () => {
+    const query = makeDfxRequestQuery(makeRequest('litecoin'), 'Edge')
+
+    expect(query).not.toHaveProperty('blockchain')
+    expect(query).not.toHaveProperty('assets')
   })
 
   it('leaves the amount out of a max quote', () => {
@@ -247,6 +266,7 @@ describe('dfxRampPlugin approveQuote', () => {
     wallet: 'Edge',
     lang: 'en',
     blockchain: 'Bitcoin',
+    assets: 'Bitcoin/BTC',
     'asset-in': 'CHF',
     'asset-out': 'BTC',
     'amount-in': '500'
@@ -291,6 +311,7 @@ describe('dfxRampPlugin approveQuote', () => {
       blockchain: 'Bitcoin',
       'asset-in': 'BTC',
       'asset-out': 'CHF',
+      assets: 'Bitcoin/BTC',
       'amount-in': '0.01'
     }
 
@@ -300,7 +321,6 @@ describe('dfxRampPlugin approveQuote', () => {
       expect(await approveSellQuery(cryptoSell)).toEqual({
         ...sellQuery,
         session: 'jwt',
-        assets: 'Bitcoin/BTC',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
     })
@@ -340,6 +360,7 @@ describe('dfxRampPlugin approveQuote', () => {
       blockchain: 'Bitcoin',
       'asset-in': 'CHF',
       'asset-out': 'BTC',
+      assets: 'Bitcoin/BTC',
       'amount-out': '0.01'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
@@ -359,6 +380,7 @@ describe('dfxRampPlugin approveQuote', () => {
       blockchain: 'Bitcoin',
       'asset-in': 'BTC',
       'asset-out': 'CHF',
+      assets: 'Bitcoin/BTC',
       'amount-in': '0.01'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
@@ -375,7 +397,8 @@ describe('dfxRampPlugin approveQuote', () => {
       lang: 'en',
       blockchain: 'Bitcoin',
       'asset-in': 'BTC',
-      'asset-out': 'EUR'
+      'asset-out': 'EUR',
+      assets: 'Bitcoin/BTC'
     }
 
     it('opens with the crypto amount DFX quotes for the fiat', async () => {
@@ -386,7 +409,6 @@ describe('dfxRampPlugin approveQuote', () => {
         ...sellQuery,
         'amount-in': '0.003502',
         session: 'jwt',
-        assets: 'Bitcoin/BTC',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
       expect(mockFetchSellCryptoAmount).toHaveBeenCalledWith({

@@ -79,6 +79,7 @@ const DEEP_QUERY = {
   blockchain: 'Bitcoin',
   'asset-in': 'BTC',
   'asset-out': 'CHF',
+  assets: 'Bitcoin/BTC',
   'amount-in': '0.0015',
   session: 'jwt'
 }
@@ -246,16 +247,12 @@ describe('openDfxSell', () => {
     jest.useFakeTimers()
   })
 
-  it("opens DFX with the payment redirect for the wallet's asset only", async () => {
+  it('opens DFX with the payment redirect and the unchanged query', async () => {
     const webView = await openWidget()
 
     const url = new URL(webView.url, true)
     expect(`${url.origin}${url.pathname}`).toBe('https://app.dfx.swiss/sell')
-    expect(url.query).toEqual({
-      ...DEEP_QUERY,
-      assets: 'Bitcoin/BTC',
-      'redirect-uri': REDIRECT_URI
-    })
+    expect(url.query).toEqual({ ...DEEP_QUERY, 'redirect-uri': REDIRECT_URI })
   })
 
   it('opens DFX when the user declines the optional camera permission', async () => {

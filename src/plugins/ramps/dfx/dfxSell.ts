@@ -154,18 +154,12 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     tokenId
   })
   // The URL carries the login session, so this module never logs it and the
-  // WebView scene logs it through `redactUrl`, which hides `session`.
-  // `assets` leaves DFX's page only the wallet's own asset on its own chain,
-  // so the order DFX hands back is one this wallet can pay. It takes DFX's
-  // unique name: DFX also matches bare names, and ETH alone would still
-  // offer ETH on Arbitrum, Optimism and Base:
+  // WebView scene logs it through `redactUrl`, which hides `session`. The
+  // query's `assets` filter (makeDfxRequestQuery) keeps the order DFX hands
+  // back to the wallet's own asset and chain:
   const url = makePluginUri(guiPlugin, {
     deepPath,
-    deepQuery: {
-      ...deepQuery,
-      assets: `${chain.blockchain}/${chain.asset}`,
-      'redirect-uri': redirectUri
-    }
+    deepQuery: { ...deepQuery, 'redirect-uri': redirectUri }
   })
 
   // The fiat amount the user entered in Edge, or '0' for a quote without one:
