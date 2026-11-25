@@ -122,6 +122,46 @@ describe('makeDfxRequestQuery', () => {
     })
   })
 
+  it("passes a sell's Max as the amount to send", () => {
+    const maxSell = makeRequest('bitcoin', {
+      amountQuery: { maxExchangeAmount: '0.00041' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(maxSell, 'Edge')).toEqual({
+      wallet: 'Edge',
+      lang: 'en',
+      blockchain: 'Bitcoin',
+      'asset-in': 'BTC',
+      'asset-out': 'CHF',
+      'amount-in': '0.00041'
+    })
+  })
+
+  it.each([
+    ['an EVM Max', '0.123456789012345678', '0.12345678'],
+    ['a Max with 8 decimals', '0.99999999', '0.99999999']
+  ])('rounds %s down to 8 decimals', (name, maxExchangeAmount, amountIn) => {
+    const maxSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(maxSell, 'Edge')['amount-in']).toBe(amountIn)
+  })
+
+  it("passes a Max below 8 decimals as 0, not DFX's default", () => {
+    const dustSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount: '0.000000001' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    expect(makeDfxRequestQuery(dustSell, 'Edge')['amount-in']).toBe('0')
+  })
+
   it('leaves the amount out of a max quote', () => {
     const maxBuy = makeRequest('ethereum', { amountQuery: { max: true } })
     const query = makeDfxRequestQuery(maxBuy, 'Edge')
@@ -364,6 +404,20 @@ describe('dfxRampPlugin approveQuote', () => {
         'amount-out': '200'
       })
     })
+  })
+
+  it("opens a sell's Max with the amount rounded down to 8 decimals", async () => {
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
+    const maxSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount: '0.123456789012345678' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    const query = await approveSellQuery(maxSell)
+
+    expect(query['amount-in']).toBe('0.12345678')
+    expect(query.assets).toBe('Ethereum/ETH')
   })
 
   // Sells approve through the plugin's own sell launcher, not the helper's:
