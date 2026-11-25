@@ -162,13 +162,13 @@ describe('fetchDfxSessionQuery', () => {
     const query = await fetchDfxSessionQuery({ wallet, walletName: 'Edge' })
 
     expect(query).toEqual({ session: 'jwt-token' })
-    expect(signMessage).toHaveBeenCalledWith(message, {
-      otherParams: { publicAddress: '4monero' }
-    })
-    expect(signBytes).not.toHaveBeenCalled()
+    expect(signMessage).not.toHaveBeenCalled()
+    expect(Buffer.from(signBytes.mock.calls[0][0]).toString('utf8')).toBe(
+      message
+    )
     expect(fakeFetch.calls[1].body).toEqual({
       address: '4monero',
-      signature: 'sig-' + message,
+      signature: '0xsig-' + message,
       wallet: 'Edge'
     })
   })
