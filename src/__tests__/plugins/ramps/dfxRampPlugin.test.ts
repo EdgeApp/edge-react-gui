@@ -271,12 +271,6 @@ describe('dfxRampPlugin approveQuote', () => {
     'amount-in': '500'
   }
 
-  it('keeps the quote choices without a session', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
-
-    expect(await approveDeepQuery(request)).toEqual(requestQuery)
-  })
-
   it('adds the session to the quote choices after a login', async () => {
     mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
 
@@ -324,19 +318,6 @@ describe('dfxRampPlugin approveQuote', () => {
       })
     })
 
-    it('opens the plugin scene as before without a login', async () => {
-      mockFetchSessionQuery.mockResolvedValueOnce(undefined)
-
-      const [route, params] = await approveRoute(cryptoSell)
-
-      expect(route).toBe('pluginViewSell')
-      expect(params).toEqual({
-        plugin: expect.objectContaining({ pluginId: 'dfx' }),
-        deepPath: '/sell',
-        deepQuery: sellQuery
-      })
-    })
-
     it('opens the plugin scene as before with an empty session', async () => {
       mockFetchSessionQuery.mockResolvedValueOnce({ session: '' })
 
@@ -347,7 +328,7 @@ describe('dfxRampPlugin approveQuote', () => {
   })
 
   it('does not quote a crypto-entered buy', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
     const cryptoBuy = makeRequest('bitcoin', {
       amountQuery: { exchangeAmount: '0.01' },
       amountType: 'crypto'
@@ -360,27 +341,30 @@ describe('dfxRampPlugin approveQuote', () => {
       'asset-in': 'CHF',
       'asset-out': 'BTC',
       assets: 'Bitcoin/BTC',
-      'amount-out': '0.01'
+      'amount-out': '0.01',
+      session: 'jwt'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
   })
 
   it('does not quote a crypto-entered sell', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
     const cryptoSell = makeRequest('bitcoin', {
       amountQuery: { exchangeAmount: '0.01' },
       amountType: 'crypto',
       direction: 'sell'
     })
 
-    expect(await approveDeepQuery(cryptoSell)).toEqual({
+    expect(await approveSellQuery(cryptoSell)).toEqual({
       wallet: 'Edge',
       lang: 'en',
       blockchain: 'Bitcoin',
       'asset-in': 'BTC',
       'asset-out': 'CHF',
       assets: 'Bitcoin/BTC',
-      'amount-in': '0.01'
+      'amount-in': '0.01',
+      session: 'jwt',
+      'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
   })
@@ -419,12 +403,14 @@ describe('dfxRampPlugin approveQuote', () => {
     })
 
     it('keeps the fiat amount when DFX cannot quote it', async () => {
-      mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+      mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
       mockFetchSellCryptoAmount.mockResolvedValueOnce(undefined)
 
-      expect(await approveDeepQuery(fiatSell)).toEqual({
+      expect(await approveSellQuery(fiatSell)).toEqual({
         ...sellQuery,
-        'amount-out': '200'
+        'amount-out': '200',
+        session: 'jwt',
+        'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
     })
   })

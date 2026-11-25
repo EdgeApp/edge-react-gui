@@ -194,8 +194,9 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // A logged-in sell hands the order back to Edge, which fetches the deposit
-  // address with the session and opens the send scene. Without a session
-  // DFX's page shows the address for a manual transfer, as before.
+  // address with the session and opens the send scene. Without a session,
+  // which only a chain without a session login leaves (a failed login
+  // throws), DFX's page shows the address for a manual transfer, as before.
   const approveSell = async (request: RampQuoteRequest): Promise<void> => {
     const deepQuery = {
       ...support.deepQuery,
