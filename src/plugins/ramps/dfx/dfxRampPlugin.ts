@@ -77,8 +77,8 @@ const DFX_CRYPTO_ASSETS = Object.keys(DFX_SESSION_CHAINS).map(pluginId => ({
 /**
  * Carries the user's quote choices into DFX's app (its query parameters,
  * github.com/DFXswiss/app#query-parameters): the language, the fiat, the
- * crypto asset and its blockchain, and the amount the user entered or a
- * sell's Max.
+ * crypto asset and its blockchain (the only ones DFX's page then offers),
+ * and the amount the user entered or a sell's Max.
  * A fiat-entered sell carries the fiat as `amount-out`, which DFX only turns
  * into a crypto amount once the user picks a bank account, so
  * `resolveDeepQuery` swaps in the crypto amount when DFX can quote it.
@@ -102,6 +102,12 @@ export function makeDfxRequestQuery(
   if (chain != null) {
     query.blockchain = chain.blockchain
     query[isBuy ? 'asset-out' : 'asset-in'] = chain.asset
+    // Leaves DFX's page only the wallet's own asset on its own chain.
+    // Otherwise a buy could deliver on any chain DFX offers for an EVM
+    // address, even one Edge doesn't support, and a sell could hand back an
+    // order this wallet can't pay. DFX also matches bare names, so ETH alone
+    // would still offer ETH on Arbitrum, Optimism and Base:
+    query.assets = `${chain.blockchain}/${chain.asset}`
   }
 
   if ('exchangeAmount' in amountQuery) {
