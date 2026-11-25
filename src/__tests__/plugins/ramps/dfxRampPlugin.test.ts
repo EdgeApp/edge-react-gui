@@ -16,6 +16,7 @@ import type {
   RampQuoteRequest
 } from '../../../plugins/ramps/rampPluginTypes'
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 
 jest.mock('../../../components/services/AirshipInstance', () => ({
   showError: jest.fn(),
@@ -270,18 +271,16 @@ describe('dfxRampPlugin approveQuote', () => {
     'amount-in': '500'
   }
 
-  it('keeps the quote choices when the login fails', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
-
-    expect(await approveDeepQuery(request)).toEqual(requestQuery)
-  })
-
   it('adds the session to the quote choices after a login', async () => {
     mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
 
     expect(await approveDeepQuery(request)).toEqual({
       ...requestQuery,
       session: 'jwt'
+    })
+    expect(mockFetchSessionQuery).toHaveBeenCalledWith({
+      wallet: request.wallet,
+      walletName: 'Edge'
     })
   })
 
@@ -321,32 +320,17 @@ describe('dfxRampPlugin approveQuote', () => {
         session: 'jwt',
         'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
-    })
-
-    it('opens the plugin scene as before without a login', async () => {
-      mockFetchSessionQuery.mockResolvedValueOnce(undefined)
-
-      const [route, params] = await approveRoute(cryptoSell)
-
-      expect(route).toBe('pluginViewSell')
-      expect(params).toEqual({
-        plugin: expect.objectContaining({ pluginId: 'dfx' }),
-        deepPath: '/sell',
-        deepQuery: sellQuery
+      expect(mockFetchSessionQuery).toHaveBeenCalledWith({
+        wallet: cryptoSell.wallet,
+        walletName: 'Edge'
       })
-    })
-
-    it('opens the plugin scene as before with an empty session', async () => {
-      mockFetchSessionQuery.mockResolvedValueOnce({ session: '' })
-
-      const [route] = await approveRoute(cryptoSell)
-
-      expect(route).toBe('pluginViewSell')
+      // A crypto-entered sell needs no quote for its amount:
+      expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
     })
   })
 
   it('does not quote a crypto-entered buy', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
     const cryptoBuy = makeRequest('bitcoin', {
       amountQuery: { exchangeAmount: '0.01' },
       amountType: 'crypto'
@@ -359,27 +343,8 @@ describe('dfxRampPlugin approveQuote', () => {
       'asset-in': 'CHF',
       'asset-out': 'BTC',
       assets: 'Bitcoin/BTC',
-      'amount-out': '0.01'
-    })
-    expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
-  })
-
-  it('does not quote a crypto-entered sell', async () => {
-    mockFetchSessionQuery.mockResolvedValueOnce(undefined)
-    const cryptoSell = makeRequest('bitcoin', {
-      amountQuery: { exchangeAmount: '0.01' },
-      amountType: 'crypto',
-      direction: 'sell'
-    })
-
-    expect(await approveDeepQuery(cryptoSell)).toEqual({
-      wallet: 'Edge',
-      lang: 'en',
-      blockchain: 'Bitcoin',
-      'asset-in': 'BTC',
-      'asset-out': 'CHF',
-      assets: 'Bitcoin/BTC',
-      'amount-in': '0.01'
+      'amount-out': '0.01',
+      session: 'jwt'
     })
     expect(mockFetchSellCryptoAmount).not.toHaveBeenCalled()
   })
@@ -418,12 +383,14 @@ describe('dfxRampPlugin approveQuote', () => {
     })
 
     it('keeps the fiat amount when DFX cannot quote it', async () => {
-      mockFetchSessionQuery.mockResolvedValueOnce(undefined)
+      mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
       mockFetchSellCryptoAmount.mockResolvedValueOnce(undefined)
 
-      expect(await approveDeepQuery(fiatSell)).toEqual({
+      expect(await approveSellQuery(fiatSell)).toEqual({
         ...sellQuery,
-        'amount-out': '200'
+        'amount-out': '200',
+        session: 'jwt',
+        'redirect-uri': 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
       })
     })
   })
@@ -442,26 +409,30 @@ describe('dfxRampPlugin approveQuote', () => {
     expect(query.assets).toBe('Ethereum/ETH')
   })
 
-  // Sells approve through the plugin's own sell launcher, not the helper's:
+  // Sells approve through the plugin's own sell launcher, not the helper's,
+  // so each refusal is checked for both:
+  const sellRequest = makeRequest('bitcoin', { direction: 'sell' })
+  const blockedCountry = new RampIpCountryError('DFX', 'Forbidden')
+  const failedLogin = new RampLoginError('DFX', 'login timed out after 10000ms')
   it.each([
-    ['buy', request],
-    ['sell', makeRequest('bitcoin', { direction: 'sell' })]
+    ['a buy', 'DFX blocks the country', request, blockedCountry],
+    ['a sell', 'DFX blocks the country', sellRequest, blockedCountry],
+    ['a buy', 'the login fails', request, failedLogin],
+    ['a sell', 'the login fails', sellRequest, failedLogin]
   ])(
-    'does not open DFX for a %s when it blocks the country',
-    async (direction, blockedRequest) => {
-      mockFetchSessionQuery.mockRejectedValueOnce(
-        new RampIpCountryError('DFX', 'Forbidden')
-      )
+    'does not open DFX for %s when %s',
+    async (kind, reason, refusedRequest, error) => {
+      mockFetchSessionQuery.mockRejectedValueOnce(error)
       const navigate = jest.fn()
       const plugin = dfxRampPlugin({
         initOptions: {},
         navigation: { navigate }
       } as unknown as RampPluginConfig)
 
-      const [quote] = await plugin.fetchQuotes(blockedRequest)
+      const [quote] = await plugin.fetchQuotes(refusedRequest)
       await expect(
-        quote.approveQuote({ coreWallet: blockedRequest.wallet })
-      ).rejects.toBeInstanceOf(RampIpCountryError)
+        quote.approveQuote({ coreWallet: refusedRequest.wallet })
+      ).rejects.toBe(error)
       expect(navigate).not.toHaveBeenCalled()
     }
   )

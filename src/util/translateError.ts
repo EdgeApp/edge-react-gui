@@ -10,6 +10,10 @@ import {
   translateRampIpCountryError
 } from '../types/RampIpCountryError'
 import {
+  RampLoginError,
+  translateRampLoginError
+} from '../types/RampLoginError'
+import {
   ResolutionError,
   translateResolutionError
 } from '../types/ResolutionError'
@@ -58,6 +62,7 @@ export function translateError(error: unknown): string {
   if (error instanceof RampIpCountryError) {
     return translateRampIpCountryError(error)
   }
+  if (error instanceof RampLoginError) return translateRampLoginError(error)
 
   return asErrorMessage(error)
 }
