@@ -178,6 +178,8 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
 
   let widgetClosed = false
   let inPayment = false
+  // From opening the send scene until it unmounts:
+  let sendSceneOpen = false
 
   const closeWidget = (): void => {
     if (widgetClosed) return
@@ -188,10 +190,10 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
   // Opens the send scene for the sell order named in DFX's payment
   // redirect, and finishes the sale once it is sent:
   const handlePaymentRedirect = async (uri: string): Promise<void> => {
-    // While the send scene is open for an order, ignore every other
-    // redirect, so none of them can pop the send scene in place of the
-    // WebView:
-    if (inPayment) return
+    // While the send scene is open, ignore every redirect, so none of them
+    // can pop the send scene in place of the WebView. Before then, a cancel
+    // still closes the widget, which drops an order whose route is loading:
+    if (sendSceneOpen) return
 
     let order: DfxSellOrder | undefined
     try {
@@ -216,6 +218,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       return
     }
 
+    if (inPayment) return
     inPayment = true
 
     const { amount, routeId } = order
@@ -323,6 +326,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
       // The send scene calls onBack whenever it unmounts, so wait for it
       // here: leaving without sending lands in the catch below.
       await new Promise<EdgeTransaction>((resolve, reject) => {
+        sendSceneOpen = true
         navigation.navigate('send2', {
           ...sendParams,
           // The default broadcast, wrapped to record that the signed
@@ -356,6 +360,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
             }
           },
           onBack: () => {
+            sendSceneOpen = false
             sendSceneClosed = true
             // Backing out after the broadcast went through still completes
             // the sale:

@@ -312,6 +312,38 @@ describe('openDfxSell', () => {
     expect(pop).not.toHaveBeenCalled()
   })
 
+  it('handles the cancel redirect again once the send scene closes', async () => {
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    send.onBack?.()
+    await settle()
+
+    webView.onShouldStartLoad?.(REDIRECT_URI)
+    await settle()
+
+    expect(pop).toHaveBeenCalledTimes(1)
+  })
+
+  it('drops the order on a cancel during the route fetch', async () => {
+    let releaseRoute = (): void => {}
+    routeLoaded = new Promise<void>(resolve => {
+      releaseRoute = resolve
+    })
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
+    await settle()
+    webView.onShouldStartLoad?.(REDIRECT_URI)
+    releaseRoute()
+    await settle()
+
+    expect(pop).toHaveBeenCalledTimes(1)
+    expect(paramsFor('send2')).toHaveLength(0)
+  })
+
   it('opens nothing for an order DFX reports as sent', async () => {
     const webView = await openWidget()
 
