@@ -157,16 +157,14 @@ describe('makeDfxRequestQuery', () => {
     expect(makeDfxRequestQuery(maxSell, 'Edge')['amount-in']).toBe(amountIn)
   })
 
-  it('leaves out a Max below 8 decimals', () => {
+  it("passes a Max below 8 decimals as 0, not DFX's default", () => {
     const dustSell = makeRequest('ethereum', {
       amountQuery: { maxExchangeAmount: '0.000000001' },
       amountType: 'crypto',
       direction: 'sell'
     })
 
-    expect(makeDfxRequestQuery(dustSell, 'Edge')).not.toHaveProperty(
-      'amount-in'
-    )
+    expect(makeDfxRequestQuery(dustSell, 'Edge')['amount-in']).toBe('0')
   })
 
   it('locks a buy to the asset and chain of the wallet', () => {
@@ -428,6 +426,20 @@ describe('dfxRampPlugin approveQuote', () => {
         'amount-out': '200'
       })
     })
+  })
+
+  it("opens a sell's Max with the amount rounded down to 8 decimals", async () => {
+    mockFetchSessionQuery.mockResolvedValueOnce({ session: 'jwt' })
+    const maxSell = makeRequest('ethereum', {
+      amountQuery: { maxExchangeAmount: '0.123456789012345678' },
+      amountType: 'crypto',
+      direction: 'sell'
+    })
+
+    const query = await approveSellQuery(maxSell)
+
+    expect(query['amount-in']).toBe('0.12345678')
+    expect(query.assets).toBe('Ethereum/ETH')
   })
 
   // Sells approve through the plugin's own sell launcher, not the helper's,
