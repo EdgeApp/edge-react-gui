@@ -22,8 +22,15 @@ interface DfxChain {
   readonly blockchain: string
   /** DFX name of the chain's native asset */
   readonly asset: string
-  /** EVM wallets sign the message bytes (personal_sign) */
-  readonly isEvm: boolean
+  /**
+   * Signs the message bytes with `signBytes`, as EVM and Monero wallets do.
+   * Every wallet has a `signBytes` method, but it rejects unless the
+   * chain's engine implements it. Bitcoin's engine only implements the
+   * deprecated `signMessage`, which core's `signBytes` falls back to with
+   * the bytes as base64 text, a signature DFX would not verify. So Bitcoin
+   * signs the literal message with `signMessage` instead.
+   */
+  readonly signsBytes: boolean
 }
 
 /**
@@ -31,17 +38,18 @@ interface DfxChain {
  * The plugin offers DFX on these chains only.
  */
 export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
-  bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', isEvm: false },
-  ethereum: { blockchain: 'Ethereum', asset: 'ETH', isEvm: true },
-  arbitrum: { blockchain: 'Arbitrum', asset: 'ETH', isEvm: true },
-  optimism: { blockchain: 'Optimism', asset: 'ETH', isEvm: true },
-  polygon: { blockchain: 'Polygon', asset: 'POL', isEvm: true },
-  base: { blockchain: 'Base', asset: 'ETH', isEvm: true },
+  bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', signsBytes: false },
+  ethereum: { blockchain: 'Ethereum', asset: 'ETH', signsBytes: true },
+  arbitrum: { blockchain: 'Arbitrum', asset: 'ETH', signsBytes: true },
+  optimism: { blockchain: 'Optimism', asset: 'ETH', signsBytes: true },
+  polygon: { blockchain: 'Polygon', asset: 'POL', signsBytes: true },
+  base: { blockchain: 'Base', asset: 'ETH', signsBytes: true },
   binancesmartchain: {
     blockchain: 'BinanceSmartChain',
     asset: 'BNB',
-    isEvm: true
-  }
+    signsBytes: true
+  },
+  monero: { blockchain: 'Monero', asset: 'XMR', signsBytes: true }
 }
 
 export interface DfxSessionParams {
@@ -101,7 +109,7 @@ async function loginToDfx(
 
   // UTXO wallets sign the literal message: `signBytes` would base64 it
   // first and DFX would verify a signature over the wrong data.
-  const signature = chain.isEvm
+  const signature = chain.signsBytes
     ? await wallet.signBytes(utf8.parse(message))
     : // eslint-disable-next-line @typescript-eslint/no-deprecated
       await wallet.signMessage(message, {
