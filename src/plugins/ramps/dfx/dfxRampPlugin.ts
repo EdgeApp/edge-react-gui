@@ -1,5 +1,9 @@
+import { floor } from 'biggystring'
+
+import { showToastSpinner } from '../../../components/services/AirshipInstance'
 import { guiPlugins } from '../../../constants/plugins/GuiPlugins'
 import { locale } from '../../../locales/intl'
+import { lstrings } from '../../../locales/strings'
 import type {
   RampPluginFactory,
   RampQuoteRequest,
@@ -11,6 +15,7 @@ import {
 } from '../utils/createExternalRampPlugin'
 import { fetchDfxSellCryptoAmount } from './dfxQuote'
 import { asInitOptions } from './dfxRampTypes'
+import { openDfxSell } from './dfxSell'
 import { DFX_SESSION_CHAINS, fetchDfxSessionQuery } from './dfxSession'
 
 // DFX settles SEPA bank transfers within a few business days.
@@ -60,17 +65,11 @@ const DFX_FIAT_CURRENCY_CODES = ['EUR', 'CHF']
 // Languages DFX's app offers through its `lang` parameter.
 const DFX_LANGUAGES = ['en', 'de', 'fr', 'it']
 
-// Session-login chains plus the chains that open DFX without a login, keyed
-// by Edge pluginId with DFX's blockchain and native asset names.
-const DFX_CHAINS: Readonly<
-  Record<string, { readonly blockchain: string; readonly asset: string }>
-> = {
-  ...DFX_SESSION_CHAINS,
-  solana: { blockchain: 'Solana', asset: 'SOL' },
-  monero: { blockchain: 'Monero', asset: 'XMR' }
-}
-
-const DFX_CRYPTO_ASSETS = Object.keys(DFX_CHAINS).map(pluginId => ({
+// DFX is offered only on the chains where Edge logs the wallet in to DFX.
+// DFX also supports other chains, such as Solana, but Edge does not log
+// wallets on those chains in to DFX, so DFX would open without the wallet's
+// address.
+const DFX_CRYPTO_ASSETS = Object.keys(DFX_SESSION_CHAINS).map(pluginId => ({
   pluginId,
   tokenId: null
 }))
@@ -78,7 +77,8 @@ const DFX_CRYPTO_ASSETS = Object.keys(DFX_CHAINS).map(pluginId => ({
 /**
  * Carries the user's quote choices into DFX's app (its query parameters,
  * github.com/DFXswiss/app#query-parameters): the language, the fiat, the
- * crypto asset and its blockchain, and the amount the user entered.
+ * crypto asset and its blockchain (the only ones DFX's page then offers),
+ * and the amount the user entered or a sell's Max.
  * A fiat-entered sell carries the fiat as `amount-out`, which DFX only turns
  * into a crypto amount once the user picks a bank account, so
  * `resolveDeepQuery` swaps in the crypto amount when DFX can quote it.
@@ -98,10 +98,16 @@ export function makeDfxRequestQuery(
       .toUpperCase()
   }
 
-  const chain = DFX_CHAINS[request.wallet.currencyInfo.pluginId]
+  const chain = DFX_SESSION_CHAINS[request.wallet.currencyInfo.pluginId]
   if (chain != null) {
     query.blockchain = chain.blockchain
     query[isBuy ? 'asset-out' : 'asset-in'] = chain.asset
+    // Leaves DFX's page only the wallet's own asset on its own chain.
+    // Otherwise a buy could deliver on any chain DFX offers for an EVM
+    // address, even one Edge doesn't support, and a sell could hand back an
+    // order this wallet can't pay. DFX also matches bare names, so ETH alone
+    // would still offer ETH on Arbitrum, Optimism and Base:
+    query.assets = `${chain.blockchain}/${chain.asset}`
   }
 
   if ('exchangeAmount' in amountQuery) {
@@ -109,6 +115,13 @@ export function makeDfxRequestQuery(
     const isInputAmount = isBuy === (amountType === 'fiat')
     query[isInputAmount ? 'amount-in' : 'amount-out'] =
       amountQuery.exchangeAmount
+  } else if ('maxExchangeAmount' in amountQuery && !isBuy) {
+    // A sell's Max is the most crypto the wallet can spend after fees.
+    // DFX turns the amount into a JavaScript number, so round it down to 8
+    // decimals: an EVM Max has 18, which DFX would show in full and could
+    // hand back a few wei above the Max. A Max below 8 decimals still goes,
+    // as 0, since without an amount DFX fills in its own default:
+    query['amount-in'] = floor(amountQuery.maxExchangeAmount, -8)
   }
 
   return query
@@ -158,9 +171,8 @@ export const dfxRampPlugin: RampPluginFactory = config => {
   }
 
   // Opens DFX with the user's quote choices, logged in with the selected
-  // wallet's address where the chain supports a signature login. The choices
-  // stay when the login is unavailable or fails, but DFX does not open when
-  // it blocks the country of the user's IP address (RampIpCountryError). A
+  // wallet's address. DFX does not open when the login fails, or when DFX
+  // blocks the country of the user's IP address (RampIpCountryError). A
   // fiat-entered sell opens with the crypto amount DFX quotes for the fiat,
   // when it can quote one.
   const resolveDeepQuery = async (
@@ -181,7 +193,42 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     return { ...query, ...sessionQuery }
   }
 
-  return createExternalRampPlugin(
+  // A logged-in sell hands the order back to Edge, which fetches the deposit
+  // address with the session and opens the send scene. Without a session,
+  // which only a chain without a session login leaves (a failed login
+  // throws), DFX's page shows the address for a manual transfer, as before.
+  const approveSell = async (request: RampQuoteRequest): Promise<void> => {
+    const deepQuery = {
+      ...support.deepQuery,
+      ...(await showToastSpinner(
+        lstrings.fiat_plugin_finalizing_quote,
+        resolveDeepQuery(request)
+      ))
+    }
+    const chain = DFX_SESSION_CHAINS[request.wallet.currencyInfo.pluginId]
+    if (
+      chain != null &&
+      deepQuery.session != null &&
+      deepQuery.session !== ''
+    ) {
+      await openDfxSell({
+        config,
+        guiPlugin: guiPlugins.dfx,
+        deepPath: '/sell',
+        deepQuery,
+        request,
+        chain
+      })
+      return
+    }
+    config.navigation.navigate('pluginViewSell', {
+      plugin: guiPlugins.dfx,
+      deepPath: '/sell',
+      deepQuery
+    })
+  }
+
+  const plugin = createExternalRampPlugin(
     'dfx',
     {
       guiPlugin: guiPlugins.dfx,
@@ -191,4 +238,18 @@ export const dfxRampPlugin: RampPluginFactory = config => {
     },
     config
   )
+
+  return {
+    ...plugin,
+    fetchQuotes: async (request, opts) => {
+      const quotes = await plugin.fetchQuotes(request, opts)
+      if (request.direction !== 'sell') return quotes
+      return quotes.map(quote => ({
+        ...quote,
+        approveQuote: async () => {
+          await approveSell(request)
+        }
+      }))
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import { RampIpCountryError } from '../../../types/RampIpCountryError'
+import { RampLoginError } from '../../../types/RampLoginError'
 import { utf8 } from '../../../util/encoding'
 import { raceTimeout, TIMED_OUT } from '../../../util/raceTimeout'
 import { fetchDfx } from './dfxApi'
@@ -21,26 +22,34 @@ interface DfxChain {
   readonly blockchain: string
   /** DFX name of the chain's native asset */
   readonly asset: string
-  /** EVM wallets sign the message bytes (personal_sign) */
-  readonly isEvm: boolean
+  /**
+   * Signs the message bytes with `signBytes`, as EVM and Monero wallets do.
+   * Every wallet has a `signBytes` method, but it rejects unless the
+   * chain's engine implements it. Bitcoin's engine only implements the
+   * deprecated `signMessage`, which core's `signBytes` falls back to with
+   * the bytes as base64 text, a signature DFX would not verify. So Bitcoin
+   * signs the literal message with `signMessage` instead.
+   */
+  readonly signsBytes: boolean
 }
 
 /**
  * Chains where Edge logs the wallet into DFX before opening the webview.
- * Other DFX chains (Solana, Monero) open DFX without a login.
+ * The plugin offers DFX on these chains only.
  */
 export const DFX_SESSION_CHAINS: Readonly<Record<string, DfxChain>> = {
-  bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', isEvm: false },
-  ethereum: { blockchain: 'Ethereum', asset: 'ETH', isEvm: true },
-  arbitrum: { blockchain: 'Arbitrum', asset: 'ETH', isEvm: true },
-  optimism: { blockchain: 'Optimism', asset: 'ETH', isEvm: true },
-  polygon: { blockchain: 'Polygon', asset: 'POL', isEvm: true },
-  base: { blockchain: 'Base', asset: 'ETH', isEvm: true },
+  bitcoin: { blockchain: 'Bitcoin', asset: 'BTC', signsBytes: false },
+  ethereum: { blockchain: 'Ethereum', asset: 'ETH', signsBytes: true },
+  arbitrum: { blockchain: 'Arbitrum', asset: 'ETH', signsBytes: true },
+  optimism: { blockchain: 'Optimism', asset: 'ETH', signsBytes: true },
+  polygon: { blockchain: 'Polygon', asset: 'POL', signsBytes: true },
+  base: { blockchain: 'Base', asset: 'ETH', signsBytes: true },
   binancesmartchain: {
     blockchain: 'BinanceSmartChain',
     asset: 'BNB',
-    isEvm: true
-  }
+    signsBytes: true
+  },
+  monero: { blockchain: 'Monero', asset: 'XMR', signsBytes: true }
 }
 
 export interface DfxSessionParams {
@@ -52,10 +61,13 @@ export interface DfxSessionParams {
 /**
  * Signs DFX's ownership message with the wallet and returns the `session`
  * query parameter that opens DFX logged in with the wallet's address.
- * Returns undefined when the chain has no session login or any step fails,
- * so the caller opens the link without a login. Throws RampIpCountryError
- * when DFX blocks the country of the user's IP address, since DFX's own
- * login would fail the same way.
+ * Returns undefined for a chain without a session login, which opens DFX
+ * without one. Throws RampLoginError, which asks the user to try again and
+ * names the cause for error reports, when the login fails: without
+ * `session`, DFX would open with whatever login it last saved on the
+ * device, which can be another wallet or another Edge account. Throws
+ * RampIpCountryError when DFX blocks the country of the user's IP address,
+ * since DFX's own login would fail the same way.
  */
 export async function fetchDfxSessionQuery(
   params: DfxSessionParams
@@ -74,10 +86,7 @@ export async function fetchDfxSessionQuery(
     return query
   } catch (error: unknown) {
     if (error instanceof RampIpCountryError) throw error
-    console.warn(
-      `DFX session login failed, opening plain link: ${String(error)}`
-    )
-    return undefined
+    throw new RampLoginError('DFX', error)
   }
 }
 
@@ -100,7 +109,7 @@ async function loginToDfx(
 
   // UTXO wallets sign the literal message: `signBytes` would base64 it
   // first and DFX would verify a signature over the wrong data.
-  const signature = chain.isEvm
+  const signature = chain.signsBytes
     ? await wallet.signBytes(utf8.parse(message))
     : // eslint-disable-next-line @typescript-eslint/no-deprecated
       await wallet.signMessage(message, {
@@ -114,6 +123,8 @@ async function loginToDfx(
       body: JSON.stringify({ address, signature, wallet: walletName })
     })
   )
+  // An empty `session` opens DFX without a login, like a failed login:
+  if (accessToken === '') throw new Error('DFX returned an empty access token')
 
   return { session: accessToken }
 }

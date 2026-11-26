@@ -3,7 +3,7 @@ PODS:
     - React
   - edge-core-js (2.55.1):
     - React-Core
-  - edge-currency-accountbased (4.107.1):
+  - edge-currency-accountbased (4.108.0):
     - React-Core
   - edge-currency-plugins (3.18.0):
     - React-Core
@@ -1624,7 +1624,7 @@ PODS:
     - Yoga
   - react-native-mail (6.1.1):
     - React-Core
-  - react-native-monero (0.5.1):
+  - react-native-monero (0.6.0):
     - React-Core
   - react-native-netinfo (12.0.1):
     - hermes-engine
@@ -3233,7 +3233,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   disklet: ef8ef081e35a73fbed579888d29e49edc2f327cc
   edge-core-js: 49d06db12155ab91760eb0be3e91cb7b76634fe2
-  edge-currency-accountbased: b79a2a5cc60b122535191a1e9f11c809b09cc132
+  edge-currency-accountbased: 089c3957e552e0d8266692b8a4f4f8efeb17e596
   edge-currency-plugins: b4dc3fc02b610655eb07d53797b73676fa18bedc
   edge-exchange-plugins: 8a1bdb54e92f295125cee31624edc12be8324111
   edge-login-ui-rn: c67a248be38c37f3768d1f41b1d87f553709b92f
@@ -3311,7 +3311,7 @@ SPEC CHECKSUMS:
   react-native-in-app-review: 668f4c80d7f95945e0ad7833e98c466cb40d6808
   react-native-keyboard-controller: d85461d7782c025cde04ee265f48846843b2e99d
   react-native-mail: 6e83813066984b26403d3fdfe79ac7bb31857e3c
-  react-native-monero: 24392b9b4d510579f5b924735fd64875ea33cacf
+  react-native-monero: 8cb1a2e84001f1de2229441b74747a48cef3d8d9
   react-native-netinfo: adec161a2fc40d327f2c1bab7d8c57a91943ab74
   react-native-performance: c2cf9c69321cd5eacfdba07ced92409a185140a8
   react-native-pirate-wallet: 83d6c97e1a90e1ad7203f41f38606a0846dda84d
