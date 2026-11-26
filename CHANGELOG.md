@@ -4,12 +4,12 @@
 
 ## 4.53.1 (staging)
 
-- added: DFX for Monero wallets, logged in with the wallet's address
-- changed: DFX sells that Edge logs in to DFX open Edge's send scene with the deposit address and amount filled in, instead of showing an address to copy
-- changed: DFX shows an error to try again when Edge can't log the wallet in to DFX, instead of opening DFX without a login
-- fixed: DFX is no longer offered for Monero and Solana wallets, which Edge does not log in to DFX
+- fixed: DFX for Monero wallets opens logged in with the wallet's address
+- fixed: DFX sells open Edge's send scene with the deposit address and amount filled in, instead of showing an address to copy
+- fixed: DFX shows an error to try again when Edge can't log the wallet in to DFX, instead of opening DFX without a login
 - fixed: DFX sells started with Max open with the amount filled in
 - fixed: DFX buys and sells only offer the asset and chain of the wallet picked in Edge
+- removed: DFX for Solana wallets, which Edge does not log in to DFX
 
 ## 4.53.0 (2026-11-20)
 
