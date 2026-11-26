@@ -68,14 +68,26 @@ import { join } from 'node:path'
 const APP = 'co.edgesecure.app'
 
 /**
+ * Temporary test branches that build as another branch: its app ID, secret
+ * file variants and Android keystore. Their version keeps their own suffix.
+ */
+const BUILDS_AS: Record<string, string> = { 'coinhub-mason-test': 'coinhub' }
+
+/** The branch whose app, configs and keystore a branch builds with. */
+export function buildsAs(branch: string): string {
+  return Object.hasOwn(BUILDS_AS, branch) ? BUILDS_AS[branch] : branch
+}
+
+/**
  * The app ID a branch builds: develop and beta have their own, as their
  * deploy patches set, and coinhub builds CoinHub's wallet, whose project
  * sets its own bundle ID (and Apple team).
  */
 export function appFor(branch: string): string {
-  if (branch === 'develop') return 'app.edge.develop'
-  if (branch === 'beta') return 'app.edge.beta'
-  if (branch === 'coinhub') return 'app.coinhubatm.wallet'
+  const name = buildsAs(branch)
+  if (name === 'develop') return 'app.edge.develop'
+  if (name === 'beta') return 'app.edge.beta'
+  if (name === 'coinhub') return 'app.coinhubatm.wallet'
   return APP
 }
 
@@ -167,7 +179,8 @@ const CONFIG_BRANCHES = ['develop', 'beta', 'coinhub', 'airbitz', 'yolo']
 
 /** The build configs of a branch's stages. */
 export function configsFor(branch: string): string[] {
-  return CONFIG_BRANCHES.includes(branch) ? [branch] : []
+  const name = buildsAs(branch)
+  return CONFIG_BRANCHES.includes(name) ? [name] : []
 }
 
 /** The machines the pools make: Macs for Xcode, Linux for the rest. */
@@ -749,7 +762,7 @@ export function androidSigning(
   }
   const edge = at(config, 'edge')
   const android = at(edge, 'android')
-  const merged = { ...edge, ...android, ...at(android, branch) }
+  const merged = { ...edge, ...android, ...at(android, buildsAs(branch)) }
   const text = (key: string): string => {
     const value = merged[key]
     if (typeof value !== 'string' || value === '')
