@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+## 4.53.1 (staging)
+
 - added: DFX for Monero wallets, logged in with the wallet's address
 - changed: DFX sells that Edge logs in to DFX open Edge's send scene with the deposit address and amount filled in, instead of showing an address to copy
 - changed: DFX shows an error to try again when Edge can't log the wallet in to DFX, instead of opening DFX without a login
