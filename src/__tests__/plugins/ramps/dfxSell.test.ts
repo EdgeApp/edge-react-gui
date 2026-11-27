@@ -56,14 +56,25 @@ const mockFetchFiatAmount = jest.mocked(fetchDfxSellFiatAmount)
 const REDIRECT_URI = 'https://deep.edge.app/redirect/payment/dfx/bitcoin/'
 const CHAIN = { blockchain: 'Bitcoin', asset: 'BTC' }
 
+// DFX's uid for the order, written the way DFX's own tests write one:
+const ORDER_UID = 'S-order-1'
+
 // The query DFX's sell page redirects with once the user confirms:
 const ORDER_QUERY: Record<string, string> = {
   routeId: '42',
   amount: '0.0015',
   asset: 'BTC',
   blockchain: 'Bitcoin',
-  isComplete: 'false'
+  isComplete: 'false',
+  orderUid: ORDER_UID
 }
+
+/** The redirect query without one of its parameters. */
+const withoutParam = (
+  query: Record<string, string>,
+  key: string
+): Record<string, string> =>
+  Object.fromEntries(Object.entries(query).filter(([name]) => name !== key))
 
 const GUI_PLUGIN: GuiPlugin = {
   pluginId: 'dfx',
@@ -97,6 +108,7 @@ describe('parseDfxSellRedirect', () => {
   it('reads the order DFX redirects with', () => {
     expect(parse(ORDER_QUERY)).toEqual({
       routeId: '42',
+      orderUid: ORDER_UID,
       amount: '0.0015',
       isComplete: false
     })
@@ -105,9 +117,43 @@ describe('parseDfxSellRedirect', () => {
   it('reads an order DFX reports as sent', () => {
     expect(parse({ ...ORDER_QUERY, isComplete: 'true' })).toEqual({
       routeId: '42',
+      orderUid: ORDER_UID,
       amount: '0.0015',
       isComplete: true
     })
+  })
+
+  it('reads an order without a uid', () => {
+    expect(parse(withoutParam(ORDER_QUERY, 'orderUid'))).toEqual({
+      routeId: '42',
+      amount: '0.0015',
+      isComplete: false
+    })
+  })
+
+  it('reads a uid of 100 characters', () => {
+    const orderUid = 'S'.repeat(100)
+    expect(parse({ ...ORDER_QUERY, orderUid })).toMatchObject({ orderUid })
+  })
+
+  const malformedUids: Array<[string, string]> = [
+    ['a uid with a path', 'S-order-1/../7'],
+    ['an empty uid', ''],
+    ['a uid over 100 characters', 'S'.repeat(101)]
+  ]
+  it.each(malformedUids)('reads the order but drops %s', (name, orderUid) => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    try {
+      expect(parse({ ...ORDER_QUERY, orderUid })).toEqual({
+        routeId: '42',
+        amount: '0.0015',
+        isComplete: false
+      })
+      expect(warn).toHaveBeenCalledTimes(1)
+    } finally {
+      warn.mockRestore()
+    }
   })
 
   it('reads no order from the cancel redirect', () => {
@@ -128,11 +174,9 @@ describe('parseDfxSellRedirect', () => {
     expect(() => parse({ ...ORDER_QUERY, ...change })).toThrow(message)
   })
 
-  it.each(Object.keys(ORDER_QUERY))('refuses an order without %s', key => {
-    const query = Object.fromEntries(
-      Object.entries(ORDER_QUERY).filter(([name]) => name !== key)
-    )
-    expect(() => parse(query)).toThrow(TypeError)
+  const requiredKeys = Object.keys(withoutParam(ORDER_QUERY, 'orderUid'))
+  it.each(requiredKeys)('refuses an order without %s', key => {
+    expect(() => parse(withoutParam(ORDER_QUERY, key))).toThrow(TypeError)
   })
 })
 
@@ -395,7 +439,8 @@ describe('openDfxSell', () => {
     expect(send.spendInfo?.assetAction).toEqual({ assetActionType: 'sell' })
     expect(send.spendInfo?.savedAction).toEqual({
       actionType: 'fiat',
-      orderId: '42',
+      orderId: ORDER_UID,
+      orderUri: 'https://app.dfx.swiss/tx/S-order-1',
       isEstimate: true,
       fiatPlugin: { providerId: 'dfx', providerDisplayName: 'DFX' },
       payinAddress: 'bc1deposit',
@@ -412,6 +457,27 @@ describe('openDfxSell', () => {
     await settle()
     expect(pop).not.toHaveBeenCalled()
     expect(showError).not.toHaveBeenCalled()
+  })
+
+  it('names the sale by its route id for an order without a uid', async () => {
+    const webView = await openWidget()
+
+    webView.onShouldStartLoad?.(
+      makeSellRedirect(withoutParam(ORDER_QUERY, 'orderUid'))
+    )
+    await settle()
+    const [send] = paramsFor<SendScene2Params>('send2')
+    expect(send.spendInfo?.savedAction).toMatchObject({ orderId: '42' })
+    expect(send.spendInfo?.savedAction).not.toHaveProperty('orderUri')
+
+    const tx = await send.alternateBroadcast?.(signedTx)
+    await send.onDone?.(null, tx)
+    send.onBack?.()
+    await settle()
+
+    expect(onLogEvent).toHaveBeenCalledWith('Sell_Success', {
+      conversionValues: expect.objectContaining({ orderId: '42' })
+    })
   })
 
   it("saves DFX's fiat estimate for the crypto that is sent", async () => {
@@ -616,7 +682,12 @@ describe('openDfxSell', () => {
     webView.onShouldStartLoad?.(makeSellRedirect(ORDER_QUERY))
     await settle()
     webView.onShouldStartLoad?.(
-      makeSellRedirect({ ...ORDER_QUERY, routeId: '43', amount: '0.002' })
+      makeSellRedirect({
+        ...ORDER_QUERY,
+        routeId: '43',
+        amount: '0.002',
+        orderUid: 'S-order-2'
+      })
     )
     releaseRoute()
     await settle()
@@ -624,6 +695,9 @@ describe('openDfxSell', () => {
     const sends = paramsFor<SendScene2Params>('send2')
     expect(sends).toHaveLength(1)
     expect(sends[0].spendInfo?.spendTargets[0].nativeAmount).toBe('150000')
+    expect(sends[0].spendInfo?.savedAction).toMatchObject({
+      orderId: ORDER_UID
+    })
     expect(
       fakeFetch.calls.filter(({ url }) => url.includes('/sell/43'))
     ).toHaveLength(0)
@@ -700,7 +774,7 @@ describe('openDfxSell', () => {
         destFiatCurrencyCode: 'iso:CHF',
         destFiatAmount: '98.45',
         fiatProviderId: 'dfx',
-        orderId: '42'
+        orderId: ORDER_UID
       })
     })
     expect(showToast).toHaveBeenCalledTimes(1)

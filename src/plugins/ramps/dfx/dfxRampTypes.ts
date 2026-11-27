@@ -105,14 +105,16 @@ export const asDfxSellEstimateResponse = asJSON(
 /**
  * The query of the redirect DFX's sell page opens once the user confirms a
  * sell. `amount` is the crypto to send, and `isComplete` is 'false' while
- * the crypto still has to be sent.
+ * the crypto still has to be sent. `orderUid` is DFX's uid for the order the
+ * user confirmed, which DFX leaves out for an order without one.
  */
 export const asDfxSellRedirectQuery = asObject({
   routeId: asString,
   amount: asString,
   asset: asString,
   blockchain: asString,
-  isComplete: asValue('true', 'false')
+  isComplete: asValue('true', 'false'),
+  orderUid: asOptional(asString)
 })
 
 /**

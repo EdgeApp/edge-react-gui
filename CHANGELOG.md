@@ -2,6 +2,8 @@
 
 ## Unreleased (develop)
 
+- fixed: DFX sells show the order's own ID and a link to its DFX status page in transaction details, instead of an ID shared by every sale to the same bank account and currency
+
 ## 4.53.1 (staging)
 
 - fixed: DFX for Monero wallets opens logged in with the wallet's address
