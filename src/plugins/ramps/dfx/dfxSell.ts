@@ -53,7 +53,10 @@ export interface DfxSellParams {
 
 /** The sell order DFX's payment redirect names. */
 export interface DfxSellOrder {
+  /** Shared by every sale to the same bank account and currency */
   readonly routeId: string
+  /** DFX's uid for this order, when the redirect names a well-formed one */
+  readonly orderUid?: string
   /** The crypto to send, as an exchange amount */
   readonly amount: string
   /** DFX reports the crypto as sent already */
@@ -64,7 +67,8 @@ export interface DfxSellOrder {
  * Reads the sell order from the redirect DFX's sell page opens, which is the
  * redirect URI with `sell` appended to its path. Returns undefined for any
  * other path, such as the bare redirect URI DFX opens on cancel. Throws when
- * the order is malformed or not for the wallet's chain and asset.
+ * the order is malformed or not for the wallet's chain and asset, except for
+ * a malformed `orderUid`, which it drops.
  */
 export function parseDfxSellRedirect(
   url: string,
@@ -76,11 +80,19 @@ export function parseDfxSellRedirect(
     return undefined
   }
 
-  const { routeId, amount, asset, blockchain, isComplete } =
+  const { routeId, amount, asset, blockchain, isComplete, orderUid } =
     asDfxSellRedirectQuery(urlObj.query)
   // The route id goes into an API path:
   if (!/^\d+$/.test(routeId)) {
     throw new Error('DFX sell redirect has a malformed routeId')
+  }
+  // The order uid goes into the status page's path, so it must be URL-safe,
+  // and the length cap keeps junk out of the saved action and Sell_Success.
+  // It only names the sale, so a malformed one is dropped instead of
+  // refusing the order:
+  const isOrderUid = orderUid != null && /^[\w-]{1,100}$/.test(orderUid)
+  if (orderUid != null && !isOrderUid) {
+    console.warn('DFX sell redirect has a malformed orderUid')
   }
   // DFX writes the amount with JavaScript's number.toString(), which uses
   // exponent form for small amounts (1e-7). That form must not be misread:
@@ -96,7 +108,12 @@ export function parseDfxSellRedirect(
     throw new Error(`DFX sell redirect is for ${asset}, not ${chain.asset}`)
   }
 
-  return { routeId, amount, isComplete: isComplete === 'true' }
+  return {
+    routeId,
+    ...(isOrderUid ? { orderUid } : {}),
+    amount,
+    isComplete: isComplete === 'true'
+  }
 }
 
 /**
@@ -216,7 +233,10 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
     if (inPayment) return
     inPayment = true
 
-    const { amount, routeId } = order
+    const { amount, orderUid, routeId } = order
+    // The uid names this sale, where the route id names every sale on the
+    // route:
+    const orderId = orderUid ?? routeId
     const assetAction: EdgeAssetAction = {
       assetActionType: 'sell'
     }
@@ -273,7 +293,12 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
 
       const savedAction: EdgeTxActionFiat = {
         actionType: 'fiat',
-        orderId: routeId,
+        orderId,
+        // DFX's status page for the order. The parser only passes a
+        // URL-safe uid:
+        ...(orderUid == null
+          ? {}
+          : { orderUri: `${guiPlugin.baseUri}/tx/${orderUid}` }),
         isEstimate: true,
         fiatPlugin: {
           providerId: pluginId,
@@ -420,7 +445,7 @@ export async function openDfxSell(params: DfxSellParams): Promise<void> {
             exchangeAmount: amount
           }),
           fiatProviderId: pluginId,
-          orderId: routeId
+          orderId
         }
       })
 
