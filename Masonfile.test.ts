@@ -15,6 +15,8 @@ import {
   androidSigning,
   buildAndroid,
   buildIos,
+  buildsAs,
+  COINHUB_TEST_ENV,
   configsFor,
   runTests,
   secretDirectory,
@@ -282,6 +284,20 @@ describe('Masonfile', () => {
     ])
   })
 
+  it('tests a CoinHub branch under its app config, without secrets', async () => {
+    const { calls, ctx, root } = recordStage('coinhub-4.50.1')
+    await runTests(ctx)
+    expect(commands(calls)).toEqual([
+      'npm ci',
+      'npm run prepare',
+      'npm test -- --ci'
+    ])
+    expect(calls.filter(([kind]) => kind === 'writeSecretFile')).toEqual([])
+    expect(JSON.parse(readFileSync(join(root, 'env.json'), 'utf8'))).toEqual(
+      COINHUB_TEST_ENV
+    )
+  })
+
   it('names each stage’s phases, in order, as Jenkins did', async () => {
     const sections = async (
       branch: string,
@@ -331,13 +347,13 @@ describe('Masonfile', () => {
     const gradle = readFileSync(join(root, 'android/app/build.gradle'), 'utf8')
     expect(gradle).toContain('versionCode 26103001')
     expect(gradle).toContain('versionName "4.53.0"')
-    // Only those lines change: the split APKs' offsets stay as they are.
+    // Only those lines change (this branch's build.gradle predates the split
+    // APKs' version offsets):
     const original = readFileSync(
       join(__dirname, 'android/app/build.gradle'),
       'utf8'
     )
     expect(gradle.split('\n').length).toBe(original.split('\n').length)
-    expect(gradle).toContain("['armeabi-v7a': 1, 'arm64-v8a': 2]")
     expect(calls.filter(([kind]) => kind === 'save')).toEqual([
       ['save', 'android-aab', 'android/app/build/outputs/bundle/release/*.aab']
     ])
@@ -357,9 +373,7 @@ describe('Masonfile', () => {
     ])
     // The Firebase config ships in the app, so it is readable; the rest stay owner-only.
     expect(calls.filter(([kind]) => kind === 'writeSecretFile')).toEqual([
-      ['writeSecretFile', 'config.json', '.', {}],
-      ['writeSecretFile', 'edgeKey.json', '.', {}],
-      ['writeSecretFile', 'keys.json', '.', {}],
+      ['writeSecretFile', 'env.json', '.', {}],
       [
         'writeSecretFile',
         'google-services.json',
@@ -514,9 +528,7 @@ describe('Masonfile', () => {
       ['exec', 'agvtool', ['new-version', '-all', '26103001'], { cwd: 'ios' }]
     ])
     expect(calls.filter(([kind]) => kind === 'writeSecretFile')).toEqual([
-      ['writeSecretFile', 'config.json', '.', {}],
-      ['writeSecretFile', 'edgeKey.json', '.', {}],
-      ['writeSecretFile', 'keys.json', '.', {}],
+      ['writeSecretFile', 'env.json', '.', {}],
       [
         'writeSecretFile',
         'GoogleService-Info.plist',
@@ -678,7 +690,7 @@ describe('Masonfile', () => {
       const app = appFor(branch)
       expect(stages['ios-maestro']).toMatchObject({
         on: mac,
-        secrets: expect.arrayContaining(['config.json']),
+        secrets: expect.arrayContaining(['env.json']),
         buildNumbers: [app],
         publishes: [app],
         run: buildIosMaestro
@@ -925,5 +937,36 @@ describe('Masonfile', () => {
       expect([branch, versionSuffix(branch!)]).toEqual([branch, suffix])
     expect(configsFor('beta')).toEqual(['beta'])
     expect(configsFor('master')).toEqual([])
+  })
+
+  it('builds coinhub-4.50.1 exactly as coinhub', () => {
+    const branch = 'coinhub-4.50.1'
+    expect(buildsAs(branch)).toBe('coinhub')
+    expect(appFor(branch)).toBe('app.coinhubatm.wallet')
+    expect(configsFor(branch)).toEqual(['coinhub'])
+    // A store build's version has no suffix:
+    expect(versionSuffix(branch)).toBe('')
+    const config = {
+      edge: {
+        androidKeyStore: 'edge-release-keystore.jks',
+        androidKeyStoreAlias: 'edge',
+        androidKeyStorePassword: 'edge-password',
+        android: {
+          coinhub: {
+            androidKeyStore: 'coinhub-keystore.jks',
+            androidKeyStoreAlias: 'coinhub',
+            androidKeyStorePassword: 'coinhub-password'
+          }
+        }
+      }
+    }
+    expect(androidSigning(config, branch)).toEqual({
+      keystore: 'coinhub-keystore.jks',
+      alias: 'coinhub',
+      password: 'coinhub-password'
+    })
+    // Other branches build as themselves:
+    expect(buildsAs('develop')).toBe('develop')
+    expect(versionSuffix('coinhub-4.50.2')).toBe('-coinhub-4-50-2')
   })
 })

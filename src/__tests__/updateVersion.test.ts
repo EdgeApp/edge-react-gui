@@ -17,9 +17,9 @@ describe('updateVersion', () => {
     })
     expect(stamped).toContain('versionName "4.53.0-d"')
     expect(stamped).toContain('versionCode 26103001')
-    // Only those two lines change; the split APKs' offsets stay.
+    // Only those two lines change (this branch's build.gradle predates the
+    // split APKs' version offsets):
     expect(stamped.split('\n').length).toBe(gradle.split('\n').length)
-    expect(stamped).toContain("['armeabi-v7a': 1, 'arm64-v8a': 2]")
     // A build.gradle stamped before, with a suffixed name, stamps again.
     expect(
       stampGradle(stamped, { version: '4.53.0', build: 26103004 })

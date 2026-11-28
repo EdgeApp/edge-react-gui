@@ -13,9 +13,9 @@ import { join } from 'node:path'
 // SDK (its licences accepted here) and CocoaPods install on demand, so a
 // fresh pool machine needs no setup for them; Xcode >=26 comes with the
 // macOS pool's image (NoMac's has Xcode 27 alone, and no helper to install
-// another), or through the helper on a Mac that runs one. Under Xcode 27,
-// patches/expo-modules-jsi builds Expo SDK 57's ExpoModulesJSI without
-// warnings, which Xcode 27 would report as a failure (expo/expo#50279).
+// another), or through the helper on a Mac that runs one. develop patches
+// Expo SDK 57's ExpoModulesJSI for Xcode 27 (expo/expo#50279); this branch
+// is on Expo 53, which has no expo-modules-jsi, so it carries no such patch.
 //
 // Each run has one build number, which both platforms stamp into their
 // native projects themselves (setAndroidVersion, setIosVersion), with the
@@ -48,11 +48,17 @@ import { join } from 'node:path'
 // are merged into config.json variants too (beta's feature flags, yolo's
 // login). Each stage's configs are its branch when the branch has variants,
 // so it gets that branch's files and the defaults for the rest. fastlane.json
-// is not one: Mason replaces fastlane. Both native builds embed the API key and secret from edgeKey.json and fail
-// without it (scripts/makeApiSigner.ts).
+// is not one: Mason replaces fastlane.
 //
-// keys.json carries Edge's Sentry upload token, which scripts/patchFiles.ts
-// writes into sentry.properties and build.gradle. Until these builds are the
+// coinhub-4.50.1 is CoinHub's 4.50.0 store build (c48a8e7ccf) with this
+// file added, so it builds as coinhub (BUILDS_AS). It predates the
+// config.json and keys.json split and the API signer: env.json alone holds
+// the app's keys, EDGE_API_KEY among them, which scripts/makeNativeHeaders.ts
+// also copies into native code during `npm run prepare`. So env.json is its
+// only shared secret file, written before scripts/patchFiles.ts reads it.
+//
+// env.json carries the Sentry upload token, which scripts/patchFiles.ts
+// writes into the native Sentry files. Until these builds are the
 // ones that ship, they upload nothing to Sentry: SENTRY_DISABLE_AUTO_UPLOAD
 // turns off the JS source maps on both platforms (@sentry/react-native), the
 // dSYMs on iOS, and on Android the native symbols, ProGuard mapping and
@@ -68,14 +74,27 @@ import { join } from 'node:path'
 const APP = 'co.edgesecure.app'
 
 /**
+ * Release branches that build as another branch: its app ID, secret file
+ * variants, Android keystore and version suffix, so coinhub-4.50.1 builds
+ * CoinHub's wallet as version 4.50.1, exactly as coinhub would.
+ */
+const BUILDS_AS: Record<string, string> = { 'coinhub-4.50.1': 'coinhub' }
+
+/** The branch whose app, configs, keystore and suffix a branch builds with. */
+export function buildsAs(branch: string): string {
+  return Object.hasOwn(BUILDS_AS, branch) ? BUILDS_AS[branch] : branch
+}
+
+/**
  * The app ID a branch builds: develop and beta have their own, as their
  * deploy patches set, and coinhub builds CoinHub's wallet, whose project
  * sets its own bundle ID (and Apple team).
  */
 export function appFor(branch: string): string {
-  if (branch === 'develop') return 'app.edge.develop'
-  if (branch === 'beta') return 'app.edge.beta'
-  if (branch === 'coinhub') return 'app.coinhubatm.wallet'
+  const name = buildsAs(branch)
+  if (name === 'develop') return 'app.edge.develop'
+  if (name === 'beta') return 'app.edge.beta'
+  if (name === 'coinhub') return 'app.coinhubatm.wallet'
   return APP
 }
 
@@ -87,6 +106,7 @@ const SHIPPED = ['GoogleService-Info.plist', 'google-services.json']
  * scripts/secretFiles.ts puts it. The master names each by its file name.
  */
 const SECRET_DIRECTORIES: Record<string, string> = {
+  'env.json': '.',
   'config.json': '.',
   'edgeKey.json': '.',
   'keys.json': '.',
@@ -102,8 +122,12 @@ export function secretDirectory(name: string): string | undefined {
   if (Object.hasOwn(SECRET_DIRECTORIES, name)) return SECRET_DIRECTORIES[name]
   if (/^[A-Za-z0-9_.-]+\.jks$/.test(name)) return KEYSTORES
 }
-/** What each platform's build reads: the shared files and its own Firebase config. */
-const SHARED_SECRETS = ['config.json', 'edgeKey.json', 'keys.json']
+/**
+ * What each platform's build reads: env.json, which this branch reads in
+ * place of config.json, keys.json and edgeKey.json, and its own Firebase
+ * config.
+ */
+const SHARED_SECRETS = ['env.json']
 const IOS_SECRETS = [...SHARED_SECRETS, 'GoogleService-Info.plist']
 const ANDROID_SECRETS = [...SHARED_SECRETS, 'google-services.json']
 /**
@@ -167,7 +191,8 @@ const CONFIG_BRANCHES = ['develop', 'beta', 'coinhub', 'airbitz', 'yolo']
 
 /** The build configs of a branch's stages. */
 export function configsFor(branch: string): string[] {
-  return CONFIG_BRANCHES.includes(branch) ? [branch] : []
+  const name = buildsAs(branch)
+  return CONFIG_BRANCHES.includes(name) ? [name] : []
 }
 
 /** The machines the pools make: Macs for Xcode, Linux for the rest. */
@@ -338,7 +363,27 @@ export function setup(m: Setup) {
 }
 
 /** The Jest suite, prepared as the Jenkinsfile's preTest runs it. */
+/**
+ * The only env.json settings the Jest suite depends on: CoinHub's snapshots
+ * render its theme without the developer mode row, as its env.json sets.
+ * `npm run prepare` fills in the rest with defaults, so no secret is needed.
+ */
+export const COINHUB_TEST_ENV = {
+  APP_CONFIG: 'coinhub',
+  ALLOW_DEVELOPER_MODE: false
+}
+
 export async function runTests(ctx: Stage) {
+  if (buildsAs(ctx.run.branch) === 'coinhub') {
+    await ctx.log.section(
+      'CoinHub test config',
+      async () =>
+        await writeFile(
+          join(ctx.workspace, 'env.json'),
+          JSON.stringify(COINHUB_TEST_ENV, null, 2) + '\n'
+        )
+    )
+  }
   await ctx.log.section('Install packages', async () => await ctx.sh('npm ci'))
   // The repository's .npmrc turns install scripts off, so `prepare` runs here.
   await ctx.log.section('Prepare', async () => await ctx.sh('npm run prepare'))
@@ -749,7 +794,7 @@ export function androidSigning(
   }
   const edge = at(config, 'edge')
   const android = at(edge, 'android')
-  const merged = { ...edge, ...android, ...at(android, branch) }
+  const merged = { ...edge, ...android, ...at(android, buildsAs(branch)) }
   const text = (key: string): string => {
     const value = merged[key]
     if (typeof value !== 'string' || value === '')
@@ -850,8 +895,8 @@ export function versionSuffix(branch: string): string {
     'test-parm': '-parm',
     'test-swiss': '-swiss'
   }
-  if (branch === '') return ''
-  if (Object.prototype.hasOwnProperty.call(special, branch))
-    return special[branch]!
-  return '-' + branch.replace(/[^0-9a-zA-Z]+/g, '-')
+  const name = buildsAs(branch)
+  if (name === '') return ''
+  if (Object.prototype.hasOwnProperty.call(special, name)) return special[name]!
+  return '-' + name.replace(/[^0-9a-zA-Z]+/g, '-')
 }
